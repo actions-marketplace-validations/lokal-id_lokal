@@ -1,0 +1,1627 @@
+[
+ {
+  "type": "NIK",
+  "value": "3201011508950001",
+  "out": "3201********0001"
+ },
+ {
+  "type": "NIK",
+  "value": "0812-3456-7890",
+  "out": "0812********7890"
+ },
+ {
+  "type": "NIK",
+  "value": "budi@gmail.com",
+  "out": "********"
+ },
+ {
+  "type": "NIK",
+  "value": "B 1234 XYZ",
+  "out": "1234********1234"
+ },
+ {
+  "type": "NIK",
+  "value": "182.253.10.15",
+  "out": "1822********1015"
+ },
+ {
+  "type": "NIK",
+  "value": "-6.200000, 106.816666",
+  "out": "6200********6666"
+ },
+ {
+  "type": "NIK",
+  "value": "Budi Santoso",
+  "out": "********"
+ },
+ {
+  "type": "NIK",
+  "value": "Jl. Mawar No. 5",
+  "out": "5********5"
+ },
+ {
+  "type": "NIK",
+  "value": "A1234567",
+  "out": "1234********4567"
+ },
+ {
+  "type": "NIK",
+  "value": "19950815 202012 1 001",
+  "out": "1995********1001"
+ },
+ {
+  "type": "NIK",
+  "value": "1234567890",
+  "out": "1234********7890"
+ },
+ {
+  "type": "NIK",
+  "value": "🌸 Dewi Lestari",
+  "out": "********"
+ },
+ {
+  "type": "NIK",
+  "value": "😀budi@gmail.com",
+  "out": "********"
+ },
+ {
+  "type": "KK",
+  "value": "3201011508950001",
+  "out": "3201********0001"
+ },
+ {
+  "type": "KK",
+  "value": "0812-3456-7890",
+  "out": "0812********7890"
+ },
+ {
+  "type": "KK",
+  "value": "budi@gmail.com",
+  "out": "********"
+ },
+ {
+  "type": "KK",
+  "value": "B 1234 XYZ",
+  "out": "1234********1234"
+ },
+ {
+  "type": "KK",
+  "value": "182.253.10.15",
+  "out": "1822********1015"
+ },
+ {
+  "type": "KK",
+  "value": "-6.200000, 106.816666",
+  "out": "6200********6666"
+ },
+ {
+  "type": "KK",
+  "value": "Budi Santoso",
+  "out": "********"
+ },
+ {
+  "type": "KK",
+  "value": "Jl. Mawar No. 5",
+  "out": "5********5"
+ },
+ {
+  "type": "KK",
+  "value": "A1234567",
+  "out": "1234********4567"
+ },
+ {
+  "type": "KK",
+  "value": "19950815 202012 1 001",
+  "out": "1995********1001"
+ },
+ {
+  "type": "KK",
+  "value": "1234567890",
+  "out": "1234********7890"
+ },
+ {
+  "type": "KK",
+  "value": "🌸 Dewi Lestari",
+  "out": "********"
+ },
+ {
+  "type": "KK",
+  "value": "😀budi@gmail.com",
+  "out": "********"
+ },
+ {
+  "type": "NPWP",
+  "value": "3201011508950001",
+  "out": "************0001"
+ },
+ {
+  "type": "NPWP",
+  "value": "0812-3456-7890",
+  "out": "********7890"
+ },
+ {
+  "type": "NPWP",
+  "value": "budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "NPWP",
+  "value": "B 1234 XYZ",
+  "out": "***1234"
+ },
+ {
+  "type": "NPWP",
+  "value": "182.253.10.15",
+  "out": "******1015"
+ },
+ {
+  "type": "NPWP",
+  "value": "-6.200000, 106.816666",
+  "out": "************6666"
+ },
+ {
+  "type": "NPWP",
+  "value": "Budi Santoso",
+  "out": "***"
+ },
+ {
+  "type": "NPWP",
+  "value": "Jl. Mawar No. 5",
+  "out": "***5"
+ },
+ {
+  "type": "NPWP",
+  "value": "A1234567",
+  "out": "***4567"
+ },
+ {
+  "type": "NPWP",
+  "value": "19950815 202012 1 001",
+  "out": "**************1001"
+ },
+ {
+  "type": "NPWP",
+  "value": "1234567890",
+  "out": "******7890"
+ },
+ {
+  "type": "NPWP",
+  "value": "🌸 Dewi Lestari",
+  "out": "***"
+ },
+ {
+  "type": "NPWP",
+  "value": "😀budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "PASSPORT",
+  "value": "3201011508950001",
+  "out": "3*****01"
+ },
+ {
+  "type": "PASSPORT",
+  "value": "0812-3456-7890",
+  "out": "0*****90"
+ },
+ {
+  "type": "PASSPORT",
+  "value": "budi@gmail.com",
+  "out": "b*****om"
+ },
+ {
+  "type": "PASSPORT",
+  "value": "B 1234 XYZ",
+  "out": "B*****YZ"
+ },
+ {
+  "type": "PASSPORT",
+  "value": "182.253.10.15",
+  "out": "1*****15"
+ },
+ {
+  "type": "PASSPORT",
+  "value": "-6.200000, 106.816666",
+  "out": "-*****66"
+ },
+ {
+  "type": "PASSPORT",
+  "value": "Budi Santoso",
+  "out": "B*****so"
+ },
+ {
+  "type": "PASSPORT",
+  "value": "Jl. Mawar No. 5",
+  "out": "J***** 5"
+ },
+ {
+  "type": "PASSPORT",
+  "value": "A1234567",
+  "out": "A*****67"
+ },
+ {
+  "type": "PASSPORT",
+  "value": "19950815 202012 1 001",
+  "out": "1*****01"
+ },
+ {
+  "type": "PASSPORT",
+  "value": "1234567890",
+  "out": "1*****90"
+ },
+ {
+  "type": "PASSPORT",
+  "value": "🌸 Dewi Lestari",
+  "out": "🌸*****ri"
+ },
+ {
+  "type": "PASSPORT",
+  "value": "😀budi@gmail.com",
+  "out": "😀*****om"
+ },
+ {
+  "type": "SIM",
+  "value": "3201011508950001",
+  "out": "*************001"
+ },
+ {
+  "type": "SIM",
+  "value": "0812-3456-7890",
+  "out": "*********890"
+ },
+ {
+  "type": "SIM",
+  "value": "budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "SIM",
+  "value": "B 1234 XYZ",
+  "out": "***234"
+ },
+ {
+  "type": "SIM",
+  "value": "182.253.10.15",
+  "out": "*******015"
+ },
+ {
+  "type": "SIM",
+  "value": "-6.200000, 106.816666",
+  "out": "*************666"
+ },
+ {
+  "type": "SIM",
+  "value": "Budi Santoso",
+  "out": "***"
+ },
+ {
+  "type": "SIM",
+  "value": "Jl. Mawar No. 5",
+  "out": "***5"
+ },
+ {
+  "type": "SIM",
+  "value": "A1234567",
+  "out": "****567"
+ },
+ {
+  "type": "SIM",
+  "value": "19950815 202012 1 001",
+  "out": "***************001"
+ },
+ {
+  "type": "SIM",
+  "value": "1234567890",
+  "out": "*******890"
+ },
+ {
+  "type": "SIM",
+  "value": "🌸 Dewi Lestari",
+  "out": "***"
+ },
+ {
+  "type": "SIM",
+  "value": "😀budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "NIP",
+  "value": "3201011508950001",
+  "out": "*************001"
+ },
+ {
+  "type": "NIP",
+  "value": "0812-3456-7890",
+  "out": "*********890"
+ },
+ {
+  "type": "NIP",
+  "value": "budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "NIP",
+  "value": "B 1234 XYZ",
+  "out": "***234"
+ },
+ {
+  "type": "NIP",
+  "value": "182.253.10.15",
+  "out": "*******015"
+ },
+ {
+  "type": "NIP",
+  "value": "-6.200000, 106.816666",
+  "out": "*************666"
+ },
+ {
+  "type": "NIP",
+  "value": "Budi Santoso",
+  "out": "***"
+ },
+ {
+  "type": "NIP",
+  "value": "Jl. Mawar No. 5",
+  "out": "***5"
+ },
+ {
+  "type": "NIP",
+  "value": "A1234567",
+  "out": "****567"
+ },
+ {
+  "type": "NIP",
+  "value": "19950815 202012 1 001",
+  "out": "***************001"
+ },
+ {
+  "type": "NIP",
+  "value": "1234567890",
+  "out": "*******890"
+ },
+ {
+  "type": "NIP",
+  "value": "🌸 Dewi Lestari",
+  "out": "***"
+ },
+ {
+  "type": "NIP",
+  "value": "😀budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "BPJS",
+  "value": "3201011508950001",
+  "out": "************0001"
+ },
+ {
+  "type": "BPJS",
+  "value": "0812-3456-7890",
+  "out": "********7890"
+ },
+ {
+  "type": "BPJS",
+  "value": "budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "BPJS",
+  "value": "B 1234 XYZ",
+  "out": "***1234"
+ },
+ {
+  "type": "BPJS",
+  "value": "182.253.10.15",
+  "out": "******1015"
+ },
+ {
+  "type": "BPJS",
+  "value": "-6.200000, 106.816666",
+  "out": "************6666"
+ },
+ {
+  "type": "BPJS",
+  "value": "Budi Santoso",
+  "out": "***"
+ },
+ {
+  "type": "BPJS",
+  "value": "Jl. Mawar No. 5",
+  "out": "***5"
+ },
+ {
+  "type": "BPJS",
+  "value": "A1234567",
+  "out": "***4567"
+ },
+ {
+  "type": "BPJS",
+  "value": "19950815 202012 1 001",
+  "out": "**************1001"
+ },
+ {
+  "type": "BPJS",
+  "value": "1234567890",
+  "out": "******7890"
+ },
+ {
+  "type": "BPJS",
+  "value": "🌸 Dewi Lestari",
+  "out": "***"
+ },
+ {
+  "type": "BPJS",
+  "value": "😀budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "PHONE",
+  "value": "3201011508950001",
+  "out": "3201********0001"
+ },
+ {
+  "type": "PHONE",
+  "value": "0812-3456-7890",
+  "out": "0812****7890"
+ },
+ {
+  "type": "PHONE",
+  "value": "budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "PHONE",
+  "value": "B 1234 XYZ",
+  "out": "1234***1234"
+ },
+ {
+  "type": "PHONE",
+  "value": "182.253.10.15",
+  "out": "1822***1015"
+ },
+ {
+  "type": "PHONE",
+  "value": "-6.200000, 106.816666",
+  "out": "6200********6666"
+ },
+ {
+  "type": "PHONE",
+  "value": "Budi Santoso",
+  "out": "***"
+ },
+ {
+  "type": "PHONE",
+  "value": "Jl. Mawar No. 5",
+  "out": "5***5"
+ },
+ {
+  "type": "PHONE",
+  "value": "A1234567",
+  "out": "1234***4567"
+ },
+ {
+  "type": "PHONE",
+  "value": "19950815 202012 1 001",
+  "out": "1995**********1001"
+ },
+ {
+  "type": "PHONE",
+  "value": "1234567890",
+  "out": "1234***7890"
+ },
+ {
+  "type": "PHONE",
+  "value": "🌸 Dewi Lestari",
+  "out": "***"
+ },
+ {
+  "type": "PHONE",
+  "value": "😀budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "EMAIL",
+  "value": "3201011508950001",
+  "out": "3***@"
+ },
+ {
+  "type": "EMAIL",
+  "value": "0812-3456-7890",
+  "out": "0***@"
+ },
+ {
+  "type": "EMAIL",
+  "value": "budi@gmail.com",
+  "out": "b***@gmail.com"
+ },
+ {
+  "type": "EMAIL",
+  "value": "B 1234 XYZ",
+  "out": "B***@"
+ },
+ {
+  "type": "EMAIL",
+  "value": "182.253.10.15",
+  "out": "1***@"
+ },
+ {
+  "type": "EMAIL",
+  "value": "-6.200000, 106.816666",
+  "out": "-***@"
+ },
+ {
+  "type": "EMAIL",
+  "value": "Budi Santoso",
+  "out": "B***@"
+ },
+ {
+  "type": "EMAIL",
+  "value": "Jl. Mawar No. 5",
+  "out": "J***@"
+ },
+ {
+  "type": "EMAIL",
+  "value": "A1234567",
+  "out": "A***@"
+ },
+ {
+  "type": "EMAIL",
+  "value": "19950815 202012 1 001",
+  "out": "1***@"
+ },
+ {
+  "type": "EMAIL",
+  "value": "1234567890",
+  "out": "1***@"
+ },
+ {
+  "type": "EMAIL",
+  "value": "🌸 Dewi Lestari",
+  "out": "🌸***@"
+ },
+ {
+  "type": "EMAIL",
+  "value": "😀budi@gmail.com",
+  "out": "😀***@gmail.com"
+ },
+ {
+  "type": "BANK_ACCOUNT",
+  "value": "3201011508950001",
+  "out": "************0001"
+ },
+ {
+  "type": "BANK_ACCOUNT",
+  "value": "0812-3456-7890",
+  "out": "********7890"
+ },
+ {
+  "type": "BANK_ACCOUNT",
+  "value": "budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "BANK_ACCOUNT",
+  "value": "B 1234 XYZ",
+  "out": "***1234"
+ },
+ {
+  "type": "BANK_ACCOUNT",
+  "value": "182.253.10.15",
+  "out": "******1015"
+ },
+ {
+  "type": "BANK_ACCOUNT",
+  "value": "-6.200000, 106.816666",
+  "out": "************6666"
+ },
+ {
+  "type": "BANK_ACCOUNT",
+  "value": "Budi Santoso",
+  "out": "***"
+ },
+ {
+  "type": "BANK_ACCOUNT",
+  "value": "Jl. Mawar No. 5",
+  "out": "***5"
+ },
+ {
+  "type": "BANK_ACCOUNT",
+  "value": "A1234567",
+  "out": "***4567"
+ },
+ {
+  "type": "BANK_ACCOUNT",
+  "value": "19950815 202012 1 001",
+  "out": "**************1001"
+ },
+ {
+  "type": "BANK_ACCOUNT",
+  "value": "1234567890",
+  "out": "******7890"
+ },
+ {
+  "type": "BANK_ACCOUNT",
+  "value": "🌸 Dewi Lestari",
+  "out": "***"
+ },
+ {
+  "type": "BANK_ACCOUNT",
+  "value": "😀budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "CARD",
+  "value": "3201011508950001",
+  "out": "************0001"
+ },
+ {
+  "type": "CARD",
+  "value": "0812-3456-7890",
+  "out": "********7890"
+ },
+ {
+  "type": "CARD",
+  "value": "budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "CARD",
+  "value": "B 1234 XYZ",
+  "out": "***1234"
+ },
+ {
+  "type": "CARD",
+  "value": "182.253.10.15",
+  "out": "******1015"
+ },
+ {
+  "type": "CARD",
+  "value": "-6.200000, 106.816666",
+  "out": "************6666"
+ },
+ {
+  "type": "CARD",
+  "value": "Budi Santoso",
+  "out": "***"
+ },
+ {
+  "type": "CARD",
+  "value": "Jl. Mawar No. 5",
+  "out": "***5"
+ },
+ {
+  "type": "CARD",
+  "value": "A1234567",
+  "out": "***4567"
+ },
+ {
+  "type": "CARD",
+  "value": "19950815 202012 1 001",
+  "out": "**************1001"
+ },
+ {
+  "type": "CARD",
+  "value": "1234567890",
+  "out": "******7890"
+ },
+ {
+  "type": "CARD",
+  "value": "🌸 Dewi Lestari",
+  "out": "***"
+ },
+ {
+  "type": "CARD",
+  "value": "😀budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "PLATE",
+  "value": "3201011508950001",
+  "out": " ****"
+ },
+ {
+  "type": "PLATE",
+  "value": "0812-3456-7890",
+  "out": " ****"
+ },
+ {
+  "type": "PLATE",
+  "value": "budi@gmail.com",
+  "out": "budi@gmail.com ****"
+ },
+ {
+  "type": "PLATE",
+  "value": "B 1234 XYZ",
+  "out": "B ****"
+ },
+ {
+  "type": "PLATE",
+  "value": "182.253.10.15",
+  "out": " ****"
+ },
+ {
+  "type": "PLATE",
+  "value": "-6.200000, 106.816666",
+  "out": "- ****"
+ },
+ {
+  "type": "PLATE",
+  "value": "Budi Santoso",
+  "out": "Budi ****"
+ },
+ {
+  "type": "PLATE",
+  "value": "Jl. Mawar No. 5",
+  "out": "Jl. ****"
+ },
+ {
+  "type": "PLATE",
+  "value": "A1234567",
+  "out": "A ****"
+ },
+ {
+  "type": "PLATE",
+  "value": "19950815 202012 1 001",
+  "out": " ****"
+ },
+ {
+  "type": "PLATE",
+  "value": "1234567890",
+  "out": " ****"
+ },
+ {
+  "type": "PLATE",
+  "value": "🌸 Dewi Lestari",
+  "out": "🌸 ****"
+ },
+ {
+  "type": "PLATE",
+  "value": "😀budi@gmail.com",
+  "out": "😀budi@gmail.com ****"
+ },
+ {
+  "type": "IP",
+  "value": "3201011508950001",
+  "out": "3201011508950001.undefined.*.*"
+ },
+ {
+  "type": "IP",
+  "value": "0812-3456-7890",
+  "out": "0812-3456-7890.undefined.*.*"
+ },
+ {
+  "type": "IP",
+  "value": "budi@gmail.com",
+  "out": "budi@gmail.com.*.*"
+ },
+ {
+  "type": "IP",
+  "value": "B 1234 XYZ",
+  "out": "B 1234 XYZ.undefined.*.*"
+ },
+ {
+  "type": "IP",
+  "value": "182.253.10.15",
+  "out": "182.253.*.*"
+ },
+ {
+  "type": "IP",
+  "value": "-6.200000, 106.816666",
+  "out": "-6.200000, 106.*.*"
+ },
+ {
+  "type": "IP",
+  "value": "Budi Santoso",
+  "out": "Budi Santoso.undefined.*.*"
+ },
+ {
+  "type": "IP",
+  "value": "Jl. Mawar No. 5",
+  "out": "Jl. Mawar No.*.*"
+ },
+ {
+  "type": "IP",
+  "value": "A1234567",
+  "out": "A1234567.undefined.*.*"
+ },
+ {
+  "type": "IP",
+  "value": "19950815 202012 1 001",
+  "out": "19950815 202012 1 001.undefined.*.*"
+ },
+ {
+  "type": "IP",
+  "value": "1234567890",
+  "out": "1234567890.undefined.*.*"
+ },
+ {
+  "type": "IP",
+  "value": "🌸 Dewi Lestari",
+  "out": "🌸 Dewi Lestari.undefined.*.*"
+ },
+ {
+  "type": "IP",
+  "value": "😀budi@gmail.com",
+  "out": "😀budi@gmail.com.*.*"
+ },
+ {
+  "type": "GEO",
+  "value": "3201011508950001",
+  "out": "3201011508950001"
+ },
+ {
+  "type": "GEO",
+  "value": "0812-3456-7890",
+  "out": "0812-3456-7890"
+ },
+ {
+  "type": "GEO",
+  "value": "budi@gmail.com",
+  "out": "budi@gmail.com"
+ },
+ {
+  "type": "GEO",
+  "value": "B 1234 XYZ",
+  "out": "B 1234 XYZ"
+ },
+ {
+  "type": "GEO",
+  "value": "182.253.10.15",
+  "out": "182.2***.1***.1***"
+ },
+ {
+  "type": "GEO",
+  "value": "-6.200000, 106.816666",
+  "out": "-6.2***, 106.8***"
+ },
+ {
+  "type": "GEO",
+  "value": "Budi Santoso",
+  "out": "Budi Santoso"
+ },
+ {
+  "type": "GEO",
+  "value": "Jl. Mawar No. 5",
+  "out": "Jl. Mawar No. 5"
+ },
+ {
+  "type": "GEO",
+  "value": "A1234567",
+  "out": "A1234567"
+ },
+ {
+  "type": "GEO",
+  "value": "19950815 202012 1 001",
+  "out": "19950815 202012 1 001"
+ },
+ {
+  "type": "GEO",
+  "value": "1234567890",
+  "out": "1234567890"
+ },
+ {
+  "type": "GEO",
+  "value": "🌸 Dewi Lestari",
+  "out": "🌸 Dewi Lestari"
+ },
+ {
+  "type": "GEO",
+  "value": "😀budi@gmail.com",
+  "out": "😀budi@gmail.com"
+ },
+ {
+  "type": "NAME",
+  "value": "3201011508950001",
+  "out": "3***"
+ },
+ {
+  "type": "NAME",
+  "value": "0812-3456-7890",
+  "out": "0***"
+ },
+ {
+  "type": "NAME",
+  "value": "budi@gmail.com",
+  "out": "b***"
+ },
+ {
+  "type": "NAME",
+  "value": "B 1234 XYZ",
+  "out": "B*** 1*** X***"
+ },
+ {
+  "type": "NAME",
+  "value": "182.253.10.15",
+  "out": "1***"
+ },
+ {
+  "type": "NAME",
+  "value": "-6.200000, 106.816666",
+  "out": "-*** 1***"
+ },
+ {
+  "type": "NAME",
+  "value": "Budi Santoso",
+  "out": "B*** S***"
+ },
+ {
+  "type": "NAME",
+  "value": "Jl. Mawar No. 5",
+  "out": "J*** M*** N*** 5***"
+ },
+ {
+  "type": "NAME",
+  "value": "A1234567",
+  "out": "A***"
+ },
+ {
+  "type": "NAME",
+  "value": "19950815 202012 1 001",
+  "out": "1*** 2*** 1*** 0***"
+ },
+ {
+  "type": "NAME",
+  "value": "1234567890",
+  "out": "1***"
+ },
+ {
+  "type": "NAME",
+  "value": "🌸 Dewi Lestari",
+  "out": "🌸*** D*** L***"
+ },
+ {
+  "type": "NAME",
+  "value": "😀budi@gmail.com",
+  "out": "😀***"
+ },
+ {
+  "type": "ADDRESS",
+  "value": "3201011508950001",
+  "out": "3201011508950001 ***"
+ },
+ {
+  "type": "ADDRESS",
+  "value": "0812-3456-7890",
+  "out": "0812-3456-7890 ***"
+ },
+ {
+  "type": "ADDRESS",
+  "value": "budi@gmail.com",
+  "out": "budi@gmail.com ***"
+ },
+ {
+  "type": "ADDRESS",
+  "value": "B 1234 XYZ",
+  "out": "B ***"
+ },
+ {
+  "type": "ADDRESS",
+  "value": "182.253.10.15",
+  "out": "182.253.10.15 ***"
+ },
+ {
+  "type": "ADDRESS",
+  "value": "-6.200000, 106.816666",
+  "out": "-6.200000, ***"
+ },
+ {
+  "type": "ADDRESS",
+  "value": "Budi Santoso",
+  "out": "Budi ***"
+ },
+ {
+  "type": "ADDRESS",
+  "value": "Jl. Mawar No. 5",
+  "out": "Jl. ***"
+ },
+ {
+  "type": "ADDRESS",
+  "value": "A1234567",
+  "out": "A1234567 ***"
+ },
+ {
+  "type": "ADDRESS",
+  "value": "19950815 202012 1 001",
+  "out": "19950815 ***"
+ },
+ {
+  "type": "ADDRESS",
+  "value": "1234567890",
+  "out": "1234567890 ***"
+ },
+ {
+  "type": "ADDRESS",
+  "value": "🌸 Dewi Lestari",
+  "out": "🌸 ***"
+ },
+ {
+  "type": "ADDRESS",
+  "value": "😀budi@gmail.com",
+  "out": "😀budi@gmail.com ***"
+ },
+ {
+  "type": "BIRTH_DATE",
+  "value": "3201011508950001",
+  "out": "***"
+ },
+ {
+  "type": "BIRTH_DATE",
+  "value": "0812-3456-7890",
+  "out": "***"
+ },
+ {
+  "type": "BIRTH_DATE",
+  "value": "budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "BIRTH_DATE",
+  "value": "B 1234 XYZ",
+  "out": "***"
+ },
+ {
+  "type": "BIRTH_DATE",
+  "value": "182.253.10.15",
+  "out": "***"
+ },
+ {
+  "type": "BIRTH_DATE",
+  "value": "-6.200000, 106.816666",
+  "out": "***"
+ },
+ {
+  "type": "BIRTH_DATE",
+  "value": "Budi Santoso",
+  "out": "***"
+ },
+ {
+  "type": "BIRTH_DATE",
+  "value": "Jl. Mawar No. 5",
+  "out": "***"
+ },
+ {
+  "type": "BIRTH_DATE",
+  "value": "A1234567",
+  "out": "***"
+ },
+ {
+  "type": "BIRTH_DATE",
+  "value": "19950815 202012 1 001",
+  "out": "***"
+ },
+ {
+  "type": "BIRTH_DATE",
+  "value": "1234567890",
+  "out": "***"
+ },
+ {
+  "type": "BIRTH_DATE",
+  "value": "🌸 Dewi Lestari",
+  "out": "***"
+ },
+ {
+  "type": "BIRTH_DATE",
+  "value": "😀budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "GENDER",
+  "value": "3201011508950001",
+  "out": "***"
+ },
+ {
+  "type": "GENDER",
+  "value": "0812-3456-7890",
+  "out": "***"
+ },
+ {
+  "type": "GENDER",
+  "value": "budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "GENDER",
+  "value": "B 1234 XYZ",
+  "out": "***"
+ },
+ {
+  "type": "GENDER",
+  "value": "182.253.10.15",
+  "out": "***"
+ },
+ {
+  "type": "GENDER",
+  "value": "-6.200000, 106.816666",
+  "out": "***"
+ },
+ {
+  "type": "GENDER",
+  "value": "Budi Santoso",
+  "out": "***"
+ },
+ {
+  "type": "GENDER",
+  "value": "Jl. Mawar No. 5",
+  "out": "***"
+ },
+ {
+  "type": "GENDER",
+  "value": "A1234567",
+  "out": "***"
+ },
+ {
+  "type": "GENDER",
+  "value": "19950815 202012 1 001",
+  "out": "***"
+ },
+ {
+  "type": "GENDER",
+  "value": "1234567890",
+  "out": "***"
+ },
+ {
+  "type": "GENDER",
+  "value": "🌸 Dewi Lestari",
+  "out": "***"
+ },
+ {
+  "type": "GENDER",
+  "value": "😀budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "RELIGION",
+  "value": "3201011508950001",
+  "out": "***"
+ },
+ {
+  "type": "RELIGION",
+  "value": "0812-3456-7890",
+  "out": "***"
+ },
+ {
+  "type": "RELIGION",
+  "value": "budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "RELIGION",
+  "value": "B 1234 XYZ",
+  "out": "***"
+ },
+ {
+  "type": "RELIGION",
+  "value": "182.253.10.15",
+  "out": "***"
+ },
+ {
+  "type": "RELIGION",
+  "value": "-6.200000, 106.816666",
+  "out": "***"
+ },
+ {
+  "type": "RELIGION",
+  "value": "Budi Santoso",
+  "out": "***"
+ },
+ {
+  "type": "RELIGION",
+  "value": "Jl. Mawar No. 5",
+  "out": "***"
+ },
+ {
+  "type": "RELIGION",
+  "value": "A1234567",
+  "out": "***"
+ },
+ {
+  "type": "RELIGION",
+  "value": "19950815 202012 1 001",
+  "out": "***"
+ },
+ {
+  "type": "RELIGION",
+  "value": "1234567890",
+  "out": "***"
+ },
+ {
+  "type": "RELIGION",
+  "value": "🌸 Dewi Lestari",
+  "out": "***"
+ },
+ {
+  "type": "RELIGION",
+  "value": "😀budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "MARITAL_STATUS",
+  "value": "3201011508950001",
+  "out": "***"
+ },
+ {
+  "type": "MARITAL_STATUS",
+  "value": "0812-3456-7890",
+  "out": "***"
+ },
+ {
+  "type": "MARITAL_STATUS",
+  "value": "budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "MARITAL_STATUS",
+  "value": "B 1234 XYZ",
+  "out": "***"
+ },
+ {
+  "type": "MARITAL_STATUS",
+  "value": "182.253.10.15",
+  "out": "***"
+ },
+ {
+  "type": "MARITAL_STATUS",
+  "value": "-6.200000, 106.816666",
+  "out": "***"
+ },
+ {
+  "type": "MARITAL_STATUS",
+  "value": "Budi Santoso",
+  "out": "***"
+ },
+ {
+  "type": "MARITAL_STATUS",
+  "value": "Jl. Mawar No. 5",
+  "out": "***"
+ },
+ {
+  "type": "MARITAL_STATUS",
+  "value": "A1234567",
+  "out": "***"
+ },
+ {
+  "type": "MARITAL_STATUS",
+  "value": "19950815 202012 1 001",
+  "out": "***"
+ },
+ {
+  "type": "MARITAL_STATUS",
+  "value": "1234567890",
+  "out": "***"
+ },
+ {
+  "type": "MARITAL_STATUS",
+  "value": "🌸 Dewi Lestari",
+  "out": "***"
+ },
+ {
+  "type": "MARITAL_STATUS",
+  "value": "😀budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "NATIONALITY",
+  "value": "3201011508950001",
+  "out": "***"
+ },
+ {
+  "type": "NATIONALITY",
+  "value": "0812-3456-7890",
+  "out": "***"
+ },
+ {
+  "type": "NATIONALITY",
+  "value": "budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "NATIONALITY",
+  "value": "B 1234 XYZ",
+  "out": "***"
+ },
+ {
+  "type": "NATIONALITY",
+  "value": "182.253.10.15",
+  "out": "***"
+ },
+ {
+  "type": "NATIONALITY",
+  "value": "-6.200000, 106.816666",
+  "out": "***"
+ },
+ {
+  "type": "NATIONALITY",
+  "value": "Budi Santoso",
+  "out": "***"
+ },
+ {
+  "type": "NATIONALITY",
+  "value": "Jl. Mawar No. 5",
+  "out": "***"
+ },
+ {
+  "type": "NATIONALITY",
+  "value": "A1234567",
+  "out": "***"
+ },
+ {
+  "type": "NATIONALITY",
+  "value": "19950815 202012 1 001",
+  "out": "***"
+ },
+ {
+  "type": "NATIONALITY",
+  "value": "1234567890",
+  "out": "***"
+ },
+ {
+  "type": "NATIONALITY",
+  "value": "🌸 Dewi Lestari",
+  "out": "***"
+ },
+ {
+  "type": "NATIONALITY",
+  "value": "😀budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "HEALTH",
+  "value": "3201011508950001",
+  "out": "***"
+ },
+ {
+  "type": "HEALTH",
+  "value": "0812-3456-7890",
+  "out": "***"
+ },
+ {
+  "type": "HEALTH",
+  "value": "budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "HEALTH",
+  "value": "B 1234 XYZ",
+  "out": "***"
+ },
+ {
+  "type": "HEALTH",
+  "value": "182.253.10.15",
+  "out": "***"
+ },
+ {
+  "type": "HEALTH",
+  "value": "-6.200000, 106.816666",
+  "out": "***"
+ },
+ {
+  "type": "HEALTH",
+  "value": "Budi Santoso",
+  "out": "***"
+ },
+ {
+  "type": "HEALTH",
+  "value": "Jl. Mawar No. 5",
+  "out": "***"
+ },
+ {
+  "type": "HEALTH",
+  "value": "A1234567",
+  "out": "***"
+ },
+ {
+  "type": "HEALTH",
+  "value": "19950815 202012 1 001",
+  "out": "***"
+ },
+ {
+  "type": "HEALTH",
+  "value": "1234567890",
+  "out": "***"
+ },
+ {
+  "type": "HEALTH",
+  "value": "🌸 Dewi Lestari",
+  "out": "***"
+ },
+ {
+  "type": "HEALTH",
+  "value": "😀budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "FINANCIAL",
+  "value": "3201011508950001",
+  "out": "***"
+ },
+ {
+  "type": "FINANCIAL",
+  "value": "0812-3456-7890",
+  "out": "***"
+ },
+ {
+  "type": "FINANCIAL",
+  "value": "budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "FINANCIAL",
+  "value": "B 1234 XYZ",
+  "out": "***"
+ },
+ {
+  "type": "FINANCIAL",
+  "value": "182.253.10.15",
+  "out": "***"
+ },
+ {
+  "type": "FINANCIAL",
+  "value": "-6.200000, 106.816666",
+  "out": "***"
+ },
+ {
+  "type": "FINANCIAL",
+  "value": "Budi Santoso",
+  "out": "***"
+ },
+ {
+  "type": "FINANCIAL",
+  "value": "Jl. Mawar No. 5",
+  "out": "***"
+ },
+ {
+  "type": "FINANCIAL",
+  "value": "A1234567",
+  "out": "***"
+ },
+ {
+  "type": "FINANCIAL",
+  "value": "19950815 202012 1 001",
+  "out": "***"
+ },
+ {
+  "type": "FINANCIAL",
+  "value": "1234567890",
+  "out": "***"
+ },
+ {
+  "type": "FINANCIAL",
+  "value": "🌸 Dewi Lestari",
+  "out": "***"
+ },
+ {
+  "type": "FINANCIAL",
+  "value": "😀budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "CRIMINAL_RECORD",
+  "value": "3201011508950001",
+  "out": "***"
+ },
+ {
+  "type": "CRIMINAL_RECORD",
+  "value": "0812-3456-7890",
+  "out": "***"
+ },
+ {
+  "type": "CRIMINAL_RECORD",
+  "value": "budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "CRIMINAL_RECORD",
+  "value": "B 1234 XYZ",
+  "out": "***"
+ },
+ {
+  "type": "CRIMINAL_RECORD",
+  "value": "182.253.10.15",
+  "out": "***"
+ },
+ {
+  "type": "CRIMINAL_RECORD",
+  "value": "-6.200000, 106.816666",
+  "out": "***"
+ },
+ {
+  "type": "CRIMINAL_RECORD",
+  "value": "Budi Santoso",
+  "out": "***"
+ },
+ {
+  "type": "CRIMINAL_RECORD",
+  "value": "Jl. Mawar No. 5",
+  "out": "***"
+ },
+ {
+  "type": "CRIMINAL_RECORD",
+  "value": "A1234567",
+  "out": "***"
+ },
+ {
+  "type": "CRIMINAL_RECORD",
+  "value": "19950815 202012 1 001",
+  "out": "***"
+ },
+ {
+  "type": "CRIMINAL_RECORD",
+  "value": "1234567890",
+  "out": "***"
+ },
+ {
+  "type": "CRIMINAL_RECORD",
+  "value": "🌸 Dewi Lestari",
+  "out": "***"
+ },
+ {
+  "type": "CRIMINAL_RECORD",
+  "value": "😀budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "BIOMETRIC",
+  "value": "3201011508950001",
+  "out": "***"
+ },
+ {
+  "type": "BIOMETRIC",
+  "value": "0812-3456-7890",
+  "out": "***"
+ },
+ {
+  "type": "BIOMETRIC",
+  "value": "budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "BIOMETRIC",
+  "value": "B 1234 XYZ",
+  "out": "***"
+ },
+ {
+  "type": "BIOMETRIC",
+  "value": "182.253.10.15",
+  "out": "***"
+ },
+ {
+  "type": "BIOMETRIC",
+  "value": "-6.200000, 106.816666",
+  "out": "***"
+ },
+ {
+  "type": "BIOMETRIC",
+  "value": "Budi Santoso",
+  "out": "***"
+ },
+ {
+  "type": "BIOMETRIC",
+  "value": "Jl. Mawar No. 5",
+  "out": "***"
+ },
+ {
+  "type": "BIOMETRIC",
+  "value": "A1234567",
+  "out": "***"
+ },
+ {
+  "type": "BIOMETRIC",
+  "value": "19950815 202012 1 001",
+  "out": "***"
+ },
+ {
+  "type": "BIOMETRIC",
+  "value": "1234567890",
+  "out": "***"
+ },
+ {
+  "type": "BIOMETRIC",
+  "value": "🌸 Dewi Lestari",
+  "out": "***"
+ },
+ {
+  "type": "BIOMETRIC",
+  "value": "😀budi@gmail.com",
+  "out": "***"
+ }
+]

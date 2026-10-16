@@ -1,0 +1,2256 @@
+[
+ {
+  "amount": 0,
+  "plain": "Rp0",
+  "decimals": "Rp0,00",
+  "noSymbol": "0",
+  "short": "Rp0"
+ },
+ {
+  "amount": 1,
+  "plain": "Rp1",
+  "decimals": "Rp1,00",
+  "noSymbol": "1",
+  "short": "Rp1"
+ },
+ {
+  "amount": 999,
+  "plain": "Rp999",
+  "decimals": "Rp999,00",
+  "noSymbol": "999",
+  "short": "Rp999"
+ },
+ {
+  "amount": 1000,
+  "plain": "Rp1.000",
+  "decimals": "Rp1.000,00",
+  "noSymbol": "1.000",
+  "short": "Rp1 rb"
+ },
+ {
+  "amount": 1500000,
+  "plain": "Rp1.500.000",
+  "decimals": "Rp1.500.000,00",
+  "noSymbol": "1.500.000",
+  "short": "Rp1,5 jt"
+ },
+ {
+  "amount": -25000,
+  "plain": "-Rp25.000",
+  "decimals": "-Rp25.000,00",
+  "noSymbol": "-25.000",
+  "short": "-Rp25 rb"
+ },
+ {
+  "amount": 1500000.5,
+  "plain": "Rp1.500.001",
+  "decimals": "Rp1.500.000,50",
+  "noSymbol": "1.500.001",
+  "short": "Rp1,5 jt"
+ },
+ {
+  "amount": 0.125,
+  "plain": "Rp0",
+  "decimals": "Rp0,13",
+  "noSymbol": "0",
+  "short": "Rp0"
+ },
+ {
+  "amount": 2.5,
+  "plain": "Rp3",
+  "decimals": "Rp2,50",
+  "noSymbol": "3",
+  "short": "Rp3"
+ },
+ {
+  "amount": -0.4,
+  "plain": "Rp0",
+  "decimals": "-Rp0,40",
+  "noSymbol": "0",
+  "short": "-Rp0"
+ },
+ {
+  "amount": 1.005,
+  "plain": "Rp1",
+  "decimals": "Rp1,00",
+  "noSymbol": "1",
+  "short": "Rp1"
+ },
+ {
+  "amount": 2.675,
+  "plain": "Rp3",
+  "decimals": "Rp2,67",
+  "noSymbol": "3",
+  "short": "Rp3"
+ },
+ {
+  "amount": 999.5,
+  "plain": "Rp1.000",
+  "decimals": "Rp999,50",
+  "noSymbol": "1.000",
+  "short": "Rp1 rb"
+ },
+ {
+  "amount": 1000000000000000,
+  "plain": "Rp1.000.000.000.000.000",
+  "decimals": "Rp1.000.000.000.000.000,00",
+  "noSymbol": "1.000.000.000.000.000",
+  "short": "Rp1000 T"
+ },
+ {
+  "amount": 123456789.987,
+  "plain": "Rp123.456.790",
+  "decimals": "Rp123.456.789,99",
+  "noSymbol": "123.456.790",
+  "short": "Rp123,5 jt"
+ },
+ {
+  "amount": 1e+21,
+  "plain": "Rp1.000.000.000.000.000.000.000",
+  "decimals": "Rp1.000.000.000.000.000.000.000,00",
+  "noSymbol": "1.000.000.000.000.000.000.000",
+  "short": "Rp1000000000 T"
+ },
+ {
+  "amount": 0.004,
+  "plain": "Rp0",
+  "decimals": "Rp0,00",
+  "noSymbol": "0",
+  "short": "Rp0"
+ },
+ {
+  "amount": -0.005,
+  "plain": "Rp0",
+  "decimals": "-Rp0,01",
+  "noSymbol": "0",
+  "short": "-Rp0"
+ },
+ {
+  "amount": 99999.995,
+  "plain": "Rp100.000",
+  "decimals": "Rp99.999,99",
+  "noSymbol": "100.000",
+  "short": "Rp100 rb"
+ },
+ {
+  "amount": 1234.5678,
+  "plain": "Rp1.235",
+  "decimals": "Rp1.234,57",
+  "noSymbol": "1.235",
+  "short": "Rp1,2 rb"
+ },
+ {
+  "amount": 3.5,
+  "plain": "Rp4",
+  "decimals": "Rp3,50",
+  "noSymbol": "4",
+  "short": "Rp4"
+ },
+ {
+  "amount": 4.5,
+  "plain": "Rp5",
+  "decimals": "Rp4,50",
+  "noSymbol": "5",
+  "short": "Rp5"
+ },
+ {
+  "amount": 8421142057050.02,
+  "plain": "Rp8.421.142.057.050",
+  "decimals": "Rp8.421.142.057.050,02",
+  "noSymbol": "8.421.142.057.050",
+  "short": "Rp8,4 T"
+ },
+ {
+  "amount": 0.67,
+  "plain": "Rp1",
+  "decimals": "Rp0,67",
+  "noSymbol": "1",
+  "short": "Rp1"
+ },
+ {
+  "amount": 681660.24,
+  "plain": "Rp681.660",
+  "decimals": "Rp681.660,24",
+  "noSymbol": "681.660",
+  "short": "Rp681,7 rb"
+ },
+ {
+  "amount": 83.26,
+  "plain": "Rp83",
+  "decimals": "Rp83,26",
+  "noSymbol": "83",
+  "short": "Rp83"
+ },
+ {
+  "amount": 448747025.34,
+  "plain": "Rp448.747.025",
+  "decimals": "Rp448.747.025,34",
+  "noSymbol": "448.747.025",
+  "short": "Rp448,7 jt"
+ },
+ {
+  "amount": 3032.29,
+  "plain": "Rp3.032",
+  "decimals": "Rp3.032,29",
+  "noSymbol": "3.032",
+  "short": "Rp3 rb"
+ },
+ {
+  "amount": 9380.3,
+  "plain": "Rp9.380",
+  "decimals": "Rp9.380,30",
+  "noSymbol": "9.380",
+  "short": "Rp9,4 rb"
+ },
+ {
+  "amount": 271759199.21,
+  "plain": "Rp271.759.199",
+  "decimals": "Rp271.759.199,21",
+  "noSymbol": "271.759.199",
+  "short": "Rp271,8 jt"
+ },
+ {
+  "amount": 1032255240716.04,
+  "plain": "Rp1.032.255.240.716",
+  "decimals": "Rp1.032.255.240.716,04",
+  "noSymbol": "1.032.255.240.716",
+  "short": "Rp1 T"
+ },
+ {
+  "amount": 9.4,
+  "plain": "Rp9",
+  "decimals": "Rp9,40",
+  "noSymbol": "9",
+  "short": "Rp9"
+ },
+ {
+  "amount": 341922.24,
+  "plain": "Rp341.922",
+  "decimals": "Rp341.922,24",
+  "noSymbol": "341.922",
+  "short": "Rp341,9 rb"
+ },
+ {
+  "amount": 938.47,
+  "plain": "Rp938",
+  "decimals": "Rp938,47",
+  "noSymbol": "938",
+  "short": "Rp938"
+ },
+ {
+  "amount": 7591.8,
+  "plain": "Rp7.592",
+  "decimals": "Rp7.591,80",
+  "noSymbol": "7.592",
+  "short": "Rp7,6 rb"
+ },
+ {
+  "amount": 33419160.15,
+  "plain": "Rp33.419.160",
+  "decimals": "Rp33.419.160,15",
+  "noSymbol": "33.419.160",
+  "short": "Rp33,4 jt"
+ },
+ {
+  "amount": 789618679.79,
+  "plain": "Rp789.618.680",
+  "decimals": "Rp789.618.679,79",
+  "noSymbol": "789.618.680",
+  "short": "Rp789,6 jt"
+ },
+ {
+  "amount": 81783.46,
+  "plain": "Rp81.783",
+  "decimals": "Rp81.783,46",
+  "noSymbol": "81.783",
+  "short": "Rp81,8 rb"
+ },
+ {
+  "amount": 956.07,
+  "plain": "Rp956",
+  "decimals": "Rp956,07",
+  "noSymbol": "956",
+  "short": "Rp956"
+ },
+ {
+  "amount": 158.87,
+  "plain": "Rp159",
+  "decimals": "Rp158,87",
+  "noSymbol": "159",
+  "short": "Rp159"
+ },
+ {
+  "amount": 7467976319.6,
+  "plain": "Rp7.467.976.320",
+  "decimals": "Rp7.467.976.319,60",
+  "noSymbol": "7.467.976.320",
+  "short": "Rp7,5 M"
+ },
+ {
+  "amount": -146660772850.74,
+  "plain": "-Rp146.660.772.851",
+  "decimals": "-Rp146.660.772.850,74",
+  "noSymbol": "-146.660.772.851",
+  "short": "-Rp146,7 M"
+ },
+ {
+  "amount": 4021594.83,
+  "plain": "Rp4.021.595",
+  "decimals": "Rp4.021.594,83",
+  "noSymbol": "4.021.595",
+  "short": "Rp4 jt"
+ },
+ {
+  "amount": -6547401351.85,
+  "plain": "-Rp6.547.401.352",
+  "decimals": "-Rp6.547.401.351,85",
+  "noSymbol": "-6.547.401.352",
+  "short": "-Rp6,5 M"
+ },
+ {
+  "amount": 655667491257.19,
+  "plain": "Rp655.667.491.257",
+  "decimals": "Rp655.667.491.257,19",
+  "noSymbol": "655.667.491.257",
+  "short": "Rp655,7 M"
+ },
+ {
+  "amount": 693028037436.31,
+  "plain": "Rp693.028.037.436",
+  "decimals": "Rp693.028.037.436,31",
+  "noSymbol": "693.028.037.436",
+  "short": "Rp693 M"
+ },
+ {
+  "amount": -2013.8,
+  "plain": "-Rp2.014",
+  "decimals": "-Rp2.013,80",
+  "noSymbol": "-2.014",
+  "short": "-Rp2 rb"
+ },
+ {
+  "amount": 88758148951.46,
+  "plain": "Rp88.758.148.951",
+  "decimals": "Rp88.758.148.951,46",
+  "noSymbol": "88.758.148.951",
+  "short": "Rp88,8 M"
+ },
+ {
+  "amount": 9441078330.86,
+  "plain": "Rp9.441.078.331",
+  "decimals": "Rp9.441.078.330,86",
+  "noSymbol": "9.441.078.331",
+  "short": "Rp9,4 M"
+ },
+ {
+  "amount": 568084532.63,
+  "plain": "Rp568.084.533",
+  "decimals": "Rp568.084.532,63",
+  "noSymbol": "568.084.533",
+  "short": "Rp568,1 jt"
+ },
+ {
+  "amount": 8617.64,
+  "plain": "Rp8.618",
+  "decimals": "Rp8.617,64",
+  "noSymbol": "8.618",
+  "short": "Rp8,6 rb"
+ },
+ {
+  "amount": 7031079.46,
+  "plain": "Rp7.031.079",
+  "decimals": "Rp7.031.079,46",
+  "noSymbol": "7.031.079",
+  "short": "Rp7 jt"
+ },
+ {
+  "amount": -0.19,
+  "plain": "Rp0",
+  "decimals": "-Rp0,19",
+  "noSymbol": "0",
+  "short": "-Rp0"
+ },
+ {
+  "amount": 5991.01,
+  "plain": "Rp5.991",
+  "decimals": "Rp5.991,01",
+  "noSymbol": "5.991",
+  "short": "Rp6 rb"
+ },
+ {
+  "amount": 784218546.47,
+  "plain": "Rp784.218.546",
+  "decimals": "Rp784.218.546,47",
+  "noSymbol": "784.218.546",
+  "short": "Rp784,2 jt"
+ },
+ {
+  "amount": 68203062703.83,
+  "plain": "Rp68.203.062.704",
+  "decimals": "Rp68.203.062.703,83",
+  "noSymbol": "68.203.062.704",
+  "short": "Rp68,2 M"
+ },
+ {
+  "amount": 71194457.45,
+  "plain": "Rp71.194.457",
+  "decimals": "Rp71.194.457,45",
+  "noSymbol": "71.194.457",
+  "short": "Rp71,2 jt"
+ },
+ {
+  "amount": 953621.88,
+  "plain": "Rp953.622",
+  "decimals": "Rp953.621,88",
+  "noSymbol": "953.622",
+  "short": "Rp953,6 rb"
+ },
+ {
+  "amount": 651084.41,
+  "plain": "Rp651.084",
+  "decimals": "Rp651.084,41",
+  "noSymbol": "651.084",
+  "short": "Rp651,1 rb"
+ },
+ {
+  "amount": 4978.96,
+  "plain": "Rp4.979",
+  "decimals": "Rp4.978,96",
+  "noSymbol": "4.979",
+  "short": "Rp5 rb"
+ },
+ {
+  "amount": 3390088.26,
+  "plain": "Rp3.390.088",
+  "decimals": "Rp3.390.088,26",
+  "noSymbol": "3.390.088",
+  "short": "Rp3,4 jt"
+ },
+ {
+  "amount": 5446138507.69,
+  "plain": "Rp5.446.138.508",
+  "decimals": "Rp5.446.138.507,69",
+  "noSymbol": "5.446.138.508",
+  "short": "Rp5,4 M"
+ },
+ {
+  "amount": 88.67,
+  "plain": "Rp89",
+  "decimals": "Rp88,67",
+  "noSymbol": "89",
+  "short": "Rp89"
+ },
+ {
+  "amount": -0.5,
+  "plain": "-Rp1",
+  "decimals": "-Rp0,50",
+  "noSymbol": "-1",
+  "short": "-Rp1"
+ },
+ {
+  "amount": 0.78,
+  "plain": "Rp1",
+  "decimals": "Rp0,78",
+  "noSymbol": "1",
+  "short": "Rp1"
+ },
+ {
+  "amount": 94427003758.03,
+  "plain": "Rp94.427.003.758",
+  "decimals": "Rp94.427.003.758,03",
+  "noSymbol": "94.427.003.758",
+  "short": "Rp94,4 M"
+ },
+ {
+  "amount": 5383115.52,
+  "plain": "Rp5.383.116",
+  "decimals": "Rp5.383.115,52",
+  "noSymbol": "5.383.116",
+  "short": "Rp5,4 jt"
+ },
+ {
+  "amount": -2.93,
+  "plain": "-Rp3",
+  "decimals": "-Rp2,93",
+  "noSymbol": "-3",
+  "short": "-Rp3"
+ },
+ {
+  "amount": -422722981.78,
+  "plain": "-Rp422.722.982",
+  "decimals": "-Rp422.722.981,78",
+  "noSymbol": "-422.722.982",
+  "short": "-Rp422,7 jt"
+ },
+ {
+  "amount": 67162178060.97,
+  "plain": "Rp67.162.178.061",
+  "decimals": "Rp67.162.178.060,97",
+  "noSymbol": "67.162.178.061",
+  "short": "Rp67,2 M"
+ },
+ {
+  "amount": 235008776187.9,
+  "plain": "Rp235.008.776.188",
+  "decimals": "Rp235.008.776.187,90",
+  "noSymbol": "235.008.776.188",
+  "short": "Rp235 M"
+ },
+ {
+  "amount": 45824016.91,
+  "plain": "Rp45.824.017",
+  "decimals": "Rp45.824.016,91",
+  "noSymbol": "45.824.017",
+  "short": "Rp45,8 jt"
+ },
+ {
+  "amount": 83399.2,
+  "plain": "Rp83.399",
+  "decimals": "Rp83.399,20",
+  "noSymbol": "83.399",
+  "short": "Rp83,4 rb"
+ },
+ {
+  "amount": 3342115.76,
+  "plain": "Rp3.342.116",
+  "decimals": "Rp3.342.115,76",
+  "noSymbol": "3.342.116",
+  "short": "Rp3,3 jt"
+ },
+ {
+  "amount": 585170425.24,
+  "plain": "Rp585.170.425",
+  "decimals": "Rp585.170.425,24",
+  "noSymbol": "585.170.425",
+  "short": "Rp585,2 jt"
+ },
+ {
+  "amount": 940983.64,
+  "plain": "Rp940.984",
+  "decimals": "Rp940.983,64",
+  "noSymbol": "940.984",
+  "short": "Rp941 rb"
+ },
+ {
+  "amount": 11589264.96,
+  "plain": "Rp11.589.265",
+  "decimals": "Rp11.589.264,96",
+  "noSymbol": "11.589.265",
+  "short": "Rp11,6 jt"
+ },
+ {
+  "amount": 5565000.46,
+  "plain": "Rp5.565.000",
+  "decimals": "Rp5.565.000,46",
+  "noSymbol": "5.565.000",
+  "short": "Rp5,6 jt"
+ },
+ {
+  "amount": 46244931.45,
+  "plain": "Rp46.244.931",
+  "decimals": "Rp46.244.931,45",
+  "noSymbol": "46.244.931",
+  "short": "Rp46,2 jt"
+ },
+ {
+  "amount": 2028618287295.1,
+  "plain": "Rp2.028.618.287.295",
+  "decimals": "Rp2.028.618.287.295,10",
+  "noSymbol": "2.028.618.287.295",
+  "short": "Rp2 T"
+ },
+ {
+  "amount": 2140.95,
+  "plain": "Rp2.141",
+  "decimals": "Rp2.140,95",
+  "noSymbol": "2.141",
+  "short": "Rp2,1 rb"
+ },
+ {
+  "amount": 136.07,
+  "plain": "Rp136",
+  "decimals": "Rp136,07",
+  "noSymbol": "136",
+  "short": "Rp136"
+ },
+ {
+  "amount": -277.94,
+  "plain": "-Rp278",
+  "decimals": "-Rp277,94",
+  "noSymbol": "-278",
+  "short": "-Rp278"
+ },
+ {
+  "amount": 3334521.08,
+  "plain": "Rp3.334.521",
+  "decimals": "Rp3.334.521,08",
+  "noSymbol": "3.334.521",
+  "short": "Rp3,3 jt"
+ },
+ {
+  "amount": 890389.89,
+  "plain": "Rp890.390",
+  "decimals": "Rp890.389,89",
+  "noSymbol": "890.390",
+  "short": "Rp890,4 rb"
+ },
+ {
+  "amount": 80357943.55,
+  "plain": "Rp80.357.944",
+  "decimals": "Rp80.357.943,55",
+  "noSymbol": "80.357.944",
+  "short": "Rp80,4 jt"
+ },
+ {
+  "amount": 970668125.9,
+  "plain": "Rp970.668.126",
+  "decimals": "Rp970.668.125,90",
+  "noSymbol": "970.668.126",
+  "short": "Rp970,7 jt"
+ },
+ {
+  "amount": 48.73,
+  "plain": "Rp49",
+  "decimals": "Rp48,73",
+  "noSymbol": "49",
+  "short": "Rp49"
+ },
+ {
+  "amount": -222267417.94,
+  "plain": "-Rp222.267.418",
+  "decimals": "-Rp222.267.417,94",
+  "noSymbol": "-222.267.418",
+  "short": "-Rp222,3 jt"
+ },
+ {
+  "amount": 5829.12,
+  "plain": "Rp5.829",
+  "decimals": "Rp5.829,12",
+  "noSymbol": "5.829",
+  "short": "Rp5,8 rb"
+ },
+ {
+  "amount": 70.64,
+  "plain": "Rp71",
+  "decimals": "Rp70,64",
+  "noSymbol": "71",
+  "short": "Rp71"
+ },
+ {
+  "amount": 524.27,
+  "plain": "Rp524",
+  "decimals": "Rp524,27",
+  "noSymbol": "524",
+  "short": "Rp524"
+ },
+ {
+  "amount": 147076.7,
+  "plain": "Rp147.077",
+  "decimals": "Rp147.076,70",
+  "noSymbol": "147.077",
+  "short": "Rp147,1 rb"
+ },
+ {
+  "amount": 2363956004846.84,
+  "plain": "Rp2.363.956.004.847",
+  "decimals": "Rp2.363.956.004.846,84",
+  "noSymbol": "2.363.956.004.847",
+  "short": "Rp2,4 T"
+ },
+ {
+  "amount": 722.13,
+  "plain": "Rp722",
+  "decimals": "Rp722,13",
+  "noSymbol": "722",
+  "short": "Rp722"
+ },
+ {
+  "amount": 7711.3,
+  "plain": "Rp7.711",
+  "decimals": "Rp7.711,30",
+  "noSymbol": "7.711",
+  "short": "Rp7,7 rb"
+ },
+ {
+  "amount": 73.56,
+  "plain": "Rp74",
+  "decimals": "Rp73,56",
+  "noSymbol": "74",
+  "short": "Rp74"
+ },
+ {
+  "amount": 3964052861556.41,
+  "plain": "Rp3.964.052.861.556",
+  "decimals": "Rp3.964.052.861.556,41",
+  "noSymbol": "3.964.052.861.556",
+  "short": "Rp4 T"
+ },
+ {
+  "amount": 11185320.72,
+  "plain": "Rp11.185.321",
+  "decimals": "Rp11.185.320,72",
+  "noSymbol": "11.185.321",
+  "short": "Rp11,2 jt"
+ },
+ {
+  "amount": 9880684.58,
+  "plain": "Rp9.880.685",
+  "decimals": "Rp9.880.684,58",
+  "noSymbol": "9.880.685",
+  "short": "Rp9,9 jt"
+ },
+ {
+  "amount": 23879.09,
+  "plain": "Rp23.879",
+  "decimals": "Rp23.879,09",
+  "noSymbol": "23.879",
+  "short": "Rp23,9 rb"
+ },
+ {
+  "amount": 0.71,
+  "plain": "Rp1",
+  "decimals": "Rp0,71",
+  "noSymbol": "1",
+  "short": "Rp1"
+ },
+ {
+  "amount": 4677713110577.32,
+  "plain": "Rp4.677.713.110.577",
+  "decimals": "Rp4.677.713.110.577,32",
+  "noSymbol": "4.677.713.110.577",
+  "short": "Rp4,7 T"
+ },
+ {
+  "amount": 7144256834.87,
+  "plain": "Rp7.144.256.835",
+  "decimals": "Rp7.144.256.834,87",
+  "noSymbol": "7.144.256.835",
+  "short": "Rp7,1 M"
+ },
+ {
+  "amount": 522996678249.91,
+  "plain": "Rp522.996.678.250",
+  "decimals": "Rp522.996.678.249,91",
+  "noSymbol": "522.996.678.250",
+  "short": "Rp523 M"
+ },
+ {
+  "amount": 547462508780.88,
+  "plain": "Rp547.462.508.781",
+  "decimals": "Rp547.462.508.780,88",
+  "noSymbol": "547.462.508.781",
+  "short": "Rp547,5 M"
+ },
+ {
+  "amount": 3098519858904.18,
+  "plain": "Rp3.098.519.858.904",
+  "decimals": "Rp3.098.519.858.904,18",
+  "noSymbol": "3.098.519.858.904",
+  "short": "Rp3,1 T"
+ },
+ {
+  "amount": 626566.87,
+  "plain": "Rp626.567",
+  "decimals": "Rp626.566,87",
+  "noSymbol": "626.567",
+  "short": "Rp626,6 rb"
+ },
+ {
+  "amount": 8744062832.56,
+  "plain": "Rp8.744.062.833",
+  "decimals": "Rp8.744.062.832,56",
+  "noSymbol": "8.744.062.833",
+  "short": "Rp8,7 M"
+ },
+ {
+  "amount": 616.94,
+  "plain": "Rp617",
+  "decimals": "Rp616,94",
+  "noSymbol": "617",
+  "short": "Rp617"
+ },
+ {
+  "amount": 9199043619.45,
+  "plain": "Rp9.199.043.619",
+  "decimals": "Rp9.199.043.619,45",
+  "noSymbol": "9.199.043.619",
+  "short": "Rp9,2 M"
+ },
+ {
+  "amount": 7.48,
+  "plain": "Rp7",
+  "decimals": "Rp7,48",
+  "noSymbol": "7",
+  "short": "Rp7"
+ },
+ {
+  "amount": 37728176.75,
+  "plain": "Rp37.728.177",
+  "decimals": "Rp37.728.176,75",
+  "noSymbol": "37.728.177",
+  "short": "Rp37,7 jt"
+ },
+ {
+  "amount": 976.65,
+  "plain": "Rp977",
+  "decimals": "Rp976,65",
+  "noSymbol": "977",
+  "short": "Rp977"
+ },
+ {
+  "amount": -862164456862.96,
+  "plain": "-Rp862.164.456.863",
+  "decimals": "-Rp862.164.456.862,96",
+  "noSymbol": "-862.164.456.863",
+  "short": "-Rp862,2 M"
+ },
+ {
+  "amount": 3213715816382.32,
+  "plain": "Rp3.213.715.816.382",
+  "decimals": "Rp3.213.715.816.382,32",
+  "noSymbol": "3.213.715.816.382",
+  "short": "Rp3,2 T"
+ },
+ {
+  "amount": 92387.95,
+  "plain": "Rp92.388",
+  "decimals": "Rp92.387,95",
+  "noSymbol": "92.388",
+  "short": "Rp92,4 rb"
+ },
+ {
+  "amount": 84318573609.93,
+  "plain": "Rp84.318.573.610",
+  "decimals": "Rp84.318.573.609,93",
+  "noSymbol": "84.318.573.610",
+  "short": "Rp84,3 M"
+ },
+ {
+  "amount": 3282859.64,
+  "plain": "Rp3.282.860",
+  "decimals": "Rp3.282.859,64",
+  "noSymbol": "3.282.860",
+  "short": "Rp3,3 jt"
+ },
+ {
+  "amount": 5233491.65,
+  "plain": "Rp5.233.492",
+  "decimals": "Rp5.233.491,65",
+  "noSymbol": "5.233.492",
+  "short": "Rp5,2 jt"
+ },
+ {
+  "amount": 18006109.91,
+  "plain": "Rp18.006.110",
+  "decimals": "Rp18.006.109,91",
+  "noSymbol": "18.006.110",
+  "short": "Rp18 jt"
+ },
+ {
+  "amount": 6.16,
+  "plain": "Rp6",
+  "decimals": "Rp6,16",
+  "noSymbol": "6",
+  "short": "Rp6"
+ },
+ {
+  "amount": 8174179.18,
+  "plain": "Rp8.174.179",
+  "decimals": "Rp8.174.179,18",
+  "noSymbol": "8.174.179",
+  "short": "Rp8,2 jt"
+ },
+ {
+  "amount": 2.94,
+  "plain": "Rp3",
+  "decimals": "Rp2,94",
+  "noSymbol": "3",
+  "short": "Rp3"
+ },
+ {
+  "amount": 292566.42,
+  "plain": "Rp292.566",
+  "decimals": "Rp292.566,42",
+  "noSymbol": "292.566",
+  "short": "Rp292,6 rb"
+ },
+ {
+  "amount": 83900.64,
+  "plain": "Rp83.901",
+  "decimals": "Rp83.900,64",
+  "noSymbol": "83.901",
+  "short": "Rp83,9 rb"
+ },
+ {
+  "amount": 5.51,
+  "plain": "Rp6",
+  "decimals": "Rp5,51",
+  "noSymbol": "6",
+  "short": "Rp6"
+ },
+ {
+  "amount": 1139149309.6,
+  "plain": "Rp1.139.149.310",
+  "decimals": "Rp1.139.149.309,60",
+  "noSymbol": "1.139.149.310",
+  "short": "Rp1,1 M"
+ },
+ {
+  "amount": 8.33,
+  "plain": "Rp8",
+  "decimals": "Rp8,33",
+  "noSymbol": "8",
+  "short": "Rp8"
+ },
+ {
+  "amount": 46070219692.77,
+  "plain": "Rp46.070.219.693",
+  "decimals": "Rp46.070.219.692,77",
+  "noSymbol": "46.070.219.693",
+  "short": "Rp46,1 M"
+ },
+ {
+  "amount": 65.27,
+  "plain": "Rp65",
+  "decimals": "Rp65,27",
+  "noSymbol": "65",
+  "short": "Rp65"
+ },
+ {
+  "amount": -4531625418.46,
+  "plain": "-Rp4.531.625.418",
+  "decimals": "-Rp4.531.625.418,46",
+  "noSymbol": "-4.531.625.418",
+  "short": "-Rp4,5 M"
+ },
+ {
+  "amount": 633059.23,
+  "plain": "Rp633.059",
+  "decimals": "Rp633.059,23",
+  "noSymbol": "633.059",
+  "short": "Rp633,1 rb"
+ },
+ {
+  "amount": 77.69,
+  "plain": "Rp78",
+  "decimals": "Rp77,69",
+  "noSymbol": "78",
+  "short": "Rp78"
+ },
+ {
+  "amount": 408565.9,
+  "plain": "Rp408.566",
+  "decimals": "Rp408.565,90",
+  "noSymbol": "408.566",
+  "short": "Rp408,6 rb"
+ },
+ {
+  "amount": 448672803.12,
+  "plain": "Rp448.672.803",
+  "decimals": "Rp448.672.803,12",
+  "noSymbol": "448.672.803",
+  "short": "Rp448,7 jt"
+ },
+ {
+  "amount": 3861.86,
+  "plain": "Rp3.862",
+  "decimals": "Rp3.861,86",
+  "noSymbol": "3.862",
+  "short": "Rp3,9 rb"
+ },
+ {
+  "amount": 326231623.07,
+  "plain": "Rp326.231.623",
+  "decimals": "Rp326.231.623,07",
+  "noSymbol": "326.231.623",
+  "short": "Rp326,2 jt"
+ },
+ {
+  "amount": 8841954.5,
+  "plain": "Rp8.841.955",
+  "decimals": "Rp8.841.954,50",
+  "noSymbol": "8.841.955",
+  "short": "Rp8,8 jt"
+ },
+ {
+  "amount": 1.54,
+  "plain": "Rp2",
+  "decimals": "Rp1,54",
+  "noSymbol": "2",
+  "short": "Rp2"
+ },
+ {
+  "amount": 2407666917424.65,
+  "plain": "Rp2.407.666.917.425",
+  "decimals": "Rp2.407.666.917.424,65",
+  "noSymbol": "2.407.666.917.425",
+  "short": "Rp2,4 T"
+ },
+ {
+  "amount": 1274775.71,
+  "plain": "Rp1.274.776",
+  "decimals": "Rp1.274.775,71",
+  "noSymbol": "1.274.776",
+  "short": "Rp1,3 jt"
+ },
+ {
+  "amount": 2894596657.72,
+  "plain": "Rp2.894.596.658",
+  "decimals": "Rp2.894.596.657,72",
+  "noSymbol": "2.894.596.658",
+  "short": "Rp2,9 M"
+ },
+ {
+  "amount": 74625566788.02,
+  "plain": "Rp74.625.566.788",
+  "decimals": "Rp74.625.566.788,02",
+  "noSymbol": "74.625.566.788",
+  "short": "Rp74,6 M"
+ },
+ {
+  "amount": 7318308.96,
+  "plain": "Rp7.318.309",
+  "decimals": "Rp7.318.308,96",
+  "noSymbol": "7.318.309",
+  "short": "Rp7,3 jt"
+ },
+ {
+  "amount": 7.4,
+  "plain": "Rp7",
+  "decimals": "Rp7,40",
+  "noSymbol": "7",
+  "short": "Rp7"
+ },
+ {
+  "amount": 9351429704.11,
+  "plain": "Rp9.351.429.704",
+  "decimals": "Rp9.351.429.704,11",
+  "noSymbol": "9.351.429.704",
+  "short": "Rp9,4 M"
+ },
+ {
+  "amount": 7.66,
+  "plain": "Rp8",
+  "decimals": "Rp7,66",
+  "noSymbol": "8",
+  "short": "Rp8"
+ },
+ {
+  "amount": 41.81,
+  "plain": "Rp42",
+  "decimals": "Rp41,81",
+  "noSymbol": "42",
+  "short": "Rp42"
+ },
+ {
+  "amount": 0.83,
+  "plain": "Rp1",
+  "decimals": "Rp0,83",
+  "noSymbol": "1",
+  "short": "Rp1"
+ },
+ {
+  "amount": 630519057.86,
+  "plain": "Rp630.519.058",
+  "decimals": "Rp630.519.057,86",
+  "noSymbol": "630.519.058",
+  "short": "Rp630,5 jt"
+ },
+ {
+  "amount": 381347.78,
+  "plain": "Rp381.348",
+  "decimals": "Rp381.347,78",
+  "noSymbol": "381.348",
+  "short": "Rp381,3 rb"
+ },
+ {
+  "amount": -9646663.53,
+  "plain": "-Rp9.646.664",
+  "decimals": "-Rp9.646.663,53",
+  "noSymbol": "-9.646.664",
+  "short": "-Rp9,6 jt"
+ },
+ {
+  "amount": 2382651397.49,
+  "plain": "Rp2.382.651.397",
+  "decimals": "Rp2.382.651.397,49",
+  "noSymbol": "2.382.651.397",
+  "short": "Rp2,4 M"
+ },
+ {
+  "amount": 3723492.78,
+  "plain": "Rp3.723.493",
+  "decimals": "Rp3.723.492,78",
+  "noSymbol": "3.723.493",
+  "short": "Rp3,7 jt"
+ },
+ {
+  "amount": 86015.47,
+  "plain": "Rp86.015",
+  "decimals": "Rp86.015,47",
+  "noSymbol": "86.015",
+  "short": "Rp86 rb"
+ },
+ {
+  "amount": 7758701.98,
+  "plain": "Rp7.758.702",
+  "decimals": "Rp7.758.701,98",
+  "noSymbol": "7.758.702",
+  "short": "Rp7,8 jt"
+ },
+ {
+  "amount": 8555360485.33,
+  "plain": "Rp8.555.360.485",
+  "decimals": "Rp8.555.360.485,33",
+  "noSymbol": "8.555.360.485",
+  "short": "Rp8,6 M"
+ },
+ {
+  "amount": 0.8,
+  "plain": "Rp1",
+  "decimals": "Rp0,80",
+  "noSymbol": "1",
+  "short": "Rp1"
+ },
+ {
+  "amount": -61248408.82,
+  "plain": "-Rp61.248.409",
+  "decimals": "-Rp61.248.408,82",
+  "noSymbol": "-61.248.409",
+  "short": "-Rp61,2 jt"
+ },
+ {
+  "amount": 78926391.04,
+  "plain": "Rp78.926.391",
+  "decimals": "Rp78.926.391,04",
+  "noSymbol": "78.926.391",
+  "short": "Rp78,9 jt"
+ },
+ {
+  "amount": 681096548.45,
+  "plain": "Rp681.096.548",
+  "decimals": "Rp681.096.548,45",
+  "noSymbol": "681.096.548",
+  "short": "Rp681,1 jt"
+ },
+ {
+  "amount": 3959890.4,
+  "plain": "Rp3.959.890",
+  "decimals": "Rp3.959.890,40",
+  "noSymbol": "3.959.890",
+  "short": "Rp4 jt"
+ },
+ {
+  "amount": 4859570355.62,
+  "plain": "Rp4.859.570.356",
+  "decimals": "Rp4.859.570.355,62",
+  "noSymbol": "4.859.570.356",
+  "short": "Rp4,9 M"
+ },
+ {
+  "amount": 13421379.36,
+  "plain": "Rp13.421.379",
+  "decimals": "Rp13.421.379,36",
+  "noSymbol": "13.421.379",
+  "short": "Rp13,4 jt"
+ },
+ {
+  "amount": 64281787.49,
+  "plain": "Rp64.281.787",
+  "decimals": "Rp64.281.787,49",
+  "noSymbol": "64.281.787",
+  "short": "Rp64,3 jt"
+ },
+ {
+  "amount": 26826058072.04,
+  "plain": "Rp26.826.058.072",
+  "decimals": "Rp26.826.058.072,04",
+  "noSymbol": "26.826.058.072",
+  "short": "Rp26,8 M"
+ },
+ {
+  "amount": 611166.82,
+  "plain": "Rp611.167",
+  "decimals": "Rp611.166,82",
+  "noSymbol": "611.167",
+  "short": "Rp611,2 rb"
+ },
+ {
+  "amount": 862444243.16,
+  "plain": "Rp862.444.243",
+  "decimals": "Rp862.444.243,16",
+  "noSymbol": "862.444.243",
+  "short": "Rp862,4 jt"
+ },
+ {
+  "amount": 20.75,
+  "plain": "Rp21",
+  "decimals": "Rp20,75",
+  "noSymbol": "21",
+  "short": "Rp21"
+ },
+ {
+  "amount": 819879195187.24,
+  "plain": "Rp819.879.195.187",
+  "decimals": "Rp819.879.195.187,24",
+  "noSymbol": "819.879.195.187",
+  "short": "Rp819,9 M"
+ },
+ {
+  "amount": 221403242.79,
+  "plain": "Rp221.403.243",
+  "decimals": "Rp221.403.242,79",
+  "noSymbol": "221.403.243",
+  "short": "Rp221,4 jt"
+ },
+ {
+  "amount": 91.86,
+  "plain": "Rp92",
+  "decimals": "Rp91,86",
+  "noSymbol": "92",
+  "short": "Rp92"
+ },
+ {
+  "amount": 0.83,
+  "plain": "Rp1",
+  "decimals": "Rp0,83",
+  "noSymbol": "1",
+  "short": "Rp1"
+ },
+ {
+  "amount": 247.58,
+  "plain": "Rp248",
+  "decimals": "Rp247,58",
+  "noSymbol": "248",
+  "short": "Rp248"
+ },
+ {
+  "amount": 8671288448385.9,
+  "plain": "Rp8.671.288.448.386",
+  "decimals": "Rp8.671.288.448.385,90",
+  "noSymbol": "8.671.288.448.386",
+  "short": "Rp8,7 T"
+ },
+ {
+  "amount": 509990.1,
+  "plain": "Rp509.990",
+  "decimals": "Rp509.990,10",
+  "noSymbol": "509.990",
+  "short": "Rp510 rb"
+ },
+ {
+  "amount": 0.54,
+  "plain": "Rp1",
+  "decimals": "Rp0,54",
+  "noSymbol": "1",
+  "short": "Rp1"
+ },
+ {
+  "amount": 182642421685.16,
+  "plain": "Rp182.642.421.685",
+  "decimals": "Rp182.642.421.685,16",
+  "noSymbol": "182.642.421.685",
+  "short": "Rp182,6 M"
+ },
+ {
+  "amount": -78.45,
+  "plain": "-Rp78",
+  "decimals": "-Rp78,45",
+  "noSymbol": "-78",
+  "short": "-Rp78"
+ },
+ {
+  "amount": -761454.33,
+  "plain": "-Rp761.454",
+  "decimals": "-Rp761.454,33",
+  "noSymbol": "-761.454",
+  "short": "-Rp761,5 rb"
+ },
+ {
+  "amount": 65530419046.99,
+  "plain": "Rp65.530.419.047",
+  "decimals": "Rp65.530.419.046,99",
+  "noSymbol": "65.530.419.047",
+  "short": "Rp65,5 M"
+ },
+ {
+  "amount": 8.52,
+  "plain": "Rp9",
+  "decimals": "Rp8,52",
+  "noSymbol": "9",
+  "short": "Rp9"
+ },
+ {
+  "amount": 2.78,
+  "plain": "Rp3",
+  "decimals": "Rp2,78",
+  "noSymbol": "3",
+  "short": "Rp3"
+ },
+ {
+  "amount": 13940016.2,
+  "plain": "Rp13.940.016",
+  "decimals": "Rp13.940.016,20",
+  "noSymbol": "13.940.016",
+  "short": "Rp13,9 jt"
+ },
+ {
+  "amount": -1725119.96,
+  "plain": "-Rp1.725.120",
+  "decimals": "-Rp1.725.119,96",
+  "noSymbol": "-1.725.120",
+  "short": "-Rp1,7 jt"
+ },
+ {
+  "amount": 76106129.45,
+  "plain": "Rp76.106.129",
+  "decimals": "Rp76.106.129,45",
+  "noSymbol": "76.106.129",
+  "short": "Rp76,1 jt"
+ },
+ {
+  "amount": 60326823266.22,
+  "plain": "Rp60.326.823.266",
+  "decimals": "Rp60.326.823.266,22",
+  "noSymbol": "60.326.823.266",
+  "short": "Rp60,3 M"
+ },
+ {
+  "amount": 979534.1,
+  "plain": "Rp979.534",
+  "decimals": "Rp979.534,10",
+  "noSymbol": "979.534",
+  "short": "Rp979,5 rb"
+ },
+ {
+  "amount": -3021105355.58,
+  "plain": "-Rp3.021.105.356",
+  "decimals": "-Rp3.021.105.355,58",
+  "noSymbol": "-3.021.105.356",
+  "short": "-Rp3 M"
+ },
+ {
+  "amount": 98873364.79,
+  "plain": "Rp98.873.365",
+  "decimals": "Rp98.873.364,79",
+  "noSymbol": "98.873.365",
+  "short": "Rp98,9 jt"
+ },
+ {
+  "amount": 42312655.25,
+  "plain": "Rp42.312.655",
+  "decimals": "Rp42.312.655,25",
+  "noSymbol": "42.312.655",
+  "short": "Rp42,3 jt"
+ },
+ {
+  "amount": 0.39,
+  "plain": "Rp0",
+  "decimals": "Rp0,39",
+  "noSymbol": "0",
+  "short": "Rp0"
+ },
+ {
+  "amount": 8911.93,
+  "plain": "Rp8.912",
+  "decimals": "Rp8.911,93",
+  "noSymbol": "8.912",
+  "short": "Rp8,9 rb"
+ },
+ {
+  "amount": 4920302669.05,
+  "plain": "Rp4.920.302.669",
+  "decimals": "Rp4.920.302.669,05",
+  "noSymbol": "4.920.302.669",
+  "short": "Rp4,9 M"
+ },
+ {
+  "amount": 1.73,
+  "plain": "Rp2",
+  "decimals": "Rp1,73",
+  "noSymbol": "2",
+  "short": "Rp2"
+ },
+ {
+  "amount": 90566.41,
+  "plain": "Rp90.566",
+  "decimals": "Rp90.566,41",
+  "noSymbol": "90.566",
+  "short": "Rp90,6 rb"
+ },
+ {
+  "amount": 42917193.31,
+  "plain": "Rp42.917.193",
+  "decimals": "Rp42.917.193,31",
+  "noSymbol": "42.917.193",
+  "short": "Rp42,9 jt"
+ },
+ {
+  "amount": 7791071948.6,
+  "plain": "Rp7.791.071.949",
+  "decimals": "Rp7.791.071.948,60",
+  "noSymbol": "7.791.071.949",
+  "short": "Rp7,8 M"
+ },
+ {
+  "amount": 342916510533.54,
+  "plain": "Rp342.916.510.534",
+  "decimals": "Rp342.916.510.533,54",
+  "noSymbol": "342.916.510.534",
+  "short": "Rp342,9 M"
+ },
+ {
+  "amount": 4043817.86,
+  "plain": "Rp4.043.818",
+  "decimals": "Rp4.043.817,86",
+  "noSymbol": "4.043.818",
+  "short": "Rp4 jt"
+ },
+ {
+  "amount": 465.05,
+  "plain": "Rp465",
+  "decimals": "Rp465,05",
+  "noSymbol": "465",
+  "short": "Rp465"
+ },
+ {
+  "amount": 68680322.92,
+  "plain": "Rp68.680.323",
+  "decimals": "Rp68.680.322,92",
+  "noSymbol": "68.680.323",
+  "short": "Rp68,7 jt"
+ },
+ {
+  "amount": 4845464.59,
+  "plain": "Rp4.845.465",
+  "decimals": "Rp4.845.464,59",
+  "noSymbol": "4.845.465",
+  "short": "Rp4,8 jt"
+ },
+ {
+  "amount": 7761878666933.63,
+  "plain": "Rp7.761.878.666.934",
+  "decimals": "Rp7.761.878.666.933,63",
+  "noSymbol": "7.761.878.666.934",
+  "short": "Rp7,8 T"
+ },
+ {
+  "amount": -69561290.79,
+  "plain": "-Rp69.561.291",
+  "decimals": "-Rp69.561.290,79",
+  "noSymbol": "-69.561.291",
+  "short": "-Rp69,6 jt"
+ },
+ {
+  "amount": 3.45,
+  "plain": "Rp3",
+  "decimals": "Rp3,45",
+  "noSymbol": "3",
+  "short": "Rp3"
+ },
+ {
+  "amount": 3343689753673.97,
+  "plain": "Rp3.343.689.753.674",
+  "decimals": "Rp3.343.689.753.673,97",
+  "noSymbol": "3.343.689.753.674",
+  "short": "Rp3,3 T"
+ },
+ {
+  "amount": 5309.28,
+  "plain": "Rp5.309",
+  "decimals": "Rp5.309,28",
+  "noSymbol": "5.309",
+  "short": "Rp5,3 rb"
+ },
+ {
+  "amount": 693.86,
+  "plain": "Rp694",
+  "decimals": "Rp693,86",
+  "noSymbol": "694",
+  "short": "Rp694"
+ },
+ {
+  "amount": 540649.75,
+  "plain": "Rp540.650",
+  "decimals": "Rp540.649,75",
+  "noSymbol": "540.650",
+  "short": "Rp540,6 rb"
+ },
+ {
+  "amount": 9458863441.83,
+  "plain": "Rp9.458.863.442",
+  "decimals": "Rp9.458.863.441,83",
+  "noSymbol": "9.458.863.442",
+  "short": "Rp9,5 M"
+ },
+ {
+  "amount": 2468528407625.85,
+  "plain": "Rp2.468.528.407.626",
+  "decimals": "Rp2.468.528.407.625,85",
+  "noSymbol": "2.468.528.407.626",
+  "short": "Rp2,5 T"
+ },
+ {
+  "amount": 867.39,
+  "plain": "Rp867",
+  "decimals": "Rp867,39",
+  "noSymbol": "867",
+  "short": "Rp867"
+ },
+ {
+  "amount": 71346705476.75,
+  "plain": "Rp71.346.705.477",
+  "decimals": "Rp71.346.705.476,75",
+  "noSymbol": "71.346.705.477",
+  "short": "Rp71,3 M"
+ },
+ {
+  "amount": 2461.19,
+  "plain": "Rp2.461",
+  "decimals": "Rp2.461,19",
+  "noSymbol": "2.461",
+  "short": "Rp2,5 rb"
+ },
+ {
+  "amount": 41486002.11,
+  "plain": "Rp41.486.002",
+  "decimals": "Rp41.486.002,11",
+  "noSymbol": "41.486.002",
+  "short": "Rp41,5 jt"
+ },
+ {
+  "amount": 7641532.27,
+  "plain": "Rp7.641.532",
+  "decimals": "Rp7.641.532,27",
+  "noSymbol": "7.641.532",
+  "short": "Rp7,6 jt"
+ },
+ {
+  "amount": 4.62,
+  "plain": "Rp5",
+  "decimals": "Rp4,62",
+  "noSymbol": "5",
+  "short": "Rp5"
+ },
+ {
+  "amount": 8.42,
+  "plain": "Rp8",
+  "decimals": "Rp8,42",
+  "noSymbol": "8",
+  "short": "Rp8"
+ },
+ {
+  "amount": -7075673639.77,
+  "plain": "-Rp7.075.673.640",
+  "decimals": "-Rp7.075.673.639,77",
+  "noSymbol": "-7.075.673.640",
+  "short": "-Rp7,1 M"
+ },
+ {
+  "amount": 6671739.03,
+  "plain": "Rp6.671.739",
+  "decimals": "Rp6.671.739,03",
+  "noSymbol": "6.671.739",
+  "short": "Rp6,7 jt"
+ },
+ {
+  "amount": 46425438.84,
+  "plain": "Rp46.425.439",
+  "decimals": "Rp46.425.438,84",
+  "noSymbol": "46.425.439",
+  "short": "Rp46,4 jt"
+ },
+ {
+  "amount": 925.55,
+  "plain": "Rp926",
+  "decimals": "Rp925,55",
+  "noSymbol": "926",
+  "short": "Rp926"
+ },
+ {
+  "amount": 0.37,
+  "plain": "Rp0",
+  "decimals": "Rp0,37",
+  "noSymbol": "0",
+  "short": "Rp0"
+ },
+ {
+  "amount": 755885314894.84,
+  "plain": "Rp755.885.314.895",
+  "decimals": "Rp755.885.314.894,84",
+  "noSymbol": "755.885.314.895",
+  "short": "Rp755,9 M"
+ },
+ {
+  "amount": 6543.86,
+  "plain": "Rp6.544",
+  "decimals": "Rp6.543,86",
+  "noSymbol": "6.544",
+  "short": "Rp6,5 rb"
+ },
+ {
+  "amount": 6.64,
+  "plain": "Rp7",
+  "decimals": "Rp6,64",
+  "noSymbol": "7",
+  "short": "Rp7"
+ },
+ {
+  "amount": -2723.41,
+  "plain": "-Rp2.723",
+  "decimals": "-Rp2.723,41",
+  "noSymbol": "-2.723",
+  "short": "-Rp2,7 rb"
+ },
+ {
+  "amount": 8178319574.8,
+  "plain": "Rp8.178.319.575",
+  "decimals": "Rp8.178.319.574,80",
+  "noSymbol": "8.178.319.575",
+  "short": "Rp8,2 M"
+ },
+ {
+  "amount": 15.21,
+  "plain": "Rp15",
+  "decimals": "Rp15,21",
+  "noSymbol": "15",
+  "short": "Rp15"
+ },
+ {
+  "amount": 9310948916245.25,
+  "plain": "Rp9.310.948.916.245",
+  "decimals": "Rp9.310.948.916.245,25",
+  "noSymbol": "9.310.948.916.245",
+  "short": "Rp9,3 T"
+ },
+ {
+  "amount": -792369005735.96,
+  "plain": "-Rp792.369.005.736",
+  "decimals": "-Rp792.369.005.735,96",
+  "noSymbol": "-792.369.005.736",
+  "short": "-Rp792,4 M"
+ },
+ {
+  "amount": -647353062406.18,
+  "plain": "-Rp647.353.062.406",
+  "decimals": "-Rp647.353.062.406,18",
+  "noSymbol": "-647.353.062.406",
+  "short": "-Rp647,4 M"
+ },
+ {
+  "amount": 4646654950.92,
+  "plain": "Rp4.646.654.951",
+  "decimals": "Rp4.646.654.950,92",
+  "noSymbol": "4.646.654.951",
+  "short": "Rp4,6 M"
+ },
+ {
+  "amount": -524956683.4,
+  "plain": "-Rp524.956.683",
+  "decimals": "-Rp524.956.683,40",
+  "noSymbol": "-524.956.683",
+  "short": "-Rp525 jt"
+ },
+ {
+  "amount": 71445.12,
+  "plain": "Rp71.445",
+  "decimals": "Rp71.445,12",
+  "noSymbol": "71.445",
+  "short": "Rp71,4 rb"
+ },
+ {
+  "amount": 826.19,
+  "plain": "Rp826",
+  "decimals": "Rp826,19",
+  "noSymbol": "826",
+  "short": "Rp826"
+ },
+ {
+  "amount": 5362919608.6,
+  "plain": "Rp5.362.919.609",
+  "decimals": "Rp5.362.919.608,60",
+  "noSymbol": "5.362.919.609",
+  "short": "Rp5,4 M"
+ },
+ {
+  "amount": 58917546.2,
+  "plain": "Rp58.917.546",
+  "decimals": "Rp58.917.546,20",
+  "noSymbol": "58.917.546",
+  "short": "Rp58,9 jt"
+ },
+ {
+  "amount": 2790139536373.32,
+  "plain": "Rp2.790.139.536.373",
+  "decimals": "Rp2.790.139.536.373,32",
+  "noSymbol": "2.790.139.536.373",
+  "short": "Rp2,8 T"
+ },
+ {
+  "amount": 839.14,
+  "plain": "Rp839",
+  "decimals": "Rp839,14",
+  "noSymbol": "839",
+  "short": "Rp839"
+ },
+ {
+  "amount": 909205687.23,
+  "plain": "Rp909.205.687",
+  "decimals": "Rp909.205.687,23",
+  "noSymbol": "909.205.687",
+  "short": "Rp909,2 jt"
+ },
+ {
+  "amount": 5.15,
+  "plain": "Rp5",
+  "decimals": "Rp5,15",
+  "noSymbol": "5",
+  "short": "Rp5"
+ },
+ {
+  "amount": 0.11,
+  "plain": "Rp0",
+  "decimals": "Rp0,11",
+  "noSymbol": "0",
+  "short": "Rp0"
+ },
+ {
+  "amount": 8662.74,
+  "plain": "Rp8.663",
+  "decimals": "Rp8.662,74",
+  "noSymbol": "8.663",
+  "short": "Rp8,7 rb"
+ },
+ {
+  "amount": 577380.43,
+  "plain": "Rp577.380",
+  "decimals": "Rp577.380,43",
+  "noSymbol": "577.380",
+  "short": "Rp577,4 rb"
+ },
+ {
+  "amount": 0.77,
+  "plain": "Rp1",
+  "decimals": "Rp0,77",
+  "noSymbol": "1",
+  "short": "Rp1"
+ },
+ {
+  "amount": -699540031608.19,
+  "plain": "-Rp699.540.031.608",
+  "decimals": "-Rp699.540.031.608,19",
+  "noSymbol": "-699.540.031.608",
+  "short": "-Rp699,5 M"
+ },
+ {
+  "amount": 0.4,
+  "plain": "Rp0",
+  "decimals": "Rp0,40",
+  "noSymbol": "0",
+  "short": "Rp0"
+ },
+ {
+  "amount": 8859242687.47,
+  "plain": "Rp8.859.242.687",
+  "decimals": "Rp8.859.242.687,47",
+  "noSymbol": "8.859.242.687",
+  "short": "Rp8,9 M"
+ },
+ {
+  "amount": 32.63,
+  "plain": "Rp33",
+  "decimals": "Rp32,63",
+  "noSymbol": "33",
+  "short": "Rp33"
+ },
+ {
+  "amount": 38812.54,
+  "plain": "Rp38.813",
+  "decimals": "Rp38.812,54",
+  "noSymbol": "38.813",
+  "short": "Rp38,8 rb"
+ },
+ {
+  "amount": 533372.42,
+  "plain": "Rp533.372",
+  "decimals": "Rp533.372,42",
+  "noSymbol": "533.372",
+  "short": "Rp533,4 rb"
+ },
+ {
+  "amount": 89.69,
+  "plain": "Rp90",
+  "decimals": "Rp89,69",
+  "noSymbol": "90",
+  "short": "Rp90"
+ },
+ {
+  "amount": 179764.73,
+  "plain": "Rp179.765",
+  "decimals": "Rp179.764,73",
+  "noSymbol": "179.765",
+  "short": "Rp179,8 rb"
+ },
+ {
+  "amount": 98724.1,
+  "plain": "Rp98.724",
+  "decimals": "Rp98.724,10",
+  "noSymbol": "98.724",
+  "short": "Rp98,7 rb"
+ },
+ {
+  "amount": 68.7,
+  "plain": "Rp69",
+  "decimals": "Rp68,70",
+  "noSymbol": "69",
+  "short": "Rp69"
+ },
+ {
+  "amount": 6503979451.95,
+  "plain": "Rp6.503.979.452",
+  "decimals": "Rp6.503.979.451,95",
+  "noSymbol": "6.503.979.452",
+  "short": "Rp6,5 M"
+ },
+ {
+  "amount": 0.4,
+  "plain": "Rp0",
+  "decimals": "Rp0,40",
+  "noSymbol": "0",
+  "short": "Rp0"
+ },
+ {
+  "amount": 96.4,
+  "plain": "Rp96",
+  "decimals": "Rp96,40",
+  "noSymbol": "96",
+  "short": "Rp96"
+ },
+ {
+  "amount": -624.14,
+  "plain": "-Rp624",
+  "decimals": "-Rp624,14",
+  "noSymbol": "-624",
+  "short": "-Rp624"
+ },
+ {
+  "amount": 3724747.3,
+  "plain": "Rp3.724.747",
+  "decimals": "Rp3.724.747,30",
+  "noSymbol": "3.724.747",
+  "short": "Rp3,7 jt"
+ },
+ {
+  "amount": 165342.88,
+  "plain": "Rp165.343",
+  "decimals": "Rp165.342,88",
+  "noSymbol": "165.343",
+  "short": "Rp165,3 rb"
+ },
+ {
+  "amount": 1.37,
+  "plain": "Rp1",
+  "decimals": "Rp1,37",
+  "noSymbol": "1",
+  "short": "Rp1"
+ },
+ {
+  "amount": 73476952943.02,
+  "plain": "Rp73.476.952.943",
+  "decimals": "Rp73.476.952.943,02",
+  "noSymbol": "73.476.952.943",
+  "short": "Rp73,5 M"
+ },
+ {
+  "amount": 6.12,
+  "plain": "Rp6",
+  "decimals": "Rp6,12",
+  "noSymbol": "6",
+  "short": "Rp6"
+ },
+ {
+  "amount": 41879980056.55,
+  "plain": "Rp41.879.980.057",
+  "decimals": "Rp41.879.980.056,55",
+  "noSymbol": "41.879.980.057",
+  "short": "Rp41,9 M"
+ },
+ {
+  "amount": 43139753304.42,
+  "plain": "Rp43.139.753.304",
+  "decimals": "Rp43.139.753.304,42",
+  "noSymbol": "43.139.753.304",
+  "short": "Rp43,1 M"
+ },
+ {
+  "amount": 883115.56,
+  "plain": "Rp883.116",
+  "decimals": "Rp883.115,56",
+  "noSymbol": "883.116",
+  "short": "Rp883,1 rb"
+ },
+ {
+  "amount": 93.61,
+  "plain": "Rp94",
+  "decimals": "Rp93,61",
+  "noSymbol": "94",
+  "short": "Rp94"
+ },
+ {
+  "amount": 16792.86,
+  "plain": "Rp16.793",
+  "decimals": "Rp16.792,86",
+  "noSymbol": "16.793",
+  "short": "Rp16,8 rb"
+ },
+ {
+  "amount": 5934365806169.81,
+  "plain": "Rp5.934.365.806.170",
+  "decimals": "Rp5.934.365.806.169,81",
+  "noSymbol": "5.934.365.806.170",
+  "short": "Rp5,9 T"
+ },
+ {
+  "amount": 456451486.56,
+  "plain": "Rp456.451.487",
+  "decimals": "Rp456.451.486,56",
+  "noSymbol": "456.451.487",
+  "short": "Rp456,5 jt"
+ },
+ {
+  "amount": -18319.65,
+  "plain": "-Rp18.320",
+  "decimals": "-Rp18.319,65",
+  "noSymbol": "-18.320",
+  "short": "-Rp18,3 rb"
+ },
+ {
+  "amount": 44312569824.98,
+  "plain": "Rp44.312.569.825",
+  "decimals": "Rp44.312.569.824,98",
+  "noSymbol": "44.312.569.825",
+  "short": "Rp44,3 M"
+ },
+ {
+  "amount": -6.53,
+  "plain": "-Rp7",
+  "decimals": "-Rp6,53",
+  "noSymbol": "-7",
+  "short": "-Rp7"
+ },
+ {
+  "amount": 468.23,
+  "plain": "Rp468",
+  "decimals": "Rp468,23",
+  "noSymbol": "468",
+  "short": "Rp468"
+ },
+ {
+  "amount": 29837.37,
+  "plain": "Rp29.837",
+  "decimals": "Rp29.837,37",
+  "noSymbol": "29.837",
+  "short": "Rp29,8 rb"
+ },
+ {
+  "amount": 584586631.27,
+  "plain": "Rp584.586.631",
+  "decimals": "Rp584.586.631,27",
+  "noSymbol": "584.586.631",
+  "short": "Rp584,6 jt"
+ },
+ {
+  "amount": 5.76,
+  "plain": "Rp6",
+  "decimals": "Rp5,76",
+  "noSymbol": "6",
+  "short": "Rp6"
+ },
+ {
+  "amount": 9185285.28,
+  "plain": "Rp9.185.285",
+  "decimals": "Rp9.185.285,28",
+  "noSymbol": "9.185.285",
+  "short": "Rp9,2 jt"
+ },
+ {
+  "amount": 965214.95,
+  "plain": "Rp965.215",
+  "decimals": "Rp965.214,95",
+  "noSymbol": "965.215",
+  "short": "Rp965,2 rb"
+ },
+ {
+  "amount": -0.54,
+  "plain": "-Rp1",
+  "decimals": "-Rp0,54",
+  "noSymbol": "-1",
+  "short": "-Rp1"
+ },
+ {
+  "amount": 8434851567726.58,
+  "plain": "Rp8.434.851.567.727",
+  "decimals": "Rp8.434.851.567.726,58",
+  "noSymbol": "8.434.851.567.727",
+  "short": "Rp8,4 T"
+ },
+ {
+  "amount": 50.81,
+  "plain": "Rp51",
+  "decimals": "Rp50,81",
+  "noSymbol": "51",
+  "short": "Rp51"
+ },
+ {
+  "amount": 19374.95,
+  "plain": "Rp19.375",
+  "decimals": "Rp19.374,95",
+  "noSymbol": "19.375",
+  "short": "Rp19,4 rb"
+ },
+ {
+  "amount": 6423766911029.82,
+  "plain": "Rp6.423.766.911.030",
+  "decimals": "Rp6.423.766.911.029,82",
+  "noSymbol": "6.423.766.911.030",
+  "short": "Rp6,4 T"
+ },
+ {
+  "amount": 60335963.15,
+  "plain": "Rp60.335.963",
+  "decimals": "Rp60.335.963,15",
+  "noSymbol": "60.335.963",
+  "short": "Rp60,3 jt"
+ },
+ {
+  "amount": 4898660185.28,
+  "plain": "Rp4.898.660.185",
+  "decimals": "Rp4.898.660.185,28",
+  "noSymbol": "4.898.660.185",
+  "short": "Rp4,9 M"
+ },
+ {
+  "amount": 1290015.9,
+  "plain": "Rp1.290.016",
+  "decimals": "Rp1.290.015,90",
+  "noSymbol": "1.290.016",
+  "short": "Rp1,3 jt"
+ },
+ {
+  "amount": 652279.36,
+  "plain": "Rp652.279",
+  "decimals": "Rp652.279,36",
+  "noSymbol": "652.279",
+  "short": "Rp652,3 rb"
+ },
+ {
+  "amount": 85428.8,
+  "plain": "Rp85.429",
+  "decimals": "Rp85.428,80",
+  "noSymbol": "85.429",
+  "short": "Rp85,4 rb"
+ },
+ {
+  "amount": 936643332242.97,
+  "plain": "Rp936.643.332.243",
+  "decimals": "Rp936.643.332.242,97",
+  "noSymbol": "936.643.332.243",
+  "short": "Rp936,6 M"
+ },
+ {
+  "amount": 460932420799.51,
+  "plain": "Rp460.932.420.800",
+  "decimals": "Rp460.932.420.799,51",
+  "noSymbol": "460.932.420.800",
+  "short": "Rp460,9 M"
+ },
+ {
+  "amount": 44781.12,
+  "plain": "Rp44.781",
+  "decimals": "Rp44.781,12",
+  "noSymbol": "44.781",
+  "short": "Rp44,8 rb"
+ },
+ {
+  "amount": 9708589.14,
+  "plain": "Rp9.708.589",
+  "decimals": "Rp9.708.589,14",
+  "noSymbol": "9.708.589",
+  "short": "Rp9,7 jt"
+ },
+ {
+  "amount": 7955373688600.96,
+  "plain": "Rp7.955.373.688.601",
+  "decimals": "Rp7.955.373.688.600,96",
+  "noSymbol": "7.955.373.688.601",
+  "short": "Rp8 T"
+ },
+ {
+  "amount": 54374694.17,
+  "plain": "Rp54.374.694",
+  "decimals": "Rp54.374.694,17",
+  "noSymbol": "54.374.694",
+  "short": "Rp54,4 jt"
+ },
+ {
+  "amount": 484269.35,
+  "plain": "Rp484.269",
+  "decimals": "Rp484.269,35",
+  "noSymbol": "484.269",
+  "short": "Rp484,3 rb"
+ },
+ {
+  "amount": 0.63,
+  "plain": "Rp1",
+  "decimals": "Rp0,63",
+  "noSymbol": "1",
+  "short": "Rp1"
+ },
+ {
+  "amount": -2295503.74,
+  "plain": "-Rp2.295.504",
+  "decimals": "-Rp2.295.503,74",
+  "noSymbol": "-2.295.504",
+  "short": "-Rp2,3 jt"
+ },
+ {
+  "amount": 47232.78,
+  "plain": "Rp47.233",
+  "decimals": "Rp47.232,78",
+  "noSymbol": "47.233",
+  "short": "Rp47,2 rb"
+ },
+ {
+  "amount": 308441989.36,
+  "plain": "Rp308.441.989",
+  "decimals": "Rp308.441.989,36",
+  "noSymbol": "308.441.989",
+  "short": "Rp308,4 jt"
+ },
+ {
+  "amount": 3367097.98,
+  "plain": "Rp3.367.098",
+  "decimals": "Rp3.367.097,98",
+  "noSymbol": "3.367.098",
+  "short": "Rp3,4 jt"
+ },
+ {
+  "amount": 3260.28,
+  "plain": "Rp3.260",
+  "decimals": "Rp3.260,28",
+  "noSymbol": "3.260",
+  "short": "Rp3,3 rb"
+ },
+ {
+  "amount": 8390181697.91,
+  "plain": "Rp8.390.181.698",
+  "decimals": "Rp8.390.181.697,91",
+  "noSymbol": "8.390.181.698",
+  "short": "Rp8,4 M"
+ },
+ {
+  "amount": 6336.68,
+  "plain": "Rp6.337",
+  "decimals": "Rp6.336,68",
+  "noSymbol": "6.337",
+  "short": "Rp6,3 rb"
+ },
+ {
+  "amount": 548302882583.81,
+  "plain": "Rp548.302.882.584",
+  "decimals": "Rp548.302.882.583,81",
+  "noSymbol": "548.302.882.584",
+  "short": "Rp548,3 M"
+ },
+ {
+  "amount": 63049308885.82,
+  "plain": "Rp63.049.308.886",
+  "decimals": "Rp63.049.308.885,82",
+  "noSymbol": "63.049.308.886",
+  "short": "Rp63 M"
+ },
+ {
+  "amount": 0.85,
+  "plain": "Rp1",
+  "decimals": "Rp0,85",
+  "noSymbol": "1",
+  "short": "Rp1"
+ },
+ {
+  "amount": -89349.14,
+  "plain": "-Rp89.349",
+  "decimals": "-Rp89.349,14",
+  "noSymbol": "-89.349",
+  "short": "-Rp89,3 rb"
+ },
+ {
+  "amount": 15303.72,
+  "plain": "Rp15.304",
+  "decimals": "Rp15.303,72",
+  "noSymbol": "15.304",
+  "short": "Rp15,3 rb"
+ },
+ {
+  "amount": 0.02,
+  "plain": "Rp0",
+  "decimals": "Rp0,02",
+  "noSymbol": "0",
+  "short": "Rp0"
+ },
+ {
+  "amount": 813904243.52,
+  "plain": "Rp813.904.244",
+  "decimals": "Rp813.904.243,52",
+  "noSymbol": "813.904.244",
+  "short": "Rp813,9 jt"
+ },
+ {
+  "amount": 1198837743.14,
+  "plain": "Rp1.198.837.743",
+  "decimals": "Rp1.198.837.743,14",
+  "noSymbol": "1.198.837.743",
+  "short": "Rp1,2 M"
+ },
+ {
+  "amount": 70267116.46,
+  "plain": "Rp70.267.116",
+  "decimals": "Rp70.267.116,46",
+  "noSymbol": "70.267.116",
+  "short": "Rp70,3 jt"
+ },
+ {
+  "amount": 2481.7,
+  "plain": "Rp2.482",
+  "decimals": "Rp2.481,70",
+  "noSymbol": "2.482",
+  "short": "Rp2,5 rb"
+ },
+ {
+  "amount": 78038743.93,
+  "plain": "Rp78.038.744",
+  "decimals": "Rp78.038.743,93",
+  "noSymbol": "78.038.744",
+  "short": "Rp78 jt"
+ },
+ {
+  "amount": 7649.26,
+  "plain": "Rp7.649",
+  "decimals": "Rp7.649,26",
+  "noSymbol": "7.649",
+  "short": "Rp7,6 rb"
+ },
+ {
+  "amount": 9.27,
+  "plain": "Rp9",
+  "decimals": "Rp9,27",
+  "noSymbol": "9",
+  "short": "Rp9"
+ },
+ {
+  "amount": 624030.36,
+  "plain": "Rp624.030",
+  "decimals": "Rp624.030,36",
+  "noSymbol": "624.030",
+  "short": "Rp624 rb"
+ }
+]

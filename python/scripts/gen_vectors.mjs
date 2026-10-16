@@ -1,0 +1,297 @@
+// Generates the parity vectors in python/tests/vectors from the TypeScript build of @lokal-id/core.
+// The Python test suite replays every input and requires the exact same output.
+//
+//   npm run build && node python/scripts/gen_vectors.mjs          # rewrite the vectors
+//   node python/scripts/gen_vectors.mjs --check                   # CI: fail if they are out of date
+//
+// Offsets are converted from JavaScript's UTF-16 units to code points, which is what Python strings index.
+
+import { createHash } from 'node:crypto';
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
+const core = await import(path.join(ROOT, 'packages/core/dist/index.js').replace(/^/, 'file:///').replace(/\\/g, '/'));
+const wil = await import(path.join(ROOT, 'packages/core/dist/wilayah.js').replace(/^/, 'file:///').replace(/\\/g, '/'));
+const OUT = path.join(ROOT, 'python', 'tests', 'vectors');
+const check = process.argv.includes('--check');
+
+// Deterministic pseudo-random numbers (mulberry32), so the vectors only change when the code does.
+let seed = 0x10ca1;
+const rand = () => {
+  seed = (seed + 0x6d2b79f5) | 0;
+  let t = seed;
+  t = Math.imul(t ^ (t >>> 15), t | 1);
+  t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+};
+const pick = (xs) => xs[Math.floor(rand() * xs.length)];
+const int = (lo, hi) => lo + Math.floor(rand() * (hi - lo + 1));
+const pad = (n, w) => String(n).padStart(w, '0');
+
+const toCodePoint = (text, unit) => [...text.slice(0, unit)].length;
+const plain = (v) => JSON.parse(JSON.stringify(v));
+const tryCall = (fn) => {
+  try {
+    return { ok: plain(fn()) };
+  } catch (e) {
+    return { error: e.constructor.name, message: e.message };
+  }
+};
+
+const files = {};
+const emit = (name, data) => (files[name] = JSON.stringify(data, null, 1) + '\n');
+
+// ---------------------------------------------------------------- NIK, NPWP, phone
+const districts = Object.keys(JSON.parse(readFileSync(path.join(ROOT, 'packages/core/data/wilayah.json'), 'utf8')))
+  .filter((c) => c.split('.').length === 3);
+const nikInputs = [
+  '3201011508950001', '3276 01 550803 0002', '12345', '9901011508950001', '3201013108950001', '3201013102950001',
+  '3201017508950001', '3201011508950000', '3201991508950001', '3201002908000001', '3200011508950001',
+  '32.01.01.150895.0001', '3201-0115-0895-0001', '', 'abc', '32010115089500011', '9301016209950002',
+  '3201010101260001', '3201010101270001', '3201012902000001', '3201012902010001', ' 3201011508950001 ',
+];
+for (let i = 0; i < 400; i++) {
+  const d = pick(districts).replace(/\./g, '');
+  const female = rand() < 0.5;
+  const day = int(0, 32) + (female ? 40 : 0);
+  nikInputs.push(`${d}${pad(day, 2)}${pad(int(0, 13), 2)}${pad(int(0, 99), 2)}${pad(int(0, 9999), 4)}`);
+}
+const ref = new Date('2026-10-15T00:00:00Z');
+emit('nik.json', nikInputs.map((input) => ({
+  input,
+  plain: plain(core.parseNik(input, { referenceDate: ref })),
+  withWilayah: plain(core.parseNik(input, { referenceDate: ref, lookupWilayah: wil.wilayahName })),
+})));
+
+const npwpInputs = [
+  '01.234.567.8-901.000', '0012345678901000', '3201011508950001', '3201011508950000', '123', '012345678901000',
+  '01 234 567 8 901 000', '09.254.294.3-407.000', 'x1.234.567.8-901.000', '0012345678901000 ',
+];
+for (let i = 0; i < 100; i++) npwpInputs.push(Array.from({ length: pick([14, 15, 16, 17]) }, () => int(0, 9)).join(''));
+emit('npwp.json', npwpInputs.map((input) => ({ input, out: plain(core.parseNpwp(input)) })));
+
+const prefixes = ['811', '812', '813', '821', '822', '823', '851', '852', '853', '814', '815', '816', '855', '856', '857',
+  '858', '895', '896', '897', '898', '899', '817', '818', '819', '859', '877', '878', '831', '832', '833', '838', '881',
+  '882', '883', '884', '885', '886', '887', '888', '889', '810', '820', '868', '827'];
+const phoneInputs = [
+  '0812-3456-7890', '+62 857 1234 5678', '6289612345678', '0881-2345-6789', '+62 (0) 812 3456 7890', '(021) 555-1234',
+  '12345', '0812', '62', '+62', '0', '', '08 12 34 56 78 90', '0751 812345', '+62 751 812345', '(0274) 512345',
+  '0812.3456.7890', ' 081234567890 ', '62812345678901234', '+6221', '0000812345678', '8123456789', 'abc',
+  ' 0812 3456 7890﻿', '0812 3456 7890', '+62-812-3456-7890',
+];
+for (let i = 0; i < 300; i++) {
+  const rest = pick(prefixes) + Array.from({ length: int(5, 10) }, () => int(0, 9)).join('');
+  const lead = pick(['0', '62', '+62', '+62 ', '0', '']);
+  const sep = pick(['', '-', ' ', '.']);
+  phoneInputs.push(lead + rest.replace(/(\d{3})(\d{4})(?=\d)/, `$1${sep}$2${sep}`));
+}
+for (let i = 0; i < 60; i++) {
+  phoneInputs.push(`${pick(['0', '+62', '(0'])}${pick(['21', '22', '24', '31', '61', '251', '274', '361', '411', '751', '778', '411', '999'])}${pick([') ', '', '-'])}${int(1000, 99999999)}`);
+}
+emit('phone.json', phoneInputs.map((input) => ({ input, out: plain(core.parsePhone(input)), e164: core.normalizePhone(input) ?? null })));
+
+// ---------------------------------------------------------------- Rupiah, terbilang
+const amounts = [0, 1, 999, 1000, 1500000, -25000, 1500000.5, 0.125, 2.5, -0.4, 1.005, 2.675, 999.5, 1e15, 123456789.987,
+  1e21, 0.004, -0.005, 99999.995, 1234.5678, 3.5, 4.5];
+for (let i = 0; i < 300; i++) amounts.push(Math.round(rand() * 10 ** int(0, 13) * 100) / 100 * (rand() < 0.1 ? -1 : 1));
+emit('rupiah_format.json', amounts.map((amount) => ({
+  amount,
+  plain: core.formatRupiah(amount),
+  decimals: core.formatRupiah(amount, { decimals: true }),
+  noSymbol: core.formatRupiah(amount, { symbol: false }),
+  short: core.formatRupiahShort(amount),
+})));
+
+const rupiahTexts = [
+  'Rp 25.000', 'Rp1.500.000,00', '1,500,000', '1,5jt', '1.5 juta', '50k', '50rb', '15ribu', '1jt 500rb', '2jtan',
+  '50rb-an', 'sekitar 1 juta', '2 juta lebih', 'goceng', 'goceng aja kak', '2 ceban', 'cepek ceng', 'gopek',
+  'sejuta setengah', 'setengah juta', 'dua setengah juta', 'satu setengah juta', 'dua ratus lima puluh ribu',
+  'seratus dua belas', 'seribu lima ratus', 'dua puluh lima juta tiga ratus ribu', '1,2 M', 'pisang goreng', '', 'jutaan',
+  'constructor', '2 toString', '~2jt', '±500rb', 'Rp.25.000', 'IDR 1.000.000', '1.500', '1,500', '1,5', '1.5', '1.500jt',
+  'rb', 'juta', '12 rebu', 'sejuta', 'semiliar', '3 noban', 'jigo', 'gocap ceng', '5 jt-an', '1jt-an', 'kurleb 300rb',
+  '2,5 t', '1 triliun', 'sebelas ribu', 'dua belas', 'tujuh puluh', '1.234.567,89', '1,234,567.89', '10.5.3', '1e5',
+  '  Rp 1.000  ', 'harga 50rb dong', 'total 1jt', 'sembilan ratus sembilan puluh sembilan', '99999999999999999999',
+];
+const words = ['satu', 'dua', 'tiga', 'lima', 'sepuluh', 'sebelas', 'belas', 'puluh', 'ratus', 'ribu', 'juta', 'rb',
+  'jt', 'setengah', 'sejuta', 'seribu', 'goceng', 'ceban', 'an', 'lebih', 'sekitar', 'rp', '1', '2,5', '100', '1.500',
+  'aja', 'kak', 'k', 'm'];
+for (let i = 0; i < 300; i++) rupiahTexts.push(Array.from({ length: int(1, 5) }, () => pick(words)).join(pick([' ', '', '-'])));
+emit('rupiah_parse.json', rupiahTexts.map((text) => ({ text, out: plain(core.parseRupiah(text)) })));
+
+const terbilangNumbers = [0, 11, 15, 21, 100, 110, 1000, 1001, 11000, 100000, 1000000, 1500000, 2000000000, -5, 2.5,
+  1e-7, 0.1 + 0.2, 123456789012345, 9007199254740991, 1.5e-7, 1e16, 999999.999, -0.5, 1001001, 10101010];
+for (let i = 0; i < 200; i++) terbilangNumbers.push(Math.floor(rand() * 10 ** int(1, 15)));
+emit('terbilang.json', terbilangNumbers.map((n) => ({
+  n,
+  lower: tryCall(() => core.terbilang(n)),
+  title: tryCall(() => core.terbilang(n, { currency: true, case: 'title' })),
+  sentence: tryCall(() => core.terbilang(n, { case: 'sentence' })),
+  // Python ints are arbitrary-precision, like bigint: compare them with the bigint result.
+  ...(Number.isInteger(n) ? { asBigint: {
+    lower: tryCall(() => core.terbilang(BigInt(n))),
+    title: tryCall(() => core.terbilang(BigInt(n), { currency: true, case: 'title' })),
+    sentence: tryCall(() => core.terbilang(BigInt(n), { case: 'sentence' })),
+  } } : {}),
+})).concat([
+  { big: '1000000000000000000', lower: tryCall(() => core.terbilang(10n ** 18n)) },
+  { big: '-123456789012345678901', lower: tryCall(() => core.terbilang(-123456789012345678901n)) },
+  { big: '1000000000000000000000', lower: tryCall(() => core.terbilang(10n ** 21n)) },
+  { n: 1e21, lower: tryCall(() => core.terbilang(1e21)) },
+]));
+
+// ---------------------------------------------------------------- Holidays
+const days = [];
+for (let d = new Date('2026-01-01T00:00:00Z'); d <= new Date('2027-12-31T00:00:00Z'); d.setUTCDate(d.getUTCDate() + 1)) {
+  days.push(d.toISOString().slice(0, 10));
+}
+emit('holidays.json', {
+  years: core.HOLIDAY_YEARS.map((y) => plain(core.getHolidays(y))),
+  days: days.map((iso) => [
+    iso, core.isWorkingDay(iso), core.isWorkingDay(iso, { cutiBersama: false }), core.isWorkingDay(iso, { weekend: [0] }),
+    core.holidaysOn(iso).length,
+  ]),
+  add: Array.from({ length: 300 }, () => {
+    const from = pick(days.slice(0, 700));
+    const n = int(-15, 15);
+    const opts = pick([{}, { cutiBersama: false }, { weekend: [0] }, { weekend: [5, 6] }]);
+    return { from, n, opts, out: tryCall(() => core.addWorkingDays(from, n, opts)) };
+  }),
+  count: Array.from({ length: 100 }, () => {
+    const a = pick(days.slice(0, 600));
+    const b = pick(days);
+    return { from: a, to: b, out: core.countWorkingDays(a, b), noCuti: core.countWorkingDays(a, b, { cutiBersama: false }) };
+  }),
+  errors: ['2028-01-03', '2026-02-30', '2026-13-01', '17-08-2026', '2025-12-31', '2026-2-3'].map((iso) => ({
+    iso, out: tryCall(() => core.isWorkingDay(iso)),
+  })),
+});
+
+// ---------------------------------------------------------------- Wilayah
+const allCodes = [];
+const walk = (parent) => {
+  for (const w of wil.listWilayah(parent)) {
+    allCodes.push(w);
+    if (w.level < 4) walk(w.code);
+  }
+};
+walk();
+const digest = (lines) => createHash('sha256').update(lines.join('\n')).digest('hex');
+emit('wilayah.json', {
+  count: allCodes.length,
+  // Every region, in dropdown order, with its type, path, and kode pos: one hash instead of 91k rows.
+  listingSha256: digest(allCodes.map((w) => [w.code, w.name, w.level, w.type, w.path, w.postalCode ?? ''].join('|'))),
+  samples: allCodes.filter(() => rand() < 0.002).map((w) => plain(w)),
+  get: ['3276', '32.76', '3276011001', '32.76.01.1001', '91.03.01', '91.03.01.3007', '99', '', '32.01', ' 32.01 ', '11']
+    .map((code) => ({ code, norm: wil.normalizeWilayahCode(code), name: wil.wilayahName(code) ?? null, out: plain(wil.getWilayah(code) ?? null) })),
+  postal: ['32.76.01', '32.76', '32', '93.01', '99', '3276'].map((code) => ({ code, out: wil.postalCodesIn(code) })),
+  byPostal: ['16431', '16514', '99999', 'abc', ' 16431 ', '1643'].map((pos) => ({ pos, out: plain(wil.findByPostalCode(pos)) })),
+  search: [
+    ['depok'], ['Kab. Bogor'], ['jakarta selatan'], ['kec. cibinong', { level: 3 }], ['a', { within: '32', limit: 5 }],
+    ['kota baru'], ['sukamaju', { level: 4 }], ['merauke'], ['sorong'], ['Tapos', { within: '32.76' }],
+    ['cinere', { within: '32.76.11' }], ['bandung'], ['KOTA'], [''], ['   '], ['kel. depok', { level: 4, limit: 3 }],
+    ['provinsi papua'], ["sa'dan"], ['jaya', { limit: 20 }], ['desa sukamaju', { within: '32.01' }],
+  ].map(([q, o]) => ({ q, o: o ?? {}, out: plain(wil.searchWilayah(q, o)) })),
+});
+
+// ---------------------------------------------------------------- Samaran
+const docs = [];
+const add = (text) => docs.push(text);
+for (const f of readdirSync(path.join(ROOT, 'evals', 'fixtures'))) add(readFileSync(path.join(ROOT, 'evals', 'fixtures', f), 'utf8'));
+// Docs and skills change often, so they are not part of the vectors; development compared them separately.
+// Every string literal in the TypeScript test suites and the hard benchmark.
+for (const f of [
+  ...readdirSync(path.join(ROOT, 'packages/core/test')).map((f) => `packages/core/test/${f}`),
+  'packages/mcp/test/mcp.test.ts', 'evals/hard/pii-bench.mjs', 'evals/cases.mjs',
+]) {
+  const src = readFileSync(path.join(ROOT, f), 'utf8');
+  for (const m of src.matchAll(/'((?:[^'\\\n]|\\.)*)'/g)) {
+    try {
+      add(JSON.parse(`"${m[1].replace(/"/g, '\\"').replace(/\\'/g, "'")}"`));
+    } catch {
+      add(m[1]);
+    }
+  }
+}
+// Fuzz: personal data in every format, glued with noise, emoji, NBSP, CRLF, and line separators.
+const fragments = [
+  'NIK 3201011508950001', 'nik: 3276 0145 0392 0003', 'KK 3201010101200001', 'NPWP 09.254.294.3-407.000', 'Paspor: A1234567',
+  'No SIM 950812345678', 'NIP 19950815 202012 1 001', 'BPJS 0001234567890', 'HP 0812-3456-7890', '+62 857-1111-2222',
+  '62 878 1234 5678', 'wa.me/6281377778888', '(0751) 812345', 'budi.santoso@gmail.com', 'siti [at] gmail [dot] com',
+  'rek BCA 1234567890', 'kartu 4539 1488 0343 6467', 'plat B 1234 XYZ', 'login 182.253.10.15', 'lokasi -6.200000, 106.816666',
+  'Nama: Budi Santoso', 'nama saya rina', 'a.n. Dewi Lestari', 'Bapak Dr. Ahmad Fauzi', 'halo kak ini rina,', 'tadi budi bilang',
+  'Alamat: Jl. Mawar No. 5 RT 03/RW 07', 'lahir 15 Agustus 1995', 'Agama: Islam', 'beragama Katolik', 'didiagnosis TBC',
+  'obat insulin (diabetes)', 'dirawat di RSUD Cibinong karena DBD', 'gaji saya 8 juta', 'Catatan Kriminal: pernah ditahan',
+  '12/10/26 09.14 - Dewi Lestari: halo', 'Chat WhatsApp dengan Siti Aminah', '{"first_name":"Siti","last_name":"Rahayu"}',
+  "INSERT INTO pelanggan (nama, nik) VALUES ('Hendra Gunawan', '1371011010850008');", 'nama,nik,hp\nBudi,3201011508950001,0812-3456-7890',
+  'order 2610014KQ7ZB2M resi SPXID045123456789',
+  'INV-081234567890', 'ORD/081234567890', 'TRX-6281234567890', 'hp-081234567890', 'no-0812 3456 7890',
+  'saya diabetes, rutin obat insulin', 'ibu saya hipertensi', 'saya siap, dia datang besok',
+  'gaji saya 8 juta, mau ambil cicilan 3 juta per bulan, budget saya 300 juta',
+  `INSERT INTO pelanggan (id, nama, nik, no_hp) VALUES (17, 'Hendra Gunawan', '1371011010850008', '0813-9999-0000'),
+(18, 'O''Brien Siregar', 3201011508950001, NULL);`,
+  "INSERT INTO `pelanggan` (`nama`,`nik`) VALUES\r\n('Siti Aminah','3276015508030002'),\r\n('Dewi', 3578014607910004);",
+  "INSERT INTO produk (nama, harga) VALUES ('Kopi Gayo', 85000), ('Arabika', 90000);",
+  'level=error nik=3201011508950001 hp=081234567890 err="PaymentTimeout"',
+  `customer:
+  first_name: Siti
+  last_name: Rahayu
+  phone: "+6281298765432"`,
+  'GET /cari?nama=Budi%20Santoso&nik=3201011508950001&email=budi@gmail.com',
+  'Pasien:   Siti   Aminah, diagnosa: Hipertensi', 'Rp1.250.000', 'Versi 3.2.1', 'Ibu Kota Nusantara', 'call 1500888',
+];
+const noise = [' ', ', ', '. ', '\n', '\r\n', ' 😭 ', ' ', ' ', ' — ', '\t', ': ', ' | ', '; ', ' 🇮🇩 ', '﻿'];
+for (let i = 0; i < 1500; i++) {
+  let t = '';
+  for (let j = int(1, 6); j > 0; j--) t += pick(noise) + pick(fragments);
+  add(t);
+}
+
+const detected = docs.map((text) => ({
+  text,
+  matches: core.detectPii(text).map((m) => [m.type, toCodePoint(text, m.start), toCodePoint(text, m.end), m.value, m.confidence]),
+}));
+emit('samaran_detect.json', detected);
+const masked = docs.slice(0, 600).map((text) => {
+  const s = new core.Samaran();
+  const placeholder = s.mask(text).text;
+  return {
+    text,
+    placeholder,
+    vault: s.exportVault(),
+    partial: core.maskPii(text, { mode: 'partial' }).text,
+    noFinanceNoName: core.maskPii(text, { exclude: ['FINANCIAL', 'NAME'] }).text,
+    high: core.detectPii(text, { minConfidence: 'high' }).map((m) => m.value),
+  };
+});
+emit('samaran_mask.json', masked);
+const keys = ['nama', 'NAMA_IBU_KANDUNG', 'customer_phone', 'alamat_pengiriman', 'first_name', 'Billing First Name', 'nik',
+  'no. ktp', 'tgl lahir', 'Tempat/Tgl Lahir', 'jk', 'agama', 'diagnosa', 'gaji', 'foto_ktp', 'name', 'title', 'id', 'kota',
+  'email_address', 'x-forwarded-for', 'remote_addr', 'lat', 'Nomor Rekening', 'va', '', '_', 'a'.repeat(41), 'surname',
+  'pasien', 'owner', 'penerima_baru', 'no_hp_2', 'ttl', 'status_perkawinan', 'kewarganegaraan', 'skck', 'ttd'];
+emit('samaran_fields.json', keys.map((key) => ({ key, out: core.fieldType(key) ?? null })));
+emit('samaran_partial.json', core.PII_TYPES.flatMap((type) =>
+  ['3201011508950001', '0812-3456-7890', 'budi@gmail.com', 'B 1234 XYZ', '182.253.10.15', '-6.200000, 106.816666',
+    'Budi Santoso', 'Jl. Mawar No. 5', 'A1234567', '19950815 202012 1 001', '1234567890', '🌸 Dewi Lestari',
+    '😀budi@gmail.com'].map((value) => ({
+    type, value, out: core.partialMask(type, value),
+  }))));
+
+// ---------------------------------------------------------------- write / check
+mkdirSync(OUT, { recursive: true });
+let stale = 0;
+for (const [name, content] of Object.entries(files)) {
+  const file = path.join(OUT, name);
+  let current = '';
+  try {
+    current = readFileSync(file, 'utf8');
+  } catch {}
+  if (current === content) continue;
+  stale++;
+  if (check) console.error(`out of date: ${name}`);
+  else writeFileSync(file, content);
+}
+if (check && stale) process.exit(1);
+const total = Object.values(files).reduce((n, c) => n + c.length, 0);
+console.log(`${Object.keys(files).length} vector files, ${(total / 1e6).toFixed(1)} MB, ${docs.length} Samaran texts${check ? ', up to date' : ''}`);

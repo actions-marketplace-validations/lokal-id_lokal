@@ -361,7 +361,7 @@ export function dataReadsInCommand(command: string, cwd: string, powershell = fa
         : flow.map((r) => ({ file: r.file, select: (t: string) => narrow(r.select(t)) }));
       if (seg.writesToFile && seg.program !== 'tee') flow = [];
     }
-    out.push(...flow);
+    for (const r of flow) out.push(r);
   }
   return out;
 }

@@ -1,0 +1,9283 @@
+{
+ "years": [
+  {
+   "year": 2026,
+   "decree": "SKB Nomor 1497 Tahun 2025, Nomor 2 Tahun 2025, Nomor 5 Tahun 2025",
+   "source": "https://www.setneg.go.id/baca/index/inilah_skb_3_menteri_libur_nasional_dan_cuti_bersama_2026",
+   "holidays": [
+    {
+     "date": "2026-01-01",
+     "name": "Tahun Baru 2026 Masehi",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2026-01-16",
+     "name": "Isra Mikraj Nabi Muhammad saw.",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2026-02-16",
+     "name": "Tahun Baru Imlek 2577 Kongzili",
+     "type": "cuti_bersama"
+    },
+    {
+     "date": "2026-02-17",
+     "name": "Tahun Baru Imlek 2577 Kongzili",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2026-03-18",
+     "name": "Hari Suci Nyepi (Tahun Baru Saka 1948)",
+     "type": "cuti_bersama"
+    },
+    {
+     "date": "2026-03-19",
+     "name": "Hari Suci Nyepi (Tahun Baru Saka 1948)",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2026-03-20",
+     "name": "Idulfitri 1447 H",
+     "type": "cuti_bersama"
+    },
+    {
+     "date": "2026-03-21",
+     "name": "Idulfitri 1447 H",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2026-03-22",
+     "name": "Idulfitri 1447 H",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2026-03-23",
+     "name": "Idulfitri 1447 H",
+     "type": "cuti_bersama"
+    },
+    {
+     "date": "2026-03-24",
+     "name": "Idulfitri 1447 H",
+     "type": "cuti_bersama"
+    },
+    {
+     "date": "2026-04-03",
+     "name": "Wafat Yesus Kristus",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2026-04-05",
+     "name": "Kebangkitan Yesus Kristus (Paskah)",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2026-05-01",
+     "name": "Hari Buruh Internasional",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2026-05-14",
+     "name": "Kenaikan Yesus Kristus",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2026-05-15",
+     "name": "Kenaikan Yesus Kristus",
+     "type": "cuti_bersama"
+    },
+    {
+     "date": "2026-05-27",
+     "name": "Iduladha 1447 H",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2026-05-28",
+     "name": "Iduladha 1447 H",
+     "type": "cuti_bersama"
+    },
+    {
+     "date": "2026-05-31",
+     "name": "Hari Raya Waisak 2570 BE",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2026-06-01",
+     "name": "Hari Lahir Pancasila",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2026-06-16",
+     "name": "1 Muharam Tahun Baru Islam 1448 H",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2026-08-17",
+     "name": "Proklamasi Kemerdekaan",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2026-08-25",
+     "name": "Maulid Nabi Muhammad saw.",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2026-12-24",
+     "name": "Kelahiran Yesus Kristus",
+     "type": "cuti_bersama"
+    },
+    {
+     "date": "2026-12-25",
+     "name": "Kelahiran Yesus Kristus",
+     "type": "libur_nasional"
+    }
+   ]
+  },
+  {
+   "year": 2027,
+   "decree": "SKB Nomor 1205 Tahun 2026, Nomor 3 Tahun 2026, Nomor 2 Tahun 2026",
+   "source": "https://setneg.go.id/baca/index/inilah_skb_3_menteri_libur_nasional_dan_cuti_bersama_2027",
+   "holidays": [
+    {
+     "date": "2027-01-01",
+     "name": "Tahun Baru 2027 Masehi",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2027-01-05",
+     "name": "Isra Mikraj Nabi Muhammad saw.",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2027-02-05",
+     "name": "Tahun Baru Imlek 2578 Kongzili",
+     "type": "cuti_bersama"
+    },
+    {
+     "date": "2027-02-06",
+     "name": "Tahun Baru Imlek 2578 Kongzili",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2027-03-08",
+     "name": "Hari Suci Nyepi (Tahun Baru Saka 1949)",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2027-03-09",
+     "name": "Idulfitri 1448 H",
+     "type": "cuti_bersama"
+    },
+    {
+     "date": "2027-03-10",
+     "name": "Idulfitri 1448 H",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2027-03-11",
+     "name": "Idulfitri 1448 H",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2027-03-12",
+     "name": "Idulfitri 1448 H",
+     "type": "cuti_bersama"
+    },
+    {
+     "date": "2027-03-15",
+     "name": "Idulfitri 1448 H",
+     "type": "cuti_bersama"
+    },
+    {
+     "date": "2027-03-25",
+     "name": "Wafat Yesus Kristus",
+     "type": "cuti_bersama"
+    },
+    {
+     "date": "2027-03-26",
+     "name": "Wafat Yesus Kristus",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2027-03-28",
+     "name": "Kebangkitan Yesus Kristus (Paskah)",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2027-05-01",
+     "name": "Hari Buruh Internasional",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2027-05-06",
+     "name": "Kenaikan Yesus Kristus",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2027-05-17",
+     "name": "Iduladha 1448 H",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2027-05-18",
+     "name": "Iduladha 1448 H",
+     "type": "cuti_bersama"
+    },
+    {
+     "date": "2027-05-19",
+     "name": "Hari Raya Waisak 2571 BE",
+     "type": "cuti_bersama"
+    },
+    {
+     "date": "2027-05-20",
+     "name": "Hari Raya Waisak 2571 BE",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2027-06-01",
+     "name": "Hari Lahir Pancasila",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2027-06-06",
+     "name": "1 Muharam Tahun Baru Islam 1449 H",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2027-08-15",
+     "name": "Maulid Nabi Muhammad saw.",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2027-08-17",
+     "name": "Proklamasi Kemerdekaan",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2027-12-24",
+     "name": "Kelahiran Yesus Kristus",
+     "type": "cuti_bersama"
+    },
+    {
+     "date": "2027-12-25",
+     "name": "Kelahiran Yesus Kristus",
+     "type": "libur_nasional"
+    },
+    {
+     "date": "2027-12-26",
+     "name": "Isra Mikraj Nabi Muhammad saw.",
+     "type": "libur_nasional"
+    }
+   ]
+  }
+ ],
+ "days": [
+  [
+   "2026-01-01",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2026-01-02",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-01-03",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-01-04",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-01-05",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-01-06",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-01-07",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-01-08",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-01-09",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-01-10",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-01-11",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-01-12",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-01-13",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-01-14",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-01-15",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-01-16",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2026-01-17",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-01-18",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-01-19",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-01-20",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-01-21",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-01-22",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-01-23",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-01-24",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-01-25",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-01-26",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-01-27",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-01-28",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-01-29",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-01-30",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-01-31",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-02-01",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-02-02",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-02-03",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-02-04",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-02-05",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-02-06",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-02-07",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-02-08",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-02-09",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-02-10",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-02-11",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-02-12",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-02-13",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-02-14",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-02-15",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-02-16",
+   false,
+   true,
+   false,
+   1
+  ],
+  [
+   "2026-02-17",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2026-02-18",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-02-19",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-02-20",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-02-21",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-02-22",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-02-23",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-02-24",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-02-25",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-02-26",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-02-27",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-02-28",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-03-01",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-03-02",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-03-03",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-03-04",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-03-05",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-03-06",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-03-07",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-03-08",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-03-09",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-03-10",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-03-11",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-03-12",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-03-13",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-03-14",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-03-15",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-03-16",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-03-17",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-03-18",
+   false,
+   true,
+   false,
+   1
+  ],
+  [
+   "2026-03-19",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2026-03-20",
+   false,
+   true,
+   false,
+   1
+  ],
+  [
+   "2026-03-21",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2026-03-22",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2026-03-23",
+   false,
+   true,
+   false,
+   1
+  ],
+  [
+   "2026-03-24",
+   false,
+   true,
+   false,
+   1
+  ],
+  [
+   "2026-03-25",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-03-26",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-03-27",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-03-28",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-03-29",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-03-30",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-03-31",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-01",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-02",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-03",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2026-04-04",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-04-05",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2026-04-06",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-07",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-08",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-09",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-10",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-11",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-04-12",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-04-13",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-14",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-15",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-16",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-17",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-18",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-04-19",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-04-20",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-21",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-22",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-23",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-24",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-25",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-04-26",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-04-27",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-28",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-29",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-04-30",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-05-01",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2026-05-02",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-05-03",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-05-04",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-05-05",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-05-06",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-05-07",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-05-08",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-05-09",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-05-10",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-05-11",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-05-12",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-05-13",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-05-14",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2026-05-15",
+   false,
+   true,
+   false,
+   1
+  ],
+  [
+   "2026-05-16",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-05-17",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-05-18",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-05-19",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-05-20",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-05-21",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-05-22",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-05-23",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-05-24",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-05-25",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-05-26",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-05-27",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2026-05-28",
+   false,
+   true,
+   false,
+   1
+  ],
+  [
+   "2026-05-29",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-05-30",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-05-31",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2026-06-01",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2026-06-02",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-06-03",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-06-04",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-06-05",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-06-06",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-06-07",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-06-08",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-06-09",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-06-10",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-06-11",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-06-12",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-06-13",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-06-14",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-06-15",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-06-16",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2026-06-17",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-06-18",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-06-19",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-06-20",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-06-21",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-06-22",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-06-23",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-06-24",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-06-25",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-06-26",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-06-27",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-06-28",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-06-29",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-06-30",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-01",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-02",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-03",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-04",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-07-05",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-07-06",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-07",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-08",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-09",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-10",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-11",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-07-12",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-07-13",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-14",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-15",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-16",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-17",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-18",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-07-19",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-07-20",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-21",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-22",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-23",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-24",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-25",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-07-26",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-07-27",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-28",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-29",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-30",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-07-31",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-08-01",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-08-02",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-08-03",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-08-04",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-08-05",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-08-06",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-08-07",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-08-08",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-08-09",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-08-10",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-08-11",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-08-12",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-08-13",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-08-14",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-08-15",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-08-16",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-08-17",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2026-08-18",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-08-19",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-08-20",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-08-21",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-08-22",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-08-23",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-08-24",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-08-25",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2026-08-26",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-08-27",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-08-28",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-08-29",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-08-30",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-08-31",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-01",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-02",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-03",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-04",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-05",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-09-06",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-09-07",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-08",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-09",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-10",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-11",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-12",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-09-13",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-09-14",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-15",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-16",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-17",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-18",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-19",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-09-20",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-09-21",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-22",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-23",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-24",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-25",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-26",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-09-27",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-09-28",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-29",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-09-30",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-01",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-02",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-03",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-10-04",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-10-05",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-06",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-07",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-08",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-09",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-10",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-10-11",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-10-12",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-13",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-14",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-15",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-16",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-17",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-10-18",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-10-19",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-20",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-21",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-22",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-23",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-24",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-10-25",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-10-26",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-27",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-28",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-29",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-30",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-10-31",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-11-01",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-11-02",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-11-03",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-11-04",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-11-05",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-11-06",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-11-07",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-11-08",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-11-09",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-11-10",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-11-11",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-11-12",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-11-13",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-11-14",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-11-15",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-11-16",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-11-17",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-11-18",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-11-19",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-11-20",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-11-21",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-11-22",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-11-23",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-11-24",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-11-25",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-11-26",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-11-27",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-11-28",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-11-29",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-11-30",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-01",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-02",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-03",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-04",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-05",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-12-06",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-12-07",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-08",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-09",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-10",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-11",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-12",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-12-13",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-12-14",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-15",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-16",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-17",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-18",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-19",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-12-20",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-12-21",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-22",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-23",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-24",
+   false,
+   true,
+   false,
+   1
+  ],
+  [
+   "2026-12-25",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2026-12-26",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2026-12-27",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2026-12-28",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-29",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-30",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2026-12-31",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-01-01",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2027-01-02",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-01-03",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-01-04",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-01-05",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2027-01-06",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-01-07",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-01-08",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-01-09",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-01-10",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-01-11",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-01-12",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-01-13",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-01-14",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-01-15",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-01-16",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-01-17",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-01-18",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-01-19",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-01-20",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-01-21",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-01-22",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-01-23",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-01-24",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-01-25",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-01-26",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-01-27",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-01-28",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-01-29",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-01-30",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-01-31",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-02-01",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-02-02",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-02-03",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-02-04",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-02-05",
+   false,
+   true,
+   false,
+   1
+  ],
+  [
+   "2027-02-06",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2027-02-07",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-02-08",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-02-09",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-02-10",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-02-11",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-02-12",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-02-13",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-02-14",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-02-15",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-02-16",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-02-17",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-02-18",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-02-19",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-02-20",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-02-21",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-02-22",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-02-23",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-02-24",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-02-25",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-02-26",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-02-27",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-02-28",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-03-01",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-03-02",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-03-03",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-03-04",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-03-05",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-03-06",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-03-07",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-03-08",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2027-03-09",
+   false,
+   true,
+   false,
+   1
+  ],
+  [
+   "2027-03-10",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2027-03-11",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2027-03-12",
+   false,
+   true,
+   false,
+   1
+  ],
+  [
+   "2027-03-13",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-03-14",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-03-15",
+   false,
+   true,
+   false,
+   1
+  ],
+  [
+   "2027-03-16",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-03-17",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-03-18",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-03-19",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-03-20",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-03-21",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-03-22",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-03-23",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-03-24",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-03-25",
+   false,
+   true,
+   false,
+   1
+  ],
+  [
+   "2027-03-26",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2027-03-27",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-03-28",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2027-03-29",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-03-30",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-03-31",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-01",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-02",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-03",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-04-04",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-04-05",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-06",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-07",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-08",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-09",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-10",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-04-11",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-04-12",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-13",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-14",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-15",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-16",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-17",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-04-18",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-04-19",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-20",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-21",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-22",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-23",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-24",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-04-25",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-04-26",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-27",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-28",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-29",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-04-30",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-05-01",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2027-05-02",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-05-03",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-05-04",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-05-05",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-05-06",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2027-05-07",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-05-08",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-05-09",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-05-10",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-05-11",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-05-12",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-05-13",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-05-14",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-05-15",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-05-16",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-05-17",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2027-05-18",
+   false,
+   true,
+   false,
+   1
+  ],
+  [
+   "2027-05-19",
+   false,
+   true,
+   false,
+   1
+  ],
+  [
+   "2027-05-20",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2027-05-21",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-05-22",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-05-23",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-05-24",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-05-25",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-05-26",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-05-27",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-05-28",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-05-29",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-05-30",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-05-31",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-01",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2027-06-02",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-03",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-04",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-05",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-06-06",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2027-06-07",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-08",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-09",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-10",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-11",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-12",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-06-13",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-06-14",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-15",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-16",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-17",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-18",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-19",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-06-20",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-06-21",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-22",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-23",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-24",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-25",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-26",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-06-27",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-06-28",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-29",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-06-30",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-01",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-02",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-03",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-07-04",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-07-05",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-06",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-07",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-08",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-09",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-10",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-07-11",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-07-12",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-13",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-14",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-15",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-16",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-17",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-07-18",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-07-19",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-20",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-21",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-22",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-23",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-24",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-07-25",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-07-26",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-27",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-28",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-29",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-30",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-07-31",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-08-01",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-08-02",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-08-03",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-08-04",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-08-05",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-08-06",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-08-07",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-08-08",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-08-09",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-08-10",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-08-11",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-08-12",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-08-13",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-08-14",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-08-15",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2027-08-16",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-08-17",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2027-08-18",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-08-19",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-08-20",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-08-21",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-08-22",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-08-23",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-08-24",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-08-25",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-08-26",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-08-27",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-08-28",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-08-29",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-08-30",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-08-31",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-01",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-02",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-03",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-04",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-09-05",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-09-06",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-07",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-08",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-09",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-10",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-11",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-09-12",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-09-13",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-14",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-15",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-16",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-17",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-18",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-09-19",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-09-20",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-21",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-22",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-23",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-24",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-25",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-09-26",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-09-27",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-28",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-29",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-09-30",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-01",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-02",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-10-03",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-10-04",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-05",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-06",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-07",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-08",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-09",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-10-10",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-10-11",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-12",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-13",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-14",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-15",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-16",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-10-17",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-10-18",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-19",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-20",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-21",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-22",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-23",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-10-24",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-10-25",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-26",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-27",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-28",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-29",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-10-30",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-10-31",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-11-01",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-02",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-03",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-04",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-05",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-06",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-11-07",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-11-08",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-09",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-10",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-11",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-12",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-13",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-11-14",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-11-15",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-16",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-17",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-18",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-19",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-20",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-11-21",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-11-22",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-23",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-24",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-25",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-26",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-27",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-11-28",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-11-29",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-11-30",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-01",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-02",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-03",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-04",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-12-05",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-12-06",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-07",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-08",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-09",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-10",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-11",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-12-12",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-12-13",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-14",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-15",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-16",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-17",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-18",
+   false,
+   false,
+   true,
+   0
+  ],
+  [
+   "2027-12-19",
+   false,
+   false,
+   false,
+   0
+  ],
+  [
+   "2027-12-20",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-21",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-22",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-23",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-24",
+   false,
+   true,
+   false,
+   1
+  ],
+  [
+   "2027-12-25",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2027-12-26",
+   false,
+   false,
+   false,
+   1
+  ],
+  [
+   "2027-12-27",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-28",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-29",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-30",
+   true,
+   true,
+   true,
+   0
+  ],
+  [
+   "2027-12-31",
+   true,
+   true,
+   true,
+   0
+  ]
+ ],
+ "add": [
+  {
+   "from": "2026-04-23",
+   "n": 3,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-04-28"
+   }
+  },
+  {
+   "from": "2027-09-13",
+   "n": 6,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-09-20"
+   }
+  },
+  {
+   "from": "2027-07-06",
+   "n": -8,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-06-24"
+   }
+  },
+  {
+   "from": "2026-12-16",
+   "n": 0,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-12-16"
+   }
+  },
+  {
+   "from": "2026-10-06",
+   "n": -3,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-10-01"
+   }
+  },
+  {
+   "from": "2027-06-10",
+   "n": -8,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-05-28"
+   }
+  },
+  {
+   "from": "2026-12-05",
+   "n": -5,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-11-29"
+   }
+  },
+  {
+   "from": "2026-02-03",
+   "n": -11,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-01-19"
+   }
+  },
+  {
+   "from": "2026-06-27",
+   "n": -9,
+   "opts": {},
+   "out": {
+    "ok": "2026-06-15"
+   }
+  },
+  {
+   "from": "2027-02-13",
+   "n": 2,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-02-16"
+   }
+  },
+  {
+   "from": "2027-03-04",
+   "n": 7,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-03-22"
+   }
+  },
+  {
+   "from": "2026-03-05",
+   "n": 9,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-03-25"
+   }
+  },
+  {
+   "from": "2026-04-04",
+   "n": -12,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-03-13"
+   }
+  },
+  {
+   "from": "2026-03-17",
+   "n": -1,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-03-16"
+   }
+  },
+  {
+   "from": "2027-09-30",
+   "n": -8,
+   "opts": {},
+   "out": {
+    "ok": "2027-09-20"
+   }
+  },
+  {
+   "from": "2026-10-09",
+   "n": 9,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-10-20"
+   }
+  },
+  {
+   "from": "2026-11-28",
+   "n": 8,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-12-08"
+   }
+  },
+  {
+   "from": "2026-02-28",
+   "n": -4,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-02-23"
+   }
+  },
+  {
+   "from": "2027-11-13",
+   "n": 3,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-11-17"
+   }
+  },
+  {
+   "from": "2026-06-18",
+   "n": -9,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-06-04"
+   }
+  },
+  {
+   "from": "2026-08-30",
+   "n": -8,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-08-16"
+   }
+  },
+  {
+   "from": "2027-10-19",
+   "n": -8,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-10-07"
+   }
+  },
+  {
+   "from": "2027-03-29",
+   "n": 15,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-04-19"
+   }
+  },
+  {
+   "from": "2027-07-28",
+   "n": -8,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-07-19"
+   }
+  },
+  {
+   "from": "2027-07-29",
+   "n": -9,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-07-16"
+   }
+  },
+  {
+   "from": "2026-11-24",
+   "n": 7,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-12-02"
+   }
+  },
+  {
+   "from": "2027-04-15",
+   "n": 11,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-04-28"
+   }
+  },
+  {
+   "from": "2026-03-23",
+   "n": 4,
+   "opts": {},
+   "out": {
+    "ok": "2026-03-30"
+   }
+  },
+  {
+   "from": "2026-05-15",
+   "n": -8,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-05-04"
+   }
+  },
+  {
+   "from": "2026-12-16",
+   "n": -1,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-12-15"
+   }
+  },
+  {
+   "from": "2027-04-30",
+   "n": -10,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-04-18"
+   }
+  },
+  {
+   "from": "2026-08-07",
+   "n": 8,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-08-20"
+   }
+  },
+  {
+   "from": "2026-12-15",
+   "n": -12,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-11-29"
+   }
+  },
+  {
+   "from": "2027-10-09",
+   "n": 14,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-10-28"
+   }
+  },
+  {
+   "from": "2026-02-22",
+   "n": 12,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-03-10"
+   }
+  },
+  {
+   "from": "2027-11-08",
+   "n": -14,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-10-19"
+   }
+  },
+  {
+   "from": "2026-02-06",
+   "n": -15,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-01-18"
+   }
+  },
+  {
+   "from": "2026-07-16",
+   "n": 9,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-07-29"
+   }
+  },
+  {
+   "from": "2026-05-10",
+   "n": 8,
+   "opts": {},
+   "out": {
+    "ok": "2026-05-22"
+   }
+  },
+  {
+   "from": "2027-10-10",
+   "n": -14,
+   "opts": {},
+   "out": {
+    "ok": "2027-09-21"
+   }
+  },
+  {
+   "from": "2026-06-20",
+   "n": 11,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-07-06"
+   }
+  },
+  {
+   "from": "2026-01-05",
+   "n": 3,
+   "opts": {},
+   "out": {
+    "ok": "2026-01-08"
+   }
+  },
+  {
+   "from": "2026-12-08",
+   "n": 2,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-12-10"
+   }
+  },
+  {
+   "from": "2027-10-11",
+   "n": 15,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-11-01"
+   }
+  },
+  {
+   "from": "2027-04-22",
+   "n": 11,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-05-10"
+   }
+  },
+  {
+   "from": "2027-05-11",
+   "n": 7,
+   "opts": {},
+   "out": {
+    "ok": "2027-05-26"
+   }
+  },
+  {
+   "from": "2027-09-28",
+   "n": 14,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-10-14"
+   }
+  },
+  {
+   "from": "2026-10-06",
+   "n": -5,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-09-29"
+   }
+  },
+  {
+   "from": "2026-01-20",
+   "n": -5,
+   "opts": {},
+   "out": {
+    "ok": "2026-01-12"
+   }
+  },
+  {
+   "from": "2027-03-09",
+   "n": -5,
+   "opts": {},
+   "out": {
+    "ok": "2027-03-01"
+   }
+  },
+  {
+   "from": "2026-12-31",
+   "n": -10,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-12-16"
+   }
+  },
+  {
+   "from": "2027-08-16",
+   "n": -5,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-08-09"
+   }
+  },
+  {
+   "from": "2027-03-16",
+   "n": -15,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-02-18"
+   }
+  },
+  {
+   "from": "2026-05-05",
+   "n": 15,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-05-25"
+   }
+  },
+  {
+   "from": "2026-06-05",
+   "n": 7,
+   "opts": {},
+   "out": {
+    "ok": "2026-06-17"
+   }
+  },
+  {
+   "from": "2026-09-03",
+   "n": -7,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-08-24"
+   }
+  },
+  {
+   "from": "2027-10-12",
+   "n": 10,
+   "opts": {},
+   "out": {
+    "ok": "2027-10-26"
+   }
+  },
+  {
+   "from": "2026-12-19",
+   "n": -4,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-12-15"
+   }
+  },
+  {
+   "from": "2026-09-16",
+   "n": -8,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-09-06"
+   }
+  },
+  {
+   "from": "2027-01-24",
+   "n": 10,
+   "opts": {},
+   "out": {
+    "ok": "2027-02-08"
+   }
+  },
+  {
+   "from": "2026-11-06",
+   "n": 11,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-11-22"
+   }
+  },
+  {
+   "from": "2027-07-20",
+   "n": 5,
+   "opts": {},
+   "out": {
+    "ok": "2027-07-27"
+   }
+  },
+  {
+   "from": "2026-04-04",
+   "n": -11,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-03-14"
+   }
+  },
+  {
+   "from": "2027-09-27",
+   "n": 10,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-10-08"
+   }
+  },
+  {
+   "from": "2027-02-24",
+   "n": -14,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-02-04"
+   }
+  },
+  {
+   "from": "2027-05-16",
+   "n": -10,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-04-30"
+   }
+  },
+  {
+   "from": "2026-03-04",
+   "n": -9,
+   "opts": {},
+   "out": {
+    "ok": "2026-02-19"
+   }
+  },
+  {
+   "from": "2027-08-01",
+   "n": -15,
+   "opts": {},
+   "out": {
+    "ok": "2027-07-12"
+   }
+  },
+  {
+   "from": "2027-07-18",
+   "n": 3,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-07-21"
+   }
+  },
+  {
+   "from": "2027-01-23",
+   "n": 13,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-02-10"
+   }
+  },
+  {
+   "from": "2026-10-13",
+   "n": 5,
+   "opts": {},
+   "out": {
+    "ok": "2026-10-20"
+   }
+  },
+  {
+   "from": "2026-12-12",
+   "n": 3,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-12-15"
+   }
+  },
+  {
+   "from": "2027-05-17",
+   "n": 3,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-05-24"
+   }
+  },
+  {
+   "from": "2026-11-17",
+   "n": -2,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-11-14"
+   }
+  },
+  {
+   "from": "2026-11-06",
+   "n": 14,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-11-23"
+   }
+  },
+  {
+   "from": "2027-07-29",
+   "n": -12,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-07-15"
+   }
+  },
+  {
+   "from": "2027-02-28",
+   "n": 0,
+   "opts": {},
+   "out": {
+    "ok": "2027-02-28"
+   }
+  },
+  {
+   "from": "2026-04-08",
+   "n": -2,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-04-06"
+   }
+  },
+  {
+   "from": "2027-01-19",
+   "n": -3,
+   "opts": {},
+   "out": {
+    "ok": "2027-01-14"
+   }
+  },
+  {
+   "from": "2027-05-27",
+   "n": -6,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-05-15"
+   }
+  },
+  {
+   "from": "2027-06-02",
+   "n": -9,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-05-21"
+   }
+  },
+  {
+   "from": "2026-09-26",
+   "n": -12,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-09-12"
+   }
+  },
+  {
+   "from": "2027-03-24",
+   "n": -11,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-03-02"
+   }
+  },
+  {
+   "from": "2026-02-25",
+   "n": 4,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-03-02"
+   }
+  },
+  {
+   "from": "2027-02-05",
+   "n": 0,
+   "opts": {},
+   "out": {
+    "ok": "2027-02-05"
+   }
+  },
+  {
+   "from": "2027-11-07",
+   "n": -1,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-11-04"
+   }
+  },
+  {
+   "from": "2027-03-14",
+   "n": -10,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-02-22"
+   }
+  },
+  {
+   "from": "2027-01-12",
+   "n": -2,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-01-08"
+   }
+  },
+  {
+   "from": "2026-10-13",
+   "n": 12,
+   "opts": {},
+   "out": {
+    "ok": "2026-10-29"
+   }
+  },
+  {
+   "from": "2027-02-28",
+   "n": 2,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-03-02"
+   }
+  },
+  {
+   "from": "2026-05-17",
+   "n": 15,
+   "opts": {},
+   "out": {
+    "ok": "2026-06-10"
+   }
+  },
+  {
+   "from": "2026-02-18",
+   "n": 10,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-03-04"
+   }
+  },
+  {
+   "from": "2027-06-08",
+   "n": 14,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-06-28"
+   }
+  },
+  {
+   "from": "2027-06-22",
+   "n": 6,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-06-29"
+   }
+  },
+  {
+   "from": "2026-06-24",
+   "n": 5,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-07-01"
+   }
+  },
+  {
+   "from": "2027-11-26",
+   "n": -15,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-11-05"
+   }
+  },
+  {
+   "from": "2026-01-14",
+   "n": -5,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-01-07"
+   }
+  },
+  {
+   "from": "2026-09-04",
+   "n": -8,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-08-26"
+   }
+  },
+  {
+   "from": "2026-09-02",
+   "n": 12,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-09-18"
+   }
+  },
+  {
+   "from": "2027-09-30",
+   "n": -2,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-09-28"
+   }
+  },
+  {
+   "from": "2026-08-09",
+   "n": -4,
+   "opts": {},
+   "out": {
+    "ok": "2026-08-04"
+   }
+  },
+  {
+   "from": "2026-11-15",
+   "n": -1,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-11-12"
+   }
+  },
+  {
+   "from": "2027-05-31",
+   "n": -5,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-05-24"
+   }
+  },
+  {
+   "from": "2027-01-19",
+   "n": 9,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-01-29"
+   }
+  },
+  {
+   "from": "2026-07-20",
+   "n": 15,
+   "opts": {},
+   "out": {
+    "ok": "2026-08-10"
+   }
+  },
+  {
+   "from": "2027-10-05",
+   "n": 13,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-10-24"
+   }
+  },
+  {
+   "from": "2027-09-17",
+   "n": -3,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-09-14"
+   }
+  },
+  {
+   "from": "2026-08-19",
+   "n": -1,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-08-18"
+   }
+  },
+  {
+   "from": "2026-04-16",
+   "n": -14,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-03-26"
+   }
+  },
+  {
+   "from": "2027-06-07",
+   "n": -5,
+   "opts": {},
+   "out": {
+    "ok": "2027-05-28"
+   }
+  },
+  {
+   "from": "2026-09-10",
+   "n": 0,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-09-10"
+   }
+  },
+  {
+   "from": "2027-08-20",
+   "n": 15,
+   "opts": {},
+   "out": {
+    "ok": "2027-09-10"
+   }
+  },
+  {
+   "from": "2027-05-08",
+   "n": -8,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-04-26"
+   }
+  },
+  {
+   "from": "2026-12-09",
+   "n": -13,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-11-24"
+   }
+  },
+  {
+   "from": "2027-05-21",
+   "n": 10,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-06-03"
+   }
+  },
+  {
+   "from": "2027-11-06",
+   "n": 3,
+   "opts": {},
+   "out": {
+    "ok": "2027-11-10"
+   }
+  },
+  {
+   "from": "2027-04-02",
+   "n": 13,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-04-20"
+   }
+  },
+  {
+   "from": "2026-01-10",
+   "n": -2,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-01-07"
+   }
+  },
+  {
+   "from": "2026-05-20",
+   "n": -13,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-04-29"
+   }
+  },
+  {
+   "from": "2027-07-04",
+   "n": -11,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-06-17"
+   }
+  },
+  {
+   "from": "2026-05-02",
+   "n": -13,
+   "opts": {},
+   "out": {
+    "ok": "2026-04-14"
+   }
+  },
+  {
+   "from": "2026-12-12",
+   "n": -2,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-12-10"
+   }
+  },
+  {
+   "from": "2027-11-16",
+   "n": 14,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-12-02"
+   }
+  },
+  {
+   "from": "2027-10-14",
+   "n": -3,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-10-11"
+   }
+  },
+  {
+   "from": "2026-10-24",
+   "n": 4,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-10-28"
+   }
+  },
+  {
+   "from": "2027-05-12",
+   "n": 5,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-05-22"
+   }
+  },
+  {
+   "from": "2026-06-30",
+   "n": 4,
+   "opts": {},
+   "out": {
+    "ok": "2026-07-06"
+   }
+  },
+  {
+   "from": "2027-06-21",
+   "n": 9,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-07-02"
+   }
+  },
+  {
+   "from": "2026-10-03",
+   "n": 3,
+   "opts": {},
+   "out": {
+    "ok": "2026-10-07"
+   }
+  },
+  {
+   "from": "2026-06-13",
+   "n": -15,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-05-21"
+   }
+  },
+  {
+   "from": "2027-09-07",
+   "n": -7,
+   "opts": {},
+   "out": {
+    "ok": "2027-08-27"
+   }
+  },
+  {
+   "from": "2027-02-20",
+   "n": 0,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-02-20"
+   }
+  },
+  {
+   "from": "2027-01-06",
+   "n": 5,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-01-13"
+   }
+  },
+  {
+   "from": "2026-11-20",
+   "n": 12,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-12-04"
+   }
+  },
+  {
+   "from": "2027-06-29",
+   "n": -10,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-06-15"
+   }
+  },
+  {
+   "from": "2026-04-22",
+   "n": -5,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-04-15"
+   }
+  },
+  {
+   "from": "2026-07-18",
+   "n": -4,
+   "opts": {},
+   "out": {
+    "ok": "2026-07-14"
+   }
+  },
+  {
+   "from": "2027-09-18",
+   "n": -12,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-09-04"
+   }
+  },
+  {
+   "from": "2026-01-17",
+   "n": -9,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-01-06"
+   }
+  },
+  {
+   "from": "2026-01-14",
+   "n": 8,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-01-24"
+   }
+  },
+  {
+   "from": "2027-11-02",
+   "n": -4,
+   "opts": {},
+   "out": {
+    "ok": "2027-10-27"
+   }
+  },
+  {
+   "from": "2027-08-08",
+   "n": -14,
+   "opts": {},
+   "out": {
+    "ok": "2027-07-20"
+   }
+  },
+  {
+   "from": "2027-11-15",
+   "n": 11,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-11-30"
+   }
+  },
+  {
+   "from": "2027-09-23",
+   "n": 15,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-10-14"
+   }
+  },
+  {
+   "from": "2027-02-08",
+   "n": -4,
+   "opts": {},
+   "out": {
+    "ok": "2027-02-01"
+   }
+  },
+  {
+   "from": "2026-07-25",
+   "n": 11,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-08-09"
+   }
+  },
+  {
+   "from": "2026-12-13",
+   "n": -2,
+   "opts": {},
+   "out": {
+    "ok": "2026-12-10"
+   }
+  },
+  {
+   "from": "2026-04-16",
+   "n": 0,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-04-16"
+   }
+  },
+  {
+   "from": "2026-06-12",
+   "n": -1,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-06-11"
+   }
+  },
+  {
+   "from": "2027-11-23",
+   "n": 15,
+   "opts": {},
+   "out": {
+    "ok": "2027-12-14"
+   }
+  },
+  {
+   "from": "2026-03-26",
+   "n": -7,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-03-16"
+   }
+  },
+  {
+   "from": "2027-10-08",
+   "n": 5,
+   "opts": {},
+   "out": {
+    "ok": "2027-10-15"
+   }
+  },
+  {
+   "from": "2027-04-30",
+   "n": -7,
+   "opts": {},
+   "out": {
+    "ok": "2027-04-21"
+   }
+  },
+  {
+   "from": "2026-10-17",
+   "n": 11,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-11-02"
+   }
+  },
+  {
+   "from": "2027-02-20",
+   "n": -8,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-02-11"
+   }
+  },
+  {
+   "from": "2026-07-19",
+   "n": -12,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-07-06"
+   }
+  },
+  {
+   "from": "2027-10-26",
+   "n": -14,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-10-09"
+   }
+  },
+  {
+   "from": "2027-09-04",
+   "n": -10,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-08-22"
+   }
+  },
+  {
+   "from": "2027-09-06",
+   "n": -5,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-08-30"
+   }
+  },
+  {
+   "from": "2027-03-15",
+   "n": 6,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-03-23"
+   }
+  },
+  {
+   "from": "2027-08-26",
+   "n": -10,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-08-10"
+   }
+  },
+  {
+   "from": "2026-07-27",
+   "n": -2,
+   "opts": {},
+   "out": {
+    "ok": "2026-07-23"
+   }
+  },
+  {
+   "from": "2026-10-17",
+   "n": 12,
+   "opts": {},
+   "out": {
+    "ok": "2026-11-03"
+   }
+  },
+  {
+   "from": "2026-01-15",
+   "n": 14,
+   "opts": {},
+   "out": {
+    "ok": "2026-02-05"
+   }
+  },
+  {
+   "from": "2026-04-13",
+   "n": 1,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-04-14"
+   }
+  },
+  {
+   "from": "2027-01-17",
+   "n": -12,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-12-29"
+   }
+  },
+  {
+   "from": "2026-08-28",
+   "n": 1,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-08-29"
+   }
+  },
+  {
+   "from": "2026-12-12",
+   "n": 15,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-01-03"
+   }
+  },
+  {
+   "from": "2026-05-12",
+   "n": 1,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-05-13"
+   }
+  },
+  {
+   "from": "2027-08-03",
+   "n": 5,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-08-09"
+   }
+  },
+  {
+   "from": "2026-10-19",
+   "n": 14,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-11-04"
+   }
+  },
+  {
+   "from": "2026-04-13",
+   "n": -15,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-03-15"
+   }
+  },
+  {
+   "from": "2026-12-26",
+   "n": 14,
+   "opts": {},
+   "out": {
+    "ok": "2027-01-18"
+   }
+  },
+  {
+   "from": "2027-03-31",
+   "n": 8,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-04-12"
+   }
+  },
+  {
+   "from": "2026-02-24",
+   "n": 10,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-03-07"
+   }
+  },
+  {
+   "from": "2026-01-12",
+   "n": 9,
+   "opts": {},
+   "out": {
+    "ok": "2026-01-26"
+   }
+  },
+  {
+   "from": "2027-11-14",
+   "n": -5,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-11-08"
+   }
+  },
+  {
+   "from": "2027-04-23",
+   "n": 9,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-05-05"
+   }
+  },
+  {
+   "from": "2026-01-16",
+   "n": 13,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-02-04"
+   }
+  },
+  {
+   "from": "2027-06-12",
+   "n": -12,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-05-26"
+   }
+  },
+  {
+   "from": "2027-09-19",
+   "n": -14,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-09-03"
+   }
+  },
+  {
+   "from": "2026-09-25",
+   "n": -7,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-09-17"
+   }
+  },
+  {
+   "from": "2026-04-23",
+   "n": 8,
+   "opts": {},
+   "out": {
+    "ok": "2026-05-06"
+   }
+  },
+  {
+   "from": "2027-05-28",
+   "n": -5,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-05-22"
+   }
+  },
+  {
+   "from": "2027-10-26",
+   "n": -3,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-10-21"
+   }
+  },
+  {
+   "from": "2026-05-04",
+   "n": -4,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-04-28"
+   }
+  },
+  {
+   "from": "2027-11-03",
+   "n": 5,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-11-10"
+   }
+  },
+  {
+   "from": "2026-03-01",
+   "n": -4,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-02-24"
+   }
+  },
+  {
+   "from": "2026-04-23",
+   "n": -5,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-04-17"
+   }
+  },
+  {
+   "from": "2027-08-08",
+   "n": 15,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-08-30"
+   }
+  },
+  {
+   "from": "2027-05-27",
+   "n": -5,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-05-16"
+   }
+  },
+  {
+   "from": "2026-09-09",
+   "n": 8,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-09-18"
+   }
+  },
+  {
+   "from": "2027-03-18",
+   "n": -1,
+   "opts": {},
+   "out": {
+    "ok": "2027-03-17"
+   }
+  },
+  {
+   "from": "2026-06-24",
+   "n": -1,
+   "opts": {},
+   "out": {
+    "ok": "2026-06-23"
+   }
+  },
+  {
+   "from": "2026-10-21",
+   "n": -9,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-10-10"
+   }
+  },
+  {
+   "from": "2027-10-06",
+   "n": -2,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-10-04"
+   }
+  },
+  {
+   "from": "2026-03-09",
+   "n": -6,
+   "opts": {},
+   "out": {
+    "ok": "2026-02-27"
+   }
+  },
+  {
+   "from": "2027-04-27",
+   "n": 10,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-05-12"
+   }
+  },
+  {
+   "from": "2026-03-11",
+   "n": -15,
+   "opts": {},
+   "out": {
+    "ok": "2026-02-18"
+   }
+  },
+  {
+   "from": "2026-05-07",
+   "n": -15,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-04-16"
+   }
+  },
+  {
+   "from": "2026-04-26",
+   "n": 4,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-04-30"
+   }
+  },
+  {
+   "from": "2026-03-23",
+   "n": 1,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-03-24"
+   }
+  },
+  {
+   "from": "2026-11-14",
+   "n": -3,
+   "opts": {},
+   "out": {
+    "ok": "2026-11-11"
+   }
+  },
+  {
+   "from": "2027-01-25",
+   "n": -10,
+   "opts": {},
+   "out": {
+    "ok": "2027-01-11"
+   }
+  },
+  {
+   "from": "2026-10-07",
+   "n": 12,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-10-25"
+   }
+  },
+  {
+   "from": "2027-06-24",
+   "n": -10,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-06-12"
+   }
+  },
+  {
+   "from": "2026-01-30",
+   "n": -8,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-01-20"
+   }
+  },
+  {
+   "from": "2027-09-12",
+   "n": -8,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-09-01"
+   }
+  },
+  {
+   "from": "2026-10-04",
+   "n": -5,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-09-27"
+   }
+  },
+  {
+   "from": "2026-02-09",
+   "n": 1,
+   "opts": {},
+   "out": {
+    "ok": "2026-02-10"
+   }
+  },
+  {
+   "from": "2026-11-23",
+   "n": 5,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-11-30"
+   }
+  },
+  {
+   "from": "2027-04-08",
+   "n": 13,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-04-27"
+   }
+  },
+  {
+   "from": "2026-03-01",
+   "n": 5,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-03-06"
+   }
+  },
+  {
+   "from": "2026-06-17",
+   "n": 4,
+   "opts": {},
+   "out": {
+    "ok": "2026-06-23"
+   }
+  },
+  {
+   "from": "2026-08-09",
+   "n": 0,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-08-09"
+   }
+  },
+  {
+   "from": "2027-06-09",
+   "n": 7,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-06-17"
+   }
+  },
+  {
+   "from": "2026-01-24",
+   "n": -1,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-01-22"
+   }
+  },
+  {
+   "from": "2026-04-21",
+   "n": -11,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-04-06"
+   }
+  },
+  {
+   "from": "2027-03-02",
+   "n": -7,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-02-21"
+   }
+  },
+  {
+   "from": "2027-09-13",
+   "n": -14,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-08-27"
+   }
+  },
+  {
+   "from": "2026-09-18",
+   "n": -2,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-09-16"
+   }
+  },
+  {
+   "from": "2027-06-01",
+   "n": 14,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-06-17"
+   }
+  },
+  {
+   "from": "2027-04-20",
+   "n": -14,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-03-31"
+   }
+  },
+  {
+   "from": "2027-08-07",
+   "n": 7,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-08-18"
+   }
+  },
+  {
+   "from": "2026-04-13",
+   "n": -2,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-04-10"
+   }
+  },
+  {
+   "from": "2026-08-30",
+   "n": 11,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-09-14"
+   }
+  },
+  {
+   "from": "2027-08-11",
+   "n": -3,
+   "opts": {},
+   "out": {
+    "ok": "2027-08-06"
+   }
+  },
+  {
+   "from": "2026-04-19",
+   "n": 8,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-04-28"
+   }
+  },
+  {
+   "from": "2027-07-25",
+   "n": -13,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-07-07"
+   }
+  },
+  {
+   "from": "2027-06-29",
+   "n": 13,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-07-14"
+   }
+  },
+  {
+   "from": "2026-11-28",
+   "n": -15,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-11-11"
+   }
+  },
+  {
+   "from": "2027-02-02",
+   "n": 15,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-02-23"
+   }
+  },
+  {
+   "from": "2026-07-22",
+   "n": -2,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-07-20"
+   }
+  },
+  {
+   "from": "2027-10-17",
+   "n": -3,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-10-13"
+   }
+  },
+  {
+   "from": "2027-08-30",
+   "n": -9,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-08-16"
+   }
+  },
+  {
+   "from": "2026-02-23",
+   "n": 6,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-03-02"
+   }
+  },
+  {
+   "from": "2027-06-09",
+   "n": 9,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-06-22"
+   }
+  },
+  {
+   "from": "2026-07-10",
+   "n": 2,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-07-14"
+   }
+  },
+  {
+   "from": "2027-10-15",
+   "n": -10,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-10-01"
+   }
+  },
+  {
+   "from": "2027-07-21",
+   "n": 8,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-07-30"
+   }
+  },
+  {
+   "from": "2027-09-12",
+   "n": 3,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-09-15"
+   }
+  },
+  {
+   "from": "2026-09-18",
+   "n": 9,
+   "opts": {},
+   "out": {
+    "ok": "2026-10-01"
+   }
+  },
+  {
+   "from": "2027-04-05",
+   "n": 12,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-04-21"
+   }
+  },
+  {
+   "from": "2026-07-23",
+   "n": 2,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-07-27"
+   }
+  },
+  {
+   "from": "2027-11-20",
+   "n": 8,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-11-30"
+   }
+  },
+  {
+   "from": "2027-08-03",
+   "n": 8,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-08-16"
+   }
+  },
+  {
+   "from": "2027-06-08",
+   "n": 5,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-06-14"
+   }
+  },
+  {
+   "from": "2026-09-29",
+   "n": -14,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-09-09"
+   }
+  },
+  {
+   "from": "2026-01-07",
+   "n": -5,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "error": "RangeError",
+    "message": "Data libur tahun 2025 belum tersedia (tersedia: 2026, 2027). SKB 3 Menteri biasanya terbit sekitar September tahun sebelumnya."
+   }
+  },
+  {
+   "from": "2026-11-24",
+   "n": 5,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-12-01"
+   }
+  },
+  {
+   "from": "2026-10-04",
+   "n": 13,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-10-21"
+   }
+  },
+  {
+   "from": "2026-09-08",
+   "n": -2,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-09-04"
+   }
+  },
+  {
+   "from": "2026-02-03",
+   "n": 3,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-02-06"
+   }
+  },
+  {
+   "from": "2027-08-01",
+   "n": -13,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-07-13"
+   }
+  },
+  {
+   "from": "2027-03-25",
+   "n": -15,
+   "opts": {},
+   "out": {
+    "ok": "2027-02-24"
+   }
+  },
+  {
+   "from": "2026-02-03",
+   "n": 15,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-02-23"
+   }
+  },
+  {
+   "from": "2026-09-07",
+   "n": 1,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-09-08"
+   }
+  },
+  {
+   "from": "2026-06-10",
+   "n": 12,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-06-29"
+   }
+  },
+  {
+   "from": "2027-06-26",
+   "n": 11,
+   "opts": {},
+   "out": {
+    "ok": "2027-07-12"
+   }
+  },
+  {
+   "from": "2026-05-30",
+   "n": -12,
+   "opts": {},
+   "out": {
+    "ok": "2026-05-08"
+   }
+  },
+  {
+   "from": "2027-10-27",
+   "n": -1,
+   "opts": {},
+   "out": {
+    "ok": "2027-10-26"
+   }
+  },
+  {
+   "from": "2026-09-02",
+   "n": 7,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-09-11"
+   }
+  },
+  {
+   "from": "2026-01-12",
+   "n": -7,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "error": "RangeError",
+    "message": "Data libur tahun 2025 belum tersedia (tersedia: 2026, 2027). SKB 3 Menteri biasanya terbit sekitar September tahun sebelumnya."
+   }
+  },
+  {
+   "from": "2026-05-10",
+   "n": 13,
+   "opts": {},
+   "out": {
+    "ok": "2026-06-03"
+   }
+  },
+  {
+   "from": "2027-08-13",
+   "n": 10,
+   "opts": {},
+   "out": {
+    "ok": "2027-08-30"
+   }
+  },
+  {
+   "from": "2026-06-21",
+   "n": 5,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-06-26"
+   }
+  },
+  {
+   "from": "2027-04-17",
+   "n": -12,
+   "opts": {},
+   "out": {
+    "ok": "2027-04-01"
+   }
+  },
+  {
+   "from": "2027-01-11",
+   "n": 14,
+   "opts": {},
+   "out": {
+    "ok": "2027-01-29"
+   }
+  },
+  {
+   "from": "2027-10-24",
+   "n": 4,
+   "opts": {},
+   "out": {
+    "ok": "2027-10-28"
+   }
+  },
+  {
+   "from": "2026-05-31",
+   "n": -1,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-05-29"
+   }
+  },
+  {
+   "from": "2026-09-15",
+   "n": 3,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-09-20"
+   }
+  },
+  {
+   "from": "2027-02-05",
+   "n": 2,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-02-09"
+   }
+  },
+  {
+   "from": "2026-09-27",
+   "n": 4,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-10-01"
+   }
+  },
+  {
+   "from": "2027-10-31",
+   "n": -15,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-10-10"
+   }
+  },
+  {
+   "from": "2026-03-14",
+   "n": -4,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-03-10"
+   }
+  },
+  {
+   "from": "2027-04-29",
+   "n": -8,
+   "opts": {},
+   "out": {
+    "ok": "2027-04-19"
+   }
+  },
+  {
+   "from": "2027-07-06",
+   "n": 4,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-07-12"
+   }
+  },
+  {
+   "from": "2027-09-10",
+   "n": -4,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-09-06"
+   }
+  },
+  {
+   "from": "2027-04-03",
+   "n": -10,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-03-19"
+   }
+  },
+  {
+   "from": "2027-02-24",
+   "n": -8,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-02-12"
+   }
+  },
+  {
+   "from": "2026-04-01",
+   "n": 2,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-04-06"
+   }
+  },
+  {
+   "from": "2026-03-13",
+   "n": -13,
+   "opts": {},
+   "out": {
+    "ok": "2026-02-24"
+   }
+  },
+  {
+   "from": "2026-01-02",
+   "n": 10,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-01-19"
+   }
+  },
+  {
+   "from": "2026-03-09",
+   "n": 2,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-03-11"
+   }
+  },
+  {
+   "from": "2027-01-11",
+   "n": -6,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-12-30"
+   }
+  },
+  {
+   "from": "2026-06-27",
+   "n": -12,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2026-06-12"
+   }
+  },
+  {
+   "from": "2026-11-03",
+   "n": 6,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-11-11"
+   }
+  },
+  {
+   "from": "2027-08-24",
+   "n": -5,
+   "opts": {
+    "weekend": [
+     0
+    ]
+   },
+   "out": {
+    "ok": "2027-08-18"
+   }
+  },
+  {
+   "from": "2027-03-07",
+   "n": 1,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-03-09"
+   }
+  },
+  {
+   "from": "2026-06-27",
+   "n": -4,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-06-22"
+   }
+  },
+  {
+   "from": "2027-04-30",
+   "n": -13,
+   "opts": {},
+   "out": {
+    "ok": "2027-04-13"
+   }
+  },
+  {
+   "from": "2027-05-13",
+   "n": 10,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2027-05-31"
+   }
+  },
+  {
+   "from": "2026-05-16",
+   "n": 0,
+   "opts": {
+    "cutiBersama": false
+   },
+   "out": {
+    "ok": "2026-05-16"
+   }
+  },
+  {
+   "from": "2026-08-10",
+   "n": 12,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-08-30"
+   }
+  },
+  {
+   "from": "2026-10-18",
+   "n": 9,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2026-10-29"
+   }
+  },
+  {
+   "from": "2026-12-08",
+   "n": 8,
+   "opts": {},
+   "out": {
+    "ok": "2026-12-18"
+   }
+  },
+  {
+   "from": "2027-03-20",
+   "n": 3,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-03-23"
+   }
+  },
+  {
+   "from": "2027-10-07",
+   "n": 7,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-10-18"
+   }
+  },
+  {
+   "from": "2026-04-20",
+   "n": 8,
+   "opts": {},
+   "out": {
+    "ok": "2026-04-30"
+   }
+  },
+  {
+   "from": "2027-08-28",
+   "n": -14,
+   "opts": {
+    "weekend": [
+     5,
+     6
+    ]
+   },
+   "out": {
+    "ok": "2027-08-05"
+   }
+  }
+ ],
+ "count": [
+  {
+   "from": "2027-05-17",
+   "to": "2027-02-13",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-04-09",
+   "to": "2027-04-17",
+   "out": 245,
+   "noCuti": 253
+  },
+  {
+   "from": "2026-12-10",
+   "to": "2027-10-08",
+   "out": 197,
+   "noCuti": 205
+  },
+  {
+   "from": "2027-05-13",
+   "to": "2027-05-02",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-11-04",
+   "to": "2026-05-21",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2027-01-07",
+   "to": "2026-10-01",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-03-21",
+   "to": "2027-09-29",
+   "out": 366,
+   "noCuti": 378
+  },
+  {
+   "from": "2026-01-30",
+   "to": "2027-12-14",
+   "out": 451,
+   "noCuti": 466
+  },
+  {
+   "from": "2026-08-10",
+   "to": "2027-06-19",
+   "out": 204,
+   "noCuti": 212
+  },
+  {
+   "from": "2027-04-02",
+   "to": "2026-11-13",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-08-15",
+   "to": "2026-03-23",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2027-01-09",
+   "to": "2027-01-31",
+   "out": 15,
+   "noCuti": 15
+  },
+  {
+   "from": "2026-02-09",
+   "to": "2026-01-09",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-05-31",
+   "to": "2027-10-29",
+   "out": 346,
+   "noCuti": 354
+  },
+  {
+   "from": "2027-02-26",
+   "to": "2027-02-20",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-01-24",
+   "to": "2027-11-12",
+   "out": 433,
+   "noCuti": 448
+  },
+  {
+   "from": "2027-02-12",
+   "to": "2026-06-04",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-06-15",
+   "to": "2027-01-14",
+   "out": 147,
+   "noCuti": 148
+  },
+  {
+   "from": "2027-02-17",
+   "to": "2026-09-22",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-10-31",
+   "to": "2027-11-12",
+   "out": 250,
+   "noCuti": 258
+  },
+  {
+   "from": "2026-10-27",
+   "to": "2027-01-13",
+   "out": 53,
+   "noCuti": 54
+  },
+  {
+   "from": "2026-01-30",
+   "to": "2026-05-19",
+   "out": 67,
+   "noCuti": 73
+  },
+  {
+   "from": "2026-07-29",
+   "to": "2027-12-05",
+   "out": 331,
+   "noCuti": 339
+  },
+  {
+   "from": "2027-07-08",
+   "to": "2026-09-27",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2027-02-24",
+   "to": "2027-12-18",
+   "out": 198,
+   "noCuti": 204
+  },
+  {
+   "from": "2026-11-22",
+   "to": "2027-01-17",
+   "out": 36,
+   "noCuti": 37
+  },
+  {
+   "from": "2026-10-05",
+   "to": "2026-07-14",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2027-08-11",
+   "to": "2026-03-01",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-06-07",
+   "to": "2027-05-25",
+   "out": 231,
+   "noCuti": 239
+  },
+  {
+   "from": "2026-05-05",
+   "to": "2027-02-17",
+   "out": 194,
+   "noCuti": 198
+  },
+  {
+   "from": "2027-04-15",
+   "to": "2027-06-01",
+   "out": 28,
+   "noCuti": 30
+  },
+  {
+   "from": "2026-05-04",
+   "to": "2027-02-09",
+   "out": 189,
+   "noCuti": 193
+  },
+  {
+   "from": "2027-03-17",
+   "to": "2027-07-26",
+   "out": 86,
+   "noCuti": 89
+  },
+  {
+   "from": "2027-04-15",
+   "to": "2026-03-20",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-09-08",
+   "to": "2027-08-13",
+   "out": 225,
+   "noCuti": 233
+  },
+  {
+   "from": "2027-02-24",
+   "to": "2026-12-04",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2027-01-15",
+   "to": "2026-02-04",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-08-14",
+   "to": "2027-04-23",
+   "out": 166,
+   "noCuti": 172
+  },
+  {
+   "from": "2026-11-21",
+   "to": "2026-09-19",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-04-22",
+   "to": "2027-08-30",
+   "out": 325,
+   "noCuti": 335
+  },
+  {
+   "from": "2027-01-08",
+   "to": "2027-10-06",
+   "out": 178,
+   "noCuti": 185
+  },
+  {
+   "from": "2026-07-11",
+   "to": "2027-10-21",
+   "out": 312,
+   "noCuti": 320
+  },
+  {
+   "from": "2027-04-24",
+   "to": "2027-09-03",
+   "out": 88,
+   "noCuti": 90
+  },
+  {
+   "from": "2026-03-20",
+   "to": "2026-06-14",
+   "out": 51,
+   "noCuti": 56
+  },
+  {
+   "from": "2027-07-10",
+   "to": "2026-12-13",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2027-04-13",
+   "to": "2026-08-28",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-05-31",
+   "to": "2027-09-22",
+   "out": 319,
+   "noCuti": 327
+  },
+  {
+   "from": "2026-01-20",
+   "to": "2026-10-21",
+   "out": 180,
+   "noCuti": 187
+  },
+  {
+   "from": "2026-12-04",
+   "to": "2026-12-22",
+   "out": 13,
+   "noCuti": 13
+  },
+  {
+   "from": "2027-08-13",
+   "to": "2027-04-06",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2027-06-17",
+   "to": "2027-07-27",
+   "out": 29,
+   "noCuti": 29
+  },
+  {
+   "from": "2027-08-15",
+   "to": "2026-02-27",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2027-05-26",
+   "to": "2027-01-27",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-10-03",
+   "to": "2027-10-11",
+   "out": 246,
+   "noCuti": 254
+  },
+  {
+   "from": "2027-07-22",
+   "to": "2027-01-29",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2027-04-11",
+   "to": "2026-06-16",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2027-06-12",
+   "to": "2027-03-08",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-03-06",
+   "to": "2026-09-11",
+   "out": 121,
+   "noCuti": 127
+  },
+  {
+   "from": "2027-06-16",
+   "to": "2027-11-11",
+   "out": 106,
+   "noCuti": 106
+  },
+  {
+   "from": "2027-06-24",
+   "to": "2027-11-13",
+   "out": 101,
+   "noCuti": 101
+  },
+  {
+   "from": "2026-03-12",
+   "to": "2027-04-26",
+   "out": 265,
+   "noCuti": 277
+  },
+  {
+   "from": "2026-07-22",
+   "to": "2027-09-28",
+   "out": 288,
+   "noCuti": 296
+  },
+  {
+   "from": "2026-12-05",
+   "to": "2027-06-23",
+   "out": 124,
+   "noCuti": 132
+  },
+  {
+   "from": "2026-08-13",
+   "to": "2027-10-28",
+   "out": 294,
+   "noCuti": 302
+  },
+  {
+   "from": "2026-08-26",
+   "to": "2027-04-03",
+   "out": 145,
+   "noCuti": 151
+  },
+  {
+   "from": "2026-10-15",
+   "to": "2026-11-18",
+   "out": 25,
+   "noCuti": 25
+  },
+  {
+   "from": "2026-09-23",
+   "to": "2026-01-16",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2027-06-13",
+   "to": "2027-08-23",
+   "out": 50,
+   "noCuti": 50
+  },
+  {
+   "from": "2026-12-27",
+   "to": "2027-11-10",
+   "out": 210,
+   "noCuti": 217
+  },
+  {
+   "from": "2026-10-27",
+   "to": "2027-03-02",
+   "out": 86,
+   "noCuti": 88
+  },
+  {
+   "from": "2026-04-06",
+   "to": "2026-03-03",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2027-01-10",
+   "to": "2026-11-13",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2027-02-27",
+   "to": "2027-03-10",
+   "out": 5,
+   "noCuti": 6
+  },
+  {
+   "from": "2027-04-29",
+   "to": "2027-07-16",
+   "out": 51,
+   "noCuti": 53
+  },
+  {
+   "from": "2026-03-06",
+   "to": "2026-12-27",
+   "out": 194,
+   "noCuti": 201
+  },
+  {
+   "from": "2027-05-06",
+   "to": "2027-03-31",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-02-01",
+   "to": "2026-01-13",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2027-02-27",
+   "to": "2026-03-06",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2027-03-22",
+   "to": "2027-07-25",
+   "out": 82,
+   "noCuti": 85
+  },
+  {
+   "from": "2027-06-18",
+   "to": "2026-09-03",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2027-03-10",
+   "to": "2026-04-03",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2027-01-24",
+   "to": "2026-12-20",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-11-12",
+   "to": "2027-05-18",
+   "out": 118,
+   "noCuti": 125
+  },
+  {
+   "from": "2026-03-07",
+   "to": "2026-03-01",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2027-07-26",
+   "to": "2026-08-19",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2027-08-18",
+   "to": "2026-09-10",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-10-21",
+   "to": "2027-10-21",
+   "out": 242,
+   "noCuti": 250
+  },
+  {
+   "from": "2026-07-21",
+   "to": "2026-03-06",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-03-19",
+   "to": "2026-02-03",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-09-23",
+   "to": "2026-04-05",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-10-06",
+   "to": "2026-10-22",
+   "out": 13,
+   "noCuti": 13
+  },
+  {
+   "from": "2026-10-24",
+   "to": "2027-06-01",
+   "out": 138,
+   "noCuti": 146
+  },
+  {
+   "from": "2026-02-11",
+   "to": "2026-11-23",
+   "out": 187,
+   "noCuti": 194
+  },
+  {
+   "from": "2026-11-23",
+   "to": "2027-06-20",
+   "out": 131,
+   "noCuti": 139
+  },
+  {
+   "from": "2026-05-29",
+   "to": "2027-03-23",
+   "out": 198,
+   "noCuti": 203
+  },
+  {
+   "from": "2027-01-28",
+   "to": "2026-09-27",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-10-02",
+   "to": "2027-02-23",
+   "out": 98,
+   "noCuti": 100
+  },
+  {
+   "from": "2026-10-25",
+   "to": "2026-01-06",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2027-07-12",
+   "to": "2027-04-25",
+   "out": 0,
+   "noCuti": 0
+  },
+  {
+   "from": "2026-03-31",
+   "to": "2026-12-19",
+   "out": 179,
+   "noCuti": 181
+  }
+ ],
+ "errors": [
+  {
+   "iso": "2028-01-03",
+   "out": {
+    "error": "RangeError",
+    "message": "Data libur tahun 2028 belum tersedia (tersedia: 2026, 2027). SKB 3 Menteri biasanya terbit sekitar September tahun sebelumnya."
+   }
+  },
+  {
+   "iso": "2026-02-30",
+   "out": {
+    "error": "RangeError",
+    "message": "Tanggal tidak valid: 2026-02-30"
+   }
+  },
+  {
+   "iso": "2026-13-01",
+   "out": {
+    "error": "RangeError",
+    "message": "Tanggal tidak valid: 2026-13-01"
+   }
+  },
+  {
+   "iso": "17-08-2026",
+   "out": {
+    "error": "RangeError",
+    "message": "Tanggal harus berformat YYYY-MM-DD: 17-08-2026"
+   }
+  },
+  {
+   "iso": "2025-12-31",
+   "out": {
+    "error": "RangeError",
+    "message": "Data libur tahun 2025 belum tersedia (tersedia: 2026, 2027). SKB 3 Menteri biasanya terbit sekitar September tahun sebelumnya."
+   }
+  },
+  {
+   "iso": "2026-2-3",
+   "out": {
+    "error": "RangeError",
+    "message": "Tanggal harus berformat YYYY-MM-DD: 2026-2-3"
+   }
+  }
+ ]
+}

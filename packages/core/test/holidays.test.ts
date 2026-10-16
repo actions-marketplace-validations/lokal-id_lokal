@@ -57,3 +57,9 @@ test('tahun tanpa data resmi gagal dengan jelas, bukan diam-diam', () => {
   assert.throws(() => isWorkingDay('2028-01-03'), /belum tersedia/);
   assert.throws(() => getHolidays(2025), /belum tersedia/);
 });
+
+test('tanggal yang tidak ada ditolak, bukan digeser ke bulan berikutnya', () => {
+  assert.throws(() => isWorkingDay('2026-02-30'), /tidak valid/);
+  assert.throws(() => addWorkingDays('2026-13-01', 1), /tidak valid/);
+  assert.throws(() => isWorkingDay('17-08-2026'), /YYYY-MM-DD/);
+});

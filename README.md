@@ -9,6 +9,7 @@ build apps that are correct for Indonesia, while keeping your users' personal da
 
 [![npm @lokal-id/mcp](https://img.shields.io/npm/v/@lokal-id/mcp?label=%40lokal-id%2Fmcp&color=cb3837)](https://www.npmjs.com/package/@lokal-id/mcp)
 [![npm @lokal-id/core](https://img.shields.io/npm/v/@lokal-id/core?label=%40lokal-id%2Fcore&color=cb3837)](https://www.npmjs.com/package/@lokal-id/core)
+[![PyPI lokal-id](https://img.shields.io/pypi/v/lokal-id?label=lokal-id&color=3775a9)](https://pypi.org/project/lokal-id/)
 [![CI](https://github.com/lokal-id/lokal/actions/workflows/ci.yml/badge.svg)](https://github.com/lokal-id/lokal/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Node.js >= 20](https://img.shields.io/badge/node-%3E%3D20-339933?logo=node.js&logoColor=white)](https://nodejs.org)
@@ -48,7 +49,7 @@ Lokal fixes both: it teaches agents Indonesian conventions, gives them accurate 
 - **Accurate reference data, bundled.** All 38 provinces down to 83,762 villages, matching the Kemendagri 2025 decree exactly, with postal codes for every village. Public holidays and *cuti bersama* from the official SKB for 2026 and 2027.
 - **Samaran masking.** Replaces 25 kinds of Indonesian personal data, covering every category in UU PDP Article 4, with stable placeholders, then restores them in the model's output.
 - **Samaran Guard.** A Claude Code hook that stops prompts containing ID numbers and redirects reads of customer data files (`Read`, `Grep`, `cat`, `Get-Content`, …) to a masked view.
-- **Works with any agent.** Claude Code plugin, stdio MCP server for Cursor, Claude Desktop, VS Code, Windsurf, and Codex, plus a TypeScript library.
+- **Works with any agent.** Claude Code plugin, stdio MCP server for Cursor, Claude Desktop, VS Code, Windsurf, and Codex, plus TypeScript and Python libraries with identical results.
 - **Local and offline.** Data ships with the package. No network calls, no telemetry, and unmasking happens on your machine.
 
 ## How it works
@@ -150,8 +151,11 @@ You can also copy the folders in [`skills/`](skills) by hand. They use the open 
 ### Library
 
 ```sh
-npm install @lokal-id/core
+npm install @lokal-id/core     # TypeScript / JavaScript
+pip install lokal-id           # Python 3.10+
 ```
+
+The Python package is a port of `@lokal-id/core` with the same rules and data, verified against thousands of TypeScript outputs. It adds `Decimal` money, `date` objects, dataclass results, and a `logging` filter for backends. See [`python/`](python#readme).
 
 ## Usage
 
@@ -203,6 +207,7 @@ samaran.unmask(reply);           // placeholders are replaced with the original 
 
 - The same value always maps to the same placeholder, across formats: `0812-…` and `+62 812…` are both `[PHONE_1]`.
 - `mode: 'partial'` is meant for logs and admin screens: `3201********0001`, `0812****7890`, `b***@gmail.com`.
+- `exclude` keeps types your app has to read. A car dealer's credit simulation needs income and installments, so `new Samaran({ exclude: ['FINANCIAL'] })` leaves "gaji saya 8 juta, cicilan 3 juta" intact while NIK and phone numbers are still masked. A misspelled type name throws instead of silently masking less.
 - Detection uses labels (`Agama: Islam`, `NAMA : BUDI`), CSV and Excel headers (`agama`, `diagnosa`, `gaji`, …), JSON/YAML keys and query strings (including split `first_name` / `last_name`), SQL `INSERT` dumps, WhatsApp chat exports, and common phrases in free text (`nama saya budi`, `didiagnosis TBC`, `obat insulin`, `gaji saya 8 juta`).
 
 <details>
@@ -231,8 +236,8 @@ samaran.unmask(reply);           // placeholders are replaced with the original 
 | `lookup_kode_pos` | Postal code → villages, or all postal codes in a region |
 | `list_holidays` | National holidays and *cuti bersama* (SKB 2026, 2027) |
 | `working_days` | Business days, SLA due dates, delivery estimates |
-| `scan_pii` | Scan files and folders (text, CSV, JSON, logs, SQL, `.xlsx`) for personal data. Shows partially masked values only, and **reports files it could not scan** (PDF, `.xls`, images) |
-| `read_file_masked` | Read a file, including `.xlsx` sheets, with personal data replaced by stable placeholders |
+| `scan_pii` | Scan files and folders (text, CSV, JSON, logs, SQL, `.xlsx`, `.docx`, up to 100 MB each) for personal data. Shows partially masked values only, and **reports files it could not scan** (PDF, `.xls`, `.doc`, images) |
+| `read_file_masked` | Read a file, including `.xlsx` sheets and `.docx` documents (text and tables), with personal data replaced by stable placeholders |
 | `write_file_unmasked` | Write results with placeholders restored, on your machine |
 
 ### Samaran Guard
@@ -287,7 +292,7 @@ This is a small sample built around everyday tasks for Indonesian developers. Do
 
 - **Detection is pattern-based and favors precision.** Names are found through labels, column headers and JSON keys, chat export senders, introductions ("nama saya budi", "atas nama", "a.n.", "halo kak ini rina,"), honorifics ("Pak Joko", "bapak ahmad"), and reported speech ("tadi budi bilang"), including lowercase. A name dropped into a sentence with no cue at all ("pesanan budi belum sampai"), unusually phrased health or financial data, and children's data that is not marked as such can still slip through. Treat Samaran as a strong safety net, not a guarantee.
 - **Tested for false positives** on 12 MB of open-source code and the full text of UU 27/2022, with no high-confidence name detections. Chat name detection caught 29 of 29 test sentences with names and flagged 0 of 26 ordinary chat sentences. The sentences were written for the test suite, so accuracy on real chats may be lower.
-- **Not every format is read.** PDF, legacy `.xls`, images (ID card photos, selfies), and archives are not scanned. `scan_pii` reports them as *not scanned*, never as clean.
+- **Not every format is read.** PDF, legacy `.xls` and `.doc`, images (ID card photos, selfies), and archives are not scanned. `scan_pii` reports them as *not scanned*, never as clean, and the guard does not intercept them. Files over 100 MB are reported too. For data files over 5 MB the guard checks the first 5 MB, to stay within the hook's 10-second limit.
 - **NIK and NPWP checks are structural.** They cannot confirm that a number is registered with Dukcapil or the tax office.
 - **Carrier detection uses number prefixes,** which match the public allocation list, including the 2025 XLSmart merger. Indonesia has no mobile number portability yet (a case is pending at the Constitutional Court, 319/PUU-XXIV/2026), so prefixes are still reliable. Landline area codes cover 19 major cities.
 - **The guard intercepts prompts, `Read`, `Grep`, and common shell readers.** A script that deliberately prints a data file, or something like `python -c "print(open(...).read())"`, cannot be caught every time. The `samaran` skill steers the agent away from that.
@@ -301,10 +306,11 @@ This is a small sample built around everyday tasks for Indonesian developers. Do
 - [x] UU PDP data categories and Excel support in Samaran
 - [ ] **Kapan**: Indonesian time expressions (`besok abis maghrib`, `lusa jam 7an`, `tanggal muda`) with location-based prayer times
 - [ ] **Warga**: consistent synthetic test data (NIK matching birth date and region, region-appropriate names)
-- [ ] PDF and `.docx` support in Samaran
+- [x] `.docx` support in Samaran (text and tables)
+- [ ] Text-based PDF support in Samaran; OCR for scanned ID cards
 - [ ] Free-text address parser → region codes
 - [ ] HTTP transport for ChatGPT and web-based agents
-- [ ] Python library (`lokal-id`) with the same API
+- [x] Python library (`lokal-id`) with the same results as TypeScript
 - [ ] Locale packs for other countries (Malaysia, the Philippines, Vietnam)
 
 Have an idea? [Open an issue](https://github.com/lokal-id/lokal/issues).
@@ -314,6 +320,7 @@ Have an idea? [Open an issue](https://github.com/lokal-id/lokal/issues).
 ```text
 packages/core     @lokal-id/core: logic and bundled data
 packages/mcp      @lokal-id/mcp: MCP server and Samaran Guard
+python/           lokal-id: the Python port, with parity tests against TypeScript
 skills/           SKILL.md files for Claude, Codex, and other agents
 hooks/            Claude Code hook (bundled, no dependencies)
 evals/            end-to-end evaluation against real Claude Code sessions

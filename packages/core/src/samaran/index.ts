@@ -61,7 +61,7 @@ export function partialMask(type: PiiType, value: string): string {
     case 'SIM':
       return `${stars(digits.length - 3)}${digits.slice(-3)}`;
     case 'PASSPORT':
-      return `${value.charAt(0)}${stars(5)}${value.slice(-2)}`;
+      return `${[...value][0] ?? ''}${stars(5)}${value.slice(-2)}`;
     case 'IP': {
       const [a, b] = value.split('.');
       return `${a}.${b}.*.*`;
@@ -84,7 +84,7 @@ export function partialMask(type: PiiType, value: string): string {
     }
     case 'EMAIL': {
       const [user = '', domain = ''] = value.split('@');
-      return `${user.charAt(0)}${stars(3)}@${domain}`;
+      return `${[...user][0] ?? ''}${stars(3)}@${domain}`;
     }
     case 'CARD':
     case 'BANK_ACCOUNT':
@@ -98,7 +98,7 @@ export function partialMask(type: PiiType, value: string): string {
     case 'NAME':
       return value
         .split(/\s+/)
-        .map((w) => `${w.charAt(0)}${stars(3)}`)
+        .map((w) => `${[...w][0] ?? ''}${stars(3)}`)
         .join(' ');
     case 'ADDRESS':
       return `${value.split(/\s+/)[0]} ${stars(3)}`;

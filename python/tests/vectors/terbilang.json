@@ -1,0 +1,5140 @@
+[
+ {
+  "n": 0,
+  "lower": {
+   "ok": "nol"
+  },
+  "title": {
+   "ok": "Nol Rupiah"
+  },
+  "sentence": {
+   "ok": "Nol"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "nol"
+   },
+   "title": {
+    "ok": "Nol Rupiah"
+   },
+   "sentence": {
+    "ok": "Nol"
+   }
+  }
+ },
+ {
+  "n": 11,
+  "lower": {
+   "ok": "sebelas"
+  },
+  "title": {
+   "ok": "Sebelas Rupiah"
+  },
+  "sentence": {
+   "ok": "Sebelas"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sebelas"
+   },
+   "title": {
+    "ok": "Sebelas Rupiah"
+   },
+   "sentence": {
+    "ok": "Sebelas"
+   }
+  }
+ },
+ {
+  "n": 15,
+  "lower": {
+   "ok": "lima belas"
+  },
+  "title": {
+   "ok": "Lima Belas Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima belas"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima belas"
+   },
+   "title": {
+    "ok": "Lima Belas Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima belas"
+   }
+  }
+ },
+ {
+  "n": 21,
+  "lower": {
+   "ok": "dua puluh satu"
+  },
+  "title": {
+   "ok": "Dua Puluh Satu Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua puluh satu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua puluh satu"
+   },
+   "title": {
+    "ok": "Dua Puluh Satu Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua puluh satu"
+   }
+  }
+ },
+ {
+  "n": 100,
+  "lower": {
+   "ok": "seratus"
+  },
+  "title": {
+   "ok": "Seratus Rupiah"
+  },
+  "sentence": {
+   "ok": "Seratus"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "seratus"
+   },
+   "title": {
+    "ok": "Seratus Rupiah"
+   },
+   "sentence": {
+    "ok": "Seratus"
+   }
+  }
+ },
+ {
+  "n": 110,
+  "lower": {
+   "ok": "seratus sepuluh"
+  },
+  "title": {
+   "ok": "Seratus Sepuluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Seratus sepuluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "seratus sepuluh"
+   },
+   "title": {
+    "ok": "Seratus Sepuluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Seratus sepuluh"
+   }
+  }
+ },
+ {
+  "n": 1000,
+  "lower": {
+   "ok": "seribu"
+  },
+  "title": {
+   "ok": "Seribu Rupiah"
+  },
+  "sentence": {
+   "ok": "Seribu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "seribu"
+   },
+   "title": {
+    "ok": "Seribu Rupiah"
+   },
+   "sentence": {
+    "ok": "Seribu"
+   }
+  }
+ },
+ {
+  "n": 1001,
+  "lower": {
+   "ok": "seribu satu"
+  },
+  "title": {
+   "ok": "Seribu Satu Rupiah"
+  },
+  "sentence": {
+   "ok": "Seribu satu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "seribu satu"
+   },
+   "title": {
+    "ok": "Seribu Satu Rupiah"
+   },
+   "sentence": {
+    "ok": "Seribu satu"
+   }
+  }
+ },
+ {
+  "n": 11000,
+  "lower": {
+   "ok": "sebelas ribu"
+  },
+  "title": {
+   "ok": "Sebelas Ribu Rupiah"
+  },
+  "sentence": {
+   "ok": "Sebelas ribu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sebelas ribu"
+   },
+   "title": {
+    "ok": "Sebelas Ribu Rupiah"
+   },
+   "sentence": {
+    "ok": "Sebelas ribu"
+   }
+  }
+ },
+ {
+  "n": 100000,
+  "lower": {
+   "ok": "seratus ribu"
+  },
+  "title": {
+   "ok": "Seratus Ribu Rupiah"
+  },
+  "sentence": {
+   "ok": "Seratus ribu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "seratus ribu"
+   },
+   "title": {
+    "ok": "Seratus Ribu Rupiah"
+   },
+   "sentence": {
+    "ok": "Seratus ribu"
+   }
+  }
+ },
+ {
+  "n": 1000000,
+  "lower": {
+   "ok": "satu juta"
+  },
+  "title": {
+   "ok": "Satu Juta Rupiah"
+  },
+  "sentence": {
+   "ok": "Satu juta"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "satu juta"
+   },
+   "title": {
+    "ok": "Satu Juta Rupiah"
+   },
+   "sentence": {
+    "ok": "Satu juta"
+   }
+  }
+ },
+ {
+  "n": 1500000,
+  "lower": {
+   "ok": "satu juta lima ratus ribu"
+  },
+  "title": {
+   "ok": "Satu Juta Lima Ratus Ribu Rupiah"
+  },
+  "sentence": {
+   "ok": "Satu juta lima ratus ribu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "satu juta lima ratus ribu"
+   },
+   "title": {
+    "ok": "Satu Juta Lima Ratus Ribu Rupiah"
+   },
+   "sentence": {
+    "ok": "Satu juta lima ratus ribu"
+   }
+  }
+ },
+ {
+  "n": 2000000000,
+  "lower": {
+   "ok": "dua miliar"
+  },
+  "title": {
+   "ok": "Dua Miliar Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua miliar"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua miliar"
+   },
+   "title": {
+    "ok": "Dua Miliar Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua miliar"
+   }
+  }
+ },
+ {
+  "n": -5,
+  "lower": {
+   "ok": "minus lima"
+  },
+  "title": {
+   "ok": "Minus Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Minus lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "minus lima"
+   },
+   "title": {
+    "ok": "Minus Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Minus lima"
+   }
+  }
+ },
+ {
+  "n": 2.5,
+  "lower": {
+   "ok": "dua koma lima"
+  },
+  "title": {
+   "ok": "Dua Koma Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua koma lima"
+  }
+ },
+ {
+  "n": 1e-7,
+  "lower": {
+   "ok": "nol koma nol nol nol nol nol nol satu"
+  },
+  "title": {
+   "ok": "Nol Koma Nol Nol Nol Nol Nol Nol Satu Rupiah"
+  },
+  "sentence": {
+   "ok": "Nol koma nol nol nol nol nol nol satu"
+  }
+ },
+ {
+  "n": 0.30000000000000004,
+  "lower": {
+   "ok": "nol koma tiga nol nol nol nol nol nol nol nol nol nol nol nol nol nol nol empat"
+  },
+  "title": {
+   "ok": "Nol Koma Tiga Nol Nol Nol Nol Nol Nol Nol Nol Nol Nol Nol Nol Nol Nol Nol Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Nol koma tiga nol nol nol nol nol nol nol nol nol nol nol nol nol nol nol empat"
+  }
+ },
+ {
+  "n": 123456789012345,
+  "lower": {
+   "ok": "seratus dua puluh tiga triliun empat ratus lima puluh enam miliar tujuh ratus delapan puluh sembilan juta dua belas ribu tiga ratus empat puluh lima"
+  },
+  "title": {
+   "ok": "Seratus Dua Puluh Tiga Triliun Empat Ratus Lima Puluh Enam Miliar Tujuh Ratus Delapan Puluh Sembilan Juta Dua Belas Ribu Tiga Ratus Empat Puluh Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Seratus dua puluh tiga triliun empat ratus lima puluh enam miliar tujuh ratus delapan puluh sembilan juta dua belas ribu tiga ratus empat puluh lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "seratus dua puluh tiga triliun empat ratus lima puluh enam miliar tujuh ratus delapan puluh sembilan juta dua belas ribu tiga ratus empat puluh lima"
+   },
+   "title": {
+    "ok": "Seratus Dua Puluh Tiga Triliun Empat Ratus Lima Puluh Enam Miliar Tujuh Ratus Delapan Puluh Sembilan Juta Dua Belas Ribu Tiga Ratus Empat Puluh Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Seratus dua puluh tiga triliun empat ratus lima puluh enam miliar tujuh ratus delapan puluh sembilan juta dua belas ribu tiga ratus empat puluh lima"
+   }
+  }
+ },
+ {
+  "n": 9007199254740991,
+  "lower": {
+   "ok": "sembilan kuadriliun tujuh triliun seratus sembilan puluh sembilan miliar dua ratus lima puluh empat juta tujuh ratus empat puluh ribu sembilan ratus sembilan puluh satu"
+  },
+  "title": {
+   "ok": "Sembilan Kuadriliun Tujuh Triliun Seratus Sembilan Puluh Sembilan Miliar Dua Ratus Lima Puluh Empat Juta Tujuh Ratus Empat Puluh Ribu Sembilan Ratus Sembilan Puluh Satu Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan kuadriliun tujuh triliun seratus sembilan puluh sembilan miliar dua ratus lima puluh empat juta tujuh ratus empat puluh ribu sembilan ratus sembilan puluh satu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan kuadriliun tujuh triliun seratus sembilan puluh sembilan miliar dua ratus lima puluh empat juta tujuh ratus empat puluh ribu sembilan ratus sembilan puluh satu"
+   },
+   "title": {
+    "ok": "Sembilan Kuadriliun Tujuh Triliun Seratus Sembilan Puluh Sembilan Miliar Dua Ratus Lima Puluh Empat Juta Tujuh Ratus Empat Puluh Ribu Sembilan Ratus Sembilan Puluh Satu Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan kuadriliun tujuh triliun seratus sembilan puluh sembilan miliar dua ratus lima puluh empat juta tujuh ratus empat puluh ribu sembilan ratus sembilan puluh satu"
+   }
+  }
+ },
+ {
+  "n": 1.5e-7,
+  "lower": {
+   "ok": "nol koma nol nol nol nol nol nol satu lima"
+  },
+  "title": {
+   "ok": "Nol Koma Nol Nol Nol Nol Nol Nol Satu Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Nol koma nol nol nol nol nol nol satu lima"
+  }
+ },
+ {
+  "n": 10000000000000000,
+  "lower": {
+   "error": "RangeError",
+   "message": "Gunakan bigint untuk angka sebesar ini."
+  },
+  "title": {
+   "error": "RangeError",
+   "message": "Gunakan bigint untuk angka sebesar ini."
+  },
+  "sentence": {
+   "error": "RangeError",
+   "message": "Gunakan bigint untuk angka sebesar ini."
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sepuluh kuadriliun"
+   },
+   "title": {
+    "ok": "Sepuluh Kuadriliun Rupiah"
+   },
+   "sentence": {
+    "ok": "Sepuluh kuadriliun"
+   }
+  }
+ },
+ {
+  "n": 999999.999,
+  "lower": {
+   "ok": "sembilan ratus sembilan puluh sembilan ribu sembilan ratus sembilan puluh sembilan koma sembilan sembilan sembilan"
+  },
+  "title": {
+   "ok": "Sembilan Ratus Sembilan Puluh Sembilan Ribu Sembilan Ratus Sembilan Puluh Sembilan Koma Sembilan Sembilan Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan ratus sembilan puluh sembilan ribu sembilan ratus sembilan puluh sembilan koma sembilan sembilan sembilan"
+  }
+ },
+ {
+  "n": -0.5,
+  "lower": {
+   "ok": "minus nol koma lima"
+  },
+  "title": {
+   "ok": "Minus Nol Koma Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Minus nol koma lima"
+  }
+ },
+ {
+  "n": 1001001,
+  "lower": {
+   "ok": "satu juta seribu satu"
+  },
+  "title": {
+   "ok": "Satu Juta Seribu Satu Rupiah"
+  },
+  "sentence": {
+   "ok": "Satu juta seribu satu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "satu juta seribu satu"
+   },
+   "title": {
+    "ok": "Satu Juta Seribu Satu Rupiah"
+   },
+   "sentence": {
+    "ok": "Satu juta seribu satu"
+   }
+  }
+ },
+ {
+  "n": 10101010,
+  "lower": {
+   "ok": "sepuluh juta seratus satu ribu sepuluh"
+  },
+  "title": {
+   "ok": "Sepuluh Juta Seratus Satu Ribu Sepuluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Sepuluh juta seratus satu ribu sepuluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sepuluh juta seratus satu ribu sepuluh"
+   },
+   "title": {
+    "ok": "Sepuluh Juta Seratus Satu Ribu Sepuluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Sepuluh juta seratus satu ribu sepuluh"
+   }
+  }
+ },
+ {
+  "n": 166582280,
+  "lower": {
+   "ok": "seratus enam puluh enam juta lima ratus delapan puluh dua ribu dua ratus delapan puluh"
+  },
+  "title": {
+   "ok": "Seratus Enam Puluh Enam Juta Lima Ratus Delapan Puluh Dua Ribu Dua Ratus Delapan Puluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Seratus enam puluh enam juta lima ratus delapan puluh dua ribu dua ratus delapan puluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "seratus enam puluh enam juta lima ratus delapan puluh dua ribu dua ratus delapan puluh"
+   },
+   "title": {
+    "ok": "Seratus Enam Puluh Enam Juta Lima Ratus Delapan Puluh Dua Ribu Dua Ratus Delapan Puluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Seratus enam puluh enam juta lima ratus delapan puluh dua ribu dua ratus delapan puluh"
+   }
+  }
+ },
+ {
+  "n": 41188831324,
+  "lower": {
+   "ok": "empat puluh satu miliar seratus delapan puluh delapan juta delapan ratus tiga puluh satu ribu tiga ratus dua puluh empat"
+  },
+  "title": {
+   "ok": "Empat Puluh Satu Miliar Seratus Delapan Puluh Delapan Juta Delapan Ratus Tiga Puluh Satu Ribu Tiga Ratus Dua Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat puluh satu miliar seratus delapan puluh delapan juta delapan ratus tiga puluh satu ribu tiga ratus dua puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat puluh satu miliar seratus delapan puluh delapan juta delapan ratus tiga puluh satu ribu tiga ratus dua puluh empat"
+   },
+   "title": {
+    "ok": "Empat Puluh Satu Miliar Seratus Delapan Puluh Delapan Juta Delapan Ratus Tiga Puluh Satu Ribu Tiga Ratus Dua Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat puluh satu miliar seratus delapan puluh delapan juta delapan ratus tiga puluh satu ribu tiga ratus dua puluh empat"
+   }
+  }
+ },
+ {
+  "n": 639970604,
+  "lower": {
+   "ok": "enam ratus tiga puluh sembilan juta sembilan ratus tujuh puluh ribu enam ratus empat"
+  },
+  "title": {
+   "ok": "Enam Ratus Tiga Puluh Sembilan Juta Sembilan Ratus Tujuh Puluh Ribu Enam Ratus Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam ratus tiga puluh sembilan juta sembilan ratus tujuh puluh ribu enam ratus empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam ratus tiga puluh sembilan juta sembilan ratus tujuh puluh ribu enam ratus empat"
+   },
+   "title": {
+    "ok": "Enam Ratus Tiga Puluh Sembilan Juta Sembilan Ratus Tujuh Puluh Ribu Enam Ratus Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam ratus tiga puluh sembilan juta sembilan ratus tujuh puluh ribu enam ratus empat"
+   }
+  }
+ },
+ {
+  "n": 85853869398,
+  "lower": {
+   "ok": "delapan puluh lima miliar delapan ratus lima puluh tiga juta delapan ratus enam puluh sembilan ribu tiga ratus sembilan puluh delapan"
+  },
+  "title": {
+   "ok": "Delapan Puluh Lima Miliar Delapan Ratus Lima Puluh Tiga Juta Delapan Ratus Enam Puluh Sembilan Ribu Tiga Ratus Sembilan Puluh Delapan Rupiah"
+  },
+  "sentence": {
+   "ok": "Delapan puluh lima miliar delapan ratus lima puluh tiga juta delapan ratus enam puluh sembilan ribu tiga ratus sembilan puluh delapan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "delapan puluh lima miliar delapan ratus lima puluh tiga juta delapan ratus enam puluh sembilan ribu tiga ratus sembilan puluh delapan"
+   },
+   "title": {
+    "ok": "Delapan Puluh Lima Miliar Delapan Ratus Lima Puluh Tiga Juta Delapan Ratus Enam Puluh Sembilan Ribu Tiga Ratus Sembilan Puluh Delapan Rupiah"
+   },
+   "sentence": {
+    "ok": "Delapan puluh lima miliar delapan ratus lima puluh tiga juta delapan ratus enam puluh sembilan ribu tiga ratus sembilan puluh delapan"
+   }
+  }
+ },
+ {
+  "n": 2,
+  "lower": {
+   "ok": "dua"
+  },
+  "title": {
+   "ok": "Dua Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua"
+   },
+   "title": {
+    "ok": "Dua Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua"
+   }
+  }
+ },
+ {
+  "n": 4287366,
+  "lower": {
+   "ok": "empat juta dua ratus delapan puluh tujuh ribu tiga ratus enam puluh enam"
+  },
+  "title": {
+   "ok": "Empat Juta Dua Ratus Delapan Puluh Tujuh Ribu Tiga Ratus Enam Puluh Enam Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat juta dua ratus delapan puluh tujuh ribu tiga ratus enam puluh enam"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat juta dua ratus delapan puluh tujuh ribu tiga ratus enam puluh enam"
+   },
+   "title": {
+    "ok": "Empat Juta Dua Ratus Delapan Puluh Tujuh Ribu Tiga Ratus Enam Puluh Enam Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat juta dua ratus delapan puluh tujuh ribu tiga ratus enam puluh enam"
+   }
+  }
+ },
+ {
+  "n": 7952730,
+  "lower": {
+   "ok": "tujuh juta sembilan ratus lima puluh dua ribu tujuh ratus tiga puluh"
+  },
+  "title": {
+   "ok": "Tujuh Juta Sembilan Ratus Lima Puluh Dua Ribu Tujuh Ratus Tiga Puluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Tujuh juta sembilan ratus lima puluh dua ribu tujuh ratus tiga puluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tujuh juta sembilan ratus lima puluh dua ribu tujuh ratus tiga puluh"
+   },
+   "title": {
+    "ok": "Tujuh Juta Sembilan Ratus Lima Puluh Dua Ribu Tujuh Ratus Tiga Puluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Tujuh juta sembilan ratus lima puluh dua ribu tujuh ratus tiga puluh"
+   }
+  }
+ },
+ {
+  "n": 5,
+  "lower": {
+   "ok": "lima"
+  },
+  "title": {
+   "ok": "Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima"
+   },
+   "title": {
+    "ok": "Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima"
+   }
+  }
+ },
+ {
+  "n": 874198713,
+  "lower": {
+   "ok": "delapan ratus tujuh puluh empat juta seratus sembilan puluh delapan ribu tujuh ratus tiga belas"
+  },
+  "title": {
+   "ok": "Delapan Ratus Tujuh Puluh Empat Juta Seratus Sembilan Puluh Delapan Ribu Tujuh Ratus Tiga Belas Rupiah"
+  },
+  "sentence": {
+   "ok": "Delapan ratus tujuh puluh empat juta seratus sembilan puluh delapan ribu tujuh ratus tiga belas"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "delapan ratus tujuh puluh empat juta seratus sembilan puluh delapan ribu tujuh ratus tiga belas"
+   },
+   "title": {
+    "ok": "Delapan Ratus Tujuh Puluh Empat Juta Seratus Sembilan Puluh Delapan Ribu Tujuh Ratus Tiga Belas Rupiah"
+   },
+   "sentence": {
+    "ok": "Delapan ratus tujuh puluh empat juta seratus sembilan puluh delapan ribu tujuh ratus tiga belas"
+   }
+  }
+ },
+ {
+  "n": 27596474,
+  "lower": {
+   "ok": "dua puluh tujuh juta lima ratus sembilan puluh enam ribu empat ratus tujuh puluh empat"
+  },
+  "title": {
+   "ok": "Dua Puluh Tujuh Juta Lima Ratus Sembilan Puluh Enam Ribu Empat Ratus Tujuh Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua puluh tujuh juta lima ratus sembilan puluh enam ribu empat ratus tujuh puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua puluh tujuh juta lima ratus sembilan puluh enam ribu empat ratus tujuh puluh empat"
+   },
+   "title": {
+    "ok": "Dua Puluh Tujuh Juta Lima Ratus Sembilan Puluh Enam Ribu Empat Ratus Tujuh Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua puluh tujuh juta lima ratus sembilan puluh enam ribu empat ratus tujuh puluh empat"
+   }
+  }
+ },
+ {
+  "n": 5597637,
+  "lower": {
+   "ok": "lima juta lima ratus sembilan puluh tujuh ribu enam ratus tiga puluh tujuh"
+  },
+  "title": {
+   "ok": "Lima Juta Lima Ratus Sembilan Puluh Tujuh Ribu Enam Ratus Tiga Puluh Tujuh Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima juta lima ratus sembilan puluh tujuh ribu enam ratus tiga puluh tujuh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima juta lima ratus sembilan puluh tujuh ribu enam ratus tiga puluh tujuh"
+   },
+   "title": {
+    "ok": "Lima Juta Lima Ratus Sembilan Puluh Tujuh Ribu Enam Ratus Tiga Puluh Tujuh Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima juta lima ratus sembilan puluh tujuh ribu enam ratus tiga puluh tujuh"
+   }
+  }
+ },
+ {
+  "n": 26,
+  "lower": {
+   "ok": "dua puluh enam"
+  },
+  "title": {
+   "ok": "Dua Puluh Enam Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua puluh enam"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua puluh enam"
+   },
+   "title": {
+    "ok": "Dua Puluh Enam Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua puluh enam"
+   }
+  }
+ },
+ {
+  "n": 120574244,
+  "lower": {
+   "ok": "seratus dua puluh juta lima ratus tujuh puluh empat ribu dua ratus empat puluh empat"
+  },
+  "title": {
+   "ok": "Seratus Dua Puluh Juta Lima Ratus Tujuh Puluh Empat Ribu Dua Ratus Empat Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Seratus dua puluh juta lima ratus tujuh puluh empat ribu dua ratus empat puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "seratus dua puluh juta lima ratus tujuh puluh empat ribu dua ratus empat puluh empat"
+   },
+   "title": {
+    "ok": "Seratus Dua Puluh Juta Lima Ratus Tujuh Puluh Empat Ribu Dua Ratus Empat Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Seratus dua puluh juta lima ratus tujuh puluh empat ribu dua ratus empat puluh empat"
+   }
+  }
+ },
+ {
+  "n": 1329,
+  "lower": {
+   "ok": "seribu tiga ratus dua puluh sembilan"
+  },
+  "title": {
+   "ok": "Seribu Tiga Ratus Dua Puluh Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Seribu tiga ratus dua puluh sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "seribu tiga ratus dua puluh sembilan"
+   },
+   "title": {
+    "ok": "Seribu Tiga Ratus Dua Puluh Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Seribu tiga ratus dua puluh sembilan"
+   }
+  }
+ },
+ {
+  "n": 6167627819,
+  "lower": {
+   "ok": "enam miliar seratus enam puluh tujuh juta enam ratus dua puluh tujuh ribu delapan ratus sembilan belas"
+  },
+  "title": {
+   "ok": "Enam Miliar Seratus Enam Puluh Tujuh Juta Enam Ratus Dua Puluh Tujuh Ribu Delapan Ratus Sembilan Belas Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam miliar seratus enam puluh tujuh juta enam ratus dua puluh tujuh ribu delapan ratus sembilan belas"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam miliar seratus enam puluh tujuh juta enam ratus dua puluh tujuh ribu delapan ratus sembilan belas"
+   },
+   "title": {
+    "ok": "Enam Miliar Seratus Enam Puluh Tujuh Juta Enam Ratus Dua Puluh Tujuh Ribu Delapan Ratus Sembilan Belas Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam miliar seratus enam puluh tujuh juta enam ratus dua puluh tujuh ribu delapan ratus sembilan belas"
+   }
+  }
+ },
+ {
+  "n": 6807374,
+  "lower": {
+   "ok": "enam juta delapan ratus tujuh ribu tiga ratus tujuh puluh empat"
+  },
+  "title": {
+   "ok": "Enam Juta Delapan Ratus Tujuh Ribu Tiga Ratus Tujuh Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam juta delapan ratus tujuh ribu tiga ratus tujuh puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam juta delapan ratus tujuh ribu tiga ratus tujuh puluh empat"
+   },
+   "title": {
+    "ok": "Enam Juta Delapan Ratus Tujuh Ribu Tiga Ratus Tujuh Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam juta delapan ratus tujuh ribu tiga ratus tujuh puluh empat"
+   }
+  }
+ },
+ {
+  "n": 20656914,
+  "lower": {
+   "ok": "dua puluh juta enam ratus lima puluh enam ribu sembilan ratus empat belas"
+  },
+  "title": {
+   "ok": "Dua Puluh Juta Enam Ratus Lima Puluh Enam Ribu Sembilan Ratus Empat Belas Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua puluh juta enam ratus lima puluh enam ribu sembilan ratus empat belas"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua puluh juta enam ratus lima puluh enam ribu sembilan ratus empat belas"
+   },
+   "title": {
+    "ok": "Dua Puluh Juta Enam Ratus Lima Puluh Enam Ribu Sembilan Ratus Empat Belas Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua puluh juta enam ratus lima puluh enam ribu sembilan ratus empat belas"
+   }
+  }
+ },
+ {
+  "n": 52189,
+  "lower": {
+   "ok": "lima puluh dua ribu seratus delapan puluh sembilan"
+  },
+  "title": {
+   "ok": "Lima Puluh Dua Ribu Seratus Delapan Puluh Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima puluh dua ribu seratus delapan puluh sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima puluh dua ribu seratus delapan puluh sembilan"
+   },
+   "title": {
+    "ok": "Lima Puluh Dua Ribu Seratus Delapan Puluh Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima puluh dua ribu seratus delapan puluh sembilan"
+   }
+  }
+ },
+ {
+  "n": 60742779,
+  "lower": {
+   "ok": "enam puluh juta tujuh ratus empat puluh dua ribu tujuh ratus tujuh puluh sembilan"
+  },
+  "title": {
+   "ok": "Enam Puluh Juta Tujuh Ratus Empat Puluh Dua Ribu Tujuh Ratus Tujuh Puluh Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam puluh juta tujuh ratus empat puluh dua ribu tujuh ratus tujuh puluh sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam puluh juta tujuh ratus empat puluh dua ribu tujuh ratus tujuh puluh sembilan"
+   },
+   "title": {
+    "ok": "Enam Puluh Juta Tujuh Ratus Empat Puluh Dua Ribu Tujuh Ratus Tujuh Puluh Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam puluh juta tujuh ratus empat puluh dua ribu tujuh ratus tujuh puluh sembilan"
+   }
+  }
+ },
+ {
+  "n": 99,
+  "lower": {
+   "ok": "sembilan puluh sembilan"
+  },
+  "title": {
+   "ok": "Sembilan Puluh Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan puluh sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan puluh sembilan"
+   },
+   "title": {
+    "ok": "Sembilan Puluh Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan puluh sembilan"
+   }
+  }
+ },
+ {
+  "n": 5365207807,
+  "lower": {
+   "ok": "lima miliar tiga ratus enam puluh lima juta dua ratus tujuh ribu delapan ratus tujuh"
+  },
+  "title": {
+   "ok": "Lima Miliar Tiga Ratus Enam Puluh Lima Juta Dua Ratus Tujuh Ribu Delapan Ratus Tujuh Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima miliar tiga ratus enam puluh lima juta dua ratus tujuh ribu delapan ratus tujuh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima miliar tiga ratus enam puluh lima juta dua ratus tujuh ribu delapan ratus tujuh"
+   },
+   "title": {
+    "ok": "Lima Miliar Tiga Ratus Enam Puluh Lima Juta Dua Ratus Tujuh Ribu Delapan Ratus Tujuh Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima miliar tiga ratus enam puluh lima juta dua ratus tujuh ribu delapan ratus tujuh"
+   }
+  }
+ },
+ {
+  "n": 5,
+  "lower": {
+   "ok": "lima"
+  },
+  "title": {
+   "ok": "Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima"
+   },
+   "title": {
+    "ok": "Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima"
+   }
+  }
+ },
+ {
+  "n": 5930156682,
+  "lower": {
+   "ok": "lima miliar sembilan ratus tiga puluh juta seratus lima puluh enam ribu enam ratus delapan puluh dua"
+  },
+  "title": {
+   "ok": "Lima Miliar Sembilan Ratus Tiga Puluh Juta Seratus Lima Puluh Enam Ribu Enam Ratus Delapan Puluh Dua Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima miliar sembilan ratus tiga puluh juta seratus lima puluh enam ribu enam ratus delapan puluh dua"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima miliar sembilan ratus tiga puluh juta seratus lima puluh enam ribu enam ratus delapan puluh dua"
+   },
+   "title": {
+    "ok": "Lima Miliar Sembilan Ratus Tiga Puluh Juta Seratus Lima Puluh Enam Ribu Enam Ratus Delapan Puluh Dua Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima miliar sembilan ratus tiga puluh juta seratus lima puluh enam ribu enam ratus delapan puluh dua"
+   }
+  }
+ },
+ {
+  "n": 35858747549355,
+  "lower": {
+   "ok": "tiga puluh lima triliun delapan ratus lima puluh delapan miliar tujuh ratus empat puluh tujuh juta lima ratus empat puluh sembilan ribu tiga ratus lima puluh lima"
+  },
+  "title": {
+   "ok": "Tiga Puluh Lima Triliun Delapan Ratus Lima Puluh Delapan Miliar Tujuh Ratus Empat Puluh Tujuh Juta Lima Ratus Empat Puluh Sembilan Ribu Tiga Ratus Lima Puluh Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Tiga puluh lima triliun delapan ratus lima puluh delapan miliar tujuh ratus empat puluh tujuh juta lima ratus empat puluh sembilan ribu tiga ratus lima puluh lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tiga puluh lima triliun delapan ratus lima puluh delapan miliar tujuh ratus empat puluh tujuh juta lima ratus empat puluh sembilan ribu tiga ratus lima puluh lima"
+   },
+   "title": {
+    "ok": "Tiga Puluh Lima Triliun Delapan Ratus Lima Puluh Delapan Miliar Tujuh Ratus Empat Puluh Tujuh Juta Lima Ratus Empat Puluh Sembilan Ribu Tiga Ratus Lima Puluh Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Tiga puluh lima triliun delapan ratus lima puluh delapan miliar tujuh ratus empat puluh tujuh juta lima ratus empat puluh sembilan ribu tiga ratus lima puluh lima"
+   }
+  }
+ },
+ {
+  "n": 4778,
+  "lower": {
+   "ok": "empat ribu tujuh ratus tujuh puluh delapan"
+  },
+  "title": {
+   "ok": "Empat Ribu Tujuh Ratus Tujuh Puluh Delapan Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat ribu tujuh ratus tujuh puluh delapan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat ribu tujuh ratus tujuh puluh delapan"
+   },
+   "title": {
+    "ok": "Empat Ribu Tujuh Ratus Tujuh Puluh Delapan Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat ribu tujuh ratus tujuh puluh delapan"
+   }
+  }
+ },
+ {
+  "n": 2450174,
+  "lower": {
+   "ok": "dua juta empat ratus lima puluh ribu seratus tujuh puluh empat"
+  },
+  "title": {
+   "ok": "Dua Juta Empat Ratus Lima Puluh Ribu Seratus Tujuh Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua juta empat ratus lima puluh ribu seratus tujuh puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua juta empat ratus lima puluh ribu seratus tujuh puluh empat"
+   },
+   "title": {
+    "ok": "Dua Juta Empat Ratus Lima Puluh Ribu Seratus Tujuh Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua juta empat ratus lima puluh ribu seratus tujuh puluh empat"
+   }
+  }
+ },
+ {
+  "n": 862718609,
+  "lower": {
+   "ok": "delapan ratus enam puluh dua juta tujuh ratus delapan belas ribu enam ratus sembilan"
+  },
+  "title": {
+   "ok": "Delapan Ratus Enam Puluh Dua Juta Tujuh Ratus Delapan Belas Ribu Enam Ratus Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Delapan ratus enam puluh dua juta tujuh ratus delapan belas ribu enam ratus sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "delapan ratus enam puluh dua juta tujuh ratus delapan belas ribu enam ratus sembilan"
+   },
+   "title": {
+    "ok": "Delapan Ratus Enam Puluh Dua Juta Tujuh Ratus Delapan Belas Ribu Enam Ratus Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Delapan ratus enam puluh dua juta tujuh ratus delapan belas ribu enam ratus sembilan"
+   }
+  }
+ },
+ {
+  "n": 10,
+  "lower": {
+   "ok": "sepuluh"
+  },
+  "title": {
+   "ok": "Sepuluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Sepuluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sepuluh"
+   },
+   "title": {
+    "ok": "Sepuluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Sepuluh"
+   }
+  }
+ },
+ {
+  "n": 10,
+  "lower": {
+   "ok": "sepuluh"
+  },
+  "title": {
+   "ok": "Sepuluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Sepuluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sepuluh"
+   },
+   "title": {
+    "ok": "Sepuluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Sepuluh"
+   }
+  }
+ },
+ {
+  "n": 351466336,
+  "lower": {
+   "ok": "tiga ratus lima puluh satu juta empat ratus enam puluh enam ribu tiga ratus tiga puluh enam"
+  },
+  "title": {
+   "ok": "Tiga Ratus Lima Puluh Satu Juta Empat Ratus Enam Puluh Enam Ribu Tiga Ratus Tiga Puluh Enam Rupiah"
+  },
+  "sentence": {
+   "ok": "Tiga ratus lima puluh satu juta empat ratus enam puluh enam ribu tiga ratus tiga puluh enam"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tiga ratus lima puluh satu juta empat ratus enam puluh enam ribu tiga ratus tiga puluh enam"
+   },
+   "title": {
+    "ok": "Tiga Ratus Lima Puluh Satu Juta Empat Ratus Enam Puluh Enam Ribu Tiga Ratus Tiga Puluh Enam Rupiah"
+   },
+   "sentence": {
+    "ok": "Tiga ratus lima puluh satu juta empat ratus enam puluh enam ribu tiga ratus tiga puluh enam"
+   }
+  }
+ },
+ {
+  "n": 544515584362670,
+  "lower": {
+   "ok": "lima ratus empat puluh empat triliun lima ratus lima belas miliar lima ratus delapan puluh empat juta tiga ratus enam puluh dua ribu enam ratus tujuh puluh"
+  },
+  "title": {
+   "ok": "Lima Ratus Empat Puluh Empat Triliun Lima Ratus Lima Belas Miliar Lima Ratus Delapan Puluh Empat Juta Tiga Ratus Enam Puluh Dua Ribu Enam Ratus Tujuh Puluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima ratus empat puluh empat triliun lima ratus lima belas miliar lima ratus delapan puluh empat juta tiga ratus enam puluh dua ribu enam ratus tujuh puluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima ratus empat puluh empat triliun lima ratus lima belas miliar lima ratus delapan puluh empat juta tiga ratus enam puluh dua ribu enam ratus tujuh puluh"
+   },
+   "title": {
+    "ok": "Lima Ratus Empat Puluh Empat Triliun Lima Ratus Lima Belas Miliar Lima Ratus Delapan Puluh Empat Juta Tiga Ratus Enam Puluh Dua Ribu Enam Ratus Tujuh Puluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima ratus empat puluh empat triliun lima ratus lima belas miliar lima ratus delapan puluh empat juta tiga ratus enam puluh dua ribu enam ratus tujuh puluh"
+   }
+  }
+ },
+ {
+  "n": 45608245767,
+  "lower": {
+   "ok": "empat puluh lima miliar enam ratus delapan juta dua ratus empat puluh lima ribu tujuh ratus enam puluh tujuh"
+  },
+  "title": {
+   "ok": "Empat Puluh Lima Miliar Enam Ratus Delapan Juta Dua Ratus Empat Puluh Lima Ribu Tujuh Ratus Enam Puluh Tujuh Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat puluh lima miliar enam ratus delapan juta dua ratus empat puluh lima ribu tujuh ratus enam puluh tujuh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat puluh lima miliar enam ratus delapan juta dua ratus empat puluh lima ribu tujuh ratus enam puluh tujuh"
+   },
+   "title": {
+    "ok": "Empat Puluh Lima Miliar Enam Ratus Delapan Juta Dua Ratus Empat Puluh Lima Ribu Tujuh Ratus Enam Puluh Tujuh Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat puluh lima miliar enam ratus delapan juta dua ratus empat puluh lima ribu tujuh ratus enam puluh tujuh"
+   }
+  }
+ },
+ {
+  "n": 94266,
+  "lower": {
+   "ok": "sembilan puluh empat ribu dua ratus enam puluh enam"
+  },
+  "title": {
+   "ok": "Sembilan Puluh Empat Ribu Dua Ratus Enam Puluh Enam Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan puluh empat ribu dua ratus enam puluh enam"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan puluh empat ribu dua ratus enam puluh enam"
+   },
+   "title": {
+    "ok": "Sembilan Puluh Empat Ribu Dua Ratus Enam Puluh Enam Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan puluh empat ribu dua ratus enam puluh enam"
+   }
+  }
+ },
+ {
+  "n": 607,
+  "lower": {
+   "ok": "enam ratus tujuh"
+  },
+  "title": {
+   "ok": "Enam Ratus Tujuh Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam ratus tujuh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam ratus tujuh"
+   },
+   "title": {
+    "ok": "Enam Ratus Tujuh Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam ratus tujuh"
+   }
+  }
+ },
+ {
+  "n": 508281239774078,
+  "lower": {
+   "ok": "lima ratus delapan triliun dua ratus delapan puluh satu miliar dua ratus tiga puluh sembilan juta tujuh ratus tujuh puluh empat ribu tujuh puluh delapan"
+  },
+  "title": {
+   "ok": "Lima Ratus Delapan Triliun Dua Ratus Delapan Puluh Satu Miliar Dua Ratus Tiga Puluh Sembilan Juta Tujuh Ratus Tujuh Puluh Empat Ribu Tujuh Puluh Delapan Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima ratus delapan triliun dua ratus delapan puluh satu miliar dua ratus tiga puluh sembilan juta tujuh ratus tujuh puluh empat ribu tujuh puluh delapan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima ratus delapan triliun dua ratus delapan puluh satu miliar dua ratus tiga puluh sembilan juta tujuh ratus tujuh puluh empat ribu tujuh puluh delapan"
+   },
+   "title": {
+    "ok": "Lima Ratus Delapan Triliun Dua Ratus Delapan Puluh Satu Miliar Dua Ratus Tiga Puluh Sembilan Juta Tujuh Ratus Tujuh Puluh Empat Ribu Tujuh Puluh Delapan Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima ratus delapan triliun dua ratus delapan puluh satu miliar dua ratus tiga puluh sembilan juta tujuh ratus tujuh puluh empat ribu tujuh puluh delapan"
+   }
+  }
+ },
+ {
+  "n": 25,
+  "lower": {
+   "ok": "dua puluh lima"
+  },
+  "title": {
+   "ok": "Dua Puluh Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua puluh lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua puluh lima"
+   },
+   "title": {
+    "ok": "Dua Puluh Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua puluh lima"
+   }
+  }
+ },
+ {
+  "n": 961874889,
+  "lower": {
+   "ok": "sembilan ratus enam puluh satu juta delapan ratus tujuh puluh empat ribu delapan ratus delapan puluh sembilan"
+  },
+  "title": {
+   "ok": "Sembilan Ratus Enam Puluh Satu Juta Delapan Ratus Tujuh Puluh Empat Ribu Delapan Ratus Delapan Puluh Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan ratus enam puluh satu juta delapan ratus tujuh puluh empat ribu delapan ratus delapan puluh sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan ratus enam puluh satu juta delapan ratus tujuh puluh empat ribu delapan ratus delapan puluh sembilan"
+   },
+   "title": {
+    "ok": "Sembilan Ratus Enam Puluh Satu Juta Delapan Ratus Tujuh Puluh Empat Ribu Delapan Ratus Delapan Puluh Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan ratus enam puluh satu juta delapan ratus tujuh puluh empat ribu delapan ratus delapan puluh sembilan"
+   }
+  }
+ },
+ {
+  "n": 69647739618,
+  "lower": {
+   "ok": "enam puluh sembilan miliar enam ratus empat puluh tujuh juta tujuh ratus tiga puluh sembilan ribu enam ratus delapan belas"
+  },
+  "title": {
+   "ok": "Enam Puluh Sembilan Miliar Enam Ratus Empat Puluh Tujuh Juta Tujuh Ratus Tiga Puluh Sembilan Ribu Enam Ratus Delapan Belas Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam puluh sembilan miliar enam ratus empat puluh tujuh juta tujuh ratus tiga puluh sembilan ribu enam ratus delapan belas"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam puluh sembilan miliar enam ratus empat puluh tujuh juta tujuh ratus tiga puluh sembilan ribu enam ratus delapan belas"
+   },
+   "title": {
+    "ok": "Enam Puluh Sembilan Miliar Enam Ratus Empat Puluh Tujuh Juta Tujuh Ratus Tiga Puluh Sembilan Ribu Enam Ratus Delapan Belas Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam puluh sembilan miliar enam ratus empat puluh tujuh juta tujuh ratus tiga puluh sembilan ribu enam ratus delapan belas"
+   }
+  }
+ },
+ {
+  "n": 40800692,
+  "lower": {
+   "ok": "empat puluh juta delapan ratus ribu enam ratus sembilan puluh dua"
+  },
+  "title": {
+   "ok": "Empat Puluh Juta Delapan Ratus Ribu Enam Ratus Sembilan Puluh Dua Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat puluh juta delapan ratus ribu enam ratus sembilan puluh dua"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat puluh juta delapan ratus ribu enam ratus sembilan puluh dua"
+   },
+   "title": {
+    "ok": "Empat Puluh Juta Delapan Ratus Ribu Enam Ratus Sembilan Puluh Dua Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat puluh juta delapan ratus ribu enam ratus sembilan puluh dua"
+   }
+  }
+ },
+ {
+  "n": 69587024161,
+  "lower": {
+   "ok": "enam puluh sembilan miliar lima ratus delapan puluh tujuh juta dua puluh empat ribu seratus enam puluh satu"
+  },
+  "title": {
+   "ok": "Enam Puluh Sembilan Miliar Lima Ratus Delapan Puluh Tujuh Juta Dua Puluh Empat Ribu Seratus Enam Puluh Satu Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam puluh sembilan miliar lima ratus delapan puluh tujuh juta dua puluh empat ribu seratus enam puluh satu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam puluh sembilan miliar lima ratus delapan puluh tujuh juta dua puluh empat ribu seratus enam puluh satu"
+   },
+   "title": {
+    "ok": "Enam Puluh Sembilan Miliar Lima Ratus Delapan Puluh Tujuh Juta Dua Puluh Empat Ribu Seratus Enam Puluh Satu Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam puluh sembilan miliar lima ratus delapan puluh tujuh juta dua puluh empat ribu seratus enam puluh satu"
+   }
+  }
+ },
+ {
+  "n": 66,
+  "lower": {
+   "ok": "enam puluh enam"
+  },
+  "title": {
+   "ok": "Enam Puluh Enam Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam puluh enam"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam puluh enam"
+   },
+   "title": {
+    "ok": "Enam Puluh Enam Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam puluh enam"
+   }
+  }
+ },
+ {
+  "n": 13462166,
+  "lower": {
+   "ok": "tiga belas juta empat ratus enam puluh dua ribu seratus enam puluh enam"
+  },
+  "title": {
+   "ok": "Tiga Belas Juta Empat Ratus Enam Puluh Dua Ribu Seratus Enam Puluh Enam Rupiah"
+  },
+  "sentence": {
+   "ok": "Tiga belas juta empat ratus enam puluh dua ribu seratus enam puluh enam"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tiga belas juta empat ratus enam puluh dua ribu seratus enam puluh enam"
+   },
+   "title": {
+    "ok": "Tiga Belas Juta Empat Ratus Enam Puluh Dua Ribu Seratus Enam Puluh Enam Rupiah"
+   },
+   "sentence": {
+    "ok": "Tiga belas juta empat ratus enam puluh dua ribu seratus enam puluh enam"
+   }
+  }
+ },
+ {
+  "n": 8355827759951,
+  "lower": {
+   "ok": "delapan triliun tiga ratus lima puluh lima miliar delapan ratus dua puluh tujuh juta tujuh ratus lima puluh sembilan ribu sembilan ratus lima puluh satu"
+  },
+  "title": {
+   "ok": "Delapan Triliun Tiga Ratus Lima Puluh Lima Miliar Delapan Ratus Dua Puluh Tujuh Juta Tujuh Ratus Lima Puluh Sembilan Ribu Sembilan Ratus Lima Puluh Satu Rupiah"
+  },
+  "sentence": {
+   "ok": "Delapan triliun tiga ratus lima puluh lima miliar delapan ratus dua puluh tujuh juta tujuh ratus lima puluh sembilan ribu sembilan ratus lima puluh satu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "delapan triliun tiga ratus lima puluh lima miliar delapan ratus dua puluh tujuh juta tujuh ratus lima puluh sembilan ribu sembilan ratus lima puluh satu"
+   },
+   "title": {
+    "ok": "Delapan Triliun Tiga Ratus Lima Puluh Lima Miliar Delapan Ratus Dua Puluh Tujuh Juta Tujuh Ratus Lima Puluh Sembilan Ribu Sembilan Ratus Lima Puluh Satu Rupiah"
+   },
+   "sentence": {
+    "ok": "Delapan triliun tiga ratus lima puluh lima miliar delapan ratus dua puluh tujuh juta tujuh ratus lima puluh sembilan ribu sembilan ratus lima puluh satu"
+   }
+  }
+ },
+ {
+  "n": 9683,
+  "lower": {
+   "ok": "sembilan ribu enam ratus delapan puluh tiga"
+  },
+  "title": {
+   "ok": "Sembilan Ribu Enam Ratus Delapan Puluh Tiga Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan ribu enam ratus delapan puluh tiga"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan ribu enam ratus delapan puluh tiga"
+   },
+   "title": {
+    "ok": "Sembilan Ribu Enam Ratus Delapan Puluh Tiga Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan ribu enam ratus delapan puluh tiga"
+   }
+  }
+ },
+ {
+  "n": 193314563,
+  "lower": {
+   "ok": "seratus sembilan puluh tiga juta tiga ratus empat belas ribu lima ratus enam puluh tiga"
+  },
+  "title": {
+   "ok": "Seratus Sembilan Puluh Tiga Juta Tiga Ratus Empat Belas Ribu Lima Ratus Enam Puluh Tiga Rupiah"
+  },
+  "sentence": {
+   "ok": "Seratus sembilan puluh tiga juta tiga ratus empat belas ribu lima ratus enam puluh tiga"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "seratus sembilan puluh tiga juta tiga ratus empat belas ribu lima ratus enam puluh tiga"
+   },
+   "title": {
+    "ok": "Seratus Sembilan Puluh Tiga Juta Tiga Ratus Empat Belas Ribu Lima Ratus Enam Puluh Tiga Rupiah"
+   },
+   "sentence": {
+    "ok": "Seratus sembilan puluh tiga juta tiga ratus empat belas ribu lima ratus enam puluh tiga"
+   }
+  }
+ },
+ {
+  "n": 63522,
+  "lower": {
+   "ok": "enam puluh tiga ribu lima ratus dua puluh dua"
+  },
+  "title": {
+   "ok": "Enam Puluh Tiga Ribu Lima Ratus Dua Puluh Dua Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam puluh tiga ribu lima ratus dua puluh dua"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam puluh tiga ribu lima ratus dua puluh dua"
+   },
+   "title": {
+    "ok": "Enam Puluh Tiga Ribu Lima Ratus Dua Puluh Dua Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam puluh tiga ribu lima ratus dua puluh dua"
+   }
+  }
+ },
+ {
+  "n": 60301182069,
+  "lower": {
+   "ok": "enam puluh miliar tiga ratus satu juta seratus delapan puluh dua ribu enam puluh sembilan"
+  },
+  "title": {
+   "ok": "Enam Puluh Miliar Tiga Ratus Satu Juta Seratus Delapan Puluh Dua Ribu Enam Puluh Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam puluh miliar tiga ratus satu juta seratus delapan puluh dua ribu enam puluh sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam puluh miliar tiga ratus satu juta seratus delapan puluh dua ribu enam puluh sembilan"
+   },
+   "title": {
+    "ok": "Enam Puluh Miliar Tiga Ratus Satu Juta Seratus Delapan Puluh Dua Ribu Enam Puluh Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam puluh miliar tiga ratus satu juta seratus delapan puluh dua ribu enam puluh sembilan"
+   }
+  }
+ },
+ {
+  "n": 785,
+  "lower": {
+   "ok": "tujuh ratus delapan puluh lima"
+  },
+  "title": {
+   "ok": "Tujuh Ratus Delapan Puluh Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Tujuh ratus delapan puluh lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tujuh ratus delapan puluh lima"
+   },
+   "title": {
+    "ok": "Tujuh Ratus Delapan Puluh Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Tujuh ratus delapan puluh lima"
+   }
+  }
+ },
+ {
+  "n": 26957873,
+  "lower": {
+   "ok": "dua puluh enam juta sembilan ratus lima puluh tujuh ribu delapan ratus tujuh puluh tiga"
+  },
+  "title": {
+   "ok": "Dua Puluh Enam Juta Sembilan Ratus Lima Puluh Tujuh Ribu Delapan Ratus Tujuh Puluh Tiga Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua puluh enam juta sembilan ratus lima puluh tujuh ribu delapan ratus tujuh puluh tiga"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua puluh enam juta sembilan ratus lima puluh tujuh ribu delapan ratus tujuh puluh tiga"
+   },
+   "title": {
+    "ok": "Dua Puluh Enam Juta Sembilan Ratus Lima Puluh Tujuh Ribu Delapan Ratus Tujuh Puluh Tiga Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua puluh enam juta sembilan ratus lima puluh tujuh ribu delapan ratus tujuh puluh tiga"
+   }
+  }
+ },
+ {
+  "n": 89277,
+  "lower": {
+   "ok": "delapan puluh sembilan ribu dua ratus tujuh puluh tujuh"
+  },
+  "title": {
+   "ok": "Delapan Puluh Sembilan Ribu Dua Ratus Tujuh Puluh Tujuh Rupiah"
+  },
+  "sentence": {
+   "ok": "Delapan puluh sembilan ribu dua ratus tujuh puluh tujuh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "delapan puluh sembilan ribu dua ratus tujuh puluh tujuh"
+   },
+   "title": {
+    "ok": "Delapan Puluh Sembilan Ribu Dua Ratus Tujuh Puluh Tujuh Rupiah"
+   },
+   "sentence": {
+    "ok": "Delapan puluh sembilan ribu dua ratus tujuh puluh tujuh"
+   }
+  }
+ },
+ {
+  "n": 798194388858,
+  "lower": {
+   "ok": "tujuh ratus sembilan puluh delapan miliar seratus sembilan puluh empat juta tiga ratus delapan puluh delapan ribu delapan ratus lima puluh delapan"
+  },
+  "title": {
+   "ok": "Tujuh Ratus Sembilan Puluh Delapan Miliar Seratus Sembilan Puluh Empat Juta Tiga Ratus Delapan Puluh Delapan Ribu Delapan Ratus Lima Puluh Delapan Rupiah"
+  },
+  "sentence": {
+   "ok": "Tujuh ratus sembilan puluh delapan miliar seratus sembilan puluh empat juta tiga ratus delapan puluh delapan ribu delapan ratus lima puluh delapan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tujuh ratus sembilan puluh delapan miliar seratus sembilan puluh empat juta tiga ratus delapan puluh delapan ribu delapan ratus lima puluh delapan"
+   },
+   "title": {
+    "ok": "Tujuh Ratus Sembilan Puluh Delapan Miliar Seratus Sembilan Puluh Empat Juta Tiga Ratus Delapan Puluh Delapan Ribu Delapan Ratus Lima Puluh Delapan Rupiah"
+   },
+   "sentence": {
+    "ok": "Tujuh ratus sembilan puluh delapan miliar seratus sembilan puluh empat juta tiga ratus delapan puluh delapan ribu delapan ratus lima puluh delapan"
+   }
+  }
+ },
+ {
+  "n": 799,
+  "lower": {
+   "ok": "tujuh ratus sembilan puluh sembilan"
+  },
+  "title": {
+   "ok": "Tujuh Ratus Sembilan Puluh Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Tujuh ratus sembilan puluh sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tujuh ratus sembilan puluh sembilan"
+   },
+   "title": {
+    "ok": "Tujuh Ratus Sembilan Puluh Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Tujuh ratus sembilan puluh sembilan"
+   }
+  }
+ },
+ {
+  "n": 57,
+  "lower": {
+   "ok": "lima puluh tujuh"
+  },
+  "title": {
+   "ok": "Lima Puluh Tujuh Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima puluh tujuh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima puluh tujuh"
+   },
+   "title": {
+    "ok": "Lima Puluh Tujuh Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima puluh tujuh"
+   }
+  }
+ },
+ {
+  "n": 180,
+  "lower": {
+   "ok": "seratus delapan puluh"
+  },
+  "title": {
+   "ok": "Seratus Delapan Puluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Seratus delapan puluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "seratus delapan puluh"
+   },
+   "title": {
+    "ok": "Seratus Delapan Puluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Seratus delapan puluh"
+   }
+  }
+ },
+ {
+  "n": 3797946,
+  "lower": {
+   "ok": "tiga juta tujuh ratus sembilan puluh tujuh ribu sembilan ratus empat puluh enam"
+  },
+  "title": {
+   "ok": "Tiga Juta Tujuh Ratus Sembilan Puluh Tujuh Ribu Sembilan Ratus Empat Puluh Enam Rupiah"
+  },
+  "sentence": {
+   "ok": "Tiga juta tujuh ratus sembilan puluh tujuh ribu sembilan ratus empat puluh enam"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tiga juta tujuh ratus sembilan puluh tujuh ribu sembilan ratus empat puluh enam"
+   },
+   "title": {
+    "ok": "Tiga Juta Tujuh Ratus Sembilan Puluh Tujuh Ribu Sembilan Ratus Empat Puluh Enam Rupiah"
+   },
+   "sentence": {
+    "ok": "Tiga juta tujuh ratus sembilan puluh tujuh ribu sembilan ratus empat puluh enam"
+   }
+  }
+ },
+ {
+  "n": 4594749,
+  "lower": {
+   "ok": "empat juta lima ratus sembilan puluh empat ribu tujuh ratus empat puluh sembilan"
+  },
+  "title": {
+   "ok": "Empat Juta Lima Ratus Sembilan Puluh Empat Ribu Tujuh Ratus Empat Puluh Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat juta lima ratus sembilan puluh empat ribu tujuh ratus empat puluh sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat juta lima ratus sembilan puluh empat ribu tujuh ratus empat puluh sembilan"
+   },
+   "title": {
+    "ok": "Empat Juta Lima Ratus Sembilan Puluh Empat Ribu Tujuh Ratus Empat Puluh Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat juta lima ratus sembilan puluh empat ribu tujuh ratus empat puluh sembilan"
+   }
+  }
+ },
+ {
+  "n": 38,
+  "lower": {
+   "ok": "tiga puluh delapan"
+  },
+  "title": {
+   "ok": "Tiga Puluh Delapan Rupiah"
+  },
+  "sentence": {
+   "ok": "Tiga puluh delapan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tiga puluh delapan"
+   },
+   "title": {
+    "ok": "Tiga Puluh Delapan Rupiah"
+   },
+   "sentence": {
+    "ok": "Tiga puluh delapan"
+   }
+  }
+ },
+ {
+  "n": 4239092390,
+  "lower": {
+   "ok": "empat miliar dua ratus tiga puluh sembilan juta sembilan puluh dua ribu tiga ratus sembilan puluh"
+  },
+  "title": {
+   "ok": "Empat Miliar Dua Ratus Tiga Puluh Sembilan Juta Sembilan Puluh Dua Ribu Tiga Ratus Sembilan Puluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat miliar dua ratus tiga puluh sembilan juta sembilan puluh dua ribu tiga ratus sembilan puluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat miliar dua ratus tiga puluh sembilan juta sembilan puluh dua ribu tiga ratus sembilan puluh"
+   },
+   "title": {
+    "ok": "Empat Miliar Dua Ratus Tiga Puluh Sembilan Juta Sembilan Puluh Dua Ribu Tiga Ratus Sembilan Puluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat miliar dua ratus tiga puluh sembilan juta sembilan puluh dua ribu tiga ratus sembilan puluh"
+   }
+  }
+ },
+ {
+  "n": 7,
+  "lower": {
+   "ok": "tujuh"
+  },
+  "title": {
+   "ok": "Tujuh Rupiah"
+  },
+  "sentence": {
+   "ok": "Tujuh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tujuh"
+   },
+   "title": {
+    "ok": "Tujuh Rupiah"
+   },
+   "sentence": {
+    "ok": "Tujuh"
+   }
+  }
+ },
+ {
+  "n": 2232050432357,
+  "lower": {
+   "ok": "dua triliun dua ratus tiga puluh dua miliar lima puluh juta empat ratus tiga puluh dua ribu tiga ratus lima puluh tujuh"
+  },
+  "title": {
+   "ok": "Dua Triliun Dua Ratus Tiga Puluh Dua Miliar Lima Puluh Juta Empat Ratus Tiga Puluh Dua Ribu Tiga Ratus Lima Puluh Tujuh Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua triliun dua ratus tiga puluh dua miliar lima puluh juta empat ratus tiga puluh dua ribu tiga ratus lima puluh tujuh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua triliun dua ratus tiga puluh dua miliar lima puluh juta empat ratus tiga puluh dua ribu tiga ratus lima puluh tujuh"
+   },
+   "title": {
+    "ok": "Dua Triliun Dua Ratus Tiga Puluh Dua Miliar Lima Puluh Juta Empat Ratus Tiga Puluh Dua Ribu Tiga Ratus Lima Puluh Tujuh Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua triliun dua ratus tiga puluh dua miliar lima puluh juta empat ratus tiga puluh dua ribu tiga ratus lima puluh tujuh"
+   }
+  }
+ },
+ {
+  "n": 47520,
+  "lower": {
+   "ok": "empat puluh tujuh ribu lima ratus dua puluh"
+  },
+  "title": {
+   "ok": "Empat Puluh Tujuh Ribu Lima Ratus Dua Puluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat puluh tujuh ribu lima ratus dua puluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat puluh tujuh ribu lima ratus dua puluh"
+   },
+   "title": {
+    "ok": "Empat Puluh Tujuh Ribu Lima Ratus Dua Puluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat puluh tujuh ribu lima ratus dua puluh"
+   }
+  }
+ },
+ {
+  "n": 3163306824,
+  "lower": {
+   "ok": "tiga miliar seratus enam puluh tiga juta tiga ratus enam ribu delapan ratus dua puluh empat"
+  },
+  "title": {
+   "ok": "Tiga Miliar Seratus Enam Puluh Tiga Juta Tiga Ratus Enam Ribu Delapan Ratus Dua Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Tiga miliar seratus enam puluh tiga juta tiga ratus enam ribu delapan ratus dua puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tiga miliar seratus enam puluh tiga juta tiga ratus enam ribu delapan ratus dua puluh empat"
+   },
+   "title": {
+    "ok": "Tiga Miliar Seratus Enam Puluh Tiga Juta Tiga Ratus Enam Ribu Delapan Ratus Dua Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Tiga miliar seratus enam puluh tiga juta tiga ratus enam ribu delapan ratus dua puluh empat"
+   }
+  }
+ },
+ {
+  "n": 86313159763813,
+  "lower": {
+   "ok": "delapan puluh enam triliun tiga ratus tiga belas miliar seratus lima puluh sembilan juta tujuh ratus enam puluh tiga ribu delapan ratus tiga belas"
+  },
+  "title": {
+   "ok": "Delapan Puluh Enam Triliun Tiga Ratus Tiga Belas Miliar Seratus Lima Puluh Sembilan Juta Tujuh Ratus Enam Puluh Tiga Ribu Delapan Ratus Tiga Belas Rupiah"
+  },
+  "sentence": {
+   "ok": "Delapan puluh enam triliun tiga ratus tiga belas miliar seratus lima puluh sembilan juta tujuh ratus enam puluh tiga ribu delapan ratus tiga belas"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "delapan puluh enam triliun tiga ratus tiga belas miliar seratus lima puluh sembilan juta tujuh ratus enam puluh tiga ribu delapan ratus tiga belas"
+   },
+   "title": {
+    "ok": "Delapan Puluh Enam Triliun Tiga Ratus Tiga Belas Miliar Seratus Lima Puluh Sembilan Juta Tujuh Ratus Enam Puluh Tiga Ribu Delapan Ratus Tiga Belas Rupiah"
+   },
+   "sentence": {
+    "ok": "Delapan puluh enam triliun tiga ratus tiga belas miliar seratus lima puluh sembilan juta tujuh ratus enam puluh tiga ribu delapan ratus tiga belas"
+   }
+  }
+ },
+ {
+  "n": 154175,
+  "lower": {
+   "ok": "seratus lima puluh empat ribu seratus tujuh puluh lima"
+  },
+  "title": {
+   "ok": "Seratus Lima Puluh Empat Ribu Seratus Tujuh Puluh Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Seratus lima puluh empat ribu seratus tujuh puluh lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "seratus lima puluh empat ribu seratus tujuh puluh lima"
+   },
+   "title": {
+    "ok": "Seratus Lima Puluh Empat Ribu Seratus Tujuh Puluh Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Seratus lima puluh empat ribu seratus tujuh puluh lima"
+   }
+  }
+ },
+ {
+  "n": 277964580,
+  "lower": {
+   "ok": "dua ratus tujuh puluh tujuh juta sembilan ratus enam puluh empat ribu lima ratus delapan puluh"
+  },
+  "title": {
+   "ok": "Dua Ratus Tujuh Puluh Tujuh Juta Sembilan Ratus Enam Puluh Empat Ribu Lima Ratus Delapan Puluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua ratus tujuh puluh tujuh juta sembilan ratus enam puluh empat ribu lima ratus delapan puluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua ratus tujuh puluh tujuh juta sembilan ratus enam puluh empat ribu lima ratus delapan puluh"
+   },
+   "title": {
+    "ok": "Dua Ratus Tujuh Puluh Tujuh Juta Sembilan Ratus Enam Puluh Empat Ribu Lima Ratus Delapan Puluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua ratus tujuh puluh tujuh juta sembilan ratus enam puluh empat ribu lima ratus delapan puluh"
+   }
+  }
+ },
+ {
+  "n": 15519703296013,
+  "lower": {
+   "ok": "lima belas triliun lima ratus sembilan belas miliar tujuh ratus tiga juta dua ratus sembilan puluh enam ribu tiga belas"
+  },
+  "title": {
+   "ok": "Lima Belas Triliun Lima Ratus Sembilan Belas Miliar Tujuh Ratus Tiga Juta Dua Ratus Sembilan Puluh Enam Ribu Tiga Belas Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima belas triliun lima ratus sembilan belas miliar tujuh ratus tiga juta dua ratus sembilan puluh enam ribu tiga belas"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima belas triliun lima ratus sembilan belas miliar tujuh ratus tiga juta dua ratus sembilan puluh enam ribu tiga belas"
+   },
+   "title": {
+    "ok": "Lima Belas Triliun Lima Ratus Sembilan Belas Miliar Tujuh Ratus Tiga Juta Dua Ratus Sembilan Puluh Enam Ribu Tiga Belas Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima belas triliun lima ratus sembilan belas miliar tujuh ratus tiga juta dua ratus sembilan puluh enam ribu tiga belas"
+   }
+  }
+ },
+ {
+  "n": 12,
+  "lower": {
+   "ok": "dua belas"
+  },
+  "title": {
+   "ok": "Dua Belas Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua belas"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua belas"
+   },
+   "title": {
+    "ok": "Dua Belas Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua belas"
+   }
+  }
+ },
+ {
+  "n": 10447173146530,
+  "lower": {
+   "ok": "sepuluh triliun empat ratus empat puluh tujuh miliar seratus tujuh puluh tiga juta seratus empat puluh enam ribu lima ratus tiga puluh"
+  },
+  "title": {
+   "ok": "Sepuluh Triliun Empat Ratus Empat Puluh Tujuh Miliar Seratus Tujuh Puluh Tiga Juta Seratus Empat Puluh Enam Ribu Lima Ratus Tiga Puluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Sepuluh triliun empat ratus empat puluh tujuh miliar seratus tujuh puluh tiga juta seratus empat puluh enam ribu lima ratus tiga puluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sepuluh triliun empat ratus empat puluh tujuh miliar seratus tujuh puluh tiga juta seratus empat puluh enam ribu lima ratus tiga puluh"
+   },
+   "title": {
+    "ok": "Sepuluh Triliun Empat Ratus Empat Puluh Tujuh Miliar Seratus Tujuh Puluh Tiga Juta Seratus Empat Puluh Enam Ribu Lima Ratus Tiga Puluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Sepuluh triliun empat ratus empat puluh tujuh miliar seratus tujuh puluh tiga juta seratus empat puluh enam ribu lima ratus tiga puluh"
+   }
+  }
+ },
+ {
+  "n": 4828805078,
+  "lower": {
+   "ok": "empat miliar delapan ratus dua puluh delapan juta delapan ratus lima ribu tujuh puluh delapan"
+  },
+  "title": {
+   "ok": "Empat Miliar Delapan Ratus Dua Puluh Delapan Juta Delapan Ratus Lima Ribu Tujuh Puluh Delapan Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat miliar delapan ratus dua puluh delapan juta delapan ratus lima ribu tujuh puluh delapan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat miliar delapan ratus dua puluh delapan juta delapan ratus lima ribu tujuh puluh delapan"
+   },
+   "title": {
+    "ok": "Empat Miliar Delapan Ratus Dua Puluh Delapan Juta Delapan Ratus Lima Ribu Tujuh Puluh Delapan Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat miliar delapan ratus dua puluh delapan juta delapan ratus lima ribu tujuh puluh delapan"
+   }
+  }
+ },
+ {
+  "n": 602,
+  "lower": {
+   "ok": "enam ratus dua"
+  },
+  "title": {
+   "ok": "Enam Ratus Dua Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam ratus dua"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam ratus dua"
+   },
+   "title": {
+    "ok": "Enam Ratus Dua Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam ratus dua"
+   }
+  }
+ },
+ {
+  "n": 8601780,
+  "lower": {
+   "ok": "delapan juta enam ratus satu ribu tujuh ratus delapan puluh"
+  },
+  "title": {
+   "ok": "Delapan Juta Enam Ratus Satu Ribu Tujuh Ratus Delapan Puluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Delapan juta enam ratus satu ribu tujuh ratus delapan puluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "delapan juta enam ratus satu ribu tujuh ratus delapan puluh"
+   },
+   "title": {
+    "ok": "Delapan Juta Enam Ratus Satu Ribu Tujuh Ratus Delapan Puluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Delapan juta enam ratus satu ribu tujuh ratus delapan puluh"
+   }
+  }
+ },
+ {
+  "n": 48878996470,
+  "lower": {
+   "ok": "empat puluh delapan miliar delapan ratus tujuh puluh delapan juta sembilan ratus sembilan puluh enam ribu empat ratus tujuh puluh"
+  },
+  "title": {
+   "ok": "Empat Puluh Delapan Miliar Delapan Ratus Tujuh Puluh Delapan Juta Sembilan Ratus Sembilan Puluh Enam Ribu Empat Ratus Tujuh Puluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat puluh delapan miliar delapan ratus tujuh puluh delapan juta sembilan ratus sembilan puluh enam ribu empat ratus tujuh puluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat puluh delapan miliar delapan ratus tujuh puluh delapan juta sembilan ratus sembilan puluh enam ribu empat ratus tujuh puluh"
+   },
+   "title": {
+    "ok": "Empat Puluh Delapan Miliar Delapan Ratus Tujuh Puluh Delapan Juta Sembilan Ratus Sembilan Puluh Enam Ribu Empat Ratus Tujuh Puluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat puluh delapan miliar delapan ratus tujuh puluh delapan juta sembilan ratus sembilan puluh enam ribu empat ratus tujuh puluh"
+   }
+  }
+ },
+ {
+  "n": 66,
+  "lower": {
+   "ok": "enam puluh enam"
+  },
+  "title": {
+   "ok": "Enam Puluh Enam Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam puluh enam"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam puluh enam"
+   },
+   "title": {
+    "ok": "Enam Puluh Enam Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam puluh enam"
+   }
+  }
+ },
+ {
+  "n": 14501814520,
+  "lower": {
+   "ok": "empat belas miliar lima ratus satu juta delapan ratus empat belas ribu lima ratus dua puluh"
+  },
+  "title": {
+   "ok": "Empat Belas Miliar Lima Ratus Satu Juta Delapan Ratus Empat Belas Ribu Lima Ratus Dua Puluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat belas miliar lima ratus satu juta delapan ratus empat belas ribu lima ratus dua puluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat belas miliar lima ratus satu juta delapan ratus empat belas ribu lima ratus dua puluh"
+   },
+   "title": {
+    "ok": "Empat Belas Miliar Lima Ratus Satu Juta Delapan Ratus Empat Belas Ribu Lima Ratus Dua Puluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat belas miliar lima ratus satu juta delapan ratus empat belas ribu lima ratus dua puluh"
+   }
+  }
+ },
+ {
+  "n": 89345808513462,
+  "lower": {
+   "ok": "delapan puluh sembilan triliun tiga ratus empat puluh lima miliar delapan ratus delapan juta lima ratus tiga belas ribu empat ratus enam puluh dua"
+  },
+  "title": {
+   "ok": "Delapan Puluh Sembilan Triliun Tiga Ratus Empat Puluh Lima Miliar Delapan Ratus Delapan Juta Lima Ratus Tiga Belas Ribu Empat Ratus Enam Puluh Dua Rupiah"
+  },
+  "sentence": {
+   "ok": "Delapan puluh sembilan triliun tiga ratus empat puluh lima miliar delapan ratus delapan juta lima ratus tiga belas ribu empat ratus enam puluh dua"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "delapan puluh sembilan triliun tiga ratus empat puluh lima miliar delapan ratus delapan juta lima ratus tiga belas ribu empat ratus enam puluh dua"
+   },
+   "title": {
+    "ok": "Delapan Puluh Sembilan Triliun Tiga Ratus Empat Puluh Lima Miliar Delapan Ratus Delapan Juta Lima Ratus Tiga Belas Ribu Empat Ratus Enam Puluh Dua Rupiah"
+   },
+   "sentence": {
+    "ok": "Delapan puluh sembilan triliun tiga ratus empat puluh lima miliar delapan ratus delapan juta lima ratus tiga belas ribu empat ratus enam puluh dua"
+   }
+  }
+ },
+ {
+  "n": 1121279634,
+  "lower": {
+   "ok": "satu miliar seratus dua puluh satu juta dua ratus tujuh puluh sembilan ribu enam ratus tiga puluh empat"
+  },
+  "title": {
+   "ok": "Satu Miliar Seratus Dua Puluh Satu Juta Dua Ratus Tujuh Puluh Sembilan Ribu Enam Ratus Tiga Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Satu miliar seratus dua puluh satu juta dua ratus tujuh puluh sembilan ribu enam ratus tiga puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "satu miliar seratus dua puluh satu juta dua ratus tujuh puluh sembilan ribu enam ratus tiga puluh empat"
+   },
+   "title": {
+    "ok": "Satu Miliar Seratus Dua Puluh Satu Juta Dua Ratus Tujuh Puluh Sembilan Ribu Enam Ratus Tiga Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Satu miliar seratus dua puluh satu juta dua ratus tujuh puluh sembilan ribu enam ratus tiga puluh empat"
+   }
+  }
+ },
+ {
+  "n": 6388296,
+  "lower": {
+   "ok": "enam juta tiga ratus delapan puluh delapan ribu dua ratus sembilan puluh enam"
+  },
+  "title": {
+   "ok": "Enam Juta Tiga Ratus Delapan Puluh Delapan Ribu Dua Ratus Sembilan Puluh Enam Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam juta tiga ratus delapan puluh delapan ribu dua ratus sembilan puluh enam"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam juta tiga ratus delapan puluh delapan ribu dua ratus sembilan puluh enam"
+   },
+   "title": {
+    "ok": "Enam Juta Tiga Ratus Delapan Puluh Delapan Ribu Dua Ratus Sembilan Puluh Enam Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam juta tiga ratus delapan puluh delapan ribu dua ratus sembilan puluh enam"
+   }
+  }
+ },
+ {
+  "n": 6533672965597,
+  "lower": {
+   "ok": "enam triliun lima ratus tiga puluh tiga miliar enam ratus tujuh puluh dua juta sembilan ratus enam puluh lima ribu lima ratus sembilan puluh tujuh"
+  },
+  "title": {
+   "ok": "Enam Triliun Lima Ratus Tiga Puluh Tiga Miliar Enam Ratus Tujuh Puluh Dua Juta Sembilan Ratus Enam Puluh Lima Ribu Lima Ratus Sembilan Puluh Tujuh Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam triliun lima ratus tiga puluh tiga miliar enam ratus tujuh puluh dua juta sembilan ratus enam puluh lima ribu lima ratus sembilan puluh tujuh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam triliun lima ratus tiga puluh tiga miliar enam ratus tujuh puluh dua juta sembilan ratus enam puluh lima ribu lima ratus sembilan puluh tujuh"
+   },
+   "title": {
+    "ok": "Enam Triliun Lima Ratus Tiga Puluh Tiga Miliar Enam Ratus Tujuh Puluh Dua Juta Sembilan Ratus Enam Puluh Lima Ribu Lima Ratus Sembilan Puluh Tujuh Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam triliun lima ratus tiga puluh tiga miliar enam ratus tujuh puluh dua juta sembilan ratus enam puluh lima ribu lima ratus sembilan puluh tujuh"
+   }
+  }
+ },
+ {
+  "n": 904,
+  "lower": {
+   "ok": "sembilan ratus empat"
+  },
+  "title": {
+   "ok": "Sembilan Ratus Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan ratus empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan ratus empat"
+   },
+   "title": {
+    "ok": "Sembilan Ratus Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan ratus empat"
+   }
+  }
+ },
+ {
+  "n": 42380489408969,
+  "lower": {
+   "ok": "empat puluh dua triliun tiga ratus delapan puluh miliar empat ratus delapan puluh sembilan juta empat ratus delapan ribu sembilan ratus enam puluh sembilan"
+  },
+  "title": {
+   "ok": "Empat Puluh Dua Triliun Tiga Ratus Delapan Puluh Miliar Empat Ratus Delapan Puluh Sembilan Juta Empat Ratus Delapan Ribu Sembilan Ratus Enam Puluh Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat puluh dua triliun tiga ratus delapan puluh miliar empat ratus delapan puluh sembilan juta empat ratus delapan ribu sembilan ratus enam puluh sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat puluh dua triliun tiga ratus delapan puluh miliar empat ratus delapan puluh sembilan juta empat ratus delapan ribu sembilan ratus enam puluh sembilan"
+   },
+   "title": {
+    "ok": "Empat Puluh Dua Triliun Tiga Ratus Delapan Puluh Miliar Empat Ratus Delapan Puluh Sembilan Juta Empat Ratus Delapan Ribu Sembilan Ratus Enam Puluh Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat puluh dua triliun tiga ratus delapan puluh miliar empat ratus delapan puluh sembilan juta empat ratus delapan ribu sembilan ratus enam puluh sembilan"
+   }
+  }
+ },
+ {
+  "n": 20,
+  "lower": {
+   "ok": "dua puluh"
+  },
+  "title": {
+   "ok": "Dua Puluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua puluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua puluh"
+   },
+   "title": {
+    "ok": "Dua Puluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua puluh"
+   }
+  }
+ },
+ {
+  "n": 67803893,
+  "lower": {
+   "ok": "enam puluh tujuh juta delapan ratus tiga ribu delapan ratus sembilan puluh tiga"
+  },
+  "title": {
+   "ok": "Enam Puluh Tujuh Juta Delapan Ratus Tiga Ribu Delapan Ratus Sembilan Puluh Tiga Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam puluh tujuh juta delapan ratus tiga ribu delapan ratus sembilan puluh tiga"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam puluh tujuh juta delapan ratus tiga ribu delapan ratus sembilan puluh tiga"
+   },
+   "title": {
+    "ok": "Enam Puluh Tujuh Juta Delapan Ratus Tiga Ribu Delapan Ratus Sembilan Puluh Tiga Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam puluh tujuh juta delapan ratus tiga ribu delapan ratus sembilan puluh tiga"
+   }
+  }
+ },
+ {
+  "n": 85,
+  "lower": {
+   "ok": "delapan puluh lima"
+  },
+  "title": {
+   "ok": "Delapan Puluh Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Delapan puluh lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "delapan puluh lima"
+   },
+   "title": {
+    "ok": "Delapan Puluh Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Delapan puluh lima"
+   }
+  }
+ },
+ {
+  "n": 2561232098,
+  "lower": {
+   "ok": "dua miliar lima ratus enam puluh satu juta dua ratus tiga puluh dua ribu sembilan puluh delapan"
+  },
+  "title": {
+   "ok": "Dua Miliar Lima Ratus Enam Puluh Satu Juta Dua Ratus Tiga Puluh Dua Ribu Sembilan Puluh Delapan Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua miliar lima ratus enam puluh satu juta dua ratus tiga puluh dua ribu sembilan puluh delapan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua miliar lima ratus enam puluh satu juta dua ratus tiga puluh dua ribu sembilan puluh delapan"
+   },
+   "title": {
+    "ok": "Dua Miliar Lima Ratus Enam Puluh Satu Juta Dua Ratus Tiga Puluh Dua Ribu Sembilan Puluh Delapan Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua miliar lima ratus enam puluh satu juta dua ratus tiga puluh dua ribu sembilan puluh delapan"
+   }
+  }
+ },
+ {
+  "n": 3421604093164,
+  "lower": {
+   "ok": "tiga triliun empat ratus dua puluh satu miliar enam ratus empat juta sembilan puluh tiga ribu seratus enam puluh empat"
+  },
+  "title": {
+   "ok": "Tiga Triliun Empat Ratus Dua Puluh Satu Miliar Enam Ratus Empat Juta Sembilan Puluh Tiga Ribu Seratus Enam Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Tiga triliun empat ratus dua puluh satu miliar enam ratus empat juta sembilan puluh tiga ribu seratus enam puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tiga triliun empat ratus dua puluh satu miliar enam ratus empat juta sembilan puluh tiga ribu seratus enam puluh empat"
+   },
+   "title": {
+    "ok": "Tiga Triliun Empat Ratus Dua Puluh Satu Miliar Enam Ratus Empat Juta Sembilan Puluh Tiga Ribu Seratus Enam Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Tiga triliun empat ratus dua puluh satu miliar enam ratus empat juta sembilan puluh tiga ribu seratus enam puluh empat"
+   }
+  }
+ },
+ {
+  "n": 871,
+  "lower": {
+   "ok": "delapan ratus tujuh puluh satu"
+  },
+  "title": {
+   "ok": "Delapan Ratus Tujuh Puluh Satu Rupiah"
+  },
+  "sentence": {
+   "ok": "Delapan ratus tujuh puluh satu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "delapan ratus tujuh puluh satu"
+   },
+   "title": {
+    "ok": "Delapan Ratus Tujuh Puluh Satu Rupiah"
+   },
+   "sentence": {
+    "ok": "Delapan ratus tujuh puluh satu"
+   }
+  }
+ },
+ {
+  "n": 25858,
+  "lower": {
+   "ok": "dua puluh lima ribu delapan ratus lima puluh delapan"
+  },
+  "title": {
+   "ok": "Dua Puluh Lima Ribu Delapan Ratus Lima Puluh Delapan Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua puluh lima ribu delapan ratus lima puluh delapan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua puluh lima ribu delapan ratus lima puluh delapan"
+   },
+   "title": {
+    "ok": "Dua Puluh Lima Ribu Delapan Ratus Lima Puluh Delapan Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua puluh lima ribu delapan ratus lima puluh delapan"
+   }
+  }
+ },
+ {
+  "n": 7842265579,
+  "lower": {
+   "ok": "tujuh miliar delapan ratus empat puluh dua juta dua ratus enam puluh lima ribu lima ratus tujuh puluh sembilan"
+  },
+  "title": {
+   "ok": "Tujuh Miliar Delapan Ratus Empat Puluh Dua Juta Dua Ratus Enam Puluh Lima Ribu Lima Ratus Tujuh Puluh Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Tujuh miliar delapan ratus empat puluh dua juta dua ratus enam puluh lima ribu lima ratus tujuh puluh sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tujuh miliar delapan ratus empat puluh dua juta dua ratus enam puluh lima ribu lima ratus tujuh puluh sembilan"
+   },
+   "title": {
+    "ok": "Tujuh Miliar Delapan Ratus Empat Puluh Dua Juta Dua Ratus Enam Puluh Lima Ribu Lima Ratus Tujuh Puluh Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Tujuh miliar delapan ratus empat puluh dua juta dua ratus enam puluh lima ribu lima ratus tujuh puluh sembilan"
+   }
+  }
+ },
+ {
+  "n": 6,
+  "lower": {
+   "ok": "enam"
+  },
+  "title": {
+   "ok": "Enam Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam"
+   },
+   "title": {
+    "ok": "Enam Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam"
+   }
+  }
+ },
+ {
+  "n": 6127156529109,
+  "lower": {
+   "ok": "enam triliun seratus dua puluh tujuh miliar seratus lima puluh enam juta lima ratus dua puluh sembilan ribu seratus sembilan"
+  },
+  "title": {
+   "ok": "Enam Triliun Seratus Dua Puluh Tujuh Miliar Seratus Lima Puluh Enam Juta Lima Ratus Dua Puluh Sembilan Ribu Seratus Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam triliun seratus dua puluh tujuh miliar seratus lima puluh enam juta lima ratus dua puluh sembilan ribu seratus sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam triliun seratus dua puluh tujuh miliar seratus lima puluh enam juta lima ratus dua puluh sembilan ribu seratus sembilan"
+   },
+   "title": {
+    "ok": "Enam Triliun Seratus Dua Puluh Tujuh Miliar Seratus Lima Puluh Enam Juta Lima Ratus Dua Puluh Sembilan Ribu Seratus Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam triliun seratus dua puluh tujuh miliar seratus lima puluh enam juta lima ratus dua puluh sembilan ribu seratus sembilan"
+   }
+  }
+ },
+ {
+  "n": 6866,
+  "lower": {
+   "ok": "enam ribu delapan ratus enam puluh enam"
+  },
+  "title": {
+   "ok": "Enam Ribu Delapan Ratus Enam Puluh Enam Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam ribu delapan ratus enam puluh enam"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam ribu delapan ratus enam puluh enam"
+   },
+   "title": {
+    "ok": "Enam Ribu Delapan Ratus Enam Puluh Enam Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam ribu delapan ratus enam puluh enam"
+   }
+  }
+ },
+ {
+  "n": 94460275,
+  "lower": {
+   "ok": "sembilan puluh empat juta empat ratus enam puluh ribu dua ratus tujuh puluh lima"
+  },
+  "title": {
+   "ok": "Sembilan Puluh Empat Juta Empat Ratus Enam Puluh Ribu Dua Ratus Tujuh Puluh Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan puluh empat juta empat ratus enam puluh ribu dua ratus tujuh puluh lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan puluh empat juta empat ratus enam puluh ribu dua ratus tujuh puluh lima"
+   },
+   "title": {
+    "ok": "Sembilan Puluh Empat Juta Empat Ratus Enam Puluh Ribu Dua Ratus Tujuh Puluh Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan puluh empat juta empat ratus enam puluh ribu dua ratus tujuh puluh lima"
+   }
+  }
+ },
+ {
+  "n": 9157765822019,
+  "lower": {
+   "ok": "sembilan triliun seratus lima puluh tujuh miliar tujuh ratus enam puluh lima juta delapan ratus dua puluh dua ribu sembilan belas"
+  },
+  "title": {
+   "ok": "Sembilan Triliun Seratus Lima Puluh Tujuh Miliar Tujuh Ratus Enam Puluh Lima Juta Delapan Ratus Dua Puluh Dua Ribu Sembilan Belas Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan triliun seratus lima puluh tujuh miliar tujuh ratus enam puluh lima juta delapan ratus dua puluh dua ribu sembilan belas"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan triliun seratus lima puluh tujuh miliar tujuh ratus enam puluh lima juta delapan ratus dua puluh dua ribu sembilan belas"
+   },
+   "title": {
+    "ok": "Sembilan Triliun Seratus Lima Puluh Tujuh Miliar Tujuh Ratus Enam Puluh Lima Juta Delapan Ratus Dua Puluh Dua Ribu Sembilan Belas Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan triliun seratus lima puluh tujuh miliar tujuh ratus enam puluh lima juta delapan ratus dua puluh dua ribu sembilan belas"
+   }
+  }
+ },
+ {
+  "n": 82,
+  "lower": {
+   "ok": "delapan puluh dua"
+  },
+  "title": {
+   "ok": "Delapan Puluh Dua Rupiah"
+  },
+  "sentence": {
+   "ok": "Delapan puluh dua"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "delapan puluh dua"
+   },
+   "title": {
+    "ok": "Delapan Puluh Dua Rupiah"
+   },
+   "sentence": {
+    "ok": "Delapan puluh dua"
+   }
+  }
+ },
+ {
+  "n": 5,
+  "lower": {
+   "ok": "lima"
+  },
+  "title": {
+   "ok": "Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima"
+   },
+   "title": {
+    "ok": "Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima"
+   }
+  }
+ },
+ {
+  "n": 945198869,
+  "lower": {
+   "ok": "sembilan ratus empat puluh lima juta seratus sembilan puluh delapan ribu delapan ratus enam puluh sembilan"
+  },
+  "title": {
+   "ok": "Sembilan Ratus Empat Puluh Lima Juta Seratus Sembilan Puluh Delapan Ribu Delapan Ratus Enam Puluh Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan ratus empat puluh lima juta seratus sembilan puluh delapan ribu delapan ratus enam puluh sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan ratus empat puluh lima juta seratus sembilan puluh delapan ribu delapan ratus enam puluh sembilan"
+   },
+   "title": {
+    "ok": "Sembilan Ratus Empat Puluh Lima Juta Seratus Sembilan Puluh Delapan Ribu Delapan Ratus Enam Puluh Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan ratus empat puluh lima juta seratus sembilan puluh delapan ribu delapan ratus enam puluh sembilan"
+   }
+  }
+ },
+ {
+  "n": 857791330432519,
+  "lower": {
+   "ok": "delapan ratus lima puluh tujuh triliun tujuh ratus sembilan puluh satu miliar tiga ratus tiga puluh juta empat ratus tiga puluh dua ribu lima ratus sembilan belas"
+  },
+  "title": {
+   "ok": "Delapan Ratus Lima Puluh Tujuh Triliun Tujuh Ratus Sembilan Puluh Satu Miliar Tiga Ratus Tiga Puluh Juta Empat Ratus Tiga Puluh Dua Ribu Lima Ratus Sembilan Belas Rupiah"
+  },
+  "sentence": {
+   "ok": "Delapan ratus lima puluh tujuh triliun tujuh ratus sembilan puluh satu miliar tiga ratus tiga puluh juta empat ratus tiga puluh dua ribu lima ratus sembilan belas"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "delapan ratus lima puluh tujuh triliun tujuh ratus sembilan puluh satu miliar tiga ratus tiga puluh juta empat ratus tiga puluh dua ribu lima ratus sembilan belas"
+   },
+   "title": {
+    "ok": "Delapan Ratus Lima Puluh Tujuh Triliun Tujuh Ratus Sembilan Puluh Satu Miliar Tiga Ratus Tiga Puluh Juta Empat Ratus Tiga Puluh Dua Ribu Lima Ratus Sembilan Belas Rupiah"
+   },
+   "sentence": {
+    "ok": "Delapan ratus lima puluh tujuh triliun tujuh ratus sembilan puluh satu miliar tiga ratus tiga puluh juta empat ratus tiga puluh dua ribu lima ratus sembilan belas"
+   }
+  }
+ },
+ {
+  "n": 3893242937047,
+  "lower": {
+   "ok": "tiga triliun delapan ratus sembilan puluh tiga miliar dua ratus empat puluh dua juta sembilan ratus tiga puluh tujuh ribu empat puluh tujuh"
+  },
+  "title": {
+   "ok": "Tiga Triliun Delapan Ratus Sembilan Puluh Tiga Miliar Dua Ratus Empat Puluh Dua Juta Sembilan Ratus Tiga Puluh Tujuh Ribu Empat Puluh Tujuh Rupiah"
+  },
+  "sentence": {
+   "ok": "Tiga triliun delapan ratus sembilan puluh tiga miliar dua ratus empat puluh dua juta sembilan ratus tiga puluh tujuh ribu empat puluh tujuh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tiga triliun delapan ratus sembilan puluh tiga miliar dua ratus empat puluh dua juta sembilan ratus tiga puluh tujuh ribu empat puluh tujuh"
+   },
+   "title": {
+    "ok": "Tiga Triliun Delapan Ratus Sembilan Puluh Tiga Miliar Dua Ratus Empat Puluh Dua Juta Sembilan Ratus Tiga Puluh Tujuh Ribu Empat Puluh Tujuh Rupiah"
+   },
+   "sentence": {
+    "ok": "Tiga triliun delapan ratus sembilan puluh tiga miliar dua ratus empat puluh dua juta sembilan ratus tiga puluh tujuh ribu empat puluh tujuh"
+   }
+  }
+ },
+ {
+  "n": 10097,
+  "lower": {
+   "ok": "sepuluh ribu sembilan puluh tujuh"
+  },
+  "title": {
+   "ok": "Sepuluh Ribu Sembilan Puluh Tujuh Rupiah"
+  },
+  "sentence": {
+   "ok": "Sepuluh ribu sembilan puluh tujuh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sepuluh ribu sembilan puluh tujuh"
+   },
+   "title": {
+    "ok": "Sepuluh Ribu Sembilan Puluh Tujuh Rupiah"
+   },
+   "sentence": {
+    "ok": "Sepuluh ribu sembilan puluh tujuh"
+   }
+  }
+ },
+ {
+  "n": 43258480,
+  "lower": {
+   "ok": "empat puluh tiga juta dua ratus lima puluh delapan ribu empat ratus delapan puluh"
+  },
+  "title": {
+   "ok": "Empat Puluh Tiga Juta Dua Ratus Lima Puluh Delapan Ribu Empat Ratus Delapan Puluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat puluh tiga juta dua ratus lima puluh delapan ribu empat ratus delapan puluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat puluh tiga juta dua ratus lima puluh delapan ribu empat ratus delapan puluh"
+   },
+   "title": {
+    "ok": "Empat Puluh Tiga Juta Dua Ratus Lima Puluh Delapan Ribu Empat Ratus Delapan Puluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat puluh tiga juta dua ratus lima puluh delapan ribu empat ratus delapan puluh"
+   }
+  }
+ },
+ {
+  "n": 174615591,
+  "lower": {
+   "ok": "seratus tujuh puluh empat juta enam ratus lima belas ribu lima ratus sembilan puluh satu"
+  },
+  "title": {
+   "ok": "Seratus Tujuh Puluh Empat Juta Enam Ratus Lima Belas Ribu Lima Ratus Sembilan Puluh Satu Rupiah"
+  },
+  "sentence": {
+   "ok": "Seratus tujuh puluh empat juta enam ratus lima belas ribu lima ratus sembilan puluh satu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "seratus tujuh puluh empat juta enam ratus lima belas ribu lima ratus sembilan puluh satu"
+   },
+   "title": {
+    "ok": "Seratus Tujuh Puluh Empat Juta Enam Ratus Lima Belas Ribu Lima Ratus Sembilan Puluh Satu Rupiah"
+   },
+   "sentence": {
+    "ok": "Seratus tujuh puluh empat juta enam ratus lima belas ribu lima ratus sembilan puluh satu"
+   }
+  }
+ },
+ {
+  "n": 66826048074290,
+  "lower": {
+   "ok": "enam puluh enam triliun delapan ratus dua puluh enam miliar empat puluh delapan juta tujuh puluh empat ribu dua ratus sembilan puluh"
+  },
+  "title": {
+   "ok": "Enam Puluh Enam Triliun Delapan Ratus Dua Puluh Enam Miliar Empat Puluh Delapan Juta Tujuh Puluh Empat Ribu Dua Ratus Sembilan Puluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam puluh enam triliun delapan ratus dua puluh enam miliar empat puluh delapan juta tujuh puluh empat ribu dua ratus sembilan puluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam puluh enam triliun delapan ratus dua puluh enam miliar empat puluh delapan juta tujuh puluh empat ribu dua ratus sembilan puluh"
+   },
+   "title": {
+    "ok": "Enam Puluh Enam Triliun Delapan Ratus Dua Puluh Enam Miliar Empat Puluh Delapan Juta Tujuh Puluh Empat Ribu Dua Ratus Sembilan Puluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam puluh enam triliun delapan ratus dua puluh enam miliar empat puluh delapan juta tujuh puluh empat ribu dua ratus sembilan puluh"
+   }
+  }
+ },
+ {
+  "n": 55099100922,
+  "lower": {
+   "ok": "lima puluh lima miliar sembilan puluh sembilan juta seratus ribu sembilan ratus dua puluh dua"
+  },
+  "title": {
+   "ok": "Lima Puluh Lima Miliar Sembilan Puluh Sembilan Juta Seratus Ribu Sembilan Ratus Dua Puluh Dua Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima puluh lima miliar sembilan puluh sembilan juta seratus ribu sembilan ratus dua puluh dua"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima puluh lima miliar sembilan puluh sembilan juta seratus ribu sembilan ratus dua puluh dua"
+   },
+   "title": {
+    "ok": "Lima Puluh Lima Miliar Sembilan Puluh Sembilan Juta Seratus Ribu Sembilan Ratus Dua Puluh Dua Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima puluh lima miliar sembilan puluh sembilan juta seratus ribu sembilan ratus dua puluh dua"
+   }
+  }
+ },
+ {
+  "n": 597266845,
+  "lower": {
+   "ok": "lima ratus sembilan puluh tujuh juta dua ratus enam puluh enam ribu delapan ratus empat puluh lima"
+  },
+  "title": {
+   "ok": "Lima Ratus Sembilan Puluh Tujuh Juta Dua Ratus Enam Puluh Enam Ribu Delapan Ratus Empat Puluh Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima ratus sembilan puluh tujuh juta dua ratus enam puluh enam ribu delapan ratus empat puluh lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima ratus sembilan puluh tujuh juta dua ratus enam puluh enam ribu delapan ratus empat puluh lima"
+   },
+   "title": {
+    "ok": "Lima Ratus Sembilan Puluh Tujuh Juta Dua Ratus Enam Puluh Enam Ribu Delapan Ratus Empat Puluh Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima ratus sembilan puluh tujuh juta dua ratus enam puluh enam ribu delapan ratus empat puluh lima"
+   }
+  }
+ },
+ {
+  "n": 1002,
+  "lower": {
+   "ok": "seribu dua"
+  },
+  "title": {
+   "ok": "Seribu Dua Rupiah"
+  },
+  "sentence": {
+   "ok": "Seribu dua"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "seribu dua"
+   },
+   "title": {
+    "ok": "Seribu Dua Rupiah"
+   },
+   "sentence": {
+    "ok": "Seribu dua"
+   }
+  }
+ },
+ {
+  "n": 5,
+  "lower": {
+   "ok": "lima"
+  },
+  "title": {
+   "ok": "Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima"
+   },
+   "title": {
+    "ok": "Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima"
+   }
+  }
+ },
+ {
+  "n": 481609892,
+  "lower": {
+   "ok": "empat ratus delapan puluh satu juta enam ratus sembilan ribu delapan ratus sembilan puluh dua"
+  },
+  "title": {
+   "ok": "Empat Ratus Delapan Puluh Satu Juta Enam Ratus Sembilan Ribu Delapan Ratus Sembilan Puluh Dua Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat ratus delapan puluh satu juta enam ratus sembilan ribu delapan ratus sembilan puluh dua"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat ratus delapan puluh satu juta enam ratus sembilan ribu delapan ratus sembilan puluh dua"
+   },
+   "title": {
+    "ok": "Empat Ratus Delapan Puluh Satu Juta Enam Ratus Sembilan Ribu Delapan Ratus Sembilan Puluh Dua Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat ratus delapan puluh satu juta enam ratus sembilan ribu delapan ratus sembilan puluh dua"
+   }
+  }
+ },
+ {
+  "n": 2,
+  "lower": {
+   "ok": "dua"
+  },
+  "title": {
+   "ok": "Dua Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua"
+   },
+   "title": {
+    "ok": "Dua Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua"
+   }
+  }
+ },
+ {
+  "n": 63438439718,
+  "lower": {
+   "ok": "enam puluh tiga miliar empat ratus tiga puluh delapan juta empat ratus tiga puluh sembilan ribu tujuh ratus delapan belas"
+  },
+  "title": {
+   "ok": "Enam Puluh Tiga Miliar Empat Ratus Tiga Puluh Delapan Juta Empat Ratus Tiga Puluh Sembilan Ribu Tujuh Ratus Delapan Belas Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam puluh tiga miliar empat ratus tiga puluh delapan juta empat ratus tiga puluh sembilan ribu tujuh ratus delapan belas"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam puluh tiga miliar empat ratus tiga puluh delapan juta empat ratus tiga puluh sembilan ribu tujuh ratus delapan belas"
+   },
+   "title": {
+    "ok": "Enam Puluh Tiga Miliar Empat Ratus Tiga Puluh Delapan Juta Empat Ratus Tiga Puluh Sembilan Ribu Tujuh Ratus Delapan Belas Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam puluh tiga miliar empat ratus tiga puluh delapan juta empat ratus tiga puluh sembilan ribu tujuh ratus delapan belas"
+   }
+  }
+ },
+ {
+  "n": 473595,
+  "lower": {
+   "ok": "empat ratus tujuh puluh tiga ribu lima ratus sembilan puluh lima"
+  },
+  "title": {
+   "ok": "Empat Ratus Tujuh Puluh Tiga Ribu Lima Ratus Sembilan Puluh Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat ratus tujuh puluh tiga ribu lima ratus sembilan puluh lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat ratus tujuh puluh tiga ribu lima ratus sembilan puluh lima"
+   },
+   "title": {
+    "ok": "Empat Ratus Tujuh Puluh Tiga Ribu Lima Ratus Sembilan Puluh Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat ratus tujuh puluh tiga ribu lima ratus sembilan puluh lima"
+   }
+  }
+ },
+ {
+  "n": 491533408872,
+  "lower": {
+   "ok": "empat ratus sembilan puluh satu miliar lima ratus tiga puluh tiga juta empat ratus delapan ribu delapan ratus tujuh puluh dua"
+  },
+  "title": {
+   "ok": "Empat Ratus Sembilan Puluh Satu Miliar Lima Ratus Tiga Puluh Tiga Juta Empat Ratus Delapan Ribu Delapan Ratus Tujuh Puluh Dua Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat ratus sembilan puluh satu miliar lima ratus tiga puluh tiga juta empat ratus delapan ribu delapan ratus tujuh puluh dua"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat ratus sembilan puluh satu miliar lima ratus tiga puluh tiga juta empat ratus delapan ribu delapan ratus tujuh puluh dua"
+   },
+   "title": {
+    "ok": "Empat Ratus Sembilan Puluh Satu Miliar Lima Ratus Tiga Puluh Tiga Juta Empat Ratus Delapan Ribu Delapan Ratus Tujuh Puluh Dua Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat ratus sembilan puluh satu miliar lima ratus tiga puluh tiga juta empat ratus delapan ribu delapan ratus tujuh puluh dua"
+   }
+  }
+ },
+ {
+  "n": 93523527,
+  "lower": {
+   "ok": "sembilan puluh tiga juta lima ratus dua puluh tiga ribu lima ratus dua puluh tujuh"
+  },
+  "title": {
+   "ok": "Sembilan Puluh Tiga Juta Lima Ratus Dua Puluh Tiga Ribu Lima Ratus Dua Puluh Tujuh Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan puluh tiga juta lima ratus dua puluh tiga ribu lima ratus dua puluh tujuh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan puluh tiga juta lima ratus dua puluh tiga ribu lima ratus dua puluh tujuh"
+   },
+   "title": {
+    "ok": "Sembilan Puluh Tiga Juta Lima Ratus Dua Puluh Tiga Ribu Lima Ratus Dua Puluh Tujuh Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan puluh tiga juta lima ratus dua puluh tiga ribu lima ratus dua puluh tujuh"
+   }
+  }
+ },
+ {
+  "n": 31152926781,
+  "lower": {
+   "ok": "tiga puluh satu miliar seratus lima puluh dua juta sembilan ratus dua puluh enam ribu tujuh ratus delapan puluh satu"
+  },
+  "title": {
+   "ok": "Tiga Puluh Satu Miliar Seratus Lima Puluh Dua Juta Sembilan Ratus Dua Puluh Enam Ribu Tujuh Ratus Delapan Puluh Satu Rupiah"
+  },
+  "sentence": {
+   "ok": "Tiga puluh satu miliar seratus lima puluh dua juta sembilan ratus dua puluh enam ribu tujuh ratus delapan puluh satu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tiga puluh satu miliar seratus lima puluh dua juta sembilan ratus dua puluh enam ribu tujuh ratus delapan puluh satu"
+   },
+   "title": {
+    "ok": "Tiga Puluh Satu Miliar Seratus Lima Puluh Dua Juta Sembilan Ratus Dua Puluh Enam Ribu Tujuh Ratus Delapan Puluh Satu Rupiah"
+   },
+   "sentence": {
+    "ok": "Tiga puluh satu miliar seratus lima puluh dua juta sembilan ratus dua puluh enam ribu tujuh ratus delapan puluh satu"
+   }
+  }
+ },
+ {
+  "n": 772465359885245,
+  "lower": {
+   "ok": "tujuh ratus tujuh puluh dua triliun empat ratus enam puluh lima miliar tiga ratus lima puluh sembilan juta delapan ratus delapan puluh lima ribu dua ratus empat puluh lima"
+  },
+  "title": {
+   "ok": "Tujuh Ratus Tujuh Puluh Dua Triliun Empat Ratus Enam Puluh Lima Miliar Tiga Ratus Lima Puluh Sembilan Juta Delapan Ratus Delapan Puluh Lima Ribu Dua Ratus Empat Puluh Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Tujuh ratus tujuh puluh dua triliun empat ratus enam puluh lima miliar tiga ratus lima puluh sembilan juta delapan ratus delapan puluh lima ribu dua ratus empat puluh lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tujuh ratus tujuh puluh dua triliun empat ratus enam puluh lima miliar tiga ratus lima puluh sembilan juta delapan ratus delapan puluh lima ribu dua ratus empat puluh lima"
+   },
+   "title": {
+    "ok": "Tujuh Ratus Tujuh Puluh Dua Triliun Empat Ratus Enam Puluh Lima Miliar Tiga Ratus Lima Puluh Sembilan Juta Delapan Ratus Delapan Puluh Lima Ribu Dua Ratus Empat Puluh Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Tujuh ratus tujuh puluh dua triliun empat ratus enam puluh lima miliar tiga ratus lima puluh sembilan juta delapan ratus delapan puluh lima ribu dua ratus empat puluh lima"
+   }
+  }
+ },
+ {
+  "n": 3210737928,
+  "lower": {
+   "ok": "tiga miliar dua ratus sepuluh juta tujuh ratus tiga puluh tujuh ribu sembilan ratus dua puluh delapan"
+  },
+  "title": {
+   "ok": "Tiga Miliar Dua Ratus Sepuluh Juta Tujuh Ratus Tiga Puluh Tujuh Ribu Sembilan Ratus Dua Puluh Delapan Rupiah"
+  },
+  "sentence": {
+   "ok": "Tiga miliar dua ratus sepuluh juta tujuh ratus tiga puluh tujuh ribu sembilan ratus dua puluh delapan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tiga miliar dua ratus sepuluh juta tujuh ratus tiga puluh tujuh ribu sembilan ratus dua puluh delapan"
+   },
+   "title": {
+    "ok": "Tiga Miliar Dua Ratus Sepuluh Juta Tujuh Ratus Tiga Puluh Tujuh Ribu Sembilan Ratus Dua Puluh Delapan Rupiah"
+   },
+   "sentence": {
+    "ok": "Tiga miliar dua ratus sepuluh juta tujuh ratus tiga puluh tujuh ribu sembilan ratus dua puluh delapan"
+   }
+  }
+ },
+ {
+  "n": 397,
+  "lower": {
+   "ok": "tiga ratus sembilan puluh tujuh"
+  },
+  "title": {
+   "ok": "Tiga Ratus Sembilan Puluh Tujuh Rupiah"
+  },
+  "sentence": {
+   "ok": "Tiga ratus sembilan puluh tujuh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tiga ratus sembilan puluh tujuh"
+   },
+   "title": {
+    "ok": "Tiga Ratus Sembilan Puluh Tujuh Rupiah"
+   },
+   "sentence": {
+    "ok": "Tiga ratus sembilan puluh tujuh"
+   }
+  }
+ },
+ {
+  "n": 4,
+  "lower": {
+   "ok": "empat"
+  },
+  "title": {
+   "ok": "Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat"
+   },
+   "title": {
+    "ok": "Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat"
+   }
+  }
+ },
+ {
+  "n": 23075,
+  "lower": {
+   "ok": "dua puluh tiga ribu tujuh puluh lima"
+  },
+  "title": {
+   "ok": "Dua Puluh Tiga Ribu Tujuh Puluh Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua puluh tiga ribu tujuh puluh lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua puluh tiga ribu tujuh puluh lima"
+   },
+   "title": {
+    "ok": "Dua Puluh Tiga Ribu Tujuh Puluh Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua puluh tiga ribu tujuh puluh lima"
+   }
+  }
+ },
+ {
+  "n": 166149276,
+  "lower": {
+   "ok": "seratus enam puluh enam juta seratus empat puluh sembilan ribu dua ratus tujuh puluh enam"
+  },
+  "title": {
+   "ok": "Seratus Enam Puluh Enam Juta Seratus Empat Puluh Sembilan Ribu Dua Ratus Tujuh Puluh Enam Rupiah"
+  },
+  "sentence": {
+   "ok": "Seratus enam puluh enam juta seratus empat puluh sembilan ribu dua ratus tujuh puluh enam"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "seratus enam puluh enam juta seratus empat puluh sembilan ribu dua ratus tujuh puluh enam"
+   },
+   "title": {
+    "ok": "Seratus Enam Puluh Enam Juta Seratus Empat Puluh Sembilan Ribu Dua Ratus Tujuh Puluh Enam Rupiah"
+   },
+   "sentence": {
+    "ok": "Seratus enam puluh enam juta seratus empat puluh sembilan ribu dua ratus tujuh puluh enam"
+   }
+  }
+ },
+ {
+  "n": 97964036301709,
+  "lower": {
+   "ok": "sembilan puluh tujuh triliun sembilan ratus enam puluh empat miliar tiga puluh enam juta tiga ratus satu ribu tujuh ratus sembilan"
+  },
+  "title": {
+   "ok": "Sembilan Puluh Tujuh Triliun Sembilan Ratus Enam Puluh Empat Miliar Tiga Puluh Enam Juta Tiga Ratus Satu Ribu Tujuh Ratus Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan puluh tujuh triliun sembilan ratus enam puluh empat miliar tiga puluh enam juta tiga ratus satu ribu tujuh ratus sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan puluh tujuh triliun sembilan ratus enam puluh empat miliar tiga puluh enam juta tiga ratus satu ribu tujuh ratus sembilan"
+   },
+   "title": {
+    "ok": "Sembilan Puluh Tujuh Triliun Sembilan Ratus Enam Puluh Empat Miliar Tiga Puluh Enam Juta Tiga Ratus Satu Ribu Tujuh Ratus Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan puluh tujuh triliun sembilan ratus enam puluh empat miliar tiga puluh enam juta tiga ratus satu ribu tujuh ratus sembilan"
+   }
+  }
+ },
+ {
+  "n": 9463671694975,
+  "lower": {
+   "ok": "sembilan triliun empat ratus enam puluh tiga miliar enam ratus tujuh puluh satu juta enam ratus sembilan puluh empat ribu sembilan ratus tujuh puluh lima"
+  },
+  "title": {
+   "ok": "Sembilan Triliun Empat Ratus Enam Puluh Tiga Miliar Enam Ratus Tujuh Puluh Satu Juta Enam Ratus Sembilan Puluh Empat Ribu Sembilan Ratus Tujuh Puluh Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan triliun empat ratus enam puluh tiga miliar enam ratus tujuh puluh satu juta enam ratus sembilan puluh empat ribu sembilan ratus tujuh puluh lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan triliun empat ratus enam puluh tiga miliar enam ratus tujuh puluh satu juta enam ratus sembilan puluh empat ribu sembilan ratus tujuh puluh lima"
+   },
+   "title": {
+    "ok": "Sembilan Triliun Empat Ratus Enam Puluh Tiga Miliar Enam Ratus Tujuh Puluh Satu Juta Enam Ratus Sembilan Puluh Empat Ribu Sembilan Ratus Tujuh Puluh Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan triliun empat ratus enam puluh tiga miliar enam ratus tujuh puluh satu juta enam ratus sembilan puluh empat ribu sembilan ratus tujuh puluh lima"
+   }
+  }
+ },
+ {
+  "n": 6,
+  "lower": {
+   "ok": "enam"
+  },
+  "title": {
+   "ok": "Enam Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam"
+   },
+   "title": {
+    "ok": "Enam Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam"
+   }
+  }
+ },
+ {
+  "n": 95837734336964,
+  "lower": {
+   "ok": "sembilan puluh lima triliun delapan ratus tiga puluh tujuh miliar tujuh ratus tiga puluh empat juta tiga ratus tiga puluh enam ribu sembilan ratus enam puluh empat"
+  },
+  "title": {
+   "ok": "Sembilan Puluh Lima Triliun Delapan Ratus Tiga Puluh Tujuh Miliar Tujuh Ratus Tiga Puluh Empat Juta Tiga Ratus Tiga Puluh Enam Ribu Sembilan Ratus Enam Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan puluh lima triliun delapan ratus tiga puluh tujuh miliar tujuh ratus tiga puluh empat juta tiga ratus tiga puluh enam ribu sembilan ratus enam puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan puluh lima triliun delapan ratus tiga puluh tujuh miliar tujuh ratus tiga puluh empat juta tiga ratus tiga puluh enam ribu sembilan ratus enam puluh empat"
+   },
+   "title": {
+    "ok": "Sembilan Puluh Lima Triliun Delapan Ratus Tiga Puluh Tujuh Miliar Tujuh Ratus Tiga Puluh Empat Juta Tiga Ratus Tiga Puluh Enam Ribu Sembilan Ratus Enam Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan puluh lima triliun delapan ratus tiga puluh tujuh miliar tujuh ratus tiga puluh empat juta tiga ratus tiga puluh enam ribu sembilan ratus enam puluh empat"
+   }
+  }
+ },
+ {
+  "n": 8478,
+  "lower": {
+   "ok": "delapan ribu empat ratus tujuh puluh delapan"
+  },
+  "title": {
+   "ok": "Delapan Ribu Empat Ratus Tujuh Puluh Delapan Rupiah"
+  },
+  "sentence": {
+   "ok": "Delapan ribu empat ratus tujuh puluh delapan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "delapan ribu empat ratus tujuh puluh delapan"
+   },
+   "title": {
+    "ok": "Delapan Ribu Empat Ratus Tujuh Puluh Delapan Rupiah"
+   },
+   "sentence": {
+    "ok": "Delapan ribu empat ratus tujuh puluh delapan"
+   }
+  }
+ },
+ {
+  "n": 45681,
+  "lower": {
+   "ok": "empat puluh lima ribu enam ratus delapan puluh satu"
+  },
+  "title": {
+   "ok": "Empat Puluh Lima Ribu Enam Ratus Delapan Puluh Satu Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat puluh lima ribu enam ratus delapan puluh satu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat puluh lima ribu enam ratus delapan puluh satu"
+   },
+   "title": {
+    "ok": "Empat Puluh Lima Ribu Enam Ratus Delapan Puluh Satu Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat puluh lima ribu enam ratus delapan puluh satu"
+   }
+  }
+ },
+ {
+  "n": 401038526324555,
+  "lower": {
+   "ok": "empat ratus satu triliun tiga puluh delapan miliar lima ratus dua puluh enam juta tiga ratus dua puluh empat ribu lima ratus lima puluh lima"
+  },
+  "title": {
+   "ok": "Empat Ratus Satu Triliun Tiga Puluh Delapan Miliar Lima Ratus Dua Puluh Enam Juta Tiga Ratus Dua Puluh Empat Ribu Lima Ratus Lima Puluh Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat ratus satu triliun tiga puluh delapan miliar lima ratus dua puluh enam juta tiga ratus dua puluh empat ribu lima ratus lima puluh lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat ratus satu triliun tiga puluh delapan miliar lima ratus dua puluh enam juta tiga ratus dua puluh empat ribu lima ratus lima puluh lima"
+   },
+   "title": {
+    "ok": "Empat Ratus Satu Triliun Tiga Puluh Delapan Miliar Lima Ratus Dua Puluh Enam Juta Tiga Ratus Dua Puluh Empat Ribu Lima Ratus Lima Puluh Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat ratus satu triliun tiga puluh delapan miliar lima ratus dua puluh enam juta tiga ratus dua puluh empat ribu lima ratus lima puluh lima"
+   }
+  }
+ },
+ {
+  "n": 9618007340468,
+  "lower": {
+   "ok": "sembilan triliun enam ratus delapan belas miliar tujuh juta tiga ratus empat puluh ribu empat ratus enam puluh delapan"
+  },
+  "title": {
+   "ok": "Sembilan Triliun Enam Ratus Delapan Belas Miliar Tujuh Juta Tiga Ratus Empat Puluh Ribu Empat Ratus Enam Puluh Delapan Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan triliun enam ratus delapan belas miliar tujuh juta tiga ratus empat puluh ribu empat ratus enam puluh delapan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan triliun enam ratus delapan belas miliar tujuh juta tiga ratus empat puluh ribu empat ratus enam puluh delapan"
+   },
+   "title": {
+    "ok": "Sembilan Triliun Enam Ratus Delapan Belas Miliar Tujuh Juta Tiga Ratus Empat Puluh Ribu Empat Ratus Enam Puluh Delapan Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan triliun enam ratus delapan belas miliar tujuh juta tiga ratus empat puluh ribu empat ratus enam puluh delapan"
+   }
+  }
+ },
+ {
+  "n": 97533943271264,
+  "lower": {
+   "ok": "sembilan puluh tujuh triliun lima ratus tiga puluh tiga miliar sembilan ratus empat puluh tiga juta dua ratus tujuh puluh satu ribu dua ratus enam puluh empat"
+  },
+  "title": {
+   "ok": "Sembilan Puluh Tujuh Triliun Lima Ratus Tiga Puluh Tiga Miliar Sembilan Ratus Empat Puluh Tiga Juta Dua Ratus Tujuh Puluh Satu Ribu Dua Ratus Enam Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan puluh tujuh triliun lima ratus tiga puluh tiga miliar sembilan ratus empat puluh tiga juta dua ratus tujuh puluh satu ribu dua ratus enam puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan puluh tujuh triliun lima ratus tiga puluh tiga miliar sembilan ratus empat puluh tiga juta dua ratus tujuh puluh satu ribu dua ratus enam puluh empat"
+   },
+   "title": {
+    "ok": "Sembilan Puluh Tujuh Triliun Lima Ratus Tiga Puluh Tiga Miliar Sembilan Ratus Empat Puluh Tiga Juta Dua Ratus Tujuh Puluh Satu Ribu Dua Ratus Enam Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan puluh tujuh triliun lima ratus tiga puluh tiga miliar sembilan ratus empat puluh tiga juta dua ratus tujuh puluh satu ribu dua ratus enam puluh empat"
+   }
+  }
+ },
+ {
+  "n": 4027398123,
+  "lower": {
+   "ok": "empat miliar dua puluh tujuh juta tiga ratus sembilan puluh delapan ribu seratus dua puluh tiga"
+  },
+  "title": {
+   "ok": "Empat Miliar Dua Puluh Tujuh Juta Tiga Ratus Sembilan Puluh Delapan Ribu Seratus Dua Puluh Tiga Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat miliar dua puluh tujuh juta tiga ratus sembilan puluh delapan ribu seratus dua puluh tiga"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat miliar dua puluh tujuh juta tiga ratus sembilan puluh delapan ribu seratus dua puluh tiga"
+   },
+   "title": {
+    "ok": "Empat Miliar Dua Puluh Tujuh Juta Tiga Ratus Sembilan Puluh Delapan Ribu Seratus Dua Puluh Tiga Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat miliar dua puluh tujuh juta tiga ratus sembilan puluh delapan ribu seratus dua puluh tiga"
+   }
+  }
+ },
+ {
+  "n": 70497,
+  "lower": {
+   "ok": "tujuh puluh ribu empat ratus sembilan puluh tujuh"
+  },
+  "title": {
+   "ok": "Tujuh Puluh Ribu Empat Ratus Sembilan Puluh Tujuh Rupiah"
+  },
+  "sentence": {
+   "ok": "Tujuh puluh ribu empat ratus sembilan puluh tujuh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tujuh puluh ribu empat ratus sembilan puluh tujuh"
+   },
+   "title": {
+    "ok": "Tujuh Puluh Ribu Empat Ratus Sembilan Puluh Tujuh Rupiah"
+   },
+   "sentence": {
+    "ok": "Tujuh puluh ribu empat ratus sembilan puluh tujuh"
+   }
+  }
+ },
+ {
+  "n": 86112823663,
+  "lower": {
+   "ok": "delapan puluh enam miliar seratus dua belas juta delapan ratus dua puluh tiga ribu enam ratus enam puluh tiga"
+  },
+  "title": {
+   "ok": "Delapan Puluh Enam Miliar Seratus Dua Belas Juta Delapan Ratus Dua Puluh Tiga Ribu Enam Ratus Enam Puluh Tiga Rupiah"
+  },
+  "sentence": {
+   "ok": "Delapan puluh enam miliar seratus dua belas juta delapan ratus dua puluh tiga ribu enam ratus enam puluh tiga"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "delapan puluh enam miliar seratus dua belas juta delapan ratus dua puluh tiga ribu enam ratus enam puluh tiga"
+   },
+   "title": {
+    "ok": "Delapan Puluh Enam Miliar Seratus Dua Belas Juta Delapan Ratus Dua Puluh Tiga Ribu Enam Ratus Enam Puluh Tiga Rupiah"
+   },
+   "sentence": {
+    "ok": "Delapan puluh enam miliar seratus dua belas juta delapan ratus dua puluh tiga ribu enam ratus enam puluh tiga"
+   }
+  }
+ },
+ {
+  "n": 3133,
+  "lower": {
+   "ok": "tiga ribu seratus tiga puluh tiga"
+  },
+  "title": {
+   "ok": "Tiga Ribu Seratus Tiga Puluh Tiga Rupiah"
+  },
+  "sentence": {
+   "ok": "Tiga ribu seratus tiga puluh tiga"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tiga ribu seratus tiga puluh tiga"
+   },
+   "title": {
+    "ok": "Tiga Ribu Seratus Tiga Puluh Tiga Rupiah"
+   },
+   "sentence": {
+    "ok": "Tiga ribu seratus tiga puluh tiga"
+   }
+  }
+ },
+ {
+  "n": 9,
+  "lower": {
+   "ok": "sembilan"
+  },
+  "title": {
+   "ok": "Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan"
+   },
+   "title": {
+    "ok": "Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan"
+   }
+  }
+ },
+ {
+  "n": 34,
+  "lower": {
+   "ok": "tiga puluh empat"
+  },
+  "title": {
+   "ok": "Tiga Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Tiga puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tiga puluh empat"
+   },
+   "title": {
+    "ok": "Tiga Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Tiga puluh empat"
+   }
+  }
+ },
+ {
+  "n": 54,
+  "lower": {
+   "ok": "lima puluh empat"
+  },
+  "title": {
+   "ok": "Lima Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima puluh empat"
+   },
+   "title": {
+    "ok": "Lima Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima puluh empat"
+   }
+  }
+ },
+ {
+  "n": 69357538409531,
+  "lower": {
+   "ok": "enam puluh sembilan triliun tiga ratus lima puluh tujuh miliar lima ratus tiga puluh delapan juta empat ratus sembilan ribu lima ratus tiga puluh satu"
+  },
+  "title": {
+   "ok": "Enam Puluh Sembilan Triliun Tiga Ratus Lima Puluh Tujuh Miliar Lima Ratus Tiga Puluh Delapan Juta Empat Ratus Sembilan Ribu Lima Ratus Tiga Puluh Satu Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam puluh sembilan triliun tiga ratus lima puluh tujuh miliar lima ratus tiga puluh delapan juta empat ratus sembilan ribu lima ratus tiga puluh satu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam puluh sembilan triliun tiga ratus lima puluh tujuh miliar lima ratus tiga puluh delapan juta empat ratus sembilan ribu lima ratus tiga puluh satu"
+   },
+   "title": {
+    "ok": "Enam Puluh Sembilan Triliun Tiga Ratus Lima Puluh Tujuh Miliar Lima Ratus Tiga Puluh Delapan Juta Empat Ratus Sembilan Ribu Lima Ratus Tiga Puluh Satu Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam puluh sembilan triliun tiga ratus lima puluh tujuh miliar lima ratus tiga puluh delapan juta empat ratus sembilan ribu lima ratus tiga puluh satu"
+   }
+  }
+ },
+ {
+  "n": 284,
+  "lower": {
+   "ok": "dua ratus delapan puluh empat"
+  },
+  "title": {
+   "ok": "Dua Ratus Delapan Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua ratus delapan puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua ratus delapan puluh empat"
+   },
+   "title": {
+    "ok": "Dua Ratus Delapan Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua ratus delapan puluh empat"
+   }
+  }
+ },
+ {
+  "n": 16664593247696,
+  "lower": {
+   "ok": "enam belas triliun enam ratus enam puluh empat miliar lima ratus sembilan puluh tiga juta dua ratus empat puluh tujuh ribu enam ratus sembilan puluh enam"
+  },
+  "title": {
+   "ok": "Enam Belas Triliun Enam Ratus Enam Puluh Empat Miliar Lima Ratus Sembilan Puluh Tiga Juta Dua Ratus Empat Puluh Tujuh Ribu Enam Ratus Sembilan Puluh Enam Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam belas triliun enam ratus enam puluh empat miliar lima ratus sembilan puluh tiga juta dua ratus empat puluh tujuh ribu enam ratus sembilan puluh enam"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam belas triliun enam ratus enam puluh empat miliar lima ratus sembilan puluh tiga juta dua ratus empat puluh tujuh ribu enam ratus sembilan puluh enam"
+   },
+   "title": {
+    "ok": "Enam Belas Triliun Enam Ratus Enam Puluh Empat Miliar Lima Ratus Sembilan Puluh Tiga Juta Dua Ratus Empat Puluh Tujuh Ribu Enam Ratus Sembilan Puluh Enam Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam belas triliun enam ratus enam puluh empat miliar lima ratus sembilan puluh tiga juta dua ratus empat puluh tujuh ribu enam ratus sembilan puluh enam"
+   }
+  }
+ },
+ {
+  "n": 26979630813,
+  "lower": {
+   "ok": "dua puluh enam miliar sembilan ratus tujuh puluh sembilan juta enam ratus tiga puluh ribu delapan ratus tiga belas"
+  },
+  "title": {
+   "ok": "Dua Puluh Enam Miliar Sembilan Ratus Tujuh Puluh Sembilan Juta Enam Ratus Tiga Puluh Ribu Delapan Ratus Tiga Belas Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua puluh enam miliar sembilan ratus tujuh puluh sembilan juta enam ratus tiga puluh ribu delapan ratus tiga belas"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua puluh enam miliar sembilan ratus tujuh puluh sembilan juta enam ratus tiga puluh ribu delapan ratus tiga belas"
+   },
+   "title": {
+    "ok": "Dua Puluh Enam Miliar Sembilan Ratus Tujuh Puluh Sembilan Juta Enam Ratus Tiga Puluh Ribu Delapan Ratus Tiga Belas Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua puluh enam miliar sembilan ratus tujuh puluh sembilan juta enam ratus tiga puluh ribu delapan ratus tiga belas"
+   }
+  }
+ },
+ {
+  "n": 1843079787,
+  "lower": {
+   "ok": "satu miliar delapan ratus empat puluh tiga juta tujuh puluh sembilan ribu tujuh ratus delapan puluh tujuh"
+  },
+  "title": {
+   "ok": "Satu Miliar Delapan Ratus Empat Puluh Tiga Juta Tujuh Puluh Sembilan Ribu Tujuh Ratus Delapan Puluh Tujuh Rupiah"
+  },
+  "sentence": {
+   "ok": "Satu miliar delapan ratus empat puluh tiga juta tujuh puluh sembilan ribu tujuh ratus delapan puluh tujuh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "satu miliar delapan ratus empat puluh tiga juta tujuh puluh sembilan ribu tujuh ratus delapan puluh tujuh"
+   },
+   "title": {
+    "ok": "Satu Miliar Delapan Ratus Empat Puluh Tiga Juta Tujuh Puluh Sembilan Ribu Tujuh Ratus Delapan Puluh Tujuh Rupiah"
+   },
+   "sentence": {
+    "ok": "Satu miliar delapan ratus empat puluh tiga juta tujuh puluh sembilan ribu tujuh ratus delapan puluh tujuh"
+   }
+  }
+ },
+ {
+  "n": 66727241431362,
+  "lower": {
+   "ok": "enam puluh enam triliun tujuh ratus dua puluh tujuh miliar dua ratus empat puluh satu juta empat ratus tiga puluh satu ribu tiga ratus enam puluh dua"
+  },
+  "title": {
+   "ok": "Enam Puluh Enam Triliun Tujuh Ratus Dua Puluh Tujuh Miliar Dua Ratus Empat Puluh Satu Juta Empat Ratus Tiga Puluh Satu Ribu Tiga Ratus Enam Puluh Dua Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam puluh enam triliun tujuh ratus dua puluh tujuh miliar dua ratus empat puluh satu juta empat ratus tiga puluh satu ribu tiga ratus enam puluh dua"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam puluh enam triliun tujuh ratus dua puluh tujuh miliar dua ratus empat puluh satu juta empat ratus tiga puluh satu ribu tiga ratus enam puluh dua"
+   },
+   "title": {
+    "ok": "Enam Puluh Enam Triliun Tujuh Ratus Dua Puluh Tujuh Miliar Dua Ratus Empat Puluh Satu Juta Empat Ratus Tiga Puluh Satu Ribu Tiga Ratus Enam Puluh Dua Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam puluh enam triliun tujuh ratus dua puluh tujuh miliar dua ratus empat puluh satu juta empat ratus tiga puluh satu ribu tiga ratus enam puluh dua"
+   }
+  }
+ },
+ {
+  "n": 25169,
+  "lower": {
+   "ok": "dua puluh lima ribu seratus enam puluh sembilan"
+  },
+  "title": {
+   "ok": "Dua Puluh Lima Ribu Seratus Enam Puluh Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua puluh lima ribu seratus enam puluh sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua puluh lima ribu seratus enam puluh sembilan"
+   },
+   "title": {
+    "ok": "Dua Puluh Lima Ribu Seratus Enam Puluh Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua puluh lima ribu seratus enam puluh sembilan"
+   }
+  }
+ },
+ {
+  "n": 533591450424864,
+  "lower": {
+   "ok": "lima ratus tiga puluh tiga triliun lima ratus sembilan puluh satu miliar empat ratus lima puluh juta empat ratus dua puluh empat ribu delapan ratus enam puluh empat"
+  },
+  "title": {
+   "ok": "Lima Ratus Tiga Puluh Tiga Triliun Lima Ratus Sembilan Puluh Satu Miliar Empat Ratus Lima Puluh Juta Empat Ratus Dua Puluh Empat Ribu Delapan Ratus Enam Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima ratus tiga puluh tiga triliun lima ratus sembilan puluh satu miliar empat ratus lima puluh juta empat ratus dua puluh empat ribu delapan ratus enam puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima ratus tiga puluh tiga triliun lima ratus sembilan puluh satu miliar empat ratus lima puluh juta empat ratus dua puluh empat ribu delapan ratus enam puluh empat"
+   },
+   "title": {
+    "ok": "Lima Ratus Tiga Puluh Tiga Triliun Lima Ratus Sembilan Puluh Satu Miliar Empat Ratus Lima Puluh Juta Empat Ratus Dua Puluh Empat Ribu Delapan Ratus Enam Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima ratus tiga puluh tiga triliun lima ratus sembilan puluh satu miliar empat ratus lima puluh juta empat ratus dua puluh empat ribu delapan ratus enam puluh empat"
+   }
+  }
+ },
+ {
+  "n": 509,
+  "lower": {
+   "ok": "lima ratus sembilan"
+  },
+  "title": {
+   "ok": "Lima Ratus Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima ratus sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima ratus sembilan"
+   },
+   "title": {
+    "ok": "Lima Ratus Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima ratus sembilan"
+   }
+  }
+ },
+ {
+  "n": 19655804964,
+  "lower": {
+   "ok": "sembilan belas miliar enam ratus lima puluh lima juta delapan ratus empat ribu sembilan ratus enam puluh empat"
+  },
+  "title": {
+   "ok": "Sembilan Belas Miliar Enam Ratus Lima Puluh Lima Juta Delapan Ratus Empat Ribu Sembilan Ratus Enam Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan belas miliar enam ratus lima puluh lima juta delapan ratus empat ribu sembilan ratus enam puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan belas miliar enam ratus lima puluh lima juta delapan ratus empat ribu sembilan ratus enam puluh empat"
+   },
+   "title": {
+    "ok": "Sembilan Belas Miliar Enam Ratus Lima Puluh Lima Juta Delapan Ratus Empat Ribu Sembilan Ratus Enam Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan belas miliar enam ratus lima puluh lima juta delapan ratus empat ribu sembilan ratus enam puluh empat"
+   }
+  }
+ },
+ {
+  "n": 47643,
+  "lower": {
+   "ok": "empat puluh tujuh ribu enam ratus empat puluh tiga"
+  },
+  "title": {
+   "ok": "Empat Puluh Tujuh Ribu Enam Ratus Empat Puluh Tiga Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat puluh tujuh ribu enam ratus empat puluh tiga"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat puluh tujuh ribu enam ratus empat puluh tiga"
+   },
+   "title": {
+    "ok": "Empat Puluh Tujuh Ribu Enam Ratus Empat Puluh Tiga Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat puluh tujuh ribu enam ratus empat puluh tiga"
+   }
+  }
+ },
+ {
+  "n": 3061083110,
+  "lower": {
+   "ok": "tiga miliar enam puluh satu juta delapan puluh tiga ribu seratus sepuluh"
+  },
+  "title": {
+   "ok": "Tiga Miliar Enam Puluh Satu Juta Delapan Puluh Tiga Ribu Seratus Sepuluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Tiga miliar enam puluh satu juta delapan puluh tiga ribu seratus sepuluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tiga miliar enam puluh satu juta delapan puluh tiga ribu seratus sepuluh"
+   },
+   "title": {
+    "ok": "Tiga Miliar Enam Puluh Satu Juta Delapan Puluh Tiga Ribu Seratus Sepuluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Tiga miliar enam puluh satu juta delapan puluh tiga ribu seratus sepuluh"
+   }
+  }
+ },
+ {
+  "n": 91496384,
+  "lower": {
+   "ok": "sembilan puluh satu juta empat ratus sembilan puluh enam ribu tiga ratus delapan puluh empat"
+  },
+  "title": {
+   "ok": "Sembilan Puluh Satu Juta Empat Ratus Sembilan Puluh Enam Ribu Tiga Ratus Delapan Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan puluh satu juta empat ratus sembilan puluh enam ribu tiga ratus delapan puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan puluh satu juta empat ratus sembilan puluh enam ribu tiga ratus delapan puluh empat"
+   },
+   "title": {
+    "ok": "Sembilan Puluh Satu Juta Empat Ratus Sembilan Puluh Enam Ribu Tiga Ratus Delapan Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan puluh satu juta empat ratus sembilan puluh enam ribu tiga ratus delapan puluh empat"
+   }
+  }
+ },
+ {
+  "n": 246386,
+  "lower": {
+   "ok": "dua ratus empat puluh enam ribu tiga ratus delapan puluh enam"
+  },
+  "title": {
+   "ok": "Dua Ratus Empat Puluh Enam Ribu Tiga Ratus Delapan Puluh Enam Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua ratus empat puluh enam ribu tiga ratus delapan puluh enam"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua ratus empat puluh enam ribu tiga ratus delapan puluh enam"
+   },
+   "title": {
+    "ok": "Dua Ratus Empat Puluh Enam Ribu Tiga Ratus Delapan Puluh Enam Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua ratus empat puluh enam ribu tiga ratus delapan puluh enam"
+   }
+  }
+ },
+ {
+  "n": 96770151,
+  "lower": {
+   "ok": "sembilan puluh enam juta tujuh ratus tujuh puluh ribu seratus lima puluh satu"
+  },
+  "title": {
+   "ok": "Sembilan Puluh Enam Juta Tujuh Ratus Tujuh Puluh Ribu Seratus Lima Puluh Satu Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan puluh enam juta tujuh ratus tujuh puluh ribu seratus lima puluh satu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan puluh enam juta tujuh ratus tujuh puluh ribu seratus lima puluh satu"
+   },
+   "title": {
+    "ok": "Sembilan Puluh Enam Juta Tujuh Ratus Tujuh Puluh Ribu Seratus Lima Puluh Satu Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan puluh enam juta tujuh ratus tujuh puluh ribu seratus lima puluh satu"
+   }
+  }
+ },
+ {
+  "n": 24264,
+  "lower": {
+   "ok": "dua puluh empat ribu dua ratus enam puluh empat"
+  },
+  "title": {
+   "ok": "Dua Puluh Empat Ribu Dua Ratus Enam Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua puluh empat ribu dua ratus enam puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua puluh empat ribu dua ratus enam puluh empat"
+   },
+   "title": {
+    "ok": "Dua Puluh Empat Ribu Dua Ratus Enam Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua puluh empat ribu dua ratus enam puluh empat"
+   }
+  }
+ },
+ {
+  "n": 6736731675,
+  "lower": {
+   "ok": "enam miliar tujuh ratus tiga puluh enam juta tujuh ratus tiga puluh satu ribu enam ratus tujuh puluh lima"
+  },
+  "title": {
+   "ok": "Enam Miliar Tujuh Ratus Tiga Puluh Enam Juta Tujuh Ratus Tiga Puluh Satu Ribu Enam Ratus Tujuh Puluh Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam miliar tujuh ratus tiga puluh enam juta tujuh ratus tiga puluh satu ribu enam ratus tujuh puluh lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam miliar tujuh ratus tiga puluh enam juta tujuh ratus tiga puluh satu ribu enam ratus tujuh puluh lima"
+   },
+   "title": {
+    "ok": "Enam Miliar Tujuh Ratus Tiga Puluh Enam Juta Tujuh Ratus Tiga Puluh Satu Ribu Enam Ratus Tujuh Puluh Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam miliar tujuh ratus tiga puluh enam juta tujuh ratus tiga puluh satu ribu enam ratus tujuh puluh lima"
+   }
+  }
+ },
+ {
+  "n": 5579517,
+  "lower": {
+   "ok": "lima juta lima ratus tujuh puluh sembilan ribu lima ratus tujuh belas"
+  },
+  "title": {
+   "ok": "Lima Juta Lima Ratus Tujuh Puluh Sembilan Ribu Lima Ratus Tujuh Belas Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima juta lima ratus tujuh puluh sembilan ribu lima ratus tujuh belas"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima juta lima ratus tujuh puluh sembilan ribu lima ratus tujuh belas"
+   },
+   "title": {
+    "ok": "Lima Juta Lima Ratus Tujuh Puluh Sembilan Ribu Lima Ratus Tujuh Belas Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima juta lima ratus tujuh puluh sembilan ribu lima ratus tujuh belas"
+   }
+  }
+ },
+ {
+  "n": 4441,
+  "lower": {
+   "ok": "empat ribu empat ratus empat puluh satu"
+  },
+  "title": {
+   "ok": "Empat Ribu Empat Ratus Empat Puluh Satu Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat ribu empat ratus empat puluh satu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat ribu empat ratus empat puluh satu"
+   },
+   "title": {
+    "ok": "Empat Ribu Empat Ratus Empat Puluh Satu Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat ribu empat ratus empat puluh satu"
+   }
+  }
+ },
+ {
+  "n": 661210469,
+  "lower": {
+   "ok": "enam ratus enam puluh satu juta dua ratus sepuluh ribu empat ratus enam puluh sembilan"
+  },
+  "title": {
+   "ok": "Enam Ratus Enam Puluh Satu Juta Dua Ratus Sepuluh Ribu Empat Ratus Enam Puluh Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam ratus enam puluh satu juta dua ratus sepuluh ribu empat ratus enam puluh sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam ratus enam puluh satu juta dua ratus sepuluh ribu empat ratus enam puluh sembilan"
+   },
+   "title": {
+    "ok": "Enam Ratus Enam Puluh Satu Juta Dua Ratus Sepuluh Ribu Empat Ratus Enam Puluh Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam ratus enam puluh satu juta dua ratus sepuluh ribu empat ratus enam puluh sembilan"
+   }
+  }
+ },
+ {
+  "n": 384212444070726,
+  "lower": {
+   "ok": "tiga ratus delapan puluh empat triliun dua ratus dua belas miliar empat ratus empat puluh empat juta tujuh puluh ribu tujuh ratus dua puluh enam"
+  },
+  "title": {
+   "ok": "Tiga Ratus Delapan Puluh Empat Triliun Dua Ratus Dua Belas Miliar Empat Ratus Empat Puluh Empat Juta Tujuh Puluh Ribu Tujuh Ratus Dua Puluh Enam Rupiah"
+  },
+  "sentence": {
+   "ok": "Tiga ratus delapan puluh empat triliun dua ratus dua belas miliar empat ratus empat puluh empat juta tujuh puluh ribu tujuh ratus dua puluh enam"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tiga ratus delapan puluh empat triliun dua ratus dua belas miliar empat ratus empat puluh empat juta tujuh puluh ribu tujuh ratus dua puluh enam"
+   },
+   "title": {
+    "ok": "Tiga Ratus Delapan Puluh Empat Triliun Dua Ratus Dua Belas Miliar Empat Ratus Empat Puluh Empat Juta Tujuh Puluh Ribu Tujuh Ratus Dua Puluh Enam Rupiah"
+   },
+   "sentence": {
+    "ok": "Tiga ratus delapan puluh empat triliun dua ratus dua belas miliar empat ratus empat puluh empat juta tujuh puluh ribu tujuh ratus dua puluh enam"
+   }
+  }
+ },
+ {
+  "n": 56571,
+  "lower": {
+   "ok": "lima puluh enam ribu lima ratus tujuh puluh satu"
+  },
+  "title": {
+   "ok": "Lima Puluh Enam Ribu Lima Ratus Tujuh Puluh Satu Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima puluh enam ribu lima ratus tujuh puluh satu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima puluh enam ribu lima ratus tujuh puluh satu"
+   },
+   "title": {
+    "ok": "Lima Puluh Enam Ribu Lima Ratus Tujuh Puluh Satu Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima puluh enam ribu lima ratus tujuh puluh satu"
+   }
+  }
+ },
+ {
+  "n": 958102743839,
+  "lower": {
+   "ok": "sembilan ratus lima puluh delapan miliar seratus dua juta tujuh ratus empat puluh tiga ribu delapan ratus tiga puluh sembilan"
+  },
+  "title": {
+   "ok": "Sembilan Ratus Lima Puluh Delapan Miliar Seratus Dua Juta Tujuh Ratus Empat Puluh Tiga Ribu Delapan Ratus Tiga Puluh Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan ratus lima puluh delapan miliar seratus dua juta tujuh ratus empat puluh tiga ribu delapan ratus tiga puluh sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan ratus lima puluh delapan miliar seratus dua juta tujuh ratus empat puluh tiga ribu delapan ratus tiga puluh sembilan"
+   },
+   "title": {
+    "ok": "Sembilan Ratus Lima Puluh Delapan Miliar Seratus Dua Juta Tujuh Ratus Empat Puluh Tiga Ribu Delapan Ratus Tiga Puluh Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan ratus lima puluh delapan miliar seratus dua juta tujuh ratus empat puluh tiga ribu delapan ratus tiga puluh sembilan"
+   }
+  }
+ },
+ {
+  "n": 92907994077540,
+  "lower": {
+   "ok": "sembilan puluh dua triliun sembilan ratus tujuh miliar sembilan ratus sembilan puluh empat juta tujuh puluh tujuh ribu lima ratus empat puluh"
+  },
+  "title": {
+   "ok": "Sembilan Puluh Dua Triliun Sembilan Ratus Tujuh Miliar Sembilan Ratus Sembilan Puluh Empat Juta Tujuh Puluh Tujuh Ribu Lima Ratus Empat Puluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan puluh dua triliun sembilan ratus tujuh miliar sembilan ratus sembilan puluh empat juta tujuh puluh tujuh ribu lima ratus empat puluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan puluh dua triliun sembilan ratus tujuh miliar sembilan ratus sembilan puluh empat juta tujuh puluh tujuh ribu lima ratus empat puluh"
+   },
+   "title": {
+    "ok": "Sembilan Puluh Dua Triliun Sembilan Ratus Tujuh Miliar Sembilan Ratus Sembilan Puluh Empat Juta Tujuh Puluh Tujuh Ribu Lima Ratus Empat Puluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan puluh dua triliun sembilan ratus tujuh miliar sembilan ratus sembilan puluh empat juta tujuh puluh tujuh ribu lima ratus empat puluh"
+   }
+  }
+ },
+ {
+  "n": 35819538054056,
+  "lower": {
+   "ok": "tiga puluh lima triliun delapan ratus sembilan belas miliar lima ratus tiga puluh delapan juta lima puluh empat ribu lima puluh enam"
+  },
+  "title": {
+   "ok": "Tiga Puluh Lima Triliun Delapan Ratus Sembilan Belas Miliar Lima Ratus Tiga Puluh Delapan Juta Lima Puluh Empat Ribu Lima Puluh Enam Rupiah"
+  },
+  "sentence": {
+   "ok": "Tiga puluh lima triliun delapan ratus sembilan belas miliar lima ratus tiga puluh delapan juta lima puluh empat ribu lima puluh enam"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tiga puluh lima triliun delapan ratus sembilan belas miliar lima ratus tiga puluh delapan juta lima puluh empat ribu lima puluh enam"
+   },
+   "title": {
+    "ok": "Tiga Puluh Lima Triliun Delapan Ratus Sembilan Belas Miliar Lima Ratus Tiga Puluh Delapan Juta Lima Puluh Empat Ribu Lima Puluh Enam Rupiah"
+   },
+   "sentence": {
+    "ok": "Tiga puluh lima triliun delapan ratus sembilan belas miliar lima ratus tiga puluh delapan juta lima puluh empat ribu lima puluh enam"
+   }
+  }
+ },
+ {
+  "n": 972030431963503,
+  "lower": {
+   "ok": "sembilan ratus tujuh puluh dua triliun tiga puluh miliar empat ratus tiga puluh satu juta sembilan ratus enam puluh tiga ribu lima ratus tiga"
+  },
+  "title": {
+   "ok": "Sembilan Ratus Tujuh Puluh Dua Triliun Tiga Puluh Miliar Empat Ratus Tiga Puluh Satu Juta Sembilan Ratus Enam Puluh Tiga Ribu Lima Ratus Tiga Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan ratus tujuh puluh dua triliun tiga puluh miliar empat ratus tiga puluh satu juta sembilan ratus enam puluh tiga ribu lima ratus tiga"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan ratus tujuh puluh dua triliun tiga puluh miliar empat ratus tiga puluh satu juta sembilan ratus enam puluh tiga ribu lima ratus tiga"
+   },
+   "title": {
+    "ok": "Sembilan Ratus Tujuh Puluh Dua Triliun Tiga Puluh Miliar Empat Ratus Tiga Puluh Satu Juta Sembilan Ratus Enam Puluh Tiga Ribu Lima Ratus Tiga Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan ratus tujuh puluh dua triliun tiga puluh miliar empat ratus tiga puluh satu juta sembilan ratus enam puluh tiga ribu lima ratus tiga"
+   }
+  }
+ },
+ {
+  "n": 392515216,
+  "lower": {
+   "ok": "tiga ratus sembilan puluh dua juta lima ratus lima belas ribu dua ratus enam belas"
+  },
+  "title": {
+   "ok": "Tiga Ratus Sembilan Puluh Dua Juta Lima Ratus Lima Belas Ribu Dua Ratus Enam Belas Rupiah"
+  },
+  "sentence": {
+   "ok": "Tiga ratus sembilan puluh dua juta lima ratus lima belas ribu dua ratus enam belas"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tiga ratus sembilan puluh dua juta lima ratus lima belas ribu dua ratus enam belas"
+   },
+   "title": {
+    "ok": "Tiga Ratus Sembilan Puluh Dua Juta Lima Ratus Lima Belas Ribu Dua Ratus Enam Belas Rupiah"
+   },
+   "sentence": {
+    "ok": "Tiga ratus sembilan puluh dua juta lima ratus lima belas ribu dua ratus enam belas"
+   }
+  }
+ },
+ {
+  "n": 4378334,
+  "lower": {
+   "ok": "empat juta tiga ratus tujuh puluh delapan ribu tiga ratus tiga puluh empat"
+  },
+  "title": {
+   "ok": "Empat Juta Tiga Ratus Tujuh Puluh Delapan Ribu Tiga Ratus Tiga Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat juta tiga ratus tujuh puluh delapan ribu tiga ratus tiga puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat juta tiga ratus tujuh puluh delapan ribu tiga ratus tiga puluh empat"
+   },
+   "title": {
+    "ok": "Empat Juta Tiga Ratus Tujuh Puluh Delapan Ribu Tiga Ratus Tiga Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat juta tiga ratus tujuh puluh delapan ribu tiga ratus tiga puluh empat"
+   }
+  }
+ },
+ {
+  "n": 126185874,
+  "lower": {
+   "ok": "seratus dua puluh enam juta seratus delapan puluh lima ribu delapan ratus tujuh puluh empat"
+  },
+  "title": {
+   "ok": "Seratus Dua Puluh Enam Juta Seratus Delapan Puluh Lima Ribu Delapan Ratus Tujuh Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Seratus dua puluh enam juta seratus delapan puluh lima ribu delapan ratus tujuh puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "seratus dua puluh enam juta seratus delapan puluh lima ribu delapan ratus tujuh puluh empat"
+   },
+   "title": {
+    "ok": "Seratus Dua Puluh Enam Juta Seratus Delapan Puluh Lima Ribu Delapan Ratus Tujuh Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Seratus dua puluh enam juta seratus delapan puluh lima ribu delapan ratus tujuh puluh empat"
+   }
+  }
+ },
+ {
+  "n": 493409213,
+  "lower": {
+   "ok": "empat ratus sembilan puluh tiga juta empat ratus sembilan ribu dua ratus tiga belas"
+  },
+  "title": {
+   "ok": "Empat Ratus Sembilan Puluh Tiga Juta Empat Ratus Sembilan Ribu Dua Ratus Tiga Belas Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat ratus sembilan puluh tiga juta empat ratus sembilan ribu dua ratus tiga belas"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat ratus sembilan puluh tiga juta empat ratus sembilan ribu dua ratus tiga belas"
+   },
+   "title": {
+    "ok": "Empat Ratus Sembilan Puluh Tiga Juta Empat Ratus Sembilan Ribu Dua Ratus Tiga Belas Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat ratus sembilan puluh tiga juta empat ratus sembilan ribu dua ratus tiga belas"
+   }
+  }
+ },
+ {
+  "n": 3539931681007,
+  "lower": {
+   "ok": "tiga triliun lima ratus tiga puluh sembilan miliar sembilan ratus tiga puluh satu juta enam ratus delapan puluh satu ribu tujuh"
+  },
+  "title": {
+   "ok": "Tiga Triliun Lima Ratus Tiga Puluh Sembilan Miliar Sembilan Ratus Tiga Puluh Satu Juta Enam Ratus Delapan Puluh Satu Ribu Tujuh Rupiah"
+  },
+  "sentence": {
+   "ok": "Tiga triliun lima ratus tiga puluh sembilan miliar sembilan ratus tiga puluh satu juta enam ratus delapan puluh satu ribu tujuh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tiga triliun lima ratus tiga puluh sembilan miliar sembilan ratus tiga puluh satu juta enam ratus delapan puluh satu ribu tujuh"
+   },
+   "title": {
+    "ok": "Tiga Triliun Lima Ratus Tiga Puluh Sembilan Miliar Sembilan Ratus Tiga Puluh Satu Juta Enam Ratus Delapan Puluh Satu Ribu Tujuh Rupiah"
+   },
+   "sentence": {
+    "ok": "Tiga triliun lima ratus tiga puluh sembilan miliar sembilan ratus tiga puluh satu juta enam ratus delapan puluh satu ribu tujuh"
+   }
+  }
+ },
+ {
+  "n": 742142821429,
+  "lower": {
+   "ok": "tujuh ratus empat puluh dua miliar seratus empat puluh dua juta delapan ratus dua puluh satu ribu empat ratus dua puluh sembilan"
+  },
+  "title": {
+   "ok": "Tujuh Ratus Empat Puluh Dua Miliar Seratus Empat Puluh Dua Juta Delapan Ratus Dua Puluh Satu Ribu Empat Ratus Dua Puluh Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Tujuh ratus empat puluh dua miliar seratus empat puluh dua juta delapan ratus dua puluh satu ribu empat ratus dua puluh sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tujuh ratus empat puluh dua miliar seratus empat puluh dua juta delapan ratus dua puluh satu ribu empat ratus dua puluh sembilan"
+   },
+   "title": {
+    "ok": "Tujuh Ratus Empat Puluh Dua Miliar Seratus Empat Puluh Dua Juta Delapan Ratus Dua Puluh Satu Ribu Empat Ratus Dua Puluh Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Tujuh ratus empat puluh dua miliar seratus empat puluh dua juta delapan ratus dua puluh satu ribu empat ratus dua puluh sembilan"
+   }
+  }
+ },
+ {
+  "n": 621048149187117,
+  "lower": {
+   "ok": "enam ratus dua puluh satu triliun empat puluh delapan miliar seratus empat puluh sembilan juta seratus delapan puluh tujuh ribu seratus tujuh belas"
+  },
+  "title": {
+   "ok": "Enam Ratus Dua Puluh Satu Triliun Empat Puluh Delapan Miliar Seratus Empat Puluh Sembilan Juta Seratus Delapan Puluh Tujuh Ribu Seratus Tujuh Belas Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam ratus dua puluh satu triliun empat puluh delapan miliar seratus empat puluh sembilan juta seratus delapan puluh tujuh ribu seratus tujuh belas"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam ratus dua puluh satu triliun empat puluh delapan miliar seratus empat puluh sembilan juta seratus delapan puluh tujuh ribu seratus tujuh belas"
+   },
+   "title": {
+    "ok": "Enam Ratus Dua Puluh Satu Triliun Empat Puluh Delapan Miliar Seratus Empat Puluh Sembilan Juta Seratus Delapan Puluh Tujuh Ribu Seratus Tujuh Belas Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam ratus dua puluh satu triliun empat puluh delapan miliar seratus empat puluh sembilan juta seratus delapan puluh tujuh ribu seratus tujuh belas"
+   }
+  }
+ },
+ {
+  "n": 760505928,
+  "lower": {
+   "ok": "tujuh ratus enam puluh juta lima ratus lima ribu sembilan ratus dua puluh delapan"
+  },
+  "title": {
+   "ok": "Tujuh Ratus Enam Puluh Juta Lima Ratus Lima Ribu Sembilan Ratus Dua Puluh Delapan Rupiah"
+  },
+  "sentence": {
+   "ok": "Tujuh ratus enam puluh juta lima ratus lima ribu sembilan ratus dua puluh delapan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tujuh ratus enam puluh juta lima ratus lima ribu sembilan ratus dua puluh delapan"
+   },
+   "title": {
+    "ok": "Tujuh Ratus Enam Puluh Juta Lima Ratus Lima Ribu Sembilan Ratus Dua Puluh Delapan Rupiah"
+   },
+   "sentence": {
+    "ok": "Tujuh ratus enam puluh juta lima ratus lima ribu sembilan ratus dua puluh delapan"
+   }
+  }
+ },
+ {
+  "n": 52105244,
+  "lower": {
+   "ok": "lima puluh dua juta seratus lima ribu dua ratus empat puluh empat"
+  },
+  "title": {
+   "ok": "Lima Puluh Dua Juta Seratus Lima Ribu Dua Ratus Empat Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima puluh dua juta seratus lima ribu dua ratus empat puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima puluh dua juta seratus lima ribu dua ratus empat puluh empat"
+   },
+   "title": {
+    "ok": "Lima Puluh Dua Juta Seratus Lima Ribu Dua Ratus Empat Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima puluh dua juta seratus lima ribu dua ratus empat puluh empat"
+   }
+  }
+ },
+ {
+  "n": 50476798089221,
+  "lower": {
+   "ok": "lima puluh triliun empat ratus tujuh puluh enam miliar tujuh ratus sembilan puluh delapan juta delapan puluh sembilan ribu dua ratus dua puluh satu"
+  },
+  "title": {
+   "ok": "Lima Puluh Triliun Empat Ratus Tujuh Puluh Enam Miliar Tujuh Ratus Sembilan Puluh Delapan Juta Delapan Puluh Sembilan Ribu Dua Ratus Dua Puluh Satu Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima puluh triliun empat ratus tujuh puluh enam miliar tujuh ratus sembilan puluh delapan juta delapan puluh sembilan ribu dua ratus dua puluh satu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima puluh triliun empat ratus tujuh puluh enam miliar tujuh ratus sembilan puluh delapan juta delapan puluh sembilan ribu dua ratus dua puluh satu"
+   },
+   "title": {
+    "ok": "Lima Puluh Triliun Empat Ratus Tujuh Puluh Enam Miliar Tujuh Ratus Sembilan Puluh Delapan Juta Delapan Puluh Sembilan Ribu Dua Ratus Dua Puluh Satu Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima puluh triliun empat ratus tujuh puluh enam miliar tujuh ratus sembilan puluh delapan juta delapan puluh sembilan ribu dua ratus dua puluh satu"
+   }
+  }
+ },
+ {
+  "n": 971016,
+  "lower": {
+   "ok": "sembilan ratus tujuh puluh satu ribu enam belas"
+  },
+  "title": {
+   "ok": "Sembilan Ratus Tujuh Puluh Satu Ribu Enam Belas Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan ratus tujuh puluh satu ribu enam belas"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan ratus tujuh puluh satu ribu enam belas"
+   },
+   "title": {
+    "ok": "Sembilan Ratus Tujuh Puluh Satu Ribu Enam Belas Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan ratus tujuh puluh satu ribu enam belas"
+   }
+  }
+ },
+ {
+  "n": 1999530,
+  "lower": {
+   "ok": "satu juta sembilan ratus sembilan puluh sembilan ribu lima ratus tiga puluh"
+  },
+  "title": {
+   "ok": "Satu Juta Sembilan Ratus Sembilan Puluh Sembilan Ribu Lima Ratus Tiga Puluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Satu juta sembilan ratus sembilan puluh sembilan ribu lima ratus tiga puluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "satu juta sembilan ratus sembilan puluh sembilan ribu lima ratus tiga puluh"
+   },
+   "title": {
+    "ok": "Satu Juta Sembilan Ratus Sembilan Puluh Sembilan Ribu Lima Ratus Tiga Puluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Satu juta sembilan ratus sembilan puluh sembilan ribu lima ratus tiga puluh"
+   }
+  }
+ },
+ {
+  "n": 0,
+  "lower": {
+   "ok": "nol"
+  },
+  "title": {
+   "ok": "Nol Rupiah"
+  },
+  "sentence": {
+   "ok": "Nol"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "nol"
+   },
+   "title": {
+    "ok": "Nol Rupiah"
+   },
+   "sentence": {
+    "ok": "Nol"
+   }
+  }
+ },
+ {
+  "n": 907242562621831,
+  "lower": {
+   "ok": "sembilan ratus tujuh triliun dua ratus empat puluh dua miliar lima ratus enam puluh dua juta enam ratus dua puluh satu ribu delapan ratus tiga puluh satu"
+  },
+  "title": {
+   "ok": "Sembilan Ratus Tujuh Triliun Dua Ratus Empat Puluh Dua Miliar Lima Ratus Enam Puluh Dua Juta Enam Ratus Dua Puluh Satu Ribu Delapan Ratus Tiga Puluh Satu Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan ratus tujuh triliun dua ratus empat puluh dua miliar lima ratus enam puluh dua juta enam ratus dua puluh satu ribu delapan ratus tiga puluh satu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan ratus tujuh triliun dua ratus empat puluh dua miliar lima ratus enam puluh dua juta enam ratus dua puluh satu ribu delapan ratus tiga puluh satu"
+   },
+   "title": {
+    "ok": "Sembilan Ratus Tujuh Triliun Dua Ratus Empat Puluh Dua Miliar Lima Ratus Enam Puluh Dua Juta Enam Ratus Dua Puluh Satu Ribu Delapan Ratus Tiga Puluh Satu Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan ratus tujuh triliun dua ratus empat puluh dua miliar lima ratus enam puluh dua juta enam ratus dua puluh satu ribu delapan ratus tiga puluh satu"
+   }
+  }
+ },
+ {
+  "n": 76095,
+  "lower": {
+   "ok": "tujuh puluh enam ribu sembilan puluh lima"
+  },
+  "title": {
+   "ok": "Tujuh Puluh Enam Ribu Sembilan Puluh Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Tujuh puluh enam ribu sembilan puluh lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tujuh puluh enam ribu sembilan puluh lima"
+   },
+   "title": {
+    "ok": "Tujuh Puluh Enam Ribu Sembilan Puluh Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Tujuh puluh enam ribu sembilan puluh lima"
+   }
+  }
+ },
+ {
+  "n": 70990513,
+  "lower": {
+   "ok": "tujuh puluh juta sembilan ratus sembilan puluh ribu lima ratus tiga belas"
+  },
+  "title": {
+   "ok": "Tujuh Puluh Juta Sembilan Ratus Sembilan Puluh Ribu Lima Ratus Tiga Belas Rupiah"
+  },
+  "sentence": {
+   "ok": "Tujuh puluh juta sembilan ratus sembilan puluh ribu lima ratus tiga belas"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tujuh puluh juta sembilan ratus sembilan puluh ribu lima ratus tiga belas"
+   },
+   "title": {
+    "ok": "Tujuh Puluh Juta Sembilan Ratus Sembilan Puluh Ribu Lima Ratus Tiga Belas Rupiah"
+   },
+   "sentence": {
+    "ok": "Tujuh puluh juta sembilan ratus sembilan puluh ribu lima ratus tiga belas"
+   }
+  }
+ },
+ {
+  "n": 63325109193101,
+  "lower": {
+   "ok": "enam puluh tiga triliun tiga ratus dua puluh lima miliar seratus sembilan juta seratus sembilan puluh tiga ribu seratus satu"
+  },
+  "title": {
+   "ok": "Enam Puluh Tiga Triliun Tiga Ratus Dua Puluh Lima Miliar Seratus Sembilan Juta Seratus Sembilan Puluh Tiga Ribu Seratus Satu Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam puluh tiga triliun tiga ratus dua puluh lima miliar seratus sembilan juta seratus sembilan puluh tiga ribu seratus satu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam puluh tiga triliun tiga ratus dua puluh lima miliar seratus sembilan juta seratus sembilan puluh tiga ribu seratus satu"
+   },
+   "title": {
+    "ok": "Enam Puluh Tiga Triliun Tiga Ratus Dua Puluh Lima Miliar Seratus Sembilan Juta Seratus Sembilan Puluh Tiga Ribu Seratus Satu Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam puluh tiga triliun tiga ratus dua puluh lima miliar seratus sembilan juta seratus sembilan puluh tiga ribu seratus satu"
+   }
+  }
+ },
+ {
+  "n": 262274821288883,
+  "lower": {
+   "ok": "dua ratus enam puluh dua triliun dua ratus tujuh puluh empat miliar delapan ratus dua puluh satu juta dua ratus delapan puluh delapan ribu delapan ratus delapan puluh tiga"
+  },
+  "title": {
+   "ok": "Dua Ratus Enam Puluh Dua Triliun Dua Ratus Tujuh Puluh Empat Miliar Delapan Ratus Dua Puluh Satu Juta Dua Ratus Delapan Puluh Delapan Ribu Delapan Ratus Delapan Puluh Tiga Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua ratus enam puluh dua triliun dua ratus tujuh puluh empat miliar delapan ratus dua puluh satu juta dua ratus delapan puluh delapan ribu delapan ratus delapan puluh tiga"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua ratus enam puluh dua triliun dua ratus tujuh puluh empat miliar delapan ratus dua puluh satu juta dua ratus delapan puluh delapan ribu delapan ratus delapan puluh tiga"
+   },
+   "title": {
+    "ok": "Dua Ratus Enam Puluh Dua Triliun Dua Ratus Tujuh Puluh Empat Miliar Delapan Ratus Dua Puluh Satu Juta Dua Ratus Delapan Puluh Delapan Ribu Delapan Ratus Delapan Puluh Tiga Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua ratus enam puluh dua triliun dua ratus tujuh puluh empat miliar delapan ratus dua puluh satu juta dua ratus delapan puluh delapan ribu delapan ratus delapan puluh tiga"
+   }
+  }
+ },
+ {
+  "n": 151158820372,
+  "lower": {
+   "ok": "seratus lima puluh satu miliar seratus lima puluh delapan juta delapan ratus dua puluh ribu tiga ratus tujuh puluh dua"
+  },
+  "title": {
+   "ok": "Seratus Lima Puluh Satu Miliar Seratus Lima Puluh Delapan Juta Delapan Ratus Dua Puluh Ribu Tiga Ratus Tujuh Puluh Dua Rupiah"
+  },
+  "sentence": {
+   "ok": "Seratus lima puluh satu miliar seratus lima puluh delapan juta delapan ratus dua puluh ribu tiga ratus tujuh puluh dua"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "seratus lima puluh satu miliar seratus lima puluh delapan juta delapan ratus dua puluh ribu tiga ratus tujuh puluh dua"
+   },
+   "title": {
+    "ok": "Seratus Lima Puluh Satu Miliar Seratus Lima Puluh Delapan Juta Delapan Ratus Dua Puluh Ribu Tiga Ratus Tujuh Puluh Dua Rupiah"
+   },
+   "sentence": {
+    "ok": "Seratus lima puluh satu miliar seratus lima puluh delapan juta delapan ratus dua puluh ribu tiga ratus tujuh puluh dua"
+   }
+  }
+ },
+ {
+  "n": 647,
+  "lower": {
+   "ok": "enam ratus empat puluh tujuh"
+  },
+  "title": {
+   "ok": "Enam Ratus Empat Puluh Tujuh Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam ratus empat puluh tujuh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam ratus empat puluh tujuh"
+   },
+   "title": {
+    "ok": "Enam Ratus Empat Puluh Tujuh Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam ratus empat puluh tujuh"
+   }
+  }
+ },
+ {
+  "n": 8158289829734,
+  "lower": {
+   "ok": "delapan triliun seratus lima puluh delapan miliar dua ratus delapan puluh sembilan juta delapan ratus dua puluh sembilan ribu tujuh ratus tiga puluh empat"
+  },
+  "title": {
+   "ok": "Delapan Triliun Seratus Lima Puluh Delapan Miliar Dua Ratus Delapan Puluh Sembilan Juta Delapan Ratus Dua Puluh Sembilan Ribu Tujuh Ratus Tiga Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Delapan triliun seratus lima puluh delapan miliar dua ratus delapan puluh sembilan juta delapan ratus dua puluh sembilan ribu tujuh ratus tiga puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "delapan triliun seratus lima puluh delapan miliar dua ratus delapan puluh sembilan juta delapan ratus dua puluh sembilan ribu tujuh ratus tiga puluh empat"
+   },
+   "title": {
+    "ok": "Delapan Triliun Seratus Lima Puluh Delapan Miliar Dua Ratus Delapan Puluh Sembilan Juta Delapan Ratus Dua Puluh Sembilan Ribu Tujuh Ratus Tiga Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Delapan triliun seratus lima puluh delapan miliar dua ratus delapan puluh sembilan juta delapan ratus dua puluh sembilan ribu tujuh ratus tiga puluh empat"
+   }
+  }
+ },
+ {
+  "n": 686,
+  "lower": {
+   "ok": "enam ratus delapan puluh enam"
+  },
+  "title": {
+   "ok": "Enam Ratus Delapan Puluh Enam Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam ratus delapan puluh enam"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam ratus delapan puluh enam"
+   },
+   "title": {
+    "ok": "Enam Ratus Delapan Puluh Enam Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam ratus delapan puluh enam"
+   }
+  }
+ },
+ {
+  "n": 590,
+  "lower": {
+   "ok": "lima ratus sembilan puluh"
+  },
+  "title": {
+   "ok": "Lima Ratus Sembilan Puluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima ratus sembilan puluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima ratus sembilan puluh"
+   },
+   "title": {
+    "ok": "Lima Ratus Sembilan Puluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima ratus sembilan puluh"
+   }
+  }
+ },
+ {
+  "n": 19625733,
+  "lower": {
+   "ok": "sembilan belas juta enam ratus dua puluh lima ribu tujuh ratus tiga puluh tiga"
+  },
+  "title": {
+   "ok": "Sembilan Belas Juta Enam Ratus Dua Puluh Lima Ribu Tujuh Ratus Tiga Puluh Tiga Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan belas juta enam ratus dua puluh lima ribu tujuh ratus tiga puluh tiga"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan belas juta enam ratus dua puluh lima ribu tujuh ratus tiga puluh tiga"
+   },
+   "title": {
+    "ok": "Sembilan Belas Juta Enam Ratus Dua Puluh Lima Ribu Tujuh Ratus Tiga Puluh Tiga Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan belas juta enam ratus dua puluh lima ribu tujuh ratus tiga puluh tiga"
+   }
+  }
+ },
+ {
+  "n": 340,
+  "lower": {
+   "ok": "tiga ratus empat puluh"
+  },
+  "title": {
+   "ok": "Tiga Ratus Empat Puluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Tiga ratus empat puluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tiga ratus empat puluh"
+   },
+   "title": {
+    "ok": "Tiga Ratus Empat Puluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Tiga ratus empat puluh"
+   }
+  }
+ },
+ {
+  "n": 980357106076553,
+  "lower": {
+   "ok": "sembilan ratus delapan puluh triliun tiga ratus lima puluh tujuh miliar seratus enam juta tujuh puluh enam ribu lima ratus lima puluh tiga"
+  },
+  "title": {
+   "ok": "Sembilan Ratus Delapan Puluh Triliun Tiga Ratus Lima Puluh Tujuh Miliar Seratus Enam Juta Tujuh Puluh Enam Ribu Lima Ratus Lima Puluh Tiga Rupiah"
+  },
+  "sentence": {
+   "ok": "Sembilan ratus delapan puluh triliun tiga ratus lima puluh tujuh miliar seratus enam juta tujuh puluh enam ribu lima ratus lima puluh tiga"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sembilan ratus delapan puluh triliun tiga ratus lima puluh tujuh miliar seratus enam juta tujuh puluh enam ribu lima ratus lima puluh tiga"
+   },
+   "title": {
+    "ok": "Sembilan Ratus Delapan Puluh Triliun Tiga Ratus Lima Puluh Tujuh Miliar Seratus Enam Juta Tujuh Puluh Enam Ribu Lima Ratus Lima Puluh Tiga Rupiah"
+   },
+   "sentence": {
+    "ok": "Sembilan ratus delapan puluh triliun tiga ratus lima puluh tujuh miliar seratus enam juta tujuh puluh enam ribu lima ratus lima puluh tiga"
+   }
+  }
+ },
+ {
+  "n": 22815433098,
+  "lower": {
+   "ok": "dua puluh dua miliar delapan ratus lima belas juta empat ratus tiga puluh tiga ribu sembilan puluh delapan"
+  },
+  "title": {
+   "ok": "Dua Puluh Dua Miliar Delapan Ratus Lima Belas Juta Empat Ratus Tiga Puluh Tiga Ribu Sembilan Puluh Delapan Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua puluh dua miliar delapan ratus lima belas juta empat ratus tiga puluh tiga ribu sembilan puluh delapan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua puluh dua miliar delapan ratus lima belas juta empat ratus tiga puluh tiga ribu sembilan puluh delapan"
+   },
+   "title": {
+    "ok": "Dua Puluh Dua Miliar Delapan Ratus Lima Belas Juta Empat Ratus Tiga Puluh Tiga Ribu Sembilan Puluh Delapan Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua puluh dua miliar delapan ratus lima belas juta empat ratus tiga puluh tiga ribu sembilan puluh delapan"
+   }
+  }
+ },
+ {
+  "n": 6042967,
+  "lower": {
+   "ok": "enam juta empat puluh dua ribu sembilan ratus enam puluh tujuh"
+  },
+  "title": {
+   "ok": "Enam Juta Empat Puluh Dua Ribu Sembilan Ratus Enam Puluh Tujuh Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam juta empat puluh dua ribu sembilan ratus enam puluh tujuh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam juta empat puluh dua ribu sembilan ratus enam puluh tujuh"
+   },
+   "title": {
+    "ok": "Enam Juta Empat Puluh Dua Ribu Sembilan Ratus Enam Puluh Tujuh Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam juta empat puluh dua ribu sembilan ratus enam puluh tujuh"
+   }
+  }
+ },
+ {
+  "n": 4833,
+  "lower": {
+   "ok": "empat ribu delapan ratus tiga puluh tiga"
+  },
+  "title": {
+   "ok": "Empat Ribu Delapan Ratus Tiga Puluh Tiga Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat ribu delapan ratus tiga puluh tiga"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat ribu delapan ratus tiga puluh tiga"
+   },
+   "title": {
+    "ok": "Empat Ribu Delapan Ratus Tiga Puluh Tiga Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat ribu delapan ratus tiga puluh tiga"
+   }
+  }
+ },
+ {
+  "n": 555591111769,
+  "lower": {
+   "ok": "lima ratus lima puluh lima miliar lima ratus sembilan puluh satu juta seratus sebelas ribu tujuh ratus enam puluh sembilan"
+  },
+  "title": {
+   "ok": "Lima Ratus Lima Puluh Lima Miliar Lima Ratus Sembilan Puluh Satu Juta Seratus Sebelas Ribu Tujuh Ratus Enam Puluh Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima ratus lima puluh lima miliar lima ratus sembilan puluh satu juta seratus sebelas ribu tujuh ratus enam puluh sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima ratus lima puluh lima miliar lima ratus sembilan puluh satu juta seratus sebelas ribu tujuh ratus enam puluh sembilan"
+   },
+   "title": {
+    "ok": "Lima Ratus Lima Puluh Lima Miliar Lima Ratus Sembilan Puluh Satu Juta Seratus Sebelas Ribu Tujuh Ratus Enam Puluh Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima ratus lima puluh lima miliar lima ratus sembilan puluh satu juta seratus sebelas ribu tujuh ratus enam puluh sembilan"
+   }
+  }
+ },
+ {
+  "n": 384,
+  "lower": {
+   "ok": "tiga ratus delapan puluh empat"
+  },
+  "title": {
+   "ok": "Tiga Ratus Delapan Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Tiga ratus delapan puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "tiga ratus delapan puluh empat"
+   },
+   "title": {
+    "ok": "Tiga Ratus Delapan Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Tiga ratus delapan puluh empat"
+   }
+  }
+ },
+ {
+  "n": 614825,
+  "lower": {
+   "ok": "enam ratus empat belas ribu delapan ratus dua puluh lima"
+  },
+  "title": {
+   "ok": "Enam Ratus Empat Belas Ribu Delapan Ratus Dua Puluh Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Enam ratus empat belas ribu delapan ratus dua puluh lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "enam ratus empat belas ribu delapan ratus dua puluh lima"
+   },
+   "title": {
+    "ok": "Enam Ratus Empat Belas Ribu Delapan Ratus Dua Puluh Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Enam ratus empat belas ribu delapan ratus dua puluh lima"
+   }
+  }
+ },
+ {
+  "n": 596726,
+  "lower": {
+   "ok": "lima ratus sembilan puluh enam ribu tujuh ratus dua puluh enam"
+  },
+  "title": {
+   "ok": "Lima Ratus Sembilan Puluh Enam Ribu Tujuh Ratus Dua Puluh Enam Rupiah"
+  },
+  "sentence": {
+   "ok": "Lima ratus sembilan puluh enam ribu tujuh ratus dua puluh enam"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "lima ratus sembilan puluh enam ribu tujuh ratus dua puluh enam"
+   },
+   "title": {
+    "ok": "Lima Ratus Sembilan Puluh Enam Ribu Tujuh Ratus Dua Puluh Enam Rupiah"
+   },
+   "sentence": {
+    "ok": "Lima ratus sembilan puluh enam ribu tujuh ratus dua puluh enam"
+   }
+  }
+ },
+ {
+  "n": 10,
+  "lower": {
+   "ok": "sepuluh"
+  },
+  "title": {
+   "ok": "Sepuluh Rupiah"
+  },
+  "sentence": {
+   "ok": "Sepuluh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "sepuluh"
+   },
+   "title": {
+    "ok": "Sepuluh Rupiah"
+   },
+   "sentence": {
+    "ok": "Sepuluh"
+   }
+  }
+ },
+ {
+  "n": 83972694,
+  "lower": {
+   "ok": "delapan puluh tiga juta sembilan ratus tujuh puluh dua ribu enam ratus sembilan puluh empat"
+  },
+  "title": {
+   "ok": "Delapan Puluh Tiga Juta Sembilan Ratus Tujuh Puluh Dua Ribu Enam Ratus Sembilan Puluh Empat Rupiah"
+  },
+  "sentence": {
+   "ok": "Delapan puluh tiga juta sembilan ratus tujuh puluh dua ribu enam ratus sembilan puluh empat"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "delapan puluh tiga juta sembilan ratus tujuh puluh dua ribu enam ratus sembilan puluh empat"
+   },
+   "title": {
+    "ok": "Delapan Puluh Tiga Juta Sembilan Ratus Tujuh Puluh Dua Ribu Enam Ratus Sembilan Puluh Empat Rupiah"
+   },
+   "sentence": {
+    "ok": "Delapan puluh tiga juta sembilan ratus tujuh puluh dua ribu enam ratus sembilan puluh empat"
+   }
+  }
+ },
+ {
+  "n": 83542516711167,
+  "lower": {
+   "ok": "delapan puluh tiga triliun lima ratus empat puluh dua miliar lima ratus enam belas juta tujuh ratus sebelas ribu seratus enam puluh tujuh"
+  },
+  "title": {
+   "ok": "Delapan Puluh Tiga Triliun Lima Ratus Empat Puluh Dua Miliar Lima Ratus Enam Belas Juta Tujuh Ratus Sebelas Ribu Seratus Enam Puluh Tujuh Rupiah"
+  },
+  "sentence": {
+   "ok": "Delapan puluh tiga triliun lima ratus empat puluh dua miliar lima ratus enam belas juta tujuh ratus sebelas ribu seratus enam puluh tujuh"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "delapan puluh tiga triliun lima ratus empat puluh dua miliar lima ratus enam belas juta tujuh ratus sebelas ribu seratus enam puluh tujuh"
+   },
+   "title": {
+    "ok": "Delapan Puluh Tiga Triliun Lima Ratus Empat Puluh Dua Miliar Lima Ratus Enam Belas Juta Tujuh Ratus Sebelas Ribu Seratus Enam Puluh Tujuh Rupiah"
+   },
+   "sentence": {
+    "ok": "Delapan puluh tiga triliun lima ratus empat puluh dua miliar lima ratus enam belas juta tujuh ratus sebelas ribu seratus enam puluh tujuh"
+   }
+  }
+ },
+ {
+  "n": 4217815645,
+  "lower": {
+   "ok": "empat miliar dua ratus tujuh belas juta delapan ratus lima belas ribu enam ratus empat puluh lima"
+  },
+  "title": {
+   "ok": "Empat Miliar Dua Ratus Tujuh Belas Juta Delapan Ratus Lima Belas Ribu Enam Ratus Empat Puluh Lima Rupiah"
+  },
+  "sentence": {
+   "ok": "Empat miliar dua ratus tujuh belas juta delapan ratus lima belas ribu enam ratus empat puluh lima"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "empat miliar dua ratus tujuh belas juta delapan ratus lima belas ribu enam ratus empat puluh lima"
+   },
+   "title": {
+    "ok": "Empat Miliar Dua Ratus Tujuh Belas Juta Delapan Ratus Lima Belas Ribu Enam Ratus Empat Puluh Lima Rupiah"
+   },
+   "sentence": {
+    "ok": "Empat miliar dua ratus tujuh belas juta delapan ratus lima belas ribu enam ratus empat puluh lima"
+   }
+  }
+ },
+ {
+  "n": 146736171,
+  "lower": {
+   "ok": "seratus empat puluh enam juta tujuh ratus tiga puluh enam ribu seratus tujuh puluh satu"
+  },
+  "title": {
+   "ok": "Seratus Empat Puluh Enam Juta Tujuh Ratus Tiga Puluh Enam Ribu Seratus Tujuh Puluh Satu Rupiah"
+  },
+  "sentence": {
+   "ok": "Seratus empat puluh enam juta tujuh ratus tiga puluh enam ribu seratus tujuh puluh satu"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "seratus empat puluh enam juta tujuh ratus tiga puluh enam ribu seratus tujuh puluh satu"
+   },
+   "title": {
+    "ok": "Seratus Empat Puluh Enam Juta Tujuh Ratus Tiga Puluh Enam Ribu Seratus Tujuh Puluh Satu Rupiah"
+   },
+   "sentence": {
+    "ok": "Seratus empat puluh enam juta tujuh ratus tiga puluh enam ribu seratus tujuh puluh satu"
+   }
+  }
+ },
+ {
+  "n": 12086599459,
+  "lower": {
+   "ok": "dua belas miliar delapan puluh enam juta lima ratus sembilan puluh sembilan ribu empat ratus lima puluh sembilan"
+  },
+  "title": {
+   "ok": "Dua Belas Miliar Delapan Puluh Enam Juta Lima Ratus Sembilan Puluh Sembilan Ribu Empat Ratus Lima Puluh Sembilan Rupiah"
+  },
+  "sentence": {
+   "ok": "Dua belas miliar delapan puluh enam juta lima ratus sembilan puluh sembilan ribu empat ratus lima puluh sembilan"
+  },
+  "asBigint": {
+   "lower": {
+    "ok": "dua belas miliar delapan puluh enam juta lima ratus sembilan puluh sembilan ribu empat ratus lima puluh sembilan"
+   },
+   "title": {
+    "ok": "Dua Belas Miliar Delapan Puluh Enam Juta Lima Ratus Sembilan Puluh Sembilan Ribu Empat Ratus Lima Puluh Sembilan Rupiah"
+   },
+   "sentence": {
+    "ok": "Dua belas miliar delapan puluh enam juta lima ratus sembilan puluh sembilan ribu empat ratus lima puluh sembilan"
+   }
+  }
+ },
+ {
+  "big": "1000000000000000000",
+  "lower": {
+   "ok": "satu kuintiliun"
+  }
+ },
+ {
+  "big": "-123456789012345678901",
+  "lower": {
+   "ok": "minus seratus dua puluh tiga kuintiliun empat ratus lima puluh enam kuadriliun tujuh ratus delapan puluh sembilan triliun dua belas miliar tiga ratus empat puluh lima juta enam ratus tujuh puluh delapan ribu sembilan ratus satu"
+  }
+ },
+ {
+  "big": "1000000000000000000000",
+  "lower": {
+   "error": "RangeError",
+   "message": "Angka terlalu besar untuk terbilang."
+  }
+ },
+ {
+  "n": 1e+21,
+  "lower": {
+   "error": "RangeError",
+   "message": "Gunakan bigint untuk angka sebesar ini."
+  }
+ }
+]

@@ -4,6 +4,28 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.2.2] - Unreleased
+
+### Added
+
+- **`lokal-id` for Python** (`pip install lokal-id`, Python 3.10+): a dependency-free port of `@lokal-id/core` with the same rules and data. Its test suite replays vectors generated from the TypeScript build (NIK, NPWP, phone, Rupiah, terbilang, every day of 2026–2027, all 91,000 regions with postal codes, and 2,700 Samaran texts) and requires identical output. Python extras: exact `Decimal` amounts, `date`/`datetime` input and output, dataclass results with `to_dict()`, and `SamaranFilter` for the `logging` module.
+
+- `exclude` option (`exclude: ['FINANCIAL', 'NAME']`, Python `exclude=[...]`) for types an app has to read, such as income and installments in a dealer's credit simulation. Unknown type names in `types` or `exclude` now throw.
+- `scan_pii` and `read_file_masked` read `.docx` files: the text, headers, and footers, with each table as its own CSV part so a "Nama" column is masked like a spreadsheet column.
+- `scan_pii` and `read_file_masked` read files up to 100 MB (was 5 MB).
+
+### Fixed
+
+- **The guard let large data files through.** A CSV or log over 5 MB was skipped instead of checked, so `Read` or `cat` passed it to the model. The guard now checks the first 5 MB. A `cat` of such a file then crashed the guard with a stack overflow (a 240,000-element spread), which also let it through, and partial outputs (`cut`, `grep`) of big files were checked in quadratic time that could exceed the 10-second hook limit. All three are fixed; a 6 MB export is now blocked in about 2 s.
+- Numbers glued to a code are no longer phone numbers: `INV-081234567890`, `ORD/081234567890`. `hp-0812…` and `wa.me/62…` still are.
+- A condition right after a pronoun is health data: "saya diabetes", "ibu saya hipertensi".
+- **A labeled value with repeated spaces left the end of a name unmasked**: `Pasien: Siti   Aminah` became `[NAME_1]ah`, because the value was rejoined with single spaces and the mask stopped short. Values now keep their original spacing, and every match equals the text at its offsets.
+- **Long single-line inputs were quadratic**: masking a 1.5 MB single-line JSON file took over ten minutes, long enough for the guard hook to time out and let the read through. It now takes about 0.3 s.
+- `isWorkingDay('2026-02-30')` and other impossible dates silently rolled over to the next month; they now throw.
+- `formatRupiahShort(999999)` gave `Rp1000 rb` instead of `Rp1 jt`; `formatRupiah(1e21)` printed `Rp1e+21`; `terbilang(1e-7)` threw an unrelated BigInt error; `parseRupiah('constructor')` returned `{ amount: null }`.
+- Partial masks of names and emails that start with an emoji no longer cut the emoji in half.
+- The WhatsApp chat sender offset is taken from the match itself instead of searching the line.
+
 ## [0.2.1] - 2026-10-16
 
 ### Fixed
@@ -36,6 +58,7 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.2.2...HEAD
+[0.2.2]: https://github.com/lokal-id/lokal/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/lokal-id/lokal/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/lokal-id/lokal/releases/tag/v0.2.0

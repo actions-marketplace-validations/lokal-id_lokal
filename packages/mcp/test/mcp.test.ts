@@ -267,3 +267,50 @@ test('guard: input rusak tidak pernah memblokir', () => {
   const res = spawnSync(process.execPath, [CLI, 'guard'], { input: 'bukan json', encoding: 'utf8' });
   assert.equal(res.status, 0);
 });
+
+test('Word: teks, header, dan tabel dipindai dan disamarkan', async () => {
+  mkdirSync(path.join(dir, 'dokumen'), { recursive: true });
+  copyFileSync(path.join(import.meta.dirname, 'fixtures', 'surat.docx'), path.join(dir, 'dokumen', 'surat.docx'));
+  const scan = await call('scan_pii', { path: 'dokumen' });
+  assert.equal(scan.data.filesWithPii, 1);
+  assert.equal(scan.data.totals.NIK, 2);
+  assert.equal(scan.data.totals.NAME, 2, 'Siti Aminah in the text, Budi Santoso in the table');
+  assert.equal(scan.data.totals.HEALTH, 1);
+  assert.equal(scan.data.notScanned, undefined);
+
+  const read = await call('read_file_masked', { path: 'dokumen/surat.docx' });
+  assert.match(read.text, /Word document: text and 1 table/);
+  assert.match(read.text, /=== Part: Tabel 1 /);
+  assert.match(read.text, /Nama,NIK,HP\n\[NAME_\d\],\[NIK_\d\],\[PHONE_1\]/);
+  for (const secret of ['Siti Aminah', 'Budi Santoso', '3276015508030002', '0812-3456-7890', 'Margonda Raya No. 45']) {
+    assert.ok(!read.text.includes(secret), secret);
+  }
+});
+
+test('file data di atas 5 MB dipindai, dan guard memeriksa awalnya alih-alih meloloskannya', async () => {
+  mkdirSync(path.join(dir, 'besar'), { recursive: true });
+  const row = 'Budi Santoso,3201011508950001,0812-3456-7890,Bogor\n';
+  writeFileSync(path.join(dir, 'besar', 'ekspor.csv'), `nama,nik,hp,kota\n${row.repeat(Math.ceil((6 * 1024 * 1024) / row.length))}`);
+
+  const scan = await call('scan_pii', { path: 'besar' });
+  assert.equal(scan.data.filesWithPii, 1);
+  assert.equal(scan.data.notScanned, undefined);
+
+  const started = Date.now();
+  const read = guard({ hook_event_name: 'PreToolUse', tool_name: 'Read', tool_input: { file_path: path.join(dir, 'besar', 'ekspor.csv') }, cwd: dir });
+  assert.equal(read.status, 2, read.stderr);
+  assert.ok(Date.now() - started < 8000, 'well inside the 10 s hook timeout');
+  const shell = (command: string) =>
+    guard({ hook_event_name: 'PreToolUse', tool_name: 'Bash', tool_input: { command }, cwd: dir }).status;
+  assert.equal(shell('cat besar/ekspor.csv'), 2); // once crashed on a 240k-element spread and let it through
+  assert.equal(shell('wc -l besar/ekspor.csv'), 0);
+
+  // Unique values: checking each against a large output with includes() was quadratic.
+  const rows = Array.from({ length: 60000 }, (_, i) => `Pelanggan ${i},32010115089${String(10000 + i).slice(-5)},Bogor`);
+  writeFileSync(path.join(dir, 'besar', 'unik.csv'), `nama,nik,kota\n${rows.join('\n')}\n`);
+  const t0 = Date.now();
+  assert.equal(shell('cut -d, -f2 besar/unik.csv'), 2);
+  assert.equal(shell('grep Bogor besar/unik.csv'), 2);
+  assert.equal(shell('head -1 besar/unik.csv'), 0);
+  assert.ok(Date.now() - t0 < 12000, `${Date.now() - t0} ms for three hook runs`);
+});

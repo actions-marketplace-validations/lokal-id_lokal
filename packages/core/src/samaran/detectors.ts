@@ -108,6 +108,22 @@ function detectPassports(text: string): PiiMatch[] {
     .map((m) => match('PASSPORT', m.index, m[0], 'high'));
 }
 
+// Words that may sit right before a number with "-" or "/" and still mean "this is a phone".
+const PHONE_LABELS = new Set([
+  'hp', 'no', 'nomor', 'nohp', 'telp', 'tlp', 'tel', 'telepon', 'telpon', 'phone', 'ph', 'handphone', 'mobile', 'wa',
+  'whatsapp', 'wa.me', 'nowa', 'sms', 'call', 'cs', 'cp', 'kontak', 'contact',
+]);
+
+/** "INV-081234567890", "ORD/0812…": a number glued to a code is an ID, not a phone. "hp-0812…" and "wa.me/62…" are. */
+function gluedToCode(text: string, index: number): boolean {
+  const sep = text[index - 1];
+  if (sep !== '-' && sep !== '/') return false;
+  let i = index - 1;
+  while (i > 0 && /[A-Za-z0-9.]/.test(text[i - 1]!)) i--;
+  const token = text.slice(i, index - 1).toLowerCase();
+  return /[a-z]/.test(token) && !PHONE_LABELS.has(token) && !token.endsWith('wa.me');
+}
+
 function detectPhones(text: string): PiiMatch[] {
   const out: PiiMatch[] = [];
   // Separators never include a line break, and every group after the operator prefix has at least three digits.
@@ -115,7 +131,7 @@ function detectPhones(text: string): PiiMatch[] {
   // fails validation, and is left unmasked.
   const mobile = /(?<![\d+\w])(?:\+62|62|0)[ \t-]?8\d{1,2}(?:[ \t.-]?\d{3,4}){2,3}(?![\d\w])/g;
   for (const m of text.matchAll(mobile)) {
-    if (parsePhone(m[0]).valid) out.push(match('PHONE', m.index, m[0], 'high'));
+    if (parsePhone(m[0]).valid && !gluedToCode(text, m.index)) out.push(match('PHONE', m.index, m[0], 'high'));
   }
   const landline = /\((?:\+62[ \t]?|0)\d{2,3}\)[ \t]?\d{3,4}[ \t-]?\d{3,4}(?!\d)|(?<![\d\w])\+62[ \t]?[2-79]\d{1,2}[ \t-]?\d{3,4}[ \t-]?\d{3,4}(?!\d)/g;
   for (const m of text.matchAll(landline)) out.push(match('PHONE', m.index, m[0], 'medium'));
@@ -190,9 +206,9 @@ function detectHealth(text: string): PiiMatch[] {
   for (const m of text.matchAll(strong)) {
     out.push(match('HEALTH', m.index + m[0].length - m[1]!.length, m[1]!, 'high'));
   }
-  // Everyday words ("positif", "menderita", "karena") only count before a known condition.
+  // Everyday words ("positif", "karena", "saya") only count before a known condition: "saya diabetes".
   const gated = new RegExp(
-    `\\b(?:positif|menderita|terkena|kena|sakit|pasien|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya)\\s+((?:penyakit\\s+)?(?:${CONDITIONS}))\\b`,
+    `\\b(?:positif|menderita|terkena|kena|sakit|pasien|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|saya|aku|gue|gw|gua|dia|beliau)\\s+((?:penyakit\\s+)?(?:${CONDITIONS}))\\b`,
     'gi',
   );
   for (const m of text.matchAll(gated)) {
@@ -368,8 +384,8 @@ const GREETING_SELF =
 // Chat export lines: Android "12/10/26 09.14 - Dewi Lestari: …", iOS "[12/10/26 09.14.33] Dewi Lestari: …",
 // and the export title "Chat WhatsApp dengan Dewi Lestari". The sender is whoever saved that contact name.
 const CHAT_SENDER =
-  /^‎?\[?\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4},?[ \t]+\d{1,2}[.:]\d{2}(?:[.:]\d{2})?(?:[ \t ]?[AP]M)?\]?(?:[ \t]+-)?[ \t]+([^:\n]{1,60}?):[ \t]/gm;
-const CHAT_TITLE = /^(?:Chat WhatsApp dengan|WhatsApp Chat with|Chat dengan|Riwayat chat dengan)[ \t]+([^\n]{1,60}?)[ \t]*$/gim;
+  /^‎?\[?\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4},?[ \t]+\d{1,2}[.:]\d{2}(?:[.:]\d{2})?(?:[ \t ]?[AP]M)?\]?(?:[ \t]+-)?[ \t]+([^:\n]{1,60}?):[ \t]/dgm;
+const CHAT_TITLE = /^(?:Chat WhatsApp dengan|WhatsApp Chat with|Chat dengan|Riwayat chat dengan)[ \t]+([^\n]{1,60}?)[ \t]*$/dgim;
 // Senders that are a business or a system role, not a customer.
 const NOT_A_PERSON =
   /\b(?:toko|shop|store|official|olshop|admin|cs|customer service|support|tim|team|pt|cv|ud|bot|system|sistem|info|layanan|grosir)\b|^(?:error|warn|warning|info|debug|trace|fatal|notice)$/i;
@@ -381,12 +397,14 @@ function detectChatSenders(text: string): PiiMatch[] {
       const sender = m[1]!.replace(/^~\s*/, '').trim();
       // Unsaved contacts show as a number; the phone detector already covers those.
       if (!/\p{L}/u.test(sender) || /^[+\d\s()-]+$/.test(sender) || NOT_A_PERSON.test(sender)) continue;
-      const start = m.index + m[0].indexOf(m[1]!) + m[1]!.indexOf(sender);
+      const start = m.indices![1]![0] + m[1]!.indexOf(sender);
       out.push(match('NAME', start, sender, 'high'));
     }
   }
   return out;
 }
+
+const DIGITS_AT = /\d+/y;
 
 const THING_TABLE =
   /produk|product|barang|item|sku|kategori|categor|menu|toko|store|shop|merchant|brand|merek|layanan|service|paket|package|kota|city|provinsi|province|wilayah|region|kecamatan|kelurahan|desa|district|bank|kurir|courier|ekspedisi|tag|role|permission|setting|config|status|metode|method/i;
@@ -425,7 +443,8 @@ function detectSqlInserts(text: string): PiiMatch[] {
       else if (depth === 0 && !/[\s,]/.test(ch)) break;
       else if (depth === 1 && /\d/.test(ch) && /[(,\s]/.test(text[i - 1]!)) {
         // An unquoted number in a personal column: `nik` stored as BIGINT.
-        const num = /^\d+/.exec(text.slice(i))![0];
+        DIGITS_AT.lastIndex = i;
+        const num = DIGITS_AT.exec(text)![0];
         const type = types[col];
         if (type && isPlausibleValue(type, num, columns[col]!)) out.push(match(type, i, num, 'high'));
         i += num.length;
@@ -450,6 +469,14 @@ function detectStreetAddresses(text: string): PiiMatch[] {
 
 const NAME_STOP = /\s(?:dan|dengan|yang|nik|hp|no|nomor|umur|usia|alamat|email|tinggal|lahir|asal|dari|di|ke|untuk|sebagai|mau|ingin|minta|tolong)\b/i;
 const MULTI_PART: ReadonlySet<PiiType> = new Set(['ADDRESS', 'BIRTH_DATE', 'HEALTH', 'GEO']);
+
+/**
+ * The first `n` words of `s` exactly as written. Rejoining `split(/\s+/)` with single spaces would shorten
+ * "Siti   Aminah", and the mask would then stop short and leave the end of the name visible.
+ */
+function takeWords(s: string, n: number): string {
+  return s.split(/(\s+)/).slice(0, Math.max(0, 2 * n - 1)).join('');
+}
 
 /** Cuts an unquoted value where the next field begins. */
 function cutValue(type: PiiType, raw: string): string {
@@ -476,7 +503,7 @@ function cutValue(type: PiiType, raw: string): string {
           break;
         }
       }
-      v = words.slice(0, cut).join(' ');
+      v = takeWords(head, cut);
     }
   }
   if (MULTI_PART.has(type)) {
@@ -496,24 +523,80 @@ function cutValue(type: PiiType, raw: string): string {
     if (stop >= 0) v = v.slice(0, stop);
     const digit = v.search(/\d/);
     if (digit >= 0) v = v.slice(0, digit);
-    v = v.split(/\s+/).slice(0, 5).join(' ');
+    v = takeWords(v, 5);
   }
   return v.replace(/[\s.,}\]]+$/, '').trim();
 }
-
-const LABEL = /((?:["'`]?[A-Za-z][A-Za-z0-9_./-]*["'`]?[ \t]+){0,4}["'`]?[A-Za-z][A-Za-z0-9_./-]*["'`]?)$/;
 
 /**
  * "Label: value" in prose, forms, logs, JSON, YAML and .env:
  * "Agama: Islam", "NAMA : BUDI SANTOSO", "tgl. lahir: 15-08-1995", "nama: budi", "customer_email" = "…".
  */
+const isQuote = (c: string | undefined) => c === '"' || c === "'" || c === '`';
+const isLabelChar = (c: string | undefined) => c !== undefined && /[A-Za-z0-9_./-]/.test(c);
+const isLetter = (c: string | undefined) => c !== undefined && /[A-Za-z]/.test(c);
+const isJsSpace = (c: string | undefined) => c !== undefined && /\s/.test(c);
+
+/**
+ * The label that ends at `end`, as `LABEL.exec(text.slice(lineStart, end).trimEnd())` would find it, but scanning
+ * right to left over at most five words instead of the whole line. On a 2 MB single-line JSON file the regex made
+ * this detector quadratic, long enough for the guard hook to time out (and fail open).
+ */
+function labelBefore(text: string, lineStart: number, end: number): string | undefined {
+  while (end > lineStart && isJsSpace(text[end - 1])) end--;
+  let pos = end;
+  let start = -1;
+  for (let words = 0; words < 5; words++) {
+    // One word: an optional quote, a letter, label characters, an optional quote.
+    let p = pos;
+    if (p > lineStart && isQuote(text[p - 1])) p--;
+    const runEnd = p;
+    while (p > lineStart && isLabelChar(text[p - 1])) p--;
+    let first = p;
+    while (first < runEnd && !isLetter(text[first])) first++;
+    if (first >= runEnd) break;
+    start = first === p && p > lineStart && isQuote(text[p - 1]) ? p - 1 : first;
+    // The label continues leftwards only over a whole word followed by spaces or tabs.
+    if (first !== p) break;
+    let q = start;
+    while (q > lineStart && (text[q - 1] === ' ' || text[q - 1] === '\t')) q--;
+    if (q === start) break;
+    pos = q;
+  }
+  return start < 0 ? undefined : text.slice(start, end);
+}
+
+/**
+ * How much of the line after a label `cutValue` can look at: up to the first `;`, `|` or `&`, or just past the first
+ * colon that ends the value (not one in "://", and not one right at the start, which cutValue ignores). Cutting
+ * the line there gives the same result and keeps long lines linear.
+ */
+function valueExtent(text: string, start: number, end: number): number {
+  const endsValue = (i: number) => text[i] === ':' && !(text[i + 1] === '/' && text[i + 2] === '/');
+  // cutValue only looks at the first such colon; at the very start it cuts nothing, so no colon does.
+  const colonsCut = !endsValue(start);
+  for (let i = start; i < end; i++) {
+    const c = text[i];
+    if (c === ';' || c === '|' || c === '&') return i;
+    if (colonsCut && endsValue(i)) return Math.min(end, i + 3);
+  }
+  return end;
+}
+
 function detectLabeledFields(text: string): PiiMatch[] {
   const out: PiiMatch[] = [];
+  let lineStart = 0;
+  let lineEnd = text.indexOf('\n');
+  if (lineEnd === -1) lineEnd = text.length;
   for (const m of text.matchAll(/[ \t]*(?::(?![:\/])|=(?![=>]))[ \t]*/g)) {
-    const lineStart = text.lastIndexOf('\n', m.index - 1) + 1;
-    const label = LABEL.exec(text.slice(lineStart, m.index).trimEnd());
+    while (m.index > lineEnd) {
+      lineStart = lineEnd + 1;
+      lineEnd = text.indexOf('\n', lineStart);
+      if (lineEnd === -1) lineEnd = text.length;
+    }
+    const label = labelBefore(text, lineStart, m.index);
     if (!label) continue;
-    const words = label[1]!.trim().split(/[ \t]+/);
+    const words = label.trim().split(/[ \t]+/);
     let type: PiiType | undefined;
     let key = '';
     for (let i = 0; i < words.length && !type; i++) {
@@ -523,18 +606,21 @@ function detectLabeledFields(text: string): PiiMatch[] {
     if (!type) continue;
 
     const valueStart = m.index + m[0].length;
-    const lineEnd = text.indexOf('\n', valueStart);
-    const raw = text.slice(valueStart, lineEnd === -1 ? text.length : lineEnd).replace(/\r$/, '');
+    const rawEnd = lineEnd > valueStart && text[lineEnd - 1] === '\r' ? lineEnd - 1 : lineEnd;
     let value: string;
     let start = valueStart;
-    const quote = raw[0];
-    if (quote === '"' || quote === "'" || quote === '`') {
-      const close = raw.indexOf(quote, 1);
-      if (close === -1) continue;
-      value = raw.slice(1, close);
+    const quote = text[valueStart];
+    if (valueStart < rawEnd && isQuote(quote)) {
+      let close = valueStart + 1;
+      while (close < rawEnd && text[close] !== quote) close++;
+      if (close >= rawEnd) continue;
+      value = text.slice(valueStart + 1, close);
       start += 1;
     } else {
+      const raw = text.slice(valueStart, valueExtent(text, valueStart, rawEnd));
       value = cutValue(type, raw);
+      // cutValue trims; "nama: Budi" starts after the no-break space, not at it.
+      if (value) start += raw.indexOf(value);
     }
     if (!isPlausibleValue(type, value, key)) continue;
     // `name: "Default Greeting"` is everywhere in code; only Indonesian/role labels are high-confidence.
@@ -624,14 +710,24 @@ const DETECTORS: Array<(text: string) => PiiMatch[]> = [
 ];
 
 export interface DetectOptions {
+  /** Only look for these types. Default: all of PII_TYPES. */
   types?: readonly PiiType[];
+  /**
+   * Never report these types, e.g. `['FINANCIAL']` when income and installments are the data an app needs to read
+   * (a dealer's credit simulation), or `['NAME']` when names are not sent anywhere sensitive.
+   */
+  exclude?: readonly PiiType[];
   /** "high" only keeps validated or keyword-anchored matches. Default "medium". */
   minConfidence?: Confidence;
 }
 
 /** All personal data in the text, non-overlapping, in reading order. */
 export function detectPii(text: string, options: DetectOptions = {}): PiiMatch[] {
+  for (const t of [...(options.types ?? []), ...(options.exclude ?? [])]) {
+    if (!PII_TYPES.includes(t)) throw new RangeError(`Unknown PII type "${t}". Valid types: ${PII_TYPES.join(', ')}`);
+  }
   const types = new Set(options.types ?? PII_TYPES);
+  for (const t of options.exclude ?? []) types.delete(t);
   const minRank = options.minConfidence === 'high' ? 2 : 1;
   const rank = (m: PiiMatch) => (m.confidence === 'high' ? 2 : 1);
 

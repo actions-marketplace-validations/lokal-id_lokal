@@ -1,0 +1,78 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "lokal-id"
+version = "0.2.2"
+description = "Indonesian data primitives for apps and AI agents: NIK, NPWP, phone numbers, Rupiah, terbilang, holidays, Kemendagri regions with postal codes, and Samaran PII masking (UU PDP)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE", "src/lokal/data/LICENSE-*.txt"]
+authors = [{ name = "Lokal contributors" }]
+keywords = [
+  "indonesia", "nik", "npwp", "rupiah", "terbilang", "wilayah", "kode-pos", "hari-libur", "pii", "uu-pdp",
+  "privacy", "llm", "masking",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Natural Language :: Indonesian",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Security",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Text Processing",
+  "Typing :: Typed",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/lokal-id/lokal"
+Documentation = "https://github.com/lokal-id/lokal/tree/main/python#readme"
+Issues = "https://github.com/lokal-id/lokal/issues"
+Changelog = "https://github.com/lokal-id/lokal/blob/main/CHANGELOG.md"
+
+[dependency-groups]
+dev = ["pytest>=8", "mypy>=1.11", "ruff>=0.6"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/lokal"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src", "tests", "scripts", "README.md", "LICENSE"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+filterwarnings = ["error"]
+
+[tool.mypy]
+strict = true
+python_version = "3.10"
+files = ["src"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM"]
+ignore = ["UP007", "UP045", "SIM108", "SIM905"]
+
+[tool.ruff.lint.per-file-ignores]
+# Patterns are the TypeScript sources verbatim, so they stay on one line each.
+"src/lokal/samaran/detectors.py" = ["E501"]
+"src/lokal/samaran/fields.py" = ["E501"]
+"tests/*" = ["E501", "B023"]
+
+[tool.ruff.format]
+quote-style = "single"

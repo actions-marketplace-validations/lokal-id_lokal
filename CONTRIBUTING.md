@@ -41,6 +41,26 @@ claude mcp add lokal-dev -- node /absolute/path/to/lokal/packages/mcp/dist/cli.j
 
 `npm run eval` runs the cases in `evals/cases.mjs` in real Claude Code sessions, with and without the plugin. It needs the `claude` CLI signed in and uses real tokens, so you do not need to run it for most changes.
 
+### Python
+
+The Python package in `python/` is a port of `packages/core` and must give the same results. You need [uv](https://docs.astral.sh/uv/):
+
+```sh
+cd python
+uv run pytest        # unit tests and the parity vectors
+uv run mypy          # strict typing
+uv run ruff check src tests scripts
+```
+
+The parity vectors in `python/tests/vectors` are generated from the TypeScript build. **Any change to `packages/core/src` must be mirrored in `python/src/lokal`**, then:
+
+```sh
+npm run build && node python/scripts/gen_vectors.mjs   # regenerate from TypeScript
+cd python && uv run pytest                            # Python must still match
+```
+
+After regenerating region data in `packages/core/data`, run `uv run python scripts/sync_data.py` in `python/` to copy it into the package. CI checks both.
+
 ## Where things live
 
 | Path | Contents |
@@ -53,13 +73,16 @@ claude mcp add lokal-dev -- node /absolute/path/to/lokal/packages/mcp/dist/cli.j
 | `packages/mcp/src/guard.ts`, `shell-reads.ts` | Samaran Guard hook and the shell command parser |
 | `skills/` | `SKILL.md` files |
 | `evals/` | End-to-end evaluation |
+| `python/src/lokal/` | The Python port: one module per TypeScript file, patterns copied verbatim |
+| `python/scripts/gen_vectors.mjs` | Generates the parity vectors from the TypeScript build |
 | `docs/assets/` | README diagrams: [Archify](https://github.com/tt-a1i/archify) sources (`*.archify.json`) and their exported SVGs |
 
 ## Pull request guidelines
 
 - **Add tests.** Every behavior change needs a test. Detection changes need both a positive case (what should now be caught) and a negative case (similar text that must not be caught), because false positives make the guard annoying enough that people turn it off.
 - **Commit the bundled hook.** The plugin runs `hooks/samaran-guard.mjs` directly. If you change anything under `packages/mcp/src` or `packages/core/src`, run `npm run build` and include the updated bundle. CI fails if it is out of date.
-- **Keep `@lokal-id/core` dependency-free.** It runs in browsers and inside the hook, which has a 10-second time limit.
+- **Keep `@lokal-id/core` and `lokal-id` dependency-free.** The TypeScript package runs in browsers and inside the hook, which has a 10-second time limit; the Python one installs anywhere.
+- **Change TypeScript and Python together**, and regenerate the parity vectors (see above). CI fails if they disagree.
 - **Cite official sources** for reference data: Kemendagri decrees, SKB 3 Menteri, legislation from JDIH, and so on.
 - **Update the docs** when you change behavior: `README.md`, `README.id.md`, and `CHANGELOG.md` under *Unreleased*.
 - Keep pull requests focused on one change. Small PRs get reviewed faster.

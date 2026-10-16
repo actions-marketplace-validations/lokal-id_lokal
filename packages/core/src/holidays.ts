@@ -90,8 +90,17 @@ const DATA: Record<number, YearData> = {
 export const HOLIDAY_YEARS: readonly number[] = Object.keys(DATA).map(Number);
 
 function toIsoDate(date: string | Date): string {
-  if (date instanceof Date) return date.toISOString().slice(0, 10);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new RangeError(`Tanggal harus berformat YYYY-MM-DD: ${date}`);
+  if (date instanceof Date) {
+    if (Number.isNaN(date.getTime())) throw new RangeError('Tanggal tidak valid.');
+    return date.toISOString().slice(0, 10);
+  }
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
+  if (!m) throw new RangeError(`Tanggal harus berformat YYYY-MM-DD: ${date}`);
+  // `new Date('2026-02-30')` quietly becomes 2 March; a date that does not exist is an error instead.
+  const d = new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3])));
+  if (d.getUTCMonth() !== Number(m[2]) - 1 || d.getUTCDate() !== Number(m[3])) {
+    throw new RangeError(`Tanggal tidak valid: ${date}`);
+  }
   return date;
 }
 

@@ -9,6 +9,7 @@ membangun aplikasi yang benar untuk Indonesia, sambil menjaga data pribadi pengg
 
 [![npm @lokal-id/mcp](https://img.shields.io/npm/v/@lokal-id/mcp?label=%40lokal-id%2Fmcp&color=cb3837)](https://www.npmjs.com/package/@lokal-id/mcp)
 [![npm @lokal-id/core](https://img.shields.io/npm/v/@lokal-id/core?label=%40lokal-id%2Fcore&color=cb3837)](https://www.npmjs.com/package/@lokal-id/core)
+[![PyPI lokal-id](https://img.shields.io/pypi/v/lokal-id?label=lokal-id&color=3775a9)](https://pypi.org/project/lokal-id/)
 [![CI](https://github.com/lokal-id/lokal/actions/workflows/ci.yml/badge.svg)](https://github.com/lokal-id/lokal/actions/workflows/ci.yml)
 [![Lisensi: MIT](https://img.shields.io/badge/lisensi-MIT-blue.svg)](LICENSE)
 [![Node.js >= 20](https://img.shields.io/badge/node-%3E%3D20-339933?logo=node.js&logoColor=white)](https://nodejs.org)
@@ -48,7 +49,7 @@ Lokal menangani keduanya: mengajari agent konvensi Indonesia, memberinya data ac
 - **Data acuan akurat, ikut terpasang.** 38 provinsi sampai 83.762 kelurahan/desa, sama persis dengan Kepmendagri 2025, lengkap dengan kode pos setiap desa. Libur nasional dan cuti bersama dari SKB resmi 2026 dan 2027.
 - **Penyamaran Samaran.** Mengganti 25 jenis data pribadi Indonesia, termasuk semua kategori di UU PDP Pasal 4, dengan placeholder yang stabil, lalu memulihkannya di jawaban model.
 - **Samaran Guard.** Hook Claude Code yang menahan prompt berisi nomor identitas dan mengalihkan pembacaan file data pelanggan (`Read`, `Grep`, `cat`, `Get-Content`, …) ke versi tersamar.
-- **Jalan di agent mana pun.** Plugin Claude Code, MCP server stdio untuk Cursor, Claude Desktop, VS Code, Windsurf, dan Codex, plus library TypeScript.
+- **Jalan di agent mana pun.** Plugin Claude Code, MCP server stdio untuk Cursor, Claude Desktop, VS Code, Windsurf, dan Codex, plus library TypeScript dan Python yang hasilnya identik.
 - **Lokal dan offline.** Data ikut di dalam paket. Tidak ada panggilan jaringan, tidak ada telemetri, dan pemulihan data terjadi di komputer kamu.
 
 ## Cara kerja
@@ -150,8 +151,11 @@ Folder di [`skills/`](skills) juga bisa disalin manual. Formatnya mengikuti stan
 ### Library
 
 ```sh
-npm install @lokal-id/core
+npm install @lokal-id/core     # TypeScript / JavaScript
+pip install lokal-id           # Python 3.10+
 ```
+
+Paket Python adalah port dari `@lokal-id/core` dengan aturan dan data yang sama, dan sudah diverifikasi terhadap ribuan hasil versi TypeScript. Versi Python juga mendukung nominal `Decimal`, objek `date`, hasil berupa dataclass, dan filter `logging` untuk backend. Lihat [`python/`](python#readme).
 
 ## Pemakaian
 
@@ -202,6 +206,7 @@ samaran.unmask(reply);           // placeholder diganti lagi dengan data asli
 ```
 
 - Nilai yang sama selalu mendapat placeholder yang sama, termasuk beda format: `0812-…` dan `+62 812…` sama-sama `[PHONE_1]`.
+- `exclude` membiarkan tipe yang memang perlu dibaca aplikasi. Simulasi kredit di dealer butuh penghasilan dan cicilan, jadi `new Samaran({ exclude: ['FINANCIAL'] })` membiarkan "gaji saya 8 juta, cicilan 3 juta" tetap utuh, sementara NIK dan nomor HP tetap disamarkan. Salah ketik nama tipe menghasilkan error, bukan diam-diam menyamarkan lebih sedikit.
 - `mode: 'partial'` untuk log dan layar admin: `3201********0001`, `0812****7890`, `b***@gmail.com`.
 - Deteksi memakai label (`Agama: Islam`, `NAMA : BUDI`), header CSV dan Excel (`agama`, `diagnosa`, `gaji`, …), key JSON/YAML dan query string (termasuk `first_name` / `last_name` yang terpisah), dump SQL `INSERT`, export chat WhatsApp, serta frasa umum di teks bebas (`nama saya budi`, `didiagnosis TBC`, `obat insulin`, `gaji saya 8 juta`).
 
@@ -231,8 +236,8 @@ samaran.unmask(reply);           // placeholder diganti lagi dengan data asli
 | `lookup_kode_pos` | Kode pos → kelurahan/desa, atau semua kode pos di suatu wilayah |
 | `list_holidays` | Libur nasional dan cuti bersama (SKB 2026, 2027) |
 | `working_days` | Hari kerja, tenggat SLA, estimasi pengiriman |
-| `scan_pii` | Pindai file dan folder (teks, CSV, JSON, log, SQL, `.xlsx`) untuk data pribadi. Hanya menampilkan nilai yang sudah disamarkan sebagian, dan **melaporkan file yang tidak bisa dipindai** (PDF, `.xls`, gambar) |
-| `read_file_masked` | Baca file, termasuk sheet `.xlsx`, dengan data pribadi diganti placeholder yang stabil |
+| `scan_pii` | Pindai file dan folder (teks, CSV, JSON, log, SQL, `.xlsx`, `.docx`, sampai 100 MB per file) untuk data pribadi. Hanya menampilkan nilai yang sudah disamarkan sebagian, dan **melaporkan file yang tidak bisa dipindai** (PDF, `.xls`, `.doc`, gambar) |
+| `read_file_masked` | Baca file, termasuk sheet `.xlsx` dan dokumen `.docx` (teks dan tabel), dengan data pribadi diganti placeholder yang stabil |
 | `write_file_unmasked` | Tulis hasil kerja dengan placeholder dipulihkan, di komputer kamu |
 
 ### Samaran Guard
@@ -287,7 +292,7 @@ Ini sampel kecil yang disusun dari keseharian developer Indonesia. Jangan dibaca
 
 - **Deteksi berbasis pola dan mengutamakan presisi.** Nama dikenali dari label, header kolom dan key JSON, pengirim di export chat, frasa pengantar ("nama saya budi", "atas nama", "a.n.", "halo kak ini rina,"), sapaan ("Pak Joko", "bapak ahmad"), dan ucapan yang dilaporkan ("tadi budi bilang"), termasuk huruf kecil. Nama yang terselip di kalimat tanpa penanda apa pun ("pesanan budi belum sampai"), data kesehatan atau keuangan dengan kalimat tidak biasa, dan data anak yang tidak ditandai sebagai data anak masih bisa lolos. Anggap Samaran sebagai jaring pengaman yang kuat, bukan jaminan.
 - **Diuji terhadap salah deteksi** di 12 MB kode open source dan teks lengkap UU 27/2022, tanpa satu pun deteksi nama berkeyakinan tinggi. Deteksi nama di chat menangkap 29 dari 29 kalimat uji berisi nama dan tidak salah tangkap di 26 kalimat chat biasa. Kalimatnya disusun untuk tes, jadi akurasi di chat asli bisa lebih rendah.
-- **Tidak semua format terbaca.** PDF, `.xls` lama, gambar (foto KTP, selfie), dan arsip tidak dipindai. `scan_pii` melaporkannya sebagai *tidak terpindai*, bukan *bersih*.
+- **Tidak semua format terbaca.** PDF, `.xls` dan `.doc` lama, gambar (foto KTP, selfie), dan arsip tidak dipindai. `scan_pii` melaporkannya sebagai *tidak terpindai*, bukan *bersih*, dan guard tidak mencegatnya. File di atas 100 MB juga dilaporkan. Untuk file data di atas 5 MB, guard memeriksa 5 MB pertamanya supaya tetap di bawah batas waktu hook 10 detik.
 - **Validasi NIK dan NPWP hanya struktur.** Tidak bisa memastikan nomornya terdaftar di Dukcapil atau DJP.
 - **Deteksi operator memakai prefix nomor**, yang cocok dengan daftar alokasi publik, termasuk merger XLSmart 2025. Indonesia belum punya *number portability* (gugatannya masih di MK, perkara 319/PUU-XXIV/2026), jadi prefix masih bisa diandalkan. Kode area telepon rumah baru mencakup 19 kota besar.
 - **Guard mencegat prompt, `Read`, `Grep`, dan perintah shell umum.** Skrip yang sengaja mencetak isi file data, atau perintah seperti `python -c "print(open(...).read())"`, tidak bisa dicegat 100%. Untuk itu skill `samaran` yang mengarahkan agent.
@@ -301,10 +306,11 @@ Ini sampel kecil yang disusun dari keseharian developer Indonesia. Jangan dibaca
 - [x] Kategori data UU PDP dan dukungan Excel di Samaran
 - [ ] **Kapan**: parser waktu khas Indonesia (`besok abis maghrib`, `lusa jam 7an`, `tanggal muda`) dengan waktu sholat berbasis lokasi
 - [ ] **Warga**: generator data uji yang konsisten (NIK sesuai tanggal lahir dan wilayah, nama sesuai daerah)
-- [ ] Dukungan PDF dan `.docx` di Samaran
+- [x] Dukungan `.docx` di Samaran (teks dan tabel)
+- [ ] Dukungan PDF berbasis teks di Samaran; OCR untuk foto KTP
 - [ ] Parser alamat bebas → kode wilayah
 - [ ] Transport HTTP untuk ChatGPT dan agent berbasis web
-- [ ] Library Python (`lokal-id`) dengan API yang sama
+- [x] Library Python (`lokal-id`) dengan hasil yang sama dengan TypeScript
 - [ ] *Locale pack* untuk negara lain (Malaysia, Filipina, Vietnam)
 
 Punya ide? [Buka issue](https://github.com/lokal-id/lokal/issues).
@@ -314,6 +320,7 @@ Punya ide? [Buka issue](https://github.com/lokal-id/lokal/issues).
 ```text
 packages/core     @lokal-id/core: logika dan data
 packages/mcp      @lokal-id/mcp: MCP server dan Samaran Guard
+python/           lokal-id: port Python, dengan tes paritas terhadap TypeScript
 skills/           SKILL.md untuk Claude, Codex, dan agent lain
 hooks/            hook Claude Code (hasil bundle, tanpa dependency)
 evals/            eval end-to-end ke sesi Claude Code sungguhan

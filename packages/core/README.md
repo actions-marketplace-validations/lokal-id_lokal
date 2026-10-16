@@ -13,6 +13,8 @@ No dependencies. Part of [Lokal](https://github.com/lokal-id/lokal) · [Bahasa I
 npm install @lokal-id/core
 ```
 
+For Python backends there is a port with identical results: `pip install lokal-id` ([docs](https://github.com/lokal-id/lokal/tree/HEAD/python#readme)).
+
 ## Usage
 
 ```ts

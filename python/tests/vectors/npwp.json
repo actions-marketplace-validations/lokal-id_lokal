@@ -1,0 +1,1850 @@
+[
+ {
+  "input": "01.234.567.8-901.000",
+  "out": {
+   "input": "01.234.567.8-901.000",
+   "valid": true,
+   "errors": [],
+   "digits": "012345678901000",
+   "kind": "npwp15",
+   "npwp16": "0012345678901000",
+   "formatted15": "01.234.567.8-901.000"
+  }
+ },
+ {
+  "input": "0012345678901000",
+  "out": {
+   "input": "0012345678901000",
+   "valid": true,
+   "errors": [],
+   "digits": "0012345678901000",
+   "kind": "npwp16",
+   "npwp16": "0012345678901000",
+   "formatted15": "01.234.567.8-901.000"
+  }
+ },
+ {
+  "input": "3201011508950001",
+  "out": {
+   "input": "3201011508950001",
+   "valid": true,
+   "errors": [],
+   "digits": "3201011508950001",
+   "kind": "nik",
+   "npwp16": "3201011508950001",
+   "nik": {
+    "input": "3201011508950001",
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "nik": "3201011508950001",
+    "provinceCode": "32",
+    "regencyCode": "32.01",
+    "districtCode": "32.01.01",
+    "province": "Jawa Barat",
+    "gender": "L",
+    "birthDate": "1995-08-15",
+    "serial": "0001"
+   }
+  }
+ },
+ {
+  "input": "3201011508950000",
+  "out": {
+   "input": "3201011508950000",
+   "valid": false,
+   "errors": [
+    {
+     "code": "nik",
+     "message": "NPWP 16 digit yang tidak diawali 0 adalah NIK, tetapi struktur NIK-nya tidak valid."
+    }
+   ],
+   "digits": "3201011508950000",
+   "kind": "nik",
+   "npwp16": "3201011508950000",
+   "nik": {
+    "input": "3201011508950000",
+    "valid": false,
+    "errors": [
+     {
+      "code": "serial",
+      "message": "Nomor urut NIK tidak boleh 0000."
+     }
+    ],
+    "warnings": [],
+    "nik": "3201011508950000",
+    "provinceCode": "32",
+    "regencyCode": "32.01",
+    "districtCode": "32.01.01",
+    "province": "Jawa Barat",
+    "gender": "L",
+    "birthDate": "1995-08-15",
+    "serial": "0000"
+   }
+  }
+ },
+ {
+  "input": "123",
+  "out": {
+   "input": "123",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "012345678901000",
+  "out": {
+   "input": "012345678901000",
+   "valid": true,
+   "errors": [],
+   "digits": "012345678901000",
+   "kind": "npwp15",
+   "npwp16": "0012345678901000",
+   "formatted15": "01.234.567.8-901.000"
+  }
+ },
+ {
+  "input": "01 234 567 8 901 000",
+  "out": {
+   "input": "01 234 567 8 901 000",
+   "valid": true,
+   "errors": [],
+   "digits": "012345678901000",
+   "kind": "npwp15",
+   "npwp16": "0012345678901000",
+   "formatted15": "01.234.567.8-901.000"
+  }
+ },
+ {
+  "input": "09.254.294.3-407.000",
+  "out": {
+   "input": "09.254.294.3-407.000",
+   "valid": true,
+   "errors": [],
+   "digits": "092542943407000",
+   "kind": "npwp15",
+   "npwp16": "0092542943407000",
+   "formatted15": "09.254.294.3-407.000"
+  }
+ },
+ {
+  "input": "x1.234.567.8-901.000",
+  "out": {
+   "input": "x1.234.567.8-901.000",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "0012345678901000 ",
+  "out": {
+   "input": "0012345678901000 ",
+   "valid": true,
+   "errors": [],
+   "digits": "0012345678901000",
+   "kind": "npwp16",
+   "npwp16": "0012345678901000",
+   "formatted15": "01.234.567.8-901.000"
+  }
+ },
+ {
+  "input": "703484944440946",
+  "out": {
+   "input": "703484944440946",
+   "valid": true,
+   "errors": [],
+   "digits": "703484944440946",
+   "kind": "npwp15",
+   "npwp16": "0703484944440946",
+   "formatted15": "70.348.494.4-440.946"
+  }
+ },
+ {
+  "input": "2325681108054936",
+  "out": {
+   "input": "2325681108054936",
+   "valid": false,
+   "errors": [
+    {
+     "code": "nik",
+     "message": "NPWP 16 digit yang tidak diawali 0 adalah NIK, tetapi struktur NIK-nya tidak valid."
+    }
+   ],
+   "digits": "2325681108054936",
+   "kind": "nik",
+   "npwp16": "2325681108054936",
+   "nik": {
+    "input": "2325681108054936",
+    "valid": false,
+    "errors": [
+     {
+      "code": "province",
+      "message": "Kode provinsi \"23\" tidak dikenal."
+     }
+    ],
+    "warnings": [],
+    "nik": "2325681108054936",
+    "provinceCode": "23",
+    "regencyCode": "23.25",
+    "districtCode": "23.25.68",
+    "gender": "L",
+    "birthDate": "2005-08-11",
+    "serial": "4936"
+   }
+  }
+ },
+ {
+  "input": "2837739456944252",
+  "out": {
+   "input": "2837739456944252",
+   "valid": false,
+   "errors": [
+    {
+     "code": "nik",
+     "message": "NPWP 16 digit yang tidak diawali 0 adalah NIK, tetapi struktur NIK-nya tidak valid."
+    }
+   ],
+   "digits": "2837739456944252",
+   "kind": "nik",
+   "npwp16": "2837739456944252",
+   "nik": {
+    "input": "2837739456944252",
+    "valid": false,
+    "errors": [
+     {
+      "code": "province",
+      "message": "Kode provinsi \"28\" tidak dikenal."
+     },
+     {
+      "code": "birth_date",
+      "message": "Tanggal lahir di NIK tidak valid."
+     }
+    ],
+    "warnings": [],
+    "nik": "2837739456944252",
+    "provinceCode": "28",
+    "regencyCode": "28.37",
+    "districtCode": "28.37.73",
+    "serial": "4252"
+   }
+  }
+ },
+ {
+  "input": "97454255207521",
+  "out": {
+   "input": "97454255207521",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "83352384090687209",
+  "out": {
+   "input": "83352384090687209",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "3571780902105287",
+  "out": {
+   "input": "3571780902105287",
+   "valid": true,
+   "errors": [],
+   "digits": "3571780902105287",
+   "kind": "nik",
+   "npwp16": "3571780902105287",
+   "nik": {
+    "input": "3571780902105287",
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "nik": "3571780902105287",
+    "provinceCode": "35",
+    "regencyCode": "35.71",
+    "districtCode": "35.71.78",
+    "province": "Jawa Timur",
+    "gender": "L",
+    "birthDate": "2010-02-09",
+    "serial": "5287"
+   }
+  }
+ },
+ {
+  "input": "86868413777989456",
+  "out": {
+   "input": "86868413777989456",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "504458181860169",
+  "out": {
+   "input": "504458181860169",
+   "valid": true,
+   "errors": [],
+   "digits": "504458181860169",
+   "kind": "npwp15",
+   "npwp16": "0504458181860169",
+   "formatted15": "50.445.818.1-860.169"
+  }
+ },
+ {
+  "input": "6191905310334188",
+  "out": {
+   "input": "6191905310334188",
+   "valid": true,
+   "errors": [],
+   "digits": "6191905310334188",
+   "kind": "nik",
+   "npwp16": "6191905310334188",
+   "nik": {
+    "input": "6191905310334188",
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "nik": "6191905310334188",
+    "provinceCode": "61",
+    "regencyCode": "61.91",
+    "districtCode": "61.91.90",
+    "province": "Kalimantan Barat",
+    "gender": "P",
+    "birthDate": "1933-10-13",
+    "serial": "4188"
+   }
+  }
+ },
+ {
+  "input": "23108575730196819",
+  "out": {
+   "input": "23108575730196819",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "237579472849948",
+  "out": {
+   "input": "237579472849948",
+   "valid": true,
+   "errors": [],
+   "digits": "237579472849948",
+   "kind": "npwp15",
+   "npwp16": "0237579472849948",
+   "formatted15": "23.757.947.2-849.948"
+  }
+ },
+ {
+  "input": "16700461811020033",
+  "out": {
+   "input": "16700461811020033",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "706428303112979",
+  "out": {
+   "input": "706428303112979",
+   "valid": true,
+   "errors": [],
+   "digits": "706428303112979",
+   "kind": "npwp15",
+   "npwp16": "0706428303112979",
+   "formatted15": "70.642.830.3-112.979"
+  }
+ },
+ {
+  "input": "65659273286843",
+  "out": {
+   "input": "65659273286843",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "75820798725913149",
+  "out": {
+   "input": "75820798725913149",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "8898337208611366",
+  "out": {
+   "input": "8898337208611366",
+   "valid": false,
+   "errors": [
+    {
+     "code": "nik",
+     "message": "NPWP 16 digit yang tidak diawali 0 adalah NIK, tetapi struktur NIK-nya tidak valid."
+    }
+   ],
+   "digits": "8898337208611366",
+   "kind": "nik",
+   "npwp16": "8898337208611366",
+   "nik": {
+    "input": "8898337208611366",
+    "valid": false,
+    "errors": [
+     {
+      "code": "province",
+      "message": "Kode provinsi \"88\" tidak dikenal."
+     },
+     {
+      "code": "birth_date",
+      "message": "Tanggal lahir di NIK tidak valid."
+     }
+    ],
+    "warnings": [],
+    "nik": "8898337208611366",
+    "provinceCode": "88",
+    "regencyCode": "88.98",
+    "districtCode": "88.98.33",
+    "serial": "1366"
+   }
+  }
+ },
+ {
+  "input": "9565878913694123",
+  "out": {
+   "input": "9565878913694123",
+   "valid": false,
+   "errors": [
+    {
+     "code": "nik",
+     "message": "NPWP 16 digit yang tidak diawali 0 adalah NIK, tetapi struktur NIK-nya tidak valid."
+    }
+   ],
+   "digits": "9565878913694123",
+   "kind": "nik",
+   "npwp16": "9565878913694123",
+   "nik": {
+    "input": "9565878913694123",
+    "valid": false,
+    "errors": [
+     {
+      "code": "birth_date",
+      "message": "Tanggal lahir di NIK tidak valid."
+     }
+    ],
+    "warnings": [],
+    "nik": "9565878913694123",
+    "provinceCode": "95",
+    "regencyCode": "95.65",
+    "districtCode": "95.65.87",
+    "province": "Papua Pegunungan",
+    "serial": "4123"
+   }
+  }
+ },
+ {
+  "input": "4995175407240483",
+  "out": {
+   "input": "4995175407240483",
+   "valid": false,
+   "errors": [
+    {
+     "code": "nik",
+     "message": "NPWP 16 digit yang tidak diawali 0 adalah NIK, tetapi struktur NIK-nya tidak valid."
+    }
+   ],
+   "digits": "4995175407240483",
+   "kind": "nik",
+   "npwp16": "4995175407240483",
+   "nik": {
+    "input": "4995175407240483",
+    "valid": false,
+    "errors": [
+     {
+      "code": "province",
+      "message": "Kode provinsi \"49\" tidak dikenal."
+     }
+    ],
+    "warnings": [],
+    "nik": "4995175407240483",
+    "provinceCode": "49",
+    "regencyCode": "49.95",
+    "districtCode": "49.95.17",
+    "gender": "P",
+    "birthDate": "2024-07-14",
+    "serial": "0483"
+   }
+  }
+ },
+ {
+  "input": "700514228674438",
+  "out": {
+   "input": "700514228674438",
+   "valid": true,
+   "errors": [],
+   "digits": "700514228674438",
+   "kind": "npwp15",
+   "npwp16": "0700514228674438",
+   "formatted15": "70.051.422.8-674.438"
+  }
+ },
+ {
+  "input": "34282668276959347",
+  "out": {
+   "input": "34282668276959347",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "7855448402100059",
+  "out": {
+   "input": "7855448402100059",
+   "valid": false,
+   "errors": [
+    {
+     "code": "nik",
+     "message": "NPWP 16 digit yang tidak diawali 0 adalah NIK, tetapi struktur NIK-nya tidak valid."
+    }
+   ],
+   "digits": "7855448402100059",
+   "kind": "nik",
+   "npwp16": "7855448402100059",
+   "nik": {
+    "input": "7855448402100059",
+    "valid": false,
+    "errors": [
+     {
+      "code": "province",
+      "message": "Kode provinsi \"78\" tidak dikenal."
+     },
+     {
+      "code": "birth_date",
+      "message": "Tanggal lahir di NIK tidak valid."
+     }
+    ],
+    "warnings": [],
+    "nik": "7855448402100059",
+    "provinceCode": "78",
+    "regencyCode": "78.55",
+    "districtCode": "78.55.44",
+    "serial": "0059"
+   }
+  }
+ },
+ {
+  "input": "652845711278676",
+  "out": {
+   "input": "652845711278676",
+   "valid": true,
+   "errors": [],
+   "digits": "652845711278676",
+   "kind": "npwp15",
+   "npwp16": "0652845711278676",
+   "formatted15": "65.284.571.1-278.676"
+  }
+ },
+ {
+  "input": "23856500391250",
+  "out": {
+   "input": "23856500391250",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "074311837695029",
+  "out": {
+   "input": "074311837695029",
+   "valid": true,
+   "errors": [],
+   "digits": "074311837695029",
+   "kind": "npwp15",
+   "npwp16": "0074311837695029",
+   "formatted15": "07.431.183.7-695.029"
+  }
+ },
+ {
+  "input": "239534437856491",
+  "out": {
+   "input": "239534437856491",
+   "valid": true,
+   "errors": [],
+   "digits": "239534437856491",
+   "kind": "npwp15",
+   "npwp16": "0239534437856491",
+   "formatted15": "23.953.443.7-856.491"
+  }
+ },
+ {
+  "input": "75636100332316766",
+  "out": {
+   "input": "75636100332316766",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "29901059385736",
+  "out": {
+   "input": "29901059385736",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "66216327079736",
+  "out": {
+   "input": "66216327079736",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "17557646927816",
+  "out": {
+   "input": "17557646927816",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "28604946250056517",
+  "out": {
+   "input": "28604946250056517",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "86277540432235",
+  "out": {
+   "input": "86277540432235",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "33236509972943690",
+  "out": {
+   "input": "33236509972943690",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "1105740389717767",
+  "out": {
+   "input": "1105740389717767",
+   "valid": false,
+   "errors": [
+    {
+     "code": "nik",
+     "message": "NPWP 16 digit yang tidak diawali 0 adalah NIK, tetapi struktur NIK-nya tidak valid."
+    }
+   ],
+   "digits": "1105740389717767",
+   "kind": "nik",
+   "npwp16": "1105740389717767",
+   "nik": {
+    "input": "1105740389717767",
+    "valid": false,
+    "errors": [
+     {
+      "code": "birth_date",
+      "message": "Tanggal lahir di NIK tidak valid."
+     }
+    ],
+    "warnings": [],
+    "nik": "1105740389717767",
+    "provinceCode": "11",
+    "regencyCode": "11.05",
+    "districtCode": "11.05.74",
+    "province": "Aceh",
+    "serial": "7767"
+   }
+  }
+ },
+ {
+  "input": "06250655486752",
+  "out": {
+   "input": "06250655486752",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "38448578851431",
+  "out": {
+   "input": "38448578851431",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "4646840652867648",
+  "out": {
+   "input": "4646840652867648",
+   "valid": false,
+   "errors": [
+    {
+     "code": "nik",
+     "message": "NPWP 16 digit yang tidak diawali 0 adalah NIK, tetapi struktur NIK-nya tidak valid."
+    }
+   ],
+   "digits": "4646840652867648",
+   "kind": "nik",
+   "npwp16": "4646840652867648",
+   "nik": {
+    "input": "4646840652867648",
+    "valid": false,
+    "errors": [
+     {
+      "code": "province",
+      "message": "Kode provinsi \"46\" tidak dikenal."
+     },
+     {
+      "code": "birth_date",
+      "message": "Tanggal lahir di NIK tidak valid."
+     }
+    ],
+    "warnings": [],
+    "nik": "4646840652867648",
+    "provinceCode": "46",
+    "regencyCode": "46.46",
+    "districtCode": "46.46.84",
+    "serial": "7648"
+   }
+  }
+ },
+ {
+  "input": "00956524215124",
+  "out": {
+   "input": "00956524215124",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "62374843080874234",
+  "out": {
+   "input": "62374843080874234",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "95032233353126",
+  "out": {
+   "input": "95032233353126",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "758306889455375",
+  "out": {
+   "input": "758306889455375",
+   "valid": true,
+   "errors": [],
+   "digits": "758306889455375",
+   "kind": "npwp15",
+   "npwp16": "0758306889455375",
+   "formatted15": "75.830.688.9-455.375"
+  }
+ },
+ {
+  "input": "02452221940333892",
+  "out": {
+   "input": "02452221940333892",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "4030700176215786",
+  "out": {
+   "input": "4030700176215786",
+   "valid": false,
+   "errors": [
+    {
+     "code": "nik",
+     "message": "NPWP 16 digit yang tidak diawali 0 adalah NIK, tetapi struktur NIK-nya tidak valid."
+    }
+   ],
+   "digits": "4030700176215786",
+   "kind": "nik",
+   "npwp16": "4030700176215786",
+   "nik": {
+    "input": "4030700176215786",
+    "valid": false,
+    "errors": [
+     {
+      "code": "province",
+      "message": "Kode provinsi \"40\" tidak dikenal."
+     },
+     {
+      "code": "birth_date",
+      "message": "Tanggal lahir di NIK tidak valid."
+     }
+    ],
+    "warnings": [],
+    "nik": "4030700176215786",
+    "provinceCode": "40",
+    "regencyCode": "40.30",
+    "districtCode": "40.30.70",
+    "serial": "5786"
+   }
+  }
+ },
+ {
+  "input": "44371665121847041",
+  "out": {
+   "input": "44371665121847041",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "501338819642162",
+  "out": {
+   "input": "501338819642162",
+   "valid": true,
+   "errors": [],
+   "digits": "501338819642162",
+   "kind": "npwp15",
+   "npwp16": "0501338819642162",
+   "formatted15": "50.133.881.9-642.162"
+  }
+ },
+ {
+  "input": "48044204042988",
+  "out": {
+   "input": "48044204042988",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "726872572499033",
+  "out": {
+   "input": "726872572499033",
+   "valid": true,
+   "errors": [],
+   "digits": "726872572499033",
+   "kind": "npwp15",
+   "npwp16": "0726872572499033",
+   "formatted15": "72.687.257.2-499.033"
+  }
+ },
+ {
+  "input": "33648879412604",
+  "out": {
+   "input": "33648879412604",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "06417321302690785",
+  "out": {
+   "input": "06417321302690785",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "77274383649712",
+  "out": {
+   "input": "77274383649712",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "4081249939550092",
+  "out": {
+   "input": "4081249939550092",
+   "valid": false,
+   "errors": [
+    {
+     "code": "nik",
+     "message": "NPWP 16 digit yang tidak diawali 0 adalah NIK, tetapi struktur NIK-nya tidak valid."
+    }
+   ],
+   "digits": "4081249939550092",
+   "kind": "nik",
+   "npwp16": "4081249939550092",
+   "nik": {
+    "input": "4081249939550092",
+    "valid": false,
+    "errors": [
+     {
+      "code": "province",
+      "message": "Kode provinsi \"40\" tidak dikenal."
+     },
+     {
+      "code": "birth_date",
+      "message": "Tanggal lahir di NIK tidak valid."
+     }
+    ],
+    "warnings": [],
+    "nik": "4081249939550092",
+    "provinceCode": "40",
+    "regencyCode": "40.81",
+    "districtCode": "40.81.24",
+    "serial": "0092"
+   }
+  }
+ },
+ {
+  "input": "16192877411660996",
+  "out": {
+   "input": "16192877411660996",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "97891341777363",
+  "out": {
+   "input": "97891341777363",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "749303968171421",
+  "out": {
+   "input": "749303968171421",
+   "valid": true,
+   "errors": [],
+   "digits": "749303968171421",
+   "kind": "npwp15",
+   "npwp16": "0749303968171421",
+   "formatted15": "74.930.396.8-171.421"
+  }
+ },
+ {
+  "input": "9108620050787445",
+  "out": {
+   "input": "9108620050787445",
+   "valid": false,
+   "errors": [
+    {
+     "code": "nik",
+     "message": "NPWP 16 digit yang tidak diawali 0 adalah NIK, tetapi struktur NIK-nya tidak valid."
+    }
+   ],
+   "digits": "9108620050787445",
+   "kind": "nik",
+   "npwp16": "9108620050787445",
+   "nik": {
+    "input": "9108620050787445",
+    "valid": false,
+    "errors": [
+     {
+      "code": "birth_date",
+      "message": "Tanggal lahir di NIK tidak valid."
+     }
+    ],
+    "warnings": [],
+    "nik": "9108620050787445",
+    "provinceCode": "91",
+    "regencyCode": "91.08",
+    "districtCode": "91.08.62",
+    "province": "Papua",
+    "serial": "7445"
+   }
+  }
+ },
+ {
+  "input": "15566272366487436",
+  "out": {
+   "input": "15566272366487436",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "014901418936529",
+  "out": {
+   "input": "014901418936529",
+   "valid": true,
+   "errors": [],
+   "digits": "014901418936529",
+   "kind": "npwp15",
+   "npwp16": "0014901418936529",
+   "formatted15": "01.490.141.8-936.529"
+  }
+ },
+ {
+  "input": "66851738995364581",
+  "out": {
+   "input": "66851738995364581",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "2847657617969243",
+  "out": {
+   "input": "2847657617969243",
+   "valid": false,
+   "errors": [
+    {
+     "code": "nik",
+     "message": "NPWP 16 digit yang tidak diawali 0 adalah NIK, tetapi struktur NIK-nya tidak valid."
+    }
+   ],
+   "digits": "2847657617969243",
+   "kind": "nik",
+   "npwp16": "2847657617969243",
+   "nik": {
+    "input": "2847657617969243",
+    "valid": false,
+    "errors": [
+     {
+      "code": "province",
+      "message": "Kode provinsi \"28\" tidak dikenal."
+     },
+     {
+      "code": "birth_date",
+      "message": "Tanggal lahir di NIK tidak valid."
+     }
+    ],
+    "warnings": [],
+    "nik": "2847657617969243",
+    "provinceCode": "28",
+    "regencyCode": "28.47",
+    "districtCode": "28.47.65",
+    "serial": "9243"
+   }
+  }
+ },
+ {
+  "input": "601724779079118",
+  "out": {
+   "input": "601724779079118",
+   "valid": true,
+   "errors": [],
+   "digits": "601724779079118",
+   "kind": "npwp15",
+   "npwp16": "0601724779079118",
+   "formatted15": "60.172.477.9-079.118"
+  }
+ },
+ {
+  "input": "39443757769450496",
+  "out": {
+   "input": "39443757769450496",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "896470638638309",
+  "out": {
+   "input": "896470638638309",
+   "valid": true,
+   "errors": [],
+   "digits": "896470638638309",
+   "kind": "npwp15",
+   "npwp16": "0896470638638309",
+   "formatted15": "89.647.063.8-638.309"
+  }
+ },
+ {
+  "input": "59914674807609125",
+  "out": {
+   "input": "59914674807609125",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "24168764481085616",
+  "out": {
+   "input": "24168764481085616",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "48116566165119126",
+  "out": {
+   "input": "48116566165119126",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "99360402394116907",
+  "out": {
+   "input": "99360402394116907",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "1274117804812127",
+  "out": {
+   "input": "1274117804812127",
+   "valid": false,
+   "errors": [
+    {
+     "code": "nik",
+     "message": "NPWP 16 digit yang tidak diawali 0 adalah NIK, tetapi struktur NIK-nya tidak valid."
+    }
+   ],
+   "digits": "1274117804812127",
+   "kind": "nik",
+   "npwp16": "1274117804812127",
+   "nik": {
+    "input": "1274117804812127",
+    "valid": false,
+    "errors": [
+     {
+      "code": "birth_date",
+      "message": "Tanggal lahir di NIK tidak valid."
+     }
+    ],
+    "warnings": [],
+    "nik": "1274117804812127",
+    "provinceCode": "12",
+    "regencyCode": "12.74",
+    "districtCode": "12.74.11",
+    "province": "Sumatera Utara",
+    "serial": "2127"
+   }
+  }
+ },
+ {
+  "input": "181005362103181",
+  "out": {
+   "input": "181005362103181",
+   "valid": true,
+   "errors": [],
+   "digits": "181005362103181",
+   "kind": "npwp15",
+   "npwp16": "0181005362103181",
+   "formatted15": "18.100.536.2-103.181"
+  }
+ },
+ {
+  "input": "5266602493330983",
+  "out": {
+   "input": "5266602493330983",
+   "valid": false,
+   "errors": [
+    {
+     "code": "nik",
+     "message": "NPWP 16 digit yang tidak diawali 0 adalah NIK, tetapi struktur NIK-nya tidak valid."
+    }
+   ],
+   "digits": "5266602493330983",
+   "kind": "nik",
+   "npwp16": "5266602493330983",
+   "nik": {
+    "input": "5266602493330983",
+    "valid": false,
+    "errors": [
+     {
+      "code": "birth_date",
+      "message": "Tanggal lahir di NIK tidak valid."
+     }
+    ],
+    "warnings": [],
+    "nik": "5266602493330983",
+    "provinceCode": "52",
+    "regencyCode": "52.66",
+    "districtCode": "52.66.60",
+    "province": "Nusa Tenggara Barat",
+    "serial": "0983"
+   }
+  }
+ },
+ {
+  "input": "130612276931442",
+  "out": {
+   "input": "130612276931442",
+   "valid": true,
+   "errors": [],
+   "digits": "130612276931442",
+   "kind": "npwp15",
+   "npwp16": "0130612276931442",
+   "formatted15": "13.061.227.6-931.442"
+  }
+ },
+ {
+  "input": "307828745426700",
+  "out": {
+   "input": "307828745426700",
+   "valid": true,
+   "errors": [],
+   "digits": "307828745426700",
+   "kind": "npwp15",
+   "npwp16": "0307828745426700",
+   "formatted15": "30.782.874.5-426.700"
+  }
+ },
+ {
+  "input": "04637712432398",
+  "out": {
+   "input": "04637712432398",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "11487064983214311",
+  "out": {
+   "input": "11487064983214311",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "760252651064205",
+  "out": {
+   "input": "760252651064205",
+   "valid": true,
+   "errors": [],
+   "digits": "760252651064205",
+   "kind": "npwp15",
+   "npwp16": "0760252651064205",
+   "formatted15": "76.025.265.1-064.205"
+  }
+ },
+ {
+  "input": "3802192766176772",
+  "out": {
+   "input": "3802192766176772",
+   "valid": false,
+   "errors": [
+    {
+     "code": "nik",
+     "message": "NPWP 16 digit yang tidak diawali 0 adalah NIK, tetapi struktur NIK-nya tidak valid."
+    }
+   ],
+   "digits": "3802192766176772",
+   "kind": "nik",
+   "npwp16": "3802192766176772",
+   "nik": {
+    "input": "3802192766176772",
+    "valid": false,
+    "errors": [
+     {
+      "code": "province",
+      "message": "Kode provinsi \"38\" tidak dikenal."
+     },
+     {
+      "code": "birth_date",
+      "message": "Tanggal lahir di NIK tidak valid."
+     }
+    ],
+    "warnings": [],
+    "nik": "3802192766176772",
+    "provinceCode": "38",
+    "regencyCode": "38.02",
+    "districtCode": "38.02.19",
+    "serial": "6772"
+   }
+  }
+ },
+ {
+  "input": "89535143871276",
+  "out": {
+   "input": "89535143871276",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "8291415878517147",
+  "out": {
+   "input": "8291415878517147",
+   "valid": false,
+   "errors": [
+    {
+     "code": "nik",
+     "message": "NPWP 16 digit yang tidak diawali 0 adalah NIK, tetapi struktur NIK-nya tidak valid."
+    }
+   ],
+   "digits": "8291415878517147",
+   "kind": "nik",
+   "npwp16": "8291415878517147",
+   "nik": {
+    "input": "8291415878517147",
+    "valid": false,
+    "errors": [
+     {
+      "code": "birth_date",
+      "message": "Tanggal lahir di NIK tidak valid."
+     }
+    ],
+    "warnings": [],
+    "nik": "8291415878517147",
+    "provinceCode": "82",
+    "regencyCode": "82.91",
+    "districtCode": "82.91.41",
+    "province": "Maluku Utara",
+    "serial": "7147"
+   }
+  }
+ },
+ {
+  "input": "73920188184328681",
+  "out": {
+   "input": "73920188184328681",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "33782864355828",
+  "out": {
+   "input": "33782864355828",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "50811612171254",
+  "out": {
+   "input": "50811612171254",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "15956571714316623",
+  "out": {
+   "input": "15956571714316623",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "47308631929948",
+  "out": {
+   "input": "47308631929948",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "74244406267180",
+  "out": {
+   "input": "74244406267180",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "812987618534345",
+  "out": {
+   "input": "812987618534345",
+   "valid": true,
+   "errors": [],
+   "digits": "812987618534345",
+   "kind": "npwp15",
+   "npwp16": "0812987618534345",
+   "formatted15": "81.298.761.8-534.345"
+  }
+ },
+ {
+  "input": "75477559815857724",
+  "out": {
+   "input": "75477559815857724",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "77487783923369",
+  "out": {
+   "input": "77487783923369",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "15245429275146157",
+  "out": {
+   "input": "15245429275146157",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "21369697020750",
+  "out": {
+   "input": "21369697020750",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "26488478805231519",
+  "out": {
+   "input": "26488478805231519",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "86411597247280856",
+  "out": {
+   "input": "86411597247280856",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "44347880649344",
+  "out": {
+   "input": "44347880649344",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "19891697605579",
+  "out": {
+   "input": "19891697605579",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "14018527787245",
+  "out": {
+   "input": "14018527787245",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "4645905446903713",
+  "out": {
+   "input": "4645905446903713",
+   "valid": false,
+   "errors": [
+    {
+     "code": "nik",
+     "message": "NPWP 16 digit yang tidak diawali 0 adalah NIK, tetapi struktur NIK-nya tidak valid."
+    }
+   ],
+   "digits": "4645905446903713",
+   "kind": "nik",
+   "npwp16": "4645905446903713",
+   "nik": {
+    "input": "4645905446903713",
+    "valid": false,
+    "errors": [
+     {
+      "code": "province",
+      "message": "Kode provinsi \"46\" tidak dikenal."
+     },
+     {
+      "code": "birth_date",
+      "message": "Tanggal lahir di NIK tidak valid."
+     }
+    ],
+    "warnings": [],
+    "nik": "4645905446903713",
+    "provinceCode": "46",
+    "regencyCode": "46.45",
+    "districtCode": "46.45.90",
+    "serial": "3713"
+   }
+  }
+ },
+ {
+  "input": "09783707331269036",
+  "out": {
+   "input": "09783707331269036",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "922720474489832",
+  "out": {
+   "input": "922720474489832",
+   "valid": true,
+   "errors": [],
+   "digits": "922720474489832",
+   "kind": "npwp15",
+   "npwp16": "0922720474489832",
+   "formatted15": "92.272.047.4-489.832"
+  }
+ },
+ {
+  "input": "30644722157199",
+  "out": {
+   "input": "30644722157199",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "0680514913901158",
+  "out": {
+   "input": "0680514913901158",
+   "valid": true,
+   "errors": [],
+   "digits": "0680514913901158",
+   "kind": "npwp16",
+   "npwp16": "0680514913901158",
+   "formatted15": "68.051.491.3-901.158"
+  }
+ },
+ {
+  "input": "6276632145636115",
+  "out": {
+   "input": "6276632145636115",
+   "valid": false,
+   "errors": [
+    {
+     "code": "nik",
+     "message": "NPWP 16 digit yang tidak diawali 0 adalah NIK, tetapi struktur NIK-nya tidak valid."
+    }
+   ],
+   "digits": "6276632145636115",
+   "kind": "nik",
+   "npwp16": "6276632145636115",
+   "nik": {
+    "input": "6276632145636115",
+    "valid": false,
+    "errors": [
+     {
+      "code": "birth_date",
+      "message": "Tanggal lahir di NIK tidak valid."
+     }
+    ],
+    "warnings": [],
+    "nik": "6276632145636115",
+    "provinceCode": "62",
+    "regencyCode": "62.76",
+    "districtCode": "62.76.63",
+    "province": "Kalimantan Tengah",
+    "serial": "6115"
+   }
+  }
+ },
+ {
+  "input": "39680643756720",
+  "out": {
+   "input": "39680643756720",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "NPWP harus 15 digit (format lama) atau 16 digit."
+    }
+   ]
+  }
+ },
+ {
+  "input": "0579480318305366",
+  "out": {
+   "input": "0579480318305366",
+   "valid": true,
+   "errors": [],
+   "digits": "0579480318305366",
+   "kind": "npwp16",
+   "npwp16": "0579480318305366",
+   "formatted15": "57.948.031.8-305.366"
+  }
+ }
+]

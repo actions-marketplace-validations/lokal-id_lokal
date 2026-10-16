@@ -1,0 +1,154 @@
+[
+ {
+  "key": "nama",
+  "out": "NAME"
+ },
+ {
+  "key": "NAMA_IBU_KANDUNG",
+  "out": "NAME"
+ },
+ {
+  "key": "customer_phone",
+  "out": "PHONE"
+ },
+ {
+  "key": "alamat_pengiriman",
+  "out": "ADDRESS"
+ },
+ {
+  "key": "first_name",
+  "out": "NAME"
+ },
+ {
+  "key": "Billing First Name",
+  "out": null
+ },
+ {
+  "key": "nik",
+  "out": "NIK"
+ },
+ {
+  "key": "no. ktp",
+  "out": "NIK"
+ },
+ {
+  "key": "tgl lahir",
+  "out": "BIRTH_DATE"
+ },
+ {
+  "key": "Tempat/Tgl Lahir",
+  "out": "BIRTH_DATE"
+ },
+ {
+  "key": "jk",
+  "out": "GENDER"
+ },
+ {
+  "key": "agama",
+  "out": "RELIGION"
+ },
+ {
+  "key": "diagnosa",
+  "out": "HEALTH"
+ },
+ {
+  "key": "gaji",
+  "out": "FINANCIAL"
+ },
+ {
+  "key": "foto_ktp",
+  "out": "BIOMETRIC"
+ },
+ {
+  "key": "name",
+  "out": "NAME"
+ },
+ {
+  "key": "title",
+  "out": null
+ },
+ {
+  "key": "id",
+  "out": null
+ },
+ {
+  "key": "kota",
+  "out": null
+ },
+ {
+  "key": "email_address",
+  "out": "EMAIL"
+ },
+ {
+  "key": "x-forwarded-for",
+  "out": "IP"
+ },
+ {
+  "key": "remote_addr",
+  "out": "IP"
+ },
+ {
+  "key": "lat",
+  "out": "GEO"
+ },
+ {
+  "key": "Nomor Rekening",
+  "out": "BANK_ACCOUNT"
+ },
+ {
+  "key": "va",
+  "out": "BANK_ACCOUNT"
+ },
+ {
+  "key": "",
+  "out": null
+ },
+ {
+  "key": "_",
+  "out": null
+ },
+ {
+  "key": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "out": null
+ },
+ {
+  "key": "surname",
+  "out": "NAME"
+ },
+ {
+  "key": "pasien",
+  "out": "NAME"
+ },
+ {
+  "key": "owner",
+  "out": "NAME"
+ },
+ {
+  "key": "penerima_baru",
+  "out": "NAME"
+ },
+ {
+  "key": "no_hp_2",
+  "out": "PHONE"
+ },
+ {
+  "key": "ttl",
+  "out": "BIRTH_DATE"
+ },
+ {
+  "key": "status_perkawinan",
+  "out": "MARITAL_STATUS"
+ },
+ {
+  "key": "kewarganegaraan",
+  "out": "NATIONALITY"
+ },
+ {
+  "key": "skck",
+  "out": "CRIMINAL_RECORD"
+ },
+ {
+  "key": "ttd",
+  "out": "BIOMETRIC"
+ }
+]

@@ -39,6 +39,18 @@ function integerWords(value: bigint): string {
   return words.join(' ');
 }
 
+/** The shortest decimal digits of a number, without exponent notation: 1e-7 → "0.0000001". */
+function plainDecimal(n: number): string {
+  const s = n.toString();
+  const m = /^(\d+)(?:\.(\d+))?e([+-]\d+)$/.exec(s);
+  if (!m) return s;
+  const digits = m[1]! + (m[2] ?? '');
+  const point = m[1]!.length + Number(m[3]);
+  if (point <= 0) return `0.${'0'.repeat(-point)}${digits}`;
+  if (point >= digits.length) return digits + '0'.repeat(point - digits.length);
+  return `${digits.slice(0, point)}.${digits.slice(point)}`;
+}
+
 export interface TerbilangOptions {
   /** Append "rupiah". */
   currency?: boolean;
@@ -58,7 +70,7 @@ export function terbilang(value: number | bigint, options: TerbilangOptions = {}
     if (!Number.isFinite(value)) throw new RangeError('value must be a finite number');
     const abs = Math.abs(value);
     if (!Number.isSafeInteger(Math.trunc(abs))) throw new RangeError('Gunakan bigint untuk angka sebesar ini.');
-    const [intPart = '0', fracPart] = abs.toString().split('.');
+    const [intPart = '0', fracPart] = plainDecimal(abs).split('.');
     text = (value < 0 ? 'minus ' : '') + integerWords(BigInt(intPart));
     if (fracPart) {
       text += ` koma ${[...fracPart].map((d) => (d === '0' ? 'nol' : ONES[Number(d)])).join(' ')}`;

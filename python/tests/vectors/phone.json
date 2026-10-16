@@ -1,0 +1,6153 @@
+[
+ {
+  "input": "0812-3456-7890",
+  "out": {
+   "input": "0812-3456-7890",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0812-3456-7890",
+   "e164": "+6281234567890",
+   "whatsapp": "6281234567890"
+  },
+  "e164": "+6281234567890"
+ },
+ {
+  "input": "+62 857 1234 5678",
+  "out": {
+   "input": "+62 857 1234 5678",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0857-1234-5678",
+   "e164": "+6285712345678",
+   "whatsapp": "6285712345678"
+  },
+  "e164": "+6285712345678"
+ },
+ {
+  "input": "6289612345678",
+  "out": {
+   "input": "6289612345678",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0896-1234-5678",
+   "e164": "+6289612345678",
+   "whatsapp": "6289612345678"
+  },
+  "e164": "+6289612345678"
+ },
+ {
+  "input": "0881-2345-6789",
+  "out": {
+   "input": "0881-2345-6789",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0881-2345-6789",
+   "e164": "+6288123456789",
+   "whatsapp": "6288123456789"
+  },
+  "e164": "+6288123456789"
+ },
+ {
+  "input": "+62 (0) 812 3456 7890",
+  "out": {
+   "input": "+62 (0) 812 3456 7890",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0812-3456-7890",
+   "e164": "+6281234567890",
+   "whatsapp": "6281234567890"
+  },
+  "e164": "+6281234567890"
+ },
+ {
+  "input": "(021) 555-1234",
+  "out": {
+   "input": "(021) 555-1234",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "021",
+   "area": "Jakarta",
+   "national": "(021) 5551234",
+   "e164": "+62215551234"
+  },
+  "e164": "+62215551234"
+ },
+ {
+  "input": "12345",
+  "out": {
+   "input": "12345",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "Nomor harus diawali 0, 62, atau +62."
+    }
+   ],
+   "warnings": []
+  },
+  "e164": null
+ },
+ {
+  "input": "0812",
+  "out": {
+   "input": "0812",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "62",
+  "out": {
+   "input": "62",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "Nomor harus diawali 0, 62, atau +62."
+    }
+   ],
+   "warnings": []
+  },
+  "e164": null
+ },
+ {
+  "input": "+62",
+  "out": {
+   "input": "+62",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "Nomor telepon hanya boleh berisi angka."
+    }
+   ],
+   "warnings": []
+  },
+  "e164": null
+ },
+ {
+  "input": "0",
+  "out": {
+   "input": "0",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "Nomor telepon hanya boleh berisi angka."
+    }
+   ],
+   "warnings": []
+  },
+  "e164": null
+ },
+ {
+  "input": "",
+  "out": {
+   "input": "",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "Nomor harus diawali 0, 62, atau +62."
+    }
+   ],
+   "warnings": []
+  },
+  "e164": null
+ },
+ {
+  "input": "08 12 34 56 78 90",
+  "out": {
+   "input": "08 12 34 56 78 90",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0812-3456-7890",
+   "e164": "+6281234567890",
+   "whatsapp": "6281234567890"
+  },
+  "e164": "+6281234567890"
+ },
+ {
+  "input": "0751 812345",
+  "out": {
+   "input": "0751 812345",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0751",
+   "area": "Padang",
+   "national": "(0751) 812345",
+   "e164": "+62751812345"
+  },
+  "e164": "+62751812345"
+ },
+ {
+  "input": "+62 751 812345",
+  "out": {
+   "input": "+62 751 812345",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0751",
+   "area": "Padang",
+   "national": "(0751) 812345",
+   "e164": "+62751812345"
+  },
+  "e164": "+62751812345"
+ },
+ {
+  "input": "(0274) 512345",
+  "out": {
+   "input": "(0274) 512345",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0274",
+   "area": "Yogyakarta",
+   "national": "(0274) 512345",
+   "e164": "+62274512345"
+  },
+  "e164": "+62274512345"
+ },
+ {
+  "input": "0812.3456.7890",
+  "out": {
+   "input": "0812.3456.7890",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0812-3456-7890",
+   "e164": "+6281234567890",
+   "whatsapp": "6281234567890"
+  },
+  "e164": "+6281234567890"
+ },
+ {
+  "input": " 081234567890 ",
+  "out": {
+   "input": " 081234567890 ",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0812-3456-7890",
+   "e164": "+6281234567890",
+   "whatsapp": "6281234567890"
+  },
+  "e164": "+6281234567890"
+ },
+ {
+  "input": "62812345678901234",
+  "out": {
+   "input": "62812345678901234",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+6221",
+  "out": {
+   "input": "+6221",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Panjang nomor telepon rumah tidak valid."
+    }
+   ],
+   "warnings": [],
+   "type": "landline"
+  },
+  "e164": null
+ },
+ {
+  "input": "0000812345678",
+  "out": {
+   "input": "0000812345678",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0812-3456-78",
+   "e164": "+62812345678",
+   "whatsapp": "62812345678"
+  },
+  "e164": "+62812345678"
+ },
+ {
+  "input": "8123456789",
+  "out": {
+   "input": "8123456789",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0812-3456-789",
+   "e164": "+628123456789",
+   "whatsapp": "628123456789"
+  },
+  "e164": "+628123456789"
+ },
+ {
+  "input": "abc",
+  "out": {
+   "input": "abc",
+   "valid": false,
+   "errors": [
+    {
+     "code": "format",
+     "message": "Nomor harus diawali 0, 62, atau +62."
+    }
+   ],
+   "warnings": []
+  },
+  "e164": null
+ },
+ {
+  "input": " 0812 3456 7890﻿",
+  "out": {
+   "input": " 0812 3456 7890﻿",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0812-3456-7890",
+   "e164": "+6281234567890",
+   "whatsapp": "6281234567890"
+  },
+  "e164": "+6281234567890"
+ },
+ {
+  "input": "0812 3456 7890",
+  "out": {
+   "input": "0812 3456 7890",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0812-3456-7890",
+   "e164": "+6281234567890",
+   "whatsapp": "6281234567890"
+  },
+  "e164": "+6281234567890"
+ },
+ {
+  "input": "+62-812-3456-7890",
+  "out": {
+   "input": "+62-812-3456-7890",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0812-3456-7890",
+   "e164": "+6281234567890",
+   "whatsapp": "6281234567890"
+  },
+  "e164": "+6281234567890"
+ },
+ {
+  "input": "62831 9125 2053",
+  "out": {
+   "input": "62831 9125 2053",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Axis",
+   "group": "XLSmart",
+   "national": "0831-9125-2053",
+   "e164": "+6283191252053",
+   "whatsapp": "6283191252053"
+  },
+  "e164": "+6283191252053"
+ },
+ {
+  "input": "62821.3813.2",
+  "out": {
+   "input": "62821.3813.2",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62 882-5687-61",
+  "out": {
+   "input": "+62 882-5687-61",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0882-5687-61",
+   "e164": "+62882568761",
+   "whatsapp": "62882568761"
+  },
+  "e164": "+62882568761"
+ },
+ {
+  "input": "+62 820.9866.15949",
+  "out": {
+   "input": "+62 820.9866.15949",
+   "valid": true,
+   "errors": [],
+   "warnings": [
+    {
+     "code": "prefix_unknown",
+     "message": "Prefix 0820 tidak dikenal."
+    }
+   ],
+   "type": "mobile",
+   "national": "0820-9866-15949",
+   "e164": "+62820986615949",
+   "whatsapp": "62820986615949"
+  },
+  "e164": "+62820986615949"
+ },
+ {
+  "input": "62813 8613 65945",
+  "out": {
+   "input": "62813 8613 65945",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0813-8613-65945",
+   "e164": "+62813861365945",
+   "whatsapp": "62813861365945"
+  },
+  "e164": "+62813861365945"
+ },
+ {
+  "input": "88793951598",
+  "out": {
+   "input": "88793951598",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0887-9395-1598",
+   "e164": "+6288793951598",
+   "whatsapp": "6288793951598"
+  },
+  "e164": "+6288793951598"
+ },
+ {
+  "input": "+62868.0139.2787",
+  "out": {
+   "input": "+62868.0139.2787",
+   "valid": true,
+   "errors": [],
+   "warnings": [
+    {
+     "code": "prefix_unknown",
+     "message": "Prefix 0868 tidak dikenal."
+    }
+   ],
+   "type": "mobile",
+   "national": "0868-0139-2787",
+   "e164": "+6286801392787",
+   "whatsapp": "6286801392787"
+  },
+  "e164": "+6286801392787"
+ },
+ {
+  "input": "8120795604",
+  "out": {
+   "input": "8120795604",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0812-0795-604",
+   "e164": "+628120795604",
+   "whatsapp": "628120795604"
+  },
+  "e164": "+628120795604"
+ },
+ {
+  "input": "+62885884808746",
+  "out": {
+   "input": "+62885884808746",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0885-8848-08746",
+   "e164": "+62885884808746",
+   "whatsapp": "62885884808746"
+  },
+  "e164": "+62885884808746"
+ },
+ {
+  "input": "628970477925594",
+  "out": {
+   "input": "628970477925594",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0895 9985 669",
+  "out": {
+   "input": "0895 9985 669",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0895-9985-669",
+   "e164": "+628959985669",
+   "whatsapp": "628959985669"
+  },
+  "e164": "+628959985669"
+ },
+ {
+  "input": "62816 7379 831",
+  "out": {
+   "input": "62816 7379 831",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0816-7379-831",
+   "e164": "+628167379831",
+   "whatsapp": "628167379831"
+  },
+  "e164": "+628167379831"
+ },
+ {
+  "input": "895.2952.06",
+  "out": {
+   "input": "895.2952.06",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0895-2952-06",
+   "e164": "+62895295206",
+   "whatsapp": "62895295206"
+  },
+  "e164": "+62895295206"
+ },
+ {
+  "input": "62852 1528 597425",
+  "out": {
+   "input": "62852 1528 597425",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62815-1985-859",
+  "out": {
+   "input": "+62815-1985-859",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0815-1985-859",
+   "e164": "+628151985859",
+   "whatsapp": "628151985859"
+  },
+  "e164": "+628151985859"
+ },
+ {
+  "input": "+62820.3706.476",
+  "out": {
+   "input": "+62820.3706.476",
+   "valid": true,
+   "errors": [],
+   "warnings": [
+    {
+     "code": "prefix_unknown",
+     "message": "Prefix 0820 tidak dikenal."
+    }
+   ],
+   "type": "mobile",
+   "national": "0820-3706-476",
+   "e164": "+628203706476",
+   "whatsapp": "628203706476"
+  },
+  "e164": "+628203706476"
+ },
+ {
+  "input": "884-9526-336897",
+  "out": {
+   "input": "884-9526-336897",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "085335550",
+  "out": {
+   "input": "085335550",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0882 3963 6",
+  "out": {
+   "input": "0882 3963 6",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62889 2152 868",
+  "out": {
+   "input": "+62889 2152 868",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0889-2152-868",
+   "e164": "+628892152868",
+   "whatsapp": "628892152868"
+  },
+  "e164": "+628892152868"
+ },
+ {
+  "input": "0811 5537 58719",
+  "out": {
+   "input": "0811 5537 58719",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0811-5537-58719",
+   "e164": "+62811553758719",
+   "whatsapp": "62811553758719"
+  },
+  "e164": "+62811553758719"
+ },
+ {
+  "input": "0823836432645",
+  "out": {
+   "input": "0823836432645",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0823-8364-32645",
+   "e164": "+62823836432645",
+   "whatsapp": "62823836432645"
+  },
+  "e164": "+62823836432645"
+ },
+ {
+  "input": "+6288396962374",
+  "out": {
+   "input": "+6288396962374",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0883-9696-2374",
+   "e164": "+6288396962374",
+   "whatsapp": "6288396962374"
+  },
+  "e164": "+6288396962374"
+ },
+ {
+  "input": "62814-2821-3486",
+  "out": {
+   "input": "62814-2821-3486",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0814-2821-3486",
+   "e164": "+6281428213486",
+   "whatsapp": "6281428213486"
+  },
+  "e164": "+6281428213486"
+ },
+ {
+  "input": "0877.8915.001",
+  "out": {
+   "input": "0877.8915.001",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0877-8915-001",
+   "e164": "+628778915001",
+   "whatsapp": "628778915001"
+  },
+  "e164": "+628778915001"
+ },
+ {
+  "input": "+62 855 2582 0153",
+  "out": {
+   "input": "+62 855 2582 0153",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0855-2582-0153",
+   "e164": "+6285525820153",
+   "whatsapp": "6285525820153"
+  },
+  "e164": "+6285525820153"
+ },
+ {
+  "input": "0898-9338-4",
+  "out": {
+   "input": "0898-9338-4",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "62823987101",
+  "out": {
+   "input": "62823987101",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0823-9871-01",
+   "e164": "+62823987101",
+   "whatsapp": "62823987101"
+  },
+  "e164": "+62823987101"
+ },
+ {
+  "input": "08684540488885",
+  "out": {
+   "input": "08684540488885",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62 852-1091-16097",
+  "out": {
+   "input": "+62 852-1091-16097",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0852-1091-16097",
+   "e164": "+62852109116097",
+   "whatsapp": "62852109116097"
+  },
+  "e164": "+62852109116097"
+ },
+ {
+  "input": "0851 2229 775",
+  "out": {
+   "input": "0851 2229 775",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0851-2229-775",
+   "e164": "+628512229775",
+   "whatsapp": "628512229775"
+  },
+  "e164": "+628512229775"
+ },
+ {
+  "input": "62886-6642-0577",
+  "out": {
+   "input": "62886-6642-0577",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0886-6642-0577",
+   "e164": "+6288666420577",
+   "whatsapp": "6288666420577"
+  },
+  "e164": "+6288666420577"
+ },
+ {
+  "input": "+62851 7827 3450",
+  "out": {
+   "input": "+62851 7827 3450",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0851-7827-3450",
+   "e164": "+6285178273450",
+   "whatsapp": "6285178273450"
+  },
+  "e164": "+6285178273450"
+ },
+ {
+  "input": "0868.6075.009851",
+  "out": {
+   "input": "0868.6075.009851",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0898 4625 458",
+  "out": {
+   "input": "0898 4625 458",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0898-4625-458",
+   "e164": "+628984625458",
+   "whatsapp": "628984625458"
+  },
+  "e164": "+628984625458"
+ },
+ {
+  "input": "0810 8606 6145",
+  "out": {
+   "input": "0810 8606 6145",
+   "valid": true,
+   "errors": [],
+   "warnings": [
+    {
+     "code": "prefix_unknown",
+     "message": "Prefix 0810 tidak dikenal."
+    }
+   ],
+   "type": "mobile",
+   "national": "0810-8606-6145",
+   "e164": "+6281086066145",
+   "whatsapp": "6281086066145"
+  },
+  "e164": "+6281086066145"
+ },
+ {
+  "input": "0814 3744 2",
+  "out": {
+   "input": "0814 3744 2",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62 857080729415",
+  "out": {
+   "input": "+62 857080729415",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0857-0807-29415",
+   "e164": "+62857080729415",
+   "whatsapp": "62857080729415"
+  },
+  "e164": "+62857080729415"
+ },
+ {
+  "input": "+62810-7971-16",
+  "out": {
+   "input": "+62810-7971-16",
+   "valid": true,
+   "errors": [],
+   "warnings": [
+    {
+     "code": "prefix_unknown",
+     "message": "Prefix 0810 tidak dikenal."
+    }
+   ],
+   "type": "mobile",
+   "national": "0810-7971-16",
+   "e164": "+62810797116",
+   "whatsapp": "62810797116"
+  },
+  "e164": "+62810797116"
+ },
+ {
+  "input": "817-6543-42517",
+  "out": {
+   "input": "817-6543-42517",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0817-6543-42517",
+   "e164": "+62817654342517",
+   "whatsapp": "62817654342517"
+  },
+  "e164": "+62817654342517"
+ },
+ {
+  "input": "62882.9385.41",
+  "out": {
+   "input": "62882.9385.41",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0882-9385-41",
+   "e164": "+62882938541",
+   "whatsapp": "62882938541"
+  },
+  "e164": "+62882938541"
+ },
+ {
+  "input": "+62 823 4415 4026",
+  "out": {
+   "input": "+62 823 4415 4026",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0823-4415-4026",
+   "e164": "+6282344154026",
+   "whatsapp": "6282344154026"
+  },
+  "e164": "+6282344154026"
+ },
+ {
+  "input": "+62 810 6550 672769",
+  "out": {
+   "input": "+62 810 6550 672769",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62814116136315",
+  "out": {
+   "input": "+62814116136315",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0814-1161-36315",
+   "e164": "+62814116136315",
+   "whatsapp": "62814116136315"
+  },
+  "e164": "+62814116136315"
+ },
+ {
+  "input": "819.3789.311923",
+  "out": {
+   "input": "819.3789.311923",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62857-6772-12",
+  "out": {
+   "input": "+62857-6772-12",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0857-6772-12",
+   "e164": "+62857677212",
+   "whatsapp": "62857677212"
+  },
+  "e164": "+62857677212"
+ },
+ {
+  "input": "+62 85568991",
+  "out": {
+   "input": "+62 85568991",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0883 8790 033828",
+  "out": {
+   "input": "0883 8790 033828",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+628885048741",
+  "out": {
+   "input": "+628885048741",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0888-5048-741",
+   "e164": "+628885048741",
+   "whatsapp": "628885048741"
+  },
+  "e164": "+628885048741"
+ },
+ {
+  "input": "0898-7978-63",
+  "out": {
+   "input": "0898-7978-63",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0898-7978-63",
+   "e164": "+62898797863",
+   "whatsapp": "62898797863"
+  },
+  "e164": "+62898797863"
+ },
+ {
+  "input": "+62 881.7644.115",
+  "out": {
+   "input": "+62 881.7644.115",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0881-7644-115",
+   "e164": "+628817644115",
+   "whatsapp": "628817644115"
+  },
+  "e164": "+628817644115"
+ },
+ {
+  "input": "+62 823 5413 1570",
+  "out": {
+   "input": "+62 823 5413 1570",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0823-5413-1570",
+   "e164": "+6282354131570",
+   "whatsapp": "6282354131570"
+  },
+  "e164": "+6282354131570"
+ },
+ {
+  "input": "081335972212",
+  "out": {
+   "input": "081335972212",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0813-3597-2212",
+   "e164": "+6281335972212",
+   "whatsapp": "6281335972212"
+  },
+  "e164": "+6281335972212"
+ },
+ {
+  "input": "62868.2466.917",
+  "out": {
+   "input": "62868.2466.917",
+   "valid": true,
+   "errors": [],
+   "warnings": [
+    {
+     "code": "prefix_unknown",
+     "message": "Prefix 0868 tidak dikenal."
+    }
+   ],
+   "type": "mobile",
+   "national": "0868-2466-917",
+   "e164": "+628682466917",
+   "whatsapp": "628682466917"
+  },
+  "e164": "+628682466917"
+ },
+ {
+  "input": "+62 883.3643.34275",
+  "out": {
+   "input": "+62 883.3643.34275",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0883-3643-34275",
+   "e164": "+62883364334275",
+   "whatsapp": "62883364334275"
+  },
+  "e164": "+62883364334275"
+ },
+ {
+  "input": "0877 9564 3825",
+  "out": {
+   "input": "0877 9564 3825",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0877-9564-3825",
+   "e164": "+6287795643825",
+   "whatsapp": "6287795643825"
+  },
+  "e164": "+6287795643825"
+ },
+ {
+  "input": "+62 856.2515.9760",
+  "out": {
+   "input": "+62 856.2515.9760",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0856-2515-9760",
+   "e164": "+6285625159760",
+   "whatsapp": "6285625159760"
+  },
+  "e164": "+6285625159760"
+ },
+ {
+  "input": "08989850902",
+  "out": {
+   "input": "08989850902",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0898-9850-902",
+   "e164": "+628989850902",
+   "whatsapp": "628989850902"
+  },
+  "e164": "+628989850902"
+ },
+ {
+  "input": "+628182504146876",
+  "out": {
+   "input": "+628182504146876",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62810-5799-31",
+  "out": {
+   "input": "+62810-5799-31",
+   "valid": true,
+   "errors": [],
+   "warnings": [
+    {
+     "code": "prefix_unknown",
+     "message": "Prefix 0810 tidak dikenal."
+    }
+   ],
+   "type": "mobile",
+   "national": "0810-5799-31",
+   "e164": "+62810579931",
+   "whatsapp": "62810579931"
+  },
+  "e164": "+62810579931"
+ },
+ {
+  "input": "0882 1969 4239",
+  "out": {
+   "input": "0882 1969 4239",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0882-1969-4239",
+   "e164": "+6288219694239",
+   "whatsapp": "6288219694239"
+  },
+  "e164": "+6288219694239"
+ },
+ {
+  "input": "+62887365433",
+  "out": {
+   "input": "+62887365433",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0887-3654-33",
+   "e164": "+62887365433",
+   "whatsapp": "62887365433"
+  },
+  "e164": "+62887365433"
+ },
+ {
+  "input": "0897 9233 8",
+  "out": {
+   "input": "0897 9233 8",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "859-9829-71",
+  "out": {
+   "input": "859-9829-71",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0859-9829-71",
+   "e164": "+62859982971",
+   "whatsapp": "62859982971"
+  },
+  "e164": "+62859982971"
+ },
+ {
+  "input": "62899.0880.8",
+  "out": {
+   "input": "62899.0880.8",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "878.1156.70",
+  "out": {
+   "input": "878.1156.70",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0878-1156-70",
+   "e164": "+62878115670",
+   "whatsapp": "62878115670"
+  },
+  "e164": "+62878115670"
+ },
+ {
+  "input": "62881-6870-53112",
+  "out": {
+   "input": "62881-6870-53112",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0881-6870-53112",
+   "e164": "+62881687053112",
+   "whatsapp": "62881687053112"
+  },
+  "e164": "+62881687053112"
+ },
+ {
+  "input": "0827 5975 4467",
+  "out": {
+   "input": "0827 5975 4467",
+   "valid": true,
+   "errors": [],
+   "warnings": [
+    {
+     "code": "prefix_unknown",
+     "message": "Prefix 0827 tidak dikenal."
+    }
+   ],
+   "type": "mobile",
+   "national": "0827-5975-4467",
+   "e164": "+6282759754467",
+   "whatsapp": "6282759754467"
+  },
+  "e164": "+6282759754467"
+ },
+ {
+  "input": "0899.6323.2",
+  "out": {
+   "input": "0899.6323.2",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "08329023715546",
+  "out": {
+   "input": "08329023715546",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62877-2050-2",
+  "out": {
+   "input": "+62877-2050-2",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "817.4451.744",
+  "out": {
+   "input": "817.4451.744",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0817-4451-744",
+   "e164": "+628174451744",
+   "whatsapp": "628174451744"
+  },
+  "e164": "+628174451744"
+ },
+ {
+  "input": "818-1165-7",
+  "out": {
+   "input": "818-1165-7",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62813-4302-740962",
+  "out": {
+   "input": "+62813-4302-740962",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62 898-8301-5",
+  "out": {
+   "input": "+62 898-8301-5",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0889599541749",
+  "out": {
+   "input": "0889599541749",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0889-5995-41749",
+   "e164": "+62889599541749",
+   "whatsapp": "62889599541749"
+  },
+  "e164": "+62889599541749"
+ },
+ {
+  "input": "62885-2172-99",
+  "out": {
+   "input": "62885-2172-99",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0885-2172-99",
+   "e164": "+62885217299",
+   "whatsapp": "62885217299"
+  },
+  "e164": "+62885217299"
+ },
+ {
+  "input": "62853380447354",
+  "out": {
+   "input": "62853380447354",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0853-3804-47354",
+   "e164": "+62853380447354",
+   "whatsapp": "62853380447354"
+  },
+  "e164": "+62853380447354"
+ },
+ {
+  "input": "0814-1389-7",
+  "out": {
+   "input": "0814-1389-7",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62856 7252 4990",
+  "out": {
+   "input": "+62856 7252 4990",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0856-7252-4990",
+   "e164": "+6285672524990",
+   "whatsapp": "6285672524990"
+  },
+  "e164": "+6285672524990"
+ },
+ {
+  "input": "0885624025",
+  "out": {
+   "input": "0885624025",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0885-6240-25",
+   "e164": "+62885624025",
+   "whatsapp": "62885624025"
+  },
+  "e164": "+62885624025"
+ },
+ {
+  "input": "0884 5668 4771",
+  "out": {
+   "input": "0884 5668 4771",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0884-5668-4771",
+   "e164": "+6288456684771",
+   "whatsapp": "6288456684771"
+  },
+  "e164": "+6288456684771"
+ },
+ {
+  "input": "0888-9992-14",
+  "out": {
+   "input": "0888-9992-14",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0888-9992-14",
+   "e164": "+62888999214",
+   "whatsapp": "62888999214"
+  },
+  "e164": "+62888999214"
+ },
+ {
+  "input": "88411016175",
+  "out": {
+   "input": "88411016175",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0884-1101-6175",
+   "e164": "+6288411016175",
+   "whatsapp": "6288411016175"
+  },
+  "e164": "+6288411016175"
+ },
+ {
+  "input": "0889227102890",
+  "out": {
+   "input": "0889227102890",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0889-2271-02890",
+   "e164": "+62889227102890",
+   "whatsapp": "62889227102890"
+  },
+  "e164": "+62889227102890"
+ },
+ {
+  "input": "62885-4593-97",
+  "out": {
+   "input": "62885-4593-97",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0885-4593-97",
+   "e164": "+62885459397",
+   "whatsapp": "62885459397"
+  },
+  "e164": "+62885459397"
+ },
+ {
+  "input": "+62 888-5444-64",
+  "out": {
+   "input": "+62 888-5444-64",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0888-5444-64",
+   "e164": "+62888544464",
+   "whatsapp": "62888544464"
+  },
+  "e164": "+62888544464"
+ },
+ {
+  "input": "628384876776726",
+  "out": {
+   "input": "628384876776726",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "886.0462.1",
+  "out": {
+   "input": "886.0462.1",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62 8534299692944",
+  "out": {
+   "input": "+62 8534299692944",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "08320093754683",
+  "out": {
+   "input": "08320093754683",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62 859.5406.8",
+  "out": {
+   "input": "+62 859.5406.8",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62823 3118 4",
+  "out": {
+   "input": "+62823 3118 4",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "62889-5134-349",
+  "out": {
+   "input": "62889-5134-349",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0889-5134-349",
+   "e164": "+628895134349",
+   "whatsapp": "628895134349"
+  },
+  "e164": "+628895134349"
+ },
+ {
+  "input": "0827.4931.0",
+  "out": {
+   "input": "0827.4931.0",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "085898273843",
+  "out": {
+   "input": "085898273843",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0858-9827-3843",
+   "e164": "+6285898273843",
+   "whatsapp": "6285898273843"
+  },
+  "e164": "+6285898273843"
+ },
+ {
+  "input": "+62884 3661 7",
+  "out": {
+   "input": "+62884 3661 7",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "62886091587435",
+  "out": {
+   "input": "62886091587435",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0886-0915-87435",
+   "e164": "+62886091587435",
+   "whatsapp": "62886091587435"
+  },
+  "e164": "+62886091587435"
+ },
+ {
+  "input": "+62858-5734-2521",
+  "out": {
+   "input": "+62858-5734-2521",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0858-5734-2521",
+   "e164": "+6285857342521",
+   "whatsapp": "6285857342521"
+  },
+  "e164": "+6285857342521"
+ },
+ {
+  "input": "08169973522214",
+  "out": {
+   "input": "08169973522214",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "883 7638 81",
+  "out": {
+   "input": "883 7638 81",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0883-7638-81",
+   "e164": "+62883763881",
+   "whatsapp": "62883763881"
+  },
+  "e164": "+62883763881"
+ },
+ {
+  "input": "628577329138",
+  "out": {
+   "input": "628577329138",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0857-7329-138",
+   "e164": "+628577329138",
+   "whatsapp": "628577329138"
+  },
+  "e164": "+628577329138"
+ },
+ {
+  "input": "62889 1478 871",
+  "out": {
+   "input": "62889 1478 871",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0889-1478-871",
+   "e164": "+628891478871",
+   "whatsapp": "628891478871"
+  },
+  "e164": "+628891478871"
+ },
+ {
+  "input": "0855 4967 273",
+  "out": {
+   "input": "0855 4967 273",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0855-4967-273",
+   "e164": "+628554967273",
+   "whatsapp": "628554967273"
+  },
+  "e164": "+628554967273"
+ },
+ {
+  "input": "857913628672",
+  "out": {
+   "input": "857913628672",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0857-9136-28672",
+   "e164": "+62857913628672",
+   "whatsapp": "62857913628672"
+  },
+  "e164": "+62857913628672"
+ },
+ {
+  "input": "0821.0067.80850",
+  "out": {
+   "input": "0821.0067.80850",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0821-0067-80850",
+   "e164": "+62821006780850",
+   "whatsapp": "62821006780850"
+  },
+  "e164": "+62821006780850"
+ },
+ {
+  "input": "+628564459248627",
+  "out": {
+   "input": "+628564459248627",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62 816.9803.1",
+  "out": {
+   "input": "+62 816.9803.1",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0816.3018.321610",
+  "out": {
+   "input": "0816.3018.321610",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "868-2798-4",
+  "out": {
+   "input": "868-2798-4",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0812.9483.4",
+  "out": {
+   "input": "0812.9483.4",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62 818.5705.52314",
+  "out": {
+   "input": "+62 818.5705.52314",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0818-5705-52314",
+   "e164": "+62818570552314",
+   "whatsapp": "62818570552314"
+  },
+  "e164": "+62818570552314"
+ },
+ {
+  "input": "+62 855-8015-8010",
+  "out": {
+   "input": "+62 855-8015-8010",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0855-8015-8010",
+   "e164": "+6285580158010",
+   "whatsapp": "6285580158010"
+  },
+  "e164": "+6285580158010"
+ },
+ {
+  "input": "822.5343.730",
+  "out": {
+   "input": "822.5343.730",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0822-5343-730",
+   "e164": "+628225343730",
+   "whatsapp": "628225343730"
+  },
+  "e164": "+628225343730"
+ },
+ {
+  "input": "818.3323.309027",
+  "out": {
+   "input": "818.3323.309027",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0898 8058 7",
+  "out": {
+   "input": "0898 8058 7",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0881.3324.2",
+  "out": {
+   "input": "0881.3324.2",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "088588650",
+  "out": {
+   "input": "088588650",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0818-6214-864054",
+  "out": {
+   "input": "0818-6214-864054",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "62811-9770-725658",
+  "out": {
+   "input": "62811-9770-725658",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0818.4610.3665",
+  "out": {
+   "input": "0818.4610.3665",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0818-4610-3665",
+   "e164": "+6281846103665",
+   "whatsapp": "6281846103665"
+  },
+  "e164": "+6281846103665"
+ },
+ {
+  "input": "0868.9039.44",
+  "out": {
+   "input": "0868.9039.44",
+   "valid": true,
+   "errors": [],
+   "warnings": [
+    {
+     "code": "prefix_unknown",
+     "message": "Prefix 0868 tidak dikenal."
+    }
+   ],
+   "type": "mobile",
+   "national": "0868-9039-44",
+   "e164": "+62868903944",
+   "whatsapp": "62868903944"
+  },
+  "e164": "+62868903944"
+ },
+ {
+  "input": "0811-6692-9764",
+  "out": {
+   "input": "0811-6692-9764",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0811-6692-9764",
+   "e164": "+6281166929764",
+   "whatsapp": "6281166929764"
+  },
+  "e164": "+6281166929764"
+ },
+ {
+  "input": "0858 7086 90",
+  "out": {
+   "input": "0858 7086 90",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0858-7086-90",
+   "e164": "+62858708690",
+   "whatsapp": "62858708690"
+  },
+  "e164": "+62858708690"
+ },
+ {
+  "input": "62819-3349-8",
+  "out": {
+   "input": "62819-3349-8",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0822.0327.2",
+  "out": {
+   "input": "0822.0327.2",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0899.2640.88",
+  "out": {
+   "input": "0899.2640.88",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0899-2640-88",
+   "e164": "+62899264088",
+   "whatsapp": "62899264088"
+  },
+  "e164": "+62899264088"
+ },
+ {
+  "input": "+62816 7419 205978",
+  "out": {
+   "input": "+62816 7419 205978",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0832.7130.68694",
+  "out": {
+   "input": "0832.7130.68694",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Axis",
+   "group": "XLSmart",
+   "national": "0832-7130-68694",
+   "e164": "+62832713068694",
+   "whatsapp": "62832713068694"
+  },
+  "e164": "+62832713068694"
+ },
+ {
+  "input": "+62820-1384-7728",
+  "out": {
+   "input": "+62820-1384-7728",
+   "valid": true,
+   "errors": [],
+   "warnings": [
+    {
+     "code": "prefix_unknown",
+     "message": "Prefix 0820 tidak dikenal."
+    }
+   ],
+   "type": "mobile",
+   "national": "0820-1384-7728",
+   "e164": "+6282013847728",
+   "whatsapp": "6282013847728"
+  },
+  "e164": "+6282013847728"
+ },
+ {
+  "input": "+62 887.9065.13",
+  "out": {
+   "input": "+62 887.9065.13",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0887-9065-13",
+   "e164": "+62887906513",
+   "whatsapp": "62887906513"
+  },
+  "e164": "+62887906513"
+ },
+ {
+  "input": "62898.0578.8",
+  "out": {
+   "input": "62898.0578.8",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0818-3024-945",
+  "out": {
+   "input": "0818-3024-945",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0818-3024-945",
+   "e164": "+628183024945",
+   "whatsapp": "628183024945"
+  },
+  "e164": "+628183024945"
+ },
+ {
+  "input": "+62827.3589.4750",
+  "out": {
+   "input": "+62827.3589.4750",
+   "valid": true,
+   "errors": [],
+   "warnings": [
+    {
+     "code": "prefix_unknown",
+     "message": "Prefix 0827 tidak dikenal."
+    }
+   ],
+   "type": "mobile",
+   "national": "0827-3589-4750",
+   "e164": "+6282735894750",
+   "whatsapp": "6282735894750"
+  },
+  "e164": "+6282735894750"
+ },
+ {
+  "input": "628976188856046",
+  "out": {
+   "input": "628976188856046",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "884-6973-0",
+  "out": {
+   "input": "884-6973-0",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "62895.9073.69450",
+  "out": {
+   "input": "62895.9073.69450",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0895-9073-69450",
+   "e164": "+62895907369450",
+   "whatsapp": "62895907369450"
+  },
+  "e164": "+62895907369450"
+ },
+ {
+  "input": "0868.2212.755",
+  "out": {
+   "input": "0868.2212.755",
+   "valid": true,
+   "errors": [],
+   "warnings": [
+    {
+     "code": "prefix_unknown",
+     "message": "Prefix 0868 tidak dikenal."
+    }
+   ],
+   "type": "mobile",
+   "national": "0868-2212-755",
+   "e164": "+628682212755",
+   "whatsapp": "628682212755"
+  },
+  "e164": "+628682212755"
+ },
+ {
+  "input": "+62 81543623",
+  "out": {
+   "input": "+62 81543623",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "813 1715 033",
+  "out": {
+   "input": "813 1715 033",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0813-1715-033",
+   "e164": "+628131715033",
+   "whatsapp": "628131715033"
+  },
+  "e164": "+628131715033"
+ },
+ {
+  "input": "62853-8332-95039",
+  "out": {
+   "input": "62853-8332-95039",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0853-8332-95039",
+   "e164": "+62853833295039",
+   "whatsapp": "62853833295039"
+  },
+  "e164": "+62853833295039"
+ },
+ {
+  "input": "+62 898-4428-2954",
+  "out": {
+   "input": "+62 898-4428-2954",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0898-4428-2954",
+   "e164": "+6289844282954",
+   "whatsapp": "6289844282954"
+  },
+  "e164": "+6289844282954"
+ },
+ {
+  "input": "0877 1588 79",
+  "out": {
+   "input": "0877 1588 79",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0877-1588-79",
+   "e164": "+62877158879",
+   "whatsapp": "62877158879"
+  },
+  "e164": "+62877158879"
+ },
+ {
+  "input": "+62 852 1870 5601",
+  "out": {
+   "input": "+62 852 1870 5601",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0852-1870-5601",
+   "e164": "+6285218705601",
+   "whatsapp": "6285218705601"
+  },
+  "e164": "+6285218705601"
+ },
+ {
+  "input": "62897 5629 2272",
+  "out": {
+   "input": "62897 5629 2272",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0897-5629-2272",
+   "e164": "+6289756292272",
+   "whatsapp": "6289756292272"
+  },
+  "e164": "+6289756292272"
+ },
+ {
+  "input": "886.0100.4",
+  "out": {
+   "input": "886.0100.4",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62827-3618-06515",
+  "out": {
+   "input": "+62827-3618-06515",
+   "valid": true,
+   "errors": [],
+   "warnings": [
+    {
+     "code": "prefix_unknown",
+     "message": "Prefix 0827 tidak dikenal."
+    }
+   ],
+   "type": "mobile",
+   "national": "0827-3618-06515",
+   "e164": "+62827361806515",
+   "whatsapp": "62827361806515"
+  },
+  "e164": "+62827361806515"
+ },
+ {
+  "input": "0886635021000",
+  "out": {
+   "input": "0886635021000",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0886-6350-21000",
+   "e164": "+62886635021000",
+   "whatsapp": "62886635021000"
+  },
+  "e164": "+62886635021000"
+ },
+ {
+  "input": "62855.9570.75157",
+  "out": {
+   "input": "62855.9570.75157",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0855-9570-75157",
+   "e164": "+62855957075157",
+   "whatsapp": "62855957075157"
+  },
+  "e164": "+62855957075157"
+ },
+ {
+  "input": "823-8165-3",
+  "out": {
+   "input": "823-8165-3",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62 884.9884.4326",
+  "out": {
+   "input": "+62 884.9884.4326",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0884-9884-4326",
+   "e164": "+6288498844326",
+   "whatsapp": "6288498844326"
+  },
+  "e164": "+6288498844326"
+ },
+ {
+  "input": "+628335153807",
+  "out": {
+   "input": "+628335153807",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Axis",
+   "group": "XLSmart",
+   "national": "0833-5153-807",
+   "e164": "+628335153807",
+   "whatsapp": "628335153807"
+  },
+  "e164": "+628335153807"
+ },
+ {
+  "input": "+62813-8171-3185",
+  "out": {
+   "input": "+62813-8171-3185",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0813-8171-3185",
+   "e164": "+6281381713185",
+   "whatsapp": "6281381713185"
+  },
+  "e164": "+6281381713185"
+ },
+ {
+  "input": "+62832-3626-7119",
+  "out": {
+   "input": "+62832-3626-7119",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Axis",
+   "group": "XLSmart",
+   "national": "0832-3626-7119",
+   "e164": "+6283236267119",
+   "whatsapp": "6283236267119"
+  },
+  "e164": "+6283236267119"
+ },
+ {
+  "input": "62816-5718-56516",
+  "out": {
+   "input": "62816-5718-56516",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0816-5718-56516",
+   "e164": "+62816571856516",
+   "whatsapp": "62816571856516"
+  },
+  "e164": "+62816571856516"
+ },
+ {
+  "input": "+62 819 0809 874653",
+  "out": {
+   "input": "+62 819 0809 874653",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62 859 6311 9618",
+  "out": {
+   "input": "+62 859 6311 9618",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0859-6311-9618",
+   "e164": "+6285963119618",
+   "whatsapp": "6285963119618"
+  },
+  "e164": "+6285963119618"
+ },
+ {
+  "input": "81966378089",
+  "out": {
+   "input": "81966378089",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0819-6637-8089",
+   "e164": "+6281966378089",
+   "whatsapp": "6281966378089"
+  },
+  "e164": "+6281966378089"
+ },
+ {
+  "input": "+62 812 8927 37",
+  "out": {
+   "input": "+62 812 8927 37",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0812-8927-37",
+   "e164": "+62812892737",
+   "whatsapp": "62812892737"
+  },
+  "e164": "+62812892737"
+ },
+ {
+  "input": "+62 88775716",
+  "out": {
+   "input": "+62 88775716",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0887 1126 9",
+  "out": {
+   "input": "0887 1126 9",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0877-1105-2812",
+  "out": {
+   "input": "0877-1105-2812",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0877-1105-2812",
+   "e164": "+6287711052812",
+   "whatsapp": "6287711052812"
+  },
+  "e164": "+6287711052812"
+ },
+ {
+  "input": "62810-6117-6154",
+  "out": {
+   "input": "62810-6117-6154",
+   "valid": true,
+   "errors": [],
+   "warnings": [
+    {
+     "code": "prefix_unknown",
+     "message": "Prefix 0810 tidak dikenal."
+    }
+   ],
+   "type": "mobile",
+   "national": "0810-6117-6154",
+   "e164": "+6281061176154",
+   "whatsapp": "6281061176154"
+  },
+  "e164": "+6281061176154"
+ },
+ {
+  "input": "62815.5274.41",
+  "out": {
+   "input": "62815.5274.41",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0815-5274-41",
+   "e164": "+62815527441",
+   "whatsapp": "62815527441"
+  },
+  "e164": "+62815527441"
+ },
+ {
+  "input": "628239628048331",
+  "out": {
+   "input": "628239628048331",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62859 0589 08371",
+  "out": {
+   "input": "+62859 0589 08371",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0859-0589-08371",
+   "e164": "+62859058908371",
+   "whatsapp": "62859058908371"
+  },
+  "e164": "+62859058908371"
+ },
+ {
+  "input": "62856 8814 2461",
+  "out": {
+   "input": "62856 8814 2461",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0856-8814-2461",
+   "e164": "+6285688142461",
+   "whatsapp": "6285688142461"
+  },
+  "e164": "+6285688142461"
+ },
+ {
+  "input": "62833.9353.6813",
+  "out": {
+   "input": "62833.9353.6813",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Axis",
+   "group": "XLSmart",
+   "national": "0833-9353-6813",
+   "e164": "+6283393536813",
+   "whatsapp": "6283393536813"
+  },
+  "e164": "+6283393536813"
+ },
+ {
+  "input": "0811-4047-796727",
+  "out": {
+   "input": "0811-4047-796727",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0859-2710-00",
+  "out": {
+   "input": "0859-2710-00",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0859-2710-00",
+   "e164": "+62859271000",
+   "whatsapp": "62859271000"
+  },
+  "e164": "+62859271000"
+ },
+ {
+  "input": "0858.9478.998",
+  "out": {
+   "input": "0858.9478.998",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0858-9478-998",
+   "e164": "+628589478998",
+   "whatsapp": "628589478998"
+  },
+  "e164": "+628589478998"
+ },
+ {
+  "input": "+62853-5777-509588",
+  "out": {
+   "input": "+62853-5777-509588",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "822-2819-16",
+  "out": {
+   "input": "822-2819-16",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0822-2819-16",
+   "e164": "+62822281916",
+   "whatsapp": "62822281916"
+  },
+  "e164": "+62822281916"
+ },
+ {
+  "input": "895-0336-720",
+  "out": {
+   "input": "895-0336-720",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0895-0336-720",
+   "e164": "+628950336720",
+   "whatsapp": "628950336720"
+  },
+  "e164": "+628950336720"
+ },
+ {
+  "input": "+6282054118",
+  "out": {
+   "input": "+6282054118",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "62819 5605 14377",
+  "out": {
+   "input": "62819 5605 14377",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0819-5605-14377",
+   "e164": "+62819560514377",
+   "whatsapp": "62819560514377"
+  },
+  "e164": "+62819560514377"
+ },
+ {
+  "input": "+62 883-9694-945",
+  "out": {
+   "input": "+62 883-9694-945",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0883-9694-945",
+   "e164": "+628839694945",
+   "whatsapp": "628839694945"
+  },
+  "e164": "+628839694945"
+ },
+ {
+  "input": "08590052566619",
+  "out": {
+   "input": "08590052566619",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "089990306",
+  "out": {
+   "input": "089990306",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0887-4719-5833",
+  "out": {
+   "input": "0887-4719-5833",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0887-4719-5833",
+   "e164": "+6288747195833",
+   "whatsapp": "6288747195833"
+  },
+  "e164": "+6288747195833"
+ },
+ {
+  "input": "+62858.7614.877037",
+  "out": {
+   "input": "+62858.7614.877037",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0895.0537.63",
+  "out": {
+   "input": "0895.0537.63",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0895-0537-63",
+   "e164": "+62895053763",
+   "whatsapp": "62895053763"
+  },
+  "e164": "+62895053763"
+ },
+ {
+  "input": "+62 896-8551-4",
+  "out": {
+   "input": "+62 896-8551-4",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "62882.4512.40414",
+  "out": {
+   "input": "62882.4512.40414",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0882-4512-40414",
+   "e164": "+62882451240414",
+   "whatsapp": "62882451240414"
+  },
+  "e164": "+62882451240414"
+ },
+ {
+  "input": "810.4165.9393",
+  "out": {
+   "input": "810.4165.9393",
+   "valid": true,
+   "errors": [],
+   "warnings": [
+    {
+     "code": "prefix_unknown",
+     "message": "Prefix 0810 tidak dikenal."
+    }
+   ],
+   "type": "mobile",
+   "national": "0810-4165-9393",
+   "e164": "+6281041659393",
+   "whatsapp": "6281041659393"
+  },
+  "e164": "+6281041659393"
+ },
+ {
+  "input": "0822 5353 91",
+  "out": {
+   "input": "0822 5353 91",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0822-5353-91",
+   "e164": "+62822535391",
+   "whatsapp": "62822535391"
+  },
+  "e164": "+62822535391"
+ },
+ {
+  "input": "+62816.3377.77924",
+  "out": {
+   "input": "+62816.3377.77924",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0816-3377-77924",
+   "e164": "+62816337777924",
+   "whatsapp": "62816337777924"
+  },
+  "e164": "+62816337777924"
+ },
+ {
+  "input": "+62895.9584.892",
+  "out": {
+   "input": "+62895.9584.892",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0895-9584-892",
+   "e164": "+628959584892",
+   "whatsapp": "628959584892"
+  },
+  "e164": "+628959584892"
+ },
+ {
+  "input": "+62823.1065.109181",
+  "out": {
+   "input": "+62823.1065.109181",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0814.5089.6255",
+  "out": {
+   "input": "0814.5089.6255",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0814-5089-6255",
+   "e164": "+6281450896255",
+   "whatsapp": "6281450896255"
+  },
+  "e164": "+6281450896255"
+ },
+ {
+  "input": "0889-5186-18666",
+  "out": {
+   "input": "0889-5186-18666",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0889-5186-18666",
+   "e164": "+62889518618666",
+   "whatsapp": "62889518618666"
+  },
+  "e164": "+62889518618666"
+ },
+ {
+  "input": "0821.4281.563",
+  "out": {
+   "input": "0821.4281.563",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0821-4281-563",
+   "e164": "+628214281563",
+   "whatsapp": "628214281563"
+  },
+  "e164": "+628214281563"
+ },
+ {
+  "input": "62818-1506-3",
+  "out": {
+   "input": "62818-1506-3",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0815 9706 05",
+  "out": {
+   "input": "0815 9706 05",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0815-9706-05",
+   "e164": "+62815970605",
+   "whatsapp": "62815970605"
+  },
+  "e164": "+62815970605"
+ },
+ {
+  "input": "62816-4940-5869",
+  "out": {
+   "input": "62816-4940-5869",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0816-4940-5869",
+   "e164": "+6281649405869",
+   "whatsapp": "6281649405869"
+  },
+  "e164": "+6281649405869"
+ },
+ {
+  "input": "818-7649-50",
+  "out": {
+   "input": "818-7649-50",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0818-7649-50",
+   "e164": "+62818764950",
+   "whatsapp": "62818764950"
+  },
+  "e164": "+62818764950"
+ },
+ {
+  "input": "+62 889-5168-841398",
+  "out": {
+   "input": "+62 889-5168-841398",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "897.4706.51",
+  "out": {
+   "input": "897.4706.51",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0897-4706-51",
+   "e164": "+62897470651",
+   "whatsapp": "62897470651"
+  },
+  "e164": "+62897470651"
+ },
+ {
+  "input": "+62882.3763.9258",
+  "out": {
+   "input": "+62882.3763.9258",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0882-3763-9258",
+   "e164": "+6288237639258",
+   "whatsapp": "6288237639258"
+  },
+  "e164": "+6288237639258"
+ },
+ {
+  "input": "0815 9491 77940",
+  "out": {
+   "input": "0815 9491 77940",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0815-9491-77940",
+   "e164": "+62815949177940",
+   "whatsapp": "62815949177940"
+  },
+  "e164": "+62815949177940"
+ },
+ {
+  "input": "889-7636-6545",
+  "out": {
+   "input": "889-7636-6545",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0889-7636-6545",
+   "e164": "+6288976366545",
+   "whatsapp": "6288976366545"
+  },
+  "e164": "+6288976366545"
+ },
+ {
+  "input": "62822 0641 1",
+  "out": {
+   "input": "62822 0641 1",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0883.4723.725839",
+  "out": {
+   "input": "0883.4723.725839",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "628226757835",
+  "out": {
+   "input": "628226757835",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0822-6757-835",
+   "e164": "+628226757835",
+   "whatsapp": "628226757835"
+  },
+  "e164": "+628226757835"
+ },
+ {
+  "input": "0889 5184 42",
+  "out": {
+   "input": "0889 5184 42",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0889-5184-42",
+   "e164": "+62889518442",
+   "whatsapp": "62889518442"
+  },
+  "e164": "+62889518442"
+ },
+ {
+  "input": "085916586",
+  "out": {
+   "input": "085916586",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "8193757999",
+  "out": {
+   "input": "8193757999",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0819-3757-999",
+   "e164": "+628193757999",
+   "whatsapp": "628193757999"
+  },
+  "e164": "+628193757999"
+ },
+ {
+  "input": "859-8602-780",
+  "out": {
+   "input": "859-8602-780",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0859-8602-780",
+   "e164": "+628598602780",
+   "whatsapp": "628598602780"
+  },
+  "e164": "+628598602780"
+ },
+ {
+  "input": "08565541594195",
+  "out": {
+   "input": "08565541594195",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62 8998214241",
+  "out": {
+   "input": "+62 8998214241",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0899-8214-241",
+   "e164": "+628998214241",
+   "whatsapp": "628998214241"
+  },
+  "e164": "+628998214241"
+ },
+ {
+  "input": "0833 7207 791385",
+  "out": {
+   "input": "0833 7207 791385",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0877-2415-2824",
+  "out": {
+   "input": "0877-2415-2824",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0877-2415-2824",
+   "e164": "+6287724152824",
+   "whatsapp": "6287724152824"
+  },
+  "e164": "+6287724152824"
+ },
+ {
+  "input": "6283231134227",
+  "out": {
+   "input": "6283231134227",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Axis",
+   "group": "XLSmart",
+   "national": "0832-3113-4227",
+   "e164": "+6283231134227",
+   "whatsapp": "6283231134227"
+  },
+  "e164": "+6283231134227"
+ },
+ {
+  "input": "0832 1892 7",
+  "out": {
+   "input": "0832 1892 7",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "62822.5754.948",
+  "out": {
+   "input": "62822.5754.948",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0822-5754-948",
+   "e164": "+628225754948",
+   "whatsapp": "628225754948"
+  },
+  "e164": "+628225754948"
+ },
+ {
+  "input": "+62857-9114-20",
+  "out": {
+   "input": "+62857-9114-20",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0857-9114-20",
+   "e164": "+62857911420",
+   "whatsapp": "62857911420"
+  },
+  "e164": "+62857911420"
+ },
+ {
+  "input": "877713720",
+  "out": {
+   "input": "877713720",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0877-7137-20",
+   "e164": "+62877713720",
+   "whatsapp": "62877713720"
+  },
+  "e164": "+62877713720"
+ },
+ {
+  "input": "0895 4702 64412",
+  "out": {
+   "input": "0895 4702 64412",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0895-4702-64412",
+   "e164": "+62895470264412",
+   "whatsapp": "62895470264412"
+  },
+  "e164": "+62895470264412"
+ },
+ {
+  "input": "895 0339 0475",
+  "out": {
+   "input": "895 0339 0475",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0895-0339-0475",
+   "e164": "+6289503390475",
+   "whatsapp": "6289503390475"
+  },
+  "e164": "+6289503390475"
+ },
+ {
+  "input": "897-8496-1",
+  "out": {
+   "input": "897-8496-1",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62 897636965624",
+  "out": {
+   "input": "+62 897636965624",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0897-6369-65624",
+   "e164": "+62897636965624",
+   "whatsapp": "62897636965624"
+  },
+  "e164": "+62897636965624"
+ },
+ {
+  "input": "0858 2059 043",
+  "out": {
+   "input": "0858 2059 043",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0858-2059-043",
+   "e164": "+628582059043",
+   "whatsapp": "628582059043"
+  },
+  "e164": "+628582059043"
+ },
+ {
+  "input": "0857.6579.5",
+  "out": {
+   "input": "0857.6579.5",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0853.5960.25",
+  "out": {
+   "input": "0853.5960.25",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0853-5960-25",
+   "e164": "+62853596025",
+   "whatsapp": "62853596025"
+  },
+  "e164": "+62853596025"
+ },
+ {
+  "input": "+62 818-7411-21",
+  "out": {
+   "input": "+62 818-7411-21",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0818-7411-21",
+   "e164": "+62818741121",
+   "whatsapp": "62818741121"
+  },
+  "e164": "+62818741121"
+ },
+ {
+  "input": "+628324140035759",
+  "out": {
+   "input": "+628324140035759",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62819-7806-88115",
+  "out": {
+   "input": "+62819-7806-88115",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0819-7806-88115",
+   "e164": "+62819780688115",
+   "whatsapp": "62819780688115"
+  },
+  "e164": "+62819780688115"
+ },
+ {
+  "input": "62884 3570 2",
+  "out": {
+   "input": "62884 3570 2",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "62877.9640.21548",
+  "out": {
+   "input": "62877.9640.21548",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0877-9640-21548",
+   "e164": "+62877964021548",
+   "whatsapp": "62877964021548"
+  },
+  "e164": "+62877964021548"
+ },
+ {
+  "input": "851.4061.1",
+  "out": {
+   "input": "851.4061.1",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "62819.8959.59",
+  "out": {
+   "input": "62819.8959.59",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0819-8959-59",
+   "e164": "+62819895959",
+   "whatsapp": "62819895959"
+  },
+  "e164": "+62819895959"
+ },
+ {
+  "input": "628109892290678",
+  "out": {
+   "input": "628109892290678",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "628576080821953",
+  "out": {
+   "input": "628576080821953",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62 897.4240.6",
+  "out": {
+   "input": "+62 897.4240.6",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62 896 8108 0",
+  "out": {
+   "input": "+62 896 8108 0",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0817-5336-033",
+  "out": {
+   "input": "0817-5336-033",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0817-5336-033",
+   "e164": "+628175336033",
+   "whatsapp": "628175336033"
+  },
+  "e164": "+628175336033"
+ },
+ {
+  "input": "887.2686.95514",
+  "out": {
+   "input": "887.2686.95514",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0887-2686-95514",
+   "e164": "+62887268695514",
+   "whatsapp": "62887268695514"
+  },
+  "e164": "+62887268695514"
+ },
+ {
+  "input": "0821.6525.7",
+  "out": {
+   "input": "0821.6525.7",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "088971589",
+  "out": {
+   "input": "088971589",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "62822 5805 151848",
+  "out": {
+   "input": "62822 5805 151848",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0817221130",
+  "out": {
+   "input": "0817221130",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0817-2211-30",
+   "e164": "+62817221130",
+   "whatsapp": "62817221130"
+  },
+  "e164": "+62817221130"
+ },
+ {
+  "input": "62868-5787-523161",
+  "out": {
+   "input": "62868-5787-523161",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0838-6530-98303",
+  "out": {
+   "input": "0838-6530-98303",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Axis",
+   "group": "XLSmart",
+   "national": "0838-6530-98303",
+   "e164": "+62838653098303",
+   "whatsapp": "62838653098303"
+  },
+  "e164": "+62838653098303"
+ },
+ {
+  "input": "08985879330132",
+  "out": {
+   "input": "08985879330132",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62818-6826-32",
+  "out": {
+   "input": "+62818-6826-32",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0818-6826-32",
+   "e164": "+62818682632",
+   "whatsapp": "62818682632"
+  },
+  "e164": "+62818682632"
+ },
+ {
+  "input": "62823.5284.8179",
+  "out": {
+   "input": "62823.5284.8179",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0823-5284-8179",
+   "e164": "+6282352848179",
+   "whatsapp": "6282352848179"
+  },
+  "e164": "+6282352848179"
+ },
+ {
+  "input": "8327214977",
+  "out": {
+   "input": "8327214977",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Axis",
+   "group": "XLSmart",
+   "national": "0832-7214-977",
+   "e164": "+628327214977",
+   "whatsapp": "628327214977"
+  },
+  "e164": "+628327214977"
+ },
+ {
+  "input": "0822.4459.7056",
+  "out": {
+   "input": "0822.4459.7056",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0822-4459-7056",
+   "e164": "+6282244597056",
+   "whatsapp": "6282244597056"
+  },
+  "e164": "+6282244597056"
+ },
+ {
+  "input": "085551695",
+  "out": {
+   "input": "085551695",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62 884 4888 1344",
+  "out": {
+   "input": "+62 884 4888 1344",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0884-4888-1344",
+   "e164": "+6288448881344",
+   "whatsapp": "6288448881344"
+  },
+  "e164": "+6288448881344"
+ },
+ {
+  "input": "62816-1772-1093",
+  "out": {
+   "input": "62816-1772-1093",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0816-1772-1093",
+   "e164": "+6281617721093",
+   "whatsapp": "6281617721093"
+  },
+  "e164": "+6281617721093"
+ },
+ {
+  "input": "628123067923",
+  "out": {
+   "input": "628123067923",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0812-3067-923",
+   "e164": "+628123067923",
+   "whatsapp": "628123067923"
+  },
+  "e164": "+628123067923"
+ },
+ {
+  "input": "0858-3258-406",
+  "out": {
+   "input": "0858-3258-406",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0858-3258-406",
+   "e164": "+628583258406",
+   "whatsapp": "628583258406"
+  },
+  "e164": "+628583258406"
+ },
+ {
+  "input": "08334349644",
+  "out": {
+   "input": "08334349644",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Axis",
+   "group": "XLSmart",
+   "national": "0833-4349-644",
+   "e164": "+628334349644",
+   "whatsapp": "628334349644"
+  },
+  "e164": "+628334349644"
+ },
+ {
+  "input": "0832 4673 977963",
+  "out": {
+   "input": "0832 4673 977963",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62 859 0566 66996",
+  "out": {
+   "input": "+62 859 0566 66996",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0859-0566-66996",
+   "e164": "+62859056666996",
+   "whatsapp": "62859056666996"
+  },
+  "e164": "+62859056666996"
+ },
+ {
+  "input": "812 2550 379",
+  "out": {
+   "input": "812 2550 379",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0812-2550-379",
+   "e164": "+628122550379",
+   "whatsapp": "628122550379"
+  },
+  "e164": "+628122550379"
+ },
+ {
+  "input": "816-0808-6899",
+  "out": {
+   "input": "816-0808-6899",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0816-0808-6899",
+   "e164": "+6281608086899",
+   "whatsapp": "6281608086899"
+  },
+  "e164": "+6281608086899"
+ },
+ {
+  "input": "+62813 5809 2",
+  "out": {
+   "input": "+62813 5809 2",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62 868 0930 95215",
+  "out": {
+   "input": "+62 868 0930 95215",
+   "valid": true,
+   "errors": [],
+   "warnings": [
+    {
+     "code": "prefix_unknown",
+     "message": "Prefix 0868 tidak dikenal."
+    }
+   ],
+   "type": "mobile",
+   "national": "0868-0930-95215",
+   "e164": "+62868093095215",
+   "whatsapp": "62868093095215"
+  },
+  "e164": "+62868093095215"
+ },
+ {
+  "input": "0811-8703-0",
+  "out": {
+   "input": "0811-8703-0",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0818-5927-7",
+  "out": {
+   "input": "0818-5927-7",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62838.9304.1647",
+  "out": {
+   "input": "+62838.9304.1647",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Axis",
+   "group": "XLSmart",
+   "national": "0838-9304-1647",
+   "e164": "+6283893041647",
+   "whatsapp": "6283893041647"
+  },
+  "e164": "+6283893041647"
+ },
+ {
+  "input": "0821-3324-612922",
+  "out": {
+   "input": "0821-3324-612922",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "62885-5245-82459",
+  "out": {
+   "input": "62885-5245-82459",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0885-5245-82459",
+   "e164": "+62885524582459",
+   "whatsapp": "62885524582459"
+  },
+  "e164": "+62885524582459"
+ },
+ {
+  "input": "+62 885 1439 4",
+  "out": {
+   "input": "+62 885 1439 4",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62823.6628.04",
+  "out": {
+   "input": "+62823.6628.04",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0823-6628-04",
+   "e164": "+62823662804",
+   "whatsapp": "62823662804"
+  },
+  "e164": "+62823662804"
+ },
+ {
+  "input": "896 1052 4718",
+  "out": {
+   "input": "896 1052 4718",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0896-1052-4718",
+   "e164": "+6289610524718",
+   "whatsapp": "6289610524718"
+  },
+  "e164": "+6289610524718"
+ },
+ {
+  "input": "0896-8287-33226",
+  "out": {
+   "input": "0896-8287-33226",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0896-8287-33226",
+   "e164": "+62896828733226",
+   "whatsapp": "62896828733226"
+  },
+  "e164": "+62896828733226"
+ },
+ {
+  "input": "62858.0678.34",
+  "out": {
+   "input": "62858.0678.34",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0858-0678-34",
+   "e164": "+62858067834",
+   "whatsapp": "62858067834"
+  },
+  "e164": "+62858067834"
+ },
+ {
+  "input": "62855-3843-9530",
+  "out": {
+   "input": "62855-3843-9530",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0855-3843-9530",
+   "e164": "+6285538439530",
+   "whatsapp": "6285538439530"
+  },
+  "e164": "+6285538439530"
+ },
+ {
+  "input": "+62 895 7795 8",
+  "out": {
+   "input": "+62 895 7795 8",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "820.3914.354",
+  "out": {
+   "input": "820.3914.354",
+   "valid": true,
+   "errors": [],
+   "warnings": [
+    {
+     "code": "prefix_unknown",
+     "message": "Prefix 0820 tidak dikenal."
+    }
+   ],
+   "type": "mobile",
+   "national": "0820-3914-354",
+   "e164": "+628203914354",
+   "whatsapp": "628203914354"
+  },
+  "e164": "+628203914354"
+ },
+ {
+  "input": "0858-2676-2",
+  "out": {
+   "input": "0858-2676-2",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "813.5643.77056",
+  "out": {
+   "input": "813.5643.77056",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Telkomsel",
+   "group": "Telkomsel",
+   "national": "0813-5643-77056",
+   "e164": "+62813564377056",
+   "whatsapp": "62813564377056"
+  },
+  "e164": "+62813564377056"
+ },
+ {
+  "input": "+62 85878156",
+  "out": {
+   "input": "+62 85878156",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "853.6046.8",
+  "out": {
+   "input": "853.6046.8",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62898 8615 1891",
+  "out": {
+   "input": "+62898 8615 1891",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0898-8615-1891",
+   "e164": "+6289886151891",
+   "whatsapp": "6289886151891"
+  },
+  "e164": "+6289886151891"
+ },
+ {
+  "input": "+62882.9380.534",
+  "out": {
+   "input": "+62882.9380.534",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0882-9380-534",
+   "e164": "+628829380534",
+   "whatsapp": "628829380534"
+  },
+  "e164": "+628829380534"
+ },
+ {
+  "input": "0857-4082-398",
+  "out": {
+   "input": "0857-4082-398",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0857-4082-398",
+   "e164": "+628574082398",
+   "whatsapp": "628574082398"
+  },
+  "e164": "+628574082398"
+ },
+ {
+  "input": "+62877 0337 546833",
+  "out": {
+   "input": "+62877 0337 546833",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62 888-3276-722",
+  "out": {
+   "input": "+62 888-3276-722",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0888-3276-722",
+   "e164": "+628883276722",
+   "whatsapp": "628883276722"
+  },
+  "e164": "+628883276722"
+ },
+ {
+  "input": "+62885.6026.774",
+  "out": {
+   "input": "+62885.6026.774",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0885-6026-774",
+   "e164": "+628856026774",
+   "whatsapp": "628856026774"
+  },
+  "e164": "+628856026774"
+ },
+ {
+  "input": "62858-7044-35",
+  "out": {
+   "input": "62858-7044-35",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0858-7044-35",
+   "e164": "+62858704435",
+   "whatsapp": "62858704435"
+  },
+  "e164": "+62858704435"
+ },
+ {
+  "input": "884-4962-92",
+  "out": {
+   "input": "884-4962-92",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0884-4962-92",
+   "e164": "+62884496292",
+   "whatsapp": "62884496292"
+  },
+  "e164": "+62884496292"
+ },
+ {
+  "input": "0868.5492.297304",
+  "out": {
+   "input": "0868.5492.297304",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "+62 885.2751.8714",
+  "out": {
+   "input": "+62 885.2751.8714",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0885-2751-8714",
+   "e164": "+6288527518714",
+   "whatsapp": "6288527518714"
+  },
+  "e164": "+6288527518714"
+ },
+ {
+  "input": "+62 883 7332 595",
+  "out": {
+   "input": "+62 883 7332 595",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0883-7332-595",
+   "e164": "+628837332595",
+   "whatsapp": "628837332595"
+  },
+  "e164": "+628837332595"
+ },
+ {
+  "input": "0895743174",
+  "out": {
+   "input": "0895743174",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0895-7431-74",
+   "e164": "+62895743174",
+   "whatsapp": "62895743174"
+  },
+  "e164": "+62895743174"
+ },
+ {
+  "input": "0883-6856-831398",
+  "out": {
+   "input": "0883-6856-831398",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "0838.0953.075",
+  "out": {
+   "input": "0838.0953.075",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Axis",
+   "group": "XLSmart",
+   "national": "0838-0953-075",
+   "e164": "+628380953075",
+   "whatsapp": "628380953075"
+  },
+  "e164": "+628380953075"
+ },
+ {
+  "input": "0856-7335-13",
+  "out": {
+   "input": "0856-7335-13",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0856-7335-13",
+   "e164": "+62856733513",
+   "whatsapp": "62856733513"
+  },
+  "e164": "+62856733513"
+ },
+ {
+  "input": "087820181201",
+  "out": {
+   "input": "087820181201",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0878-2018-1201",
+   "e164": "+6287820181201",
+   "whatsapp": "6287820181201"
+  },
+  "e164": "+6287820181201"
+ },
+ {
+  "input": "+62 877.6667.2048",
+  "out": {
+   "input": "+62 877.6667.2048",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0877-6667-2048",
+   "e164": "+6287766672048",
+   "whatsapp": "6287766672048"
+  },
+  "e164": "+6287766672048"
+ },
+ {
+  "input": "62896945604",
+  "out": {
+   "input": "62896945604",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0896-9456-04",
+   "e164": "+62896945604",
+   "whatsapp": "62896945604"
+  },
+  "e164": "+62896945604"
+ },
+ {
+  "input": "+62897-9164-227",
+  "out": {
+   "input": "+62897-9164-227",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Tri",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0897-9164-227",
+   "e164": "+628979164227",
+   "whatsapp": "628979164227"
+  },
+  "e164": "+628979164227"
+ },
+ {
+  "input": "+62 859057715142",
+  "out": {
+   "input": "+62 859057715142",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "XL",
+   "group": "XLSmart",
+   "national": "0859-0577-15142",
+   "e164": "+62859057715142",
+   "whatsapp": "62859057715142"
+  },
+  "e164": "+62859057715142"
+ },
+ {
+  "input": "886.2313.0",
+  "out": {
+   "input": "886.2313.0",
+   "valid": false,
+   "errors": [
+    {
+     "code": "length",
+     "message": "Nomor HP harus 10–13 digit (termasuk 0 di depan)."
+    }
+   ],
+   "warnings": [],
+   "type": "mobile"
+  },
+  "e164": null
+ },
+ {
+  "input": "62888 0802 9860",
+  "out": {
+   "input": "62888 0802 9860",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Smartfren",
+   "group": "XLSmart",
+   "national": "0888-0802-9860",
+   "e164": "+6288808029860",
+   "whatsapp": "6288808029860"
+  },
+  "e164": "+6288808029860"
+ },
+ {
+  "input": "+62 856.7900.2773",
+  "out": {
+   "input": "+62 856.7900.2773",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "mobile",
+   "operator": "Indosat",
+   "group": "Indosat Ooredoo Hutchison",
+   "national": "0856-7900-2773",
+   "e164": "+6285679002773",
+   "whatsapp": "6285679002773"
+  },
+  "e164": "+6285679002773"
+ },
+ {
+  "input": "(02212056295",
+  "out": {
+   "input": "(02212056295",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "022",
+   "area": "Bandung",
+   "national": "(022) 12056295",
+   "e164": "+622212056295"
+  },
+  "e164": "+622212056295"
+ },
+ {
+  "input": "+622277236821",
+  "out": {
+   "input": "+622277236821",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "022",
+   "area": "Bandung",
+   "national": "(022) 77236821",
+   "e164": "+622277236821"
+  },
+  "e164": "+622277236821"
+ },
+ {
+  "input": "+623196345100",
+  "out": {
+   "input": "+623196345100",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "031",
+   "area": "Surabaya",
+   "national": "(031) 96345100",
+   "e164": "+623196345100"
+  },
+  "e164": "+623196345100"
+ },
+ {
+  "input": "+62411) 43696479",
+  "out": {
+   "input": "+62411) 43696479",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0411",
+   "area": "Makassar",
+   "national": "(0411) 43696479",
+   "e164": "+6241143696479"
+  },
+  "e164": "+6241143696479"
+ },
+ {
+  "input": "+62751-26123240",
+  "out": {
+   "input": "+62751-26123240",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0751",
+   "area": "Padang",
+   "national": "(0751) 26123240",
+   "e164": "+6275126123240"
+  },
+  "e164": "+6275126123240"
+ },
+ {
+  "input": "(02264915921",
+  "out": {
+   "input": "(02264915921",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "022",
+   "area": "Bandung",
+   "national": "(022) 64915921",
+   "e164": "+622264915921"
+  },
+  "e164": "+622264915921"
+ },
+ {
+  "input": "+6224-18421213",
+  "out": {
+   "input": "+6224-18421213",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "024",
+   "area": "Semarang",
+   "national": "(024) 18421213",
+   "e164": "+622418421213"
+  },
+  "e164": "+622418421213"
+ },
+ {
+  "input": "(021) 80376553",
+  "out": {
+   "input": "(021) 80376553",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "021",
+   "area": "Jakarta",
+   "national": "(021) 80376553",
+   "e164": "+622180376553"
+  },
+  "e164": "+622180376553"
+ },
+ {
+  "input": "(021-64515712",
+  "out": {
+   "input": "(021-64515712",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "021",
+   "area": "Jakarta",
+   "national": "(021) 64515712",
+   "e164": "+622164515712"
+  },
+  "e164": "+622164515712"
+ },
+ {
+  "input": "(077818904047",
+  "out": {
+   "input": "(077818904047",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0778",
+   "area": "Batam",
+   "national": "(0778) 18904047",
+   "e164": "+6277818904047"
+  },
+  "e164": "+6277818904047"
+ },
+ {
+  "input": "021) 9263616",
+  "out": {
+   "input": "021) 9263616",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "021",
+   "area": "Jakarta",
+   "national": "(021) 9263616",
+   "e164": "+62219263616"
+  },
+  "e164": "+62219263616"
+ },
+ {
+  "input": "(0244038360",
+  "out": {
+   "input": "(0244038360",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "024",
+   "area": "Semarang",
+   "national": "(024) 4038360",
+   "e164": "+62244038360"
+  },
+  "e164": "+62244038360"
+ },
+ {
+  "input": "+62361) 58598172",
+  "out": {
+   "input": "+62361) 58598172",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0361",
+   "area": "Denpasar",
+   "national": "(0361) 58598172",
+   "e164": "+6236158598172"
+  },
+  "e164": "+6236158598172"
+ },
+ {
+  "input": "(0274-37404646",
+  "out": {
+   "input": "(0274-37404646",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0274",
+   "area": "Yogyakarta",
+   "national": "(0274) 37404646",
+   "e164": "+6227437404646"
+  },
+  "e164": "+6227437404646"
+ },
+ {
+  "input": "+62999-23675520",
+  "out": {
+   "input": "+62999-23675520",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "national": "099923675520",
+   "e164": "+6299923675520"
+  },
+  "e164": "+6299923675520"
+ },
+ {
+  "input": "(021-65103277",
+  "out": {
+   "input": "(021-65103277",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "021",
+   "area": "Jakarta",
+   "national": "(021) 65103277",
+   "e164": "+622165103277"
+  },
+  "e164": "+622165103277"
+ },
+ {
+  "input": "0411-91824885",
+  "out": {
+   "input": "0411-91824885",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0411",
+   "area": "Makassar",
+   "national": "(0411) 91824885",
+   "e164": "+6241191824885"
+  },
+  "e164": "+6241191824885"
+ },
+ {
+  "input": "027437761906",
+  "out": {
+   "input": "027437761906",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0274",
+   "area": "Yogyakarta",
+   "national": "(0274) 37761906",
+   "e164": "+6227437761906"
+  },
+  "e164": "+6227437761906"
+ },
+ {
+  "input": "+622446478502",
+  "out": {
+   "input": "+622446478502",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "024",
+   "area": "Semarang",
+   "national": "(024) 46478502",
+   "e164": "+622446478502"
+  },
+  "e164": "+622446478502"
+ },
+ {
+  "input": "+623141229603",
+  "out": {
+   "input": "+623141229603",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "031",
+   "area": "Surabaya",
+   "national": "(031) 41229603",
+   "e164": "+623141229603"
+  },
+  "e164": "+623141229603"
+ },
+ {
+  "input": "031-1267132",
+  "out": {
+   "input": "031-1267132",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "031",
+   "area": "Surabaya",
+   "national": "(031) 1267132",
+   "e164": "+62311267132"
+  },
+  "e164": "+62311267132"
+ },
+ {
+  "input": "+62411) 76660929",
+  "out": {
+   "input": "+62411) 76660929",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0411",
+   "area": "Makassar",
+   "national": "(0411) 76660929",
+   "e164": "+6241176660929"
+  },
+  "e164": "+6241176660929"
+ },
+ {
+  "input": "+62778-25414703",
+  "out": {
+   "input": "+62778-25414703",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0778",
+   "area": "Batam",
+   "national": "(0778) 25414703",
+   "e164": "+6277825414703"
+  },
+  "e164": "+6277825414703"
+ },
+ {
+  "input": "(031-86405515",
+  "out": {
+   "input": "(031-86405515",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "031",
+   "area": "Surabaya",
+   "national": "(031) 86405515",
+   "e164": "+623186405515"
+  },
+  "e164": "+623186405515"
+ },
+ {
+  "input": "(061-57835721",
+  "out": {
+   "input": "(061-57835721",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "061",
+   "area": "Medan",
+   "national": "(061) 57835721",
+   "e164": "+626157835721"
+  },
+  "e164": "+626157835721"
+ },
+ {
+  "input": "(022) 88293994",
+  "out": {
+   "input": "(022) 88293994",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "022",
+   "area": "Bandung",
+   "national": "(022) 88293994",
+   "e164": "+622288293994"
+  },
+  "e164": "+622288293994"
+ },
+ {
+  "input": "0999-81786736",
+  "out": {
+   "input": "0999-81786736",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "national": "099981786736",
+   "e164": "+6299981786736"
+  },
+  "e164": "+6299981786736"
+ },
+ {
+  "input": "(031) 91159071",
+  "out": {
+   "input": "(031) 91159071",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "031",
+   "area": "Surabaya",
+   "national": "(031) 91159071",
+   "e164": "+623191159071"
+  },
+  "e164": "+623191159071"
+ },
+ {
+  "input": "+62778-60535280",
+  "out": {
+   "input": "+62778-60535280",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0778",
+   "area": "Batam",
+   "national": "(0778) 60535280",
+   "e164": "+6277860535280"
+  },
+  "e164": "+6277860535280"
+ },
+ {
+  "input": "0361-54865196",
+  "out": {
+   "input": "0361-54865196",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0361",
+   "area": "Denpasar",
+   "national": "(0361) 54865196",
+   "e164": "+6236154865196"
+  },
+  "e164": "+6236154865196"
+ },
+ {
+  "input": "0778-84843179",
+  "out": {
+   "input": "0778-84843179",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0778",
+   "area": "Batam",
+   "national": "(0778) 84843179",
+   "e164": "+6277884843179"
+  },
+  "e164": "+6277884843179"
+ },
+ {
+  "input": "(0251-3973435",
+  "out": {
+   "input": "(0251-3973435",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0251",
+   "area": "Bogor",
+   "national": "(0251) 3973435",
+   "e164": "+622513973435"
+  },
+  "e164": "+622513973435"
+ },
+ {
+  "input": "(075178429168",
+  "out": {
+   "input": "(075178429168",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0751",
+   "area": "Padang",
+   "national": "(0751) 78429168",
+   "e164": "+6275178429168"
+  },
+  "e164": "+6275178429168"
+ },
+ {
+  "input": "(025146488900",
+  "out": {
+   "input": "(025146488900",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0251",
+   "area": "Bogor",
+   "national": "(0251) 46488900",
+   "e164": "+6225146488900"
+  },
+  "e164": "+6225146488900"
+ },
+ {
+  "input": "+6224-18335508",
+  "out": {
+   "input": "+6224-18335508",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "024",
+   "area": "Semarang",
+   "national": "(024) 18335508",
+   "e164": "+622418335508"
+  },
+  "e164": "+622418335508"
+ },
+ {
+  "input": "+6221-8100909",
+  "out": {
+   "input": "+6221-8100909",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "021",
+   "area": "Jakarta",
+   "national": "(021) 8100909",
+   "e164": "+62218100909"
+  },
+  "e164": "+62218100909"
+ },
+ {
+  "input": "0751-7110187",
+  "out": {
+   "input": "0751-7110187",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0751",
+   "area": "Padang",
+   "national": "(0751) 7110187",
+   "e164": "+627517110187"
+  },
+  "e164": "+627517110187"
+ },
+ {
+  "input": "+6222-28954158",
+  "out": {
+   "input": "+6222-28954158",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "022",
+   "area": "Bandung",
+   "national": "(022) 28954158",
+   "e164": "+622228954158"
+  },
+  "e164": "+622228954158"
+ },
+ {
+  "input": "+62611751940",
+  "out": {
+   "input": "+62611751940",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "061",
+   "area": "Medan",
+   "national": "(061) 1751940",
+   "e164": "+62611751940"
+  },
+  "e164": "+62611751940"
+ },
+ {
+  "input": "(0361-92702563",
+  "out": {
+   "input": "(0361-92702563",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0361",
+   "area": "Denpasar",
+   "national": "(0361) 92702563",
+   "e164": "+6236192702563"
+  },
+  "e164": "+6236192702563"
+ },
+ {
+  "input": "+622259877319",
+  "out": {
+   "input": "+622259877319",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "022",
+   "area": "Bandung",
+   "national": "(022) 59877319",
+   "e164": "+622259877319"
+  },
+  "e164": "+622259877319"
+ },
+ {
+  "input": "+6231) 96598591",
+  "out": {
+   "input": "+6231) 96598591",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "031",
+   "area": "Surabaya",
+   "national": "(031) 96598591",
+   "e164": "+623196598591"
+  },
+  "e164": "+623196598591"
+ },
+ {
+  "input": "+62751-41765462",
+  "out": {
+   "input": "+62751-41765462",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0751",
+   "area": "Padang",
+   "national": "(0751) 41765462",
+   "e164": "+6275141765462"
+  },
+  "e164": "+6275141765462"
+ },
+ {
+  "input": "(0274) 73989388",
+  "out": {
+   "input": "(0274) 73989388",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0274",
+   "area": "Yogyakarta",
+   "national": "(0274) 73989388",
+   "e164": "+6227473989388"
+  },
+  "e164": "+6227473989388"
+ },
+ {
+  "input": "02235374632",
+  "out": {
+   "input": "02235374632",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "022",
+   "area": "Bandung",
+   "national": "(022) 35374632",
+   "e164": "+622235374632"
+  },
+  "e164": "+622235374632"
+ },
+ {
+  "input": "(024-53910414",
+  "out": {
+   "input": "(024-53910414",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "024",
+   "area": "Semarang",
+   "national": "(024) 53910414",
+   "e164": "+622453910414"
+  },
+  "e164": "+622453910414"
+ },
+ {
+  "input": "(031-28651028",
+  "out": {
+   "input": "(031-28651028",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "031",
+   "area": "Surabaya",
+   "national": "(031) 28651028",
+   "e164": "+623128651028"
+  },
+  "e164": "+623128651028"
+ },
+ {
+  "input": "(025185721018",
+  "out": {
+   "input": "(025185721018",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0251",
+   "area": "Bogor",
+   "national": "(0251) 85721018",
+   "e164": "+6225185721018"
+  },
+  "e164": "+6225185721018"
+ },
+ {
+  "input": "+62411-21404257",
+  "out": {
+   "input": "+62411-21404257",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0411",
+   "area": "Makassar",
+   "national": "(0411) 21404257",
+   "e164": "+6241121404257"
+  },
+  "e164": "+6241121404257"
+ },
+ {
+  "input": "(02118966451",
+  "out": {
+   "input": "(02118966451",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "021",
+   "area": "Jakarta",
+   "national": "(021) 18966451",
+   "e164": "+622118966451"
+  },
+  "e164": "+622118966451"
+ },
+ {
+  "input": "+62778) 14377515",
+  "out": {
+   "input": "+62778) 14377515",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0778",
+   "area": "Batam",
+   "national": "(0778) 14377515",
+   "e164": "+6277814377515"
+  },
+  "e164": "+6277814377515"
+ },
+ {
+  "input": "(0778) 93293747",
+  "out": {
+   "input": "(0778) 93293747",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0778",
+   "area": "Batam",
+   "national": "(0778) 93293747",
+   "e164": "+6277893293747"
+  },
+  "e164": "+6277893293747"
+ },
+ {
+  "input": "+6227475252248",
+  "out": {
+   "input": "+6227475252248",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0274",
+   "area": "Yogyakarta",
+   "national": "(0274) 75252248",
+   "e164": "+6227475252248"
+  },
+  "e164": "+6227475252248"
+ },
+ {
+  "input": "+6231-10581336",
+  "out": {
+   "input": "+6231-10581336",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "031",
+   "area": "Surabaya",
+   "national": "(031) 10581336",
+   "e164": "+623110581336"
+  },
+  "e164": "+623110581336"
+ },
+ {
+  "input": "061) 54669397",
+  "out": {
+   "input": "061) 54669397",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "061",
+   "area": "Medan",
+   "national": "(061) 54669397",
+   "e164": "+626154669397"
+  },
+  "e164": "+626154669397"
+ },
+ {
+  "input": "022) 35398812",
+  "out": {
+   "input": "022) 35398812",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "022",
+   "area": "Bandung",
+   "national": "(022) 35398812",
+   "e164": "+622235398812"
+  },
+  "e164": "+622235398812"
+ },
+ {
+  "input": "02196004667",
+  "out": {
+   "input": "02196004667",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "021",
+   "area": "Jakarta",
+   "national": "(021) 96004667",
+   "e164": "+622196004667"
+  },
+  "e164": "+622196004667"
+ },
+ {
+  "input": "+62251) 364250",
+  "out": {
+   "input": "+62251) 364250",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0251",
+   "area": "Bogor",
+   "national": "(0251) 364250",
+   "e164": "+62251364250"
+  },
+  "e164": "+62251364250"
+ },
+ {
+  "input": "+62999-59002884",
+  "out": {
+   "input": "+62999-59002884",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "national": "099959002884",
+   "e164": "+6299959002884"
+  },
+  "e164": "+6299959002884"
+ },
+ {
+  "input": "0251-38726809",
+  "out": {
+   "input": "0251-38726809",
+   "valid": true,
+   "errors": [],
+   "warnings": [],
+   "type": "landline",
+   "areaCode": "0251",
+   "area": "Bogor",
+   "national": "(0251) 38726809",
+   "e164": "+6225138726809"
+  },
+  "e164": "+6225138726809"
+ }
+]

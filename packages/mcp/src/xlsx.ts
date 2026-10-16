@@ -8,7 +8,7 @@ export interface Sheet {
   csv: string;
 }
 
-function unzip(buf: Buffer): Map<string, Buffer> {
+export function unzip(buf: Buffer): Map<string, Buffer> {
   const files = new Map<string, Buffer>();
   let eocd = -1;
   for (let i = buf.length - 22; i >= Math.max(0, buf.length - 65557); i--) {
@@ -39,7 +39,7 @@ function unzip(buf: Buffer): Map<string, Buffer> {
   return files;
 }
 
-function decodeXml(s: string): string {
+export function decodeXml(s: string): string {
   return s.replace(/&(amp|lt|gt|quot|apos|#(\d+)|#x([0-9a-f]+));/gi, (all, name: string, dec?: string, hex?: string) => {
     if (dec) return String.fromCodePoint(Number(dec));
     if (hex) return String.fromCodePoint(parseInt(hex, 16));
@@ -57,7 +57,7 @@ function columnIndex(ref: string): number {
   return n - 1;
 }
 
-function csvCell(value: string): string {
+export function csvCell(value: string): string {
   return /[",\n\r]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
 }
 
@@ -101,7 +101,7 @@ export function readXlsx(buf: Buffer): Sheet[] {
       rows.push(cells);
     }
     // Excel omits trailing empty cells; pad so every row has as many fields as the widest one.
-    const width = Math.max(0, ...rows.map((r) => r.length));
+    const width = rows.reduce((w, r) => Math.max(w, r.length), 0);
     const csv = rows.map((r) => [...r, ...Array(width - r.length).fill('')].map(csvCell).join(',')).join('\n');
     sheets.push({ name, csv });
   }

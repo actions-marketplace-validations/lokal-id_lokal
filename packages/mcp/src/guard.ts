@@ -17,7 +17,7 @@
 import { statSync } from 'node:fs';
 import path from 'node:path';
 import { detectPii, partialMask, type PiiMatch, type PiiType } from '@lokal-id/core';
-import { globToRegExp, loadDocument, loadIgnore, walkFiles } from './files.ts';
+import { GUARD_MAX_ZIP_BYTES, GUARD_SAMPLE_BYTES, globToRegExp, loadDocument, loadIgnore, walkFiles } from './files.ts';
 import { dataReadsInCommand, SHELL_DATA_FILE } from './shell-reads.ts';
 
 // One of these is enough to hold a prompt or a file back: identity numbers, and labeled sensitive data.
@@ -70,7 +70,8 @@ function summarize(matches: PiiMatch[], examples = true): string {
 
 function fileTexts(file: string): string[] | undefined {
   try {
-    const doc = loadDocument(file);
+    // A big export is checked from its first rows instead of being skipped: skipping once let a 6 MB CSV through.
+    const doc = loadDocument(file, { sampleBytes: GUARD_SAMPLE_BYTES, maxZipBytes: GUARD_MAX_ZIP_BYTES });
     if (doc.kind === 'skipped') return undefined;
     return doc.kind === 'text' ? [doc.text] : doc.sheets.map((s) => s.csv);
   } catch {
@@ -100,7 +101,18 @@ function verdictOf(found: PiiMatch[]): PiiMatch[] | undefined {
  * and labels give context (`cut -d, -f2` prints a bare column of names), and counts what reaches the output.
  */
 function shownPii(full: string, shown: string, file: string): PiiMatch[] {
-  const inFile = detectPii(full, { minConfidence: 'high' }).filter((m) => shown.includes(m.value));
+  const all = detectPii(full, { minConfidence: 'high' });
+  let inFile: PiiMatch[];
+  if (shown.length >= full.length) {
+    inFile = all; // `cat`: everything is shown
+  } else if (shown.length <= 100_000) {
+    inFile = all.filter((m) => shown.includes(m.value));
+  } else {
+    // A large partial output (`cut`, `grep` on a big export): look values up by field. Searching the whole output
+    // once per match was quadratic and could run past the hook's 10 s, which lets the command through.
+    const fields = new Set(shown.split(/[\t\n\r,;|]+/).map((f) => f.trim().replace(/^"|"$/g, '')));
+    inFile = all.filter((m) => fields.has(m.value));
+  }
   const direct = detectPii(withHeader(full, shown, file), { minConfidence: 'high' });
   return inFile.length >= direct.length ? inFile : direct;
 }
@@ -130,7 +142,7 @@ function shellTool(command: string, cwd: string, powershell: boolean, ignored: (
       const shown = r.select(full);
       if (!shown.trim()) continue;
       const here = shownPii(full, shown, r.file);
-      matches.push(...here);
+      for (const m of here) matches.push(m);
       if (verdictOf(here)) files.add(r.file);
     }
   }
@@ -184,7 +196,7 @@ function grepTool(input: NonNullable<HookInput['tool_input']>, cwd: string, igno
       if (!keep.size) continue;
       const shown = [...keep].sort((a, b) => a - b).map((i) => lines[i]).join('\n');
       const here = shownPii(full, shown, file);
-      matches.push(...here);
+      for (const m of here) matches.push(m);
       if (verdictOf(here)) files.push(file);
     }
   }

@@ -568,11 +568,46 @@ function detectPassports(text) {
   const re = /(?<![A-Za-z0-9])[A-Z]{1,2}\s?\d{6,8}(?![A-Za-z0-9])/g;
   return [...text.matchAll(re)].filter((m) => /\b(paspor|passport)\b/.test(before(text, m.index, 30))).map((m) => match("PASSPORT", m.index, m[0], "high"));
 }
+var PHONE_LABELS = /* @__PURE__ */ new Set([
+  "hp",
+  "no",
+  "nomor",
+  "nohp",
+  "telp",
+  "tlp",
+  "tel",
+  "telepon",
+  "telpon",
+  "phone",
+  "ph",
+  "handphone",
+  "mobile",
+  "wa",
+  "whatsapp",
+  "wa.me",
+  "nowa",
+  "sms",
+  "call",
+  "cs",
+  "cp",
+  "kontak",
+  "contact"
+]);
+function gluedToCode(text, index) {
+  const sep = text[index - 1];
+  if (sep !== "-" && sep !== "/")
+    return false;
+  let i = index - 1;
+  while (i > 0 && /[A-Za-z0-9.]/.test(text[i - 1]))
+    i--;
+  const token = text.slice(i, index - 1).toLowerCase();
+  return /[a-z]/.test(token) && !PHONE_LABELS.has(token) && !token.endsWith("wa.me");
+}
 function detectPhones(text) {
   const out = [];
   const mobile = /(?<![\d+\w])(?:\+62|62|0)[ \t-]?8\d{1,2}(?:[ \t.-]?\d{3,4}){2,3}(?![\d\w])/g;
   for (const m of text.matchAll(mobile)) {
-    if (parsePhone(m[0]).valid)
+    if (parsePhone(m[0]).valid && !gluedToCode(text, m.index))
       out.push(match("PHONE", m.index, m[0], "high"));
   }
   const landline = /\((?:\+62[ \t]?|0)\d{2,3}\)[ \t]?\d{3,4}[ \t-]?\d{3,4}(?!\d)|(?<![\d\w])\+62[ \t]?[2-79]\d{1,2}[ \t-]?\d{3,4}[ \t-]?\d{3,4}(?!\d)/g;
@@ -632,7 +667,7 @@ function detectHealth(text) {
   for (const m of text.matchAll(strong)) {
     out.push(match("HEALTH", m.index + m[0].length - m[1].length, m[1], "high"));
   }
-  const gated = new RegExp(`\\b(?:positif|menderita|terkena|kena|sakit|pasien|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya)\\s+((?:penyakit\\s+)?(?:${CONDITIONS}))\\b`, "gi");
+  const gated = new RegExp(`\\b(?:positif|menderita|terkena|kena|sakit|pasien|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|saya|aku|gue|gw|gua|dia|beliau)\\s+((?:penyakit\\s+)?(?:${CONDITIONS}))\\b`, "gi");
   for (const m of text.matchAll(gated)) {
     out.push(match("HEALTH", m.index + m[0].length - m[1].length, m[1], "medium"));
   }
@@ -790,8 +825,8 @@ function detectNames(text) {
 var REPORTED_SPEECH = /\b(?:tadi|kemarin|kemaren|katanya|kata)[ \t]+([A-Za-z]{3,15})[ \t]+(bilang|ngomong|nanya|nanyain|minta|cerita|nelpon|telpon|ngechat|nge-?wa|kasih\s+tau|ngasih\s+tau)\b/gi;
 var NOT_A_SPEAKER = new Set("mama mamah papa papah ayah bunda emak abah suami istri anak adik adek kakak abang teman temen sahabat tetangga bos atasan boss orangnya mereka kalian sistem system aplikasi website web bot google kurir driver ojol sopir penjual pembeli seller admin cs operator petugas dokter perawat bidan guru dosen polisi pacar doi beliau".split(" "));
 var GREETING_SELF = /\b(?:halo|hai|hallo|hi|permisi|assalamualaikum|selamat\s+(?:pagi|siang|sore|malam))[ \t]*,?[ \t]*(?:(?:kak|kakak|min|admin|gan|sis|mas|mbak|pak|bu|bang)[ \t]*,?[ \t]+)?(?:ini|sama|dengan|dgn)[ \t]+/gi;
-var CHAT_SENDER = /^‎?\[?\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4},?[ \t]+\d{1,2}[.:]\d{2}(?:[.:]\d{2})?(?:[ \t ]?[AP]M)?\]?(?:[ \t]+-)?[ \t]+([^:\n]{1,60}?):[ \t]/gm;
-var CHAT_TITLE = /^(?:Chat WhatsApp dengan|WhatsApp Chat with|Chat dengan|Riwayat chat dengan)[ \t]+([^\n]{1,60}?)[ \t]*$/gim;
+var CHAT_SENDER = /^‎?\[?\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4},?[ \t]+\d{1,2}[.:]\d{2}(?:[.:]\d{2})?(?:[ \t ]?[AP]M)?\]?(?:[ \t]+-)?[ \t]+([^:\n]{1,60}?):[ \t]/dgm;
+var CHAT_TITLE = /^(?:Chat WhatsApp dengan|WhatsApp Chat with|Chat dengan|Riwayat chat dengan)[ \t]+([^\n]{1,60}?)[ \t]*$/dgim;
 var NOT_A_PERSON = /\b(?:toko|shop|store|official|olshop|admin|cs|customer service|support|tim|team|pt|cv|ud|bot|system|sistem|info|layanan|grosir)\b|^(?:error|warn|warning|info|debug|trace|fatal|notice)$/i;
 function detectChatSenders(text) {
   const out = [];
@@ -800,12 +835,13 @@ function detectChatSenders(text) {
       const sender = m[1].replace(/^~\s*/, "").trim();
       if (!new RegExp("\\p{L}", "u").test(sender) || /^[+\d\s()-]+$/.test(sender) || NOT_A_PERSON.test(sender))
         continue;
-      const start = m.index + m[0].indexOf(m[1]) + m[1].indexOf(sender);
+      const start = m.indices[1][0] + m[1].indexOf(sender);
       out.push(match("NAME", start, sender, "high"));
     }
   }
   return out;
 }
+var DIGITS_AT = /\d+/y;
 var THING_TABLE = /produk|product|barang|item|sku|kategori|categor|menu|toko|store|shop|merchant|brand|merek|layanan|service|paket|package|kota|city|provinsi|province|wilayah|region|kecamatan|kelurahan|desa|district|bank|kurir|courier|ekspedisi|tag|role|permission|setting|config|status|metode|method/i;
 function detectSqlInserts(text) {
   const out = [];
@@ -845,7 +881,8 @@ function detectSqlInserts(text) {
       else if (depth === 0 && !/[\s,]/.test(ch))
         break;
       else if (depth === 1 && /\d/.test(ch) && /[(,\s]/.test(text[i - 1])) {
-        const num = /^\d+/.exec(text.slice(i))[0];
+        DIGITS_AT.lastIndex = i;
+        const num = DIGITS_AT.exec(text)[0];
         const type = types[col];
         if (type && isPlausibleValue(type, num, columns[col]))
           out.push(match(type, i, num, "high"));
@@ -869,6 +906,9 @@ function detectStreetAddresses(text) {
 }
 var NAME_STOP = /\s(?:dan|dengan|yang|nik|hp|no|nomor|umur|usia|alamat|email|tinggal|lahir|asal|dari|di|ke|untuk|sebagai|mau|ingin|minta|tolong)\b/i;
 var MULTI_PART = /* @__PURE__ */ new Set(["ADDRESS", "BIRTH_DATE", "HEALTH", "GEO"]);
+function takeWords(s, n) {
+  return s.split(/(\s+)/).slice(0, Math.max(0, 2 * n - 1)).join("");
+}
 function cutValue(type, raw) {
   let v = raw;
   const semi = v.search(/[;|&]/);
@@ -894,7 +934,7 @@ function cutValue(type, raw) {
           break;
         }
       }
-      v = words.slice(0, cut).join(" ");
+      v = takeWords(head, cut);
     }
   }
   if (MULTI_PART.has(type)) {
@@ -916,19 +956,72 @@ function cutValue(type, raw) {
     const digit = v.search(/\d/);
     if (digit >= 0)
       v = v.slice(0, digit);
-    v = v.split(/\s+/).slice(0, 5).join(" ");
+    v = takeWords(v, 5);
   }
   return v.replace(/[\s.,}\]]+$/, "").trim();
 }
-var LABEL = /((?:["'`]?[A-Za-z][A-Za-z0-9_./-]*["'`]?[ \t]+){0,4}["'`]?[A-Za-z][A-Za-z0-9_./-]*["'`]?)$/;
+var isQuote = (c) => c === '"' || c === "'" || c === "`";
+var isLabelChar = (c) => c !== void 0 && /[A-Za-z0-9_./-]/.test(c);
+var isLetter = (c) => c !== void 0 && /[A-Za-z]/.test(c);
+var isJsSpace = (c) => c !== void 0 && /\s/.test(c);
+function labelBefore(text, lineStart, end) {
+  while (end > lineStart && isJsSpace(text[end - 1]))
+    end--;
+  let pos = end;
+  let start = -1;
+  for (let words = 0; words < 5; words++) {
+    let p = pos;
+    if (p > lineStart && isQuote(text[p - 1]))
+      p--;
+    const runEnd = p;
+    while (p > lineStart && isLabelChar(text[p - 1]))
+      p--;
+    let first = p;
+    while (first < runEnd && !isLetter(text[first]))
+      first++;
+    if (first >= runEnd)
+      break;
+    start = first === p && p > lineStart && isQuote(text[p - 1]) ? p - 1 : first;
+    if (first !== p)
+      break;
+    let q = start;
+    while (q > lineStart && (text[q - 1] === " " || text[q - 1] === "	"))
+      q--;
+    if (q === start)
+      break;
+    pos = q;
+  }
+  return start < 0 ? void 0 : text.slice(start, end);
+}
+function valueExtent(text, start, end) {
+  const endsValue = (i) => text[i] === ":" && !(text[i + 1] === "/" && text[i + 2] === "/");
+  const colonsCut = !endsValue(start);
+  for (let i = start; i < end; i++) {
+    const c = text[i];
+    if (c === ";" || c === "|" || c === "&")
+      return i;
+    if (colonsCut && endsValue(i))
+      return Math.min(end, i + 3);
+  }
+  return end;
+}
 function detectLabeledFields(text) {
   const out = [];
+  let lineStart = 0;
+  let lineEnd = text.indexOf("\n");
+  if (lineEnd === -1)
+    lineEnd = text.length;
   for (const m of text.matchAll(/[ \t]*(?::(?![:\/])|=(?![=>]))[ \t]*/g)) {
-    const lineStart = text.lastIndexOf("\n", m.index - 1) + 1;
-    const label = LABEL.exec(text.slice(lineStart, m.index).trimEnd());
+    while (m.index > lineEnd) {
+      lineStart = lineEnd + 1;
+      lineEnd = text.indexOf("\n", lineStart);
+      if (lineEnd === -1)
+        lineEnd = text.length;
+    }
+    const label = labelBefore(text, lineStart, m.index);
     if (!label)
       continue;
-    const words = label[1].trim().split(/[ \t]+/);
+    const words = label.trim().split(/[ \t]+/);
     let type;
     let key = "";
     for (let i = 0; i < words.length && !type; i++) {
@@ -938,19 +1031,23 @@ function detectLabeledFields(text) {
     if (!type)
       continue;
     const valueStart = m.index + m[0].length;
-    const lineEnd = text.indexOf("\n", valueStart);
-    const raw = text.slice(valueStart, lineEnd === -1 ? text.length : lineEnd).replace(/\r$/, "");
+    const rawEnd = lineEnd > valueStart && text[lineEnd - 1] === "\r" ? lineEnd - 1 : lineEnd;
     let value;
     let start = valueStart;
-    const quote = raw[0];
-    if (quote === '"' || quote === "'" || quote === "`") {
-      const close = raw.indexOf(quote, 1);
-      if (close === -1)
+    const quote = text[valueStart];
+    if (valueStart < rawEnd && isQuote(quote)) {
+      let close = valueStart + 1;
+      while (close < rawEnd && text[close] !== quote)
+        close++;
+      if (close >= rawEnd)
         continue;
-      value = raw.slice(1, close);
+      value = text.slice(valueStart + 1, close);
       start += 1;
     } else {
+      const raw = text.slice(valueStart, valueExtent(text, valueStart, rawEnd));
       value = cutValue(type, raw);
+      if (value)
+        start += raw.indexOf(value);
     }
     if (!isPlausibleValue(type, value, key))
       continue;
@@ -1033,7 +1130,13 @@ var DETECTORS = [
   detectCsvColumns
 ];
 function detectPii(text, options = {}) {
+  for (const t of [...options.types ?? [], ...options.exclude ?? []]) {
+    if (!PII_TYPES.includes(t))
+      throw new RangeError(`Unknown PII type "${t}". Valid types: ${PII_TYPES.join(", ")}`);
+  }
   const types = new Set(options.types ?? PII_TYPES);
+  for (const t of options.exclude ?? [])
+    types.delete(t);
   const minRank = options.minConfidence === "high" ? 2 : 1;
   const rank = (m) => m.confidence === "high" ? 2 : 1;
   const candidates = DETECTORS.flatMap((d) => d(text)).filter((m) => m.end > m.start && types.has(m.type) && rank(m) >= minRank);
@@ -1064,7 +1167,7 @@ function partialMask(type, value) {
     case "SIM":
       return `${stars(digits.length - 3)}${digits.slice(-3)}`;
     case "PASSPORT":
-      return `${value.charAt(0)}${stars(5)}${value.slice(-2)}`;
+      return `${[...value][0] ?? ""}${stars(5)}${value.slice(-2)}`;
     case "IP": {
       const [a, b] = value.split(".");
       return `${a}.${b}.*.*`;
@@ -1087,7 +1190,7 @@ function partialMask(type, value) {
     }
     case "EMAIL": {
       const [user = "", domain = ""] = value.split("@");
-      return `${user.charAt(0)}${stars(3)}@${domain}`;
+      return `${[...user][0] ?? ""}${stars(3)}@${domain}`;
     }
     case "CARD":
     case "BANK_ACCOUNT":
@@ -1099,7 +1202,7 @@ function partialMask(type, value) {
       return `${region} ${stars(4)}`;
     }
     case "NAME":
-      return value.split(/\s+/).map((w) => `${w.charAt(0)}${stars(3)}`).join(" ");
+      return value.split(/\s+/).map((w) => `${[...w][0] ?? ""}${stars(3)}`).join(" ");
     case "ADDRESS":
       return `${value.split(/\s+/)[0]} ${stars(3)}`;
   }
@@ -1193,15 +1296,56 @@ function readXlsx(buf) {
       }
       rows.push(cells);
     }
-    const width = Math.max(0, ...rows.map((r) => r.length));
+    const width = rows.reduce((w, r) => Math.max(w, r.length), 0);
     const csv = rows.map((r) => [...r, ...Array(width - r.length).fill("")].map(csvCell).join(",")).join("\n");
     sheets.push({ name, csv });
   }
   return sheets;
 }
 
+// packages/mcp/src/docx.ts
+var PARTS = /^word\/(document|header\d*|footer\d*|footnotes|endnotes|comments)\.xml$/;
+var ORDER = ["document", "header", "footer", "footnotes", "endnotes", "comments"];
+var TOKEN = /<w:t(?:\s[^>]*)?>([\s\S]*?)<\/w:t>|<w:(tab|br|cr)\b[^>]*\/>|<\/w:p>/g;
+function paragraphs(xml) {
+  let out = "";
+  for (const m of xml.matchAll(TOKEN)) {
+    if (m[1] !== void 0) out += decodeXml(m[1]);
+    else if (m[2] === "tab") out += "	";
+    else out += "\n";
+  }
+  return out.replace(/\n{3,}/g, "\n\n").trim();
+}
+function tableCsv(xml) {
+  const rows = [...xml.matchAll(/<w:tr\b[^>]*>([\s\S]*?)<\/w:tr>/g)].map(
+    (r) => [...r[1].matchAll(/<w:tc\b[^>]*>([\s\S]*?)<\/w:tc>/g)].map((c) => paragraphs(c[1]).replace(/\s*\n\s*/g, " "))
+  );
+  const width = rows.reduce((w, r) => Math.max(w, r.length), 0);
+  return rows.map((r) => [...r, ...Array(width - r.length).fill("")].map(csvCell).join(",")).join("\n");
+}
+function readDocx(buf) {
+  const files = unzip(buf);
+  if (!files.has("word/document.xml")) throw new Error("Not a Word document (word/document.xml is missing).");
+  const names = [...files.keys()].filter((n) => PARTS.test(n));
+  const rank = (n) => ORDER.findIndex((o) => n.startsWith(`word/${o}`));
+  names.sort((a, b) => rank(a) - rank(b) || a.localeCompare(b, "en", { numeric: true }));
+  const tables = [];
+  const texts = names.map(
+    (n) => paragraphs(
+      files.get(n).toString("utf8").replace(/<w:tbl\b[^>]*>[\s\S]*?<\/w:tbl>/g, (tbl) => {
+        const name = `Tabel ${tables.length + 1}`;
+        tables.push({ name, csv: tableCsv(tbl) });
+        return `<w:p><w:r><w:t>[${name}]</w:t></w:r></w:p>`;
+      })
+    )
+  );
+  return [{ name: "Dokumen", csv: texts.filter(Boolean).join("\n\n") }, ...tables];
+}
+
 // packages/mcp/src/files.ts
-var MAX_FILE_BYTES = 5 * 1024 * 1024;
+var MAX_FILE_BYTES = 100 * 1024 * 1024;
+var GUARD_SAMPLE_BYTES = 5 * 1024 * 1024;
+var GUARD_MAX_ZIP_BYTES = 20 * 1024 * 1024;
 var SKIP_DIRS = /* @__PURE__ */ new Set([
   "node_modules",
   ".git",
@@ -1297,11 +1441,23 @@ function loadIgnore(root) {
     });
   };
 }
+function readHead(file, bytes) {
+  const fd = openSync(file, "r");
+  try {
+    const buf = Buffer.alloc(bytes);
+    const n = readSync(fd, buf, 0, bytes, 0);
+    const text = buf.subarray(0, n).toString("utf8");
+    const lastBreak = text.lastIndexOf("\n");
+    return lastBreak > 0 ? text.slice(0, lastBreak) : text;
+  } finally {
+    closeSync(fd);
+  }
+}
+var mb = (bytes) => `${Math.round(bytes / 1024 / 1024)} MB`;
 var UNSUPPORTED_DATA = {
   ".xls": "Excel 97-2003 (.xls) is not supported; save it as .xlsx or .csv",
   ".pdf": "PDF is not supported yet",
-  ".doc": "Word documents are not supported yet",
-  ".docx": "Word documents are not supported yet",
+  ".doc": "Word 97-2003 (.doc) is not supported; save it as .docx",
   ".ods": "OpenDocument spreadsheets are not supported yet",
   ".db": "database file",
   ".sqlite": "database file",
@@ -1316,10 +1472,14 @@ var UNSUPPORTED_DATA = {
   ".heic": "image (may be a KTP or selfie photo)",
   ".webp": "image (may be a KTP or selfie photo)"
 };
-function loadDocument(file) {
+function loadDocument(file, options = {}) {
   const ext = path.extname(file).toLowerCase();
   const st = statSync(file);
-  if (st.size > MAX_FILE_BYTES) return { kind: "skipped", reason: "larger than 5 MB", dataBearing: true };
+  if (st.size > MAX_FILE_BYTES) return { kind: "skipped", reason: `larger than ${mb(MAX_FILE_BYTES)}`, dataBearing: true };
+  const zipped = ext === ".xlsx" || ext === ".xlsm" || ext === ".docx";
+  if (zipped && options.maxZipBytes !== void 0 && st.size > options.maxZipBytes) {
+    return { kind: "skipped", reason: `larger than ${mb(options.maxZipBytes)}`, dataBearing: true };
+  }
   if (ext === ".xlsx" || ext === ".xlsm") {
     try {
       return { kind: "sheets", sheets: readXlsx(readFileSync(file)) };
@@ -1327,9 +1487,19 @@ function loadDocument(file) {
       return { kind: "skipped", reason: `unreadable spreadsheet: ${e.message}`, dataBearing: true };
     }
   }
+  if (ext === ".docx") {
+    try {
+      return { kind: "sheets", sheets: readDocx(readFileSync(file)), unit: "part" };
+    } catch (e) {
+      return { kind: "skipped", reason: `unreadable Word document: ${e.message}`, dataBearing: true };
+    }
+  }
   const unsupported = UNSUPPORTED_DATA[ext];
   if (unsupported) return { kind: "skipped", reason: unsupported, dataBearing: true };
   if (!isTextFile(file)) return { kind: "skipped", reason: "binary file", dataBearing: false };
+  if (options.sampleBytes !== void 0 && st.size > options.sampleBytes) {
+    return { kind: "text", text: readHead(file, options.sampleBytes), sampled: true };
+  }
   return { kind: "text", text: readFileSync(file, "utf8") };
 }
 
@@ -1676,7 +1846,7 @@ function dataReadsInCommand(command, cwd, powershell = false) {
       flow = files.length ? files.map((file) => ({ file, select: narrow })) : flow.map((r) => ({ file: r.file, select: (t) => narrow(r.select(t)) }));
       if (seg.writesToFile && seg.program !== "tee") flow = [];
     }
-    out.push(...flow);
+    for (const r of flow) out.push(r);
   }
   return out;
 }
@@ -1721,7 +1891,7 @@ function summarize(matches, examples = true) {
 }
 function fileTexts(file) {
   try {
-    const doc = loadDocument(file);
+    const doc = loadDocument(file, { sampleBytes: GUARD_SAMPLE_BYTES, maxZipBytes: GUARD_MAX_ZIP_BYTES });
     if (doc.kind === "skipped") return void 0;
     return doc.kind === "text" ? [doc.text] : doc.sheets.map((s) => s.csv);
   } catch {
@@ -1742,7 +1912,16 @@ function verdictOf(found) {
   return strict || found.length >= BULK_THRESHOLD ? found : void 0;
 }
 function shownPii(full, shown, file) {
-  const inFile = detectPii(full, { minConfidence: "high" }).filter((m) => shown.includes(m.value));
+  const all2 = detectPii(full, { minConfidence: "high" });
+  let inFile;
+  if (shown.length >= full.length) {
+    inFile = all2;
+  } else if (shown.length <= 1e5) {
+    inFile = all2.filter((m) => shown.includes(m.value));
+  } else {
+    const fields2 = new Set(shown.split(/[\t\n\r,;|]+/).map((f) => f.trim().replace(/^"|"$/g, "")));
+    inFile = all2.filter((m) => fields2.has(m.value));
+  }
   const direct = detectPii(withHeader(full, shown, file), { minConfidence: "high" });
   return inFile.length >= direct.length ? inFile : direct;
 }
@@ -1768,7 +1947,7 @@ function shellTool(command, cwd, powershell, ignored) {
       const shown = r.select(full);
       if (!shown.trim()) continue;
       const here = shownPii(full, shown, r.file);
-      matches.push(...here);
+      for (const m of here) matches.push(m);
       if (verdictOf(here)) files.add(r.file);
     }
   }
@@ -1816,7 +1995,7 @@ function grepTool(input, cwd, ignored) {
       if (!keep.size) continue;
       const shown = [...keep].sort((a, b) => a - b).map((i) => lines[i]).join("\n");
       const here = shownPii(full, shown, file);
-      matches.push(...here);
+      for (const m of here) matches.push(m);
       if (verdictOf(here)) files.push(file);
     }
   }

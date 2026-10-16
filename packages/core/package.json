@@ -1,6 +1,6 @@
 {
   "name": "@lokal-id/core",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Indonesian data primitives for apps and AI agents: NIK, NPWP, phone numbers, Rupiah, terbilang, wilayah Kemendagri, and Samaran PII masking.",
   "type": "module",
   "exports": {

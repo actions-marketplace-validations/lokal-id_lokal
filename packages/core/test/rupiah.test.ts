@@ -83,3 +83,22 @@ test('terbilang untuk kuitansi', () => {
   assert.equal(terbilang(1500000, { currency: true, case: 'title' }), 'Satu Juta Lima Ratus Ribu Rupiah');
   assert.equal(terbilang(25000, { case: 'sentence' }), 'Dua puluh lima ribu');
 });
+
+test('pembulatan yang melewati satuan dan angka sangat besar', () => {
+  assert.equal(formatRupiahShort(999999), 'Rp1 jt');
+  assert.equal(formatRupiahShort(999.96), 'Rp1 rb');
+  assert.equal(formatRupiahShort(950000), 'Rp950 rb');
+  assert.equal(formatRupiah(1e21), 'Rp1.000.000.000.000.000.000.000');
+  assert.equal(formatRupiah(0.125, { decimals: true }), 'Rp0,13');
+  assert.equal(formatRupiah(2.5), 'Rp3');
+});
+
+test('parseRupiah tidak tertipu nama properti bawaan objek', () => {
+  assert.equal(parseRupiah('constructor'), null);
+  assert.equal(parseRupiah('2 toString'), null);
+});
+
+test('terbilang angka desimal sangat kecil', () => {
+  assert.equal(terbilang(1e-7), 'nol koma nol nol nol nol nol nol satu');
+  assert.throws(() => terbilang(1e21), /bigint/);
+});

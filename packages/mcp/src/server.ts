@@ -34,7 +34,7 @@ import {
 } from '@lokal-id/core/wilayah';
 import { loadDocument, loadIgnore, resolveInRoot, toPosix, walkFiles, type Document } from './files.ts';
 
-const VERSION = '0.2.1';
+const VERSION = '0.2.2';
 const FILE_LIMIT = 5000;
 
 const INSTRUCTIONS = `Lokal makes you Indonesia-ready.
@@ -261,7 +261,7 @@ export function createServer(
     {
       title: 'Scan files for Indonesian personal data',
       description:
-        'Scan a file or directory (text, CSV, JSON, logs, SQL, .xlsx) for personal data — identifiers (NIK, KK, NPWP, phone, email, bank account, BPJS, passport, SIM, NIP, card, plate, IP, coordinates), names, addresses, birth dates, and UU PDP categories (religion, marital status, gender, nationality, health, finances, criminal records, biometrics) — without revealing it: findings show only partially masked values. Also lists files it could not scan (PDF, .xls, images, archives). Use before reading data files and before committing fixtures or seeders.',
+        'Scan a file or directory (text, CSV, JSON, logs, SQL, .xlsx, .docx; up to 100 MB each) for personal data — identifiers (NIK, KK, NPWP, phone, email, bank account, BPJS, passport, SIM, NIP, card, plate, IP, coordinates), names, addresses, birth dates, and UU PDP categories (religion, marital status, gender, nationality, health, finances, criminal records, biometrics) — without revealing it: findings show only partially masked values. Also lists files it could not scan (PDF, .xls, .doc, images, archives). Use before reading data files and before committing fixtures or seeders.',
       inputSchema: {
         path: z.string().default('.').describe('File or directory, relative to the project root'),
         types: piiTypes,
@@ -364,7 +364,7 @@ export function createServer(
     {
       title: 'Read a file with personal data masked',
       description:
-        'Read a text, CSV, JSON, log or .xlsx file with Indonesian personal data replaced by stable placeholders ([NIK_1], [PHONE_2], [RELIGION_1] …). The same value always gets the same placeholder in this session, so joins, counts, grouping and deduplication still work. Real values never leave the user\'s machine. Spreadsheets come back as CSV, one block per sheet.',
+        'Read a text, CSV, JSON, log, .xlsx or .docx file with Indonesian personal data replaced by stable placeholders ([NIK_1], [PHONE_2], [RELIGION_1] …). The same value always gets the same placeholder in this session, so joins, counts, grouping and deduplication still work. Real values never leave the user\'s machine. Spreadsheets come back as CSV, one block per sheet; Word documents as their text plus each table as CSV.',
       inputSchema: {
         path: z.string(),
         start_line: z.number().int().min(1).default(1),
@@ -395,19 +395,24 @@ export function createServer(
         if (withHeader) slice = `${lines[0]}\n${slice}`;
         let { text: masked, matches } = samaran.mask(slice);
         if (withHeader) masked = masked.slice(masked.indexOf('\n') + 1);
-        all.push(...matches);
+        for (const m of matches) all.push(m);
         const end = Math.min(lines.length, start_line - 1 + max_lines);
         const range = `lines ${start_line}-${end} of ${lines.length}`;
         if (part.sheet === undefined) {
           textRange = range;
           blocks.push(masked);
         } else {
-          blocks.push(`=== Sheet: ${part.sheet} (${range}) ===\n${masked}`);
+          const unit = doc.kind === 'sheets' && doc.unit === 'part' ? 'Part' : 'Sheet';
+          blocks.push(`=== ${unit}: ${part.sheet} (${range}) ===\n${masked}`);
         }
       }
       const rel = toPosix(path.relative(root, abs));
       const what =
-        doc.kind === 'text' ? textRange : `${doc.sheets.length} sheet${doc.sheets.length === 1 ? '' : 's'}, as CSV`;
+        doc.kind === 'text'
+          ? textRange
+          : doc.unit === 'part'
+            ? `Word document: text and ${doc.sheets.length - 1} table${doc.sheets.length === 2 ? '' : 's'}, tables as CSV`
+            : `${doc.sheets.length} sheet${doc.sheets.length === 1 ? '' : 's'}, as CSV`;
       const header = [
         `File: ${rel} (${what})`,
         `Masked: ${all.length ? JSON.stringify(countByType(all.map((m) => m.type))) : 'nothing found'}`,

@@ -1,0 +1,2126 @@
+[
+ {
+  "text": "Rp 25.000",
+  "out": {
+   "amount": 25000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "Rp1.500.000,00",
+  "out": {
+   "amount": 1500000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "1,500,000",
+  "out": {
+   "amount": 1500000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "1,5jt",
+  "out": {
+   "amount": 1500000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "1.5 juta",
+  "out": {
+   "amount": 1500000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "50k",
+  "out": {
+   "amount": 50000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "50rb",
+  "out": {
+   "amount": 50000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "15ribu",
+  "out": {
+   "amount": 15000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "1jt 500rb",
+  "out": {
+   "amount": 1500000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "2jtan",
+  "out": {
+   "amount": 2000000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "50rb-an",
+  "out": {
+   "amount": 50000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "sekitar 1 juta",
+  "out": {
+   "amount": 1000000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "2 juta lebih",
+  "out": {
+   "amount": 2000000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "goceng",
+  "out": {
+   "amount": 5000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "goceng aja kak",
+  "out": {
+   "amount": 5000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "2 ceban",
+  "out": {
+   "amount": 20000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "cepek ceng",
+  "out": {
+   "amount": 100000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "gopek",
+  "out": {
+   "amount": 500,
+   "approximate": false
+  }
+ },
+ {
+  "text": "sejuta setengah",
+  "out": {
+   "amount": 1500000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "setengah juta",
+  "out": {
+   "amount": 500000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "dua setengah juta",
+  "out": {
+   "amount": 2500000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "satu setengah juta",
+  "out": {
+   "amount": 1500000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "dua ratus lima puluh ribu",
+  "out": {
+   "amount": 250000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "seratus dua belas",
+  "out": {
+   "amount": 112,
+   "approximate": false
+  }
+ },
+ {
+  "text": "seribu lima ratus",
+  "out": {
+   "amount": 1500,
+   "approximate": false
+  }
+ },
+ {
+  "text": "dua puluh lima juta tiga ratus ribu",
+  "out": {
+   "amount": 25300000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "1,2 M",
+  "out": {
+   "amount": 1200000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "pisang goreng",
+  "out": null
+ },
+ {
+  "text": "",
+  "out": null
+ },
+ {
+  "text": "jutaan",
+  "out": null
+ },
+ {
+  "text": "constructor",
+  "out": null
+ },
+ {
+  "text": "2 toString",
+  "out": null
+ },
+ {
+  "text": "~2jt",
+  "out": {
+   "amount": 2000000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "±500rb",
+  "out": {
+   "amount": 500000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "Rp.25.000",
+  "out": {
+   "amount": 25000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "IDR 1.000.000",
+  "out": {
+   "amount": 1000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "1.500",
+  "out": {
+   "amount": 1500,
+   "approximate": false
+  }
+ },
+ {
+  "text": "1,500",
+  "out": {
+   "amount": 1500,
+   "approximate": false
+  }
+ },
+ {
+  "text": "1,5",
+  "out": {
+   "amount": 1.5,
+   "approximate": false
+  }
+ },
+ {
+  "text": "1.5",
+  "out": {
+   "amount": 1.5,
+   "approximate": false
+  }
+ },
+ {
+  "text": "1.500jt",
+  "out": {
+   "amount": 1500000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "rb",
+  "out": null
+ },
+ {
+  "text": "juta",
+  "out": null
+ },
+ {
+  "text": "12 rebu",
+  "out": {
+   "amount": 12000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "sejuta",
+  "out": {
+   "amount": 1000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "semiliar",
+  "out": {
+   "amount": 1000000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "3 noban",
+  "out": {
+   "amount": 60000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "jigo",
+  "out": {
+   "amount": 25,
+   "approximate": false
+  }
+ },
+ {
+  "text": "gocap ceng",
+  "out": {
+   "amount": 50000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "5 jt-an",
+  "out": {
+   "amount": 5000000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "1jt-an",
+  "out": {
+   "amount": 1000000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "kurleb 300rb",
+  "out": {
+   "amount": 300000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "2,5 t",
+  "out": {
+   "amount": 2500000000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "1 triliun",
+  "out": {
+   "amount": 1000000000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "sebelas ribu",
+  "out": {
+   "amount": 11000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "dua belas",
+  "out": {
+   "amount": 12,
+   "approximate": false
+  }
+ },
+ {
+  "text": "tujuh puluh",
+  "out": {
+   "amount": 70,
+   "approximate": false
+  }
+ },
+ {
+  "text": "1.234.567,89",
+  "out": {
+   "amount": 1234567.89,
+   "approximate": false
+  }
+ },
+ {
+  "text": "1,234,567.89",
+  "out": {
+   "amount": 1234567.89,
+   "approximate": false
+  }
+ },
+ {
+  "text": "10.5.3",
+  "out": {
+   "amount": 1053,
+   "approximate": false
+  }
+ },
+ {
+  "text": "1e5",
+  "out": null
+ },
+ {
+  "text": "  Rp 1.000  ",
+  "out": {
+   "amount": 1000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "harga 50rb dong",
+  "out": {
+   "amount": 50000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "total 1jt",
+  "out": {
+   "amount": 1000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "sembilan ratus sembilan puluh sembilan",
+  "out": {
+   "amount": 999,
+   "approximate": false
+  }
+ },
+ {
+  "text": "99999999999999999999",
+  "out": {
+   "amount": 100000000000000000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "juta-k-ribu-tiga-tiga",
+  "out": null
+ },
+ {
+  "text": "kakjtsekitar2,52,5",
+  "out": null
+ },
+ {
+  "text": "ratus ratus 2,5 ceban",
+  "out": {
+   "amount": 2025000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "satu juta 1.500 lebih",
+  "out": {
+   "amount": 1001500,
+   "approximate": true
+  }
+ },
+ {
+  "text": "m",
+  "out": null
+ },
+ {
+  "text": "k-dua-aja-setengah",
+  "out": null
+ },
+ {
+  "text": "sekitar",
+  "out": null
+ },
+ {
+  "text": "m puluh sepuluh m",
+  "out": null
+ },
+ {
+  "text": "sebelas sekitar lima",
+  "out": {
+   "amount": 16,
+   "approximate": true
+  }
+ },
+ {
+  "text": "dua-lebih-juta",
+  "out": {
+   "amount": 2000000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "100m",
+  "out": {
+   "amount": 100000000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "msekitargocengduakak",
+  "out": null
+ },
+ {
+  "text": "sepuluh-seribu-lebih",
+  "out": {
+   "amount": 11000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "100 belas aja",
+  "out": {
+   "amount": 110,
+   "approximate": false
+  }
+ },
+ {
+  "text": "satu-1.500-setengah-an",
+  "out": {
+   "amount": 1501.5,
+   "approximate": true
+  }
+ },
+ {
+  "text": "sekitarsekitarkak",
+  "out": null
+ },
+ {
+  "text": "aja-satu-100-2,5",
+  "out": {
+   "amount": 103.5,
+   "approximate": false
+  }
+ },
+ {
+  "text": "100-rp-m",
+  "out": {
+   "amount": 100000000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "satu 100 sekitar rb",
+  "out": {
+   "amount": 101000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "2,5 1.500",
+  "out": {
+   "amount": 1502.5,
+   "approximate": false
+  }
+ },
+ {
+  "text": "100 aja jt",
+  "out": {
+   "amount": 100000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "anlebih1.5002,5",
+  "out": null
+ },
+ {
+  "text": "sepuluhkak",
+  "out": null
+ },
+ {
+  "text": "ribu",
+  "out": null
+ },
+ {
+  "text": "setengahbelastigaseribudua",
+  "out": null
+ },
+ {
+  "text": "jt 1",
+  "out": null
+ },
+ {
+  "text": "jt lima",
+  "out": null
+ },
+ {
+  "text": "satuduagoceng",
+  "out": null
+ },
+ {
+  "text": "sepuluh lima k setengah",
+  "out": {
+   "amount": 15500,
+   "approximate": false
+  }
+ },
+ {
+  "text": "1-jt-ratus",
+  "out": {
+   "amount": 1000100,
+   "approximate": false
+  }
+ },
+ {
+  "text": "rb 100 2,5 rp",
+  "out": null
+ },
+ {
+  "text": "ancebanajarpseribu",
+  "out": null
+ },
+ {
+  "text": "dua sekitar jt seribu lebih",
+  "out": {
+   "amount": 2001000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "m dua",
+  "out": null
+ },
+ {
+  "text": "rbceban",
+  "out": null
+ },
+ {
+  "text": "kak",
+  "out": null
+ },
+ {
+  "text": "seribu",
+  "out": {
+   "amount": 1000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "lima-kak-aja",
+  "out": {
+   "amount": 5,
+   "approximate": false
+  }
+ },
+ {
+  "text": "tiga-seribu",
+  "out": {
+   "amount": 4000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "m-rp-m-lima",
+  "out": null
+ },
+ {
+  "text": "setengahgoceng1100",
+  "out": null
+ },
+ {
+  "text": "100-jt-seribu-1.500-1.500",
+  "out": {
+   "amount": 100004000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "1.500 goceng sejuta goceng",
+  "out": {
+   "amount": 8505000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "sekitar",
+  "out": null
+ },
+ {
+  "text": "gocenggocengmjuta",
+  "out": null
+ },
+ {
+  "text": "rp-sebelas-tiga-lebih",
+  "out": {
+   "amount": 14,
+   "approximate": true
+  }
+ },
+ {
+  "text": "m 1.500 kak",
+  "out": null
+ },
+ {
+  "text": "lebih-sebelas-aja-lebih-m",
+  "out": {
+   "amount": 11000000000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "sekitar 2,5",
+  "out": {
+   "amount": 2.5,
+   "approximate": true
+  }
+ },
+ {
+  "text": "ajasejutasejuta2,51",
+  "out": null
+ },
+ {
+  "text": "rb-lima-ribu-tiga-100",
+  "out": null
+ },
+ {
+  "text": "belas-2,5-dua-ratus",
+  "out": {
+   "amount": 212.5,
+   "approximate": false
+  }
+ },
+ {
+  "text": "aja lima tiga puluh sepuluh",
+  "out": {
+   "amount": 45,
+   "approximate": false
+  }
+ },
+ {
+  "text": "rb-juta-m-an-k",
+  "out": null
+ },
+ {
+  "text": "jt-belas-goceng",
+  "out": null
+ },
+ {
+  "text": "1.500-1.500-rp-an-k",
+  "out": {
+   "amount": 3000000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "limarban",
+  "out": null
+ },
+ {
+  "text": "lebih-ribu",
+  "out": null
+ },
+ {
+  "text": "setengah-m",
+  "out": {
+   "amount": 500000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "ceban-rb",
+  "out": {
+   "amount": 11000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "an lima",
+  "out": {
+   "amount": 5,
+   "approximate": true
+  }
+ },
+ {
+  "text": "mbelasrb",
+  "out": null
+ },
+ {
+  "text": "sejuta setengah",
+  "out": {
+   "amount": 1500000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "2,5seribu",
+  "out": {
+   "amount": 3500,
+   "approximate": false
+  }
+ },
+ {
+  "text": "ratus1001",
+  "out": {
+   "amount": 1101,
+   "approximate": false
+  }
+ },
+ {
+  "text": "jt1.500sepuluh2,5lebih",
+  "out": null
+ },
+ {
+  "text": "kaksatuansebelas",
+  "out": null
+ },
+ {
+  "text": "lebih-sebelas-seribu-lebih-ratus",
+  "out": {
+   "amount": 12100,
+   "approximate": true
+  }
+ },
+ {
+  "text": "belasm",
+  "out": null
+ },
+ {
+  "text": "aja",
+  "out": null
+ },
+ {
+  "text": "satu",
+  "out": {
+   "amount": 1,
+   "approximate": false
+  }
+ },
+ {
+  "text": "kak-juta-an-ratus-aja",
+  "out": null
+ },
+ {
+  "text": "kak-k-an-belas",
+  "out": null
+ },
+ {
+  "text": "rb sepuluh ceban",
+  "out": null
+ },
+ {
+  "text": "juta-lebih-sebelas-m",
+  "out": null
+ },
+ {
+  "text": "k-tiga-aja-satu-ratus",
+  "out": null
+ },
+ {
+  "text": "setengah-2,5-rb-satu-2,5",
+  "out": {
+   "amount": 3003.5,
+   "approximate": false
+  }
+ },
+ {
+  "text": "setengahsaturp",
+  "out": null
+ },
+ {
+  "text": "lebih sebelas sebelas lima goceng",
+  "out": {
+   "amount": 135000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "an",
+  "out": null
+ },
+ {
+  "text": "tiga-ribu-goceng-rp",
+  "out": {
+   "amount": 8000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "ceban tiga",
+  "out": {
+   "amount": 10003,
+   "approximate": false
+  }
+ },
+ {
+  "text": "sebelas puluh goceng jt",
+  "out": {
+   "amount": 1105000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "ceban-juta-lima-100",
+  "out": {
+   "amount": 1010105,
+   "approximate": false
+  }
+ },
+ {
+  "text": "goceng kak tiga lebih belas",
+  "out": {
+   "amount": 5013,
+   "approximate": true
+  }
+ },
+ {
+  "text": "juta satu satu",
+  "out": null
+ },
+ {
+  "text": "puluhlimakak",
+  "out": null
+ },
+ {
+  "text": "sekitar 1 sejuta 2,5",
+  "out": {
+   "amount": 2000002.5,
+   "approximate": true
+  }
+ },
+ {
+  "text": "sebelas",
+  "out": {
+   "amount": 11,
+   "approximate": false
+  }
+ },
+ {
+  "text": "cebanjtsejutasepuluhrb",
+  "out": null
+ },
+ {
+  "text": "2,5-aja-k-juta-2,5",
+  "out": {
+   "amount": 1002502.5,
+   "approximate": false
+  }
+ },
+ {
+  "text": "setengah 100 ratus k",
+  "out": {
+   "amount": 10000500,
+   "approximate": false
+  }
+ },
+ {
+  "text": "1gocengjutaduasepuluh",
+  "out": null
+ },
+ {
+  "text": "100 m sekitar sejuta m",
+  "out": {
+   "amount": 101001000000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "m",
+  "out": null
+ },
+ {
+  "text": "1.500 1.500 seribu goceng rp",
+  "out": {
+   "amount": 3006000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "sejuta sebelas",
+  "out": {
+   "amount": 1000011,
+   "approximate": false
+  }
+ },
+ {
+  "text": "k-seribu-sekitar",
+  "out": null
+ },
+ {
+  "text": "satu juta",
+  "out": {
+   "amount": 1000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "dua sebelas",
+  "out": {
+   "amount": 13,
+   "approximate": false
+  }
+ },
+ {
+  "text": "kak-sepuluh-sejuta",
+  "out": {
+   "amount": 11000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "goceng seribu",
+  "out": {
+   "amount": 6000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "tigalima",
+  "out": null
+ },
+ {
+  "text": "sejuta-seribu",
+  "out": {
+   "amount": 1001000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "1.500",
+  "out": {
+   "amount": 1500,
+   "approximate": false
+  }
+ },
+ {
+  "text": "rp100",
+  "out": {
+   "amount": 100,
+   "approximate": false
+  }
+ },
+ {
+  "text": "belaslimakseribu",
+  "out": null
+ },
+ {
+  "text": "100 ribu kak",
+  "out": {
+   "amount": 100000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "gocengksekitarlebih",
+  "out": null
+ },
+ {
+  "text": "seribu-sebelas-seribu",
+  "out": {
+   "amount": 13000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "sebelasjt",
+  "out": null
+ },
+ {
+  "text": "an aja an tiga m",
+  "out": {
+   "amount": 3000000000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "satu sejuta kak kak",
+  "out": {
+   "amount": 2000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "sebelas",
+  "out": {
+   "amount": 11,
+   "approximate": false
+  }
+ },
+ {
+  "text": "aja lima aja",
+  "out": {
+   "amount": 5,
+   "approximate": false
+  }
+ },
+ {
+  "text": "an puluh kak juta lebih",
+  "out": {
+   "amount": 10000000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "belas goceng aja lebih satu",
+  "out": {
+   "amount": 50001,
+   "approximate": true
+  }
+ },
+ {
+  "text": "1.500kak2,5ratus",
+  "out": {
+   "amount": 1750,
+   "approximate": false
+  }
+ },
+ {
+  "text": "setengah",
+  "out": {
+   "amount": 0.5,
+   "approximate": false
+  }
+ },
+ {
+  "text": "goceng-1-satu-sepuluh-1.500",
+  "out": {
+   "amount": 6512,
+   "approximate": false
+  }
+ },
+ {
+  "text": "lima-ratus-m",
+  "out": {
+   "amount": 500000000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "sekitar-1",
+  "out": {
+   "amount": 1,
+   "approximate": true
+  }
+ },
+ {
+  "text": "juta-goceng",
+  "out": null
+ },
+ {
+  "text": "ratus2,5dua100",
+  "out": {
+   "amount": 204.5,
+   "approximate": false
+  }
+ },
+ {
+  "text": "belas goceng m k",
+  "out": {
+   "amount": 1000051000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "rb-dua-2,5-aja-2,5",
+  "out": null
+ },
+ {
+  "text": "lebih belas 1.500 lebih",
+  "out": {
+   "amount": 1510,
+   "approximate": true
+  }
+ },
+ {
+  "text": "anancebansebelas",
+  "out": null
+ },
+ {
+  "text": "rpratustiga",
+  "out": null
+ },
+ {
+  "text": "rb sebelas kak dua",
+  "out": null
+ },
+ {
+  "text": "belasbelasgoceng",
+  "out": null
+ },
+ {
+  "text": "2,5-dua-puluh",
+  "out": {
+   "amount": 22.5,
+   "approximate": false
+  }
+ },
+ {
+  "text": "100 setengah goceng",
+  "out": {
+   "amount": 502500,
+   "approximate": false
+  }
+ },
+ {
+  "text": "sejutapuluhrb",
+  "out": null
+ },
+ {
+  "text": "sejuta-rp-ratus-rb-1",
+  "out": {
+   "amount": 1100001,
+   "approximate": false
+  }
+ },
+ {
+  "text": "sejuta rp setengah",
+  "out": {
+   "amount": 1500000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "ratus",
+  "out": {
+   "amount": 100,
+   "approximate": false
+  }
+ },
+ {
+  "text": "1tigaseribu",
+  "out": null
+ },
+ {
+  "text": "ceban",
+  "out": {
+   "amount": 10000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "tiga",
+  "out": {
+   "amount": 3,
+   "approximate": false
+  }
+ },
+ {
+  "text": "dua",
+  "out": {
+   "amount": 2,
+   "approximate": false
+  }
+ },
+ {
+  "text": "satu-ribu",
+  "out": {
+   "amount": 1000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "jt-goceng-1.500-100",
+  "out": null
+ },
+ {
+  "text": "100-ribu-sekitar-100-1.500",
+  "out": {
+   "amount": 101600,
+   "approximate": true
+  }
+ },
+ {
+  "text": "1.500lebih100",
+  "out": {
+   "amount": 1600,
+   "approximate": true
+  }
+ },
+ {
+  "text": "anm",
+  "out": null
+ },
+ {
+  "text": "puluh-rb-seribu",
+  "out": {
+   "amount": 11000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "jutabelasduabelasan",
+  "out": null
+ },
+ {
+  "text": "satu rp lima rp an",
+  "out": {
+   "amount": 6,
+   "approximate": true
+  }
+ },
+ {
+  "text": "juta",
+  "out": null
+ },
+ {
+  "text": "sekitar kak ratus kak",
+  "out": {
+   "amount": 100,
+   "approximate": true
+  }
+ },
+ {
+  "text": "ribu jt 1.500 sekitar goceng",
+  "out": null
+ },
+ {
+  "text": "rb-puluh-dua-rp-aja",
+  "out": null
+ },
+ {
+  "text": "1 tiga aja",
+  "out": {
+   "amount": 4,
+   "approximate": false
+  }
+ },
+ {
+  "text": "rb",
+  "out": null
+ },
+ {
+  "text": "lebih aja jt k aja",
+  "out": null
+ },
+ {
+  "text": "rp",
+  "out": null
+ },
+ {
+  "text": "kak-aja-sejuta-1.500-kak",
+  "out": {
+   "amount": 1001500,
+   "approximate": false
+  }
+ },
+ {
+  "text": "rb juta 100",
+  "out": null
+ },
+ {
+  "text": "aja sebelas lebih jt rb",
+  "out": {
+   "amount": 11001000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "kkaklima",
+  "out": null
+ },
+ {
+  "text": "rp ceban",
+  "out": {
+   "amount": 10000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "100sejutaajaan",
+  "out": null
+ },
+ {
+  "text": "ratusseribu",
+  "out": null
+ },
+ {
+  "text": "1belasjuta",
+  "out": null
+ },
+ {
+  "text": "rb rp juta 1 sejuta",
+  "out": null
+ },
+ {
+  "text": "tiga sekitar ribu",
+  "out": {
+   "amount": 3000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "lima k belas",
+  "out": {
+   "amount": 5010,
+   "approximate": false
+  }
+ },
+ {
+  "text": "2,5 ribu",
+  "out": {
+   "amount": 2500,
+   "approximate": false
+  }
+ },
+ {
+  "text": "an-sebelas-m",
+  "out": {
+   "amount": 11000000000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "dua-kak-seribu-dua",
+  "out": {
+   "amount": 3002,
+   "approximate": false
+  }
+ },
+ {
+  "text": "an",
+  "out": null
+ },
+ {
+  "text": "juta-satu",
+  "out": null
+ },
+ {
+  "text": "seribu satu",
+  "out": {
+   "amount": 1001,
+   "approximate": false
+  }
+ },
+ {
+  "text": "sekitar k rb k jt",
+  "out": null
+ },
+ {
+  "text": "an",
+  "out": null
+ },
+ {
+  "text": "juta-seribu-ribu-an",
+  "out": null
+ },
+ {
+  "text": "ratus",
+  "out": {
+   "amount": 100,
+   "approximate": false
+  }
+ },
+ {
+  "text": "ratus",
+  "out": {
+   "amount": 100,
+   "approximate": false
+  }
+ },
+ {
+  "text": "m lima aja",
+  "out": null
+ },
+ {
+  "text": "limapuluhjtrb",
+  "out": null
+ },
+ {
+  "text": "satu 2,5 sejuta jt",
+  "out": {
+   "amount": 5500000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "seribu",
+  "out": {
+   "amount": 1000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "riburplebih",
+  "out": null
+ },
+ {
+  "text": "rp",
+  "out": null
+ },
+ {
+  "text": "cebanlima",
+  "out": null
+ },
+ {
+  "text": "an",
+  "out": null
+ },
+ {
+  "text": "puluh",
+  "out": {
+   "amount": 10,
+   "approximate": false
+  }
+ },
+ {
+  "text": "an jt",
+  "out": null
+ },
+ {
+  "text": "lima ceban lebih belas",
+  "out": {
+   "amount": 50010,
+   "approximate": true
+  }
+ },
+ {
+  "text": "1tiga100lebihsatu",
+  "out": null
+ },
+ {
+  "text": "kak-puluh-sepuluh-ceban-sejuta",
+  "out": {
+   "amount": 1200000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "k2,5",
+  "out": null
+ },
+ {
+  "text": "cebandua",
+  "out": null
+ },
+ {
+  "text": "lebih-m",
+  "out": null
+ },
+ {
+  "text": "ribuajaseributiga",
+  "out": null
+ },
+ {
+  "text": "k-juta-tiga",
+  "out": null
+ },
+ {
+  "text": "ribupuluhsetengahsepuluhsekitar",
+  "out": null
+ },
+ {
+  "text": "setengah sekitar puluh puluh an",
+  "out": {
+   "amount": 20.5,
+   "approximate": true
+  }
+ },
+ {
+  "text": "2,5tigaseribu2,5sebelas",
+  "out": null
+ },
+ {
+  "text": "an-sebelas-an-seribu-ribu",
+  "out": {
+   "amount": 13000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "2,5-1",
+  "out": {
+   "amount": 3.5,
+   "approximate": false
+  }
+ },
+ {
+  "text": "setengahk",
+  "out": null
+ },
+ {
+  "text": "sekitarkak",
+  "out": null
+ },
+ {
+  "text": "2,5-juta",
+  "out": {
+   "amount": 2500000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "jutarp1.500",
+  "out": null
+ },
+ {
+  "text": "andua",
+  "out": null
+ },
+ {
+  "text": "juta-100",
+  "out": null
+ },
+ {
+  "text": "2,5 satu",
+  "out": {
+   "amount": 3.5,
+   "approximate": false
+  }
+ },
+ {
+  "text": "jtseribu2,5",
+  "out": null
+ },
+ {
+  "text": "1.500tigasekitarkak",
+  "out": null
+ },
+ {
+  "text": "rb-sepuluh-lima-sebelas-goceng",
+  "out": null
+ },
+ {
+  "text": "m rp",
+  "out": null
+ },
+ {
+  "text": "100ksekitarbelaspuluh",
+  "out": null
+ },
+ {
+  "text": "1.500 juta",
+  "out": {
+   "amount": 1500000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "dua-an-100-2,5",
+  "out": {
+   "amount": 104.5,
+   "approximate": true
+  }
+ },
+ {
+  "text": "m-100-sejuta-1-sekitar",
+  "out": null
+ },
+ {
+  "text": "belas",
+  "out": null
+ },
+ {
+  "text": "sekitar",
+  "out": null
+ },
+ {
+  "text": "ratus-goceng-sekitar",
+  "out": {
+   "amount": 500000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "rp-aja-aja",
+  "out": null
+ },
+ {
+  "text": "ratus-rb-lima-setengah",
+  "out": {
+   "amount": 100505,
+   "approximate": false
+  }
+ },
+ {
+  "text": "lebih sekitar",
+  "out": null
+ },
+ {
+  "text": "tiga-lebih-belas-aja",
+  "out": {
+   "amount": 13,
+   "approximate": true
+  }
+ },
+ {
+  "text": "rprb",
+  "out": null
+ },
+ {
+  "text": "rpsejutasepuluh2,5",
+  "out": null
+ },
+ {
+  "text": "ratus",
+  "out": {
+   "amount": 100,
+   "approximate": false
+  }
+ },
+ {
+  "text": "1tigarp",
+  "out": null
+ },
+ {
+  "text": "1.500 k jt k dua",
+  "out": {
+   "amount": 2501002,
+   "approximate": false
+  }
+ },
+ {
+  "text": "belas dua",
+  "out": {
+   "amount": 12,
+   "approximate": false
+  }
+ },
+ {
+  "text": "sebelas",
+  "out": {
+   "amount": 11,
+   "approximate": false
+  }
+ },
+ {
+  "text": "mjuta",
+  "out": null
+ },
+ {
+  "text": "kak aja 1.500 m setengah",
+  "out": {
+   "amount": 1500500000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "belassebelaslima100kak",
+  "out": null
+ },
+ {
+  "text": "1",
+  "out": {
+   "amount": 1,
+   "approximate": false
+  }
+ },
+ {
+  "text": "belas-tiga-goceng",
+  "out": {
+   "amount": 65000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "2,5",
+  "out": {
+   "amount": 2.5,
+   "approximate": false
+  }
+ },
+ {
+  "text": "ratus 1.500",
+  "out": {
+   "amount": 1600,
+   "approximate": false
+  }
+ },
+ {
+  "text": "kak satu sejuta",
+  "out": {
+   "amount": 2000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "puluh-rb-ceban-1",
+  "out": {
+   "amount": 20001,
+   "approximate": false
+  }
+ },
+ {
+  "text": "an 1 ratus",
+  "out": {
+   "amount": 100,
+   "approximate": true
+  }
+ },
+ {
+  "text": "m sepuluh lima sebelas",
+  "out": null
+ },
+ {
+  "text": "rb",
+  "out": null
+ },
+ {
+  "text": "gocengajak",
+  "out": null
+ },
+ {
+  "text": "satu puluh rb goceng",
+  "out": {
+   "amount": 15000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "lebih-sekitar-sebelas-puluh",
+  "out": {
+   "amount": 21,
+   "approximate": true
+  }
+ },
+ {
+  "text": "lebihsepuluh100m",
+  "out": null
+ },
+ {
+  "text": "2,5-dua-aja-rb",
+  "out": {
+   "amount": 4500,
+   "approximate": false
+  }
+ },
+ {
+  "text": "lebihlebihjuta",
+  "out": null
+ },
+ {
+  "text": "puluh ratus 100",
+  "out": {
+   "amount": 210,
+   "approximate": false
+  }
+ },
+ {
+  "text": "dua",
+  "out": {
+   "amount": 2,
+   "approximate": false
+  }
+ },
+ {
+  "text": "goceng",
+  "out": {
+   "amount": 5000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "seribu-lima-tiga-aja-seribu",
+  "out": {
+   "amount": 10000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "dua-goceng-goceng-dua-sekitar",
+  "out": {
+   "amount": 15002,
+   "approximate": true
+  }
+ },
+ {
+  "text": "1.500 aja ceban sepuluh",
+  "out": {
+   "amount": 15000010,
+   "approximate": false
+  }
+ },
+ {
+  "text": "sebelassebelas",
+  "out": null
+ },
+ {
+  "text": "tiga",
+  "out": {
+   "amount": 3,
+   "approximate": false
+  }
+ },
+ {
+  "text": "k 100",
+  "out": null
+ },
+ {
+  "text": "100",
+  "out": {
+   "amount": 100,
+   "approximate": false
+  }
+ },
+ {
+  "text": "tiga kak kak rp satu",
+  "out": {
+   "amount": 4,
+   "approximate": false
+  }
+ },
+ {
+  "text": "puluh jt",
+  "out": {
+   "amount": 10000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "ratus",
+  "out": {
+   "amount": 100,
+   "approximate": false
+  }
+ },
+ {
+  "text": "sekitar",
+  "out": null
+ },
+ {
+  "text": "rb",
+  "out": null
+ },
+ {
+  "text": "lebih1",
+  "out": {
+   "amount": 1,
+   "approximate": true
+  }
+ },
+ {
+  "text": "lebih",
+  "out": null
+ },
+ {
+  "text": "1",
+  "out": {
+   "amount": 1,
+   "approximate": false
+  }
+ },
+ {
+  "text": "jutaratusajarb",
+  "out": null
+ },
+ {
+  "text": "m-100-dua-sebelas",
+  "out": null
+ },
+ {
+  "text": "lima",
+  "out": {
+   "amount": 5,
+   "approximate": false
+  }
+ },
+ {
+  "text": "seriburibubelasduaribu",
+  "out": null
+ },
+ {
+  "text": "1.500-kak",
+  "out": {
+   "amount": 1500,
+   "approximate": false
+  }
+ },
+ {
+  "text": "sebelas lebih",
+  "out": {
+   "amount": 11,
+   "approximate": true
+  }
+ },
+ {
+  "text": "seribu-setengah",
+  "out": {
+   "amount": 1500,
+   "approximate": false
+  }
+ },
+ {
+  "text": "ratus sejuta sekitar",
+  "out": {
+   "amount": 101000000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "1-belas",
+  "out": {
+   "amount": 11,
+   "approximate": false
+  }
+ },
+ {
+  "text": "an tiga 100 rp",
+  "out": {
+   "amount": 103,
+   "approximate": true
+  }
+ },
+ {
+  "text": "k belas juta an",
+  "out": null
+ },
+ {
+  "text": "ribu",
+  "out": null
+ },
+ {
+  "text": "satu",
+  "out": {
+   "amount": 1,
+   "approximate": false
+  }
+ },
+ {
+  "text": "lebih-2,5-1",
+  "out": {
+   "amount": 3.5,
+   "approximate": true
+  }
+ },
+ {
+  "text": "sepuluh1.500",
+  "out": {
+   "amount": 1510,
+   "approximate": false
+  }
+ },
+ {
+  "text": "tiga dua m aja juta",
+  "out": {
+   "amount": 5001000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "lebih sebelas k seribu",
+  "out": {
+   "amount": 12000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "ratus-dua",
+  "out": {
+   "amount": 102,
+   "approximate": false
+  }
+ },
+ {
+  "text": "sekitar",
+  "out": null
+ },
+ {
+  "text": "sekitar-lebih-juta-1-sebelas",
+  "out": null
+ },
+ {
+  "text": "sekitar-setengah-ribu-jt",
+  "out": {
+   "amount": 1000500,
+   "approximate": true
+  }
+ },
+ {
+  "text": "100limak",
+  "out": null
+ },
+ {
+  "text": "1ratussetengahkakkak",
+  "out": null
+ },
+ {
+  "text": "puluh 1 an setengah",
+  "out": {
+   "amount": 11.5,
+   "approximate": true
+  }
+ },
+ {
+  "text": "rp-sebelas",
+  "out": {
+   "amount": 11,
+   "approximate": false
+  }
+ },
+ {
+  "text": "rp-lebih",
+  "out": null
+ },
+ {
+  "text": "belas-seribu-sepuluh-k-1",
+  "out": {
+   "amount": 21001,
+   "approximate": false
+  }
+ },
+ {
+  "text": "seribu an rp ceban an",
+  "out": {
+   "amount": 11000,
+   "approximate": true
+  }
+ },
+ {
+  "text": "m-lima-1.500",
+  "out": null
+ },
+ {
+  "text": "1m",
+  "out": {
+   "amount": 1000000000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "sejuta-belas-ribu-sepuluh-lebih",
+  "out": {
+   "amount": 1010010,
+   "approximate": true
+  }
+ },
+ {
+  "text": "dua juta setengah jt",
+  "out": {
+   "amount": 2500000,
+   "approximate": false
+  }
+ },
+ {
+  "text": "sebelaslebihsejuta",
+  "out": null
+ }
+]

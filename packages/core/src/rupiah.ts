@@ -14,7 +14,9 @@ export function formatRupiah(amount: number, options: FormatRupiahOptions = {}):
   if (!Number.isFinite(amount)) throw new RangeError('amount must be a finite number');
   const { decimals = false, symbol = true } = options;
   const abs = Math.abs(amount);
-  const fixed = decimals ? abs.toFixed(2) : Math.round(abs).toString();
+  // From 1e21 up, toFixed and toString switch to exponent notation; such numbers are whole, so BigInt is exact.
+  const fixed =
+    abs >= 1e21 ? `${BigInt(abs)}${decimals ? '.00' : ''}` : decimals ? abs.toFixed(2) : Math.round(abs).toString();
   const [int = '0', frac] = fixed.split('.');
   const body = groupThousands(int) + (frac ? `,${frac}` : '');
   const sign = amount < 0 && Number(fixed) !== 0 ? '-' : '';
@@ -33,13 +35,16 @@ export function formatRupiahShort(amount: number): string {
   if (!Number.isFinite(amount)) throw new RangeError('amount must be a finite number');
   const abs = Math.abs(amount);
   const sign = amount < 0 ? '-' : '';
-  for (const [size, unit] of SHORT_UNITS) {
-    if (abs >= size) {
-      const value = Math.round((abs / size) * 10) / 10;
-      return `${sign}Rp${value.toString().replace('.', ',')} ${unit}`;
-    }
+  const short = (size: number, unit: string) =>
+    `${sign}Rp${(Math.round((abs / size) * 10) / 10).toString().replace('.', ',')} ${unit}`;
+  for (let i = 0; i < SHORT_UNITS.length; i++) {
+    const [size, unit] = SHORT_UNITS[i]!;
+    if (abs < size) continue;
+    // 999.999 rounds to "1000 rb"; say "1 jt" instead.
+    if (i > 0 && Math.round((abs / size) * 10) / 10 >= 1000) return short(...SHORT_UNITS[i - 1]!);
+    return short(size, unit);
   }
-  return `${sign}Rp${Math.round(abs)}`;
+  return Math.round(abs) >= 1000 ? short(1e3, 'rb') : `${sign}Rp${Math.round(abs)}`;
 }
 
 export interface ParsedRupiah {
@@ -103,7 +108,8 @@ function stripApproxSuffix(tok: string): { tok: string; approx: boolean } {
   if (m) {
     const stem = m[1]!;
     if (
-      stem in SCALES || stem in SE_SCALES || stem in SLANG_AMOUNTS || stem in SLANG_NUMBERS || isNumberToken(stem)
+      Object.hasOwn(SCALES, stem) || Object.hasOwn(SE_SCALES, stem) || Object.hasOwn(SLANG_AMOUNTS, stem) ||
+      Object.hasOwn(SLANG_NUMBERS, stem) || isNumberToken(stem)
     ) {
       return { tok: stem, approx: true };
     }
@@ -145,19 +151,19 @@ export function parseRupiah(text: string): ParsedRupiah | null {
   let sawValue = false;
 
   const isScaleToken = (tok: string | undefined) =>
-    tok !== undefined && (tok in SCALES || tok in SE_SCALES);
+    tok !== undefined && (Object.hasOwn(SCALES, tok) || Object.hasOwn(SE_SCALES, tok));
 
   for (let i = 0; i < tokens.length; i++) {
     const tok = tokens[i]!;
     const next = tokens[i + 1];
 
     if (isNumberToken(tok)) {
-      const n = parseNumberToken(tok, isScaleToken(next) || (next !== undefined && next in SLANG_AMOUNTS));
+      const n = parseNumberToken(tok, isScaleToken(next) || (next !== undefined && Object.hasOwn(SLANG_AMOUNTS, next)));
       if (!Number.isFinite(n)) return null;
       current += n;
       lastDigit = n;
       sawValue = true;
-    } else if (tok in DIGIT_WORDS) {
+    } else if (Object.hasOwn(DIGIT_WORDS, tok)) {
       const n = DIGIT_WORDS[tok]!;
       current += n;
       lastDigit = n;
@@ -174,25 +180,25 @@ export function parseRupiah(text: string): ParsedRupiah | null {
       current = current - lastDigit + (lastDigit || 1) * mult;
       lastDigit = 0;
       sawValue = true;
-    } else if (tok in SE_SCALES) {
+    } else if (Object.hasOwn(SE_SCALES, tok)) {
       const scale = SE_SCALES[tok]!;
       total += (current + 1) * scale;
       current = 0;
       lastDigit = 0;
       lastScale = scale;
       sawValue = true;
-    } else if (tok in SCALES) {
+    } else if (Object.hasOwn(SCALES, tok)) {
       if (!sawValue) return null;
       const scale = SCALES[tok]!;
       total += (current || 1) * scale;
       current = 0;
       lastDigit = 0;
       lastScale = scale;
-    } else if (tok in SLANG_NUMBERS) {
+    } else if (Object.hasOwn(SLANG_NUMBERS, tok)) {
       current += SLANG_NUMBERS[tok]!;
       lastDigit = 0;
       sawValue = true;
-    } else if (tok in SLANG_AMOUNTS) {
+    } else if (Object.hasOwn(SLANG_AMOUNTS, tok)) {
       total += (current || 1) * SLANG_AMOUNTS[tok]!;
       current = 0;
       lastDigit = 0;

@@ -245,3 +245,52 @@ test('email yang dieja manual dan nama tanpa label di chat', () => {
     assert.deepEqual(values(benign, ['NAME']), [], benign);
   }
 });
+
+test('nilai yang ditemukan selalu sama persis dengan teks di posisinya', () => {
+  // Rejoining "Siti   Aminah" with single spaces once made the mask stop short and leave "ah" visible.
+  const texts = [
+    'Pasien: Siti   Aminah dan suami', 'Nama: Budi  Santoso', 'nama: Budi Santoso', 'Nama: Budi\tSantoso, HP 0812',
+    'NAMA :  BUDI   SANTOSO  NIK: 3201011508950001', 'alamat:  Jl. Mawar  No. 5,  Depok',
+  ];
+  for (const text of texts) {
+    for (const m of detectPii(text)) assert.equal(text.slice(m.start, m.end), m.value, text);
+    const s = new Samaran();
+    const { text: masked } = s.mask(text);
+    assert.ok(!/Aminah|Santoso|SANTOSO|Mawar/.test(masked), masked);
+    assert.equal(s.unmask(masked), text);
+  }
+});
+
+test('JSON satu baris yang besar tetap cepat (guard punya batas waktu 10 detik)', () => {
+  // Scanning the whole line before every ":" once took minutes here, and a timed-out guard lets the read through.
+  const json = `[${Array.from({ length: 20000 }, (_, i) => `{"id":${i},"nama":"Budi Santoso","nik":"3201011508950001"}`).join(',')}]`;
+  const started = Date.now();
+  const found = detectPii(json);
+  assert.equal(found.length, 40000);
+  assert.ok(Date.now() - started < 5000, `${Date.now() - started} ms`);
+});
+
+test('exclude: data keuangan dan nama tetap terbaca untuk simulasi kredit', () => {
+  const text = 'gaji saya 8 juta, mau ambil cicilan 3 juta per bulan, a.n. Budi Santoso, HP 0812-3456-7890';
+  assert.equal(
+    new Samaran({ exclude: ['FINANCIAL', 'NAME'] }).mask(text).text,
+    'gaji saya 8 juta, mau ambil cicilan 3 juta per bulan, a.n. Budi Santoso, HP [PHONE_1]',
+  );
+  assert.throws(() => detectPii(text, { exclude: ['FINANSIAL' as never] }), /Unknown PII type "FINANSIAL"/);
+});
+
+test('nomor yang menempel pada kode (INV-, ORD/) bukan nomor HP', () => {
+  for (const id of ['INV-081234567890', 'ORD/081234567890', 'TRX-6281234567890', 'inv.2026-081234567890']) {
+    assert.deepEqual(detectPii(id), [], id);
+  }
+  for (const phone of ['hp-081234567890', 'no-081234567890', 'wa.me/6281377778888', 'https://wa.me/6281234567890']) {
+    assert.equal(detectPii(phone)[0]?.type, 'PHONE', phone);
+  }
+  assert.deepEqual(detectPii('081234567890/081298765432').map((m) => m.value), ['081234567890', '081298765432']);
+});
+
+test('penyakit setelah kata ganti: "saya diabetes"', () => {
+  assert.deepEqual(detectPii('saya diabetes, rutin obat insulin').map((m) => m.value), ['diabetes', 'insulin']);
+  assert.deepEqual(detectPii('ibu saya hipertensi').map((m) => m.value), ['hipertensi']);
+  assert.deepEqual(detectPii('saya siap, dia datang besok'), []);
+});
