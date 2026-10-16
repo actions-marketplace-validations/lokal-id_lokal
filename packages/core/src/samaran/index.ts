@@ -1,0 +1,195 @@
+import { parsePhone } from '../phone.ts';
+import { detectPii, type DetectOptions } from './detectors.ts';
+import { PII_TYPES, UU_PDP_CATEGORY, type Confidence, type PiiMatch, type PiiType } from './types.ts';
+
+export { detectPii, PII_TYPES, UU_PDP_CATEGORY, type Confidence, type DetectOptions, type PiiMatch, type PiiType };
+export { fieldType } from './fields.ts';
+
+export interface MaskedMatch extends PiiMatch {
+  /** What replaced the value: "[NIK_1]" in placeholder mode, "3201********0001" in partial mode. */
+  replacement: string;
+}
+
+export interface MaskResult {
+  text: string;
+  matches: MaskedMatch[];
+}
+
+export interface SamaranOptions extends DetectOptions {
+  /**
+   * - `placeholder` (default): reversible tokens like [NIK_1], for text sent to an LLM.
+   * - `partial`: human-readable masks like 0812****7890, for logs and admin screens. Not reversible.
+   */
+  mode?: 'placeholder' | 'partial';
+  /** Values that are never masked, e.g. your own support hotline. */
+  allow?: Array<string | RegExp>;
+}
+
+/** Same person, same placeholder: "0812-3456-7890" and "+62 812 3456 7890" both map to [PHONE_1]. */
+function canonical(type: PiiType, value: string): string {
+  switch (type) {
+    case 'PHONE':
+      return parsePhone(value).e164 ?? value.replace(/\D/g, '');
+    case 'EMAIL':
+      return value.toLowerCase();
+    case 'PLATE':
+    case 'PASSPORT':
+      return value.toUpperCase().replace(/\s+/g, '');
+    case 'NIK':
+    case 'KK':
+    case 'NPWP':
+    case 'SIM':
+    case 'NIP':
+    case 'BPJS':
+    case 'BANK_ACCOUNT':
+    case 'CARD':
+      return value.replace(/\D/g, '');
+    default:
+      return value.toLowerCase().replace(/\s+/g, ' ').trim();
+  }
+}
+
+/** Keeps just enough to recognise the value: 3201********0001, 0812****7890, b***@gmail.com. */
+export function partialMask(type: PiiType, value: string): string {
+  const stars = (n: number) => '*'.repeat(Math.max(n, 3));
+  const digits = value.replace(/\D/g, '');
+  switch (type) {
+    case 'NIK':
+    case 'KK':
+      return `${digits.slice(0, 4)}${stars(8)}${digits.slice(-4)}`;
+    case 'NIP':
+    case 'SIM':
+      return `${stars(digits.length - 3)}${digits.slice(-3)}`;
+    case 'PASSPORT':
+      return `${value.charAt(0)}${stars(5)}${value.slice(-2)}`;
+    case 'IP': {
+      const [a, b] = value.split('.');
+      return `${a}.${b}.*.*`;
+    }
+    case 'GEO':
+      return value.replace(/(\.\d)\d+/g, '$1***');
+    case 'BIRTH_DATE':
+    case 'GENDER':
+    case 'RELIGION':
+    case 'MARITAL_STATUS':
+    case 'NATIONALITY':
+    case 'HEALTH':
+    case 'FINANCIAL':
+    case 'CRIMINAL_RECORD':
+    case 'BIOMETRIC':
+      return stars(3);
+    case 'PHONE': {
+      const national = parsePhone(value).e164?.replace('+62', '0') ?? digits;
+      return `${national.slice(0, 4)}${stars(national.length - 8)}${national.slice(-4)}`;
+    }
+    case 'EMAIL': {
+      const [user = '', domain = ''] = value.split('@');
+      return `${user.charAt(0)}${stars(3)}@${domain}`;
+    }
+    case 'CARD':
+    case 'BANK_ACCOUNT':
+    case 'BPJS':
+    case 'NPWP':
+      return `${stars(digits.length - 4)}${digits.slice(-4)}`;
+    case 'PLATE': {
+      const [region = ''] = value.split(/[\s\d]/);
+      return `${region} ${stars(4)}`;
+    }
+    case 'NAME':
+      return value
+        .split(/\s+/)
+        .map((w) => `${w.charAt(0)}${stars(3)}`)
+        .join(' ');
+    case 'ADDRESS':
+      return `${value.split(/\s+/)[0]} ${stars(3)}`;
+  }
+}
+
+const PLACEHOLDER = /\[([A-Z_]+_\d+)\]/g;
+
+/**
+ * Masks Indonesian personal data before text leaves your server, and restores it afterwards.
+ *
+ *   const samaran = new Samaran();
+ *   const { text } = samaran.mask('NIK saya 3201011508950001, HP 0812-3456-7890');
+ *   // → 'NIK saya [NIK_1], HP [PHONE_1]'
+ *   const reply = await llm(text);
+ *   samaran.unmask(reply);
+ *
+ * One instance keeps one vault: use one per conversation or request, not one global.
+ */
+export class Samaran {
+  readonly options: SamaranOptions;
+  private byCanonical = new Map<string, string>();
+  private byPlaceholder = new Map<string, string>();
+  private counters = new Map<PiiType, number>();
+
+  constructor(options: SamaranOptions = {}) {
+    this.options = options;
+  }
+
+  scan(text: string): PiiMatch[] {
+    const allow = this.options.allow ?? [];
+    return detectPii(text, this.options).filter(
+      (m) => !allow.some((a) => (typeof a === 'string' ? a === m.value : a.test(m.value))),
+    );
+  }
+
+  mask(text: string): MaskResult {
+    const matches = this.scan(text);
+    const masked: MaskedMatch[] = [];
+    let out = '';
+    let cursor = 0;
+    for (const m of matches) {
+      const replacement = this.options.mode === 'partial' ? partialMask(m.type, m.value) : this.placeholderFor(m);
+      out += text.slice(cursor, m.start) + replacement;
+      cursor = m.end;
+      masked.push({ ...m, replacement });
+    }
+    out += text.slice(cursor);
+    return { text: out, matches: masked };
+  }
+
+  /** Puts the original values back. Unknown placeholders are left as they are. */
+  unmask(text: string): string {
+    return text.replace(PLACEHOLDER, (whole, key: string) => this.byPlaceholder.get(`[${key}]`) ?? whole);
+  }
+
+  /** Number of distinct values in the vault. */
+  get size(): number {
+    return this.byPlaceholder.size;
+  }
+
+  /** Serializable vault, to restore placeholders in another process. Treat it as the raw data it contains. */
+  exportVault(): Array<[placeholder: string, value: string]> {
+    return [...this.byPlaceholder.entries()];
+  }
+
+  importVault(entries: Array<[string, string]>): void {
+    for (const [placeholder, value] of entries) {
+      const match = /^\[([A-Z_]+)_(\d+)\]$/.exec(placeholder);
+      if (!match) continue;
+      const type = match[1] as PiiType;
+      this.byPlaceholder.set(placeholder, value);
+      this.byCanonical.set(`${type}:${canonical(type, value)}`, placeholder);
+      this.counters.set(type, Math.max(this.counters.get(type) ?? 0, Number(match[2])));
+    }
+  }
+
+  private placeholderFor(m: PiiMatch): string {
+    const key = `${m.type}:${canonical(m.type, m.value)}`;
+    const existing = this.byCanonical.get(key);
+    if (existing) return existing;
+    const n = (this.counters.get(m.type) ?? 0) + 1;
+    this.counters.set(m.type, n);
+    const placeholder = `[${m.type}_${n}]`;
+    this.byCanonical.set(key, placeholder);
+    this.byPlaceholder.set(placeholder, m.value);
+    return placeholder;
+  }
+}
+
+/** One-shot masking. Use a `Samaran` instance when you need to unmask later. */
+export function maskPii(text: string, options: SamaranOptions = {}): MaskResult {
+  return new Samaran(options).mask(text);
+}

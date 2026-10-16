@@ -1,0 +1,264 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Cara Lokal menjaga data pribadi tetap di komputer kamu",
+    "output": ".archify/architecture-lokal-overview-id-20261016-154325/lokal-overview-id.html",
+    "locale": "id",
+    "quality_profile": "showcase",
+    "legend": {
+      "entries": {
+        "frontend": {
+          "label": "AI agent"
+        },
+        "backend": {
+          "label": "Lokal"
+        },
+        "security": {
+          "label": "Lapisan privasi"
+        },
+        "database": {
+          "label": "Data lokal"
+        },
+        "external": {
+          "label": "Di luar Lokal"
+        }
+      }
+    },
+    "translations": {
+      "legend.title": "Keterangan"
+    }
+  },
+  "components": [
+    {
+      "id": "developer",
+      "type": "external",
+      "label": "Kamu",
+      "sublabel": "developer",
+      "pos": [
+        10,
+        210
+      ],
+      "size": [
+        100,
+        64
+      ]
+    },
+    {
+      "id": "skills",
+      "type": "backend",
+      "label": "Skills",
+      "sublabel": "lokal-indonesia, samaran",
+      "pos": [
+        400,
+        50
+      ],
+      "size": [
+        170,
+        64
+      ],
+      "tag": "SKILL.md"
+    },
+    {
+      "id": "agent",
+      "type": "frontend",
+      "label": "AI agent",
+      "sublabel": "Claude Code, Cursor, Codex",
+      "pos": [
+        400,
+        210
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "guard",
+      "type": "security",
+      "label": "Samaran Guard",
+      "sublabel": "hook Claude Code",
+      "pos": [
+        720,
+        50
+      ],
+      "size": [
+        160,
+        64
+      ],
+      "tag": "tahan baca mentah"
+    },
+    {
+      "id": "llm",
+      "type": "external",
+      "label": "Penyedia LLM",
+      "sublabel": "API model",
+      "pos": [
+        960,
+        210
+      ],
+      "size": [
+        130,
+        64
+      ]
+    },
+    {
+      "id": "refdata",
+      "type": "database",
+      "label": "Data acuan",
+      "sublabel": "wilayah, kode pos, libur",
+      "pos": [
+        150,
+        380
+      ],
+      "size": [
+        180,
+        64
+      ],
+      "tag": "ikut terpasang"
+    },
+    {
+      "id": "mcp",
+      "type": "backend",
+      "label": "MCP server Lokal",
+      "sublabel": "@lokal-id/mcp",
+      "pos": [
+        400,
+        380
+      ],
+      "size": [
+        170,
+        64
+      ],
+      "tag": "13 tool"
+    },
+    {
+      "id": "samaran",
+      "type": "security",
+      "label": "Samaran",
+      "sublabel": "samarkan & pulihkan PII",
+      "pos": [
+        720,
+        380
+      ],
+      "size": [
+        160,
+        64
+      ],
+      "tag": "25 jenis"
+    },
+    {
+      "id": "files",
+      "type": "database",
+      "label": "File project",
+      "sublabel": "CSV, Excel, log",
+      "pos": [
+        400,
+        540
+      ],
+      "size": [
+        170,
+        64
+      ],
+      "tag": "data asli"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Komputer kamu",
+      "wraps": [
+        "skills",
+        "agent",
+        "guard",
+        "refdata",
+        "mcp",
+        "samaran",
+        "files"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "prompt",
+      "from": "developer",
+      "to": "agent",
+      "label": "prompt",
+      "variant": "emphasis"
+    },
+    {
+      "id": "conventions",
+      "from": "skills",
+      "to": "agent",
+      "label": "konvensi"
+    },
+    {
+      "id": "hook-check",
+      "from": "agent",
+      "to": "guard",
+      "label": "cek prompt & bacaan",
+      "variant": "security"
+    },
+    {
+      "id": "masked-context",
+      "from": "agent",
+      "to": "llm",
+      "label": "hanya konteks tersamar",
+      "variant": "emphasis"
+    },
+    {
+      "id": "tool-calls",
+      "from": "agent",
+      "to": "mcp",
+      "label": "tool MCP (stdio)"
+    },
+    {
+      "id": "lookup",
+      "from": "mcp",
+      "to": "refdata",
+      "label": "cari"
+    },
+    {
+      "id": "mask-restore",
+      "from": "mcp",
+      "to": "samaran",
+      "label": "samarkan, pulihkan",
+      "variant": "security"
+    },
+    {
+      "id": "read-write",
+      "from": "mcp",
+      "to": "files",
+      "label": "baca, tulis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Yang dilihat model",
+      "items": [
+        "Placeholder seperti [NAME_1], [NIK_1], [PHONE_1]",
+        "Nilai yang sama selalu dapat placeholder yang sama, jadi dedup dan join tetap jalan",
+        "Data asli dipulihkan di komputer kamu oleh write_file_unmasked"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Samaran Guard",
+      "items": [
+        "Menahan prompt berisi NIK, KK, nomor rekening, atau data kesehatan berlabel",
+        "Memblokir Read, Grep, cat, dan Get-Content pada file berisi data pribadi",
+        "Mengarahkan agent ke read_file_masked; skrip pengolah data tetap jalan"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Data acuan",
+      "items": [
+        "38 provinsi sampai 83.762 kelurahan/desa (Kepmendagri 2025)",
+        "Kode pos untuk setiap kelurahan/desa",
+        "Libur nasional dan cuti bersama dari SKB 2026 dan 2027"
+      ]
+    }
+  ]
+}

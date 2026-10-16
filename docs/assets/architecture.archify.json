@@ -1,0 +1,261 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "How Lokal keeps personal data on your machine",
+    "output": ".archify/architecture-lokal-overview-20261016-154325/lokal-overview.html",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "legend": {
+      "entries": {
+        "frontend": {
+          "label": "AI agent"
+        },
+        "backend": {
+          "label": "Lokal"
+        },
+        "security": {
+          "label": "Privacy layer"
+        },
+        "database": {
+          "label": "Local data"
+        },
+        "external": {
+          "label": "Outside Lokal"
+        }
+      }
+    }
+  },
+  "components": [
+    {
+      "id": "developer",
+      "type": "external",
+      "label": "You",
+      "sublabel": "developer",
+      "pos": [
+        10,
+        210
+      ],
+      "size": [
+        100,
+        64
+      ]
+    },
+    {
+      "id": "skills",
+      "type": "backend",
+      "label": "Skills",
+      "sublabel": "lokal-indonesia, samaran",
+      "pos": [
+        400,
+        50
+      ],
+      "size": [
+        170,
+        64
+      ],
+      "tag": "SKILL.md"
+    },
+    {
+      "id": "agent",
+      "type": "frontend",
+      "label": "AI agent",
+      "sublabel": "Claude Code, Cursor, Codex",
+      "pos": [
+        400,
+        210
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "guard",
+      "type": "security",
+      "label": "Samaran Guard",
+      "sublabel": "Claude Code hook",
+      "pos": [
+        680,
+        50
+      ],
+      "size": [
+        160,
+        64
+      ],
+      "tag": "blocks raw reads"
+    },
+    {
+      "id": "llm",
+      "type": "external",
+      "label": "LLM provider",
+      "sublabel": "model API",
+      "pos": [
+        920,
+        210
+      ],
+      "size": [
+        130,
+        64
+      ]
+    },
+    {
+      "id": "refdata",
+      "type": "database",
+      "label": "Reference data",
+      "sublabel": "regions, postcodes, holidays",
+      "pos": [
+        150,
+        380
+      ],
+      "size": [
+        180,
+        64
+      ],
+      "tag": "bundled"
+    },
+    {
+      "id": "mcp",
+      "type": "backend",
+      "label": "Lokal MCP server",
+      "sublabel": "@lokal-id/mcp",
+      "pos": [
+        400,
+        380
+      ],
+      "size": [
+        170,
+        64
+      ],
+      "tag": "13 tools"
+    },
+    {
+      "id": "samaran",
+      "type": "security",
+      "label": "Samaran",
+      "sublabel": "mask and restore PII",
+      "pos": [
+        680,
+        380
+      ],
+      "size": [
+        160,
+        64
+      ],
+      "tag": "25 types"
+    },
+    {
+      "id": "files",
+      "type": "database",
+      "label": "Project files",
+      "sublabel": "CSV, Excel, logs",
+      "pos": [
+        400,
+        540
+      ],
+      "size": [
+        170,
+        64
+      ],
+      "tag": "real data"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Your machine",
+      "wraps": [
+        "skills",
+        "agent",
+        "guard",
+        "refdata",
+        "mcp",
+        "samaran",
+        "files"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "prompt",
+      "from": "developer",
+      "to": "agent",
+      "label": "prompt",
+      "variant": "emphasis"
+    },
+    {
+      "id": "conventions",
+      "from": "skills",
+      "to": "agent",
+      "label": "conventions"
+    },
+    {
+      "id": "hook-check",
+      "from": "agent",
+      "to": "guard",
+      "label": "checks prompts, reads",
+      "variant": "security"
+    },
+    {
+      "id": "masked-context",
+      "from": "agent",
+      "to": "llm",
+      "label": "masked context only",
+      "variant": "emphasis"
+    },
+    {
+      "id": "tool-calls",
+      "from": "agent",
+      "to": "mcp",
+      "label": "MCP tools (stdio)"
+    },
+    {
+      "id": "lookup",
+      "from": "mcp",
+      "to": "refdata",
+      "label": "lookup"
+    },
+    {
+      "id": "mask-restore",
+      "from": "mcp",
+      "to": "samaran",
+      "label": "mask, unmask",
+      "variant": "security"
+    },
+    {
+      "id": "read-write",
+      "from": "mcp",
+      "to": "files",
+      "label": "read, write"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "What the model sees",
+      "items": [
+        "Placeholders like [NAME_1], [NIK_1], [PHONE_1]",
+        "The same value always gets the same placeholder, so dedupe and joins still work",
+        "Real values are restored locally by write_file_unmasked"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Samaran Guard",
+      "items": [
+        "Holds prompts that contain NIK, KK, account numbers, or labeled health data",
+        "Blocks Read, Grep, cat, and Get-Content on personal data files",
+        "Points the agent to read_file_masked; scripts on data files still run"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Reference data",
+      "items": [
+        "38 provinces down to 83,762 villages (Kepmendagri 2025)",
+        "Postal codes for every village",
+        "Holidays and cuti bersama from the SKB, 2026 and 2027"
+      ]
+    }
+  ]
+}

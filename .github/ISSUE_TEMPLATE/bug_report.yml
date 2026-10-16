@@ -1,0 +1,48 @@
+name: Bug report
+description: Something in the library, MCP server, plugin, or skills does not work
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Use made-up data only.** Never paste real personal data, logs, or customer files. Bahasa Indonesia is fine.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Code, a tool call, or the prompt you gave the agent.
+      render: text
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - "@lokal-id/core (library)"
+        - "@lokal-id/mcp (MCP server)"
+        - Samaran Guard (Claude Code hook)
+        - Skills
+        - Reference data (regions, postal codes, holidays, carriers)
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "Lokal 0.2.0, Node 24, Windows 11, Claude Code 2.x / Cursor / Codex"
+    validations:
+      required: true
+  - type: checkboxes
+    id: fake
+    attributes:
+      label: Confirmation
+      options:
+        - label: Everything I pasted here is made-up data.
+          required: true

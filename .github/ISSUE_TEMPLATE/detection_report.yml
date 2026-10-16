@@ -1,0 +1,55 @@
+name: Detection report
+description: Samaran missed personal data, or masked something that is not personal data
+labels: [detection]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Use made-up data only.** Never paste real NIK, phone numbers, names, or addresses here. Bahasa Indonesia is fine.
+        If you found a way to get data past the guard on purpose, report it privately instead (see SECURITY.md).
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What happened?
+      options:
+        - Missed (personal data was not detected)
+        - False positive (something was masked that is not personal data)
+    validations:
+      required: true
+  - type: textarea
+    id: input
+    attributes:
+      label: Example input
+      description: The smallest text, CSV row, or log line that shows the problem, with fake values.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+      placeholder: "e.g. `bu siti` should be masked as [NAME_1]"
+    validations:
+      required: true
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where did you see it?
+      options:
+        - Library (Samaran.mask / detectPii)
+        - MCP tool (scan_pii / read_file_masked)
+        - Samaran Guard (Claude Code hook)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Lokal version
+      placeholder: "0.2.0"
+  - type: checkboxes
+    id: fake
+    attributes:
+      label: Confirmation
+      options:
+        - label: The example contains only made-up data.
+          required: true

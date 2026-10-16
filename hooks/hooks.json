@@ -1,0 +1,28 @@
+{
+  "description": "Samaran guard: holds back prompts containing NIK, NPWP, bank account, BPJS or card numbers, and redirects reads of data files (CSV, JSON, logs, SQL dumps) full of personal data - via Read, Grep, or cat/head/grep/Get-Content in the shell - to read_file_masked.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/samaran-guard.mjs\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Read|Grep|Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/samaran-guard.mjs\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

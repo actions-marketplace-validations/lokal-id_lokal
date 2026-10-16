@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security issue
+    url: https://github.com/lokal-id/lokal/security/advisories/new
+    about: Ways to get personal data past Samaran or the guard. Please report these privately.

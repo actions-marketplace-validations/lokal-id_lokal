@@ -1,0 +1,20 @@
+name: Feature request
+description: A convention agents get wrong, a missing tool, or new reference data
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: For agent behavior, include what the agent produced and what an Indonesian app actually needs.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+  - type: input
+    id: source
+    attributes:
+      label: Official source
+      description: For reference data, link the regulation or official publication.

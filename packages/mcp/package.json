@@ -1,0 +1,45 @@
+{
+  "name": "@lokal-id/mcp",
+  "version": "0.2.0",
+  "description": "MCP server that makes AI agents Indonesia-ready: NIK/NPWP/phone validation, Rupiah, wilayah Kemendagri, and Samaran — read production data with Indonesian PII masked.",
+  "type": "module",
+  "bin": {
+    "lokal-mcp": "dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@lokal-id/core": "^0.2.0",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "zod": "^4.6.7"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "indonesia",
+    "pii",
+    "uu-pdp",
+    "claude",
+    "cursor"
+  ],
+  "homepage": "https://github.com/lokal-id/lokal/tree/main/packages/mcp#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lokal-id/lokal.git",
+    "directory": "packages/mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/lokal-id/lokal/issues"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

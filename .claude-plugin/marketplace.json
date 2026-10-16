@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "lokal",
+  "description": "Indonesia-ready toolkit for AI agents",
+  "owner": {
+    "name": "lokal-id",
+    "url": "https://github.com/lokal-id"
+  },
+  "plugins": [
+    {
+      "name": "lokal",
+      "description": "Skills, MCP server, and privacy guard that make AI agents build correctly for Indonesia and keep Indonesian personal data out of the model.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}

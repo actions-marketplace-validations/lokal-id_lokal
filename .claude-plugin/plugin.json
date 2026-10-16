@@ -1,0 +1,20 @@
+{
+  "name": "lokal",
+  "description": "Make AI agents Indonesia-ready: conventions and real data for Indonesian apps (Rupiah, NIK/NPWP, phone numbers, wilayah Kemendagri, UI copy) plus Samaran, which keeps Indonesian personal data out of the model.",
+  "version": "0.2.0",
+  "author": {
+    "name": "Lokal contributors"
+  },
+  "license": "MIT",
+  "keywords": [
+    "indonesia",
+    "localization",
+    "privacy",
+    "pii",
+    "uu-pdp",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "homepage": "https://github.com/lokal-id/lokal",
+  "repository": "https://github.com/lokal-id/lokal"
+}

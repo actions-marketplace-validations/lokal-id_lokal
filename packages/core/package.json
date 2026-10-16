@@ -1,0 +1,51 @@
+{
+  "name": "@lokal-id/core",
+  "version": "0.2.0",
+  "description": "Indonesian data primitives for apps and AI agents: NIK, NPWP, phone numbers, Rupiah, terbilang, wilayah Kemendagri, and Samaran PII masking.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./wilayah": {
+      "types": "./dist/wilayah.d.ts",
+      "default": "./dist/wilayah.js"
+    }
+  },
+  "files": [
+    "dist",
+    "data"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "data:wilayah": "node scripts/build-wilayah.ts"
+  },
+  "keywords": [
+    "indonesia",
+    "nik",
+    "npwp",
+    "rupiah",
+    "terbilang",
+    "wilayah",
+    "pii",
+    "uu-pdp",
+    "llm"
+  ],
+  "homepage": "https://github.com/lokal-id/lokal/tree/main/packages/core#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lokal-id/lokal.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/lokal-id/lokal/issues"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

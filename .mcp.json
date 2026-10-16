@@ -1,0 +1,6 @@
+{
+  "lokal": {
+    "command": "npx",
+    "args": ["-y", "@lokal-id/mcp"]
+  }
+}

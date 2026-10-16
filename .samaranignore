@@ -1,0 +1,5 @@
+# Files in this repo that only hold fake, structurally valid example data.
+packages/*/test/
+README.md
+skills/
+evals/fixtures/

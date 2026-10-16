@@ -1,0 +1,24 @@
+2026-10-14T01:02:17.000Z INFO  checkout started user_email=budi.santoso@gmail.com hp=081234567890
+2026-10-14T01:02:17.000Z ERROR checkout failed order=INV-10231 nik=3201011508950001 hp=081234567890 err="PaymentTimeout: gateway did not respond in 30000ms"
+2026-10-14T01:04:43.000Z INFO  checkout started user_email=siti.aminah@yahoo.co.id hp=085711112222
+2026-10-14T01:04:43.000Z ERROR checkout failed order=INV-10232 nik=3276015508030002 hp=085711112222 err="PaymentTimeout: gateway did not respond in 30000ms"
+2026-10-14T01:07:18.000Z INFO  checkout started user_email=andi.wijaya@gmail.com hp=081399990000
+2026-10-14T01:07:18.000Z ERROR checkout failed order=INV-10233 nik=3171012003880003 hp=081399990000 err="InvalidAddress: kode_pos 16xxx not found"
+2026-10-14T01:10:02.000Z INFO  checkout started user_email=dewi.lestari@outlook.com hp=083812345678
+2026-10-14T01:10:02.000Z ERROR checkout failed order=INV-10234 nik=3578014607910004 hp=083812345678 err="PaymentTimeout: gateway did not respond in 30000ms"
+2026-10-14T01:12:55.000Z INFO  checkout started user_email=budi.santoso@gmail.com hp=081234567890
+2026-10-14T01:12:55.000Z ERROR checkout failed order=INV-10235 nik=3201011508950001 hp=081234567890 err="OtpExpired: OTP older than 300s"
+2026-10-14T01:15:57.000Z INFO  checkout started user_email=siti.aminah@yahoo.co.id hp=085711112222
+2026-10-14T01:15:57.000Z ERROR checkout failed order=INV-10236 nik=3276015508030002 hp=085711112222 err="PaymentTimeout: gateway did not respond in 30000ms"
+2026-10-14T01:19:08.000Z INFO  checkout started user_email=andi.wijaya@gmail.com hp=081399990000
+2026-10-14T01:19:08.000Z ERROR checkout failed order=INV-10237 nik=3171012003880003 hp=081399990000 err="InvalidAddress: kecamatan missing"
+2026-10-14T01:22:28.000Z INFO  checkout started user_email=dewi.lestari@outlook.com hp=083812345678
+2026-10-14T01:22:28.000Z ERROR checkout failed order=INV-10238 nik=3578014607910004 hp=083812345678 err="PaymentTimeout: gateway did not respond in 30000ms"
+2026-10-14T01:25:57.000Z INFO  checkout started user_email=budi.santoso@gmail.com hp=081234567890
+2026-10-14T01:25:57.000Z ERROR checkout failed order=INV-10239 nik=3201011508950001 hp=081234567890 err="OtpExpired: OTP older than 300s"
+2026-10-14T01:29:35.000Z INFO  checkout started user_email=siti.aminah@yahoo.co.id hp=085711112222
+2026-10-14T01:29:35.000Z ERROR checkout failed order=INV-10240 nik=3276015508030002 hp=085711112222 err="PaymentTimeout: gateway did not respond in 30000ms"
+2026-10-14T01:33:22.000Z INFO  checkout started user_email=andi.wijaya@gmail.com hp=081399990000
+2026-10-14T01:33:22.000Z ERROR checkout failed order=INV-10241 nik=3171012003880003 hp=081399990000 err="InvalidAddress: kode_pos 16xxx not found"
+2026-10-14T01:37:18.000Z INFO  checkout started user_email=dewi.lestari@outlook.com hp=083812345678
+2026-10-14T01:37:18.000Z ERROR checkout failed order=INV-10242 nik=3578014607910004 hp=083812345678 err="PaymentTimeout: gateway did not respond in 30000ms"

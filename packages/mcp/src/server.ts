@@ -1,0 +1,462 @@
+import { existsSync, mkdirSync, statSync, writeFileSync } from 'node:fs';
+import path from 'node:path';
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { z } from 'zod';
+import {
+  PII_TYPES,
+  Samaran,
+  UU_PDP_CATEGORY,
+  addWorkingDays,
+  countWorkingDays,
+  detectPii,
+  formatRupiah,
+  formatRupiahShort,
+  getHolidays,
+  holidaysOn,
+  isWorkingDay,
+  parseNik,
+  parseNpwp,
+  parsePhone,
+  parseRupiah,
+  partialMask,
+  terbilang,
+  type PiiMatch,
+  type PiiType,
+} from '@lokal-id/core';
+import {
+  findByPostalCode,
+  getWilayah,
+  listWilayah,
+  postalCodesIn,
+  searchWilayah,
+  wilayahName,
+} from '@lokal-id/core/wilayah';
+import { loadDocument, loadIgnore, resolveInRoot, toPosix, walkFiles, type Document } from './files.ts';
+
+const VERSION = '0.2.0';
+const FILE_LIMIT = 5000;
+
+const INSTRUCTIONS = `Lokal makes you Indonesia-ready.
+
+Data tools (use them instead of guessing): parse_nik, validate_npwp, parse_phone, format_rupiah, parse_rupiah, search_wilayah, list_wilayah, lookup_kode_pos, list_holidays, working_days. Region lists, kode pos, holidays, NIK structure, and Rupiah formatting are easy to get subtly wrong from memory.
+
+Privacy tools (Samaran): when a task touches real user data — logs, CSV/Excel exports, database dumps, support tickets, seed files from production — run scan_pii first, then read it with read_file_masked instead of reading the raw file (also never cat/head/type it in a shell). Identifiers (NIK, KK, NPWP, phone, bank account, BPJS, passport …), names, addresses, birth dates, and the UU PDP categories (religion, marital status, health, finances, criminal records, biometrics) come back as stable placeholders like [NIK_1]. Work with the placeholders; never ask the user for the real values. When output must contain the real data (a cleaned CSV, a report), write it with write_file_unmasked, which restores the placeholders on the user's machine. If scan_pii reports files it could not scan, tell the user; do not treat them as clean.`;
+
+function json(value: unknown) {
+  return { content: [{ type: 'text' as const, text: JSON.stringify(value, null, 2) }] };
+}
+
+function fail(message: string) {
+  return { content: [{ type: 'text' as const, text: message }], isError: true };
+}
+
+function countByType(types: PiiType[]): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (const t of types) counts[t] = (counts[t] ?? 0) + 1;
+  return counts;
+}
+
+function lineOf(text: string, index: number): number {
+  let line = 1;
+  for (let i = 0; i < index; i++) if (text.charCodeAt(i) === 10) line++;
+  return line;
+}
+
+function parts(doc: Exclude<Document, { kind: 'skipped' }>): Array<{ sheet?: string; text: string }> {
+  return doc.kind === 'text' ? [{ text: doc.text }] : doc.sheets.map((s) => ({ sheet: s.name, text: s.csv }));
+}
+
+const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'YYYY-MM-DD');
+
+export function createServer(
+  root = path.resolve(process.env.LOKAL_ROOT ?? process.env.CLAUDE_PROJECT_DIR ?? process.cwd()),
+): McpServer {
+  const server = new McpServer({ name: 'lokal', version: VERSION }, { instructions: INSTRUCTIONS });
+  // One vault per server process, so placeholders stay stable across calls in a session.
+  const samaran = new Samaran();
+  const isIgnored = loadIgnore(root);
+  const readOnly = { readOnlyHint: true, openWorldHint: false } as const;
+  const inRoot = (p: string) => resolveInRoot(root, p);
+
+  server.registerTool(
+    'parse_nik',
+    {
+      title: 'Parse NIK',
+      description:
+        'Validate an Indonesian NIK (16-digit national ID) by structure and decode it: province, regency, district (Kemendagri), birth date, gender. Cannot prove the NIK is registered at Dukcapil.',
+      inputSchema: { nik: z.string().describe('16-digit NIK; spaces and dots are ignored') },
+      annotations: readOnly,
+    },
+    async ({ nik }) => json(parseNik(nik, { lookupWilayah: wilayahName })),
+  );
+
+  server.registerTool(
+    'validate_npwp',
+    {
+      title: 'Validate NPWP',
+      description:
+        'Validate the format of an Indonesian tax ID (NPWP): legacy 15-digit (XX.XXX.XXX.X-XXX.XXX), 16-digit, or NIK used as NPWP for individuals. Returns the 16-digit form DJP uses today. Format only: it does not check the DJP check digit or registration.',
+      inputSchema: { npwp: z.string() },
+      annotations: readOnly,
+    },
+    async ({ npwp }) => json(parseNpwp(npwp)),
+  );
+
+  server.registerTool(
+    'parse_phone',
+    {
+      title: 'Parse Indonesian phone number',
+      description:
+        'Normalize an Indonesian phone number (08xx, +62, 62, landline with area code) to E.164, display format, WhatsApp form, and original operator (Telkomsel, Indosat, Tri, XL, Axis, Smartfren).',
+      inputSchema: { phone: z.string() },
+      annotations: readOnly,
+    },
+    async ({ phone }) => json(parsePhone(phone)),
+  );
+
+  server.registerTool(
+    'format_rupiah',
+    {
+      title: 'Format Rupiah',
+      description:
+        'Format an amount as Rupiah the Indonesian way (Rp1.500.000), short form (Rp1,5 jt), and spelled out in words (terbilang) for receipts and invoices.',
+      inputSchema: { amount: z.number().describe('Amount in rupiah') },
+      annotations: readOnly,
+    },
+    async ({ amount }) =>
+      json({
+        formatted: formatRupiah(amount),
+        withDecimals: formatRupiah(amount, { decimals: true }),
+        short: formatRupiahShort(amount),
+        terbilang: terbilang(Math.round(amount), { currency: true }),
+        terbilangKuitansi: terbilang(Math.round(amount), { currency: true, case: 'title' }),
+      }),
+  );
+
+  server.registerTool(
+    'parse_rupiah',
+    {
+      title: 'Parse Rupiah from text',
+      description:
+        'Turn how Indonesians write money into a number: "Rp 25.000", "1,5jt", "2jtan", "50rb-an", "goceng", "2 ceban", "sejuta setengah", "dua ratus ribu". "m" means miliar.',
+      inputSchema: { text: z.string() },
+      annotations: readOnly,
+    },
+    async ({ text }) => json(parseRupiah(text) ?? { amount: null, reason: 'Not a recognizable amount' }),
+  );
+
+  server.registerTool(
+    'search_wilayah',
+    {
+      title: 'Search Indonesian regions',
+      description:
+        'Find official Kemendagri regions by name (provinsi, kabupaten/kota, kecamatan, kelurahan/desa) with their codes. Use for address forms, normalizing user-typed locations, and seed data instead of inventing region names.',
+      inputSchema: {
+        query: z.string(),
+        level: z
+          .union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)])
+          .optional()
+          .describe('1 provinsi, 2 kabupaten/kota, 3 kecamatan, 4 kelurahan/desa'),
+        within: z.string().optional().describe('Only search inside this region code, e.g. "32" for Jawa Barat'),
+        limit: z.number().int().min(1).max(50).optional(),
+      },
+      annotations: readOnly,
+    },
+    async ({ query, level, within, limit }) => json(searchWilayah(query, { level, within, limit })),
+  );
+
+  server.registerTool(
+    'list_wilayah',
+    {
+      title: 'List child regions',
+      description:
+        'List the direct children of a region code — the data behind cascading address dropdowns. No code returns the 38 provinces; "32" returns the kabupaten/kota in Jawa Barat, and so on down to kelurahan/desa (which include their kode pos).',
+      inputSchema: { parent_code: z.string().optional() },
+      annotations: readOnly,
+    },
+    async ({ parent_code }) => {
+      if (parent_code && !getWilayah(parent_code)) return fail(`Unknown region code: ${parent_code}`);
+      return json(
+        listWilayah(parent_code).map(({ code, name, type, postalCode }) => ({ code, name, type, postalCode })),
+      );
+    },
+  );
+
+  server.registerTool(
+    'lookup_kode_pos',
+    {
+      title: 'Look up kode pos',
+      description:
+        'Kode pos (postal codes) for Indonesian regions. Give kode_pos to find the kelurahan/desa that use it, or wilayah_code to list every kode pos inside a region (e.g. "32.76" Kota Depok).',
+      inputSchema: {
+        kode_pos: z.string().regex(/^\d{5}$/).optional(),
+        wilayah_code: z.string().optional(),
+      },
+      annotations: readOnly,
+    },
+    async ({ kode_pos, wilayah_code }) => {
+      if (kode_pos) {
+        const villages = findByPostalCode(kode_pos);
+        if (!villages.length) return fail(`No kelurahan/desa uses kode pos ${kode_pos}.`);
+        return json(villages.map(({ code, name, type, path: p }) => ({ code, name, type, path: p })));
+      }
+      if (wilayah_code) {
+        const wilayah = getWilayah(wilayah_code);
+        if (!wilayah) return fail(`Unknown region code: ${wilayah_code}`);
+        return json({ wilayah: wilayah.path, postalCodes: postalCodesIn(wilayah.code) });
+      }
+      return fail('Give kode_pos or wilayah_code.');
+    },
+  );
+
+  server.registerTool(
+    'list_holidays',
+    {
+      title: 'Indonesian public holidays',
+      description:
+        'Libur nasional and cuti bersama for a year, from the official SKB 3 Menteri. Only years with a published decree are available; other years return an error rather than a guess.',
+      inputSchema: { year: z.number().int() },
+      annotations: readOnly,
+    },
+    async ({ year }) => {
+      try {
+        return json(getHolidays(year));
+      } catch (e) {
+        return fail((e as Error).message);
+      }
+    },
+  );
+
+  server.registerTool(
+    'working_days',
+    {
+      title: 'Indonesian working days',
+      description:
+        'Working-day math with Indonesian holidays: is a date a working day, the date N working days after a date (SLA, delivery estimates), or the number of working days between two dates (inclusive). Cuti bersama counts as a day off unless cuti_bersama is false (private companies may work on them).',
+      inputSchema: {
+        from: isoDate,
+        to: isoDate.optional(),
+        add: z.number().int().optional().describe('Working days to add (negative to go back)'),
+        cuti_bersama: z.boolean().default(true),
+      },
+      annotations: readOnly,
+    },
+    async ({ from, to, add, cuti_bersama }) => {
+      const options = { cutiBersama: cuti_bersama };
+      try {
+        if (add !== undefined) return json({ from, add, result: addWorkingDays(from, add, options) });
+        if (to) return json({ from, to, workingDays: countWorkingDays(from, to, options) });
+        return json({ date: from, workingDay: isWorkingDay(from, options), holidays: holidaysOn(from) });
+      } catch (e) {
+        return fail((e as Error).message);
+      }
+    },
+  );
+
+  const piiTypes = z.array(z.enum(PII_TYPES as [PiiType, ...PiiType[]])).optional();
+
+  server.registerTool(
+    'scan_pii',
+    {
+      title: 'Scan files for Indonesian personal data',
+      description:
+        'Scan a file or directory (text, CSV, JSON, logs, SQL, .xlsx) for personal data — identifiers (NIK, KK, NPWP, phone, email, bank account, BPJS, passport, SIM, NIP, card, plate, IP, coordinates), names, addresses, birth dates, and UU PDP categories (religion, marital status, gender, nationality, health, finances, criminal records, biometrics) — without revealing it: findings show only partially masked values. Also lists files it could not scan (PDF, .xls, images, archives). Use before reading data files and before committing fixtures or seeders.',
+      inputSchema: {
+        path: z.string().default('.').describe('File or directory, relative to the project root'),
+        types: piiTypes,
+        min_confidence: z.enum(['high', 'medium']).default('high'),
+      },
+      annotations: readOnly,
+    },
+    async ({ path: target, types, min_confidence }) => {
+      let abs: string;
+      try {
+        abs = inRoot(target);
+      } catch (e) {
+        return fail((e as Error).message);
+      }
+      if (!existsSync(abs)) return fail(`Not found: ${target}`);
+
+      const files = statSync(abs).isDirectory() ? [...walkFiles(abs, FILE_LIMIT)] : [abs];
+      const findings: Array<Record<string, unknown>> = [];
+      const totals: PiiType[] = [];
+      const skipped: Array<{ file: string; reason: string; dataBearing: boolean }> = [];
+      let scanned = 0;
+      let withPii = 0;
+      let ignored = 0;
+
+      for (const file of files) {
+        if (isIgnored(file)) {
+          ignored++;
+          continue;
+        }
+        const rel = toPosix(path.relative(root, file)) || path.basename(file);
+        let doc: Document;
+        try {
+          doc = loadDocument(file);
+        } catch {
+          continue;
+        }
+        if (doc.kind === 'skipped') {
+          skipped.push({ file: rel, reason: doc.reason, dataBearing: doc.dataBearing });
+          continue;
+        }
+        scanned++;
+        let fileHasPii = false;
+        for (const part of parts(doc)) {
+          const matches = detectPii(part.text, { types, minConfidence: min_confidence });
+          if (matches.length) fileHasPii = true;
+          for (const m of matches) {
+            totals.push(m.type);
+            if (findings.length < 200) {
+              findings.push({
+                file: rel,
+                sheet: part.sheet,
+                line: lineOf(part.text, m.start),
+                type: m.type,
+                uuPdp: UU_PDP_CATEGORY[m.type],
+                confidence: m.confidence,
+                preview: partialMask(m.type, m.value),
+              });
+            }
+          }
+        }
+        if (fileHasPii) withPii++;
+      }
+
+      const notScanned = skipped.filter((s) => s.dataBearing);
+      const byReason: Record<string, number> = {};
+      for (const s of notScanned) byReason[s.reason] = (byReason[s.reason] ?? 0) + 1;
+      const spesifik = totals.filter((t) => UU_PDP_CATEGORY[t] === 'spesifik').length;
+
+      return json({
+        filesScanned: scanned,
+        filesWithPii: withPii,
+        filesIgnored: ignored,
+        fileLimitReached: files.length >= FILE_LIMIT || undefined,
+        totals: countByType(totals),
+        dataPribadiSpesifik: spesifik || undefined,
+        findings,
+        truncated: totals.length > findings.length || undefined,
+        notScanned: notScanned.length
+          ? {
+              count: notScanned.length,
+              byReason,
+              files: notScanned
+                .filter((s) => !s.reason.startsWith('image'))
+                .slice(0, 30)
+                .map((s) => `${s.file} (${s.reason})`),
+            }
+          : undefined,
+        warning: notScanned.length
+          ? `${notScanned.length} file(s) may hold personal data but were NOT scanned. Do not treat them as clean.`
+          : undefined,
+        next: withPii
+          ? 'Read these files with read_file_masked, not directly. Files that only hold fake data can be listed in .samaranignore.'
+          : undefined,
+      });
+    },
+  );
+
+  server.registerTool(
+    'read_file_masked',
+    {
+      title: 'Read a file with personal data masked',
+      description:
+        'Read a text, CSV, JSON, log or .xlsx file with Indonesian personal data replaced by stable placeholders ([NIK_1], [PHONE_2], [RELIGION_1] …). The same value always gets the same placeholder in this session, so joins, counts, grouping and deduplication still work. Real values never leave the user\'s machine. Spreadsheets come back as CSV, one block per sheet.',
+      inputSchema: {
+        path: z.string(),
+        start_line: z.number().int().min(1).default(1),
+        max_lines: z.number().int().min(1).max(5000).default(2000),
+      },
+      annotations: readOnly,
+    },
+    async ({ path: target, start_line, max_lines }) => {
+      let abs: string;
+      try {
+        abs = inRoot(target);
+      } catch (e) {
+        return fail((e as Error).message);
+      }
+      if (!existsSync(abs)) return fail(`Not found: ${target}`);
+      const doc = loadDocument(abs);
+      if (doc.kind === 'skipped') return fail(`Cannot read ${target}: ${doc.reason}.`);
+
+      // Paging through a table: keep the header in view of the detector so its columns stay masked.
+      const tabular = doc.kind === 'sheets' || /\.(csv|tsv)$/i.test(abs);
+      const blocks: string[] = [];
+      const all: PiiMatch[] = [];
+      let textRange = '';
+      for (const part of parts(doc)) {
+        const lines = part.text.split(/\r?\n/);
+        let slice = lines.slice(start_line - 1, start_line - 1 + max_lines).join('\n');
+        const withHeader = tabular && start_line > 1;
+        if (withHeader) slice = `${lines[0]}\n${slice}`;
+        let { text: masked, matches } = samaran.mask(slice);
+        if (withHeader) masked = masked.slice(masked.indexOf('\n') + 1);
+        all.push(...matches);
+        const end = Math.min(lines.length, start_line - 1 + max_lines);
+        const range = `lines ${start_line}-${end} of ${lines.length}`;
+        if (part.sheet === undefined) {
+          textRange = range;
+          blocks.push(masked);
+        } else {
+          blocks.push(`=== Sheet: ${part.sheet} (${range}) ===\n${masked}`);
+        }
+      }
+      const rel = toPosix(path.relative(root, abs));
+      const what =
+        doc.kind === 'text' ? textRange : `${doc.sheets.length} sheet${doc.sheets.length === 1 ? '' : 's'}, as CSV`;
+      const header = [
+        `File: ${rel} (${what})`,
+        `Masked: ${all.length ? JSON.stringify(countByType(all.map((m) => m.type))) : 'nothing found'}`,
+        '---',
+      ];
+      return { content: [{ type: 'text' as const, text: `${header.join('\n')}\n${blocks.join('\n\n')}` }] };
+    },
+  );
+
+  server.registerTool(
+    'write_file_unmasked',
+    {
+      title: 'Write a file, restoring masked values',
+      description:
+        'Write content to a file after replacing Samaran placeholders ([NIK_1], [PHONE_2] …) from this session with the real values, locally. Use this to produce output (cleaned CSV, reports, migrations) from data you read with read_file_masked.',
+      inputSchema: {
+        path: z.string(),
+        content: z.string(),
+        overwrite: z.boolean().default(false),
+      },
+      annotations: { readOnlyHint: false, destructiveHint: true, openWorldHint: false },
+    },
+    async ({ path: target, content, overwrite }) => {
+      let abs: string;
+      try {
+        abs = inRoot(target);
+      } catch (e) {
+        return fail((e as Error).message);
+      }
+      if (existsSync(abs) && !overwrite) return fail(`${target} already exists. Pass overwrite: true to replace it.`);
+
+      const placeholders = content.match(/\[[A-Z_]+_\d+\]/g) ?? [];
+      const unknown = [...new Set(placeholders.filter((p) => samaran.unmask(p) === p))];
+      const restoredText = samaran.unmask(content);
+      mkdirSync(path.dirname(abs), { recursive: true });
+      writeFileSync(abs, restoredText, 'utf8');
+      return json({
+        wrote: toPosix(path.relative(root, abs)),
+        bytes: Buffer.byteLength(restoredText),
+        restored: placeholders.filter((p) => !unknown.includes(p)).length,
+        unknownPlaceholders: unknown.length ? unknown : undefined,
+      });
+    },
+  );
+
+  return server;
+}
+
+export async function runServer(): Promise<void> {
+  const server = createServer();
+  await server.connect(new StdioServerTransport());
+}
