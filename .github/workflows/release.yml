@@ -1,0 +1,112 @@
+name: Release
+
+# Push a tag like v0.2.3 to build @lokal-id/core and @lokal-id/mcp from that commit, test them,
+# publish them to npm, then publish server.json to the official MCP Registry.
+# No token is stored anywhere: npm uses Trusted Publishing (configured on npmjs.com for this
+# repository, this workflow file, and the "npm" environment) and the MCP Registry uses GitHub OIDC,
+# which grants the io.github.lokal-id/* namespace.
+# Run it by hand (Actions > Release > Run workflow) to retry: anything already published is skipped.
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  npm:
+    name: Build, test, and publish to npm
+    runs-on: ubuntu-latest
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/@lokal-id/mcp
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - name: npm supports Trusted Publishing (11.5.1 or later)
+        run: |
+          npm --version
+          node -e "const [a, b, c] = process.argv[1].split('.').map(Number); process.exit(a > 11 || (a === 11 && (b > 5 || (b === 5 && c >= 1))) ? 0 : 1)" "$(npm --version)" || npm install -g npm@11
+      - name: Versions match the tag
+        run: node scripts/check-release.mjs ${{ github.ref_type == 'tag' && github.ref_name || '' }}
+      - run: npm ci
+      - run: npm run build
+      - run: npm run typecheck
+      - run: npm test
+      - name: Bundled hook is up to date
+        run: git diff --exit-code -- hooks/samaran-guard.mjs
+      - name: Python parity vectors are up to date
+        run: node python/scripts/gen_vectors.mjs --check
+      - name: Publish @lokal-id/core, then @lokal-id/mcp
+        run: |
+          for dir in packages/core packages/mcp; do
+            name=$(node -p "require('./$dir/package.json').name")
+            version=$(node -p "require('./$dir/package.json').version")
+            if npm view "$name@$version" version > /dev/null 2>&1; then
+              echo "$name@$version is already on npm, skipping"
+            else
+              npm publish --workspace "$name"
+            fi
+          done
+
+  mcp-registry:
+    name: Publish to the MCP Registry
+    needs: npm
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      PUBLISHER_VERSION: 1.8.1
+      PUBLISHER_SHA256: a06c9096dcb9727c13555b6be26c7effa707b01f06a4c561ba7a3635443cf2cc
+    steps:
+      - uses: actions/checkout@v5
+      - name: Versions match the tag
+        run: node scripts/check-release.mjs ${{ github.ref_type == 'tag' && github.ref_name || '' }}
+      - name: Install mcp-publisher
+        run: |
+          curl -fsSL -o mcp-publisher.tar.gz "https://github.com/modelcontextprotocol/registry/releases/download/v$PUBLISHER_VERSION/mcp-publisher_linux_amd64.tar.gz"
+          echo "$PUBLISHER_SHA256  mcp-publisher.tar.gz" | sha256sum --check
+          tar xzf mcp-publisher.tar.gz mcp-publisher
+      - name: Check whether this version is already in the registry
+        id: existing
+        run: |
+          name=$(node -p "require('./server.json').name")
+          version=$(node -p "require('./server.json').version")
+          status=$(curl -s -o /dev/null -w '%{http_code}' "https://registry.modelcontextprotocol.io/v0/servers/${name/\//%2F}/versions/$version")
+          if [ "$status" = 200 ]; then
+            echo "$name $version is already in the MCP Registry, skipping"
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          fi
+      # The registry checks that the npm package declares mcpName, so wait until npm serves the new version.
+      - name: Wait for npm
+        if: steps.existing.outputs.published != 'true'
+        run: |
+          version=$(node -p "require('./server.json').version")
+          for attempt in $(seq 1 30); do
+            if [ "$(npm view "@lokal-id/mcp@$version" mcpName 2> /dev/null)" = "$(node -p "require('./server.json').name")" ]; then exit 0; fi
+            sleep 10
+          done
+          echo "::error::@lokal-id/mcp@$version with mcpName is not on npm after 5 minutes"
+          exit 1
+      - name: Validate server.json
+        if: steps.existing.outputs.published != 'true'
+        run: ./mcp-publisher validate
+      - name: Log in with GitHub OIDC
+        if: steps.existing.outputs.published != 'true'
+        run: ./mcp-publisher login github-oidc
+      - name: Publish server.json
+        if: steps.existing.outputs.published != 'true'
+        run: ./mcp-publisher publish

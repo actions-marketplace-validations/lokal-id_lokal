@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+### Changed
+
+- npm releases are built, tested, and published by GitHub Actions from the release tag with Trusted Publishing, and carry provenance attestations. The same workflow lists the server in the official MCP Registry as `io.github.lokal-id/lokal`.
+
 ## [0.2.3] - 2026-10-16 (Python only)
 
 - `lokal-id` on PyPI, with the same code as 0.2.2 below. The `lokal-id` 0.2.2 upload on PyPI was built from an earlier checkout and lacks `exclude`, the `INV-…` phone fix, and the pronoun health rule; it is yanked. From this release on, PyPI uploads are built and tested by GitHub Actions from the release tag (`py-v*`) with Trusted Publishing.

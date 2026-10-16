@@ -89,8 +89,10 @@ After regenerating region data in `packages/core/data`, run `uv run python scrip
 
 ## Releasing (maintainers)
 
-- **npm:** bump the versions in `packages/*/package.json`, `.claude-plugin/plugin.json`, `server.json`, and `VERSION` in `packages/mcp/src/server.ts`; run `npm run build`; publish `@lokal-id/core` first, then `@lokal-id/mcp`; tag `vX.Y.Z`.
-- **PyPI:** bump `python/pyproject.toml` and `__version__` in `python/src/lokal/__init__.py`, then push a tag `py-vX.Y.Z`. The *Publish Python package* workflow builds, tests, and uploads from that commit through Trusted Publishing. Do not upload from a local `dist/`: it can be older than the code.
+Releases are published by GitHub Actions from a tag, never from a local checkout: a local `dist/` can be older than the code.
+
+- **npm and the MCP Registry:** bump the version in `packages/core/package.json`, `packages/mcp/package.json` (and its `@lokal-id/core` dependency), `.claude-plugin/plugin.json`, both versions in `server.json`, and `VERSION` in `packages/mcp/src/server.ts`. `node scripts/check-release.mjs` confirms they agree. Run `npm run build` and commit the rebuilt hook, then push a tag `vX.Y.Z`. The *Release* workflow tests that commit, publishes `@lokal-id/core` and then `@lokal-id/mcp` through npm Trusted Publishing, and publishes `server.json` to the MCP Registry with GitHub OIDC. If a step fails, run the workflow again by hand: anything already published is skipped.
+- **PyPI:** bump `python/pyproject.toml` and `__version__` in `python/src/lokal/__init__.py`, then push a tag `py-vX.Y.Z`. The *Publish Python package* workflow builds, tests, and uploads from that commit through Trusted Publishing.
 
 ## License
 
