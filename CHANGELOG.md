@@ -4,16 +4,15 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
-## Python [0.2.3] - 2026-10-16
+## [0.2.3] - 2026-10-16 (Python only)
 
-- Same code as 0.2.2 below. The `lokal-id` 0.2.2 upload on PyPI was built from an earlier checkout and lacks `exclude`, the `INV-…` phone fix, and the pronoun health rule; it is yanked. From this release on, PyPI uploads are built and tested by GitHub Actions from the release tag (`py-v*`) with Trusted Publishing.
+- `lokal-id` on PyPI, with the same code as 0.2.2 below. The `lokal-id` 0.2.2 upload on PyPI was built from an earlier checkout and lacks `exclude`, the `INV-…` phone fix, and the pronoun health rule; it is yanked. From this release on, PyPI uploads are built and tested by GitHub Actions from the release tag (`py-v*`) with Trusted Publishing.
 
 ## [0.2.2] - 2026-10-16
 
 ### Added
 
-- **`lokal-id` for Python** (`pip install lokal-id`, Python 3.10+): a dependency-free port of `@lokal-id/core` with the same rules and data. Its test suite replays vectors generated from the TypeScript build (NIK, NPWP, phone, Rupiah, terbilang, every day of 2026–2027, all 91,000 regions with postal codes, and 2,700 Samaran texts) and requires identical output. Python extras: exact `Decimal` amounts, `date`/`datetime` input and output, dataclass results with `to_dict()`, and `SamaranFilter` for the `logging` module.
-
+- **`lokal-id` for Python** (`pip install lokal-id`, Python 3.10+): a dependency-free port of `@lokal-id/core` with the same rules and data. Its test suite replays vectors generated from the TypeScript build (NIK, NPWP, phone, Rupiah, terbilang, every day of 2026–2027, all 91,000 regions with postal codes, and 2,700 Samaran texts) and requires identical output. Python extras: exact `Decimal` amounts, `date`/`datetime` input and output, dataclass results with `to_dict()`, and `SamaranFilter` for the `logging` module. Install 0.2.3 or later; see above.
 - `exclude` option (`exclude: ['FINANCIAL', 'NAME']`, Python `exclude=[...]`) for types an app has to read, such as income and installments in a dealer's credit simulation. Unknown type names in `types` or `exclude` now throw.
 - `scan_pii` and `read_file_masked` read `.docx` files: the text, headers, and footers, with each table as its own CSV part so a "Nama" column is masked like a spreadsheet column.
 - `scan_pii` and `read_file_masked` read files up to 100 MB (was 5 MB).
