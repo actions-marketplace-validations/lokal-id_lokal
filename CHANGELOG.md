@@ -4,7 +4,11 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
-## [0.2.2] - Unreleased
+## Python [0.2.3] - 2026-10-16
+
+- Same code as 0.2.2 below. The `lokal-id` 0.2.2 upload on PyPI was built from an earlier checkout and lacks `exclude`, the `INV-…` phone fix, and the pronoun health rule; it is yanked. From this release on, PyPI uploads are built and tested by GitHub Actions from the release tag (`py-v*`) with Trusted Publishing.
+
+## [0.2.2] - 2026-10-16
 
 ### Added
 
@@ -59,6 +63,7 @@ First public release.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
 [Unreleased]: https://github.com/lokal-id/lokal/compare/v0.2.2...HEAD
+[0.2.3]: https://github.com/lokal-id/lokal/releases/tag/py-v0.2.3
 [0.2.2]: https://github.com/lokal-id/lokal/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/lokal-id/lokal/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/lokal-id/lokal/releases/tag/v0.2.0

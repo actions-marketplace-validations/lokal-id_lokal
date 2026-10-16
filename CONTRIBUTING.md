@@ -87,6 +87,11 @@ After regenerating region data in `packages/core/data`, run `uv run python scrip
 - **Update the docs** when you change behavior: `README.md`, `README.id.md`, and `CHANGELOG.md` under *Unreleased*.
 - Keep pull requests focused on one change. Small PRs get reviewed faster.
 
+## Releasing (maintainers)
+
+- **npm:** bump the versions in `packages/*/package.json`, `.claude-plugin/plugin.json`, `server.json`, and `VERSION` in `packages/mcp/src/server.ts`; run `npm run build`; publish `@lokal-id/core` first, then `@lokal-id/mcp`; tag `vX.Y.Z`.
+- **PyPI:** bump `python/pyproject.toml` and `__version__` in `python/src/lokal/__init__.py`, then push a tag `py-vX.Y.Z`. The *Publish Python package* workflow builds, tests, and uploads from that commit through Trusted Publishing. Do not upload from a local `dist/`: it can be older than the code.
+
 ## License
 
 By contributing, you agree that your contributions are licensed under the [MIT License](LICENSE).

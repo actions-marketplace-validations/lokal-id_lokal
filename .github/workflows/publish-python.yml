@@ -1,0 +1,48 @@
+name: Publish Python package
+
+# Push a tag like py-v0.2.3 to build lokal-id from that commit, test it, and upload it to PyPI.
+# Uses PyPI Trusted Publishing: no token is stored anywhere. The publisher is configured on
+# pypi.org for this repository, this workflow file, and the "pypi" environment.
+
+on:
+  push:
+    tags: ['py-v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Build, test, and publish lokal-id
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/lokal-id/
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: python
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: '3.12'
+      - name: Tag matches the package version
+        if: github.ref_type == 'tag'
+        run: |
+          version=$(uv run --no-project python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
+          if [ "py-v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match pyproject.toml version $version"
+            exit 1
+          fi
+      - name: Region data matches packages/core/data
+        run: uv run python scripts/sync_data.py --check
+      - run: uv run pytest
+      - run: uv run mypy
+      - name: Build from this commit
+        run: uv build
+      - name: Upload to PyPI
+        run: uv publish --trusted-publishing always

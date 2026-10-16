@@ -67,7 +67,7 @@ def test_invalid_options_fail_early() -> None:
 
 
 def test_version_and_package_data() -> None:
-    assert lokal.__version__ == '0.2.2'
+    assert lokal.__version__ == '0.2.3'
     from importlib import resources
 
     names = {p.name for p in resources.files('lokal').joinpath('data').iterdir()}
