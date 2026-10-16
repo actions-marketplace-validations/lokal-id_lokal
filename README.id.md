@@ -135,9 +135,17 @@ env = { LOKAL_ROOT = "/path/ke/project" }
 
 Tool file (`scan_pii`, `read_file_masked`, `write_file_unmasked`) hanya bisa mengakses `LOKAL_ROOT`. Defaultnya `CLAUDE_PROJECT_DIR`, lalu folder tempat server dijalankan.
 
-### Skill di agent lain
+### Hanya skill, untuk agent mana pun
 
-Folder [`skills/`](skills) mengikuti format terbuka Agent Skills (`SKILL.md`). Salin `skills/lokal-indonesia` dan `skills/samaran` ke folder skill agent kamu, misalnya `~/.claude/skills/` atau `~/.codex/skills/`.
+```sh
+npx skills add lokal-id/lokal
+```
+
+Perintah ini memasang `lokal-indonesia` dan `samaran` lewat [skills CLI](https://github.com/vercel-labs/skills) ke Claude Code, Codex, Cursor, dan agent lain yang didukungnya. Tambahkan `-g` untuk memasang di level user, bukan di project yang sedang dibuka.
+
+Skill mengajari agent konvensinya. Untuk data wilayah, kode pos, dan hari libur yang akurat serta pembacaan file tersamar, pasang juga MCP server-nya (lihat di atas). Samaran Guard berupa hook, jadi hanya ikut lewat plugin Claude Code.
+
+Folder di [`skills/`](skills) juga bisa disalin manual. Formatnya mengikuti standar terbuka Agent Skills (`SKILL.md`).
 
 ### Library
 
