@@ -203,7 +203,7 @@ samaran.unmask(reply);           // placeholders are replaced with the original 
 
 - The same value always maps to the same placeholder, across formats: `0812-…` and `+62 812…` are both `[PHONE_1]`.
 - `mode: 'partial'` is meant for logs and admin screens: `3201********0001`, `0812****7890`, `b***@gmail.com`.
-- Detection uses labels (`Agama: Islam`, `NAMA : BUDI`), CSV and Excel headers (`agama`, `diagnosa`, `gaji`, …), JSON/YAML keys and query strings, and common phrases in free text (`nama saya budi`, `didiagnosis TBC`, `gaji saya 8 juta`).
+- Detection uses labels (`Agama: Islam`, `NAMA : BUDI`), CSV and Excel headers (`agama`, `diagnosa`, `gaji`, …), JSON/YAML keys and query strings (including split `first_name` / `last_name`), SQL `INSERT` dumps, WhatsApp chat exports, and common phrases in free text (`nama saya budi`, `didiagnosis TBC`, `obat insulin`, `gaji saya 8 juta`).
 
 <details>
 <summary><b>Detected data types (25)</b></summary>
@@ -267,11 +267,25 @@ The same vibe-coding tasks were run in real Claude Code sessions in an empty fol
 
 A fifth task, **debugging an `app.log` that contains customer NIK, phone numbers, and emails**, was added later. Without Lokal, the agent ran `Get-Content app.log` and the whole log reached the model. With Lokal, the agent used `scan_pii` → `read_file_masked`, and no customer data reached the model in 2 of 2 runs. The first run of this task exposed a bug where a `key=value` log field swallowed the next pair and leaked a phone number through the scan preview. It is fixed and covered by a regression test.
 
+### Hard cases
+
+Three harder tasks use answers checked against official sources rather than Lokal's own data, and real document formats with fake identities (2 runs each):
+
+| Task | Without Lokal | With Lokal |
+|---|---|---|
+| Postal codes for Depok kelurahan, provinces after the 2022 Papua split, an SLA around Lebaran 2027 | 6/8 (**SLA wrong in 2/2 runs**: the 2027 SKB is newer than the model) | 8/8 |
+| Join a marketplace export with a Midtrans log, list paid orders without a resi, phone numbers as E.164 | 8/14 (right answer, every customer's data sent to the model) | 14/14 (right answer, the model saw placeholders only) |
+| Summarize a WhatsApp CS export for the product team without customer identities | 4/10 | 10/10 |
+
+The first runs of these tasks found a bug and four detection gaps, all fixed in 0.2.1: a phone number at the end of a line leaked when the next line began with a digit, and names split into `first_name` / `last_name`, WhatsApp senders, medicines and hospital stays were missed. The id.wikipedia list of Depok postal codes turned out to be wrong for 32 kelurahan; Lokal matches [en.wikipedia](https://en.wikipedia.org/wiki/Cinere) and other sources.
+
+`npm run eval:pii` runs the format benchmark on its own: 43 of 43 personal values masked across 15 formats (KTP OCR, WhatsApp exports, Midtrans JSON, Laravel logs, SQL dumps, …), and 27 of 27 look-alikes left intact (resi numbers, invoice IDs, timestamps, call-center numbers, institutions).
+
 This is a small sample built around everyday tasks for Indonesian developers. Do not read it as a general benchmark.
 
 ## Limitations
 
-- **Detection is pattern-based and favors precision.** Names are found through labels, column headers, introductions ("nama saya budi", "atas nama", "a.n.", "bernama"), and honorifics ("Pak Joko", "bapak ahmad"), including lowercase. A bare name with no cue ("tadi budi bilang …"), unusually phrased health or financial data, and children's data that is not marked as such can still slip through. Treat Samaran as a strong safety net, not a guarantee.
+- **Detection is pattern-based and favors precision.** Names are found through labels, column headers and JSON keys, chat export senders, introductions ("nama saya budi", "atas nama", "a.n.", "halo kak ini rina,"), honorifics ("Pak Joko", "bapak ahmad"), and reported speech ("tadi budi bilang"), including lowercase. A name dropped into a sentence with no cue at all ("pesanan budi belum sampai"), unusually phrased health or financial data, and children's data that is not marked as such can still slip through. Treat Samaran as a strong safety net, not a guarantee.
 - **Tested for false positives** on 12 MB of open-source code and the full text of UU 27/2022, with no high-confidence name detections. Chat name detection caught 29 of 29 test sentences with names and flagged 0 of 26 ordinary chat sentences. The sentences were written for the test suite, so accuracy on real chats may be lower.
 - **Not every format is read.** PDF, legacy `.xls`, images (ID card photos, selfies), and archives are not scanned. `scan_pii` reports them as *not scanned*, never as clean.
 - **NIK and NPWP checks are structural.** They cannot confirm that a number is registered with Dukcapil or the tax office.

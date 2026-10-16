@@ -1,0 +1,31 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.lokal-id/lokal",
+  "title": "Lokal",
+  "description": "Indonesia-ready agents: NIK, phone, Rupiah, regions, postal codes, holidays, and PII masking.",
+  "version": "0.2.1",
+  "websiteUrl": "https://github.com/lokal-id/lokal",
+  "repository": {
+    "url": "https://github.com/lokal-id/lokal",
+    "source": "github",
+    "subfolder": "packages/mcp"
+  },
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@lokal-id/mcp",
+      "version": "0.2.1",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "LOKAL_ROOT",
+          "description": "Folder the file tools (scan_pii, read_file_masked, write_file_unmasked) may access. Defaults to the working directory.",
+          "isRequired": false,
+          "format": "filepath"
+        }
+      ]
+    }
+  ]
+}

@@ -4,7 +4,7 @@ import type { PiiType } from './types.ts';
 
 const FIELDS: Array<[PiiType, string]> = [
   // A column called "pasien" or "pelanggan" holds that person's name.
-  ['NAME', 'nama|name|full_?name|nama_?lengkap|first_?name|last_?name|nama_?depan|nama_?belakang|nama_?panggilan|nickname|nama_?ibu_?kandung|mother_?s?_?maiden_?name|penerima|pengirim|recipient|pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner'],
+  ['NAME', 'nama|name|full_?name|nama_?lengkap|first_?name|last_?name|middle_?name|given_?name|family_?name|surname|nama_?depan|nama_?tengah|nama_?belakang|nama_?panggilan|nickname|nama_?ibu_?kandung|mother_?s?_?maiden_?name|penerima|pengirim|recipient|pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner'],
   ['ADDRESS', 'alamat|address|full_?address|street|street_?address|domisili|alamat_?domisili|alamat_?ktp|alamat_?rumah|alamat_?pengiriman|shipping_?address|home_?address|billing_?address'],
   ['NIK', 'nik|no_?ktp|nomor_?ktp|ktp|nomor_?induk_?kependudukan|national_?id'],
   ['KK', 'kk|no_?kk|nomor_?kk|kartu_?keluarga|no_?kartu_?keluarga|nomor_?kartu_?keluarga|family_?card(_?number)?'],
@@ -58,8 +58,19 @@ export function fieldType(key: string): PiiType | undefined {
 
 /** `name` and `title`-like keys are everywhere in code; only a full name counts for them. */
 export function isGenericNameKey(key: string): boolean {
-  return /^(name|first_?name|last_?name|nickname)$/.test(normalizeKey(key));
+  return /^(name|nickname)$/.test(normalizeKey(key));
 }
+
+/**
+ * One part of a person's name, as payment gateways and CRMs split it (`"first_name":"Siti","last_name":"Rahayu"`).
+ * A single capitalized word is the whole value here, so it counts.
+ */
+function isNamePartKey(key: string): boolean {
+  return /^(?:(?:customer|billing|shipping|user|contact)_)?(?:first|last|middle|given|family)_?name$|^surname$/.test(normalizeKey(key));
+}
+
+// Form labels rather than a person: `first_name: "First Name"`, `last_name: "Nama Belakang"`.
+const NAME_LABEL_WORDS = /^(?:first|last|middle|given|family|sur|name|nama|depan|belakang|tengah|lengkap|full)$/i;
 
 const GENDER_WORD = /^(?:laki-?\s?laki|lelaki|perempuan|pria|wanita|male|female|man|woman|cowok|cewek)$/i;
 const GENDER_VALUE = { test: (v: string) => /^[LPMF]$/.test(v) || GENDER_WORD.test(v) };
@@ -108,7 +119,9 @@ export function isPlausibleValue(type: PiiType, value: string, key: string): boo
     if (/^(?:new|this|await|null|undefined|true|false|typeof|function|return|self|None)\b/.test(v)) return false;
     if (/^[A-Z][a-z]+[A-Z]/.test(v)) return false; // PascalCase identifier
     const words = v.split(/\s+/);
-    if (isGenericNameKey(key)) {
+    if (isNamePartKey(key)) {
+      if (words.length > 4 || !words.every((w) => /^[A-Z]/.test(w)) || words.every((w) => NAME_LABEL_WORDS.test(w))) return false;
+    } else if (isGenericNameKey(key)) {
       // `name: Build and test` in a CI file is not a person.
       if (words.length < 2 || words.length > 5 || !words.every((w) => /^[A-Z]/.test(w))) return false;
     } else if (ROLE_KEY.test(normalizeKey(key)) && words.length === 1 && !/^[A-Z]/.test(v)) {

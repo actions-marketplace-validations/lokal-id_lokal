@@ -67,6 +67,14 @@ test('nomor HP setelah kata transfer tetap terdeteksi sebagai HP (e-wallet)', ()
   assert.equal(m?.type, 'PHONE');
 });
 
+test('nomor HP di akhir baris tidak menelan angka di baris berikutnya', () => {
+  // WhatsApp export: the header ends with the number and the next line starts with a date.
+  const chat = 'Chat WhatsApp dengan +62 881-2345-6789\n14/10/26 08.30 - +62 881-2345-6789: halo';
+  assert.equal(new Samaran().mask(chat).text, 'Chat WhatsApp dengan [PHONE_1]\n14/10/26 08.30 - [PHONE_1]: halo');
+  assert.deepEqual(detectPii('hp 0812-3456-7890\n2026-10-01 error').map((m) => m.value), ['0812-3456-7890']);
+  assert.deepEqual(detectPii('kirim 0812-3456-7890 2 pcs').map((m) => m.value), ['0812-3456-7890']);
+});
+
 test('kartu kredit lolos Luhn, BPJS butuh kata kunci', () => {
   assert.equal(detectPii('kartu 4539 1488 0343 6467')[0]?.type, 'CARD');
   // Published test card numbers are not anyone's card.
@@ -183,4 +191,57 @@ test('log logfmt: nilai berhenti di pasangan key=value berikutnya', () => {
   );
   const { text } = new Samaran().mask(line);
   assert.equal(text, 'ERROR checkout failed user_email=[EMAIL_1] nik=[NIK_1] hp=[PHONE_1] err="PaymentTimeout"');
+});
+
+const values = (text: string, types?: Parameters<typeof detectPii>[1]['types']) =>
+  detectPii(text, types ? { types } : {}).map((m) => `${m.type}:${m.value}`);
+
+test('nama yang dipecah per bagian di JSON payment gateway', () => {
+  const json = '{"customer_details":{"first_name":"Siti","last_name":"Rahayu","email":"siti@gmail.com"}}';
+  assert.deepEqual(values(json, ['NAME']), ['NAME:Siti', 'NAME:Rahayu']);
+  // Form labels and schemas are not people.
+  assert.deepEqual(values('first_name: "First Name"\nlast_name: "string"\nfamily_name: "Nama Belakang"', ['NAME']), []);
+});
+
+test('pengirim di export chat WhatsApp, kecuali akun bisnis dan baris log', () => {
+  const chat = [
+    'Chat WhatsApp dengan Dewi Lestari',
+    '12/10/26 09.14 - Dewi Lestari: kak mug nya pecah',
+    '12/10/26 09.16 - Toko Kopi Senja: Mohon maaf',
+    '[12/10/26 09.20:11] Maria Gebze: paket belum sampai',
+    '10/12/26, 9:14 AM - Budi: ok',
+  ].join('\n');
+  assert.deepEqual(values(chat, ['NAME']), [
+    'NAME:Dewi Lestari', 'NAME:Dewi Lestari', 'NAME:Maria Gebze', 'NAME:Budi',
+  ]);
+  assert.deepEqual(values('12/10/26 09.14 - ERROR: koneksi gagal', ['NAME']), []);
+});
+
+test('data kesehatan di teks bebas: obat, rawat inap, penyakit dalam kurung', () => {
+  const text = 'isinya obat insulin buat ibu saya (diabetes). Beliau dirawat di RSUD Cibinong karena DBD';
+  assert.deepEqual(values(text, ['HEALTH']), [
+    'HEALTH:insulin', 'HEALTH:diabetes', 'HEALTH:dirawat di RSUD Cibinong', 'HEALTH:DBD',
+  ]);
+  for (const benign of ['minum oat tiap pagi', 'beli obat batuk', 'mobilnya dirawat di bengkel', 'karena macet']) {
+    assert.deepEqual(values(benign, ['HEALTH']), [], benign);
+  }
+});
+
+test('dump SQL: nilai dicocokkan dengan kolomnya', () => {
+  const sql =
+    "INSERT INTO pelanggan (id, nama, nik, no_hp) VALUES (17, 'Hendra Gunawan', '1371011010850008', '0813-9999-0000'),\n" +
+    "(18, 'O''Brien Siregar', 3201011508950001, NULL);";
+  assert.deepEqual(values(sql), [
+    'NAME:Hendra Gunawan', 'NIK:1371011010850008', 'PHONE:0813-9999-0000', "NAME:O''Brien Siregar", 'NIK:3201011508950001',
+  ]);
+  assert.deepEqual(values("INSERT INTO produk (nama, harga) VALUES ('Kopi Gayo', 85000);"), []);
+});
+
+test('email yang dieja manual dan nama tanpa label di chat', () => {
+  assert.deepEqual(values('kirim ke siti.rahayu88 [at] gmail [dot] com ya'), ['EMAIL:siti.rahayu88 [at] gmail [dot] com']);
+  assert.deepEqual(values('halo kak ini rina, pesanan saya batal', ['NAME']), ['NAME:rina']);
+  assert.deepEqual(values('tadi budi bilang udah dikirim', ['NAME']), ['NAME:budi']);
+  for (const benign of ['halo kak ini mau tanya', 'halo ini stok ready?', 'tadi kurir bilang nyasar', 'kemarin mama nanya']) {
+    assert.deepEqual(values(benign, ['NAME']), [], benign);
+  }
 });

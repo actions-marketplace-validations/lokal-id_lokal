@@ -110,11 +110,14 @@ function detectPassports(text: string): PiiMatch[] {
 
 function detectPhones(text: string): PiiMatch[] {
   const out: PiiMatch[] = [];
-  const mobile = /(?<![\d+\w])(?:\+62|62|0)[\s-]?8\d{1,2}(?:[\s.-]?\d){6,10}(?![\d\w])/g;
+  // Separators never include a line break, and every group after the operator prefix has at least three digits.
+  // Otherwise a number at the end of a line swallows the digits that start the next one ("…6789\n14/10/26"),
+  // fails validation, and is left unmasked.
+  const mobile = /(?<![\d+\w])(?:\+62|62|0)[ \t-]?8\d{1,2}(?:[ \t.-]?\d{3,4}){2,3}(?![\d\w])/g;
   for (const m of text.matchAll(mobile)) {
     if (parsePhone(m[0]).valid) out.push(match('PHONE', m.index, m[0], 'high'));
   }
-  const landline = /\((?:\+62\s?|0)\d{2,3}\)\s?\d{3,4}[\s-]?\d{3,4}(?!\d)|(?<![\d\w])\+62\s?[2-79]\d{1,2}[\s-]?\d{3,4}[\s-]?\d{3,4}(?!\d)/g;
+  const landline = /\((?:\+62[ \t]?|0)\d{2,3}\)[ \t]?\d{3,4}[ \t-]?\d{3,4}(?!\d)|(?<![\d\w])\+62[ \t]?[2-79]\d{1,2}[ \t-]?\d{3,4}[ \t-]?\d{3,4}(?!\d)/g;
   for (const m of text.matchAll(landline)) out.push(match('PHONE', m.index, m[0], 'medium'));
   return out;
 }
@@ -124,9 +127,15 @@ const RESERVED_EMAIL_DOMAIN = /@(?:[\w-]+\.)*(?:example\.(?:com|net|org)|[\w-]+\
 
 function detectEmails(text: string): PiiMatch[] {
   const re = /(?<![\w.+-])[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}(?![\w-])/g;
-  return [...text.matchAll(re)]
+  const out = [...text.matchAll(re)]
     .filter((m) => !RESERVED_EMAIL_DOMAIN.test(m[0]))
     .map((m) => match('EMAIL', m.index, m[0], 'high'));
+  // Written out to dodge scrapers: "siti.rahayu88 [at] gmail [dot] com", "budi(at)yahoo.co.id".
+  const AT = String.raw`\s*(?:\[\s*at\s*\]|\(\s*at\s*\)|\{\s*at\s*\})\s*`;
+  const DOT = String.raw`(?:\s*(?:\[\s*dot\s*\]|\(\s*dot\s*\)|\{\s*dot\s*\})\s*|\.)`;
+  const spelled = new RegExp(String.raw`(?<![\w.+-])[A-Za-z0-9._%+-]+${AT}[A-Za-z0-9-]+(?:${DOT}[A-Za-z0-9-]+)*${DOT}[A-Za-z]{2,}(?![\w-])`, 'gi');
+  for (const m of text.matchAll(spelled)) out.push(match('EMAIL', m.index, m[0], 'high'));
+  return out;
 }
 
 function detectIps(text: string): PiiMatch[] {
@@ -167,6 +176,12 @@ function detectBirthDates(text: string): PiiMatch[] {
 const CONDITIONS =
   'hiv|aids|odha|tbc|tb paru|tuberkulosis|hepatitis(?: [abc])?|kanker(?: \\w+)?|tumor(?: \\w+)?|diabetes(?: melitus)?|hipertensi|stroke|penyakit jantung|gagal ginjal|cuci darah|covid(?:-19)?|dbd|demam berdarah|malaria|kusta|lepra|skizofrenia|bipolar|depresi(?: berat)?|gangguan jiwa|gangguan mental|odgj|autis(?:me)?|epilepsi|ims|sifilis|gonore|herpes|hamil|keguguran';
 
+// Medicines that name the condition they treat.
+const MEDICATIONS =
+  'insulin|metformin|glibenclamide|arv|antiretroviral|obat tbc|rifampisin|isoniazid|kemoterapi|kemo|antidepresan|' +
+  'antipsikotik|fluoxetine|sertraline|risperidone|haloperidol|lithium|metadon|methadone|warfarin|amlodipine|captopril|' +
+  'levothyroxine|tamoxifen|hormon|kb|pil kb';
+
 function detectHealth(text: string): PiiMatch[] {
   const out: PiiMatch[] = [];
   // Strong medical verbs: whatever follows is the condition.
@@ -175,14 +190,31 @@ function detectHealth(text: string): PiiMatch[] {
   for (const m of text.matchAll(strong)) {
     out.push(match('HEALTH', m.index + m[0].length - m[1]!.length, m[1]!, 'high'));
   }
-  // Everyday verbs ("positif", "menderita", "pasien") only count before a known condition.
+  // Everyday words ("positif", "menderita", "karena") only count before a known condition.
   const gated = new RegExp(
-    `\\b(?:positif|menderita|terkena|kena|sakit|pasien|penderita|pengidap|penyintas|mengalami)\\s+((?:penyakit\\s+)?(?:${CONDITIONS}))\\b`,
+    `\\b(?:positif|menderita|terkena|kena|sakit|pasien|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya)\\s+((?:penyakit\\s+)?(?:${CONDITIONS}))\\b`,
     'gi',
   );
   for (const m of text.matchAll(gated)) {
     out.push(match('HEALTH', m.index + m[0].length - m[1]!.length, m[1]!, 'medium'));
   }
+  // A known condition on its own in brackets: "obat buat ibu saya (diabetes)".
+  for (const m of text.matchAll(new RegExp(`\\((${CONDITIONS})\\)`, 'gi'))) {
+    out.push(match('HEALTH', m.index + 1, m[1]!, 'medium'));
+  }
+  // Treatment that reveals the condition: "obat insulin", "suntik insulin", "terapi ARV", "kemoterapi".
+  const treatment = new RegExp(
+    `\\b(?:obat|suntik(?:an)?|minum|konsumsi|terapi|resep)\\s+(${MEDICATIONS})\\b|\\b(kemoterapi|radioterapi|hemodialisa|cuci darah)\\b`,
+    'gi',
+  );
+  for (const m of text.matchAll(treatment)) {
+    const value = m[1] ?? m[2]!;
+    out.push(match('HEALTH', m.index + m[0].length - value.length, value, 'medium'));
+  }
+  // Being in hospital is health data too: "dirawat di RSUD Cibinong", "opname di RS Hermina".
+  const hospital =
+    /\b(?:dirawat|opname|rawat inap|diopname|dioperasi|isolasi)\s+(?:di\s+)?(?:(?:RSUD|RSU|RSIA|RSJ|RSAB|RS|Rumah Sakit|Puskesmas|Klinik)\b[^\n,.;:()]{0,40}?)(?=\s+(?:karena|krn|sejak|selama|dan|tapi|jadi|sampai)\b|[\n,.;:()]|$)/gi;
+  for (const m of text.matchAll(hospital)) out.push(match('HEALTH', m.index, m[0], 'medium'));
   return out;
 }
 
@@ -305,6 +337,102 @@ function detectNames(text: string): PiiMatch[] {
     // ("bapak ahmad"); the short ones ("kak", "pak", "bu") too often just address the reader.
     const lowercaseOk = /^(?:bapak|ibu|mbak)\b/.test(m[0]);
     add(nameAt(text, m.index + m[0].length, 'medium', !lowercaseOk));
+  }
+  // "tadi budi bilang …": reported speech names whoever spoke, unless that is a role or a thing.
+  for (const m of text.matchAll(REPORTED_SPEECH)) {
+    const word = m[1]!;
+    const bare = word.toLowerCase();
+    if (NOT_NAME.has(bare) || TITLE_WORDS.has(bare) || NOT_A_SPEAKER.has(bare)) continue;
+    out.push(match('NAME', m.index + /^\S+[ \t]+/.exec(m[0])![0].length, word, 'medium'));
+  }
+  // "halo kak ini rina, …": a one-word lowercase self-introduction, only when a comma or line end closes it.
+  for (const m of text.matchAll(GREETING_SELF)) {
+    const found = nameAt(text, m.index + m[0].length, 'medium');
+    if (found && !/\s/.test(found.value) && /^\s*(?:[,.!\n]|$)/.test(text.slice(found.end))) add(found);
+  }
+  return out;
+}
+
+const REPORTED_SPEECH =
+  /\b(?:tadi|kemarin|kemaren|katanya|kata)[ \t]+([A-Za-z]{3,15})[ \t]+(bilang|ngomong|nanya|nanyain|minta|cerita|nelpon|telpon|ngechat|nge-?wa|kasih\s+tau|ngasih\s+tau)\b/gi;
+// Speakers that are relatives, roles, or software rather than a named person.
+const NOT_A_SPEAKER = new Set(
+  ('mama mamah papa papah ayah bunda emak abah suami istri anak adik adek kakak abang teman temen sahabat tetangga ' +
+    'bos atasan boss orangnya mereka kalian sistem system aplikasi website web bot google kurir driver ojol sopir ' +
+    'penjual pembeli seller admin cs operator petugas dokter perawat bidan guru dosen polisi pacar doi beliau').split(' '),
+);
+
+const GREETING_SELF =
+  /\b(?:halo|hai|hallo|hi|permisi|assalamualaikum|selamat\s+(?:pagi|siang|sore|malam))[ \t]*,?[ \t]*(?:(?:kak|kakak|min|admin|gan|sis|mas|mbak|pak|bu|bang)[ \t]*,?[ \t]+)?(?:ini|sama|dengan|dgn)[ \t]+/gi;
+
+// Chat export lines: Android "12/10/26 09.14 - Dewi Lestari: …", iOS "[12/10/26 09.14.33] Dewi Lestari: …",
+// and the export title "Chat WhatsApp dengan Dewi Lestari". The sender is whoever saved that contact name.
+const CHAT_SENDER =
+  /^‎?\[?\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4},?[ \t]+\d{1,2}[.:]\d{2}(?:[.:]\d{2})?(?:[ \t ]?[AP]M)?\]?(?:[ \t]+-)?[ \t]+([^:\n]{1,60}?):[ \t]/gm;
+const CHAT_TITLE = /^(?:Chat WhatsApp dengan|WhatsApp Chat with|Chat dengan|Riwayat chat dengan)[ \t]+([^\n]{1,60}?)[ \t]*$/gim;
+// Senders that are a business or a system role, not a customer.
+const NOT_A_PERSON =
+  /\b(?:toko|shop|store|official|olshop|admin|cs|customer service|support|tim|team|pt|cv|ud|bot|system|sistem|info|layanan|grosir)\b|^(?:error|warn|warning|info|debug|trace|fatal|notice)$/i;
+
+function detectChatSenders(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  for (const re of [CHAT_SENDER, CHAT_TITLE]) {
+    for (const m of text.matchAll(re)) {
+      const sender = m[1]!.replace(/^~\s*/, '').trim();
+      // Unsaved contacts show as a number; the phone detector already covers those.
+      if (!/\p{L}/u.test(sender) || /^[+\d\s()-]+$/.test(sender) || NOT_A_PERSON.test(sender)) continue;
+      const start = m.index + m[0].indexOf(m[1]!) + m[1]!.indexOf(sender);
+      out.push(match('NAME', start, sender, 'high'));
+    }
+  }
+  return out;
+}
+
+const THING_TABLE =
+  /produk|product|barang|item|sku|kategori|categor|menu|toko|store|shop|merchant|brand|merek|layanan|service|paket|package|kota|city|provinsi|province|wilayah|region|kecamatan|kelurahan|desa|district|bank|kurir|courier|ekspedisi|tag|role|permission|setting|config|status|metode|method/i;
+
+/** `INSERT INTO pelanggan (nama, nik, …) VALUES ('Hendra', '1371…'), (…);` with values matched to their columns. */
+function detectSqlInserts(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  const insert = /\bINSERT\s+INTO\s+([`"\w.]+)\s*\(([^)]{1,2000})\)\s*VALUES\s*/gi;
+  for (const m of text.matchAll(insert)) {
+    const thingTable = THING_TABLE.test(m[1]!);
+    const columns = m[2]!.split(',').map((c) => c.trim().replace(/^[`"[]|[`"\]]$/g, ''));
+    // `produk.nama` is a product; only a person's table makes a bare "nama" column a name.
+    const types = columns.map((c) => (thingTable && /^(?:nama|name|title|judul)$/i.test(c) ? undefined : fieldType(c)));
+    if (!types.some(Boolean)) continue;
+    let i = m.index + m[0].length;
+    let col = 0;
+    let depth = 0;
+    // Walk the tuples character by character so quoted commas and parentheses stay inside their value.
+    while (i < text.length) {
+      const ch = text[i]!;
+      if (ch === "'" || ch === '"') {
+        let j = i + 1;
+        while (j < text.length && !(text[j] === ch && text[j + 1] !== ch)) j += text[j] === ch || text[j] === '\\' ? 2 : 1;
+        const type = depth === 1 ? types[col] : undefined;
+        const value = text.slice(i + 1, j);
+        if (type && isPlausibleValue(type, value, columns[col]!)) out.push(match(type, i + 1, value, 'high'));
+        i = j + 1;
+        continue;
+      }
+      if (ch === '(') {
+        depth++;
+        if (depth === 1) col = 0;
+      } else if (ch === ')') depth--;
+      else if (ch === ',' && depth === 1) col++;
+      else if (ch === ';' && depth === 0) break;
+      else if (depth === 0 && !/[\s,]/.test(ch)) break;
+      else if (depth === 1 && /\d/.test(ch) && /[(,\s]/.test(text[i - 1]!)) {
+        // An unquoted number in a personal column: `nik` stored as BIGINT.
+        const num = /^\d+/.exec(text.slice(i))![0];
+        const type = types[col];
+        if (type && isPlausibleValue(type, num, columns[col]!)) out.push(match(type, i, num, 'high'));
+        i += num.length;
+        continue;
+      }
+      i++;
+    }
   }
   return out;
 }
@@ -488,6 +616,8 @@ const DETECTORS: Array<(text: string) => PiiMatch[]> = [
   detectReligion,
   detectPlates,
   detectNames,
+  detectChatSenders,
+  detectSqlInserts,
   detectStreetAddresses,
   detectLabeledFields,
   detectCsvColumns,

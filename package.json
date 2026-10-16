@@ -12,7 +12,8 @@
     "bundle:hook": "esbuild packages/mcp/src/guard.ts --bundle --platform=node --format=esm --target=node20 --outfile=hooks/samaran-guard.mjs --log-level=warning",
     "test": "node --test \"packages/*/test/*.test.ts\"",
     "eval": "node evals/run.mjs",
-    "typecheck": "tsc -p packages/core --noEmit && tsc -p packages/mcp --noEmit"
+    "typecheck": "tsc -p packages/core --noEmit && tsc -p packages/mcp --noEmit",
+    "eval:pii": "node evals/hard/pii-bench.mjs"
   },
   "devDependencies": {
     "@types/node": "^24.19.2",

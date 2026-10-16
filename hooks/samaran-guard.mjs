@@ -276,7 +276,7 @@ var HOLIDAY_YEARS = Object.keys(DATA).map(Number);
 // packages/core/dist/samaran/fields.js
 var FIELDS = [
   // A column called "pasien" or "pelanggan" holds that person's name.
-  ["NAME", "nama|name|full_?name|nama_?lengkap|first_?name|last_?name|nama_?depan|nama_?belakang|nama_?panggilan|nickname|nama_?ibu_?kandung|mother_?s?_?maiden_?name|penerima|pengirim|recipient|pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner"],
+  ["NAME", "nama|name|full_?name|nama_?lengkap|first_?name|last_?name|middle_?name|given_?name|family_?name|surname|nama_?depan|nama_?tengah|nama_?belakang|nama_?panggilan|nickname|nama_?ibu_?kandung|mother_?s?_?maiden_?name|penerima|pengirim|recipient|pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner"],
   ["ADDRESS", "alamat|address|full_?address|street|street_?address|domisili|alamat_?domisili|alamat_?ktp|alamat_?rumah|alamat_?pengiriman|shipping_?address|home_?address|billing_?address"],
   ["NIK", "nik|no_?ktp|nomor_?ktp|ktp|nomor_?induk_?kependudukan|national_?id"],
   ["KK", "kk|no_?kk|nomor_?kk|kartu_?keluarga|no_?kartu_?keluarga|nomor_?kartu_?keluarga|family_?card(_?number)?"],
@@ -321,8 +321,12 @@ function fieldType(key) {
   return void 0;
 }
 function isGenericNameKey(key) {
-  return /^(name|first_?name|last_?name|nickname)$/.test(normalizeKey(key));
+  return /^(name|nickname)$/.test(normalizeKey(key));
 }
+function isNamePartKey(key) {
+  return /^(?:(?:customer|billing|shipping|user|contact)_)?(?:first|last|middle|given|family)_?name$|^surname$/.test(normalizeKey(key));
+}
+var NAME_LABEL_WORDS = /^(?:first|last|middle|given|family|sur|name|nama|depan|belakang|tengah|lengkap|full)$/i;
 var GENDER_WORD = /^(?:laki-?\s?laki|lelaki|perempuan|pria|wanita|male|female|man|woman|cowok|cewek)$/i;
 var GENDER_VALUE = { test: (v) => /^[LPMF]$/.test(v) || GENDER_WORD.test(v) };
 var DATE_KEY = /tanggal|tgl|date|dob|birthday|birthdate|ttl/;
@@ -413,7 +417,10 @@ function isPlausibleValue(type, value, key) {
     if (/^[A-Z][a-z]+[A-Z]/.test(v))
       return false;
     const words = v.split(/\s+/);
-    if (isGenericNameKey(key)) {
+    if (isNamePartKey(key)) {
+      if (words.length > 4 || !words.every((w) => /^[A-Z]/.test(w)) || words.every((w) => NAME_LABEL_WORDS.test(w)))
+        return false;
+    } else if (isGenericNameKey(key)) {
       if (words.length < 2 || words.length > 5 || !words.every((w) => /^[A-Z]/.test(w)))
         return false;
     } else if (ROLE_KEY.test(normalizeKey(key)) && words.length === 1 && !/^[A-Z]/.test(v)) {
@@ -563,12 +570,12 @@ function detectPassports(text) {
 }
 function detectPhones(text) {
   const out = [];
-  const mobile = /(?<![\d+\w])(?:\+62|62|0)[\s-]?8\d{1,2}(?:[\s.-]?\d){6,10}(?![\d\w])/g;
+  const mobile = /(?<![\d+\w])(?:\+62|62|0)[ \t-]?8\d{1,2}(?:[ \t.-]?\d{3,4}){2,3}(?![\d\w])/g;
   for (const m of text.matchAll(mobile)) {
     if (parsePhone(m[0]).valid)
       out.push(match("PHONE", m.index, m[0], "high"));
   }
-  const landline = /\((?:\+62\s?|0)\d{2,3}\)\s?\d{3,4}[\s-]?\d{3,4}(?!\d)|(?<![\d\w])\+62\s?[2-79]\d{1,2}[\s-]?\d{3,4}[\s-]?\d{3,4}(?!\d)/g;
+  const landline = /\((?:\+62[ \t]?|0)\d{2,3}\)[ \t]?\d{3,4}[ \t-]?\d{3,4}(?!\d)|(?<![\d\w])\+62[ \t]?[2-79]\d{1,2}[ \t-]?\d{3,4}[ \t-]?\d{3,4}(?!\d)/g;
   for (const m of text.matchAll(landline))
     out.push(match("PHONE", m.index, m[0], "medium"));
   return out;
@@ -576,7 +583,13 @@ function detectPhones(text) {
 var RESERVED_EMAIL_DOMAIN = /@(?:[\w-]+\.)*(?:example\.(?:com|net|org)|[\w-]+\.(?:example|test|invalid|localhost))$/i;
 function detectEmails(text) {
   const re = /(?<![\w.+-])[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}(?![\w-])/g;
-  return [...text.matchAll(re)].filter((m) => !RESERVED_EMAIL_DOMAIN.test(m[0])).map((m) => match("EMAIL", m.index, m[0], "high"));
+  const out = [...text.matchAll(re)].filter((m) => !RESERVED_EMAIL_DOMAIN.test(m[0])).map((m) => match("EMAIL", m.index, m[0], "high"));
+  const AT = String.raw`\s*(?:\[\s*at\s*\]|\(\s*at\s*\)|\{\s*at\s*\})\s*`;
+  const DOT = String.raw`(?:\s*(?:\[\s*dot\s*\]|\(\s*dot\s*\)|\{\s*dot\s*\})\s*|\.)`;
+  const spelled = new RegExp(String.raw`(?<![\w.+-])[A-Za-z0-9._%+-]+${AT}[A-Za-z0-9-]+(?:${DOT}[A-Za-z0-9-]+)*${DOT}[A-Za-z]{2,}(?![\w-])`, "gi");
+  for (const m of text.matchAll(spelled))
+    out.push(match("EMAIL", m.index, m[0], "high"));
+  return out;
 }
 function detectIps(text) {
   const out = [];
@@ -612,16 +625,28 @@ function detectBirthDates(text) {
   return [...text.matchAll(re)].map((m) => match("BIRTH_DATE", m.index + m[0].length - m[1].length, m[1], "high"));
 }
 var CONDITIONS = "hiv|aids|odha|tbc|tb paru|tuberkulosis|hepatitis(?: [abc])?|kanker(?: \\w+)?|tumor(?: \\w+)?|diabetes(?: melitus)?|hipertensi|stroke|penyakit jantung|gagal ginjal|cuci darah|covid(?:-19)?|dbd|demam berdarah|malaria|kusta|lepra|skizofrenia|bipolar|depresi(?: berat)?|gangguan jiwa|gangguan mental|odgj|autis(?:me)?|epilepsi|ims|sifilis|gonore|herpes|hamil|keguguran";
+var MEDICATIONS = "insulin|metformin|glibenclamide|arv|antiretroviral|obat tbc|rifampisin|isoniazid|kemoterapi|kemo|antidepresan|antipsikotik|fluoxetine|sertraline|risperidone|haloperidol|lithium|metadon|methadone|warfarin|amlodipine|captopril|levothyroxine|tamoxifen|hormon|kb|pil kb";
 function detectHealth(text) {
   const out = [];
   const strong = /\b(?:didiagnosis|didiagnosa|terdiagnosis|terdiagnosa|mengidap|terinfeksi|riwayat penyakit|divonis)\s+(?:menderita\s+|mengidap\s+|penyakit\s+)?([^\n,.;:()]{2,60}?)(?=\s+(?:sejak|selama|dan sudah|dan sedang|tapi|namun|sehingga|jadi)\b|[\n,.;:()]|$)/gi;
   for (const m of text.matchAll(strong)) {
     out.push(match("HEALTH", m.index + m[0].length - m[1].length, m[1], "high"));
   }
-  const gated = new RegExp(`\\b(?:positif|menderita|terkena|kena|sakit|pasien|penderita|pengidap|penyintas|mengalami)\\s+((?:penyakit\\s+)?(?:${CONDITIONS}))\\b`, "gi");
+  const gated = new RegExp(`\\b(?:positif|menderita|terkena|kena|sakit|pasien|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya)\\s+((?:penyakit\\s+)?(?:${CONDITIONS}))\\b`, "gi");
   for (const m of text.matchAll(gated)) {
     out.push(match("HEALTH", m.index + m[0].length - m[1].length, m[1], "medium"));
   }
+  for (const m of text.matchAll(new RegExp(`\\((${CONDITIONS})\\)`, "gi"))) {
+    out.push(match("HEALTH", m.index + 1, m[1], "medium"));
+  }
+  const treatment = new RegExp(`\\b(?:obat|suntik(?:an)?|minum|konsumsi|terapi|resep)\\s+(${MEDICATIONS})\\b|\\b(kemoterapi|radioterapi|hemodialisa|cuci darah)\\b`, "gi");
+  for (const m of text.matchAll(treatment)) {
+    const value = m[1] ?? m[2];
+    out.push(match("HEALTH", m.index + m[0].length - value.length, value, "medium"));
+  }
+  const hospital = /\b(?:dirawat|opname|rawat inap|diopname|dioperasi|isolasi)\s+(?:di\s+)?(?:(?:RSUD|RSU|RSIA|RSJ|RSAB|RS|Rumah Sakit|Puskesmas|Klinik)\b[^\n,.;:()]{0,40}?)(?=\s+(?:karena|krn|sejak|selama|dan|tapi|jadi|sampai)\b|[\n,.;:()]|$)/gi;
+  for (const m of text.matchAll(hospital))
+    out.push(match("HEALTH", m.index, m[0], "medium"));
   return out;
 }
 function detectFinancial(text) {
@@ -747,6 +772,88 @@ function detectNames(text) {
   for (const m of text.matchAll(HONORIFIC)) {
     const lowercaseOk = /^(?:bapak|ibu|mbak)\b/.test(m[0]);
     add(nameAt(text, m.index + m[0].length, "medium", !lowercaseOk));
+  }
+  for (const m of text.matchAll(REPORTED_SPEECH)) {
+    const word = m[1];
+    const bare = word.toLowerCase();
+    if (NOT_NAME.has(bare) || TITLE_WORDS.has(bare) || NOT_A_SPEAKER.has(bare))
+      continue;
+    out.push(match("NAME", m.index + /^\S+[ \t]+/.exec(m[0])[0].length, word, "medium"));
+  }
+  for (const m of text.matchAll(GREETING_SELF)) {
+    const found = nameAt(text, m.index + m[0].length, "medium");
+    if (found && !/\s/.test(found.value) && /^\s*(?:[,.!\n]|$)/.test(text.slice(found.end)))
+      add(found);
+  }
+  return out;
+}
+var REPORTED_SPEECH = /\b(?:tadi|kemarin|kemaren|katanya|kata)[ \t]+([A-Za-z]{3,15})[ \t]+(bilang|ngomong|nanya|nanyain|minta|cerita|nelpon|telpon|ngechat|nge-?wa|kasih\s+tau|ngasih\s+tau)\b/gi;
+var NOT_A_SPEAKER = new Set("mama mamah papa papah ayah bunda emak abah suami istri anak adik adek kakak abang teman temen sahabat tetangga bos atasan boss orangnya mereka kalian sistem system aplikasi website web bot google kurir driver ojol sopir penjual pembeli seller admin cs operator petugas dokter perawat bidan guru dosen polisi pacar doi beliau".split(" "));
+var GREETING_SELF = /\b(?:halo|hai|hallo|hi|permisi|assalamualaikum|selamat\s+(?:pagi|siang|sore|malam))[ \t]*,?[ \t]*(?:(?:kak|kakak|min|admin|gan|sis|mas|mbak|pak|bu|bang)[ \t]*,?[ \t]+)?(?:ini|sama|dengan|dgn)[ \t]+/gi;
+var CHAT_SENDER = /^‎?\[?\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4},?[ \t]+\d{1,2}[.:]\d{2}(?:[.:]\d{2})?(?:[ \t ]?[AP]M)?\]?(?:[ \t]+-)?[ \t]+([^:\n]{1,60}?):[ \t]/gm;
+var CHAT_TITLE = /^(?:Chat WhatsApp dengan|WhatsApp Chat with|Chat dengan|Riwayat chat dengan)[ \t]+([^\n]{1,60}?)[ \t]*$/gim;
+var NOT_A_PERSON = /\b(?:toko|shop|store|official|olshop|admin|cs|customer service|support|tim|team|pt|cv|ud|bot|system|sistem|info|layanan|grosir)\b|^(?:error|warn|warning|info|debug|trace|fatal|notice)$/i;
+function detectChatSenders(text) {
+  const out = [];
+  for (const re of [CHAT_SENDER, CHAT_TITLE]) {
+    for (const m of text.matchAll(re)) {
+      const sender = m[1].replace(/^~\s*/, "").trim();
+      if (!new RegExp("\\p{L}", "u").test(sender) || /^[+\d\s()-]+$/.test(sender) || NOT_A_PERSON.test(sender))
+        continue;
+      const start = m.index + m[0].indexOf(m[1]) + m[1].indexOf(sender);
+      out.push(match("NAME", start, sender, "high"));
+    }
+  }
+  return out;
+}
+var THING_TABLE = /produk|product|barang|item|sku|kategori|categor|menu|toko|store|shop|merchant|brand|merek|layanan|service|paket|package|kota|city|provinsi|province|wilayah|region|kecamatan|kelurahan|desa|district|bank|kurir|courier|ekspedisi|tag|role|permission|setting|config|status|metode|method/i;
+function detectSqlInserts(text) {
+  const out = [];
+  const insert = /\bINSERT\s+INTO\s+([`"\w.]+)\s*\(([^)]{1,2000})\)\s*VALUES\s*/gi;
+  for (const m of text.matchAll(insert)) {
+    const thingTable = THING_TABLE.test(m[1]);
+    const columns = m[2].split(",").map((c) => c.trim().replace(/^[`"[]|[`"\]]$/g, ""));
+    const types = columns.map((c) => thingTable && /^(?:nama|name|title|judul)$/i.test(c) ? void 0 : fieldType(c));
+    if (!types.some(Boolean))
+      continue;
+    let i = m.index + m[0].length;
+    let col = 0;
+    let depth = 0;
+    while (i < text.length) {
+      const ch = text[i];
+      if (ch === "'" || ch === '"') {
+        let j = i + 1;
+        while (j < text.length && !(text[j] === ch && text[j + 1] !== ch))
+          j += text[j] === ch || text[j] === "\\" ? 2 : 1;
+        const type = depth === 1 ? types[col] : void 0;
+        const value = text.slice(i + 1, j);
+        if (type && isPlausibleValue(type, value, columns[col]))
+          out.push(match(type, i + 1, value, "high"));
+        i = j + 1;
+        continue;
+      }
+      if (ch === "(") {
+        depth++;
+        if (depth === 1)
+          col = 0;
+      } else if (ch === ")")
+        depth--;
+      else if (ch === "," && depth === 1)
+        col++;
+      else if (ch === ";" && depth === 0)
+        break;
+      else if (depth === 0 && !/[\s,]/.test(ch))
+        break;
+      else if (depth === 1 && /\d/.test(ch) && /[(,\s]/.test(text[i - 1])) {
+        const num = /^\d+/.exec(text.slice(i))[0];
+        const type = types[col];
+        if (type && isPlausibleValue(type, num, columns[col]))
+          out.push(match(type, i, num, "high"));
+        i += num.length;
+        continue;
+      }
+      i++;
+    }
   }
   return out;
 }
@@ -919,6 +1026,8 @@ var DETECTORS = [
   detectReligion,
   detectPlates,
   detectNames,
+  detectChatSenders,
+  detectSqlInserts,
   detectStreetAddresses,
   detectLabeledFields,
   detectCsvColumns

@@ -4,6 +4,23 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-10-16
+
+### Fixed
+
+- **A phone number at the end of a line was left unmasked when the next line started with a digit**, for example a WhatsApp export title followed by a dated message, or a log field followed by a timestamp. The detector swallowed the next line's digits, the result failed validation, and the number passed through `read_file_masked` and the guard. Separators inside a phone number no longer cross a line break.
+
+### Added
+
+- Samaran detects names split across `first_name` / `last_name` / `given_name` / `family_name` keys, as Midtrans, Xendit, and most CRMs send them.
+- WhatsApp chat exports: sender names on Android and iOS lines and in the export title. Business accounts (`Toko …`, `Admin`, `CS`) and log levels are left alone.
+- Health data in free text: medicines that reveal a condition (`obat insulin`, `terapi ARV`), hospital stays (`dirawat di RSUD …`), conditions after `karena` and in brackets (`(diabetes)`).
+- SQL dumps: `INSERT INTO … (columns) VALUES (…)` values are matched to their columns. A bare `nama` column in a product or region table is not treated as a person.
+- Emails spelled out as `nama [at] gmail [dot] com`, one-word self-introductions (`halo kak ini rina,`), and names in reported speech (`tadi budi bilang`).
+- `npm run eval:pii`: a benchmark of real-world Indonesian document formats with fake identities and false-positive traps.
+- Three hard eval cases checked against official sources: postal codes, the 2022 Papua provinces, and the 2027 SKB holidays; a marketplace export joined with a Midtrans log; and a WhatsApp CS export summarized without identities.
+- `server.json` and `mcpName` for the official MCP Registry (`io.github.lokal-id/lokal`).
+
 ## [0.2.0] - 2026-10-16
 
 First public release.
@@ -19,5 +36,6 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/lokal-id/lokal/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/lokal-id/lokal/releases/tag/v0.2.0

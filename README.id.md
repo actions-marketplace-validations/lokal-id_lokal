@@ -203,7 +203,7 @@ samaran.unmask(reply);           // placeholder diganti lagi dengan data asli
 
 - Nilai yang sama selalu mendapat placeholder yang sama, termasuk beda format: `0812-…` dan `+62 812…` sama-sama `[PHONE_1]`.
 - `mode: 'partial'` untuk log dan layar admin: `3201********0001`, `0812****7890`, `b***@gmail.com`.
-- Deteksi memakai label (`Agama: Islam`, `NAMA : BUDI`), header CSV dan Excel (`agama`, `diagnosa`, `gaji`, …), key JSON/YAML dan query string, serta frasa umum di teks bebas (`nama saya budi`, `didiagnosis TBC`, `gaji saya 8 juta`).
+- Deteksi memakai label (`Agama: Islam`, `NAMA : BUDI`), header CSV dan Excel (`agama`, `diagnosa`, `gaji`, …), key JSON/YAML dan query string (termasuk `first_name` / `last_name` yang terpisah), dump SQL `INSERT`, export chat WhatsApp, serta frasa umum di teks bebas (`nama saya budi`, `didiagnosis TBC`, `obat insulin`, `gaji saya 8 juta`).
 
 <details>
 <summary><b>Jenis data yang dideteksi (25)</b></summary>
@@ -267,11 +267,25 @@ Tugas vibe coding yang sama dijalankan di sesi Claude Code sungguhan di folder k
 
 Kasus kelima, **debug `app.log` yang berisi NIK, HP, dan email pelanggan**, ditambahkan belakangan. Tanpa Lokal, agent langsung menjalankan `Get-Content app.log` dan seluruh log sampai ke model. Dengan Lokal, agent memakai `scan_pii` → `read_file_masked`, dan di 2 dari 2 run tidak ada data pelanggan yang sampai ke model. Run pertama kasus ini justru menemukan bug: nilai log `key=value` ikut menelan pasangan berikutnya, sehingga nomor HP lolos lewat preview. Bug itu sudah diperbaiki dan ada tes regresinya.
 
+### Kasus sulit
+
+Tiga tugas yang lebih sulit memakai kunci jawaban yang dicocokkan dengan sumber resmi, bukan dengan data Lokal sendiri, dan format dokumen sungguhan dengan identitas palsu (masing-masing 2 run):
+
+| Kasus | Tanpa Lokal | Dengan Lokal |
+|---|---|---|
+| Kode pos kelurahan di Depok, provinsi hasil pemekaran Papua 2022, SLA di sekitar Lebaran 2027 | 6/8 (**SLA salah di 2/2 run**: SKB 2027 lebih baru dari pengetahuan model) | 8/8 |
+| Gabungkan export marketplace dengan log Midtrans, cari pesanan lunas yang belum ada resi, HP dalam format E.164 | 8/14 (jawaban benar, data semua pelanggan terkirim ke model) | 14/14 (jawaban benar, model hanya melihat placeholder) |
+| Ringkas export chat WhatsApp CS untuk tim produk tanpa identitas pelanggan | 4/10 | 10/10 |
+
+Run pertama tugas-tugas ini menemukan satu bug dan empat celah deteksi, semuanya sudah diperbaiki di 0.2.1: nomor HP di akhir baris bocor kalau baris berikutnya diawali angka, serta nama yang dipecah jadi `first_name` / `last_name`, pengirim chat WhatsApp, obat, dan rawat inap belum terdeteksi. Daftar kode pos Depok di id.wikipedia ternyata keliru untuk 32 kelurahan; data Lokal cocok dengan [en.wikipedia](https://en.wikipedia.org/wiki/Cinere) dan sumber lain.
+
+`npm run eval:pii` menjalankan benchmark formatnya saja: 43 dari 43 data pribadi tersamar di 15 format (KTP hasil OCR, export WhatsApp, JSON Midtrans, log Laravel, dump SQL, …), dan 27 dari 27 nilai yang mirip tetap utuh (nomor resi, ID invoice, timestamp, nomor call center, nama lembaga).
+
 Ini sampel kecil yang disusun dari keseharian developer Indonesia. Jangan dibaca sebagai benchmark umum.
 
 ## Batasan
 
-- **Deteksi berbasis pola dan mengutamakan presisi.** Nama dikenali dari label, header kolom, frasa pengantar ("nama saya budi", "atas nama", "a.n.", "bernama"), dan sapaan ("Pak Joko", "bapak ahmad"), termasuk huruf kecil. Nama yang muncul begitu saja tanpa pengantar ("tadi budi bilang …"), data kesehatan atau keuangan dengan kalimat tidak biasa, dan data anak yang tidak ditandai sebagai data anak masih bisa lolos. Anggap Samaran sebagai jaring pengaman yang kuat, bukan jaminan.
+- **Deteksi berbasis pola dan mengutamakan presisi.** Nama dikenali dari label, header kolom dan key JSON, pengirim di export chat, frasa pengantar ("nama saya budi", "atas nama", "a.n.", "halo kak ini rina,"), sapaan ("Pak Joko", "bapak ahmad"), dan ucapan yang dilaporkan ("tadi budi bilang"), termasuk huruf kecil. Nama yang terselip di kalimat tanpa penanda apa pun ("pesanan budi belum sampai"), data kesehatan atau keuangan dengan kalimat tidak biasa, dan data anak yang tidak ditandai sebagai data anak masih bisa lolos. Anggap Samaran sebagai jaring pengaman yang kuat, bukan jaminan.
 - **Diuji terhadap salah deteksi** di 12 MB kode open source dan teks lengkap UU 27/2022, tanpa satu pun deteksi nama berkeyakinan tinggi. Deteksi nama di chat menangkap 29 dari 29 kalimat uji berisi nama dan tidak salah tangkap di 26 kalimat chat biasa. Kalimatnya disusun untuk tes, jadi akurasi di chat asli bisa lebih rendah.
 - **Tidak semua format terbaca.** PDF, `.xls` lama, gambar (foto KTP, selfie), dan arsip tidak dipindai. `scan_pii` melaporkannya sebagai *tidak terpindai*, bukan *bersih*.
 - **Validasi NIK dan NPWP hanya struktur.** Tidak bisa memastikan nomornya terdaftar di Dukcapil atau DJP.
