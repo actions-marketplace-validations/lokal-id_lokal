@@ -26,7 +26,7 @@ export interface SamaranOptions extends DetectOptions {
 }
 
 /** Same person, same placeholder: "0812-3456-7890" and "+62 812 3456 7890" both map to [PHONE_1]. */
-function canonical(type: PiiType, value: string): string {
+export function canonical(type: PiiType, value: string): string {
   switch (type) {
     case 'PHONE':
       return parsePhone(value).e164 ?? value.replace(/\D/g, '');

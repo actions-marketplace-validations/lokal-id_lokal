@@ -86,6 +86,8 @@ def balas_pelanggan(pesan: str) -> str:
 - `detect_pii(text)` returns the matches without masking; `min_confidence='high'` keeps only validated or keyword-anchored ones.
 - 25 types, covering every category in UU PDP Article 4: identifiers (NIK, KK, NPWP, passport, SIM, NIP, BPJS, phone, email, bank account, card, plate, IP, coordinates), name, address, birth date, gender, religion, marital status, nationality, health, finances, criminal records, and biometrics. Found through labels, CSV headers, JSON/YAML keys, SQL `INSERT` dumps, WhatsApp chat exports, and common phrases in free text.
 
+To cover every LLM call of an app without calling `mask()` and `unmask()` at each one, run the Samaran Proxy (`npx @lokal-id/mcp proxy`) next to the backend and point the SDK at it: `OpenAI(base_url='http://127.0.0.1:8787/v1')` or `Anthropic(base_url='http://127.0.0.1:8787')`. It masks requests and restores responses, streaming and tool calls included. See the [Lokal README](https://github.com/lokal-id/lokal#samaran-proxy-protect-an-apps-llm-calls).
+
 ### Logging
 
 ```python
@@ -127,6 +129,35 @@ masked = [(part.name, s.mask(part.text).text) for part in doc.parts]   # one par
 - Files that may hold personal data but cannot be read (photos, scanned or encrypted PDFs, `.xls`, archives) are listed in `not_scanned`, never treated as clean. `report.clean` is true only when nothing was found and nothing was left unread.
 - Folders skip `node_modules`, `.git`, virtualenvs, and build output, and honor `.samaranignore` at the folder root for fixtures that hold only fake data.
 - Pure Python, like the rest of the package. A PDF of 1,000 pages takes about 6 seconds; most documents take milliseconds.
+
+### Kembaran: production data for staging
+
+```python
+from pathlib import Path
+from lokal.kembaran import Kembaran
+
+k = Kembaran(secret='staging-2026')          # the same secret gives the same people on every run
+for name in ('pelanggan.sql', 'kredit.csv'):  # one instance: the same customer in both files
+    out = k.text(Path('dump', name).read_text())
+    Path('staging', name).write_text(out.text)
+    print(name, out.replaced)                # {'NAME': 1200, 'NIK': 1200, 'PHONE': 1180, ...}
+```
+
+Every person becomes a realistic stand-in: a valid NIK in the same district with the same gender and birth year, a phone number on the same operator, a name with the same casing, an address in the same area, e-mail at `example.com`. From the shell: `python -m lokal.kembaran prod.sql -o staging.sql --secret …`. The output is identical to the TypeScript version for the same secret. A stand-in phone number can still belong to someone, so keep staging from sending SMS or WhatsApp.
+
+### QRIS
+
+```python
+from lokal import parse_qris, set_qris_amount
+
+info = parse_qris(payload)        # the text inside the merchant's QRIS code
+info.valid, info.type, info.merchant_name, info.nmid, info.criteria_label
+# (True, 'static', 'KOPI CONTOH', 'ID1026000000001', 'Usaha Mikro')
+
+dynamic = set_qris_amount(payload, 25000, tip_percent='0.7')   # same merchant, Rp25.000 + 0.7%, new CRC
+```
+
+`parse_qris` reports a broken or altered code (`CRC tidak cocok: …`) and anything that is not QRIS. `set_qris_amount` takes `int`, `str`, or `Decimal` amounts and refuses more than 2 decimals instead of rounding.
 
 ### Validating API input
 

@@ -21,7 +21,7 @@ You need Node.js 24 for development, because the tests run TypeScript directly. 
 ```sh
 git clone https://github.com/lokal-id/lokal.git
 cd lokal
-npm install
+npm ci             # installs exactly what package-lock.json lists; .npmrc turns off install scripts
 npm run build      # builds core and mcp, then bundles hooks/samaran-guard.mjs
 npm test           # unit tests, MCP server end to end, guard
 npm run typecheck
@@ -38,6 +38,17 @@ This loads the skills and the guard hook from your checkout, but the plugin's MC
 ```sh
 claude mcp add lokal-dev -- node /absolute/path/to/lokal/packages/mcp/dist/cli.js
 ```
+
+`packages/mcp/dist/cli.js` is one bundle that includes the MCP SDK and zod, so the published package depends on `@lokal-id/core` alone. `node scripts/smoke-mcp.mjs` checks that bundle after a build.
+
+### Dependencies
+
+Every dependency is a way into the machines of everyone who installs Lokal, so there are few, and they are handled carefully:
+
+- `@lokal-id/core` and the Python package have no runtime dependencies. Keep it that way.
+- New packages for `@lokal-id/mcp` go in `devDependencies`: they are bundled at build time, and `scripts/bundle-mcp.mjs` adds their licenses to `dist/THIRD_PARTY_LICENSES.md`.
+- Commit `package-lock.json` and `python/uv.lock` with any dependency change. CI installs only from them (`npm ci --ignore-scripts`, `uv sync --locked`) and runs `npm audit signatures`.
+- Pin GitHub Actions to a full commit SHA with the version in a comment, never to a tag.
 
 `npm run eval` runs the cases in `evals/cases.mjs` in real Claude Code sessions, with and without the plugin. It needs the `claude` CLI signed in and uses real tokens, so you do not need to run it for most changes.
 
@@ -70,7 +81,8 @@ After regenerating region data in `packages/core/data`, run `uv run python scrip
 | `packages/core/src/phone.ts` | Carrier prefixes and area codes |
 | `packages/core/data/` | Region and postal code data (see its README to regenerate) |
 | `packages/mcp/src/server.ts` | MCP tools |
-| `packages/mcp/src/guard.ts`, `shell-reads.ts` | Samaran Guard hook and the shell command parser |
+| `packages/mcp/src/guard.ts`, `shell-reads.ts` | Samaran Guard hook (Claude Code, Codex, Cursor, Gemini CLI) and the shell command parser |
+| `packages/mcp/src/proxy.ts` | Samaran Proxy for OpenAI- and Anthropic-compatible APIs |
 | `packages/mcp/src/files.ts`, `pdf.ts`, `xlsx.ts`, `docx.ts` | File readers for `scan_pii`, `read_file_masked`, and the guard |
 | `packages/mcp/test/pdf-builder.ts` | Hand-built PDFs for the reader's tests and the Python parity vectors |
 | `skills/` | `SKILL.md` files |
@@ -91,9 +103,9 @@ After regenerating region data in `packages/core/data`, run `uv run python scrip
 
 ## Releasing (maintainers)
 
-Releases are published by GitHub Actions from a tag, never from a local checkout: a local `dist/` can be older than the code.
+Releases are published by GitHub Actions from a tag, never from a local checkout: a local `dist/` can be older than the code. In both workflows, a build job without publishing rights installs, tests, and packs; a separate publish job with the Trusted Publishing token only uploads what it was handed.
 
-- **npm and the MCP Registry:** bump the version in `packages/core/package.json`, `packages/mcp/package.json` (and its `@lokal-id/core` dependency), `.claude-plugin/plugin.json`, the pinned `@lokal-id/mcp@X.Y.Z` in `.mcp.json`, both versions in `server.json`, and `VERSION` in `packages/mcp/src/server.ts`. `node scripts/check-release.mjs` confirms they agree. Run `npm run build` and commit the rebuilt hook, then push a tag `vX.Y.Z`. The *Release* workflow tests that commit, publishes `@lokal-id/core` and then `@lokal-id/mcp` through npm Trusted Publishing, and publishes `server.json` to the MCP Registry with GitHub OIDC. If a step fails, run the workflow again by hand: anything already published is skipped.
+- **npm and the MCP Registry:** bump the version in `packages/core/package.json`, `packages/mcp/package.json` (and its `@lokal-id/core` dependency, pinned to the exact version), `.claude-plugin/plugin.json`, the pinned `@lokal-id/mcp@X.Y.Z` in `.mcp.json`, both versions in `server.json`, and `VERSION` in `packages/mcp/src/server.ts`. `node scripts/check-release.mjs` confirms they agree. Run `npm run build` and commit the rebuilt hook, then push a tag `vX.Y.Z`. The *Release* workflow tests that commit, publishes `@lokal-id/core` and then `@lokal-id/mcp` through npm Trusted Publishing, and publishes `server.json` to the MCP Registry with GitHub OIDC. If a step fails, run the workflow again by hand: anything already published is skipped.
 - **PyPI:** bump `python/pyproject.toml` and `__version__` in `python/src/lokal/__init__.py`, then push a tag `py-vX.Y.Z`. The *Publish Python package* workflow builds, tests, and uploads from that commit through Trusted Publishing.
 
 ## License

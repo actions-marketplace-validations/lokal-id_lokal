@@ -2349,6 +2349,895 @@
   "matches": []
  },
  {
+  "text": "../src/kembaran.ts",
+  "matches": []
+ },
+ {
+  "text": "Budi Santoso",
+  "matches": []
+ },
+ {
+  "text": "SITI AMINAH",
+  "matches": []
+ },
+ {
+  "text": "3201011508950001",
+  "matches": [
+   [
+    "NIK",
+    0,
+    16,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "3276015508030002",
+  "matches": [
+   [
+    "NIK",
+    0,
+    16,
+    "3276015508030002",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "3456-7890",
+  "matches": []
+ },
+ {
+  "text": "3456 7890",
+  "matches": []
+ },
+ {
+  "text": "1111",
+  "matches": []
+ },
+ {
+  "text": "gmail.com",
+  "matches": []
+ },
+ {
+  "text": "yahoo",
+  "matches": []
+ },
+ {
+  "text": "Mawar",
+  "matches": []
+ },
+ {
+  "text": "Kenanga",
+  "matches": []
+ },
+ {
+  "text": "\n",
+  "matches": []
+ },
+ {
+  "text": "Kembaran: CSV pelanggan tanpa satu pun nilai asli, tetap konsisten dan valid",
+  "matches": []
+ },
+ {
+  "text": "uji",
+  "matches": []
+ },
+ {
+  "text": "the same person gets the same stand-in",
+  "matches": []
+ },
+ {
+  "text": "Bogor",
+  "matches": []
+ },
+ {
+  "text": "the city stays",
+  "matches": []
+ },
+ {
+  "text": "casing follows the original",
+  "matches": []
+ },
+ {
+  "text": "320101",
+  "matches": []
+ },
+ {
+  "text": "L",
+  "matches": []
+ },
+ {
+  "text": "1995",
+  "matches": []
+ },
+ {
+  "text": "P",
+  "matches": []
+ },
+ {
+  "text": "-",
+  "matches": []
+ },
+ {
+  "text": "Telkomsel",
+  "matches": []
+ },
+ {
+  "text": "0812-… and 0812… are one person",
+  "matches": []
+ },
+ {
+  "text": "Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK",
+  "matches": []
+ },
+ {
+  "text": "uji",
+  "matches": []
+ },
+ {
+  "text": "Budi Santoso",
+  "matches": []
+ },
+ {
+  "text": "3201011508950001",
+  "matches": [
+   [
+    "NIK",
+    0,
+    16,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "1234567890",
+  "matches": []
+ },
+ {
+  "text": "pelanggan_nik,npwp,gaji\n3201011508950001,3201011508950001,8500000",
+  "matches": [
+   [
+    "NIK",
+    24,
+    40,
+    "3201011508950001",
+    "high"
+   ],
+   [
+    "NIK",
+    41,
+    57,
+    "3201011508950001",
+    "high"
+   ],
+   [
+    "FINANCIAL",
+    58,
+    65,
+    "8500000",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "(\\d{16})",
+  "matches": []
+ },
+ {
+  "text": "\n",
+  "matches": []
+ },
+ {
+  "text": ",",
+  "matches": []
+ },
+ {
+  "text": "the same NIK in another file",
+  "matches": []
+ },
+ {
+  "text": "an individual NPWP is their NIK",
+  "matches": []
+ },
+ {
+  "text": "Kembaran: kunci yang sama memberi hasil yang sama, kunci lain berbeda, tanpa kunci acak",
+  "matches": []
+ },
+ {
+  "text": "staging",
+  "matches": []
+ },
+ {
+  "text": "staging",
+  "matches": []
+ },
+ {
+  "text": "lain",
+  "matches": []
+ },
+ {
+  "text": "Kembaran: 5.000 NIK dari kecamatan, tahun, dan jenis kelamin yang sama tidak pernah bertabrakan",
+  "matches": []
+ },
+ {
+  "text": "tabrakan",
+  "matches": []
+ },
+ {
+  "text": "0",
+  "matches": []
+ },
+ {
+  "text": "NIK",
+  "matches": []
+ },
+ {
+  "text": "Kembaran: opsi keep, tanggal lahir utuh, dan teks bebas",
+  "matches": []
+ },
+ {
+  "text": "k",
+  "matches": []
+ },
+ {
+  "text": "NAME",
+  "matches": []
+ },
+ {
+  "text": "GENDER",
+  "matches": []
+ },
+ {
+  "text": "Budi Santoso",
+  "matches": []
+ },
+ {
+  "text": "15-08-1995",
+  "matches": []
+ },
+ {
+  "text": "15 Agustus 2003",
+  "matches": []
+ },
+ {
+  "text": "3201011508950001",
+  "matches": [
+   [
+    "NIK",
+    0,
+    16,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "150895",
+  "matches": []
+ },
+ {
+  "text": "the NIK keeps the whole birth date too",
+  "matches": []
+ },
+ {
+  "text": "NAMA",
+  "matches": []
+ },
+ {
+  "text": "p",
+  "matches": []
+ },
+ {
+  "text": "Pasien: Siti Aminah, diagnosa: Diabetes tipe 2. Plat B 1234 XYZ, login dari 182.253.10.15, kartu 4539 1488 0343 6467. Agama: Islam",
+  "matches": [
+   [
+    "NAME",
+    8,
+    19,
+    "Siti Aminah",
+    "high"
+   ],
+   [
+    "HEALTH",
+    31,
+    46,
+    "Diabetes tipe 2",
+    "high"
+   ],
+   [
+    "PLATE",
+    53,
+    63,
+    "B 1234 XYZ",
+    "high"
+   ],
+   [
+    "IP",
+    76,
+    89,
+    "182.253.10.15",
+    "high"
+   ],
+   [
+    "CARD",
+    97,
+    116,
+    "4539 1488 0343 6467",
+    "high"
+   ],
+   [
+    "RELIGION",
+    125,
+    130,
+    "Islam",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Siti Aminah",
+  "matches": []
+ },
+ {
+  "text": "Diabetes",
+  "matches": []
+ },
+ {
+  "text": "1234 XYZ",
+  "matches": []
+ },
+ {
+  "text": "182.253.10.15",
+  "matches": [
+   [
+    "IP",
+    0,
+    13,
+    "182.253.10.15",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "4539 1488 0343 6467",
+  "matches": [
+   [
+    "CARD",
+    0,
+    19,
+    "4539 1488 0343 6467",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "",
+  "matches": []
+ },
+ {
+  "text": "453914",
+  "matches": []
+ },
+ {
+  "text": "the card keeps its issuer prefix",
+  "matches": []
+ },
+ {
+  "text": "and passes Luhn",
+  "matches": []
+ },
+ {
+  "text": "religion is kept by default",
+  "matches": []
+ },
+ {
+  "text": "node:test",
+  "matches": []
+ },
+ {
+  "text": "node:assert/strict",
+  "matches": []
+ },
+ {
+  "text": "../src/index.ts",
+  "matches": []
+ },
+ {
+  "text": "0",
+  "matches": []
+ },
+ {
+  "text": "26",
+  "matches": []
+ },
+ {
+  "text": "00",
+  "matches": []
+ },
+ {
+  "text": "COM.CONTOH.WWW",
+  "matches": []
+ },
+ {
+  "text": "01",
+  "matches": []
+ },
+ {
+  "text": "936000000000000001",
+  "matches": []
+ },
+ {
+  "text": "02",
+  "matches": []
+ },
+ {
+  "text": "000000000000001",
+  "matches": []
+ },
+ {
+  "text": "03",
+  "matches": []
+ },
+ {
+  "text": "UMI",
+  "matches": []
+ },
+ {
+  "text": "51",
+  "matches": []
+ },
+ {
+  "text": "00",
+  "matches": []
+ },
+ {
+  "text": "ID.CO.QRIS.WWW",
+  "matches": []
+ },
+ {
+  "text": "02",
+  "matches": []
+ },
+ {
+  "text": "ID1026000000001",
+  "matches": []
+ },
+ {
+  "text": "03",
+  "matches": []
+ },
+ {
+  "text": "UMI",
+  "matches": []
+ },
+ {
+  "text": "52",
+  "matches": []
+ },
+ {
+  "text": "5812",
+  "matches": []
+ },
+ {
+  "text": "53",
+  "matches": []
+ },
+ {
+  "text": "360",
+  "matches": []
+ },
+ {
+  "text": "58",
+  "matches": []
+ },
+ {
+  "text": "ID",
+  "matches": []
+ },
+ {
+  "text": "59",
+  "matches": []
+ },
+ {
+  "text": "KOPI CONTOH",
+  "matches": []
+ },
+ {
+  "text": "60",
+  "matches": []
+ },
+ {
+  "text": "BOGOR",
+  "matches": []
+ },
+ {
+  "text": "61",
+  "matches": []
+ },
+ {
+  "text": "16914",
+  "matches": []
+ },
+ {
+  "text": "00",
+  "matches": []
+ },
+ {
+  "text": "01",
+  "matches": []
+ },
+ {
+  "text": "01",
+  "matches": []
+ },
+ {
+  "text": "11",
+  "matches": []
+ },
+ {
+  "text": "62",
+  "matches": []
+ },
+ {
+  "text": "01",
+  "matches": []
+ },
+ {
+  "text": "INV-77",
+  "matches": []
+ },
+ {
+  "text": "07",
+  "matches": []
+ },
+ {
+  "text": "A01",
+  "matches": []
+ },
+ {
+  "text": "CRC-16/CCITT-FALSE",
+  "matches": []
+ },
+ {
+  "text": "123456789",
+  "matches": []
+ },
+ {
+  "text": "29B1",
+  "matches": []
+ },
+ {
+  "text": "",
+  "matches": []
+ },
+ {
+  "text": "FFFF",
+  "matches": []
+ },
+ {
+  "text": "QRIS statis dibaca lengkap",
+  "matches": []
+ },
+ {
+  "text": "static",
+  "matches": []
+ },
+ {
+  "text": "KOPI CONTOH",
+  "matches": []
+ },
+ {
+  "text": "BOGOR",
+  "matches": []
+ },
+ {
+  "text": "16914",
+  "matches": []
+ },
+ {
+  "text": "ID1026000000001",
+  "matches": []
+ },
+ {
+  "text": "UMI",
+  "matches": []
+ },
+ {
+  "text": "Usaha Mikro",
+  "matches": []
+ },
+ {
+  "text": "5812",
+  "matches": []
+ },
+ {
+  "text": "26",
+  "matches": []
+ },
+ {
+  "text": "COM.CONTOH.WWW",
+  "matches": []
+ },
+ {
+  "text": "936000000000000001",
+  "matches": []
+ },
+ {
+  "text": "000000000000001",
+  "matches": []
+ },
+ {
+  "text": "UMI",
+  "matches": []
+ },
+ {
+  "text": "51",
+  "matches": []
+ },
+ {
+  "text": "ID.CO.QRIS.WWW",
+  "matches": []
+ },
+ {
+  "text": "ID1026000000001",
+  "matches": []
+ },
+ {
+  "text": "UMI",
+  "matches": []
+ },
+ {
+  "text": "INV-77",
+  "matches": []
+ },
+ {
+  "text": "A01",
+  "matches": []
+ },
+ {
+  "text": "QRIS statis menjadi dinamis dengan nominal, field lain tetap",
+  "matches": []
+ },
+ {
+  "text": "dynamic",
+  "matches": []
+ },
+ {
+  "text": "25000",
+  "matches": []
+ },
+ {
+  "text": "ID1026000000001",
+  "matches": []
+ },
+ {
+  "text": "5303360540525000",
+  "matches": []
+ },
+ {
+  "text": "5802ID",
+  "matches": []
+ },
+ {
+  "text": "the amount sits between currency and country",
+  "matches": []
+ },
+ {
+  "text": "01",
+  "matches": []
+ },
+ {
+  "text": "54",
+  "matches": []
+ },
+ {
+  "text": "63",
+  "matches": []
+ },
+ {
+  "text": "1500.50",
+  "matches": []
+ },
+ {
+  "text": "1500.50",
+  "matches": []
+ },
+ {
+  "text": "100000",
+  "matches": []
+ },
+ {
+  "text": "fixed",
+  "matches": []
+ },
+ {
+  "text": "2500",
+  "matches": []
+ },
+ {
+  "text": "percent",
+  "matches": []
+ },
+ {
+  "text": "0.70",
+  "matches": []
+ },
+ {
+  "text": "12,000",
+  "matches": []
+ },
+ {
+  "text": "1e5",
+  "matches": []
+ },
+ {
+  "text": "12345678901234",
+  "matches": []
+ },
+ {
+  "text": "0",
+  "matches": []
+ },
+ {
+  "text": "QRIS rusak dan yang bukan QRIS dikenali",
+  "matches": []
+ },
+ {
+  "text": "0000",
+  "matches": []
+ },
+ {
+  "text": "",
+  "matches": []
+ },
+ {
+  "text": "payload_format",
+  "matches": []
+ },
+ {
+  "text": "https://example.com",
+  "matches": []
+ },
+ {
+  "text": "format",
+  "matches": []
+ },
+ {
+  "text": "00",
+  "matches": []
+ },
+ {
+  "text": "01",
+  "matches": []
+ },
+ {
+  "text": "01",
+  "matches": []
+ },
+ {
+  "text": "11",
+  "matches": []
+ },
+ {
+  "text": "5303360",
+  "matches": []
+ },
+ {
+  "text": "5303840",
+  "matches": []
+ },
+ {
+  "text": "currency",
+  "matches": []
+ },
+ {
+  "text": "00",
+  "matches": []
+ },
+ {
+  "text": "01",
+  "matches": []
+ },
+ {
+  "text": "59",
+  "matches": []
+ },
+ {
+  "text": "KOPI CONTOH",
+  "matches": []
+ },
+ {
+  "text": "59",
+  "matches": []
+ },
+ {
+  "text": "WARUNG KOPI CONTOH SEJAHTERA",
+  "matches": []
+ },
+ {
+  "text": "merchant_name",
+  "matches": []
+ },
+ {
+  "text": "00",
+  "matches": []
+ },
+ {
+  "text": "01",
+  "matches": []
+ },
+ {
+  "text": "01",
+  "matches": []
+ },
+ {
+  "text": "12",
+  "matches": []
+ },
+ {
+  "text": "not_qris",
+  "matches": []
+ },
+ {
+  "text": "dynamic_without_amount",
+  "matches": []
+ },
+ {
+  "text": "00",
+  "matches": []
+ },
+ {
+  "text": "01",
+  "matches": []
+ },
+ {
+  "text": "55",
+  "matches": []
+ },
+ {
+  "text": "02",
+  "matches": []
+ },
+ {
+  "text": "tip",
+  "matches": []
+ },
+ {
+  "text": "00",
+  "matches": []
+ },
+ {
+  "text": "01",
+  "matches": []
+ },
+ {
+  "text": "53",
+  "matches": []
+ },
+ {
+  "text": "360",
+  "matches": []
+ },
+ {
+  "text": "duplicate",
+  "matches": []
+ },
+ {
+  "text": "node:test",
+  "matches": []
+ },
+ {
+  "text": "node:assert/strict",
+  "matches": []
+ },
+ {
+  "text": "../src/index.ts",
+  "matches": []
+ },
+ {
   "text": "formatRupiah mengikuti PUEBI",
   "matches": []
  },
@@ -4951,6 +5840,157 @@
   "matches": []
  },
  {
+  "text": "file dengan nomor baris (tool Read agent, cat -n): header tetap dikenali",
+  "matches": []
+ },
+ {
+  "text": "1→nama,nik,kota\n2→Budi Santoso,3201011508950001,Bogor\n3→Siti Aminah,3276015508030002,Depok",
+  "matches": [
+   [
+    "NAME",
+    18,
+    30,
+    "Budi Santoso",
+    "high"
+   ],
+   [
+    "NIK",
+    31,
+    47,
+    "3201011508950001",
+    "high"
+   ],
+   [
+    "NAME",
+    56,
+    67,
+    "Siti Aminah",
+    "high"
+   ],
+   [
+    "NIK",
+    68,
+    84,
+    "3276015508030002",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "NAME",
+  "matches": []
+ },
+ {
+  "text": "NAME:Budi Santoso",
+  "matches": [
+   [
+    "NAME",
+    5,
+    17,
+    "Budi Santoso",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "NAME:Siti Aminah",
+  "matches": [
+   [
+    "NAME",
+    5,
+    16,
+    "Siti Aminah",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "     1\tnama,nik\n     2\tBudi Santoso,3201011508950001",
+  "matches": [
+   [
+    "NAME",
+    23,
+    35,
+    "Budi Santoso",
+    "high"
+   ],
+   [
+    "NIK",
+    36,
+    52,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "NAME",
+  "matches": []
+ },
+ {
+  "text": "NAME:Budi Santoso",
+  "matches": [
+   [
+    "NAME",
+    5,
+    17,
+    "Budi Santoso",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "1\tNama\tNIK\n2\tRina Wati\t3276014503920002",
+  "matches": [
+   [
+    "NAME",
+    13,
+    22,
+    "Rina Wati",
+    "high"
+   ],
+   [
+    "NIK",
+    23,
+    39,
+    "3276014503920002",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "NAME",
+  "matches": []
+ },
+ {
+  "text": "NAME:Rina Wati",
+  "matches": [
+   [
+    "NAME",
+    5,
+    14,
+    "Rina Wati",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "12\tnama,nik\n7\tBudi Santoso,3201011508950001",
+  "matches": [
+   [
+    "NIK",
+    27,
+    43,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "NAME",
+  "matches": []
+ },
+ {
   "text": "nilai yang ditemukan selalu sama persis dengan teks di posisinya",
   "matches": []
  },
@@ -6705,6 +7745,10 @@
   "matches": []
  },
  {
+  "text": "anonymize_file",
+  "matches": []
+ },
+ {
   "text": "format_rupiah",
   "matches": []
  },
@@ -6729,6 +7773,10 @@
   "matches": []
  },
  {
+  "text": "parse_qris",
+  "matches": []
+ },
+ {
   "text": "parse_rupiah",
   "matches": []
  },
@@ -6745,6 +7793,10 @@
   "matches": []
  },
  {
+  "text": "set_qris_amount",
+  "matches": []
+ },
+ {
   "text": "validate_npwp",
   "matches": []
  },
@@ -6758,6 +7810,74 @@
  },
  {
   "text": "",
+  "matches": []
+ },
+ {
+  "text": "server HTTP untuk ChatGPT dan Claude.ai: tool data saja, tanpa akses file",
+  "matches": []
+ },
+ {
+  "text": "../src/server.ts",
+  "matches": []
+ },
+ {
+  "text": "@modelcontextprotocol/sdk/client/streamableHttp.js",
+  "matches": []
+ },
+ {
+  "text": "remote",
+  "matches": []
+ },
+ {
+  "text": "0.0.0",
+  "matches": []
+ },
+ {
+  "text": "parse_nik",
+  "matches": []
+ },
+ {
+  "text": "parse_qris",
+  "matches": []
+ },
+ {
+  "text": "search_wilayah",
+  "matches": []
+ },
+ {
+  "text": "scan_pii",
+  "matches": []
+ },
+ {
+  "text": "read_file_masked",
+  "matches": []
+ },
+ {
+  "text": "write_file_unmasked",
+  "matches": []
+ },
+ {
+  "text": "",
+  "matches": []
+ },
+ {
+  "text": "parse_nik",
+  "matches": []
+ },
+ {
+  "text": "3201011508950001",
+  "matches": [
+   [
+    "NIK",
+    0,
+    16,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Kabupaten Bogor",
   "matches": []
  },
  {
@@ -6842,6 +7962,146 @@
  },
  {
   "text": "99",
+  "matches": []
+ },
+ {
+  "text": "0",
+  "matches": []
+ },
+ {
+  "text": "00",
+  "matches": []
+ },
+ {
+  "text": "01",
+  "matches": []
+ },
+ {
+  "text": "01",
+  "matches": []
+ },
+ {
+  "text": "11",
+  "matches": []
+ },
+ {
+  "text": "51",
+  "matches": []
+ },
+ {
+  "text": "00",
+  "matches": []
+ },
+ {
+  "text": "ID.CO.QRIS.WWW",
+  "matches": []
+ },
+ {
+  "text": "02",
+  "matches": []
+ },
+ {
+  "text": "ID1026000000001",
+  "matches": []
+ },
+ {
+  "text": "03",
+  "matches": []
+ },
+ {
+  "text": "UMI",
+  "matches": []
+ },
+ {
+  "text": "52",
+  "matches": []
+ },
+ {
+  "text": "5812",
+  "matches": []
+ },
+ {
+  "text": "53",
+  "matches": []
+ },
+ {
+  "text": "360",
+  "matches": []
+ },
+ {
+  "text": "58",
+  "matches": []
+ },
+ {
+  "text": "ID",
+  "matches": []
+ },
+ {
+  "text": "59",
+  "matches": []
+ },
+ {
+  "text": "KOPI CONTOH",
+  "matches": []
+ },
+ {
+  "text": "60",
+  "matches": []
+ },
+ {
+  "text": "BOGOR",
+  "matches": []
+ },
+ {
+  "text": "6304",
+  "matches": []
+ },
+ {
+  "text": "parse_qris",
+  "matches": []
+ },
+ {
+  "text": "parse_qris",
+  "matches": []
+ },
+ {
+  "text": "static",
+  "matches": []
+ },
+ {
+  "text": "ID1026000000001",
+  "matches": []
+ },
+ {
+  "text": "Usaha Mikro",
+  "matches": []
+ },
+ {
+  "text": "set_qris_amount",
+  "matches": []
+ },
+ {
+  "text": "dynamic",
+  "matches": []
+ },
+ {
+  "text": "25000",
+  "matches": []
+ },
+ {
+  "text": "percent",
+  "matches": []
+ },
+ {
+  "text": "0.70",
+  "matches": []
+ },
+ {
+  "text": "parse_qris",
+  "matches": []
+ },
+ {
+  "text": "set_qris_amount",
   "matches": []
  },
  {
@@ -7433,6 +8693,182 @@
  },
  {
   "text": "test/\n",
+  "matches": []
+ },
+ {
+  "text": "guard untuk Cursor: selalu menjawab JSON dalam format Cursor",
+  "matches": []
+ },
+ {
+  "text": "c1",
+  "matches": []
+ },
+ {
+  "text": "beforeSubmitPrompt",
+  "matches": []
+ },
+ {
+  "text": "cek NIK 3201011508950001 dong",
+  "matches": [
+   [
+    "NIK",
+    8,
+    24,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "beforeSubmitPrompt",
+  "matches": []
+ },
+ {
+  "text": "bikin form checkout",
+  "matches": []
+ },
+ {
+  "text": "beforeReadFile",
+  "matches": []
+ },
+ {
+  "text": "",
+  "matches": []
+ },
+ {
+  "text": "pelanggan.csv",
+  "matches": []
+ },
+ {
+  "text": "deny",
+  "matches": []
+ },
+ {
+  "text": "pelanggan.csv",
+  "matches": []
+ },
+ {
+  "text": "README.md",
+  "matches": []
+ },
+ {
+  "text": "allow",
+  "matches": []
+ },
+ {
+  "text": "pelanggan.csv",
+  "matches": []
+ },
+ {
+  "text": "permission",
+  "matches": []
+ },
+ {
+  "text": "user_message",
+  "matches": []
+ },
+ {
+  "text": "only documented fields",
+  "matches": []
+ },
+ {
+  "text": "ekspor/ktp.jpg",
+  "matches": []
+ },
+ {
+  "text": "deny",
+  "matches": []
+ },
+ {
+  "text": "beforeShellExecution",
+  "matches": []
+ },
+ {
+  "text": "cat pelanggan.csv",
+  "matches": []
+ },
+ {
+  "text": "deny",
+  "matches": []
+ },
+ {
+  "text": "ls",
+  "matches": []
+ },
+ {
+  "text": "allow",
+  "matches": []
+ },
+ {
+  "text": "guard untuk Gemini CLI: exit code 2 untuk prompt dan tool yang ditahan",
+  "matches": []
+ },
+ {
+  "text": "s1",
+  "matches": []
+ },
+ {
+  "text": "2026-10-17T00:00:00Z",
+  "matches": []
+ },
+ {
+  "text": "BeforeAgent",
+  "matches": []
+ },
+ {
+  "text": "NIK 3201011508950001",
+  "matches": [
+   [
+    "NIK",
+    4,
+    20,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "BeforeAgent",
+  "matches": []
+ },
+ {
+  "text": "buat landing page",
+  "matches": []
+ },
+ {
+  "text": "BeforeTool",
+  "matches": []
+ },
+ {
+  "text": "read_file",
+  "matches": []
+ },
+ {
+  "text": "pelanggan.csv",
+  "matches": []
+ },
+ {
+  "text": "BeforeTool",
+  "matches": []
+ },
+ {
+  "text": "run_shell_command",
+  "matches": []
+ },
+ {
+  "text": "cat pelanggan.csv",
+  "matches": []
+ },
+ {
+  "text": "BeforeTool",
+  "matches": []
+ },
+ {
+  "text": "write_file",
+  "matches": []
+ },
+ {
+  "text": "x.txt",
   "matches": []
  },
  {
@@ -8156,6 +9592,273 @@
  },
  {
   "text": "pdfinfo pdf/invoice.pdf",
+  "matches": []
+ },
+ {
+  "text": "anonymize_file: dump produksi jadi data staging, konsisten antarfile, agent tidak melihat isinya",
+  "matches": []
+ },
+ {
+  "text": "prod",
+  "matches": []
+ },
+ {
+  "text": "prod",
+  "matches": []
+ },
+ {
+  "text": "pelanggan.sql",
+  "matches": []
+ },
+ {
+  "text": "Budi Santoso",
+  "matches": []
+ },
+ {
+  "text": "3201011508950001",
+  "matches": [
+   [
+    "NIK",
+    0,
+    16,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "0812-3456-7890",
+  "matches": [
+   [
+    "PHONE",
+    0,
+    14,
+    "0812-3456-7890",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "prod",
+  "matches": []
+ },
+ {
+  "text": "kredit.csv",
+  "matches": []
+ },
+ {
+  "text": "nik,gaji\n3201011508950001,8500000\n",
+  "matches": [
+   [
+    "NIK",
+    9,
+    25,
+    "3201011508950001",
+    "high"
+   ],
+   [
+    "FINANCIAL",
+    26,
+    33,
+    "8500000",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "anonymize_file",
+  "matches": []
+ },
+ {
+  "text": "prod/pelanggan.sql",
+  "matches": []
+ },
+ {
+  "text": "prod/kredit.csv",
+  "matches": []
+ },
+ {
+  "text": "staging",
+  "matches": []
+ },
+ {
+  "text": "uji",
+  "matches": []
+ },
+ {
+  "text": "FINANCIAL",
+  "matches": []
+ },
+ {
+  "text": "staging/pelanggan.sql",
+  "matches": []
+ },
+ {
+  "text": "staging/kredit.csv",
+  "matches": []
+ },
+ {
+  "text": "Budi Santoso",
+  "matches": []
+ },
+ {
+  "text": "3201011508950001",
+  "matches": [
+   [
+    "NIK",
+    0,
+    16,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "3456-7890",
+  "matches": []
+ },
+ {
+  "text": "staging",
+  "matches": []
+ },
+ {
+  "text": "pelanggan.sql",
+  "matches": []
+ },
+ {
+  "text": "utf8",
+  "matches": []
+ },
+ {
+  "text": "staging",
+  "matches": []
+ },
+ {
+  "text": "kredit.csv",
+  "matches": []
+ },
+ {
+  "text": "utf8",
+  "matches": []
+ },
+ {
+  "text": "Budi Santoso",
+  "matches": []
+ },
+ {
+  "text": "3201011508950001",
+  "matches": [
+   [
+    "NIK",
+    0,
+    16,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "3456-7890",
+  "matches": []
+ },
+ {
+  "text": "(\\d{16})",
+  "matches": []
+ },
+ {
+  "text": "\n",
+  "matches": []
+ },
+ {
+  "text": "the same customer in both files; FINANCIAL kept",
+  "matches": []
+ },
+ {
+  "text": "anonymize_file",
+  "matches": []
+ },
+ {
+  "text": "prod/kredit.csv",
+  "matches": []
+ },
+ {
+  "text": "staging/kredit.csv",
+  "matches": []
+ },
+ {
+  "text": "uji",
+  "matches": []
+ },
+ {
+  "text": "anonymize_file",
+  "matches": []
+ },
+ {
+  "text": "../luar.sql",
+  "matches": []
+ },
+ {
+  "text": "x.sql",
+  "matches": []
+ },
+ {
+  "text": "anonymize_file",
+  "matches": []
+ },
+ {
+  "text": "ekspor/pelanggan.xlsx",
+  "matches": []
+ },
+ {
+  "text": "x.xlsx",
+  "matches": []
+ },
+ {
+  "text": "kembaran",
+  "matches": []
+ },
+ {
+  "text": "prod",
+  "matches": []
+ },
+ {
+  "text": "kredit.csv",
+  "matches": []
+ },
+ {
+  "text": "-o",
+  "matches": []
+ },
+ {
+  "text": "cli.csv",
+  "matches": []
+ },
+ {
+  "text": "--secret",
+  "matches": []
+ },
+ {
+  "text": "uji",
+  "matches": []
+ },
+ {
+  "text": "--keep",
+  "matches": []
+ },
+ {
+  "text": "FINANCIAL",
+  "matches": []
+ },
+ {
+  "text": "utf8",
+  "matches": []
+ },
+ {
+  "text": "cli.csv",
+  "matches": []
+ },
+ {
+  "text": "utf8",
   "matches": []
  },
  {

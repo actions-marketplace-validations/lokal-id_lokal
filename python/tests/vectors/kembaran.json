@@ -1,0 +1,6338 @@
+[
+ {
+  "options": {
+   "secret": "vektor-1"
+  },
+  "results": [
+   {
+    "text": "2026-10-14T01:02:17.000Z INFO  checkout started user_email=rahmat.hutapea40@example.com hp=081218275350\n2026-10-14T01:02:17.000Z ERROR checkout failed order=INV-10231 nik=3201011503953074 hp=081218275350 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:04:43.000Z INFO  checkout started user_email=fransiska.permata68@example.com hp=085755264657\n2026-10-14T01:04:43.000Z ERROR checkout failed order=INV-10232 nik=3276015208032515 hp=085755264657 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:07:18.000Z INFO  checkout started user_email=dadang.susanto76@example.com hp=081304311162\n2026-10-14T01:07:18.000Z ERROR checkout failed order=INV-10233 nik=3171010201884185 hp=081304311162 err=\"InvalidAddress: kode_pos 16xxx not found\"\n2026-10-14T01:10:02.000Z INFO  checkout started user_email=bayu.firmansyah63@example.com hp=083870777953\n2026-10-14T01:10:02.000Z ERROR checkout failed order=INV-10234 nik=3578014501915663 hp=083870777953 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:12:55.000Z INFO  checkout started user_email=rahmat.hutapea40@example.com hp=081218275350\n2026-10-14T01:12:55.000Z ERROR checkout failed order=INV-10235 nik=3201011503953074 hp=081218275350 err=\"OtpExpired: OTP older than 300s\"\n2026-10-14T01:15:57.000Z INFO  checkout started user_email=fransiska.permata68@example.com hp=085755264657\n2026-10-14T01:15:57.000Z ERROR checkout failed order=INV-10236 nik=3276015208032515 hp=085755264657 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:19:08.000Z INFO  checkout started user_email=dadang.susanto76@example.com hp=081304311162\n2026-10-14T01:19:08.000Z ERROR checkout failed order=INV-10237 nik=3171010201884185 hp=081304311162 err=\"InvalidAddress: kecamatan missing\"\n2026-10-14T01:22:28.000Z INFO  checkout started user_email=bayu.firmansyah63@example.com hp=083870777953\n2026-10-14T01:22:28.000Z ERROR checkout failed order=INV-10238 nik=3578014501915663 hp=083870777953 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:25:57.000Z INFO  checkout started user_email=rahmat.hutapea40@example.com hp=081218275350\n2026-10-14T01:25:57.000Z ERROR checkout failed order=INV-10239 nik=3201011503953074 hp=081218275350 err=\"OtpExpired: OTP older than 300s\"\n2026-10-14T01:29:35.000Z INFO  checkout started user_email=fransiska.permata68@example.com hp=085755264657\n2026-10-14T01:29:35.000Z ERROR checkout failed order=INV-10240 nik=3276015208032515 hp=085755264657 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:33:22.000Z INFO  checkout started user_email=dadang.susanto76@example.com hp=081304311162\n2026-10-14T01:33:22.000Z ERROR checkout failed order=INV-10241 nik=3171010201884185 hp=081304311162 err=\"InvalidAddress: kode_pos 16xxx not found\"\n2026-10-14T01:37:18.000Z INFO  checkout started user_email=bayu.firmansyah63@example.com hp=083870777953\n2026-10-14T01:37:18.000Z ERROR checkout failed order=INV-10242 nik=3578014501915663 hp=083870777953 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n",
+    "replaced": {
+     "EMAIL": 12,
+     "PHONE": 24,
+     "NIK": 12
+    }
+   },
+   {
+    "text": "Chat WhatsApp dengan Fitri Andriani\n12/10/26 09.14 - Pesan dan panggilan terenkripsi secara end-to-end. Tidak seorang pun di luar chat ini, termasuk WhatsApp, yang dapat membaca atau mendengarkannya.\n12/10/26 09.14 - Fitri Andriani: kak pesanan saya 2610018GH6WX3S kok mug nya pecah ya 😭\n12/10/26 09.16 - Toko Kopi Senja: Mohon maaf kak Iis, boleh kirim foto mug dan paketnya?\n12/10/26 09.20 - Fitri Andriani: <Media tidak disertakan>\n12/10/26 09.21 - Fitri Andriani: saya mau refund aja kak, ke rek BCA 9484756734 a.n. Fitri Andriani\n12/10/26 09.25 - Toko Kopi Senja: Baik kak, refund Rp75.000 kami proses maksimal 3 hari kerja ya\n\nChat WhatsApp dengan Ana Hapsari Damayanti\n13/10/26 14.02 - Ana Hapsari Damayanti: selamat siang, paket saya ke merauke sudah seminggu belum sampai\n13/10/26 14.03 - Ana Hapsari Damayanti: no hp saya 0878.2131.4361 kalau kurir mau telpon\n13/10/26 14.10 - Toko Kopi Senja: Siang kak Dewi, kami cek ke J&T dulu ya\n13/10/26 16.45 - Toko Kopi Senja: Kak, paketnya tertahan di hub Jayapura, estimasi tiba 2 hari lagi\n13/10/26 16.50 - Ana Hapsari Damayanti: oke kak makasih, tolong dikabari lagi ya\n\nChat WhatsApp dengan +62 881-2723-2826\n14/10/26 08.30 - +62 881-2723-2826: halo kak ini susi, pesanan saya dibatalin sistem padahal udah transfer\n14/10/26 08.31 - +62 881-2723-2826: transfer dari rekening mandiri 1449236414544 atas nama citra novitasari ningsih\n14/10/26 08.40 - Toko Kopi Senja: Halo kak Susi, VA-nya kedaluwarsa sebelum pembayaran masuk. Dananya akan otomatis kembali ya\n14/10/26 08.42 - +62 881-2723-2826: oh gitu, oke kak\n\nChat WhatsApp dengan Dian Puspita\n15/10/26 19.05 - Dian Puspita: kak tolong pesanan saya dipercepat, isinya obat demam buat ibu saya yg lagi Demam\n15/10/26 19.06 - Dian Puspita: alamat kirim ganti ya ke Jl. Durian No. 49 RT 07/RW 08, Kel. Cinere, Depok\n15/10/26 19.20 - Toko Kopi Senja: Baik kak Rosa, alamat sudah kami ubah dan pesanan kami prioritaskan\n\nChat WhatsApp dengan Sigit Halim\n16/10/26 10.00 - Sigit Halim: min kopi arabika gayo 250gr ready lagi kapan?\n16/10/26 10.05 - Toko Kopi Senja: Siang kak Gede, restock minggu depan ya\n16/10/26 10.06 - Sigit Halim: sip, kabarin ya min\n",
+    "replaced": {
+     "NAME": 22,
+     "BANK_ACCOUNT": 2,
+     "PHONE": 5,
+     "HEALTH": 2,
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "No. Pesanan,Status Pesanan,No. Resi,Opsi Pengiriman,Waktu Pesanan Dibuat,Username (Pembeli),Nama Penerima,No. Telepon,Alamat Pengiriman,Kota/Kabupaten,Provinsi,Total Pembayaran,Catatan dari Pembeli\n2610014KQ7ZB2M,Perlu Dikirim,,SPX Standard,2026-10-01 08:12,sitirahayu88,Nina Halim,6281207884126,\"Jl. Cempaka No. 57, RT 03/RW 05, Kel. Depok, Kec. Pancoran Mas\",KOTA DEPOK,JAWA BARAT,Rp185.000,tolong a.n. Ibu Nina Halim ya kak\n2610015AB3XY9P,Dikirim,SPXID045123456789,SPX Standard,2026-10-01 09:40,budi_s,Fajar Halim,+62 857-5526-4657,\"Perum Seroja Blok C3 No. 8, Cibinong\",KAB. BOGOR,JAWA BARAT,Rp92.500,\n2610016CD4ZT1Q,Perlu Dikirim,,J&T Express,2026-10-02 10:05,mamah.yosef,Ana Hapsari Damayanti,0878.2131.4361,\"Jl. Harapan No. 20, Kel. Mandala, Distrik Merauke\",KAB. MERAUKE,PAPUA SELATAN,Rp310.000,kalau kurir nyasar hub suami saya Pak Wawan 0813-7316-4050\n2610017EF5UV2R,Perlu Dikirim,,JNE REG,2026-10-02 13:22,andiwj,Dedi Hakim,081240106474,\"Jl. Dahlia No. 6, Kota Sorong\",KOTA SORONG,PAPUA BARAT DAYA,Rp1.250.000,NIK saya 9671 0105 0887 3290 untuk klaim garansi\n2610018GH6WX3S,Selesai,JX4417730215,J&T Express,2026-10-03 07:55,dewi.lestari,Fitri Andriani,0896-4935-5398,\"Jl. Merdeka No. 173, Denpasar\",KOTA DENPASAR,BALI,Rp75.000,\n2610019IJ7YZ4T,Perlu Dikirim,,SiCepat REG,2026-10-03 16:30,rina_kartika,Citra Novitasari Ningsih,0881-2723-2826,\"Jl. Harapan No. 7, Penajam\",KAB. PENAJAM PASER UTARA,KALIMANTAN TIMUR,Rp640.000,\"rumah cat hijau sebelah masjid, titip ke satpam\"\n2610020KL8AB5U,Perlu Dikirim,,SPX Hemat,2026-10-04 11:11,yuliana.n,Dani Siregar,0821 0418 5461,\"Jl. Kutilang No. 9, Nabire\",KAB. NABIRE,PAPUA TENGAH,Rp230.000,\n2610021MN9CD6V,Perlu Dikirim,,JNE YES,2026-10-04 19:45,hendra88,Sigit Halim,(0751) 260722,\"Jl. Kenanga No. 60, Padang\",KOTA PADANG,SUMATERA BARAT,Rp415.000,bayar pake VA BCA 50702417760 sudah ya\n2610022OP1EF7W,Batal,,SPX Standard,2026-10-05 08:00,fitri_h,Rini Kusumawati,0852-5789-5898,\"Jl. Melati No. 1, Surabaya\",KOTA SURABAYA,JAWA TIMUR,Rp99.000,\n2610023QR2GH8X,Perlu Dikirim,,SiCepat BEST,2026-10-05 14:20,lukman.h,Hari Effendi,6281315952932,\"Jl. Pahlawan No. 9, Kel. Tapos\",KOTA DEPOK,JAWA BARAT,Rp150.000,\n2610024ST3IJ9Y,Perlu Dikirim,,J&T Express,2026-10-06 09:09,siti.aminah,Dian Puspita,0838-1669-4130,\"Jl. Anggrek No. 41, Kel. Cinere\",KOTA DEPOK,JAWA BARAT,Rp88.000,\"tolong jgn dibanting, isi obat demam buat ibu saya (alergi ringan)\"\n2610025UV4KL1Z,Dikirim,CGK7700123456789,JNE REG,2026-10-06 10:10,agus_p,Gilang Hidayat,0819-2485-3061,\"Jl. Dahlia 9, Sleman\",KAB. SLEMAN,DI YOGYAKARTA,Rp56.000,\n",
+    "replaced": {
+     "NAME": 14,
+     "PHONE": 13,
+     "ADDRESS": 12,
+     "NIK": 1,
+     "BANK_ACCOUNT": 1,
+     "HEALTH": 2
+    }
+   },
+   {
+    "text": "[2026-10-01 08:12:40] production.INFO: midtrans.charge {\"order_id\":\"2610014KQ7ZB2M\",\"gross_amount\":185000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"Rosa\",\"last_name\":\"Yohana\",\"email\":\"novi.kusumawati29@example.com\",\"phone\":\"+6281207884126\"}}\n[2026-10-01 08:14:02] production.INFO: midtrans.notification {\"order_id\":\"2610014KQ7ZB2M\",\"transaction_status\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"185000.00\",\"transaction_time\":\"2026-10-01 08:13:55\"}\n[2026-10-01 09:40:31] production.INFO: midtrans.charge {\"order_id\":\"2610015AB3XY9P\",\"gross_amount\":92500,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"Hadi\",\"last_name\":\"Wulan\",\"email\":\"yohana.oktaviani39@example.com\",\"phone\":\"+6285755264657\"}}\n[2026-10-01 09:41:10] production.INFO: midtrans.notification {\"order_id\":\"2610015AB3XY9P\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"92500.00\",\"transaction_time\":\"2026-10-01 09:41:02\"}\n[2026-10-02 10:05:12] production.INFO: midtrans.charge {\"order_id\":\"2610016CD4ZT1Q\",\"gross_amount\":310000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Hari Hidayat\",\"last_name\":\"Ivan\",\"email\":\"kevin.prasetyo93@example.com\",\"phone\":\"+6287821314361\"}}\n[2026-10-02 10:05:13] production.INFO: midtrans.va_created {\"order_id\":\"2610016CD4ZT1Q\",\"va_numbers\":[{\"bank\":\"bca\",\"va_number\":\"43338969280482\"}]}\n[2026-10-02 11:47:20] production.INFO: midtrans.notification {\"order_id\":\"2610016CD4ZT1Q\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"310000.00\",\"transaction_time\":\"2026-10-02 11:47:11\"}\n[2026-10-02 13:22:05] production.INFO: midtrans.charge {\"order_id\":\"2610017EF5UV2R\",\"gross_amount\":1250000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Nyoman\",\"last_name\":\"Joko\",\"email\":\"mega.hapsari31@example.com\",\"phone\":\"+6281240106474\"}}\n[2026-10-02 13:22:06] production.INFO: midtrans.notification {\"order_id\":\"2610017EF5UV2R\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"1250000.00\",\"transaction_time\":\"2026-10-02 13:22:06\"}\n[2026-10-02 13:25:41] production.ERROR: Gagal verifikasi KTP untuk klaim garansi {\"order_id\":\"2610017EF5UV2R\",\"nik\":\"9671010508873290\",\"nama\":\"Dedi Hakim\",\"alasan\":\"foto KTP buram\"}\n[2026-10-03 07:55:18] production.INFO: midtrans.charge {\"order_id\":\"2610018GH6WX3S\",\"gross_amount\":75000,\"payment_type\":\"shopeepay\",\"customer_details\":{\"first_name\":\"Iis\",\"last_name\":\"Gilang\",\"email\":\"yoga.hakim31@example.com\",\"phone\":\"+6289649355398\"}}\n[2026-10-03 07:56:02] production.INFO: midtrans.notification {\"order_id\":\"2610018GH6WX3S\",\"transaction_status\":\"settlement\",\"payment_type\":\"shopeepay\",\"gross_amount\":\"75000.00\",\"transaction_time\":\"2026-10-03 07:55:58\"}\n[2026-10-03 09:30:00] production.INFO: midtrans.notification {\"order_id\":\"2610017EF5UV2R\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"1250000.00\",\"transaction_time\":\"2026-10-03 09:29:47\"}\n[2026-10-03 16:30:44] production.INFO: midtrans.charge {\"order_id\":\"2610019IJ7YZ4T\",\"gross_amount\":640000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Butet Yuliani\",\"last_name\":\"Tari\",\"email\":\"farhan.halim75@example.com\",\"phone\":\"+6288127232826\"}}\n[2026-10-03 16:30:45] production.INFO: midtrans.notification {\"order_id\":\"2610019IJ7YZ4T\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"640000.00\",\"transaction_time\":\"2026-10-03 16:30:45\"}\n[2026-10-04 11:11:09] production.INFO: midtrans.charge {\"order_id\":\"2610020KL8AB5U\",\"gross_amount\":230000,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"Vina\",\"last_name\":\"Nurul\",\"email\":\"rahmat.sembiring98@example.com\",\"phone\":\"+6282104185461\"}}\n[2026-10-04 11:12:30] production.INFO: midtrans.notification {\"order_id\":\"2610020KL8AB5U\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"230000.00\",\"transaction_time\":\"2026-10-04 11:12:21\"}\n[2026-10-04 16:30:46] production.INFO: midtrans.notification {\"order_id\":\"2610019IJ7YZ4T\",\"transaction_status\":\"expire\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"640000.00\",\"transaction_time\":\"2026-10-04 16:30:46\"}\n[2026-10-04 19:45:51] production.INFO: midtrans.charge {\"order_id\":\"2610021MN9CD6V\",\"gross_amount\":415000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Gede\",\"last_name\":\"Rini\",\"email\":\"rina.permata98@example.com\",\"phone\":\"+62751260722\"}}\n[2026-10-04 20:02:13] production.INFO: midtrans.notification {\"order_id\":\"2610021MN9CD6V\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"415000.00\",\"transaction_time\":\"2026-10-04 20:02:04\"}\n[2026-10-05 08:00:22] production.INFO: midtrans.charge {\"order_id\":\"2610022OP1EF7W\",\"gross_amount\":99000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"Fransiska\",\"last_name\":\"Hana\",\"email\":\"tono.hermawan78@example.com\",\"phone\":\"+6285257895898\"}}\n[2026-10-05 08:20:00] production.INFO: midtrans.notification {\"order_id\":\"2610022OP1EF7W\",\"transaction_status\":\"cancel\",\"payment_type\":\"qris\",\"gross_amount\":\"99000.00\",\"transaction_time\":\"2026-10-05 08:19:58\"}\n[2026-10-05 14:20:37] production.INFO: midtrans.charge {\"order_id\":\"2610023QR2GH8X\",\"gross_amount\":150000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Asep\",\"last_name\":\"Putri\",\"email\":\"gilang.tambunan21@example.com\",\"phone\":\"+6281315952932\"}}\n[2026-10-05 14:20:38] production.INFO: midtrans.notification {\"order_id\":\"2610023QR2GH8X\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"150000.00\",\"transaction_time\":\"2026-10-05 14:20:38\"}\n[2026-10-06 09:09:15] production.INFO: midtrans.charge {\"order_id\":\"2610024ST3IJ9Y\",\"gross_amount\":88000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"Rosa\",\"last_name\":\"Grace\",\"email\":\"arif.gunawan80@example.com\",\"phone\":\"+6283816694130\"}}\n[2026-10-06 09:10:01] production.INFO: midtrans.notification {\"order_id\":\"2610024ST3IJ9Y\",\"transaction_status\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"88000.00\",\"transaction_time\":\"2026-10-06 09:09:52\"}\n[2026-10-06 10:10:28] production.INFO: midtrans.charge {\"order_id\":\"2610025UV4KL1Z\",\"gross_amount\":56000,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"Iwan\",\"last_name\":\"Sari\",\"email\":\"satria.setiawan26@example.com\",\"phone\":\"+6281924853061\"}}\n[2026-10-06 10:11:44] production.INFO: midtrans.notification {\"order_id\":\"2610025UV4KL1Z\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"56000.00\",\"transaction_time\":\"2026-10-06 10:11:35\"}\n[2026-10-06 12:00:03] production.WARNING: midtrans.notification order tidak dikenal {\"order_id\":\"TEST-0001\",\"transaction_status\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"1.00\"}\n",
+    "replaced": {
+     "NAME": 25,
+     "EMAIL": 12,
+     "PHONE": 12,
+     "BANK_ACCOUNT": 1,
+     "NIK": 1
+    }
+   },
+   {
+    "text": "id,nama,nik,no_hp,kota,total_belanja\n1,Fajar Halim,3201011503953074,0812-1827-5350,Bogor,1250000\n2,Dian Puspita,3276015208032515,+62 857 5526 4657,Depok,430000\n3,Dedi Hakim,3171010201884185,0813-0431-1162,Jakarta Pusat,89000\n4,Fajar Halim,3201011503953074,081218275350,Bogor,500000\n5,Fitri Andriani,3578014501915663,0838-7077-7953,Surabaya,2100000\n6,Dian Puspita,3276015208032515,6285755264657,Depok,75000\n",
+    "replaced": {
+     "NAME": 6,
+     "NIK": 6,
+     "PHONE": 6
+    }
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "Rabu",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "Sabtu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-01-01",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2026-01-16",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2026-02-16",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2026-02-17",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-18",
+    "replaced": {}
+   },
+   {
+    "text": "Rabu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-19",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-20",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-21",
+    "replaced": {}
+   },
+   {
+    "text": "Sabtu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-22",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-23",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-24",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2026-04-03",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2026-04-05",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-05-01",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2026-05-14",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2026-05-15",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2026-05-27",
+    "replaced": {}
+   },
+   {
+    "text": "Rabu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-05-28",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2026-05-31",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-06-01",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2026-06-16",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2026-08-17",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2026-08-25",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2026-12-24",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2026-12-25",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2027-01-01",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2027-01-05",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2027-02-05",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2027-02-06",
+    "replaced": {}
+   },
+   {
+    "text": "Sabtu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-08",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-09",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-10",
+    "replaced": {}
+   },
+   {
+    "text": "Rabu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-11",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-12",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-15",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-25",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-26",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-28",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-05-01",
+    "replaced": {}
+   },
+   {
+    "text": "Sabtu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-05-06",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2027-05-17",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2027-05-18",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2027-05-19",
+    "replaced": {}
+   },
+   {
+    "text": "Rabu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-05-20",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2027-06-01",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2027-06-06",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-08-15",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-08-17",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2027-12-24",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2027-12-25",
+    "replaced": {}
+   },
+   {
+    "text": "Sabtu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-12-26",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "setiap tanggal jatuh pada hari yang tertulis di pengumuman resmi",
+    "replaced": {}
+   },
+   {
+    "text": "jumlah sesuai SKB: 2026 = 17 libur + 8 cuti, 2027 = 18 libur + 8 cuti",
+    "replaced": {}
+   },
+   {
+    "text": "libur_nasional",
+    "replaced": {}
+   },
+   {
+    "text": "cuti_bersama",
+    "replaced": {}
+   },
+   {
+    "text": "libur_nasional",
+    "replaced": {}
+   },
+   {
+    "text": "cuti_bersama",
+    "replaced": {}
+   },
+   {
+    "text": "hari kerja, dengan dan tanpa cuti bersama",
+    "replaced": {}
+   },
+   {
+    "text": "2026-08-17",
+    "replaced": {}
+   },
+   {
+    "text": "2026-08-18",
+    "replaced": {}
+   },
+   {
+    "text": "2026-10-17",
+    "replaced": {}
+   },
+   {
+    "text": "2026-12-24",
+    "replaced": {}
+   },
+   {
+    "text": "2026-12-24",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-21",
+    "replaced": {}
+   },
+   {
+    "text": "Idulfitri 1447 H",
+    "replaced": {}
+   },
+   {
+    "text": "SLA hari kerja melewati libur Lebaran",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-17",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-25",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-25",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-17",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-16",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-27",
+    "replaced": {}
+   },
+   {
+    "text": "tahun tanpa data resmi gagal dengan jelas, bukan diam-diam",
+    "replaced": {}
+   },
+   {
+    "text": "2028-01-03",
+    "replaced": {}
+   },
+   {
+    "text": "tanggal yang tidak ada ditolak, bukan digeser ke bulan berikutnya",
+    "replaced": {}
+   },
+   {
+    "text": "2026-02-30",
+    "replaced": {}
+   },
+   {
+    "text": "2026-13-01",
+    "replaced": {}
+   },
+   {
+    "text": "17-08-2026",
+    "replaced": {}
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "../src/wilayah.ts",
+    "replaced": {}
+   },
+   {
+    "text": "2026-10-15",
+    "replaced": {}
+   },
+   {
+    "text": "NIK: laki-laki, wilayah dari data Kemendagri",
+    "replaced": {}
+   },
+   {
+    "text": "3201011503953074",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "L",
+    "replaced": {}
+   },
+   {
+    "text": "1995-08-15",
+    "replaced": {}
+   },
+   {
+    "text": "Jawa Barat",
+    "replaced": {}
+   },
+   {
+    "text": "Kabupaten Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "Cibinong",
+    "replaced": {}
+   },
+   {
+    "text": "0001",
+    "replaced": {}
+   },
+   {
+    "text": "NIK: perempuan (tanggal + 40), tahun 2000-an, spasi diabaikan",
+    "replaced": {}
+   },
+   {
+    "text": "3276 01 520803 2515",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "P",
+    "replaced": {}
+   },
+   {
+    "text": "2003-08-15",
+    "replaced": {}
+   },
+   {
+    "text": "NIK: struktur salah ditolak dengan alasan yang jelas",
+    "replaced": {}
+   },
+   {
+    "text": "12345",
+    "replaced": {}
+   },
+   {
+    "text": "format",
+    "replaced": {}
+   },
+   {
+    "text": "9901011508950001",
+    "replaced": {}
+   },
+   {
+    "text": "province",
+    "replaced": {}
+   },
+   {
+    "text": "3201011812953580",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "3201013102950001",
+    "replaced": {}
+   },
+   {
+    "text": "birth_date",
+    "replaced": {}
+   },
+   {
+    "text": "3201017508950001",
+    "replaced": {}
+   },
+   {
+    "text": "birth_date",
+    "replaced": {}
+   },
+   {
+    "text": "3201011508950000",
+    "replaced": {}
+   },
+   {
+    "text": "serial",
+    "replaced": {}
+   },
+   {
+    "text": "NIK: kode wilayah lama memberi peringatan, bukan error",
+    "replaced": {}
+   },
+   {
+    "text": "3201992011958778",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "wilayah_unknown",
+    "replaced": {}
+   },
+   {
+    "text": "NPWP: format 15 digit lama",
+    "replaced": {}
+   },
+   {
+    "text": "05.374.811.8-167.706",
+    "replaced": {
+     "NPWP": 1
+    }
+   },
+   {
+    "text": "npwp15",
+    "replaced": {}
+   },
+   {
+    "text": "0012345678901000",
+    "replaced": {}
+   },
+   {
+    "text": "05.374.811.8-167.706",
+    "replaced": {
+     "NPWP": 1
+    }
+   },
+   {
+    "text": "NPWP: 16 digit diawali 0 dan NIK sebagai NPWP",
+    "replaced": {}
+   },
+   {
+    "text": "0012345678901000",
+    "replaced": {}
+   },
+   {
+    "text": "npwp16",
+    "replaced": {}
+   },
+   {
+    "text": "3201011503953074",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "nik",
+    "replaced": {}
+   },
+   {
+    "text": "3201011508950000",
+    "replaced": {}
+   },
+   {
+    "text": "123",
+    "replaced": {}
+   },
+   {
+    "text": "HP: berbagai cara menulis, operator, dan format",
+    "replaced": {}
+   },
+   {
+    "text": "0812-1827-5350",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "+6281218275350",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "0812-1827-5350",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "6281218275350",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "Telkomsel",
+    "replaced": {}
+   },
+   {
+    "text": "+62 857 1211 9396",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "Indosat",
+    "replaced": {}
+   },
+   {
+    "text": "6289688626367",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "Tri",
+    "replaced": {}
+   },
+   {
+    "text": "6289688626367",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "Indosat Ooredoo Hutchison",
+    "replaced": {}
+   },
+   {
+    "text": "0881-2723-2826",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "XLSmart",
+    "replaced": {}
+   },
+   {
+    "text": "+62 (0) 812 3456 7890",
+    "replaced": {}
+   },
+   {
+    "text": "+6281218275350",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "Telepon rumah dan nomor tidak valid",
+    "replaced": {}
+   },
+   {
+    "text": "(021) 589-6692",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "landline",
+    "replaced": {}
+   },
+   {
+    "text": "Jakarta",
+    "replaced": {}
+   },
+   {
+    "text": "+62215896692",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "12345",
+    "replaced": {}
+   },
+   {
+    "text": "0812",
+    "replaced": {}
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "../src/kembaran.ts",
+    "replaced": {}
+   },
+   {
+    "text": "Budi Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "SITI AMINAH",
+    "replaced": {}
+   },
+   {
+    "text": "3201011503953074",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "3276015208032515",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "3456-7890",
+    "replaced": {}
+   },
+   {
+    "text": "3456 7890",
+    "replaced": {}
+   },
+   {
+    "text": "1111",
+    "replaced": {}
+   },
+   {
+    "text": "gmail.com",
+    "replaced": {}
+   },
+   {
+    "text": "yahoo",
+    "replaced": {}
+   },
+   {
+    "text": "Mawar",
+    "replaced": {}
+   },
+   {
+    "text": "Kenanga",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": "Kembaran: CSV pelanggan tanpa satu pun nilai asli, tetap konsisten dan valid",
+    "replaced": {}
+   },
+   {
+    "text": "uji",
+    "replaced": {}
+   },
+   {
+    "text": "the same person gets the same stand-in",
+    "replaced": {}
+   },
+   {
+    "text": "Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "the city stays",
+    "replaced": {}
+   },
+   {
+    "text": "casing follows the original",
+    "replaced": {}
+   },
+   {
+    "text": "320101",
+    "replaced": {}
+   },
+   {
+    "text": "L",
+    "replaced": {}
+   },
+   {
+    "text": "1995",
+    "replaced": {}
+   },
+   {
+    "text": "P",
+    "replaced": {}
+   },
+   {
+    "text": "-",
+    "replaced": {}
+   },
+   {
+    "text": "Telkomsel",
+    "replaced": {}
+   },
+   {
+    "text": "0812-… and 0812… are one person",
+    "replaced": {}
+   },
+   {
+    "text": "Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK",
+    "replaced": {}
+   },
+   {
+    "text": "uji",
+    "replaced": {}
+   },
+   {
+    "text": "Budi Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "3201011503953074",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "1234567890",
+    "replaced": {}
+   },
+   {
+    "text": "pelanggan_nik,npwp,gaji\n3201011503953074,3201011503953074,5516458",
+    "replaced": {
+     "NIK": 2,
+     "FINANCIAL": 1
+    }
+   },
+   {
+    "text": "(\\d{16})",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": ",",
+    "replaced": {}
+   },
+   {
+    "text": "the same NIK in another file",
+    "replaced": {}
+   },
+   {
+    "text": "an individual NPWP is their NIK",
+    "replaced": {}
+   },
+   {
+    "text": "Kembaran: kunci yang sama memberi hasil yang sama, kunci lain berbeda, tanpa kunci acak",
+    "replaced": {}
+   },
+   {
+    "text": "staging",
+    "replaced": {}
+   },
+   {
+    "text": "staging",
+    "replaced": {}
+   },
+   {
+    "text": "lain",
+    "replaced": {}
+   },
+   {
+    "text": "Kembaran: 5.000 NIK dari kecamatan, tahun, dan jenis kelamin yang sama tidak pernah bertabrakan",
+    "replaced": {}
+   },
+   {
+    "text": "tabrakan",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "NIK",
+    "replaced": {}
+   },
+   {
+    "text": "Kembaran: opsi keep, tanggal lahir utuh, dan teks bebas",
+    "replaced": {}
+   },
+   {
+    "text": "k",
+    "replaced": {}
+   },
+   {
+    "text": "NAME",
+    "replaced": {}
+   },
+   {
+    "text": "GENDER",
+    "replaced": {}
+   },
+   {
+    "text": "Budi Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "15-08-1995",
+    "replaced": {}
+   },
+   {
+    "text": "15 Agustus 2003",
+    "replaced": {}
+   },
+   {
+    "text": "3201011503953074",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "150895",
+    "replaced": {}
+   },
+   {
+    "text": "the NIK keeps the whole birth date too",
+    "replaced": {}
+   },
+   {
+    "text": "NAMA",
+    "replaced": {}
+   },
+   {
+    "text": "p",
+    "replaced": {}
+   },
+   {
+    "text": "Pasien: Dian Puspita, diagnosa: Batuk. Plat B 2052 GOD, login dari 198.51.100.146, kartu 4539 1463 8007 7001. Agama: Islam",
+    "replaced": {
+     "NAME": 1,
+     "HEALTH": 1,
+     "PLATE": 1,
+     "IP": 1,
+     "CARD": 1
+    }
+   },
+   {
+    "text": "Siti Aminah",
+    "replaced": {}
+   },
+   {
+    "text": "Diabetes",
+    "replaced": {}
+   },
+   {
+    "text": "1234 XYZ",
+    "replaced": {}
+   },
+   {
+    "text": "198.51.100.146",
+    "replaced": {
+     "IP": 1
+    }
+   },
+   {
+    "text": "4539 1463 8007 7001",
+    "replaced": {
+     "CARD": 1
+    }
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "453914",
+    "replaced": {}
+   },
+   {
+    "text": "the card keeps its issuer prefix",
+    "replaced": {}
+   },
+   {
+    "text": "and passes Luhn",
+    "replaced": {}
+   },
+   {
+    "text": "religion is kept by default",
+    "replaced": {}
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "26",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "COM.CONTOH.WWW",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "936000000000000001",
+    "replaced": {}
+   },
+   {
+    "text": "02",
+    "replaced": {}
+   },
+   {
+    "text": "000000000000001",
+    "replaced": {}
+   },
+   {
+    "text": "03",
+    "replaced": {}
+   },
+   {
+    "text": "UMI",
+    "replaced": {}
+   },
+   {
+    "text": "51",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "ID.CO.QRIS.WWW",
+    "replaced": {}
+   },
+   {
+    "text": "02",
+    "replaced": {}
+   },
+   {
+    "text": "ID1026000000001",
+    "replaced": {}
+   },
+   {
+    "text": "03",
+    "replaced": {}
+   },
+   {
+    "text": "UMI",
+    "replaced": {}
+   },
+   {
+    "text": "52",
+    "replaced": {}
+   },
+   {
+    "text": "5812",
+    "replaced": {}
+   },
+   {
+    "text": "53",
+    "replaced": {}
+   },
+   {
+    "text": "360",
+    "replaced": {}
+   },
+   {
+    "text": "58",
+    "replaced": {}
+   },
+   {
+    "text": "ID",
+    "replaced": {}
+   },
+   {
+    "text": "59",
+    "replaced": {}
+   },
+   {
+    "text": "KOPI CONTOH",
+    "replaced": {}
+   },
+   {
+    "text": "60",
+    "replaced": {}
+   },
+   {
+    "text": "BOGOR",
+    "replaced": {}
+   },
+   {
+    "text": "61",
+    "replaced": {}
+   },
+   {
+    "text": "16914",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "11",
+    "replaced": {}
+   },
+   {
+    "text": "62",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "INV-77",
+    "replaced": {}
+   },
+   {
+    "text": "07",
+    "replaced": {}
+   },
+   {
+    "text": "A01",
+    "replaced": {}
+   },
+   {
+    "text": "CRC-16/CCITT-FALSE",
+    "replaced": {}
+   },
+   {
+    "text": "123456789",
+    "replaced": {}
+   },
+   {
+    "text": "29B1",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "FFFF",
+    "replaced": {}
+   },
+   {
+    "text": "QRIS statis dibaca lengkap",
+    "replaced": {}
+   },
+   {
+    "text": "static",
+    "replaced": {}
+   },
+   {
+    "text": "KOPI CONTOH",
+    "replaced": {}
+   },
+   {
+    "text": "BOGOR",
+    "replaced": {}
+   },
+   {
+    "text": "16914",
+    "replaced": {}
+   },
+   {
+    "text": "ID1026000000001",
+    "replaced": {}
+   },
+   {
+    "text": "UMI",
+    "replaced": {}
+   },
+   {
+    "text": "Usaha Mikro",
+    "replaced": {}
+   },
+   {
+    "text": "5812",
+    "replaced": {}
+   },
+   {
+    "text": "26",
+    "replaced": {}
+   },
+   {
+    "text": "COM.CONTOH.WWW",
+    "replaced": {}
+   },
+   {
+    "text": "936000000000000001",
+    "replaced": {}
+   },
+   {
+    "text": "000000000000001",
+    "replaced": {}
+   },
+   {
+    "text": "UMI",
+    "replaced": {}
+   },
+   {
+    "text": "51",
+    "replaced": {}
+   },
+   {
+    "text": "ID.CO.QRIS.WWW",
+    "replaced": {}
+   },
+   {
+    "text": "ID1026000000001",
+    "replaced": {}
+   },
+   {
+    "text": "UMI",
+    "replaced": {}
+   },
+   {
+    "text": "INV-77",
+    "replaced": {}
+   },
+   {
+    "text": "A01",
+    "replaced": {}
+   },
+   {
+    "text": "QRIS statis menjadi dinamis dengan nominal, field lain tetap",
+    "replaced": {}
+   },
+   {
+    "text": "dynamic",
+    "replaced": {}
+   },
+   {
+    "text": "25000",
+    "replaced": {}
+   },
+   {
+    "text": "ID1026000000001",
+    "replaced": {}
+   },
+   {
+    "text": "5303360540525000",
+    "replaced": {}
+   },
+   {
+    "text": "5802ID",
+    "replaced": {}
+   },
+   {
+    "text": "the amount sits between currency and country",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "54",
+    "replaced": {}
+   },
+   {
+    "text": "63",
+    "replaced": {}
+   },
+   {
+    "text": "1500.50",
+    "replaced": {}
+   },
+   {
+    "text": "1500.50",
+    "replaced": {}
+   },
+   {
+    "text": "100000",
+    "replaced": {}
+   },
+   {
+    "text": "fixed",
+    "replaced": {}
+   },
+   {
+    "text": "2500",
+    "replaced": {}
+   },
+   {
+    "text": "percent",
+    "replaced": {}
+   },
+   {
+    "text": "0.70",
+    "replaced": {}
+   },
+   {
+    "text": "12,000",
+    "replaced": {}
+   },
+   {
+    "text": "1e5",
+    "replaced": {}
+   },
+   {
+    "text": "12345678901234",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "QRIS rusak dan yang bukan QRIS dikenali",
+    "replaced": {}
+   },
+   {
+    "text": "0000",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "payload_format",
+    "replaced": {}
+   },
+   {
+    "text": "https://example.com",
+    "replaced": {}
+   },
+   {
+    "text": "format",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "11",
+    "replaced": {}
+   },
+   {
+    "text": "5303360",
+    "replaced": {}
+   },
+   {
+    "text": "5303840",
+    "replaced": {}
+   },
+   {
+    "text": "currency",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "59",
+    "replaced": {}
+   },
+   {
+    "text": "KOPI CONTOH",
+    "replaced": {}
+   },
+   {
+    "text": "59",
+    "replaced": {}
+   },
+   {
+    "text": "WARUNG KOPI CONTOH SEJAHTERA",
+    "replaced": {}
+   },
+   {
+    "text": "merchant_name",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "12",
+    "replaced": {}
+   },
+   {
+    "text": "not_qris",
+    "replaced": {}
+   },
+   {
+    "text": "dynamic_without_amount",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "55",
+    "replaced": {}
+   },
+   {
+    "text": "02",
+    "replaced": {}
+   },
+   {
+    "text": "tip",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "53",
+    "replaced": {}
+   },
+   {
+    "text": "360",
+    "replaced": {}
+   },
+   {
+    "text": "duplicate",
+    "replaced": {}
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "formatRupiah mengikuti PUEBI",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1.500.000",
+    "replaced": {}
+   },
+   {
+    "text": "Rp0",
+    "replaced": {}
+   },
+   {
+    "text": "-Rp25.000",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1.500.000,50",
+    "replaced": {}
+   },
+   {
+    "text": "999",
+    "replaced": {}
+   },
+   {
+    "text": "formatRupiahShort",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1,5 jt",
+    "replaced": {}
+   },
+   {
+    "text": "Rp2,3 M",
+    "replaced": {}
+   },
+   {
+    "text": "Rp15 rb",
+    "replaced": {}
+   },
+   {
+    "text": "Rp750",
+    "replaced": {}
+   },
+   {
+    "text": "Rp 25.000",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1.500.000,00",
+    "replaced": {}
+   },
+   {
+    "text": "1,500,000",
+    "replaced": {}
+   },
+   {
+    "text": "1,5jt",
+    "replaced": {}
+   },
+   {
+    "text": "1.5 juta",
+    "replaced": {}
+   },
+   {
+    "text": "50k",
+    "replaced": {}
+   },
+   {
+    "text": "50rb",
+    "replaced": {}
+   },
+   {
+    "text": "15ribu",
+    "replaced": {}
+   },
+   {
+    "text": "1jt 500rb",
+    "replaced": {}
+   },
+   {
+    "text": "2jtan",
+    "replaced": {}
+   },
+   {
+    "text": "50rb-an",
+    "replaced": {}
+   },
+   {
+    "text": "sekitar 1 juta",
+    "replaced": {}
+   },
+   {
+    "text": "2 juta lebih",
+    "replaced": {}
+   },
+   {
+    "text": "goceng",
+    "replaced": {}
+   },
+   {
+    "text": "goceng aja kak",
+    "replaced": {}
+   },
+   {
+    "text": "2 ceban",
+    "replaced": {}
+   },
+   {
+    "text": "cepek ceng",
+    "replaced": {}
+   },
+   {
+    "text": "gopek",
+    "replaced": {}
+   },
+   {
+    "text": "sejuta setengah",
+    "replaced": {}
+   },
+   {
+    "text": "setengah juta",
+    "replaced": {}
+   },
+   {
+    "text": "dua setengah juta",
+    "replaced": {}
+   },
+   {
+    "text": "satu setengah juta",
+    "replaced": {}
+   },
+   {
+    "text": "dua ratus lima puluh ribu",
+    "replaced": {}
+   },
+   {
+    "text": "seratus dua belas",
+    "replaced": {}
+   },
+   {
+    "text": "seribu lima ratus",
+    "replaced": {}
+   },
+   {
+    "text": "dua puluh lima juta tiga ratus ribu",
+    "replaced": {}
+   },
+   {
+    "text": "1,2 M",
+    "replaced": {}
+   },
+   {
+    "text": "parseRupiah menolak teks yang bukan nominal",
+    "replaced": {}
+   },
+   {
+    "text": "pisang goreng",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "jutaan",
+    "replaced": {}
+   },
+   {
+    "text": "terbilang",
+    "replaced": {}
+   },
+   {
+    "text": "nol",
+    "replaced": {}
+   },
+   {
+    "text": "sebelas",
+    "replaced": {}
+   },
+   {
+    "text": "lima belas",
+    "replaced": {}
+   },
+   {
+    "text": "dua puluh satu",
+    "replaced": {}
+   },
+   {
+    "text": "seratus",
+    "replaced": {}
+   },
+   {
+    "text": "seratus sepuluh",
+    "replaced": {}
+   },
+   {
+    "text": "seribu",
+    "replaced": {}
+   },
+   {
+    "text": "seribu satu",
+    "replaced": {}
+   },
+   {
+    "text": "sebelas ribu",
+    "replaced": {}
+   },
+   {
+    "text": "seratus ribu",
+    "replaced": {}
+   },
+   {
+    "text": "satu juta",
+    "replaced": {}
+   },
+   {
+    "text": "satu juta lima ratus ribu",
+    "replaced": {}
+   },
+   {
+    "text": "dua miliar",
+    "replaced": {}
+   },
+   {
+    "text": "minus lima",
+    "replaced": {}
+   },
+   {
+    "text": "dua koma lima",
+    "replaced": {}
+   },
+   {
+    "text": "satu kuintiliun",
+    "replaced": {}
+   },
+   {
+    "text": "terbilang untuk kuitansi",
+    "replaced": {}
+   },
+   {
+    "text": "satu juta lima ratus ribu rupiah",
+    "replaced": {}
+   },
+   {
+    "text": "title",
+    "replaced": {}
+   },
+   {
+    "text": "Satu Juta Lima Ratus Ribu Rupiah",
+    "replaced": {}
+   },
+   {
+    "text": "sentence",
+    "replaced": {}
+   },
+   {
+    "text": "Dua puluh lima ribu",
+    "replaced": {}
+   },
+   {
+    "text": "pembulatan yang melewati satuan dan angka sangat besar",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1 jt",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1 rb",
+    "replaced": {}
+   },
+   {
+    "text": "Rp950 rb",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1.000.000.000.000.000.000.000",
+    "replaced": {}
+   },
+   {
+    "text": "Rp0,13",
+    "replaced": {}
+   },
+   {
+    "text": "Rp3",
+    "replaced": {}
+   },
+   {
+    "text": "parseRupiah tidak tertipu nama properti bawaan objek",
+    "replaced": {}
+   },
+   {
+    "text": "constructor",
+    "replaced": {}
+   },
+   {
+    "text": "2 toString",
+    "replaced": {}
+   },
+   {
+    "text": "terbilang angka desimal sangat kecil",
+    "replaced": {}
+   },
+   {
+    "text": "nol koma nol nol nol nol nol nol satu",
+    "replaced": {}
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "Halo kak, saya mau komplain. Nama: Fajar Halim",
+    "replaced": {
+     "NAME": 1
+    }
+   },
+   {
+    "text": "NIK 3201011503953074, NPWP 05.374.811.8-167.706",
+    "replaced": {
+     "NIK": 1,
+     "NPWP": 1
+    }
+   },
+   {
+    "text": "HP 0812-1827-5350 atau email rahmat.hutapea40@example.com",
+    "replaced": {
+     "PHONE": 1,
+     "EMAIL": 1
+    }
+   },
+   {
+    "text": "Refund ke rek BCA 9484756734 a.n. Fajar Halim ya",
+    "replaced": {
+     "BANK_ACCOUNT": 1,
+     "NAME": 1
+    }
+   },
+   {
+    "text": "Alamat Jl. Harapan No. 6 RT 04/RW 06, motor B 2052 GOD",
+    "replaced": {
+     "ADDRESS": 1,
+     "PLATE": 1
+    }
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": "mendeteksi semua jenis PII khas Indonesia dalam satu chat",
+    "replaced": {}
+   },
+   {
+    "text": "NAME:Fajar Halim",
+    "replaced": {
+     "NAME": 1
+    }
+   },
+   {
+    "text": "NIK:3201011503953074",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "NPWP:05.374.811.8-167.706",
+    "replaced": {
+     "NPWP": 1
+    }
+   },
+   {
+    "text": "PHONE:0812-1827-5350",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "EMAIL:rahmat.hutapea40@example.com",
+    "replaced": {
+     "EMAIL": 1
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "secret": "vektor-2",
+   "keepBirthDate": true
+  },
+  "results": [
+   {
+    "text": "2026-10-14T01:02:17.000Z INFO  checkout started user_email=fransiska.kartini77@example.com hp=081270023934\n2026-10-14T01:02:17.000Z ERROR checkout failed order=INV-10231 nik=3201011508955680 hp=081270023934 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:04:43.000Z INFO  checkout started user_email=tari.sinaga80@example.com hp=085725215070\n2026-10-14T01:04:43.000Z ERROR checkout failed order=INV-10232 nik=3276015508038540 hp=085725215070 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:07:18.000Z INFO  checkout started user_email=nina.novitasari35@example.com hp=081336833038\n2026-10-14T01:07:18.000Z ERROR checkout failed order=INV-10233 nik=3171012003884991 hp=081336833038 err=\"InvalidAddress: kode_pos 16xxx not found\"\n2026-10-14T01:10:02.000Z INFO  checkout started user_email=mega.wijaya45@example.com hp=083837779176\n2026-10-14T01:10:02.000Z ERROR checkout failed order=INV-10234 nik=3578014607915503 hp=083837779176 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:12:55.000Z INFO  checkout started user_email=fransiska.kartini77@example.com hp=081270023934\n2026-10-14T01:12:55.000Z ERROR checkout failed order=INV-10235 nik=3201011508955680 hp=081270023934 err=\"OtpExpired: OTP older than 300s\"\n2026-10-14T01:15:57.000Z INFO  checkout started user_email=tari.sinaga80@example.com hp=085725215070\n2026-10-14T01:15:57.000Z ERROR checkout failed order=INV-10236 nik=3276015508038540 hp=085725215070 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:19:08.000Z INFO  checkout started user_email=nina.novitasari35@example.com hp=081336833038\n2026-10-14T01:19:08.000Z ERROR checkout failed order=INV-10237 nik=3171012003884991 hp=081336833038 err=\"InvalidAddress: kecamatan missing\"\n2026-10-14T01:22:28.000Z INFO  checkout started user_email=mega.wijaya45@example.com hp=083837779176\n2026-10-14T01:22:28.000Z ERROR checkout failed order=INV-10238 nik=3578014607915503 hp=083837779176 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:25:57.000Z INFO  checkout started user_email=fransiska.kartini77@example.com hp=081270023934\n2026-10-14T01:25:57.000Z ERROR checkout failed order=INV-10239 nik=3201011508955680 hp=081270023934 err=\"OtpExpired: OTP older than 300s\"\n2026-10-14T01:29:35.000Z INFO  checkout started user_email=tari.sinaga80@example.com hp=085725215070\n2026-10-14T01:29:35.000Z ERROR checkout failed order=INV-10240 nik=3276015508038540 hp=085725215070 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:33:22.000Z INFO  checkout started user_email=nina.novitasari35@example.com hp=081336833038\n2026-10-14T01:33:22.000Z ERROR checkout failed order=INV-10241 nik=3171012003884991 hp=081336833038 err=\"InvalidAddress: kode_pos 16xxx not found\"\n2026-10-14T01:37:18.000Z INFO  checkout started user_email=mega.wijaya45@example.com hp=083837779176\n2026-10-14T01:37:18.000Z ERROR checkout failed order=INV-10242 nik=3578014607915503 hp=083837779176 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n",
+    "replaced": {
+     "EMAIL": 12,
+     "PHONE": 24,
+     "NIK": 12
+    }
+   },
+   {
+    "text": "Chat WhatsApp dengan Nina Hapsari\n12/10/26 09.14 - Pesan dan panggilan terenkripsi secara end-to-end. Tidak seorang pun di luar chat ini, termasuk WhatsApp, yang dapat membaca atau mendengarkannya.\n12/10/26 09.14 - Nina Hapsari: kak pesanan saya 2610018GH6WX3S kok mug nya pecah ya 😭\n12/10/26 09.16 - Toko Kopi Senja: Mohon maaf kak Nur, boleh kirim foto mug dan paketnya?\n12/10/26 09.20 - Nina Hapsari: <Media tidak disertakan>\n12/10/26 09.21 - Nina Hapsari: saya mau refund aja kak, ke rek BCA 6536168079 a.n. Nina Hapsari\n12/10/26 09.25 - Toko Kopi Senja: Baik kak, refund Rp75.000 kami proses maksimal 3 hari kerja ya\n\nChat WhatsApp dengan Rahmat Simanjuntak Hakim\n13/10/26 14.02 - Rahmat Simanjuntak Hakim: selamat siang, paket saya ke merauke sudah seminggu belum sampai\n13/10/26 14.03 - Rahmat Simanjuntak Hakim: no hp saya 0878.6447.6621 kalau kurir mau telpon\n13/10/26 14.10 - Toko Kopi Senja: Siang kak Zainal, kami cek ke J&T dulu ya\n13/10/26 16.45 - Toko Kopi Senja: Kak, paketnya tertahan di hub Jayapura, estimasi tiba 2 hari lagi\n13/10/26 16.50 - Rahmat Simanjuntak Hakim: oke kak makasih, tolong dikabari lagi ya\n\nChat WhatsApp dengan +62 881-9330-5427\n14/10/26 08.30 - +62 881-9330-5427: halo kak ini fitri, pesanan saya dibatalin sistem padahal udah transfer\n14/10/26 08.31 - +62 881-9330-5427: transfer dari rekening mandiri 6506804947927 atas nama ani nasution hapsari\n14/10/26 08.40 - Toko Kopi Senja: Halo kak Fitri, VA-nya kedaluwarsa sebelum pembayaran masuk. Dananya akan otomatis kembali ya\n14/10/26 08.42 - +62 881-9330-5427: oh gitu, oke kak\n\nChat WhatsApp dengan Santi Lestari\n15/10/26 19.05 - Santi Lestari: kak tolong pesanan saya dipercepat, isinya obat sehat buat ibu saya yg lagi Maag\n15/10/26 19.06 - Santi Lestari: alamat kirim ganti ya ke Jl. Cendrawasih No. 66 RT 08/RW 05, Kel. Cinere, Depok\n15/10/26 19.20 - Toko Kopi Senja: Baik kak Wulan, alamat sudah kami ubah dan pesanan kami prioritaskan\n\nChat WhatsApp dengan Benny Gunawan\n16/10/26 10.00 - Benny Gunawan: min kopi arabika gayo 250gr ready lagi kapan?\n16/10/26 10.05 - Toko Kopi Senja: Siang kak Satria, restock minggu depan ya\n16/10/26 10.06 - Benny Gunawan: sip, kabarin ya min\n",
+    "replaced": {
+     "NAME": 22,
+     "BANK_ACCOUNT": 2,
+     "PHONE": 5,
+     "HEALTH": 2,
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "No. Pesanan,Status Pesanan,No. Resi,Opsi Pengiriman,Waktu Pesanan Dibuat,Username (Pembeli),Nama Penerima,No. Telepon,Alamat Pengiriman,Kota/Kabupaten,Provinsi,Total Pembayaran,Catatan dari Pembeli\n2610014KQ7ZB2M,Perlu Dikirim,,SPX Standard,2026-10-01 08:12,sitirahayu88,Ratna Puspita,6281202990126,\"Jl. Damai No. 51, RT 03/RW 05, Kel. Depok, Kec. Pancoran Mas\",KOTA DEPOK,JAWA BARAT,Rp185.000,tolong a.n. Ibu Ratna Puspita ya kak\n2610015AB3XY9P,Dikirim,SPXID045123456789,SPX Standard,2026-10-01 09:40,budi_s,Arif Matondang,+62 857-2521-5070,\"Perum Cemara Blok C4 No. 1, Cibinong\",KAB. BOGOR,JAWA BARAT,Rp92.500,\n2610016CD4ZT1Q,Perlu Dikirim,,J&T Express,2026-10-02 10:05,mamah.yosef,Rahmat Simanjuntak Hakim,0878.6447.6621,\"Jl. Akasia No. 83, Kel. Mandala, Distrik Merauke\",KAB. MERAUKE,PAPUA SELATAN,Rp310.000,kalau kurir nyasar hub suami saya Pak Arif 0813-1403-7300\n2610017EF5UV2R,Perlu Dikirim,,JNE REG,2026-10-02 13:22,andiwj,Farhan Siregar,081257316544,\"Jl. Cendrawasih No. 1, Kota Sorong\",KOTA SORONG,PAPUA BARAT DAYA,Rp1.250.000,NIK saya 9671 0125 1187 5481 untuk klaim garansi\n2610018GH6WX3S,Selesai,JX4417730215,J&T Express,2026-10-03 07:55,dewi.lestari,Nina Hapsari,0896-0568-0842,\"Jl. Flamboyan No. 885, Denpasar\",KOTA DENPASAR,BALI,Rp75.000,\n2610019IJ7YZ4T,Perlu Dikirim,,SiCepat REG,2026-10-03 16:30,rina_kartika,Ani Nasution Hapsari,0881-9330-5427,\"Jl. Cendrawasih No. 2, Penajam\",KAB. PENAJAM PASER UTARA,KALIMANTAN TIMUR,Rp640.000,\"rumah cat hijau sebelah masjid, titip ke satpam\"\n2610020KL8AB5U,Perlu Dikirim,,SPX Hemat,2026-10-04 11:11,yuliana.n,Tari Pertiwi,0821 1954 1195,\"Jl. Cempaka No. 3, Nabire\",KAB. NABIRE,PAPUA TENGAH,Rp230.000,\n2610021MN9CD6V,Perlu Dikirim,,JNE YES,2026-10-04 19:45,hendra88,Benny Gunawan,(0751) 899182,\"Jl. Rambutan No. 15, Padang\",KOTA PADANG,SUMATERA BARAT,Rp415.000,bayar pake VA BCA 03587861887 sudah ya\n2610022OP1EF7W,Batal,,SPX Standard,2026-10-05 08:00,fitri_h,Nurul Damayanti,0852-7340-5528,\"Jl. Kenanga No. 1, Surabaya\",KOTA SURABAYA,JAWA TIMUR,Rp99.000,\n2610023QR2GH8X,Perlu Dikirim,,SiCepat BEST,2026-10-05 14:20,lukman.h,Bayu Harahap,6281391103418,\"Jl. Damai No. 4, Kel. Tapos\",KOTA DEPOK,JAWA BARAT,Rp150.000,\n2610024ST3IJ9Y,Perlu Dikirim,,J&T Express,2026-10-06 09:09,siti.aminah,Santi Lestari,0838-9501-7154,\"Jl. Akasia No. 22, Kel. Cinere\",KOTA DEPOK,JAWA BARAT,Rp88.000,\"tolong jgn dibanting, isi obat sehat buat ibu saya (demam)\"\n2610025UV4KL1Z,Dikirim,CGK7700123456789,JNE REG,2026-10-06 10:10,agus_p,Hadi Wibowo,0819-1073-9490,\"Jl. Durian 4, Sleman\",KAB. SLEMAN,DI YOGYAKARTA,Rp56.000,\n",
+    "replaced": {
+     "NAME": 14,
+     "PHONE": 13,
+     "ADDRESS": 12,
+     "NIK": 1,
+     "BANK_ACCOUNT": 1,
+     "HEALTH": 2
+    }
+   },
+   {
+    "text": "[2026-10-01 08:12:40] production.INFO: midtrans.charge {\"order_id\":\"2610014KQ7ZB2M\",\"gross_amount\":185000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"Wulan\",\"last_name\":\"Yanti\",\"email\":\"bayu.daulay52@example.com\",\"phone\":\"+6281202990126\"}}\n[2026-10-01 08:14:02] production.INFO: midtrans.notification {\"order_id\":\"2610014KQ7ZB2M\",\"transaction_status\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"185000.00\",\"transaction_time\":\"2026-10-01 08:13:55\"}\n[2026-10-01 09:40:31] production.INFO: midtrans.charge {\"order_id\":\"2610015AB3XY9P\",\"gross_amount\":92500,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"Dimas\",\"last_name\":\"Ratna\",\"email\":\"maya.lubis81@example.com\",\"phone\":\"+6285725215070\"}}\n[2026-10-01 09:41:10] production.INFO: midtrans.notification {\"order_id\":\"2610015AB3XY9P\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"92500.00\",\"transaction_time\":\"2026-10-01 09:41:02\"}\n[2026-10-02 10:05:12] production.INFO: midtrans.charge {\"order_id\":\"2610016CD4ZT1Q\",\"gross_amount\":310000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Novi Anggraini\",\"last_name\":\"Indah\",\"email\":\"hadi.hutapea14@example.com\",\"phone\":\"+6287864476621\"}}\n[2026-10-02 10:05:13] production.INFO: midtrans.va_created {\"order_id\":\"2610016CD4ZT1Q\",\"va_numbers\":[{\"bank\":\"bca\",\"va_number\":\"82879487295453\"}]}\n[2026-10-02 11:47:20] production.INFO: midtrans.notification {\"order_id\":\"2610016CD4ZT1Q\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"310000.00\",\"transaction_time\":\"2026-10-02 11:47:11\"}\n[2026-10-02 13:22:05] production.INFO: midtrans.charge {\"order_id\":\"2610017EF5UV2R\",\"gross_amount\":1250000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Sigit\",\"last_name\":\"Indah\",\"email\":\"tari.astuti64@example.com\",\"phone\":\"+6281257316544\"}}\n[2026-10-02 13:22:06] production.INFO: midtrans.notification {\"order_id\":\"2610017EF5UV2R\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"1250000.00\",\"transaction_time\":\"2026-10-02 13:22:06\"}\n[2026-10-02 13:25:41] production.ERROR: Gagal verifikasi KTP untuk klaim garansi {\"order_id\":\"2610017EF5UV2R\",\"nik\":\"9671012511875481\",\"nama\":\"Farhan Siregar\",\"alasan\":\"foto KTP buram\"}\n[2026-10-03 07:55:18] production.INFO: midtrans.charge {\"order_id\":\"2610018GH6WX3S\",\"gross_amount\":75000,\"payment_type\":\"shopeepay\",\"customer_details\":{\"first_name\":\"Nur\",\"last_name\":\"Erna\",\"email\":\"novi.astuti76@example.com\",\"phone\":\"+6289605680842\"}}\n[2026-10-03 07:56:02] production.INFO: midtrans.notification {\"order_id\":\"2610018GH6WX3S\",\"transaction_status\":\"settlement\",\"payment_type\":\"shopeepay\",\"gross_amount\":\"75000.00\",\"transaction_time\":\"2026-10-03 07:55:58\"}\n[2026-10-03 09:30:00] production.INFO: midtrans.notification {\"order_id\":\"2610017EF5UV2R\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"1250000.00\",\"transaction_time\":\"2026-10-03 09:29:47\"}\n[2026-10-03 16:30:44] production.INFO: midtrans.charge {\"order_id\":\"2610019IJ7YZ4T\",\"gross_amount\":640000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Desi Astuti\",\"last_name\":\"Dewi\",\"email\":\"ayu.sinaga20@example.com\",\"phone\":\"+6288193305427\"}}\n[2026-10-03 16:30:45] production.INFO: midtrans.notification {\"order_id\":\"2610019IJ7YZ4T\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"640000.00\",\"transaction_time\":\"2026-10-03 16:30:45\"}\n[2026-10-04 11:11:09] production.INFO: midtrans.charge {\"order_id\":\"2610020KL8AB5U\",\"gross_amount\":230000,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"Fajar\",\"last_name\":\"Michael\",\"email\":\"rudi.setiawan70@example.com\",\"phone\":\"+6282119541195\"}}\n[2026-10-04 11:12:30] production.INFO: midtrans.notification {\"order_id\":\"2610020KL8AB5U\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"230000.00\",\"transaction_time\":\"2026-10-04 11:12:21\"}\n[2026-10-04 16:30:46] production.INFO: midtrans.notification {\"order_id\":\"2610019IJ7YZ4T\",\"transaction_status\":\"expire\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"640000.00\",\"transaction_time\":\"2026-10-04 16:30:46\"}\n[2026-10-04 19:45:51] production.INFO: midtrans.charge {\"order_id\":\"2610021MN9CD6V\",\"gross_amount\":415000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Satria\",\"last_name\":\"Taufik\",\"email\":\"rahma.andriani92@example.com\",\"phone\":\"+62751899182\"}}\n[2026-10-04 20:02:13] production.INFO: midtrans.notification {\"order_id\":\"2610021MN9CD6V\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"415000.00\",\"transaction_time\":\"2026-10-04 20:02:04\"}\n[2026-10-05 08:00:22] production.INFO: midtrans.charge {\"order_id\":\"2610022OP1EF7W\",\"gross_amount\":99000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"Widya\",\"last_name\":\"Rahma\",\"email\":\"budi.sinaga34@example.com\",\"phone\":\"+6285273405528\"}}\n[2026-10-05 08:20:00] production.INFO: midtrans.notification {\"order_id\":\"2610022OP1EF7W\",\"transaction_status\":\"cancel\",\"payment_type\":\"qris\",\"gross_amount\":\"99000.00\",\"transaction_time\":\"2026-10-05 08:19:58\"}\n[2026-10-05 14:20:37] production.INFO: midtrans.charge {\"order_id\":\"2610023QR2GH8X\",\"gross_amount\":150000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Komang\",\"last_name\":\"Rosa\",\"email\":\"ivan.sinaga23@example.com\",\"phone\":\"+6281391103418\"}}\n[2026-10-05 14:20:38] production.INFO: midtrans.notification {\"order_id\":\"2610023QR2GH8X\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"150000.00\",\"transaction_time\":\"2026-10-05 14:20:38\"}\n[2026-10-06 09:09:15] production.INFO: midtrans.charge {\"order_id\":\"2610024ST3IJ9Y\",\"gross_amount\":88000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"Wulan\",\"last_name\":\"Dian\",\"email\":\"taufik.lubis81@example.com\",\"phone\":\"+6283895017154\"}}\n[2026-10-06 09:10:01] production.INFO: midtrans.notification {\"order_id\":\"2610024ST3IJ9Y\",\"transaction_status\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"88000.00\",\"transaction_time\":\"2026-10-06 09:09:52\"}\n[2026-10-06 10:10:28] production.INFO: midtrans.charge {\"order_id\":\"2610025UV4KL1Z\",\"gross_amount\":56000,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"Rizki\",\"last_name\":\"Galih\",\"email\":\"hari.hidayat90@example.com\",\"phone\":\"+6281910739490\"}}\n[2026-10-06 10:11:44] production.INFO: midtrans.notification {\"order_id\":\"2610025UV4KL1Z\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"56000.00\",\"transaction_time\":\"2026-10-06 10:11:35\"}\n[2026-10-06 12:00:03] production.WARNING: midtrans.notification order tidak dikenal {\"order_id\":\"TEST-0001\",\"transaction_status\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"1.00\"}\n",
+    "replaced": {
+     "NAME": 25,
+     "EMAIL": 12,
+     "PHONE": 12,
+     "BANK_ACCOUNT": 1,
+     "NIK": 1
+    }
+   },
+   {
+    "text": "id,nama,nik,no_hp,kota,total_belanja\n1,Arif Matondang,3201011508955680,0812-7002-3934,Bogor,1250000\n2,Santi Lestari,3276015508038540,+62 857 2521 5070,Depok,430000\n3,Farhan Siregar,3171012003884991,0813-3683-3038,Jakarta Pusat,89000\n4,Arif Matondang,3201011508955680,081270023934,Bogor,500000\n5,Nina Hapsari,3578014607915503,0838-3777-9176,Surabaya,2100000\n6,Santi Lestari,3276015508038540,6285725215070,Depok,75000\n",
+    "replaced": {
+     "NAME": 6,
+     "NIK": 6,
+     "PHONE": 6
+    }
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "Rabu",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "Sabtu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-01-01",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2026-01-16",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2026-02-16",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2026-02-17",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-18",
+    "replaced": {}
+   },
+   {
+    "text": "Rabu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-19",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-20",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-21",
+    "replaced": {}
+   },
+   {
+    "text": "Sabtu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-22",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-23",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-24",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2026-04-03",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2026-04-05",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-05-01",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2026-05-14",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2026-05-15",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2026-05-27",
+    "replaced": {}
+   },
+   {
+    "text": "Rabu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-05-28",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2026-05-31",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-06-01",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2026-06-16",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2026-08-17",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2026-08-25",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2026-12-24",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2026-12-25",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2027-01-01",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2027-01-05",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2027-02-05",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2027-02-06",
+    "replaced": {}
+   },
+   {
+    "text": "Sabtu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-08",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-09",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-10",
+    "replaced": {}
+   },
+   {
+    "text": "Rabu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-11",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-12",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-15",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-25",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-26",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-28",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-05-01",
+    "replaced": {}
+   },
+   {
+    "text": "Sabtu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-05-06",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2027-05-17",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2027-05-18",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2027-05-19",
+    "replaced": {}
+   },
+   {
+    "text": "Rabu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-05-20",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2027-06-01",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2027-06-06",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-08-15",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-08-17",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2027-12-24",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2027-12-25",
+    "replaced": {}
+   },
+   {
+    "text": "Sabtu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-12-26",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "setiap tanggal jatuh pada hari yang tertulis di pengumuman resmi",
+    "replaced": {}
+   },
+   {
+    "text": "jumlah sesuai SKB: 2026 = 17 libur + 8 cuti, 2027 = 18 libur + 8 cuti",
+    "replaced": {}
+   },
+   {
+    "text": "libur_nasional",
+    "replaced": {}
+   },
+   {
+    "text": "cuti_bersama",
+    "replaced": {}
+   },
+   {
+    "text": "libur_nasional",
+    "replaced": {}
+   },
+   {
+    "text": "cuti_bersama",
+    "replaced": {}
+   },
+   {
+    "text": "hari kerja, dengan dan tanpa cuti bersama",
+    "replaced": {}
+   },
+   {
+    "text": "2026-08-17",
+    "replaced": {}
+   },
+   {
+    "text": "2026-08-18",
+    "replaced": {}
+   },
+   {
+    "text": "2026-10-17",
+    "replaced": {}
+   },
+   {
+    "text": "2026-12-24",
+    "replaced": {}
+   },
+   {
+    "text": "2026-12-24",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-21",
+    "replaced": {}
+   },
+   {
+    "text": "Idulfitri 1447 H",
+    "replaced": {}
+   },
+   {
+    "text": "SLA hari kerja melewati libur Lebaran",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-17",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-25",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-25",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-17",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-16",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-27",
+    "replaced": {}
+   },
+   {
+    "text": "tahun tanpa data resmi gagal dengan jelas, bukan diam-diam",
+    "replaced": {}
+   },
+   {
+    "text": "2028-01-03",
+    "replaced": {}
+   },
+   {
+    "text": "tanggal yang tidak ada ditolak, bukan digeser ke bulan berikutnya",
+    "replaced": {}
+   },
+   {
+    "text": "2026-02-30",
+    "replaced": {}
+   },
+   {
+    "text": "2026-13-01",
+    "replaced": {}
+   },
+   {
+    "text": "17-08-2026",
+    "replaced": {}
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "../src/wilayah.ts",
+    "replaced": {}
+   },
+   {
+    "text": "2026-10-15",
+    "replaced": {}
+   },
+   {
+    "text": "NIK: laki-laki, wilayah dari data Kemendagri",
+    "replaced": {}
+   },
+   {
+    "text": "3201011508955680",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "L",
+    "replaced": {}
+   },
+   {
+    "text": "1995-08-15",
+    "replaced": {}
+   },
+   {
+    "text": "Jawa Barat",
+    "replaced": {}
+   },
+   {
+    "text": "Kabupaten Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "Cibinong",
+    "replaced": {}
+   },
+   {
+    "text": "0001",
+    "replaced": {}
+   },
+   {
+    "text": "NIK: perempuan (tanggal + 40), tahun 2000-an, spasi diabaikan",
+    "replaced": {}
+   },
+   {
+    "text": "3276 01 550803 8540",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "P",
+    "replaced": {}
+   },
+   {
+    "text": "2003-08-15",
+    "replaced": {}
+   },
+   {
+    "text": "NIK: struktur salah ditolak dengan alasan yang jelas",
+    "replaced": {}
+   },
+   {
+    "text": "12345",
+    "replaced": {}
+   },
+   {
+    "text": "format",
+    "replaced": {}
+   },
+   {
+    "text": "9901011508950001",
+    "replaced": {}
+   },
+   {
+    "text": "province",
+    "replaced": {}
+   },
+   {
+    "text": "3201013108955410",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "3201013102950001",
+    "replaced": {}
+   },
+   {
+    "text": "birth_date",
+    "replaced": {}
+   },
+   {
+    "text": "3201017508950001",
+    "replaced": {}
+   },
+   {
+    "text": "birth_date",
+    "replaced": {}
+   },
+   {
+    "text": "3201011508950000",
+    "replaced": {}
+   },
+   {
+    "text": "serial",
+    "replaced": {}
+   },
+   {
+    "text": "NIK: kode wilayah lama memberi peringatan, bukan error",
+    "replaced": {}
+   },
+   {
+    "text": "3201991508953713",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "wilayah_unknown",
+    "replaced": {}
+   },
+   {
+    "text": "NPWP: format 15 digit lama",
+    "replaced": {}
+   },
+   {
+    "text": "01.946.582.0-271.666",
+    "replaced": {
+     "NPWP": 1
+    }
+   },
+   {
+    "text": "npwp15",
+    "replaced": {}
+   },
+   {
+    "text": "0012345678901000",
+    "replaced": {}
+   },
+   {
+    "text": "01.946.582.0-271.666",
+    "replaced": {
+     "NPWP": 1
+    }
+   },
+   {
+    "text": "NPWP: 16 digit diawali 0 dan NIK sebagai NPWP",
+    "replaced": {}
+   },
+   {
+    "text": "0012345678901000",
+    "replaced": {}
+   },
+   {
+    "text": "npwp16",
+    "replaced": {}
+   },
+   {
+    "text": "3201011508955680",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "nik",
+    "replaced": {}
+   },
+   {
+    "text": "3201011508950000",
+    "replaced": {}
+   },
+   {
+    "text": "123",
+    "replaced": {}
+   },
+   {
+    "text": "HP: berbagai cara menulis, operator, dan format",
+    "replaced": {}
+   },
+   {
+    "text": "0812-7002-3934",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "+6281270023934",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "0812-7002-3934",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "6281270023934",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "Telkomsel",
+    "replaced": {}
+   },
+   {
+    "text": "+62 857 9327 7500",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "Indosat",
+    "replaced": {}
+   },
+   {
+    "text": "6289695504787",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "Tri",
+    "replaced": {}
+   },
+   {
+    "text": "6289695504787",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "Indosat Ooredoo Hutchison",
+    "replaced": {}
+   },
+   {
+    "text": "0881-9330-5427",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "XLSmart",
+    "replaced": {}
+   },
+   {
+    "text": "+62 (0) 812 3456 7890",
+    "replaced": {}
+   },
+   {
+    "text": "+6281270023934",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "Telepon rumah dan nomor tidak valid",
+    "replaced": {}
+   },
+   {
+    "text": "(021) 593-4317",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "landline",
+    "replaced": {}
+   },
+   {
+    "text": "Jakarta",
+    "replaced": {}
+   },
+   {
+    "text": "+62215934317",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "12345",
+    "replaced": {}
+   },
+   {
+    "text": "0812",
+    "replaced": {}
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "../src/kembaran.ts",
+    "replaced": {}
+   },
+   {
+    "text": "Budi Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "SITI AMINAH",
+    "replaced": {}
+   },
+   {
+    "text": "3201011508955680",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "3276015508038540",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "3456-7890",
+    "replaced": {}
+   },
+   {
+    "text": "3456 7890",
+    "replaced": {}
+   },
+   {
+    "text": "1111",
+    "replaced": {}
+   },
+   {
+    "text": "gmail.com",
+    "replaced": {}
+   },
+   {
+    "text": "yahoo",
+    "replaced": {}
+   },
+   {
+    "text": "Mawar",
+    "replaced": {}
+   },
+   {
+    "text": "Kenanga",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": "Kembaran: CSV pelanggan tanpa satu pun nilai asli, tetap konsisten dan valid",
+    "replaced": {}
+   },
+   {
+    "text": "uji",
+    "replaced": {}
+   },
+   {
+    "text": "the same person gets the same stand-in",
+    "replaced": {}
+   },
+   {
+    "text": "Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "the city stays",
+    "replaced": {}
+   },
+   {
+    "text": "casing follows the original",
+    "replaced": {}
+   },
+   {
+    "text": "320101",
+    "replaced": {}
+   },
+   {
+    "text": "L",
+    "replaced": {}
+   },
+   {
+    "text": "1995",
+    "replaced": {}
+   },
+   {
+    "text": "P",
+    "replaced": {}
+   },
+   {
+    "text": "-",
+    "replaced": {}
+   },
+   {
+    "text": "Telkomsel",
+    "replaced": {}
+   },
+   {
+    "text": "0812-… and 0812… are one person",
+    "replaced": {}
+   },
+   {
+    "text": "Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK",
+    "replaced": {}
+   },
+   {
+    "text": "uji",
+    "replaced": {}
+   },
+   {
+    "text": "Budi Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "3201011508955680",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "1234567890",
+    "replaced": {}
+   },
+   {
+    "text": "pelanggan_nik,npwp,gaji\n3201011508955680,3201011508955680,6971640",
+    "replaced": {
+     "NIK": 2,
+     "FINANCIAL": 1
+    }
+   },
+   {
+    "text": "(\\d{16})",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": ",",
+    "replaced": {}
+   },
+   {
+    "text": "the same NIK in another file",
+    "replaced": {}
+   },
+   {
+    "text": "an individual NPWP is their NIK",
+    "replaced": {}
+   },
+   {
+    "text": "Kembaran: kunci yang sama memberi hasil yang sama, kunci lain berbeda, tanpa kunci acak",
+    "replaced": {}
+   },
+   {
+    "text": "staging",
+    "replaced": {}
+   },
+   {
+    "text": "staging",
+    "replaced": {}
+   },
+   {
+    "text": "lain",
+    "replaced": {}
+   },
+   {
+    "text": "Kembaran: 5.000 NIK dari kecamatan, tahun, dan jenis kelamin yang sama tidak pernah bertabrakan",
+    "replaced": {}
+   },
+   {
+    "text": "tabrakan",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "NIK",
+    "replaced": {}
+   },
+   {
+    "text": "Kembaran: opsi keep, tanggal lahir utuh, dan teks bebas",
+    "replaced": {}
+   },
+   {
+    "text": "k",
+    "replaced": {}
+   },
+   {
+    "text": "NAME",
+    "replaced": {}
+   },
+   {
+    "text": "GENDER",
+    "replaced": {}
+   },
+   {
+    "text": "Budi Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "15-08-1995",
+    "replaced": {}
+   },
+   {
+    "text": "15 Agustus 2003",
+    "replaced": {}
+   },
+   {
+    "text": "3201011508955680",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "150895",
+    "replaced": {}
+   },
+   {
+    "text": "the NIK keeps the whole birth date too",
+    "replaced": {}
+   },
+   {
+    "text": "NAMA",
+    "replaced": {}
+   },
+   {
+    "text": "p",
+    "replaced": {}
+   },
+   {
+    "text": "Pasien: Santi Lestari, diagnosa: Pegal linu. Plat B 5418 NBV, login dari 203.0.113.241, kartu 4539 1496 6863 2422. Agama: Islam",
+    "replaced": {
+     "NAME": 1,
+     "HEALTH": 1,
+     "PLATE": 1,
+     "IP": 1,
+     "CARD": 1
+    }
+   },
+   {
+    "text": "Siti Aminah",
+    "replaced": {}
+   },
+   {
+    "text": "Diabetes",
+    "replaced": {}
+   },
+   {
+    "text": "1234 XYZ",
+    "replaced": {}
+   },
+   {
+    "text": "203.0.113.241",
+    "replaced": {
+     "IP": 1
+    }
+   },
+   {
+    "text": "4539 1496 6863 2422",
+    "replaced": {
+     "CARD": 1
+    }
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "453914",
+    "replaced": {}
+   },
+   {
+    "text": "the card keeps its issuer prefix",
+    "replaced": {}
+   },
+   {
+    "text": "and passes Luhn",
+    "replaced": {}
+   },
+   {
+    "text": "religion is kept by default",
+    "replaced": {}
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "26",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "COM.CONTOH.WWW",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "936000000000000001",
+    "replaced": {}
+   },
+   {
+    "text": "02",
+    "replaced": {}
+   },
+   {
+    "text": "000000000000001",
+    "replaced": {}
+   },
+   {
+    "text": "03",
+    "replaced": {}
+   },
+   {
+    "text": "UMI",
+    "replaced": {}
+   },
+   {
+    "text": "51",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "ID.CO.QRIS.WWW",
+    "replaced": {}
+   },
+   {
+    "text": "02",
+    "replaced": {}
+   },
+   {
+    "text": "ID1026000000001",
+    "replaced": {}
+   },
+   {
+    "text": "03",
+    "replaced": {}
+   },
+   {
+    "text": "UMI",
+    "replaced": {}
+   },
+   {
+    "text": "52",
+    "replaced": {}
+   },
+   {
+    "text": "5812",
+    "replaced": {}
+   },
+   {
+    "text": "53",
+    "replaced": {}
+   },
+   {
+    "text": "360",
+    "replaced": {}
+   },
+   {
+    "text": "58",
+    "replaced": {}
+   },
+   {
+    "text": "ID",
+    "replaced": {}
+   },
+   {
+    "text": "59",
+    "replaced": {}
+   },
+   {
+    "text": "KOPI CONTOH",
+    "replaced": {}
+   },
+   {
+    "text": "60",
+    "replaced": {}
+   },
+   {
+    "text": "BOGOR",
+    "replaced": {}
+   },
+   {
+    "text": "61",
+    "replaced": {}
+   },
+   {
+    "text": "16914",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "11",
+    "replaced": {}
+   },
+   {
+    "text": "62",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "INV-77",
+    "replaced": {}
+   },
+   {
+    "text": "07",
+    "replaced": {}
+   },
+   {
+    "text": "A01",
+    "replaced": {}
+   },
+   {
+    "text": "CRC-16/CCITT-FALSE",
+    "replaced": {}
+   },
+   {
+    "text": "123456789",
+    "replaced": {}
+   },
+   {
+    "text": "29B1",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "FFFF",
+    "replaced": {}
+   },
+   {
+    "text": "QRIS statis dibaca lengkap",
+    "replaced": {}
+   },
+   {
+    "text": "static",
+    "replaced": {}
+   },
+   {
+    "text": "KOPI CONTOH",
+    "replaced": {}
+   },
+   {
+    "text": "BOGOR",
+    "replaced": {}
+   },
+   {
+    "text": "16914",
+    "replaced": {}
+   },
+   {
+    "text": "ID1026000000001",
+    "replaced": {}
+   },
+   {
+    "text": "UMI",
+    "replaced": {}
+   },
+   {
+    "text": "Usaha Mikro",
+    "replaced": {}
+   },
+   {
+    "text": "5812",
+    "replaced": {}
+   },
+   {
+    "text": "26",
+    "replaced": {}
+   },
+   {
+    "text": "COM.CONTOH.WWW",
+    "replaced": {}
+   },
+   {
+    "text": "936000000000000001",
+    "replaced": {}
+   },
+   {
+    "text": "000000000000001",
+    "replaced": {}
+   },
+   {
+    "text": "UMI",
+    "replaced": {}
+   },
+   {
+    "text": "51",
+    "replaced": {}
+   },
+   {
+    "text": "ID.CO.QRIS.WWW",
+    "replaced": {}
+   },
+   {
+    "text": "ID1026000000001",
+    "replaced": {}
+   },
+   {
+    "text": "UMI",
+    "replaced": {}
+   },
+   {
+    "text": "INV-77",
+    "replaced": {}
+   },
+   {
+    "text": "A01",
+    "replaced": {}
+   },
+   {
+    "text": "QRIS statis menjadi dinamis dengan nominal, field lain tetap",
+    "replaced": {}
+   },
+   {
+    "text": "dynamic",
+    "replaced": {}
+   },
+   {
+    "text": "25000",
+    "replaced": {}
+   },
+   {
+    "text": "ID1026000000001",
+    "replaced": {}
+   },
+   {
+    "text": "5303360540525000",
+    "replaced": {}
+   },
+   {
+    "text": "5802ID",
+    "replaced": {}
+   },
+   {
+    "text": "the amount sits between currency and country",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "54",
+    "replaced": {}
+   },
+   {
+    "text": "63",
+    "replaced": {}
+   },
+   {
+    "text": "1500.50",
+    "replaced": {}
+   },
+   {
+    "text": "1500.50",
+    "replaced": {}
+   },
+   {
+    "text": "100000",
+    "replaced": {}
+   },
+   {
+    "text": "fixed",
+    "replaced": {}
+   },
+   {
+    "text": "2500",
+    "replaced": {}
+   },
+   {
+    "text": "percent",
+    "replaced": {}
+   },
+   {
+    "text": "0.70",
+    "replaced": {}
+   },
+   {
+    "text": "12,000",
+    "replaced": {}
+   },
+   {
+    "text": "1e5",
+    "replaced": {}
+   },
+   {
+    "text": "12345678901234",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "QRIS rusak dan yang bukan QRIS dikenali",
+    "replaced": {}
+   },
+   {
+    "text": "0000",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "payload_format",
+    "replaced": {}
+   },
+   {
+    "text": "https://example.com",
+    "replaced": {}
+   },
+   {
+    "text": "format",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "11",
+    "replaced": {}
+   },
+   {
+    "text": "5303360",
+    "replaced": {}
+   },
+   {
+    "text": "5303840",
+    "replaced": {}
+   },
+   {
+    "text": "currency",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "59",
+    "replaced": {}
+   },
+   {
+    "text": "KOPI CONTOH",
+    "replaced": {}
+   },
+   {
+    "text": "59",
+    "replaced": {}
+   },
+   {
+    "text": "WARUNG KOPI CONTOH SEJAHTERA",
+    "replaced": {}
+   },
+   {
+    "text": "merchant_name",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "12",
+    "replaced": {}
+   },
+   {
+    "text": "not_qris",
+    "replaced": {}
+   },
+   {
+    "text": "dynamic_without_amount",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "55",
+    "replaced": {}
+   },
+   {
+    "text": "02",
+    "replaced": {}
+   },
+   {
+    "text": "tip",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "53",
+    "replaced": {}
+   },
+   {
+    "text": "360",
+    "replaced": {}
+   },
+   {
+    "text": "duplicate",
+    "replaced": {}
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "formatRupiah mengikuti PUEBI",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1.500.000",
+    "replaced": {}
+   },
+   {
+    "text": "Rp0",
+    "replaced": {}
+   },
+   {
+    "text": "-Rp25.000",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1.500.000,50",
+    "replaced": {}
+   },
+   {
+    "text": "999",
+    "replaced": {}
+   },
+   {
+    "text": "formatRupiahShort",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1,5 jt",
+    "replaced": {}
+   },
+   {
+    "text": "Rp2,3 M",
+    "replaced": {}
+   },
+   {
+    "text": "Rp15 rb",
+    "replaced": {}
+   },
+   {
+    "text": "Rp750",
+    "replaced": {}
+   },
+   {
+    "text": "Rp 25.000",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1.500.000,00",
+    "replaced": {}
+   },
+   {
+    "text": "1,500,000",
+    "replaced": {}
+   },
+   {
+    "text": "1,5jt",
+    "replaced": {}
+   },
+   {
+    "text": "1.5 juta",
+    "replaced": {}
+   },
+   {
+    "text": "50k",
+    "replaced": {}
+   },
+   {
+    "text": "50rb",
+    "replaced": {}
+   },
+   {
+    "text": "15ribu",
+    "replaced": {}
+   },
+   {
+    "text": "1jt 500rb",
+    "replaced": {}
+   },
+   {
+    "text": "2jtan",
+    "replaced": {}
+   },
+   {
+    "text": "50rb-an",
+    "replaced": {}
+   },
+   {
+    "text": "sekitar 1 juta",
+    "replaced": {}
+   },
+   {
+    "text": "2 juta lebih",
+    "replaced": {}
+   },
+   {
+    "text": "goceng",
+    "replaced": {}
+   },
+   {
+    "text": "goceng aja kak",
+    "replaced": {}
+   },
+   {
+    "text": "2 ceban",
+    "replaced": {}
+   },
+   {
+    "text": "cepek ceng",
+    "replaced": {}
+   },
+   {
+    "text": "gopek",
+    "replaced": {}
+   },
+   {
+    "text": "sejuta setengah",
+    "replaced": {}
+   },
+   {
+    "text": "setengah juta",
+    "replaced": {}
+   },
+   {
+    "text": "dua setengah juta",
+    "replaced": {}
+   },
+   {
+    "text": "satu setengah juta",
+    "replaced": {}
+   },
+   {
+    "text": "dua ratus lima puluh ribu",
+    "replaced": {}
+   },
+   {
+    "text": "seratus dua belas",
+    "replaced": {}
+   },
+   {
+    "text": "seribu lima ratus",
+    "replaced": {}
+   },
+   {
+    "text": "dua puluh lima juta tiga ratus ribu",
+    "replaced": {}
+   },
+   {
+    "text": "1,2 M",
+    "replaced": {}
+   },
+   {
+    "text": "parseRupiah menolak teks yang bukan nominal",
+    "replaced": {}
+   },
+   {
+    "text": "pisang goreng",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "jutaan",
+    "replaced": {}
+   },
+   {
+    "text": "terbilang",
+    "replaced": {}
+   },
+   {
+    "text": "nol",
+    "replaced": {}
+   },
+   {
+    "text": "sebelas",
+    "replaced": {}
+   },
+   {
+    "text": "lima belas",
+    "replaced": {}
+   },
+   {
+    "text": "dua puluh satu",
+    "replaced": {}
+   },
+   {
+    "text": "seratus",
+    "replaced": {}
+   },
+   {
+    "text": "seratus sepuluh",
+    "replaced": {}
+   },
+   {
+    "text": "seribu",
+    "replaced": {}
+   },
+   {
+    "text": "seribu satu",
+    "replaced": {}
+   },
+   {
+    "text": "sebelas ribu",
+    "replaced": {}
+   },
+   {
+    "text": "seratus ribu",
+    "replaced": {}
+   },
+   {
+    "text": "satu juta",
+    "replaced": {}
+   },
+   {
+    "text": "satu juta lima ratus ribu",
+    "replaced": {}
+   },
+   {
+    "text": "dua miliar",
+    "replaced": {}
+   },
+   {
+    "text": "minus lima",
+    "replaced": {}
+   },
+   {
+    "text": "dua koma lima",
+    "replaced": {}
+   },
+   {
+    "text": "satu kuintiliun",
+    "replaced": {}
+   },
+   {
+    "text": "terbilang untuk kuitansi",
+    "replaced": {}
+   },
+   {
+    "text": "satu juta lima ratus ribu rupiah",
+    "replaced": {}
+   },
+   {
+    "text": "title",
+    "replaced": {}
+   },
+   {
+    "text": "Satu Juta Lima Ratus Ribu Rupiah",
+    "replaced": {}
+   },
+   {
+    "text": "sentence",
+    "replaced": {}
+   },
+   {
+    "text": "Dua puluh lima ribu",
+    "replaced": {}
+   },
+   {
+    "text": "pembulatan yang melewati satuan dan angka sangat besar",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1 jt",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1 rb",
+    "replaced": {}
+   },
+   {
+    "text": "Rp950 rb",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1.000.000.000.000.000.000.000",
+    "replaced": {}
+   },
+   {
+    "text": "Rp0,13",
+    "replaced": {}
+   },
+   {
+    "text": "Rp3",
+    "replaced": {}
+   },
+   {
+    "text": "parseRupiah tidak tertipu nama properti bawaan objek",
+    "replaced": {}
+   },
+   {
+    "text": "constructor",
+    "replaced": {}
+   },
+   {
+    "text": "2 toString",
+    "replaced": {}
+   },
+   {
+    "text": "terbilang angka desimal sangat kecil",
+    "replaced": {}
+   },
+   {
+    "text": "nol koma nol nol nol nol nol nol satu",
+    "replaced": {}
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "Halo kak, saya mau komplain. Nama: Arif Matondang",
+    "replaced": {
+     "NAME": 1
+    }
+   },
+   {
+    "text": "NIK 3201011508955680, NPWP 01.946.582.0-271.666",
+    "replaced": {
+     "NIK": 1,
+     "NPWP": 1
+    }
+   },
+   {
+    "text": "HP 0812-7002-3934 atau email fransiska.kartini77@example.com",
+    "replaced": {
+     "PHONE": 1,
+     "EMAIL": 1
+    }
+   },
+   {
+    "text": "Refund ke rek BCA 6536168079 a.n. Arif Matondang ya",
+    "replaced": {
+     "BANK_ACCOUNT": 1,
+     "NAME": 1
+    }
+   },
+   {
+    "text": "Alamat Jl. Swadaya No. 6 RT 06/RW 04, motor B 5418 NBV",
+    "replaced": {
+     "ADDRESS": 1,
+     "PLATE": 1
+    }
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": "mendeteksi semua jenis PII khas Indonesia dalam satu chat",
+    "replaced": {}
+   },
+   {
+    "text": "NAME:Arif Matondang",
+    "replaced": {
+     "NAME": 1
+    }
+   },
+   {
+    "text": "NIK:3201011508955680",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "NPWP:01.946.582.0-271.666",
+    "replaced": {
+     "NPWP": 1
+    }
+   },
+   {
+    "text": "PHONE:0812-7002-3934",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "EMAIL:fransiska.kartini77@example.com",
+    "replaced": {
+     "EMAIL": 1
+    }
+   }
+  ]
+ },
+ {
+  "options": {
+   "secret": "vektor-3",
+   "keep": [
+    "NAME",
+    "GENDER"
+   ],
+   "minConfidence": "high"
+  },
+  "results": [
+   {
+    "text": "2026-10-14T01:02:17.000Z INFO  checkout started user_email=paulus.effendi82@example.com hp=081250246610\n2026-10-14T01:02:17.000Z ERROR checkout failed order=INV-10231 nik=3201010607955083 hp=081250246610 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:04:43.000Z INFO  checkout started user_email=mega.wijaya69@example.com hp=085725598844\n2026-10-14T01:04:43.000Z ERROR checkout failed order=INV-10232 nik=3276014707033411 hp=085725598844 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:07:18.000Z INFO  checkout started user_email=taufik.tambunan54@example.com hp=081361333823\n2026-10-14T01:07:18.000Z ERROR checkout failed order=INV-10233 nik=3171010411886802 hp=081361333823 err=\"InvalidAddress: kode_pos 16xxx not found\"\n2026-10-14T01:10:02.000Z INFO  checkout started user_email=cecep.lubis73@example.com hp=083857651006\n2026-10-14T01:10:02.000Z ERROR checkout failed order=INV-10234 nik=3578014111919370 hp=083857651006 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:12:55.000Z INFO  checkout started user_email=paulus.effendi82@example.com hp=081250246610\n2026-10-14T01:12:55.000Z ERROR checkout failed order=INV-10235 nik=3201010607955083 hp=081250246610 err=\"OtpExpired: OTP older than 300s\"\n2026-10-14T01:15:57.000Z INFO  checkout started user_email=mega.wijaya69@example.com hp=085725598844\n2026-10-14T01:15:57.000Z ERROR checkout failed order=INV-10236 nik=3276014707033411 hp=085725598844 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:19:08.000Z INFO  checkout started user_email=taufik.tambunan54@example.com hp=081361333823\n2026-10-14T01:19:08.000Z ERROR checkout failed order=INV-10237 nik=3171010411886802 hp=081361333823 err=\"InvalidAddress: kecamatan missing\"\n2026-10-14T01:22:28.000Z INFO  checkout started user_email=cecep.lubis73@example.com hp=083857651006\n2026-10-14T01:22:28.000Z ERROR checkout failed order=INV-10238 nik=3578014111919370 hp=083857651006 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:25:57.000Z INFO  checkout started user_email=paulus.effendi82@example.com hp=081250246610\n2026-10-14T01:25:57.000Z ERROR checkout failed order=INV-10239 nik=3201010607955083 hp=081250246610 err=\"OtpExpired: OTP older than 300s\"\n2026-10-14T01:29:35.000Z INFO  checkout started user_email=mega.wijaya69@example.com hp=085725598844\n2026-10-14T01:29:35.000Z ERROR checkout failed order=INV-10240 nik=3276014707033411 hp=085725598844 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:33:22.000Z INFO  checkout started user_email=taufik.tambunan54@example.com hp=081361333823\n2026-10-14T01:33:22.000Z ERROR checkout failed order=INV-10241 nik=3171010411886802 hp=081361333823 err=\"InvalidAddress: kode_pos 16xxx not found\"\n2026-10-14T01:37:18.000Z INFO  checkout started user_email=cecep.lubis73@example.com hp=083857651006\n2026-10-14T01:37:18.000Z ERROR checkout failed order=INV-10242 nik=3578014111919370 hp=083857651006 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n",
+    "replaced": {
+     "EMAIL": 12,
+     "PHONE": 24,
+     "NIK": 12
+    }
+   },
+   {
+    "text": "Chat WhatsApp dengan Dewi Lestari\n12/10/26 09.14 - Pesan dan panggilan terenkripsi secara end-to-end. Tidak seorang pun di luar chat ini, termasuk WhatsApp, yang dapat membaca atau mendengarkannya.\n12/10/26 09.14 - Dewi Lestari: kak pesanan saya 2610018GH6WX3S kok mug nya pecah ya 😭\n12/10/26 09.16 - Toko Kopi Senja: Mohon maaf kak Dewi, boleh kirim foto mug dan paketnya?\n12/10/26 09.20 - Dewi Lestari: <Media tidak disertakan>\n12/10/26 09.21 - Dewi Lestari: saya mau refund aja kak, ke rek BCA 4530618462 a.n. Dewi Lestari\n12/10/26 09.25 - Toko Kopi Senja: Baik kak, refund Rp75.000 kami proses maksimal 3 hari kerja ya\n\nChat WhatsApp dengan Maria Yosefina Gebze\n13/10/26 14.02 - Maria Yosefina Gebze: selamat siang, paket saya ke merauke sudah seminggu belum sampai\n13/10/26 14.03 - Maria Yosefina Gebze: no hp saya 0878.3194.6015 kalau kurir mau telpon\n13/10/26 14.10 - Toko Kopi Senja: Siang kak Maria, kami cek ke J&T dulu ya\n13/10/26 16.45 - Toko Kopi Senja: Kak, paketnya tertahan di hub Jayapura, estimasi tiba 2 hari lagi\n13/10/26 16.50 - Maria Yosefina Gebze: oke kak makasih, tolong dikabari lagi ya\n\nChat WhatsApp dengan +62 881-7024-8971\n14/10/26 08.30 - +62 881-7024-8971: halo kak ini rina, pesanan saya dibatalin sistem padahal udah transfer\n14/10/26 08.31 - +62 881-7024-8971: transfer dari rekening mandiri 5514574869429 atas nama rina kartika sari\n14/10/26 08.40 - Toko Kopi Senja: Halo kak Rina, VA-nya kedaluwarsa sebelum pembayaran masuk. Dananya akan otomatis kembali ya\n14/10/26 08.42 - +62 881-7024-8971: oh gitu, oke kak\n\nChat WhatsApp dengan Siti Aminah\n15/10/26 19.05 - Siti Aminah: kak tolong pesanan saya dipercepat, isinya obat insulin buat ibu saya yg lagi dirawat di RSUD Cibinong\n15/10/26 19.06 - Siti Aminah: alamat kirim ganti ya ke Jl. Melati No. 99 RT 07/RW 06, Kel. Cinere, Depok\n15/10/26 19.20 - Toko Kopi Senja: Baik kak Siti, alamat sudah kami ubah dan pesanan kami prioritaskan\n\nChat WhatsApp dengan Hendra Gunawan\n16/10/26 10.00 - Hendra Gunawan: min kopi arabika gayo 250gr ready lagi kapan?\n16/10/26 10.05 - Toko Kopi Senja: Siang kak Hendra, restock minggu depan ya\n16/10/26 10.06 - Hendra Gunawan: sip, kabarin ya min\n",
+    "replaced": {
+     "BANK_ACCOUNT": 2,
+     "PHONE": 5,
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "No. Pesanan,Status Pesanan,No. Resi,Opsi Pengiriman,Waktu Pesanan Dibuat,Username (Pembeli),Nama Penerima,No. Telepon,Alamat Pengiriman,Kota/Kabupaten,Provinsi,Total Pembayaran,Catatan dari Pembeli\n2610014KQ7ZB2M,Perlu Dikirim,,SPX Standard,2026-10-01 08:12,sitirahayu88,Siti Rahayu,6281234836521,\"Jl. Harapan No. 83, RT 03/RW 05, Kel. Depok, Kec. Pancoran Mas\",KOTA DEPOK,JAWA BARAT,Rp185.000,tolong a.n. Ibu Siti Rahayu ya kak\n2610015AB3XY9P,Dikirim,SPXID045123456789,SPX Standard,2026-10-01 09:40,budi_s,Budi Santoso,+62 857-2559-8844,\"Perum Jati Blok C4 No. 7, Cibinong\",KAB. BOGOR,JAWA BARAT,Rp92.500,\n2610016CD4ZT1Q,Perlu Dikirim,,J&T Express,2026-10-02 10:05,mamah.yosef,Maria Yosefina Gebze,0878.3194.6015,\"Jl. Akasia No. 52, Kel. Mandala, Distrik Merauke\",KAB. MERAUKE,PAPUA SELATAN,Rp310.000,kalau kurir nyasar hub suami saya Pak Yohanes 0813-8604-6275\n2610017EF5UV2R,Perlu Dikirim,,JNE REG,2026-10-02 13:22,andiwj,Andi Wijaya,081261233730,\"Jl. Durian No. 2, Kota Sorong\",KOTA SORONG,PAPUA BARAT DAYA,Rp1.250.000,NIK saya 9671 0108 0687 0995 untuk klaim garansi\n2610018GH6WX3S,Selesai,JX4417730215,J&T Express,2026-10-03 07:55,dewi.lestari,Dewi Lestari,0896-6217-9068,\"Jl. Merdeka No. 882, Denpasar\",KOTA DENPASAR,BALI,Rp75.000,\n2610019IJ7YZ4T,Perlu Dikirim,,SiCepat REG,2026-10-03 16:30,rina_kartika,Rina Kartika Sari,0881-7024-8971,\"Jl. Kutilang No. 9, Penajam\",KAB. PENAJAM PASER UTARA,KALIMANTAN TIMUR,Rp640.000,\"rumah cat hijau sebelah masjid, titip ke satpam\"\n2610020KL8AB5U,Perlu Dikirim,,SPX Hemat,2026-10-04 11:11,yuliana.n,Yuliana Nawipa,0821 0942 1515,\"Jl. Jati No. 7, Nabire\",KAB. NABIRE,PAPUA TENGAH,Rp230.000,\n2610021MN9CD6V,Perlu Dikirim,,JNE YES,2026-10-04 19:45,hendra88,Hendra Gunawan,(0751) 812345,\"Jl. Anggrek No. 52, Padang\",KOTA PADANG,SUMATERA BARAT,Rp415.000,bayar pake VA BCA 46633967631 sudah ya\n2610022OP1EF7W,Batal,,SPX Standard,2026-10-05 08:00,fitri_h,Fitri Handayani,0852-5952-5728,\"Jl. Swadaya No. 1, Surabaya\",KOTA SURABAYA,JAWA TIMUR,Rp99.000,\n2610023QR2GH8X,Perlu Dikirim,,SiCepat BEST,2026-10-05 14:20,lukman.h,Lukman Hakim,6281356948240,\"Jl. Mangga No. 2, Kel. Tapos\",KOTA DEPOK,JAWA BARAT,Rp150.000,\n2610024ST3IJ9Y,Perlu Dikirim,,J&T Express,2026-10-06 09:09,siti.aminah,Siti Aminah,0838-9014-1461,\"Jl. Swadaya No. 87, Kel. Cinere\",KOTA DEPOK,JAWA BARAT,Rp88.000,\"tolong jgn dibanting, isi obat insulin buat ibu saya (diabetes)\"\n2610025UV4KL1Z,Dikirim,CGK7700123456789,JNE REG,2026-10-06 10:10,agus_p,Agus Prasetyo,0819-4971-3828,\"Jl. Cendrawasih 8, Sleman\",KAB. SLEMAN,DI YOGYAKARTA,Rp56.000,\n",
+    "replaced": {
+     "PHONE": 12,
+     "ADDRESS": 12,
+     "NIK": 1,
+     "BANK_ACCOUNT": 1
+    }
+   },
+   {
+    "text": "[2026-10-01 08:12:40] production.INFO: midtrans.charge {\"order_id\":\"2610014KQ7ZB2M\",\"gross_amount\":185000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"Siti\",\"last_name\":\"Rahayu\",\"email\":\"jessica.kusumawati17@example.com\",\"phone\":\"+6281234836521\"}}\n[2026-10-01 08:14:02] production.INFO: midtrans.notification {\"order_id\":\"2610014KQ7ZB2M\",\"transaction_status\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"185000.00\",\"transaction_time\":\"2026-10-01 08:13:55\"}\n[2026-10-01 09:40:31] production.INFO: midtrans.charge {\"order_id\":\"2610015AB3XY9P\",\"gross_amount\":92500,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"Budi\",\"last_name\":\"Santoso\",\"email\":\"taufik.kurniawan34@example.com\",\"phone\":\"+6285725598844\"}}\n[2026-10-01 09:41:10] production.INFO: midtrans.notification {\"order_id\":\"2610015AB3XY9P\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"92500.00\",\"transaction_time\":\"2026-10-01 09:41:02\"}\n[2026-10-02 10:05:12] production.INFO: midtrans.charge {\"order_id\":\"2610016CD4ZT1Q\",\"gross_amount\":310000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Maria Yosefina\",\"last_name\":\"Gebze\",\"email\":\"butet.handayani90@example.com\",\"phone\":\"+6287831946015\"}}\n[2026-10-02 10:05:13] production.INFO: midtrans.va_created {\"order_id\":\"2610016CD4ZT1Q\",\"va_numbers\":[{\"bank\":\"bca\",\"va_number\":\"50135295718998\"}]}\n[2026-10-02 11:47:20] production.INFO: midtrans.notification {\"order_id\":\"2610016CD4ZT1Q\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"310000.00\",\"transaction_time\":\"2026-10-02 11:47:11\"}\n[2026-10-02 13:22:05] production.INFO: midtrans.charge {\"order_id\":\"2610017EF5UV2R\",\"gross_amount\":1250000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Andi\",\"last_name\":\"Wijaya\",\"email\":\"indra.pane87@example.com\",\"phone\":\"+6281261233730\"}}\n[2026-10-02 13:22:06] production.INFO: midtrans.notification {\"order_id\":\"2610017EF5UV2R\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"1250000.00\",\"transaction_time\":\"2026-10-02 13:22:06\"}\n[2026-10-02 13:25:41] production.ERROR: Gagal verifikasi KTP untuk klaim garansi {\"order_id\":\"2610017EF5UV2R\",\"nik\":\"9671010806870995\",\"nama\":\"Andi Wijaya\",\"alasan\":\"foto KTP buram\"}\n[2026-10-03 07:55:18] production.INFO: midtrans.charge {\"order_id\":\"2610018GH6WX3S\",\"gross_amount\":75000,\"payment_type\":\"shopeepay\",\"customer_details\":{\"first_name\":\"Dewi\",\"last_name\":\"Lestari\",\"email\":\"irfan.hermawan35@example.com\",\"phone\":\"+6289662179068\"}}\n[2026-10-03 07:56:02] production.INFO: midtrans.notification {\"order_id\":\"2610018GH6WX3S\",\"transaction_status\":\"settlement\",\"payment_type\":\"shopeepay\",\"gross_amount\":\"75000.00\",\"transaction_time\":\"2026-10-03 07:55:58\"}\n[2026-10-03 09:30:00] production.INFO: midtrans.notification {\"order_id\":\"2610017EF5UV2R\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"1250000.00\",\"transaction_time\":\"2026-10-03 09:29:47\"}\n[2026-10-03 16:30:44] production.INFO: midtrans.charge {\"order_id\":\"2610019IJ7YZ4T\",\"gross_amount\":640000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Rina Kartika\",\"last_name\":\"Sari\",\"email\":\"doni.daulay27@example.com\",\"phone\":\"+6288170248971\"}}\n[2026-10-03 16:30:45] production.INFO: midtrans.notification {\"order_id\":\"2610019IJ7YZ4T\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"640000.00\",\"transaction_time\":\"2026-10-03 16:30:45\"}\n[2026-10-04 11:11:09] production.INFO: midtrans.charge {\"order_id\":\"2610020KL8AB5U\",\"gross_amount\":230000,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"Yuliana\",\"last_name\":\"Nawipa\",\"email\":\"surya.santoso00@example.com\",\"phone\":\"+6282109421515\"}}\n[2026-10-04 11:12:30] production.INFO: midtrans.notification {\"order_id\":\"2610020KL8AB5U\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"230000.00\",\"transaction_time\":\"2026-10-04 11:12:21\"}\n[2026-10-04 16:30:46] production.INFO: midtrans.notification {\"order_id\":\"2610019IJ7YZ4T\",\"transaction_status\":\"expire\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"640000.00\",\"transaction_time\":\"2026-10-04 16:30:46\"}\n[2026-10-04 19:45:51] production.INFO: midtrans.charge {\"order_id\":\"2610021MN9CD6V\",\"gross_amount\":415000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Hendra\",\"last_name\":\"Gunawan\",\"email\":\"ivan.panjaitan48@example.com\",\"phone\":\"+62751018262\"}}\n[2026-10-04 20:02:13] production.INFO: midtrans.notification {\"order_id\":\"2610021MN9CD6V\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"415000.00\",\"transaction_time\":\"2026-10-04 20:02:04\"}\n[2026-10-05 08:00:22] production.INFO: midtrans.charge {\"order_id\":\"2610022OP1EF7W\",\"gross_amount\":99000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"Fitri\",\"last_name\":\"Handayani\",\"email\":\"gilang.matondang95@example.com\",\"phone\":\"+6285259525728\"}}\n[2026-10-05 08:20:00] production.INFO: midtrans.notification {\"order_id\":\"2610022OP1EF7W\",\"transaction_status\":\"cancel\",\"payment_type\":\"qris\",\"gross_amount\":\"99000.00\",\"transaction_time\":\"2026-10-05 08:19:58\"}\n[2026-10-05 14:20:37] production.INFO: midtrans.charge {\"order_id\":\"2610023QR2GH8X\",\"gross_amount\":150000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Lukman\",\"last_name\":\"Hakim\",\"email\":\"michael.maulana23@example.com\",\"phone\":\"+6281356948240\"}}\n[2026-10-05 14:20:38] production.INFO: midtrans.notification {\"order_id\":\"2610023QR2GH8X\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"150000.00\",\"transaction_time\":\"2026-10-05 14:20:38\"}\n[2026-10-06 09:09:15] production.INFO: midtrans.charge {\"order_id\":\"2610024ST3IJ9Y\",\"gross_amount\":88000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"Siti\",\"last_name\":\"Aminah\",\"email\":\"yohanes.tarigan54@example.com\",\"phone\":\"+6283890141461\"}}\n[2026-10-06 09:10:01] production.INFO: midtrans.notification {\"order_id\":\"2610024ST3IJ9Y\",\"transaction_status\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"88000.00\",\"transaction_time\":\"2026-10-06 09:09:52\"}\n[2026-10-06 10:10:28] production.INFO: midtrans.charge {\"order_id\":\"2610025UV4KL1Z\",\"gross_amount\":56000,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"Agus\",\"last_name\":\"Prasetyo\",\"email\":\"irma.anggraini50@example.com\",\"phone\":\"+6281949713828\"}}\n[2026-10-06 10:11:44] production.INFO: midtrans.notification {\"order_id\":\"2610025UV4KL1Z\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"56000.00\",\"transaction_time\":\"2026-10-06 10:11:35\"}\n[2026-10-06 12:00:03] production.WARNING: midtrans.notification order tidak dikenal {\"order_id\":\"TEST-0001\",\"transaction_status\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"1.00\"}\n",
+    "replaced": {
+     "EMAIL": 12,
+     "PHONE": 12,
+     "BANK_ACCOUNT": 1,
+     "NIK": 1
+    }
+   },
+   {
+    "text": "id,nama,nik,no_hp,kota,total_belanja\n1,Budi Santoso,3201010607955083,0812-5024-6610,Bogor,1250000\n2,Siti Aminah,3276014707033411,+62 857 2559 8844,Depok,430000\n3,Andi Wijaya,3171010411886802,0813-6133-3823,Jakarta Pusat,89000\n4,Budi Santoso,3201010607955083,081250246610,Bogor,500000\n5,Dewi Lestari,3578014111919370,0838-5765-1006,Surabaya,2100000\n6,Siti Aminah,3276014707033411,6285725598844,Depok,75000\n",
+    "replaced": {
+     "NIK": 6,
+     "PHONE": 6
+    }
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "Rabu",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "Sabtu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-01-01",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2026-01-16",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2026-02-16",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2026-02-17",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-18",
+    "replaced": {}
+   },
+   {
+    "text": "Rabu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-19",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-20",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-21",
+    "replaced": {}
+   },
+   {
+    "text": "Sabtu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-22",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-23",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-24",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2026-04-03",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2026-04-05",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-05-01",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2026-05-14",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2026-05-15",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2026-05-27",
+    "replaced": {}
+   },
+   {
+    "text": "Rabu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-05-28",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2026-05-31",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "2026-06-01",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2026-06-16",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2026-08-17",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2026-08-25",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2026-12-24",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2026-12-25",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2027-01-01",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2027-01-05",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2027-02-05",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2027-02-06",
+    "replaced": {}
+   },
+   {
+    "text": "Sabtu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-08",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-09",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-10",
+    "replaced": {}
+   },
+   {
+    "text": "Rabu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-11",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-12",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-15",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-25",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-26",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2027-03-28",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-05-01",
+    "replaced": {}
+   },
+   {
+    "text": "Sabtu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-05-06",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2027-05-17",
+    "replaced": {}
+   },
+   {
+    "text": "Senin",
+    "replaced": {}
+   },
+   {
+    "text": "2027-05-18",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2027-05-19",
+    "replaced": {}
+   },
+   {
+    "text": "Rabu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-05-20",
+    "replaced": {}
+   },
+   {
+    "text": "Kamis",
+    "replaced": {}
+   },
+   {
+    "text": "2027-06-01",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2027-06-06",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-08-15",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-08-17",
+    "replaced": {}
+   },
+   {
+    "text": "Selasa",
+    "replaced": {}
+   },
+   {
+    "text": "2027-12-24",
+    "replaced": {}
+   },
+   {
+    "text": "Jumat",
+    "replaced": {}
+   },
+   {
+    "text": "2027-12-25",
+    "replaced": {}
+   },
+   {
+    "text": "Sabtu",
+    "replaced": {}
+   },
+   {
+    "text": "2027-12-26",
+    "replaced": {}
+   },
+   {
+    "text": "Minggu",
+    "replaced": {}
+   },
+   {
+    "text": "setiap tanggal jatuh pada hari yang tertulis di pengumuman resmi",
+    "replaced": {}
+   },
+   {
+    "text": "jumlah sesuai SKB: 2026 = 17 libur + 8 cuti, 2027 = 18 libur + 8 cuti",
+    "replaced": {}
+   },
+   {
+    "text": "libur_nasional",
+    "replaced": {}
+   },
+   {
+    "text": "cuti_bersama",
+    "replaced": {}
+   },
+   {
+    "text": "libur_nasional",
+    "replaced": {}
+   },
+   {
+    "text": "cuti_bersama",
+    "replaced": {}
+   },
+   {
+    "text": "hari kerja, dengan dan tanpa cuti bersama",
+    "replaced": {}
+   },
+   {
+    "text": "2026-08-17",
+    "replaced": {}
+   },
+   {
+    "text": "2026-08-18",
+    "replaced": {}
+   },
+   {
+    "text": "2026-10-17",
+    "replaced": {}
+   },
+   {
+    "text": "2026-12-24",
+    "replaced": {}
+   },
+   {
+    "text": "2026-12-24",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-21",
+    "replaced": {}
+   },
+   {
+    "text": "Idulfitri 1447 H",
+    "replaced": {}
+   },
+   {
+    "text": "SLA hari kerja melewati libur Lebaran",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-17",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-25",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-25",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-17",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-16",
+    "replaced": {}
+   },
+   {
+    "text": "2026-03-27",
+    "replaced": {}
+   },
+   {
+    "text": "tahun tanpa data resmi gagal dengan jelas, bukan diam-diam",
+    "replaced": {}
+   },
+   {
+    "text": "2028-01-03",
+    "replaced": {}
+   },
+   {
+    "text": "tanggal yang tidak ada ditolak, bukan digeser ke bulan berikutnya",
+    "replaced": {}
+   },
+   {
+    "text": "2026-02-30",
+    "replaced": {}
+   },
+   {
+    "text": "2026-13-01",
+    "replaced": {}
+   },
+   {
+    "text": "17-08-2026",
+    "replaced": {}
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "../src/wilayah.ts",
+    "replaced": {}
+   },
+   {
+    "text": "2026-10-15",
+    "replaced": {}
+   },
+   {
+    "text": "NIK: laki-laki, wilayah dari data Kemendagri",
+    "replaced": {}
+   },
+   {
+    "text": "3201010607955083",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "L",
+    "replaced": {}
+   },
+   {
+    "text": "1995-08-15",
+    "replaced": {}
+   },
+   {
+    "text": "Jawa Barat",
+    "replaced": {}
+   },
+   {
+    "text": "Kabupaten Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "Cibinong",
+    "replaced": {}
+   },
+   {
+    "text": "0001",
+    "replaced": {}
+   },
+   {
+    "text": "NIK: perempuan (tanggal + 40), tahun 2000-an, spasi diabaikan",
+    "replaced": {}
+   },
+   {
+    "text": "3276 01 470703 3411",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "P",
+    "replaced": {}
+   },
+   {
+    "text": "2003-08-15",
+    "replaced": {}
+   },
+   {
+    "text": "NIK: struktur salah ditolak dengan alasan yang jelas",
+    "replaced": {}
+   },
+   {
+    "text": "12345",
+    "replaced": {}
+   },
+   {
+    "text": "format",
+    "replaced": {}
+   },
+   {
+    "text": "9901011508950001",
+    "replaced": {}
+   },
+   {
+    "text": "province",
+    "replaced": {}
+   },
+   {
+    "text": "3201011312955361",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "3201013102950001",
+    "replaced": {}
+   },
+   {
+    "text": "birth_date",
+    "replaced": {}
+   },
+   {
+    "text": "3201017508950001",
+    "replaced": {}
+   },
+   {
+    "text": "birth_date",
+    "replaced": {}
+   },
+   {
+    "text": "3201011508950000",
+    "replaced": {}
+   },
+   {
+    "text": "serial",
+    "replaced": {}
+   },
+   {
+    "text": "NIK: kode wilayah lama memberi peringatan, bukan error",
+    "replaced": {}
+   },
+   {
+    "text": "3201992609952143",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "wilayah_unknown",
+    "replaced": {}
+   },
+   {
+    "text": "NPWP: format 15 digit lama",
+    "replaced": {}
+   },
+   {
+    "text": "05.682.577.4-701.119",
+    "replaced": {
+     "NPWP": 1
+    }
+   },
+   {
+    "text": "npwp15",
+    "replaced": {}
+   },
+   {
+    "text": "0012345678901000",
+    "replaced": {}
+   },
+   {
+    "text": "05.682.577.4-701.119",
+    "replaced": {
+     "NPWP": 1
+    }
+   },
+   {
+    "text": "NPWP: 16 digit diawali 0 dan NIK sebagai NPWP",
+    "replaced": {}
+   },
+   {
+    "text": "0012345678901000",
+    "replaced": {}
+   },
+   {
+    "text": "npwp16",
+    "replaced": {}
+   },
+   {
+    "text": "3201010607955083",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "nik",
+    "replaced": {}
+   },
+   {
+    "text": "3201011508950000",
+    "replaced": {}
+   },
+   {
+    "text": "123",
+    "replaced": {}
+   },
+   {
+    "text": "HP: berbagai cara menulis, operator, dan format",
+    "replaced": {}
+   },
+   {
+    "text": "0812-5024-6610",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "+6281250246610",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "0812-5024-6610",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "6281250246610",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "Telkomsel",
+    "replaced": {}
+   },
+   {
+    "text": "+62 857 2571 6901",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "Indosat",
+    "replaced": {}
+   },
+   {
+    "text": "6289642187723",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "Tri",
+    "replaced": {}
+   },
+   {
+    "text": "6289642187723",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "Indosat Ooredoo Hutchison",
+    "replaced": {}
+   },
+   {
+    "text": "0881-7024-8971",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "XLSmart",
+    "replaced": {}
+   },
+   {
+    "text": "+62 (0) 812 3456 7890",
+    "replaced": {}
+   },
+   {
+    "text": "+6281250246610",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "Telepon rumah dan nomor tidak valid",
+    "replaced": {}
+   },
+   {
+    "text": "(021) 555-1234",
+    "replaced": {}
+   },
+   {
+    "text": "landline",
+    "replaced": {}
+   },
+   {
+    "text": "Jakarta",
+    "replaced": {}
+   },
+   {
+    "text": "+62215551234",
+    "replaced": {}
+   },
+   {
+    "text": "12345",
+    "replaced": {}
+   },
+   {
+    "text": "0812",
+    "replaced": {}
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "../src/kembaran.ts",
+    "replaced": {}
+   },
+   {
+    "text": "Budi Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "SITI AMINAH",
+    "replaced": {}
+   },
+   {
+    "text": "3201010607955083",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "3276014707033411",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "3456-7890",
+    "replaced": {}
+   },
+   {
+    "text": "3456 7890",
+    "replaced": {}
+   },
+   {
+    "text": "1111",
+    "replaced": {}
+   },
+   {
+    "text": "gmail.com",
+    "replaced": {}
+   },
+   {
+    "text": "yahoo",
+    "replaced": {}
+   },
+   {
+    "text": "Mawar",
+    "replaced": {}
+   },
+   {
+    "text": "Kenanga",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": "Kembaran: CSV pelanggan tanpa satu pun nilai asli, tetap konsisten dan valid",
+    "replaced": {}
+   },
+   {
+    "text": "uji",
+    "replaced": {}
+   },
+   {
+    "text": "the same person gets the same stand-in",
+    "replaced": {}
+   },
+   {
+    "text": "Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "the city stays",
+    "replaced": {}
+   },
+   {
+    "text": "casing follows the original",
+    "replaced": {}
+   },
+   {
+    "text": "320101",
+    "replaced": {}
+   },
+   {
+    "text": "L",
+    "replaced": {}
+   },
+   {
+    "text": "1995",
+    "replaced": {}
+   },
+   {
+    "text": "P",
+    "replaced": {}
+   },
+   {
+    "text": "-",
+    "replaced": {}
+   },
+   {
+    "text": "Telkomsel",
+    "replaced": {}
+   },
+   {
+    "text": "0812-… and 0812… are one person",
+    "replaced": {}
+   },
+   {
+    "text": "Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK",
+    "replaced": {}
+   },
+   {
+    "text": "uji",
+    "replaced": {}
+   },
+   {
+    "text": "Budi Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "3201010607955083",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "1234567890",
+    "replaced": {}
+   },
+   {
+    "text": "pelanggan_nik,npwp,gaji\n3201010607955083,3201010607955083,1452285",
+    "replaced": {
+     "NIK": 2,
+     "FINANCIAL": 1
+    }
+   },
+   {
+    "text": "(\\d{16})",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": ",",
+    "replaced": {}
+   },
+   {
+    "text": "the same NIK in another file",
+    "replaced": {}
+   },
+   {
+    "text": "an individual NPWP is their NIK",
+    "replaced": {}
+   },
+   {
+    "text": "Kembaran: kunci yang sama memberi hasil yang sama, kunci lain berbeda, tanpa kunci acak",
+    "replaced": {}
+   },
+   {
+    "text": "staging",
+    "replaced": {}
+   },
+   {
+    "text": "staging",
+    "replaced": {}
+   },
+   {
+    "text": "lain",
+    "replaced": {}
+   },
+   {
+    "text": "Kembaran: 5.000 NIK dari kecamatan, tahun, dan jenis kelamin yang sama tidak pernah bertabrakan",
+    "replaced": {}
+   },
+   {
+    "text": "tabrakan",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "NIK",
+    "replaced": {}
+   },
+   {
+    "text": "Kembaran: opsi keep, tanggal lahir utuh, dan teks bebas",
+    "replaced": {}
+   },
+   {
+    "text": "k",
+    "replaced": {}
+   },
+   {
+    "text": "NAME",
+    "replaced": {}
+   },
+   {
+    "text": "GENDER",
+    "replaced": {}
+   },
+   {
+    "text": "Budi Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "15-08-1995",
+    "replaced": {}
+   },
+   {
+    "text": "15 Agustus 2003",
+    "replaced": {}
+   },
+   {
+    "text": "3201010607955083",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "150895",
+    "replaced": {}
+   },
+   {
+    "text": "the NIK keeps the whole birth date too",
+    "replaced": {}
+   },
+   {
+    "text": "NAMA",
+    "replaced": {}
+   },
+   {
+    "text": "p",
+    "replaced": {}
+   },
+   {
+    "text": "Pasien: Siti Aminah, diagnosa: Demam. Plat B 6367 ZST, login dari 192.0.2.229, kartu 4539 1482 1935 0849. Agama: Buddha",
+    "replaced": {
+     "HEALTH": 1,
+     "PLATE": 1,
+     "IP": 1,
+     "CARD": 1,
+     "RELIGION": 1
+    }
+   },
+   {
+    "text": "Siti Aminah",
+    "replaced": {}
+   },
+   {
+    "text": "Diabetes",
+    "replaced": {}
+   },
+   {
+    "text": "1234 XYZ",
+    "replaced": {}
+   },
+   {
+    "text": "192.0.2.229",
+    "replaced": {
+     "IP": 1
+    }
+   },
+   {
+    "text": "4539 1482 1935 0849",
+    "replaced": {
+     "CARD": 1
+    }
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "453914",
+    "replaced": {}
+   },
+   {
+    "text": "the card keeps its issuer prefix",
+    "replaced": {}
+   },
+   {
+    "text": "and passes Luhn",
+    "replaced": {}
+   },
+   {
+    "text": "religion is kept by default",
+    "replaced": {}
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "26",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "COM.CONTOH.WWW",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "936000000000000001",
+    "replaced": {}
+   },
+   {
+    "text": "02",
+    "replaced": {}
+   },
+   {
+    "text": "000000000000001",
+    "replaced": {}
+   },
+   {
+    "text": "03",
+    "replaced": {}
+   },
+   {
+    "text": "UMI",
+    "replaced": {}
+   },
+   {
+    "text": "51",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "ID.CO.QRIS.WWW",
+    "replaced": {}
+   },
+   {
+    "text": "02",
+    "replaced": {}
+   },
+   {
+    "text": "ID1026000000001",
+    "replaced": {}
+   },
+   {
+    "text": "03",
+    "replaced": {}
+   },
+   {
+    "text": "UMI",
+    "replaced": {}
+   },
+   {
+    "text": "52",
+    "replaced": {}
+   },
+   {
+    "text": "5812",
+    "replaced": {}
+   },
+   {
+    "text": "53",
+    "replaced": {}
+   },
+   {
+    "text": "360",
+    "replaced": {}
+   },
+   {
+    "text": "58",
+    "replaced": {}
+   },
+   {
+    "text": "ID",
+    "replaced": {}
+   },
+   {
+    "text": "59",
+    "replaced": {}
+   },
+   {
+    "text": "KOPI CONTOH",
+    "replaced": {}
+   },
+   {
+    "text": "60",
+    "replaced": {}
+   },
+   {
+    "text": "BOGOR",
+    "replaced": {}
+   },
+   {
+    "text": "61",
+    "replaced": {}
+   },
+   {
+    "text": "16914",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "11",
+    "replaced": {}
+   },
+   {
+    "text": "62",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "INV-77",
+    "replaced": {}
+   },
+   {
+    "text": "07",
+    "replaced": {}
+   },
+   {
+    "text": "A01",
+    "replaced": {}
+   },
+   {
+    "text": "CRC-16/CCITT-FALSE",
+    "replaced": {}
+   },
+   {
+    "text": "123456789",
+    "replaced": {}
+   },
+   {
+    "text": "29B1",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "FFFF",
+    "replaced": {}
+   },
+   {
+    "text": "QRIS statis dibaca lengkap",
+    "replaced": {}
+   },
+   {
+    "text": "static",
+    "replaced": {}
+   },
+   {
+    "text": "KOPI CONTOH",
+    "replaced": {}
+   },
+   {
+    "text": "BOGOR",
+    "replaced": {}
+   },
+   {
+    "text": "16914",
+    "replaced": {}
+   },
+   {
+    "text": "ID1026000000001",
+    "replaced": {}
+   },
+   {
+    "text": "UMI",
+    "replaced": {}
+   },
+   {
+    "text": "Usaha Mikro",
+    "replaced": {}
+   },
+   {
+    "text": "5812",
+    "replaced": {}
+   },
+   {
+    "text": "26",
+    "replaced": {}
+   },
+   {
+    "text": "COM.CONTOH.WWW",
+    "replaced": {}
+   },
+   {
+    "text": "936000000000000001",
+    "replaced": {}
+   },
+   {
+    "text": "000000000000001",
+    "replaced": {}
+   },
+   {
+    "text": "UMI",
+    "replaced": {}
+   },
+   {
+    "text": "51",
+    "replaced": {}
+   },
+   {
+    "text": "ID.CO.QRIS.WWW",
+    "replaced": {}
+   },
+   {
+    "text": "ID1026000000001",
+    "replaced": {}
+   },
+   {
+    "text": "UMI",
+    "replaced": {}
+   },
+   {
+    "text": "INV-77",
+    "replaced": {}
+   },
+   {
+    "text": "A01",
+    "replaced": {}
+   },
+   {
+    "text": "QRIS statis menjadi dinamis dengan nominal, field lain tetap",
+    "replaced": {}
+   },
+   {
+    "text": "dynamic",
+    "replaced": {}
+   },
+   {
+    "text": "25000",
+    "replaced": {}
+   },
+   {
+    "text": "ID1026000000001",
+    "replaced": {}
+   },
+   {
+    "text": "5303360540525000",
+    "replaced": {}
+   },
+   {
+    "text": "5802ID",
+    "replaced": {}
+   },
+   {
+    "text": "the amount sits between currency and country",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "54",
+    "replaced": {}
+   },
+   {
+    "text": "63",
+    "replaced": {}
+   },
+   {
+    "text": "1500.50",
+    "replaced": {}
+   },
+   {
+    "text": "1500.50",
+    "replaced": {}
+   },
+   {
+    "text": "100000",
+    "replaced": {}
+   },
+   {
+    "text": "fixed",
+    "replaced": {}
+   },
+   {
+    "text": "2500",
+    "replaced": {}
+   },
+   {
+    "text": "percent",
+    "replaced": {}
+   },
+   {
+    "text": "0.70",
+    "replaced": {}
+   },
+   {
+    "text": "12,000",
+    "replaced": {}
+   },
+   {
+    "text": "1e5",
+    "replaced": {}
+   },
+   {
+    "text": "12345678901234",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "QRIS rusak dan yang bukan QRIS dikenali",
+    "replaced": {}
+   },
+   {
+    "text": "0000",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "payload_format",
+    "replaced": {}
+   },
+   {
+    "text": "https://example.com",
+    "replaced": {}
+   },
+   {
+    "text": "format",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "11",
+    "replaced": {}
+   },
+   {
+    "text": "5303360",
+    "replaced": {}
+   },
+   {
+    "text": "5303840",
+    "replaced": {}
+   },
+   {
+    "text": "currency",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "59",
+    "replaced": {}
+   },
+   {
+    "text": "KOPI CONTOH",
+    "replaced": {}
+   },
+   {
+    "text": "59",
+    "replaced": {}
+   },
+   {
+    "text": "WARUNG KOPI CONTOH SEJAHTERA",
+    "replaced": {}
+   },
+   {
+    "text": "merchant_name",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "12",
+    "replaced": {}
+   },
+   {
+    "text": "not_qris",
+    "replaced": {}
+   },
+   {
+    "text": "dynamic_without_amount",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "55",
+    "replaced": {}
+   },
+   {
+    "text": "02",
+    "replaced": {}
+   },
+   {
+    "text": "tip",
+    "replaced": {}
+   },
+   {
+    "text": "00",
+    "replaced": {}
+   },
+   {
+    "text": "01",
+    "replaced": {}
+   },
+   {
+    "text": "53",
+    "replaced": {}
+   },
+   {
+    "text": "360",
+    "replaced": {}
+   },
+   {
+    "text": "duplicate",
+    "replaced": {}
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "formatRupiah mengikuti PUEBI",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1.500.000",
+    "replaced": {}
+   },
+   {
+    "text": "Rp0",
+    "replaced": {}
+   },
+   {
+    "text": "-Rp25.000",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1.500.000,50",
+    "replaced": {}
+   },
+   {
+    "text": "999",
+    "replaced": {}
+   },
+   {
+    "text": "formatRupiahShort",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1,5 jt",
+    "replaced": {}
+   },
+   {
+    "text": "Rp2,3 M",
+    "replaced": {}
+   },
+   {
+    "text": "Rp15 rb",
+    "replaced": {}
+   },
+   {
+    "text": "Rp750",
+    "replaced": {}
+   },
+   {
+    "text": "Rp 25.000",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1.500.000,00",
+    "replaced": {}
+   },
+   {
+    "text": "1,500,000",
+    "replaced": {}
+   },
+   {
+    "text": "1,5jt",
+    "replaced": {}
+   },
+   {
+    "text": "1.5 juta",
+    "replaced": {}
+   },
+   {
+    "text": "50k",
+    "replaced": {}
+   },
+   {
+    "text": "50rb",
+    "replaced": {}
+   },
+   {
+    "text": "15ribu",
+    "replaced": {}
+   },
+   {
+    "text": "1jt 500rb",
+    "replaced": {}
+   },
+   {
+    "text": "2jtan",
+    "replaced": {}
+   },
+   {
+    "text": "50rb-an",
+    "replaced": {}
+   },
+   {
+    "text": "sekitar 1 juta",
+    "replaced": {}
+   },
+   {
+    "text": "2 juta lebih",
+    "replaced": {}
+   },
+   {
+    "text": "goceng",
+    "replaced": {}
+   },
+   {
+    "text": "goceng aja kak",
+    "replaced": {}
+   },
+   {
+    "text": "2 ceban",
+    "replaced": {}
+   },
+   {
+    "text": "cepek ceng",
+    "replaced": {}
+   },
+   {
+    "text": "gopek",
+    "replaced": {}
+   },
+   {
+    "text": "sejuta setengah",
+    "replaced": {}
+   },
+   {
+    "text": "setengah juta",
+    "replaced": {}
+   },
+   {
+    "text": "dua setengah juta",
+    "replaced": {}
+   },
+   {
+    "text": "satu setengah juta",
+    "replaced": {}
+   },
+   {
+    "text": "dua ratus lima puluh ribu",
+    "replaced": {}
+   },
+   {
+    "text": "seratus dua belas",
+    "replaced": {}
+   },
+   {
+    "text": "seribu lima ratus",
+    "replaced": {}
+   },
+   {
+    "text": "dua puluh lima juta tiga ratus ribu",
+    "replaced": {}
+   },
+   {
+    "text": "1,2 M",
+    "replaced": {}
+   },
+   {
+    "text": "parseRupiah menolak teks yang bukan nominal",
+    "replaced": {}
+   },
+   {
+    "text": "pisang goreng",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "jutaan",
+    "replaced": {}
+   },
+   {
+    "text": "terbilang",
+    "replaced": {}
+   },
+   {
+    "text": "nol",
+    "replaced": {}
+   },
+   {
+    "text": "sebelas",
+    "replaced": {}
+   },
+   {
+    "text": "lima belas",
+    "replaced": {}
+   },
+   {
+    "text": "dua puluh satu",
+    "replaced": {}
+   },
+   {
+    "text": "seratus",
+    "replaced": {}
+   },
+   {
+    "text": "seratus sepuluh",
+    "replaced": {}
+   },
+   {
+    "text": "seribu",
+    "replaced": {}
+   },
+   {
+    "text": "seribu satu",
+    "replaced": {}
+   },
+   {
+    "text": "sebelas ribu",
+    "replaced": {}
+   },
+   {
+    "text": "seratus ribu",
+    "replaced": {}
+   },
+   {
+    "text": "satu juta",
+    "replaced": {}
+   },
+   {
+    "text": "satu juta lima ratus ribu",
+    "replaced": {}
+   },
+   {
+    "text": "dua miliar",
+    "replaced": {}
+   },
+   {
+    "text": "minus lima",
+    "replaced": {}
+   },
+   {
+    "text": "dua koma lima",
+    "replaced": {}
+   },
+   {
+    "text": "satu kuintiliun",
+    "replaced": {}
+   },
+   {
+    "text": "terbilang untuk kuitansi",
+    "replaced": {}
+   },
+   {
+    "text": "satu juta lima ratus ribu rupiah",
+    "replaced": {}
+   },
+   {
+    "text": "title",
+    "replaced": {}
+   },
+   {
+    "text": "Satu Juta Lima Ratus Ribu Rupiah",
+    "replaced": {}
+   },
+   {
+    "text": "sentence",
+    "replaced": {}
+   },
+   {
+    "text": "Dua puluh lima ribu",
+    "replaced": {}
+   },
+   {
+    "text": "pembulatan yang melewati satuan dan angka sangat besar",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1 jt",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1 rb",
+    "replaced": {}
+   },
+   {
+    "text": "Rp950 rb",
+    "replaced": {}
+   },
+   {
+    "text": "Rp1.000.000.000.000.000.000.000",
+    "replaced": {}
+   },
+   {
+    "text": "Rp0,13",
+    "replaced": {}
+   },
+   {
+    "text": "Rp3",
+    "replaced": {}
+   },
+   {
+    "text": "parseRupiah tidak tertipu nama properti bawaan objek",
+    "replaced": {}
+   },
+   {
+    "text": "constructor",
+    "replaced": {}
+   },
+   {
+    "text": "2 toString",
+    "replaced": {}
+   },
+   {
+    "text": "terbilang angka desimal sangat kecil",
+    "replaced": {}
+   },
+   {
+    "text": "nol koma nol nol nol nol nol nol satu",
+    "replaced": {}
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "Halo kak, saya mau komplain. Nama: Budi Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "NIK 3201010607955083, NPWP 05.682.577.4-701.119",
+    "replaced": {
+     "NIK": 1,
+     "NPWP": 1
+    }
+   },
+   {
+    "text": "HP 0812-5024-6610 atau email paulus.effendi82@example.com",
+    "replaced": {
+     "PHONE": 1,
+     "EMAIL": 1
+    }
+   },
+   {
+    "text": "Refund ke rek BCA 4530618462 a.n. Budi Santoso ya",
+    "replaced": {
+     "BANK_ACCOUNT": 1
+    }
+   },
+   {
+    "text": "Alamat Jl. Swadaya No. 7 RT 07/RW 03, motor B 6367 ZST",
+    "replaced": {
+     "ADDRESS": 1,
+     "PLATE": 1
+    }
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": "mendeteksi semua jenis PII khas Indonesia dalam satu chat",
+    "replaced": {}
+   },
+   {
+    "text": "NAME:Budi Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "NIK:3201010607955083",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "NPWP:05.682.577.4-701.119",
+    "replaced": {
+     "NPWP": 1
+    }
+   },
+   {
+    "text": "PHONE:0812-5024-6610",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "EMAIL:paulus.effendi82@example.com",
+    "replaced": {
+     "EMAIL": 1
+    }
+   }
+  ]
+ }
+]

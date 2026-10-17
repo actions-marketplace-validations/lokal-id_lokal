@@ -650,6 +650,7 @@ _NAME_STOP_CHAT = rx(
 # A name ends at an emoji, a pictograph, or ! and ?. Detectors see UTF-16, so an emoji is a surrogate pair here.
 _NAME_END = rx(r'[!?\u2190-\u2bff\ud800-\udfff\ufe0f]')
 _MULTI_PART: frozenset[PiiType] = frozenset(('ADDRESS', 'BIRTH_DATE', 'HEALTH', 'GEO'))
+_SENTENCE_END = rx(r'\.\s+[A-Z]')
 _VALUE_END = rx(r'[;|&]')
 _NEXT_PAIR = rx(r'\s+[A-Za-z_][\w.-]*=(?!=)')
 _WS_ONE = rx(r'\s')
@@ -703,6 +704,11 @@ def _cut_value(pii_type: PiiType, raw: str) -> str:
                     cut = i
                     break
             v = _take_words(head, cut)
+    if pii_type == 'HEALTH':
+        # "diagnosa: Diabetes tipe 2. Plat B 1234 XYZ": a condition ends with its sentence.
+        end = _js_search(_SENTENCE_END, v)
+        if end >= 0:
+            v = v[:end]
     if pii_type in _MULTI_PART:
         # "Alamat: Jl. Mawar No. 5, Depok, HP 0812…": keep commas until a segment opens with a field name.
         parts = v.split(',')
@@ -876,8 +882,26 @@ def _strip_cr(s: str) -> str:
 _HEADER_SENTENCE_END = re.compile(r'[.!?]\Z')
 
 
+_NUMBERED_LINE = rx(r'^ *(\d{1,7})(?:\t|\u2192)')
+_NUMBERED_LINES = rx(r'^ *\d{1,7}(?:\t|\u2192)', 'gm')
+
+
+def _blank_line_numbers(text: str) -> str:
+    """A file shown with line numbers, as an agent's Read tool or `cat -n` prints it, with the numbers blanked out.
+
+    The header row is then a header again. Same length, so offsets stay put.
+    """
+    first = _NUMBERED_LINE.search(text)
+    break_at = text.find('\n')
+    second = _NUMBERED_LINE.search(text[break_at + 1 :]) if break_at >= 0 else None
+    if not first or not second or int(second.group(1)) != int(first.group(1)) + 1:
+        return text
+    return _NUMBERED_LINES.sub(lambda m: ' ' * len(m.group(0)), text)
+
+
 def _detect_csv_columns(text: str) -> list[PiiMatch]:
     """Every cell under a header that says what it holds: nama, nik, agama, diagnosa, gaji, …"""
+    text = _blank_line_numbers(text)
     first_break = text.find('\n')
     if first_break == -1:
         return []
@@ -937,6 +961,7 @@ def _detect_tab_tables(text: str) -> list[PiiMatch]:
     """
     if '\t' not in text:
         return []
+    text = _blank_line_numbers(text)
     out: list[PiiMatch] = []
     header: Optional[list[str]] = None
     columns: list[Optional[PiiType]] = []

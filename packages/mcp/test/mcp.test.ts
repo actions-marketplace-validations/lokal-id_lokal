@@ -65,11 +65,33 @@ async function call(name: string, args: Record<string, unknown> = {}) {
 test('server mengiklankan semua tool beserta instruksinya', async () => {
   const { tools } = await client.listTools();
   assert.deepEqual(tools.map((t) => t.name).sort(), [
-    'format_rupiah', 'list_holidays', 'list_wilayah', 'lookup_kode_pos', 'parse_nik', 'parse_phone',
-    'parse_rupiah', 'read_file_masked', 'scan_pii', 'search_wilayah', 'validate_npwp', 'working_days',
-    'write_file_unmasked',
+    'anonymize_file', 'format_rupiah', 'list_holidays', 'list_wilayah', 'lookup_kode_pos', 'parse_nik', 'parse_phone', 'parse_qris',
+    'parse_rupiah', 'read_file_masked', 'scan_pii', 'search_wilayah', 'set_qris_amount', 'validate_npwp',
+    'working_days', 'write_file_unmasked',
   ]);
   assert.match(client.getInstructions() ?? '', /read_file_masked/);
+});
+
+test('server HTTP untuk ChatGPT dan Claude.ai: tool data saja, tanpa akses file', async () => {
+  const { startHttpServer } = await import('../src/server.ts');
+  const { StreamableHTTPClientTransport } = await import('@modelcontextprotocol/sdk/client/streamableHttp.js');
+  const http = await startHttpServer(0);
+  const url = `http://127.0.0.1:${(http.address() as { port: number }).port}`;
+  try {
+    const remote = new Client({ name: 'remote', version: '0.0.0' });
+    await remote.connect(new StreamableHTTPClientTransport(new URL(`${url}/mcp`)));
+    const names = (await remote.listTools()).tools.map((t) => t.name);
+    assert.ok(names.includes('parse_nik') && names.includes('parse_qris') && names.includes('search_wilayah'));
+    for (const fileTool of ['scan_pii', 'read_file_masked', 'write_file_unmasked']) assert.ok(!names.includes(fileTool), fileTool);
+    assert.doesNotMatch(remote.getInstructions() ?? '', /read_file_masked/);
+    const res = (await remote.callTool({ name: 'parse_nik', arguments: { nik: '3201011508950001' } })) as { content: Array<{ text: string }> };
+    assert.equal(JSON.parse(res.content[0]!.text).regency, 'Kabupaten Bogor');
+    await remote.close();
+    assert.equal((await fetch(`${url}/mcp`)).status, 405);
+    assert.match(await (await fetch(url)).text(), /Lokal MCP server/);
+  } finally {
+    http.close();
+  }
 });
 
 test('tool data Indonesia', async () => {
@@ -81,6 +103,20 @@ test('tool data Indonesia', async () => {
   assert.equal((await call('search_wilayah', { query: 'depok' })).data[0].code, '32.76');
   assert.equal((await call('list_wilayah')).data.length, 38);
   assert.equal((await call('list_wilayah', { parent_code: '99' })).isError, true);
+
+  // A made-up static QRIS: read it, then make it dynamic for Rp25.000 plus a 0.7% fee.
+  const f = (tag: string, value: string) => tag + String(value.length).padStart(2, '0') + value;
+  const fields = f('00', '01') + f('01', '11') + f('51', f('00', 'ID.CO.QRIS.WWW') + f('02', 'ID1026000000001') + f('03', 'UMI'))
+    + f('52', '5812') + f('53', '360') + f('58', 'ID') + f('59', 'KOPI CONTOH') + f('60', 'BOGOR') + '6304';
+  const crc = (await call('parse_qris', { payload: `${fields}0000` })).data;
+  assert.equal(crc.valid, false);
+  const expected = /seharusnya ([0-9A-F]{4})/.exec(crc.errors[0].message)![1];
+  const read = (await call('parse_qris', { payload: fields + expected })).data;
+  assert.deepEqual([read.valid, read.type, read.nmid, read.criteriaLabel], [true, 'static', 'ID1026000000001', 'Usaha Mikro']);
+  const dynamic = (await call('set_qris_amount', { payload: fields + expected, amount: 25000, fee_percent: 0.7 })).data;
+  assert.deepEqual([dynamic.type, dynamic.amount, dynamic.tip], ['dynamic', '25000', { kind: 'percent', value: '0.70' }]);
+  assert.equal((await call('parse_qris', { payload: dynamic.payload })).data.valid, true);
+  assert.equal((await call('set_qris_amount', { payload: fields + expected, amount: 0 })).isError, true);
 });
 
 test('kode pos, hari libur, dan hari kerja', async () => {
@@ -241,6 +277,44 @@ test('guard: foto dokumen dan PDF yang tidak terbaca ditanyakan dulu ke pengguna
   writeFileSync(path.join(dir, '.samaranignore'), 'test/\n');
 });
 
+test('guard untuk Cursor: selalu menjawab JSON dalam format Cursor', () => {
+  const cursor = (event: object) => {
+    const r = guard({ conversation_id: 'c1', workspace_roots: [dir], ...event });
+    assert.equal(r.status, 0, r.stderr);
+    return JSON.parse(r.stdout);
+  };
+  const prompt = cursor({ hook_event_name: 'beforeSubmitPrompt', prompt: 'cek NIK 3201011508950001 dong' });
+  assert.equal(prompt.continue, false);
+  assert.match(prompt.user_message, /Samaran menahan prompt ini/);
+  assert.deepEqual(cursor({ hook_event_name: 'beforeSubmitPrompt', prompt: 'bikin form checkout' }), { continue: true });
+
+  const read = (file: string) => cursor({ hook_event_name: 'beforeReadFile', file_path: path.join(dir, file), content: '' });
+  assert.equal(read('pelanggan.csv').permission, 'deny');
+  assert.match(read('pelanggan.csv').user_message, /read_file_masked/);
+  assert.deepEqual(read('README.md'), { permission: 'allow' });
+  assert.deepEqual(Object.keys(read('pelanggan.csv')).sort(), ['permission', 'user_message'], 'only documented fields');
+  const photo = read('ekspor/ktp.jpg');
+  assert.equal(photo.permission, 'deny');
+  assert.match(photo.user_message, /Cursor tidak bisa bertanya dulu/);
+
+  const shell = (command: string) => cursor({ hook_event_name: 'beforeShellExecution', command, cwd: dir, sandbox: false });
+  const cat = shell('cat pelanggan.csv');
+  assert.equal(cat.permission, 'deny');
+  assert.match(cat.agent_message, /read_file_masked/);
+  assert.deepEqual(shell('ls'), { permission: 'allow' });
+});
+
+test('guard untuk Gemini CLI: exit code 2 untuk prompt dan tool yang ditahan', () => {
+  const gemini = (event: object) => guard({ session_id: 's1', cwd: dir, timestamp: '2026-10-17T00:00:00Z', ...event });
+  assert.equal(gemini({ hook_event_name: 'BeforeAgent', prompt: 'NIK 3201011508950001' }).status, 2);
+  assert.equal(gemini({ hook_event_name: 'BeforeAgent', prompt: 'buat landing page' }).status, 0);
+  const read = gemini({ hook_event_name: 'BeforeTool', tool_name: 'read_file', tool_input: { absolute_path: path.join(dir, 'pelanggan.csv') } });
+  assert.equal(read.status, 2);
+  assert.match(read.stderr, /read_file_masked/);
+  assert.equal(gemini({ hook_event_name: 'BeforeTool', tool_name: 'run_shell_command', tool_input: { command: 'cat pelanggan.csv' } }).status, 2);
+  assert.equal(gemini({ hook_event_name: 'BeforeTool', tool_name: 'write_file', tool_input: { file_path: 'x.txt' } }).status, 0);
+});
+
 test('guard: Bash/PowerShell yang mencetak file data ditahan, skrip pengolah diloloskan', () => {
   const sh = (command: string, tool = 'Bash') =>
     guard({ hook_event_name: 'PreToolUse', tool_name: tool, tool_input: { command }, cwd: dir }).status;
@@ -397,4 +471,33 @@ test('PDF: teks dipindai dan disamarkan, halaman hasil scan dilaporkan, guard me
   assert.equal(shell('pdftotext pdf/invoice.pdf - | head -20'), 2);
   assert.equal(shell('pdftotext pdf/invoice.pdf invoice.txt'), 0, 'writes a file instead');
   assert.equal(shell('pdfinfo pdf/invoice.pdf'), 0);
+});
+
+test('anonymize_file: dump produksi jadi data staging, konsisten antarfile, agent tidak melihat isinya', async () => {
+  mkdirSync(path.join(dir, 'prod'), { recursive: true });
+  writeFileSync(path.join(dir, 'prod', 'pelanggan.sql'), "INSERT INTO pelanggan (nama, nik, no_hp) VALUES ('Budi Santoso', '3201011508950001', '0812-3456-7890');\n");
+  writeFileSync(path.join(dir, 'prod', 'kredit.csv'), 'nik,gaji\n3201011508950001,8500000\n');
+  const res = await call('anonymize_file', { paths: ['prod/pelanggan.sql', 'prod/kredit.csv'], output: 'staging', secret: 'uji', keep: ['FINANCIAL'] });
+  assert.equal(res.isError, undefined, res.text);
+  assert.deepEqual(res.data.files.map((f: any) => f.to), ['staging/pelanggan.sql', 'staging/kredit.csv']);
+  assert.deepEqual(res.data.files[0].replaced, { NAME: 1, NIK: 1, PHONE: 1 });
+  assert.match(res.data.note, /samaranignore/);
+  for (const secret of ['Budi Santoso', '3201011508950001', '3456-7890']) assert.ok(!res.text.includes(secret), secret);
+
+  const sql = readFileSync(path.join(dir, 'staging', 'pelanggan.sql'), 'utf8');
+  const csv = readFileSync(path.join(dir, 'staging', 'kredit.csv'), 'utf8');
+  for (const secret of ['Budi Santoso', '3201011508950001', '3456-7890']) assert.ok(!sql.includes(secret) && !csv.includes(secret), secret);
+  const nik = /'(\d{16})'/.exec(sql)![1]!;
+  assert.equal(csv.split('\n')[1], `${nik},8500000`, 'the same customer in both files; FINANCIAL kept');
+
+  const again = await call('anonymize_file', { paths: ['prod/kredit.csv'], output: 'staging/kredit.csv', secret: 'uji' });
+  assert.match(again.text, /already exists/);
+  assert.match((await call('anonymize_file', { paths: ['../luar.sql'], output: 'x.sql' })).text, /outside the allowed root/);
+  assert.match((await call('anonymize_file', { paths: ['ekspor/pelanggan.xlsx'], output: 'x.xlsx' })).text, /not a text file/);
+
+  // The same through the command line, with the same secret: the same stand-ins.
+  const cli = spawnSync(process.execPath, [CLI, 'kembaran', path.join(dir, 'prod', 'kredit.csv'), '-o', path.join(dir, 'cli.csv'), '--secret', 'uji', '--keep', 'FINANCIAL'], { encoding: 'utf8' });
+  assert.equal(cli.status, 0, cli.stderr);
+  assert.match(cli.stderr, /NIK=1/);
+  assert.equal(readFileSync(path.join(dir, 'cli.csv'), 'utf8'), csv);
 });

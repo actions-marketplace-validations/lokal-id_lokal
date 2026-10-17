@@ -267,7 +267,7 @@ function grepTool(input: NonNullable<HookInput['tool_input']>, cwd: string, igno
 }
 
 /** Whether to block or ask, with the message; undefined to allow. */
-export function evaluate(input: HookInput): Verdict | undefined {
+export function evaluate(input: HookInput, projectRoot?: string): Verdict | undefined {
   if (process.env.SAMARAN_GUARD === 'off') return undefined;
 
   if (input.hook_event_name === 'UserPromptSubmit' && input.prompt) {
@@ -282,7 +282,7 @@ export function evaluate(input: HookInput): Verdict | undefined {
   }
 
   if (input.hook_event_name !== 'PreToolUse' || !input.tool_input) return undefined;
-  const root = process.env.CLAUDE_PROJECT_DIR ?? input.cwd ?? process.cwd();
+  const root = projectRoot ?? process.env.CLAUDE_PROJECT_DIR ?? input.cwd ?? process.cwd();
   const cwd = input.cwd ?? root;
   const ignored = loadIgnore(root);
   const tool = input.tool_input;
@@ -306,21 +306,111 @@ export function evaluate(input: HookInput): Verdict | undefined {
   }
 }
 
+// ------------------------------------------------------------------------------------------------ other agents
+//
+// The same guard for other agents' hooks. Codex CLI uses Claude Code's format (PreToolUse with Bash, UserPromptSubmit,
+// exit code 2) and needs nothing here. Cursor and Gemini CLI name their events differently and answer differently;
+// their event names tell them apart, so one command, `lokal-mcp guard`, serves every agent.
+
+interface OtherAgentInput {
+  hook_event_name?: string;
+  prompt?: string;
+  file_path?: string;
+  command?: string;
+  cwd?: string;
+  workspace_roots?: string[];
+  tool_name?: string;
+  tool_input?: { file_path?: string; absolute_path?: string; path?: string; command?: string };
+}
+
+type Agent = 'claude' | 'cursor' | 'gemini';
+const CURSOR_EVENTS = new Set(['beforeSubmitPrompt', 'beforeReadFile', 'beforeShellExecution']);
+const GEMINI_EVENTS = new Set(['BeforeAgent', 'BeforeTool']);
+// Cursor and Gemini CLI run shell commands in PowerShell on Windows.
+const shellToolName = () => (process.platform === 'win32' ? 'PowerShell' : 'Bash');
+
+/** The event in Claude Code's terms, which `evaluate` speaks, and the project root to use. */
+export function translate(raw: OtherAgentInput & HookInput): { agent: Agent; input: HookInput; root?: string } {
+  const event = raw.hook_event_name ?? '';
+  if (CURSOR_EVENTS.has(event)) {
+    const root = raw.workspace_roots?.[0];
+    if (event === 'beforeSubmitPrompt') return { agent: 'cursor', input: { hook_event_name: 'UserPromptSubmit', prompt: raw.prompt }, root };
+    if (event === 'beforeReadFile') {
+      return { agent: 'cursor', input: { hook_event_name: 'PreToolUse', tool_name: 'Read', tool_input: { file_path: raw.file_path }, cwd: root }, root };
+    }
+    return {
+      agent: 'cursor',
+      input: { hook_event_name: 'PreToolUse', tool_name: shellToolName(), tool_input: { command: raw.command }, cwd: raw.cwd ?? root },
+      root,
+    };
+  }
+  if (GEMINI_EVENTS.has(event)) {
+    if (event === 'BeforeAgent') return { agent: 'gemini', input: { hook_event_name: 'UserPromptSubmit', prompt: raw.prompt, cwd: raw.cwd } };
+    const tool = raw.tool_input ?? {};
+    if (raw.tool_name === 'read_file') {
+      const file = tool.file_path ?? tool.absolute_path ?? tool.path;
+      return { agent: 'gemini', input: { hook_event_name: 'PreToolUse', tool_name: 'Read', tool_input: { file_path: file }, cwd: raw.cwd } };
+    }
+    if (raw.tool_name === 'run_shell_command') {
+      return { agent: 'gemini', input: { hook_event_name: 'PreToolUse', tool_name: shellToolName(), tool_input: { command: tool.command }, cwd: raw.cwd } };
+    }
+    return { agent: 'gemini', input: { hook_event_name: 'PreToolUse', tool_name: raw.tool_name, cwd: raw.cwd } };
+  }
+  return { agent: 'claude', input: raw };
+}
+
+/** What a hook prints and exits with, in the agent's own format. */
+export function respond(agent: Agent, event: string, verdict: Verdict | undefined): { stdout?: string; stderr?: string; exitCode: number } {
+  if (agent === 'cursor') {
+    // Cursor treats a permission hook without valid JSON as a denial, so it always gets an answer.
+    if (event === 'beforeSubmitPrompt') {
+      return { stdout: JSON.stringify(verdict ? { continue: false, user_message: verdict.message } : { continue: true }), exitCode: 0 };
+    }
+    if (!verdict) return { stdout: JSON.stringify({ permission: 'allow' }), exitCode: 0 };
+    if (event === 'beforeReadFile') {
+      // Reads cannot ask in Cursor: what Samaran cannot check is held back, with a way to allow it.
+      const message = verdict.action === 'ask' ? `${verdict.message} (Cursor tidak bisa bertanya dulu, jadi berkas ini ditahan.)` : verdict.message;
+      return { stdout: JSON.stringify({ permission: 'deny', user_message: message }), exitCode: 0 };
+    }
+    return {
+      stdout: JSON.stringify(
+        verdict.action === 'ask'
+          ? { permission: 'ask', user_message: verdict.message }
+          : { permission: 'deny', user_message: verdict.message, agent_message: verdict.message },
+      ),
+      exitCode: 0,
+    };
+  }
+  if (!verdict) return { exitCode: 0 };
+  if (verdict.action === 'ask' && agent === 'claude') {
+    // Claude Code shows the reason in its permission prompt, and asks in auto mode too.
+    const hookSpecificOutput = { hookEventName: 'PreToolUse', permissionDecision: 'ask', permissionDecisionReason: verdict.message };
+    return { stdout: JSON.stringify({ hookSpecificOutput }), exitCode: 0 };
+  }
+  // A block, or an ask in Gemini CLI, which cannot ask: exit code 2 with the reason on stderr.
+  return { stderr: verdict.message, exitCode: 2 };
+}
+
 export async function runGuard(): Promise<void> {
+  let agent: Agent = 'claude';
+  let event = '';
   try {
     let raw = '';
     for await (const chunk of process.stdin) raw += chunk;
-    const verdict = evaluate(JSON.parse(raw) as HookInput);
-    if (verdict?.action === 'block') {
-      process.stderr.write(`${verdict.message}\n`);
-      process.exitCode = 2;
-    } else if (verdict?.action === 'ask') {
-      // Claude Code shows the reason in its permission prompt, and asks in auto mode too.
-      const hookSpecificOutput = { hookEventName: 'PreToolUse', permissionDecision: 'ask', permissionDecisionReason: verdict.message };
-      process.stdout.write(`${JSON.stringify({ hookSpecificOutput })}\n`);
-    }
+    const parsed = JSON.parse(raw) as OtherAgentInput & HookInput;
+    const translated = translate(parsed);
+    agent = translated.agent;
+    event = parsed.hook_event_name ?? '';
+    const out = respond(agent, event, evaluate(translated.input, translated.root));
+    if (out.stdout) process.stdout.write(`${out.stdout}\n`);
+    if (out.stderr) process.stderr.write(`${out.stderr}\n`);
+    process.exitCode = out.exitCode;
   } catch (e) {
     process.stderr.write(`samaran-guard: ${(e as Error).message}\n`);
+    // A broken guard must never break the session: allow, in the agent's format.
+    const out = respond(agent, event, undefined);
+    if (out.stdout) process.stdout.write(`${out.stdout}\n`);
+    process.exitCode = 0;
   }
 }
 

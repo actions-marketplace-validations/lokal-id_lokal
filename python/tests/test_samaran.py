@@ -228,6 +228,16 @@ def test_tab_tables_from_excel_word_and_pdf_text() -> None:
     assert values('Nama\t: Budi Santoso\nAgama\t:\tIslam') == ['NAME:Budi Santoso', 'RELIGION:Islam']
 
 
+def test_line_numbered_files_from_agent_read_tools() -> None:
+    arrow = chr(0x2192)
+    text = f'1{arrow}nama,nik,kota\n2{arrow}Budi Santoso,3201011508950001,Bogor\n3{arrow}Siti Aminah,3276015508030002,Depok'
+    assert values(text, ['NAME']) == ['NAME:Budi Santoso', 'NAME:Siti Aminah']
+    assert values('     1\tnama,nik\n     2\tBudi Santoso,3201011508950001', ['NAME']) == ['NAME:Budi Santoso']
+    assert values('1\tNama\tNIK\n2\tRina Wati\t3276014503920002', ['NAME']) == ['NAME:Rina Wati']
+    # Numbers that do not count up are data, not line numbers.
+    assert values('12\tnama,nik\n7\tBudi Santoso,3201011508950001', ['NAME']) == []
+
+
 @pytest.mark.parametrize('benign', [
     'n01687978\tagama\nn01688243\tfrilled lizard\nn01688961\tChamaeleo oweni',
     '\t\t\tuser\tuser name\n\t\t\thost\thost name\n\t\t\tpid\tPID of the Vim process',

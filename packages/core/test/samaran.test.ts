@@ -299,6 +299,16 @@ test('tabel ber-tab di tengah teks: salinan Excel/Word dan teks PDF', () => {
   }
 });
 
+test('file dengan nomor baris (tool Read agent, cat -n): header tetap dikenali', () => {
+  assert.deepEqual(values('1\u2192nama,nik,kota\n2\u2192Budi Santoso,3201011508950001,Bogor\n3\u2192Siti Aminah,3276015508030002,Depok', ['NAME']), [
+    'NAME:Budi Santoso', 'NAME:Siti Aminah',
+  ]);
+  assert.deepEqual(values('     1\tnama,nik\n     2\tBudi Santoso,3201011508950001', ['NAME']), ['NAME:Budi Santoso']);
+  assert.deepEqual(values('1\tNama\tNIK\n2\tRina Wati\t3276014503920002', ['NAME']), ['NAME:Rina Wati']);
+  // Numbers that do not count up are data, not line numbers.
+  assert.deepEqual(values('12\tnama,nik\n7\tBudi Santoso,3201011508950001', ['NAME']), []);
+});
+
 test('nilai yang ditemukan selalu sama persis dengan teks di posisinya', () => {
   // Rejoining "Siti   Aminah" with single spaces once made the mask stop short and leave "ah" visible.
   const texts = [

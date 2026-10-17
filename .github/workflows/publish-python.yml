@@ -3,6 +3,10 @@ name: Publish Python package
 # Push a tag like py-v0.2.3 to build lokal-id from that commit, test it, and upload it to PyPI.
 # Uses PyPI Trusted Publishing: no token is stored anywhere. The publisher is configured on
 # pypi.org for this repository, this workflow file, and the "pypi" environment.
+#
+# The build job installs the test tools from uv.lock and builds the wheel, but cannot publish: it has no
+# id-token. The publish job can, but installs and runs nothing from the repository: it only uploads the
+# files the build job made. Every action is pinned to a commit.
 
 on:
   push:
@@ -13,23 +17,22 @@ permissions:
   contents: read
 
 jobs:
-  publish:
-    name: Build, test, and publish lokal-id
+  build:
+    name: Build and test lokal-id
     runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://pypi.org/project/lokal-id/
     permissions:
       contents: read
-      id-token: write
     defaults:
       run:
         working-directory: python
     steps:
-      - uses: actions/checkout@v5
-      - uses: astral-sh/setup-uv@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
         with:
           python-version: '3.12'
+          enable-cache: false
       - name: Tag matches the package version
         if: github.ref_type == 'tag'
         run: |
@@ -38,11 +41,40 @@ jobs:
             echo "::error::Tag $GITHUB_REF_NAME does not match pyproject.toml version $version"
             exit 1
           fi
+      - name: Install the test tools from uv.lock
+        run: uv sync --locked
       - name: Region data matches packages/core/data
-        run: uv run python scripts/sync_data.py --check
-      - run: uv run pytest
-      - run: uv run mypy
+        run: uv run --locked python scripts/sync_data.py --check
+      - name: Kembaran word lists match packages/core
+        run: uv run --locked python scripts/sync_kembaran_data.py --check
+      - run: uv run --locked pytest
+      - run: uv run --locked mypy
       - name: Build from this commit
         run: uv build
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: python-dist
+          path: python/dist/
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: Publish lokal-id to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/lokal-id/
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: python-dist
+          path: dist
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          enable-cache: false
       - name: Upload to PyPI
-        run: uv publish --trusted-publishing always
+        run: uv publish --trusted-publishing always dist/*

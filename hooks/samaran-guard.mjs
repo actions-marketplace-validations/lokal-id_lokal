@@ -940,6 +940,11 @@ function cutValue(type, raw) {
       v = takeWords(head, cut);
     }
   }
+  if (type === "HEALTH") {
+    const end = v.search(/\.\s+[A-Z]/);
+    if (end >= 0)
+      v = v.slice(0, end);
+  }
   if (MULTI_PART.has(type)) {
     const parts = v.split(",");
     let keep = 1;
@@ -1081,7 +1086,18 @@ function csvFields(line, delimiter) {
   }
   return fields2;
 }
+var NUMBERED_LINE = /^ *(\d{1,7})(?:\t|\u2192)/;
+var NUMBERED_LINES = /^ *\d{1,7}(?:\t|\u2192)/gm;
+function blankLineNumbers(text) {
+  const first = NUMBERED_LINE.exec(text);
+  const breakAt = text.indexOf("\n");
+  const second = breakAt >= 0 ? NUMBERED_LINE.exec(text.slice(breakAt + 1)) : null;
+  if (!first || !second || Number(second[1]) !== Number(first[1]) + 1)
+    return text;
+  return text.replace(NUMBERED_LINES, (prefix) => " ".repeat(prefix.length));
+}
 function detectCsvColumns(text) {
+  text = blankLineNumbers(text);
   const firstBreak = text.indexOf("\n");
   if (firstBreak === -1)
     return [];
@@ -1120,6 +1136,7 @@ function detectCsvColumns(text) {
 function detectTabTables(text) {
   if (!text.includes("	"))
     return [];
+  text = blankLineNumbers(text);
   const out = [];
   let header;
   let columns = [];
@@ -3091,7 +3108,7 @@ function grepTool(input, cwd, ignored) {
     "Add a glob or type that leaves data files out if you meant to search code."
   ].join(" "));
 }
-function evaluate(input) {
+function evaluate(input, projectRoot) {
   if (process.env.SAMARAN_GUARD === "off") return void 0;
   if (input.hook_event_name === "UserPromptSubmit" && input.prompt) {
     if (BYPASS.test(input.prompt)) return void 0;
@@ -3104,7 +3121,7 @@ function evaluate(input) {
     ].join("\n"));
   }
   if (input.hook_event_name !== "PreToolUse" || !input.tool_input) return void 0;
-  const root = process.env.CLAUDE_PROJECT_DIR ?? input.cwd ?? process.cwd();
+  const root = projectRoot ?? process.env.CLAUDE_PROJECT_DIR ?? input.cwd ?? process.cwd();
   const cwd = input.cwd ?? root;
   const ignored = loadIgnore(root);
   const tool = input.tool_input;
@@ -3127,23 +3144,84 @@ function evaluate(input) {
       return void 0;
   }
 }
+var CURSOR_EVENTS = /* @__PURE__ */ new Set(["beforeSubmitPrompt", "beforeReadFile", "beforeShellExecution"]);
+var GEMINI_EVENTS = /* @__PURE__ */ new Set(["BeforeAgent", "BeforeTool"]);
+var shellToolName = () => process.platform === "win32" ? "PowerShell" : "Bash";
+function translate(raw) {
+  const event = raw.hook_event_name ?? "";
+  if (CURSOR_EVENTS.has(event)) {
+    const root = raw.workspace_roots?.[0];
+    if (event === "beforeSubmitPrompt") return { agent: "cursor", input: { hook_event_name: "UserPromptSubmit", prompt: raw.prompt }, root };
+    if (event === "beforeReadFile") {
+      return { agent: "cursor", input: { hook_event_name: "PreToolUse", tool_name: "Read", tool_input: { file_path: raw.file_path }, cwd: root }, root };
+    }
+    return {
+      agent: "cursor",
+      input: { hook_event_name: "PreToolUse", tool_name: shellToolName(), tool_input: { command: raw.command }, cwd: raw.cwd ?? root },
+      root
+    };
+  }
+  if (GEMINI_EVENTS.has(event)) {
+    if (event === "BeforeAgent") return { agent: "gemini", input: { hook_event_name: "UserPromptSubmit", prompt: raw.prompt, cwd: raw.cwd } };
+    const tool = raw.tool_input ?? {};
+    if (raw.tool_name === "read_file") {
+      const file = tool.file_path ?? tool.absolute_path ?? tool.path;
+      return { agent: "gemini", input: { hook_event_name: "PreToolUse", tool_name: "Read", tool_input: { file_path: file }, cwd: raw.cwd } };
+    }
+    if (raw.tool_name === "run_shell_command") {
+      return { agent: "gemini", input: { hook_event_name: "PreToolUse", tool_name: shellToolName(), tool_input: { command: tool.command }, cwd: raw.cwd } };
+    }
+    return { agent: "gemini", input: { hook_event_name: "PreToolUse", tool_name: raw.tool_name, cwd: raw.cwd } };
+  }
+  return { agent: "claude", input: raw };
+}
+function respond(agent, event, verdict2) {
+  if (agent === "cursor") {
+    if (event === "beforeSubmitPrompt") {
+      return { stdout: JSON.stringify(verdict2 ? { continue: false, user_message: verdict2.message } : { continue: true }), exitCode: 0 };
+    }
+    if (!verdict2) return { stdout: JSON.stringify({ permission: "allow" }), exitCode: 0 };
+    if (event === "beforeReadFile") {
+      const message = verdict2.action === "ask" ? `${verdict2.message} (Cursor tidak bisa bertanya dulu, jadi berkas ini ditahan.)` : verdict2.message;
+      return { stdout: JSON.stringify({ permission: "deny", user_message: message }), exitCode: 0 };
+    }
+    return {
+      stdout: JSON.stringify(
+        verdict2.action === "ask" ? { permission: "ask", user_message: verdict2.message } : { permission: "deny", user_message: verdict2.message, agent_message: verdict2.message }
+      ),
+      exitCode: 0
+    };
+  }
+  if (!verdict2) return { exitCode: 0 };
+  if (verdict2.action === "ask" && agent === "claude") {
+    const hookSpecificOutput = { hookEventName: "PreToolUse", permissionDecision: "ask", permissionDecisionReason: verdict2.message };
+    return { stdout: JSON.stringify({ hookSpecificOutput }), exitCode: 0 };
+  }
+  return { stderr: verdict2.message, exitCode: 2 };
+}
 async function runGuard() {
+  let agent = "claude";
+  let event = "";
   try {
     let raw = "";
     for await (const chunk of process.stdin) raw += chunk;
-    const verdict2 = evaluate(JSON.parse(raw));
-    if (verdict2?.action === "block") {
-      process.stderr.write(`${verdict2.message}
+    const parsed = JSON.parse(raw);
+    const translated = translate(parsed);
+    agent = translated.agent;
+    event = parsed.hook_event_name ?? "";
+    const out = respond(agent, event, evaluate(translated.input, translated.root));
+    if (out.stdout) process.stdout.write(`${out.stdout}
 `);
-      process.exitCode = 2;
-    } else if (verdict2?.action === "ask") {
-      const hookSpecificOutput = { hookEventName: "PreToolUse", permissionDecision: "ask", permissionDecisionReason: verdict2.message };
-      process.stdout.write(`${JSON.stringify({ hookSpecificOutput })}
+    if (out.stderr) process.stderr.write(`${out.stderr}
 `);
-    }
+    process.exitCode = out.exitCode;
   } catch (e) {
     process.stderr.write(`samaran-guard: ${e.message}
 `);
+    const out = respond(agent, event, void 0);
+    if (out.stdout) process.stdout.write(`${out.stdout}
+`);
+    process.exitCode = 0;
   }
 }
 if (process.argv[1] && /samaran-guard\.m?js$/.test(process.argv[1])) {
@@ -3151,5 +3229,7 @@ if (process.argv[1] && /samaran-guard\.m?js$/.test(process.argv[1])) {
 }
 export {
   evaluate,
-  runGuard
+  respond,
+  runGuard,
+  translate
 };

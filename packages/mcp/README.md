@@ -53,17 +53,38 @@ The file tools can only access `LOKAL_ROOT`, which defaults to `CLAUDE_PROJECT_D
 | `parse_nik` | Validate and decode a NIK: region, date of birth, sex |
 | `validate_npwp` | 15-digit NPWP, 16-digit NPWP, or NIK as NPWP |
 | `parse_phone` | Normalize numbers, display format, WhatsApp link, carrier |
+| `parse_qris` | Read and check a QRIS payload: merchant, NMID, criteria, amount, CRC |
+| `set_qris_amount` | Make a merchant's QRIS dynamic for an amount, with a new CRC |
 | `format_rupiah` / `parse_rupiah` | `Rp1.500.000`, *terbilang*; "2jtan", "goceng" → numbers |
 | `search_wilayah` / `list_wilayah` | Provinces down to villages, with codes and postal codes |
 | `lookup_kode_pos` | Postal code → villages, or all postal codes in a region |
 | `list_holidays` / `working_days` | National holidays and *cuti bersama* (SKB 2026, 2027), SLA due dates |
 | `scan_pii` | Scan files and folders for personal data by UU PDP category; reports files it could not scan |
-| `read_file_masked` | Read a file (text, CSV, JSON, logs, `.xlsx`, `.docx`) with personal data replaced by placeholders |
+| `read_file_masked` | Read a file (text, CSV, JSON, logs, `.xlsx`, `.docx`, text-based PDF) with personal data replaced by placeholders |
 | `write_file_unmasked` | Write results with placeholders restored, on your machine |
+| `anonymize_file` | Copy dumps and exports with realistic stand-ins for every person (Kembaran), returning only counts |
 
 ## Samaran Guard
 
-`lokal-mcp guard` is a Claude Code hook (`UserPromptSubmit`, and `PreToolUse` for `Read|Grep|Bash|PowerShell`). It holds prompts that contain NIK, bank account, or health data, and blocks commands that would print a personal data file into the conversation, pointing the agent to `read_file_masked` instead. The Lokal plugin sets it up for you.
+`lokal-mcp guard` is a hook for Claude Code (`UserPromptSubmit`, and `PreToolUse` for `Read|Grep|Bash|PowerShell`), Codex CLI, Cursor, and Gemini CLI. It holds prompts that contain NIK, bank account, or health data, blocks commands that would print a personal data file into the conversation, pointing the agent to `read_file_masked` instead, and asks before photos of documents and scanned PDFs are read. The Lokal plugin sets it up for Claude Code; see the [Lokal README](https://github.com/lokal-id/lokal#in-codex-cli-cursor-and-gemini-cli) for the other agents.
+
+## Kembaran
+
+`lokal-mcp kembaran prod.sql export.csv -o staging/ [--secret <text>] [--keep FINANCIAL] [--keep-birth-date]` copies text files with every person replaced by a realistic stand-in, consistent across the files. See the [Lokal README](https://github.com/lokal-id/lokal#kembaran-production-data-for-staging-without-real-people).
+
+## Remote (HTTP) mode
+
+`lokal-mcp serve --http --port 3000` serves the data tools over Streamable HTTP at `/mcp`, for ChatGPT and Claude.ai connectors. The file tools are not available in this mode.
+
+## Samaran Proxy
+
+`lokal-mcp proxy` is an OpenAI- and Anthropic-compatible endpoint for apps: it masks Indonesian personal data in every request and restores it in the response, streaming and tool calls included.
+
+```sh
+npx @lokal-id/mcp proxy --port 8787 [--openai <url>] [--anthropic <url>] [--exclude FINANCIAL]
+```
+
+Then use `OpenAI(base_url="http://127.0.0.1:8787/v1")` or `Anthropic(base_url="http://127.0.0.1:8787")`. See the [Lokal README](https://github.com/lokal-id/lokal#samaran-proxy-protect-an-apps-llm-calls).
 
 ## License
 

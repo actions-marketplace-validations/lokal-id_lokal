@@ -268,7 +268,7 @@ function detectPlates(text: string): PiiMatch[] {
   return out;
 }
 
-// Titles between the honorific and the name are skipped: "Bapak Presiden Joko Widodo" → "Joko Widodo".
+// Titles between the honorific and the name are skipped: "Bapak Presiden Joko Widodo" \u2192 "Joko Widodo".
 const TITLE_WORDS = new Set([
   'bapak', 'ibu', 'pak', 'bu', 'mas', 'mbak', 'kak', 'bang', 'presiden', 'wakil', 'menteri', 'direktur',
   'dokter', 'dr', 'drs', 'dra', 'prof', 'ir', 'h', 'hj', 'guru', 'lurah', 'camat', 'bupati', 'walikota', 'wali',
@@ -512,6 +512,11 @@ function cutValue(type: PiiType, raw: string): string {
       v = takeWords(head, cut);
     }
   }
+  if (type === 'HEALTH') {
+    // "diagnosa: Diabetes tipe 2. Plat B 1234 XYZ": a condition ends with its sentence.
+    const end = v.search(/\.\s+[A-Z]/);
+    if (end >= 0) v = v.slice(0, end);
+  }
   if (MULTI_PART.has(type)) {
     // "Alamat: Jl. Mawar No. 5, Depok, HP 0812…": keep commas until a segment opens with a field name.
     const parts = v.split(',');
@@ -659,7 +664,23 @@ function csvFields(line: string, delimiter: string): Array<{ start: number; end:
 }
 
 /** Every cell under a header that says what it holds: nama, nik, agama, diagnosa, gaji, … */
+const NUMBERED_LINE = /^ *(\d{1,7})(?:\t|\u2192)/;
+const NUMBERED_LINES = /^ *\d{1,7}(?:\t|\u2192)/gm;
+
+/**
+ * A file shown with line numbers, as an agent's Read tool or `cat -n` prints it ("1\u2192nama,nik" or "     1<TAB>nama,nik"),
+ * with the numbers blanked out: the header row is then a header again. Same length, so offsets stay put.
+ */
+function blankLineNumbers(text: string): string {
+  const first = NUMBERED_LINE.exec(text);
+  const breakAt = text.indexOf('\n');
+  const second = breakAt >= 0 ? NUMBERED_LINE.exec(text.slice(breakAt + 1)) : null;
+  if (!first || !second || Number(second[1]) !== Number(first[1]) + 1) return text;
+  return text.replace(NUMBERED_LINES, (prefix) => ' '.repeat(prefix.length));
+}
+
 function detectCsvColumns(text: string): PiiMatch[] {
+  text = blankLineNumbers(text);
   const firstBreak = text.indexOf('\n');
   if (firstBreak === -1) return [];
   const header = text.slice(0, firstBreak).replace(/\r$/, '');
@@ -706,6 +727,7 @@ function detectCsvColumns(text: string): PiiMatch[] {
  */
 function detectTabTables(text: string): PiiMatch[] {
   if (!text.includes('\t')) return [];
+  text = blankLineNumbers(text);
   const out: PiiMatch[] = [];
   let header: string[] | undefined;
   let columns: Array<PiiType | undefined> = [];

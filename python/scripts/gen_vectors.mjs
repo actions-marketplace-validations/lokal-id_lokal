@@ -281,6 +281,55 @@ emit('samaran_partial.json', core.PII_TYPES.flatMap((type) =>
     type, value, out: core.partialMask(type, value),
   }))));
 
+// ---------------------------------------------------------------- Kembaran
+{
+  const { Kembaran } = await import(path.join(ROOT, 'packages/core/dist/kembaran.js').replace(/^/, 'file:///').replace(/\\/g, '/'));
+  const variants = [
+    { secret: 'vektor-1' },
+    { secret: 'vektor-2', keepBirthDate: true },
+    { secret: 'vektor-3', keep: ['NAME', 'GENDER'], minConfidence: 'high' },
+  ];
+  // One instance per variant over many texts: stand-ins must stay consistent across texts, and collisions resolve
+  // the same way in both ports.
+  emit('kembaran.json', variants.map((options) => {
+    const k = new Kembaran(options);
+    return { options, results: docs.slice(0, 500).map((text) => plain(k.text(text))) };
+  }));
+}
+
+// ---------------------------------------------------------------- QRIS
+{
+  const f = (tag, value) => tag + String(value.length).padStart(2, '0') + value;
+  const withCrc = (fields) => `${fields}6304${core.qrisCrc(`${fields}6304`)}`;
+  const account = f('26', f('00', 'COM.CONTOH.WWW') + f('01', '936000000000000001') + f('02', '000000000000001') + f('03', 'UMI'));
+  const national = (id = 'ID1026000000001', criteria = 'UMI') => f('51', f('00', 'ID.CO.QRIS.WWW') + f('02', id) + f('03', criteria));
+  const merchant = (name = 'KOPI CONTOH', city = 'BOGOR') => f('52', '5812') + f('53', '360') + f('58', 'ID') + f('59', name) + f('60', city) + f('61', '16914');
+  const bases = [
+    withCrc(f('00', '01') + f('01', '11') + account + national() + merchant() + f('62', f('01', 'INV-77') + f('07', 'A01'))),
+    withCrc(f('00', '01') + f('01', '12') + national('ID20230000001', 'UKE') + merchant('Toko Ümit Café', 'Denpasar') + f('54', '15000.5') + f('55', '01')),
+    withCrc(f('00', '01') + account + merchant() + f('55', '03') + f('57', '2.5') + f('64', f('00', 'ID') + f('01', 'KOPI'))),
+    withCrc(f('00', '01') + f('01', '13') + national('', 'URE') + merchant('', 'A'.repeat(16)) + f('54', '1,5') + f('55', '09')),
+  ];
+  const inputs = [...bases, '', '0002', 'https://example.com', '000201010211', `  ${bases[0]}\n`, bases[0].toLowerCase()];
+  for (const b of bases.slice(0, 2)) {
+    for (let i = 0; i < 40; i++) {
+      const at = int(0, b.length - 1);
+      inputs.push(b.slice(0, at) + pick(['0', '9', 'A', ' ', '']) + b.slice(at + 1));
+      inputs.push(b.slice(0, int(0, b.length)));
+    }
+  }
+  emit('qris_parse.json', inputs.map((input) => ({ input, out: plain(core.parseQris(input)) })));
+  const amounts = [25000, '25000', 1500.5, '1500.50', 0, -5, 1.234, '12,000', '1e5', '12345678901234', ' 9000 ', 1e21, 0.1 + 0.2];
+  const tips = [undefined, { fixed: 2500 }, { percent: 0.7 }, { percent: 150 }, { fixed: '0' }];
+  const sets = [];
+  for (const input of [...bases, bases[0].slice(0, -1) + '0']) {
+    for (const amount of amounts) {
+      for (const tip of tips) sets.push({ input, amount, tip: tip ?? null, out: tryCall(() => core.setQrisAmount(input, amount, tip ? { tip } : {})) });
+    }
+  }
+  emit('qris_set_amount.json', sets);
+}
+
 // ---------------------------------------------------------------- documents (the MCP server's file readers)
 // lokal.files ports packages/mcp/src/{files,pdf,xlsx,docx}.ts. Each document goes through loadDocument under its
 // file name; Python writes the same bytes under the same name and must load the same thing.

@@ -22,6 +22,7 @@ from .nik import Gender, Issue, NikInfo, is_valid_nik, parse_nik
 from .npwp import NpwpInfo, NpwpKind, format_npwp15, parse_npwp
 from .phone import PhoneInfo, PhoneType, normalize_phone, parse_phone
 from .provinces import PROVINCES
+from .qris import QrisInfo, parse_qris, qris_crc, set_qris_amount
 from .rupiah import ParsedRupiah, format_rupiah, format_rupiah_short, parse_rupiah
 from .samaran import (
     PII_TYPES,
@@ -39,7 +40,7 @@ from .samaran import (
 )
 from .terbilang import terbilang
 
-__version__ = '0.3.0'
+__version__ = '0.4.0'
 
 __all__ = [
     'HOLIDAY_YEARS',
@@ -60,6 +61,7 @@ __all__ = [
     'ParsedRupiah',
     'PhoneInfo',
     'PhoneType',
+    'QrisInfo',
     'PiiMatch',
     'PiiType',
     'Samaran',
@@ -80,7 +82,10 @@ __all__ = [
     'parse_nik',
     'parse_npwp',
     'parse_phone',
+    'parse_qris',
     'parse_rupiah',
     'partial_mask',
+    'qris_crc',
+    'set_qris_amount',
     'terbilang',
 ]

@@ -1,6 +1,6 @@
 ---
 name: samaran
-description: Keep Indonesian personal data — NIK, KK, NPWP, phone, bank account, BPJS, passport, names, addresses, birth dates, and UU PDP sensitive data (health, finances, religion, criminal records, biometrics) — out of the model and out of third-party APIs. Use when reading or debugging with real data (production logs, CSV/Excel exports, database dumps, support tickets, seeders copied from production) and when building features that send user text to an LLM (chatbots, summarizers, ticket triage, CS automation) or that log or display personal data.
+description: Keep Indonesian personal data — NIK, KK, NPWP, phone, bank account, BPJS, passport, names, addresses, birth dates, and UU PDP sensitive data (health, finances, religion, criminal records, biometrics) — out of the model and out of third-party APIs. Use when reading or debugging with real data (production logs, CSV/Excel exports, database dumps, support tickets, seeders copied from production, copying production data to staging) and when building features that send user text to an LLM (chatbots, summarizers, ticket triage, CS automation) or that log or display personal data.
 ---
 
 # Samaran: work with personal data without seeing it
@@ -59,7 +59,7 @@ logger.info(maskPii(rawMessage, { mode: 'partial' }).text);
 
 ### Test data
 
-Use synthetic data in fixtures and seeders. Do not copy production rows. Run `scan_pii` on `test/`, `fixtures/`, and `seed*` before committing.
+Use synthetic data in fixtures and seeders. Do not copy production rows. When staging, a seeder, or a vendor needs data shaped like production, make it with the `anonymize_file` tool (Kembaran): it copies a dump or export with every person replaced by a realistic stand-in (a valid NIK in the same district, a phone on the same operator), consistent across files, and you only see counts. In code, `@lokal-id/core/kembaran` and `python -m lokal.kembaran` do the same, for example in a staging refresh job. Run `scan_pii` on `test/`, `fixtures/`, and `seed*` before committing.
 
 ## What Samaran detects
 

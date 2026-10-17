@@ -4,6 +4,29 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-17
+
+npm (`@lokal-id/core`, `@lokal-id/mcp`) and PyPI (`lokal-id`).
+
+### Added
+
+- **Kembaran**: copies production dumps and exports (SQL, CSV, JSON, logs) for staging, seeders, or vendors with every person replaced by a realistic stand-in. A NIK keeps its district, gender, and birth year and stays valid; a phone number keeps its operator and format; names keep their casing and titles; e-mail goes to `example.com`; a birth date on the same row follows the stand-in NIK. The same value gets the same stand-in across files, stand-ins come from HMAC-SHA256 under a secret, and unique values never collide. `lokal-mcp kembaran`, the `anonymize_file` MCP tool (returns only counts), `@lokal-id/core/kembaran`, and `python -m lokal.kembaran`, with identical output in TypeScript and Python for the same secret.
+- **Samaran Proxy** (`npx @lokal-id/mcp proxy`): an OpenAI- and Anthropic-compatible endpoint that masks personal data in every LLM call an app makes and restores it in the answers. It covers Chat Completions, the Responses API, embeddings, and Anthropic Messages, streamed or not, with tool call arguments restored as valid JSON and signed thinking blocks left alone. Any OpenAI-compatible API (OpenRouter, Groq, DeepSeek, Ollama, Gemini) can be the upstream. Tested end to end with Claude Code running through it.
+- **QRIS**: `parseQris` / `parse_qris` reads a QRIS payload (static or dynamic, merchant, NMID, merchant criteria, amount, fee, CRC) with errors in Indonesian, and `setQrisAmount` / `set_qris_amount` turns a merchant's QRIS into a dynamic one for an amount, optionally with a fixed or percentage fee, recomputing the CRC-16. Amounts with more than 2 decimals are refused, not rounded. In TypeScript, Python, and the MCP server, with parity vectors.
+- **ChatGPT and Claude.ai**: `lokal-mcp serve --http` serves the data tools (NIK, NPWP, phone, Rupiah, regions, postal codes, holidays, QRIS) over Streamable HTTP for remote connectors. The file tools are left out in this mode.
+- **Samaran Guard in Codex CLI, Cursor, and Gemini CLI**: `lokal-mcp guard` recognizes their hook events and answers in each agent's format, so the same prompt and file-read checks work there. Cursor always gets a JSON answer, since it treats a missing one as a denial.
+
+### Fixed
+
+- A labeled health value ran on into the next sentence: `diagnosa: Diabetes tipe 2. Plat B 1234 XYZ` took the plate along. It now ends with its sentence.
+- Files shown with line numbers, as an agent's `Read` tool or `cat -n` prints them (`1→nama,nik`), lost their CSV header, so a `nama` column was not masked. Line numbers are now ignored when headers and tab-separated tables are read.
+
+### Security
+
+- **`@lokal-id/mcp` installs no third-party packages.** The MCP SDK, zod, and their dependencies are bundled into `dist/cli.js` at release time from the lockfile, with their licenses in `dist/THIRD_PARTY_LICENSES.md`. Its only dependency is `@lokal-id/core`, pinned to the exact version it was tested with, and core has none. Before, `npx @lokal-id/mcp` installed 95 third-party packages, resolved by version range on each machine, so a compromised release of any of them would have reached users.
+- Releases are built and published in separate jobs. The job that installs dependencies and runs the build and tests has no publishing rights; the job that publishes (npm and PyPI, through Trusted Publishing) installs and runs nothing, and only uploads the files the first job made. Dependencies are installed from the lockfiles (`npm ci --ignore-scripts`, `uv sync --locked`) with install scripts off, `npm audit signatures` checks the registry signatures, and every GitHub Action is pinned to a commit. The repository's `.npmrc` turns off install scripts for contributors too.
+- CI and the release test the bundled server as published (`scripts/smoke-mcp.mjs`), not only the sources.
+
 ## [0.3.0] - 2026-10-17
 
 npm (`@lokal-id/core`, `@lokal-id/mcp`) and PyPI (`lokal-id`).
@@ -85,7 +108,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/lokal-id/lokal/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/lokal-id/lokal/compare/v0.2.2...v0.3.0
 [0.2.3]: https://github.com/lokal-id/lokal/releases/tag/py-v0.2.3
 [0.2.2]: https://github.com/lokal-id/lokal/compare/v0.2.1...v0.2.2

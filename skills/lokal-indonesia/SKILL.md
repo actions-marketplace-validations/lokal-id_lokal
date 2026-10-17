@@ -87,6 +87,8 @@ Card payment is a minority. Offer, through a gateway such as Midtrans or Xendit:
 - E-wallets: GoPay, OVO, DANA, ShopeePay, LinkAja
 - Retail outlets (Alfamart, Indomaret) and, in e-commerce, COD and paylater
 
+To read a QRIS payload, or to turn a merchant's static QRIS into a dynamic one for an amount, use the `parse_qris` and `set_qris_amount` tools (or `parseQris` / `setQrisAmount` from `@lokal-id/core`): the TLV lengths and the CRC-16 checksum are easy to get wrong by hand, and a wrong CRC makes every bank app reject the code. A dynamic QRIS made this way still pays the same merchant account; for payments you need to confirm automatically, use the gateway's own QRIS API and webhooks.
+
 Payment completion is asynchronous: design order states around webhooks (`menunggu pembayaran` → `dibayar` → `kedaluwarsa`), verify webhook signatures, and show the VA number with a copy button and a countdown.
 
 ## UI copy in Bahasa Indonesia

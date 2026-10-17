@@ -17,7 +17,8 @@ const serverTs = read('packages/mcp/src/server.ts').match(/const VERSION = '([^'
 const found = {
   'packages/core/package.json': core.version,
   'packages/mcp/package.json': mcp.version,
-  'packages/mcp/package.json dependencies["@lokal-id/core"]': mcp.dependencies[core.name]?.replace(/^\^/, ''),
+  // Pinned exactly, so each @lokal-id/mcp release runs on the core it was built and tested with.
+  'packages/mcp/package.json dependencies["@lokal-id/core"]': mcp.dependencies[core.name],
   'packages/mcp/src/server.ts VERSION': serverTs,
   '.claude-plugin/plugin.json': json('.claude-plugin/plugin.json').version,
   // The plugin starts the MCP server with npx; a pinned version keeps the two in step and gets past npx's cache.

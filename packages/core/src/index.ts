@@ -9,6 +9,17 @@ export {
   type ParsedRupiah,
 } from './rupiah.ts';
 export { terbilang, type TerbilangOptions } from './terbilang.ts';
+export {
+  parseQris,
+  setQrisAmount,
+  qrisCrc,
+  type QrisInfo,
+  type QrisField,
+  type QrisMerchantAccount,
+  type QrisTip,
+  type QrisAdditionalData,
+  type QrisAmountOptions,
+} from './qris.ts';
 export { PROVINCES } from './provinces.ts';
 export {
   getHolidays,

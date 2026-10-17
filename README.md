@@ -48,8 +48,10 @@ Lokal fixes both: it teaches agents Indonesian conventions, gives them accurate 
 - **Indonesian conventions for agents.** Money, phone numbers, NIK/NPWP, tiered addresses, WIB/WITA/WIT, local payment methods, UI copy, and UU PDP, packaged as [Agent Skills](https://agentskills.io).
 - **Accurate reference data, bundled.** All 38 provinces down to 83,762 villages, matching the Kemendagri 2025 decree exactly, with postal codes for every village. Public holidays and *cuti bersama* from the official SKB for 2026 and 2027.
 - **Samaran masking.** Replaces 25 kinds of Indonesian personal data, covering every category in UU PDP Article 4, with stable placeholders, then restores them in the model's output.
-- **Samaran Guard.** A Claude Code hook that stops prompts containing ID numbers and redirects reads of customer data files (`Read`, `Grep`, `cat`, `Get-Content`, …) to a masked view.
-- **Works with any agent.** Claude Code plugin, stdio MCP server for Cursor, Claude Desktop, VS Code, Windsurf, and Codex, plus TypeScript and Python libraries with identical results.
+- **Samaran Guard.** A hook for Claude Code, Codex CLI, Cursor, and Gemini CLI that stops prompts containing ID numbers and redirects reads of customer data files (`Read`, `Grep`, `cat`, `Get-Content`, …) to a masked view.
+- **Kembaran.** Copies production dumps and exports for staging with every person replaced by a realistic stand-in: a valid NIK in the same district, a phone number on the same operator, consistent across tables.
+- **Samaran Proxy.** An OpenAI- and Anthropic-compatible endpoint that masks personal data in every LLM call your app makes and restores it in the answers, streaming included. Change the base URL, not the code.
+- **Works with any agent.** Claude Code plugin, stdio MCP server for Cursor, Claude Desktop, VS Code, Windsurf, and Codex, an HTTP server for ChatGPT and Claude.ai connectors, plus TypeScript and Python libraries with identical results.
 - **Local and offline.** Data ships with the package. No network calls, no telemetry, and unmasking happens on your machine.
 
 ## How it works
@@ -134,6 +136,20 @@ env = { LOKAL_ROOT = "/path/to/your/project" }
 
 </details>
 
+<details>
+<summary><b>ChatGPT and Claude.ai (remote connector)</b></summary>
+
+ChatGPT and Claude.ai on the web connect only to remote MCP servers over HTTPS. Run the server in HTTP mode:
+
+```sh
+npx @lokal-id/mcp serve --http --port 3000                  # http://127.0.0.1:3000/mcp
+npx @lokal-id/mcp serve --http --host 0.0.0.0 --port $PORT  # on a Node host such as Render or Fly.io
+```
+
+Put it behind HTTPS (your host's domain, or `cloudflared tunnel --url http://localhost:3000` to try it), then add `https://<your-domain>/mcp` as a custom connector: in ChatGPT through developer mode (availability depends on your plan), in Claude.ai under Settings → Connectors. HTTP mode serves the data tools only (NIK, NPWP, phone, Rupiah, regions, postal codes, holidays, QRIS). The file tools are left out: a remote server cannot see your files, and it must not open its own.
+
+</details>
+
 The file tools (`scan_pii`, `read_file_masked`, `write_file_unmasked`) can only access `LOKAL_ROOT`, which defaults to `CLAUDE_PROJECT_DIR` and then to the directory the server was started in.
 
 ### Skills only, for any agent
@@ -144,7 +160,7 @@ npx skills add lokal-id/lokal
 
 This installs `lokal-indonesia` and `samaran` with the [skills CLI](https://github.com/vercel-labs/skills) into Claude Code, Codex, Cursor, and the other agents it supports. Add `-g` to install them for your user instead of the current project.
 
-Skills teach the agent the conventions. For accurate region, postal code, and holiday data and for masked file reads, add the MCP server as well (see above). Samaran Guard is a hook, so it comes only with the Claude Code plugin.
+Skills teach the agent the conventions. For accurate region, postal code, and holiday data and for masked file reads, add the MCP server as well (see above). Samaran Guard is a hook: it comes with the Claude Code plugin, and [can be set up](#in-codex-cli-cursor-and-gemini-cli) in Codex CLI, Cursor, and Gemini CLI.
 
 You can also copy the folders in [`skills/`](skills) by hand. They use the open Agent Skills format (`SKILL.md`).
 
@@ -163,7 +179,7 @@ The Python package is a port of `@lokal-id/core` with the same rules and data, v
 
 ```ts
 import {
-  parseNik, parsePhone, formatRupiah, parseRupiah, terbilang, addWorkingDays, isWorkingDay,
+  parseNik, parsePhone, formatRupiah, parseRupiah, terbilang, addWorkingDays, isWorkingDay, parseQris, setQrisAmount,
 } from '@lokal-id/core';
 import { listWilayah, searchWilayah, wilayahName, findByPostalCode } from '@lokal-id/core/wilayah';
 
@@ -185,6 +201,9 @@ findByPostalCode('16431');               // villages that use this postal code
 
 addWorkingDays('2026-03-17', 1);         // '2026-03-25', skipping Nyepi and Lebaran
 isWorkingDay('2026-12-24', { cutiBersama: false }); // true for offices that ignore cuti bersama
+
+parseQris(payload);                      // { valid, type: 'static', merchantName, nmid, criteriaLabel: 'Usaha Mikro', … }
+setQrisAmount(payload, 25000);           // the same merchant's QRIS, dynamic, for Rp25.000, with a new CRC
 ```
 
 `@lokal-id/core/wilayah` loads about 4.4 MB of region data and runs on Node only. The main entry point does not load it and is safe for browsers.
@@ -222,6 +241,63 @@ samaran.unmask(reply);           // placeholders are replaced with the original 
 
 </details>
 
+### Samaran Proxy: protect an app's LLM calls
+
+Masking by hand means every call site has to remember it. The proxy does it for the whole app: start it next to your backend and point the SDK's base URL at it.
+
+```sh
+npx @lokal-id/mcp proxy                 # http://127.0.0.1:8787
+```
+
+```python
+from openai import OpenAI
+from anthropic import Anthropic
+
+client = OpenAI(base_url='http://127.0.0.1:8787/v1')   # Chat Completions, Responses, embeddings
+claude = Anthropic(base_url='http://127.0.0.1:8787')   # Messages
+```
+
+- Every text in the request is masked before it leaves your server: the conversation history, system prompts, tool results, and tool call arguments. Images, IDs, and signed thinking blocks are left alone.
+- Responses come back with the real values, streamed or not, including tool call arguments, so the tools your app runs get real data.
+- Each request gets its own vault. Masking the whole conversation in order gives the same person the same placeholder on every turn.
+- Other OpenAI-compatible APIs work too: `--openai https://openrouter.ai/api/v1`, Groq, DeepSeek, Ollama, or Gemini's OpenAI endpoint. `--exclude FINANCIAL` lets the model see income figures for a credit simulation.
+- It listens on 127.0.0.1 only, passes API keys through without storing them, and logs one line per request with counts, never values. Each response has an `x-samaran-masked: NIK=1,NAME=2` header. File uploads cannot be masked and are refused unless you start it with `--allow-unmasked`.
+
+Tested end to end with Claude Code itself running through it: the model only ever saw placeholders, and the files it wrote with its tools had the real values.
+
+### Kembaran: production data for staging, without real people
+
+Copying production data to staging or a laptop is the most common way personal data leaks. Kembaran makes a copy in which every person is a realistic stand-in, so the data still behaves like production:
+
+```sh
+npx @lokal-id/mcp kembaran prod.sql export.csv -o staging/ --secret staging-2026
+python -m lokal.kembaran prod.sql -o staging.sql          # the same, from a Python backend
+```
+
+```
+nama,nik,tgl_lahir,hp,email
+Budi Santoso,3201011508950001,15-08-1995,0812-3456-7890,budi.santoso@gmail.com
+↓
+Slamet Matondang,3201012409953895,24-09-1995,0812-8655-8077,rini.pertiwi10@example.com
+```
+
+| Value | Stand-in keeps |
+|---|---|
+| NIK, KK | District, gender, and birth year; still a valid NIK |
+| Birth date | The year; on the same row, the date in the stand-in NIK |
+| Phone | Operator and format: `0812-…` stays Telkomsel |
+| Name | Number of words, casing, titles (`Dr. Ir. H. …`) |
+| Address | RT/RW, village, district, city; street and house number change |
+| E-mail | Nothing: `…@example.com`, so staging cannot mail anyone |
+| Card, bank account | Length; a card keeps its issuer prefix and passes Luhn |
+
+- The same value gets the same stand-in in every file of one run, so joins and foreign keys hold. `0812-3456-7890` and `+62 812 3456 7890` are one person. An individual's NPWP stays equal to their NIK.
+- Stand-ins come from HMAC-SHA256 under a secret. Without `--secret` it is random for each run; with one, a weekly staging refresh gives the same people. NIKs, phone numbers, and account numbers never collide.
+- Gender, religion, marital status, and nationality are kept by default; `--keep FINANCIAL` keeps more. `--keep-birth-date` keeps whole birth dates.
+- In an agent, the `anonymize_file` tool does it on your machine and returns only counts. TypeScript: `new Kembaran({ secret }).text(text)` from `@lokal-id/core/kembaran`; Python: `Kembaran(secret=…).text(text)` from `lokal.kembaran`, with the same output for the same secret.
+
+A stand-in phone number can still belong to someone, so keep staging from sending SMS or WhatsApp. Text files only (SQL dumps, CSV, JSON, logs) up to 100 MB; about 2 MB/s in TypeScript.
+
 ### MCP tools
 
 | Tool | What it does |
@@ -236,9 +312,12 @@ samaran.unmask(reply);           // placeholders are replaced with the original 
 | `lookup_kode_pos` | Postal code → villages, or all postal codes in a region |
 | `list_holidays` | National holidays and *cuti bersama* (SKB 2026, 2027) |
 | `working_days` | Business days, SLA due dates, delivery estimates |
+| `parse_qris` | Read and check a QRIS payload: merchant, NMID, criteria, amount, CRC |
+| `set_qris_amount` | Make a merchant's QRIS dynamic for an amount, with a new CRC |
 | `scan_pii` | Scan files and folders (text, CSV, JSON, logs, SQL, `.xlsx`, `.docx`, text-based PDF, up to 100 MB each) for personal data. Shows partially masked values only, and **reports files and pages it could not scan** (scanned or encrypted PDFs, `.xls`, `.doc`, images) |
 | `read_file_masked` | Read a file, including `.xlsx` sheets, `.docx` documents (text and tables), and PDFs (page text, tables, and filled-in form fields), with personal data replaced by stable placeholders |
 | `write_file_unmasked` | Write results with placeholders restored, on your machine |
+| `anonymize_file` | Copy dumps and exports with realistic stand-ins for every person (Kembaran), returning only counts |
 
 ### Samaran Guard
 
@@ -258,6 +337,64 @@ Enabled automatically by the Claude Code plugin.
   ```
 
 - Set `SAMARAN_GUARD=off` to disable the guard.
+
+#### In Codex CLI, Cursor, and Gemini CLI
+
+The same guard works as a hook in other agents: `lokal-mcp guard` recognizes each agent's events and answers in its format. Install it once so the hook starts fast (`npx` on every file read is slow):
+
+```sh
+npm install -g @lokal-id/mcp
+```
+
+<details>
+<summary><b>Codex CLI</b>: <code>.codex/hooks.json</code></summary>
+
+```json
+{
+  "hooks": {
+    "UserPromptSubmit": [{ "hooks": [{ "type": "command", "command": "lokal-mcp guard" }] }],
+    "PreToolUse": [{ "matcher": "Bash", "hooks": [{ "type": "command", "command": "lokal-mcp guard" }] }]
+  }
+}
+```
+
+Codex asks you to review new hooks with `/hooks` before they run. It reads files through the shell, so `cat`, `sed -n`, and the like are what the guard checks.
+
+</details>
+
+<details>
+<summary><b>Cursor</b>: <code>.cursor/hooks.json</code></summary>
+
+```json
+{
+  "version": 1,
+  "hooks": {
+    "beforeSubmitPrompt": [{ "command": "lokal-mcp guard" }],
+    "beforeReadFile": [{ "command": "lokal-mcp guard" }],
+    "beforeShellExecution": [{ "command": "lokal-mcp guard" }]
+  }
+}
+```
+
+Cursor's file reads cannot ask first, so a photo or scanned PDF that Claude Code would ask about is held back in Cursor; list it in `.samaranignore` if it holds no real data.
+
+</details>
+
+<details>
+<summary><b>Gemini CLI</b> (experimental): <code>.gemini/settings.json</code></summary>
+
+```json
+{
+  "hooks": {
+    "BeforeAgent": [{ "hooks": [{ "type": "command", "command": "lokal-mcp guard" }] }],
+    "BeforeTool": [{ "matcher": "read_file|run_shell_command", "hooks": [{ "type": "command", "command": "lokal-mcp guard" }] }]
+  }
+}
+```
+
+Hooks are experimental in Gemini CLI; turn them on as its documentation describes for your version.
+
+</details>
 
 ## Evaluation
 
@@ -298,7 +435,6 @@ This is a small sample built around everyday tasks for Indonesian developers. Do
 - **Carrier detection uses number prefixes,** which match the public allocation list, including the 2025 XLSmart merger. Indonesia has no mobile number portability yet (a case is pending at the Constitutional Court, 319/PUU-XXIV/2026), so prefixes are still reliable. Landline area codes cover 19 major cities.
 - **The guard intercepts prompts, `Read`, `Grep`, and common shell readers.** A script that deliberately prints a data file, or something like `python -c "print(open(...).read())"`, cannot be caught every time. The `samaran` skill steers the agent away from that.
 - **Holidays** exist only for years whose SKB has been published (2026, 2027). Other years return an error, not a guess.
-- **ChatGPT** needs MCP over HTTP. This server supports stdio only for now.
 
 ## Roadmap
 
@@ -311,7 +447,7 @@ This is a small sample built around everyday tasks for Indonesian developers. Do
 - [x] Text-based PDF support in Samaran (page text, tables, form fields)
 - [ ] OCR for scanned PDFs and ID card photos
 - [ ] Free-text address parser → region codes
-- [ ] HTTP transport for ChatGPT and web-based agents
+- [x] HTTP transport for ChatGPT and web-based agents
 - [x] Python library (`lokal-id`) with the same results as TypeScript
 - [ ] Locale packs for other countries (Malaysia, the Philippines, Vietnam)
 
@@ -343,6 +479,8 @@ npm run eval    # real Claude Code sessions with and without the plugin
 ## Security
 
 If you find a way to get personal data past Samaran or the guard, please report it privately as described in [SECURITY.md](SECURITY.md) rather than opening a public issue.
+
+Releases are built from a tag by GitHub Actions and published with Trusted Publishing and provenance. `@lokal-id/core` and the Python package have no dependencies, and `@lokal-id/mcp` bundles its own, so installing Lokal pulls in no third-party packages. [SECURITY.md](SECURITY.md#how-releases-are-protected) describes how releases are protected and how to verify what you installed.
 
 ## License
 

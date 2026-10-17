@@ -48,8 +48,10 @@ Lokal menangani keduanya: mengajari agent konvensi Indonesia, memberinya data ac
 - **Konvensi Indonesia untuk agent.** Uang, nomor telepon, NIK/NPWP, alamat berjenjang, WIB/WITA/WIT, metode pembayaran lokal, teks UI, dan UU PDP, dikemas sebagai [Agent Skills](https://agentskills.io).
 - **Data acuan akurat, ikut terpasang.** 38 provinsi sampai 83.762 kelurahan/desa, sama persis dengan Kepmendagri 2025, lengkap dengan kode pos setiap desa. Libur nasional dan cuti bersama dari SKB resmi 2026 dan 2027.
 - **Penyamaran Samaran.** Mengganti 25 jenis data pribadi Indonesia, termasuk semua kategori di UU PDP Pasal 4, dengan placeholder yang stabil, lalu memulihkannya di jawaban model.
-- **Samaran Guard.** Hook Claude Code yang menahan prompt berisi nomor identitas dan mengalihkan pembacaan file data pelanggan (`Read`, `Grep`, `cat`, `Get-Content`, …) ke versi tersamar.
-- **Jalan di agent mana pun.** Plugin Claude Code, MCP server stdio untuk Cursor, Claude Desktop, VS Code, Windsurf, dan Codex, plus library TypeScript dan Python yang hasilnya identik.
+- **Samaran Guard.** Hook untuk Claude Code, Codex CLI, Cursor, dan Gemini CLI yang menahan prompt berisi nomor identitas dan mengalihkan pembacaan file data pelanggan (`Read`, `Grep`, `cat`, `Get-Content`, …) ke versi tersamar.
+- **Kembaran.** Menyalin dump dan ekspor produksi untuk staging dengan setiap orang diganti kembaran yang realistis: NIK valid di kecamatan yang sama, nomor HP di operator yang sama, konsisten antartabel.
+- **Samaran Proxy.** Endpoint yang kompatibel dengan OpenAI dan Anthropic. Proxy menyamarkan data pribadi di setiap panggilan LLM dari aplikasimu dan memulihkannya di jawaban, termasuk saat streaming. Cukup ganti base URL, kodenya tidak perlu diubah.
+- **Jalan di agent mana pun.** Plugin Claude Code, MCP server stdio untuk Cursor, Claude Desktop, VS Code, Windsurf, dan Codex, server HTTP untuk konektor ChatGPT dan Claude.ai, plus library TypeScript dan Python yang hasilnya identik.
 - **Lokal dan offline.** Data ikut di dalam paket. Tidak ada panggilan jaringan, tidak ada telemetri, dan pemulihan data terjadi di komputer kamu.
 
 ## Cara kerja
@@ -134,6 +136,20 @@ env = { LOKAL_ROOT = "/path/ke/project" }
 
 </details>
 
+<details>
+<summary><b>ChatGPT dan Claude.ai (konektor remote)</b></summary>
+
+ChatGPT dan Claude.ai versi web hanya bisa tersambung ke MCP server remote lewat HTTPS. Jalankan server dalam mode HTTP:
+
+```sh
+npx @lokal-id/mcp serve --http --port 3000                  # http://127.0.0.1:3000/mcp
+npx @lokal-id/mcp serve --http --host 0.0.0.0 --port $PORT  # di hosting Node seperti Render atau Fly.io
+```
+
+Pasang di belakang HTTPS (domain dari hosting kamu, atau `cloudflared tunnel --url http://localhost:3000` untuk mencoba), lalu tambahkan `https://<domain-kamu>/mcp` sebagai konektor kustom: di ChatGPT lewat developer mode (tergantung paket langganan), di Claude.ai lewat Settings → Connectors. Mode HTTP hanya menyediakan tool data (NIK, NPWP, nomor HP, Rupiah, wilayah, kode pos, hari libur, QRIS). Tool file sengaja tidak disertakan: server remote tidak bisa melihat file kamu, dan tidak boleh membuka file miliknya sendiri.
+
+</details>
+
 Tool file (`scan_pii`, `read_file_masked`, `write_file_unmasked`) hanya bisa mengakses `LOKAL_ROOT`. Defaultnya `CLAUDE_PROJECT_DIR`, lalu folder tempat server dijalankan.
 
 ### Hanya skill, untuk agent mana pun
@@ -144,7 +160,7 @@ npx skills add lokal-id/lokal
 
 Perintah ini memasang `lokal-indonesia` dan `samaran` lewat [skills CLI](https://github.com/vercel-labs/skills) ke Claude Code, Codex, Cursor, dan agent lain yang didukungnya. Tambahkan `-g` untuk memasang di level user, bukan di project yang sedang dibuka.
 
-Skill mengajari agent konvensinya. Untuk data wilayah, kode pos, dan hari libur yang akurat serta pembacaan file tersamar, pasang juga MCP server-nya (lihat di atas). Samaran Guard berupa hook, jadi hanya ikut lewat plugin Claude Code.
+Skill mengajari agent konvensinya. Untuk data wilayah, kode pos, dan hari libur yang akurat serta pembacaan file tersamar, pasang juga MCP server-nya (lihat di atas). Samaran Guard berupa hook: ikut otomatis lewat plugin Claude Code, dan [bisa dipasang](#di-codex-cli-cursor-dan-gemini-cli) di Codex CLI, Cursor, dan Gemini CLI.
 
 Folder di [`skills/`](skills) juga bisa disalin manual. Formatnya mengikuti standar terbuka Agent Skills (`SKILL.md`).
 
@@ -163,7 +179,7 @@ Paket Python adalah port dari `@lokal-id/core` dengan aturan dan data yang sama,
 
 ```ts
 import {
-  parseNik, parsePhone, formatRupiah, parseRupiah, terbilang, addWorkingDays, isWorkingDay,
+  parseNik, parsePhone, formatRupiah, parseRupiah, terbilang, addWorkingDays, isWorkingDay, parseQris, setQrisAmount,
 } from '@lokal-id/core';
 import { listWilayah, searchWilayah, wilayahName, findByPostalCode } from '@lokal-id/core/wilayah';
 
@@ -185,6 +201,9 @@ findByPostalCode('16431');               // kelurahan yang memakai kode pos ini
 
 addWorkingDays('2026-03-17', 1);         // '2026-03-25', melewati Nyepi dan Lebaran
 isWorkingDay('2026-12-24', { cutiBersama: false }); // true untuk kantor yang tidak ikut cuti bersama
+
+parseQris(payload);                      // { valid, type: 'static', merchantName, nmid, criteriaLabel: 'Usaha Mikro', … }
+setQrisAmount(payload, 25000);           // QRIS merchant yang sama, versi dinamis Rp25.000, dengan CRC baru
 ```
 
 `@lokal-id/core/wilayah` memuat data wilayah sekitar 4,4 MB dan hanya berjalan di Node. Entry utama tidak memuatnya, jadi aman untuk browser.
@@ -222,6 +241,63 @@ samaran.unmask(reply);           // placeholder diganti lagi dengan data asli
 
 </details>
 
+### Samaran Proxy: lindungi panggilan LLM di aplikasi
+
+Menyamarkan secara manual berarti setiap tempat yang memanggil LLM harus ingat melakukannya. Proxy melakukannya untuk seluruh aplikasi: jalankan di samping backend, lalu arahkan base URL SDK ke sana.
+
+```sh
+npx @lokal-id/mcp proxy                 # http://127.0.0.1:8787
+```
+
+```python
+from openai import OpenAI
+from anthropic import Anthropic
+
+client = OpenAI(base_url='http://127.0.0.1:8787/v1')   # Chat Completions, Responses, embeddings
+claude = Anthropic(base_url='http://127.0.0.1:8787')   # Messages
+```
+
+- Semua teks di request disamarkan sebelum keluar dari server kamu: riwayat percakapan, system prompt, hasil tool, dan argumen tool call. Gambar, ID, dan blok thinking yang bertanda tangan tidak diubah.
+- Jawaban kembali dengan nilai asli, baik streaming maupun tidak, termasuk argumen tool call, sehingga tool yang dijalankan aplikasi menerima data asli.
+- Setiap request punya vault sendiri. Karena seluruh percakapan disamarkan berurutan, orang yang sama selalu mendapat placeholder yang sama di setiap giliran.
+- API lain yang kompatibel dengan OpenAI juga bisa: `--openai https://openrouter.ai/api/v1`, Groq, DeepSeek, Ollama, atau endpoint OpenAI milik Gemini. `--exclude FINANCIAL` membiarkan model melihat angka penghasilan untuk simulasi kredit.
+- Hanya mendengarkan di 127.0.0.1, meneruskan API key tanpa menyimpannya, dan mencatat satu baris per request berisi jumlah, bukan nilai. Setiap respons punya header `x-samaran-masked: NIK=1,NAME=2`. Unggahan file tidak bisa disamarkan sehingga ditolak, kecuali proxy dijalankan dengan `--allow-unmasked`.
+
+Sudah diuji end-to-end dengan Claude Code sendiri yang dijalankan lewat proxy: model hanya pernah melihat placeholder, dan file yang ditulisnya lewat tool berisi nilai asli.
+
+### Kembaran: data produksi untuk staging, tanpa orang sungguhan
+
+Menyalin data produksi ke staging atau laptop developer adalah penyebab kebocoran data pribadi yang paling umum. Kembaran membuat salinan yang setiap orangnya diganti dengan "kembaran" yang realistis, sehingga datanya tetap berperilaku seperti produksi:
+
+```sh
+npx @lokal-id/mcp kembaran prod.sql ekspor.csv -o staging/ --secret staging-2026
+python -m lokal.kembaran prod.sql -o staging.sql          # sama, dari backend Python
+```
+
+```
+nama,nik,tgl_lahir,hp,email
+Budi Santoso,3201011508950001,15-08-1995,0812-3456-7890,budi.santoso@gmail.com
+↓
+Slamet Matondang,3201012409953895,24-09-1995,0812-8655-8077,rini.pertiwi10@example.com
+```
+
+| Data | Yang dipertahankan |
+|---|---|
+| NIK, KK | Kecamatan, jenis kelamin, tahun lahir; tetap NIK yang valid |
+| Tanggal lahir | Tahunnya; di baris yang sama, mengikuti tanggal di NIK palsunya |
+| Nomor HP | Operator dan format: `0812-…` tetap Telkomsel |
+| Nama | Jumlah kata, huruf besar/kecil, gelar (`Dr. Ir. H. …`) |
+| Alamat | RT/RW, kelurahan, kecamatan, kota; nama jalan dan nomor rumah berganti |
+| Email | Tidak ada: `…@example.com`, jadi staging tidak bisa mengirim email ke siapa pun |
+| Kartu, rekening | Panjangnya; kartu tetap berawalan penerbit yang sama dan lolos Luhn |
+
+- Nilai yang sama mendapat kembaran yang sama di semua file dalam satu kali jalan, jadi JOIN dan foreign key tetap jalan. `0812-3456-7890` dan `+62 812 3456 7890` dianggap satu orang. NPWP orang pribadi tetap sama dengan NIK-nya.
+- Kembaran dibuat dengan HMAC-SHA256 dan sebuah kunci. Tanpa `--secret`, kuncinya acak setiap kali jalan; dengan kunci, refresh staging mingguan menghasilkan orang palsu yang sama. NIK, nomor HP, dan nomor rekening palsu tidak pernah bertabrakan.
+- Jenis kelamin, agama, status perkawinan, dan kewarganegaraan dibiarkan secara default; `--keep FINANCIAL` membiarkan lebih banyak. `--keep-birth-date` mempertahankan tanggal lahir lengkap.
+- Di agent, tool `anonymize_file` melakukannya di komputer kamu dan hanya mengembalikan jumlah. TypeScript: `new Kembaran({ secret }).text(text)` dari `@lokal-id/core/kembaran`; Python: `Kembaran(secret=…).text(text)` dari `lokal.kembaran`, dengan hasil yang sama untuk kunci yang sama.
+
+Nomor HP palsu tetap bisa kebetulan milik orang lain, jadi cegah staging mengirim SMS atau WhatsApp. Hanya file teks (SQL dump, CSV, JSON, log) sampai 100 MB; sekitar 2 MB/detik di TypeScript.
+
 ### MCP tools
 
 | Tool | Kegunaan |
@@ -236,9 +312,12 @@ samaran.unmask(reply);           // placeholder diganti lagi dengan data asli
 | `lookup_kode_pos` | Kode pos → kelurahan/desa, atau semua kode pos di suatu wilayah |
 | `list_holidays` | Libur nasional dan cuti bersama (SKB 2026, 2027) |
 | `working_days` | Hari kerja, tenggat SLA, estimasi pengiriman |
+| `parse_qris` | Baca dan periksa payload QRIS: merchant, NMID, kriteria, nominal, CRC |
+| `set_qris_amount` | Jadikan QRIS merchant dinamis untuk nominal tertentu, dengan CRC baru |
 | `scan_pii` | Pindai file dan folder (teks, CSV, JSON, log, SQL, `.xlsx`, `.docx`, PDF berbasis teks, sampai 100 MB per file) untuk data pribadi. Hanya menampilkan nilai yang sudah disamarkan sebagian, dan **melaporkan file dan halaman yang tidak bisa dipindai** (PDF hasil scan atau terenkripsi, `.xls`, `.doc`, gambar) |
 | `read_file_masked` | Baca file, termasuk sheet `.xlsx`, dokumen `.docx` (teks dan tabel), dan PDF (teks halaman, tabel, dan isian formulir), dengan data pribadi diganti placeholder yang stabil |
 | `write_file_unmasked` | Tulis hasil kerja dengan placeholder dipulihkan, di komputer kamu |
+| `anonymize_file` | Salin dump dan ekspor dengan kembaran realistis untuk setiap orang (Kembaran), hanya mengembalikan jumlah |
 
 ### Samaran Guard
 
@@ -258,6 +337,64 @@ Otomatis aktif lewat plugin Claude Code.
   ```
 
 - `SAMARAN_GUARD=off` mematikan guard.
+
+#### Di Codex CLI, Cursor, dan Gemini CLI
+
+Guard yang sama bisa dipasang sebagai hook di agent lain: `lokal-mcp guard` mengenali event setiap agent dan menjawab dalam formatnya. Pasang sekali secara global supaya hook cepat jalan (`npx` di setiap pembacaan file terlalu lambat):
+
+```sh
+npm install -g @lokal-id/mcp
+```
+
+<details>
+<summary><b>Codex CLI</b>: <code>.codex/hooks.json</code></summary>
+
+```json
+{
+  "hooks": {
+    "UserPromptSubmit": [{ "hooks": [{ "type": "command", "command": "lokal-mcp guard" }] }],
+    "PreToolUse": [{ "matcher": "Bash", "hooks": [{ "type": "command", "command": "lokal-mcp guard" }] }]
+  }
+}
+```
+
+Codex meminta kamu meninjau hook baru lewat `/hooks` sebelum dijalankan. Codex membaca file lewat shell, jadi yang diperiksa guard adalah `cat`, `sed -n`, dan sejenisnya.
+
+</details>
+
+<details>
+<summary><b>Cursor</b>: <code>.cursor/hooks.json</code></summary>
+
+```json
+{
+  "version": 1,
+  "hooks": {
+    "beforeSubmitPrompt": [{ "command": "lokal-mcp guard" }],
+    "beforeReadFile": [{ "command": "lokal-mcp guard" }],
+    "beforeShellExecution": [{ "command": "lokal-mcp guard" }]
+  }
+}
+```
+
+Pembacaan file di Cursor tidak bisa bertanya dulu, jadi foto atau PDF hasil scan yang di Claude Code akan ditanyakan, di Cursor langsung ditahan. Masukkan ke `.samaranignore` kalau berkas itu tidak berisi data asli.
+
+</details>
+
+<details>
+<summary><b>Gemini CLI</b> (eksperimental): <code>.gemini/settings.json</code></summary>
+
+```json
+{
+  "hooks": {
+    "BeforeAgent": [{ "hooks": [{ "type": "command", "command": "lokal-mcp guard" }] }],
+    "BeforeTool": [{ "matcher": "read_file|run_shell_command", "hooks": [{ "type": "command", "command": "lokal-mcp guard" }] }]
+  }
+}
+```
+
+Hook di Gemini CLI masih eksperimental; aktifkan sesuai dokumentasi Gemini CLI untuk versimu.
+
+</details>
 
 ## Hasil eval
 
@@ -298,7 +435,6 @@ Ini sampel kecil yang disusun dari keseharian developer Indonesia. Jangan dibaca
 - **Deteksi operator memakai prefix nomor**, yang cocok dengan daftar alokasi publik, termasuk merger XLSmart 2025. Indonesia belum punya *number portability* (gugatannya masih di MK, perkara 319/PUU-XXIV/2026), jadi prefix masih bisa diandalkan. Kode area telepon rumah baru mencakup 19 kota besar.
 - **Guard mencegat prompt, `Read`, `Grep`, dan perintah shell umum.** Skrip yang sengaja mencetak isi file data, atau perintah seperti `python -c "print(open(...).read())"`, tidak bisa dicegat 100%. Untuk itu skill `samaran` yang mengarahkan agent.
 - **Hari libur** hanya tersedia untuk tahun yang SKB-nya sudah terbit (2026, 2027). Tahun lain menghasilkan error, bukan tebakan.
-- **ChatGPT** butuh MCP lewat HTTP. Server ini baru mendukung stdio.
 
 ## Roadmap
 
@@ -311,7 +447,7 @@ Ini sampel kecil yang disusun dari keseharian developer Indonesia. Jangan dibaca
 - [x] Dukungan PDF berbasis teks di Samaran (teks halaman, tabel, isian formulir)
 - [ ] OCR untuk PDF hasil scan dan foto KTP
 - [ ] Parser alamat bebas → kode wilayah
-- [ ] Transport HTTP untuk ChatGPT dan agent berbasis web
+- [x] Transport HTTP untuk ChatGPT dan agent berbasis web
 - [x] Library Python (`lokal-id`) dengan hasil yang sama dengan TypeScript
 - [ ] *Locale pack* untuk negara lain (Malaysia, Filipina, Vietnam)
 
@@ -343,6 +479,8 @@ npm run eval    # sesi Claude Code sungguhan, dengan dan tanpa plugin
 ## Keamanan
 
 Kalau kamu menemukan cara meloloskan data pribadi melewati Samaran atau guard, laporkan secara privat sesuai [SECURITY.md](SECURITY.md), jangan lewat issue publik.
+
+Rilis dibangun dari tag oleh GitHub Actions dan diterbitkan lewat Trusted Publishing dengan provenance. `@lokal-id/core` dan paket Python tidak punya dependency, dan `@lokal-id/mcp` membundel dependency-nya sendiri, jadi memasang Lokal tidak menarik paket pihak ketiga apa pun. [SECURITY.md](SECURITY.md#how-releases-are-protected) menjelaskan cara rilis dilindungi dan cara memverifikasi paket yang kamu pasang.
 
 ## Lisensi
 

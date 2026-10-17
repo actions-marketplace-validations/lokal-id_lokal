@@ -1,7 +1,9 @@
 import { existsSync, mkdirSync, statSync, writeFileSync } from 'node:fs';
+import { createServer as createHttpServer, type Server as HttpServer } from 'node:http';
 import path from 'node:path';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { z } from 'zod';
 import {
   PII_TYPES,
@@ -18,8 +20,10 @@ import {
   parseNik,
   parseNpwp,
   parsePhone,
+  parseQris,
   parseRupiah,
   partialMask,
+  setQrisAmount,
   terbilang,
   type PiiMatch,
   type PiiType,
@@ -33,15 +37,16 @@ import {
   wilayahName,
 } from '@lokal-id/core/wilayah';
 import { loadDocument, loadIgnore, resolveInRoot, toPosix, walkFiles, type Document } from './files.ts';
+import { anonymizeFiles, KEMBARAN_NOTE } from './kembaran-files.ts';
 
-const VERSION = '0.3.0';
+const VERSION = '0.4.0';
 const FILE_LIMIT = 5000;
 
 const INSTRUCTIONS = `Lokal makes you Indonesia-ready.
 
-Data tools (use them instead of guessing): parse_nik, validate_npwp, parse_phone, format_rupiah, parse_rupiah, search_wilayah, list_wilayah, lookup_kode_pos, list_holidays, working_days. Region lists, kode pos, holidays, NIK structure, and Rupiah formatting are easy to get subtly wrong from memory.
+Data tools (use them instead of guessing): parse_nik, validate_npwp, parse_phone, format_rupiah, parse_rupiah, search_wilayah, list_wilayah, lookup_kode_pos, list_holidays, working_days, parse_qris, set_qris_amount. Region lists, kode pos, holidays, NIK structure, Rupiah formatting, and QRIS checksums are easy to get subtly wrong from memory.
 
-Privacy tools (Samaran): when a task touches real user data — logs, CSV/Excel exports, database dumps, support tickets, seed files from production — run scan_pii first, then read it with read_file_masked instead of reading the raw file (also never cat/head/type it in a shell). Identifiers (NIK, KK, NPWP, phone, bank account, BPJS, passport …), names, addresses, birth dates, and the UU PDP categories (religion, marital status, health, finances, criminal records, biometrics) come back as stable placeholders like [NIK_1]. Work with the placeholders; never ask the user for the real values. When output must contain the real data (a cleaned CSV, a report), write it with write_file_unmasked, which restores the placeholders on the user's machine. If scan_pii reports files it could not scan, tell the user; do not treat them as clean.`;
+Privacy tools (Samaran): when a task touches real user data — logs, CSV/Excel exports, database dumps, support tickets, seed files from production — run scan_pii first, then read it with read_file_masked instead of reading the raw file (also never cat/head/type it in a shell). Identifiers (NIK, KK, NPWP, phone, bank account, BPJS, passport …), names, addresses, birth dates, and the UU PDP categories (religion, marital status, health, finances, criminal records, biometrics) come back as stable placeholders like [NIK_1]. Work with the placeholders; never ask the user for the real values. When output must contain the real data (a cleaned CSV, a report), write it with write_file_unmasked, which restores the placeholders on the user's machine. To copy production data to staging, build seeders, or share it with a vendor, use anonymize_file: it writes a copy where every person is a realistic stand-in. If scan_pii reports files it could not scan, tell the user; do not treat them as clean.`;
 
 function json(value: unknown) {
   return { content: [{ type: 'text' as const, text: JSON.stringify(value, null, 2) }] };
@@ -69,10 +74,23 @@ function parts(doc: Exclude<Document, { kind: 'skipped' }>): Array<{ sheet?: str
 
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'YYYY-MM-DD');
 
+export interface ServerOptions {
+  /**
+   * The file tools (scan_pii, read_file_masked, write_file_unmasked). Off for a remote server: it would open the
+   * host's files to anyone who can reach it, and it cannot see the user's files anyway.
+   */
+  files?: boolean;
+}
+
 export function createServer(
   root = path.resolve(process.env.LOKAL_ROOT ?? process.env.CLAUDE_PROJECT_DIR ?? process.cwd()),
+  options: ServerOptions = {},
 ): McpServer {
-  const server = new McpServer({ name: 'lokal', version: VERSION }, { instructions: INSTRUCTIONS });
+  const files = options.files !== false;
+  const server = new McpServer(
+    { name: 'lokal', version: VERSION },
+    { instructions: files ? INSTRUCTIONS : INSTRUCTIONS.slice(0, INSTRUCTIONS.indexOf('\n\nPrivacy tools')) },
+  );
   // One vault per server process, so placeholders stay stable across calls in a session.
   const samaran = new Samaran();
   const isIgnored = loadIgnore(root);
@@ -101,6 +119,45 @@ export function createServer(
       annotations: readOnly,
     },
     async ({ npwp }) => json(parseNpwp(npwp)),
+  );
+
+  server.registerTool(
+    'parse_qris',
+    {
+      title: 'Read a QRIS payload',
+      description:
+        'Read and check a QRIS payload (the text inside an Indonesian QRIS payment code): static or dynamic, merchant name and city, NMID, merchant criteria (UMI, UKE, …), amount, tip, merchant accounts, and whether the CRC checksum is intact. Errors and warnings are in Indonesian.',
+      inputSchema: { payload: z.string().describe('The QRIS text, starting with 000201') },
+      annotations: readOnly,
+    },
+    async ({ payload }) => json(parseQris(payload)),
+  );
+
+  server.registerTool(
+    'set_qris_amount',
+    {
+      title: 'Make a dynamic QRIS with an amount',
+      description:
+        'Turn a QRIS payload into a dynamic one for an amount in Rupiah, optionally with a fixed or percentage fee, and recompute the CRC. The merchant account is unchanged. Returns the new payload, ready to render as a QR code.',
+      inputSchema: {
+        payload: z.string(),
+        amount: z.union([z.number(), z.string()]).describe('Rupiah, at most 2 decimals, e.g. 25000'),
+        fee_fixed: z.union([z.number(), z.string()]).optional().describe('A fixed fee in Rupiah on top of the amount'),
+        fee_percent: z.union([z.number(), z.string()]).optional().describe('A percentage fee on top of the amount'),
+      },
+      annotations: readOnly,
+    },
+    async ({ payload, amount, fee_fixed, fee_percent }) => {
+      if (fee_fixed !== undefined && fee_percent !== undefined) return fail('Use fee_fixed or fee_percent, not both.');
+      const tip = fee_fixed !== undefined ? { fixed: fee_fixed } : fee_percent !== undefined ? { percent: fee_percent } : undefined;
+      try {
+        const out = setQrisAmount(payload, amount, tip ? { tip } : {});
+        const info = parseQris(out);
+        return json({ payload: out, type: info.type, amount: info.amount, tip: info.tip, merchantName: info.merchantName, nmid: info.nmid });
+      } catch (e) {
+        return fail((e as Error).message);
+      }
+    },
   );
 
   server.registerTool(
@@ -254,6 +311,7 @@ export function createServer(
     },
   );
 
+  if (!files) return server;
   const piiTypes = z.array(z.enum(PII_TYPES as [PiiType, ...PiiType[]])).optional();
 
   server.registerTool(
@@ -462,10 +520,92 @@ export function createServer(
     },
   );
 
+  server.registerTool(
+    'anonymize_file',
+    {
+      title: 'Make a copy of data with realistic stand-ins (Kembaran)',
+      description:
+        'Copy SQL dumps, CSV, JSON, or log files with every piece of Indonesian personal data replaced by a realistic stand-in, for staging, seeders, tests, or sharing with a vendor: valid NIKs in the same district with the same gender and birth year, phone numbers on the same operator, names with the same casing, addresses in the same area, e-mail at example.com. The same value gets the same stand-in in every file of one call, so joins still work. Runs on the user\'s machine and returns only counts: you never see the data. Use it instead of reading production data, and when asked to copy production data to staging or build seeders from it.',
+      inputSchema: {
+        paths: z.array(z.string()).min(1).describe('Input files, relative to the project root'),
+        output: z.string().describe('Output file, or a folder when there are several inputs'),
+        keep: piiTypes.describe('Types to leave as they are, e.g. ["FINANCIAL"] for a credit simulation'),
+        keep_birth_date: z.boolean().default(false).describe('Keep whole birth dates instead of only the year'),
+        secret: z.string().optional().describe('The same secret gives the same stand-ins on every run'),
+        overwrite: z.boolean().default(false),
+      },
+      annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
+    },
+    async ({ paths, output, keep, keep_birth_date, secret, overwrite }) => {
+      let inputs: string[];
+      let out: string;
+      try {
+        inputs = paths.map(inRoot);
+        out = inRoot(output);
+        const files = anonymizeFiles(inputs, out, { keep, keepBirthDate: keep_birth_date, secret, overwrite });
+        return json({
+          files: files.map((f) => ({ from: toPosix(path.relative(root, f.from)), to: toPosix(path.relative(root, f.to)), replaced: f.replaced })),
+          note: KEMBARAN_NOTE,
+        });
+      } catch (e) {
+        return fail((e as Error).message);
+      }
+    },
+  );
+
   return server;
 }
 
 export async function runServer(): Promise<void> {
   const server = createServer();
   await server.connect(new StdioServerTransport());
+}
+
+/**
+ * MCP over Streamable HTTP, for clients that only connect to remote servers: ChatGPT connectors, Claude.ai custom
+ * connectors. Stateless, data tools only. Put it behind HTTPS to use it from those clients.
+ */
+export function startHttpServer(port = 3000, host = '127.0.0.1'): Promise<HttpServer> {
+  const http = createHttpServer(async (req, res) => {
+    const pathname = (req.url ?? '/').split('?')[0];
+    if (pathname === '/' && req.method === 'GET') {
+      res.writeHead(200, { 'content-type': 'text/plain; charset=utf-8' });
+      res.end(`Lokal MCP server ${VERSION}. Connect an MCP client to /mcp.\n`);
+      return;
+    }
+    if (pathname !== '/mcp') {
+      res.writeHead(404, { 'content-type': 'text/plain' }).end('Not found. The MCP endpoint is /mcp.\n');
+      return;
+    }
+    if (req.method !== 'POST') {
+      // Stateless: no server-initiated stream (GET) and no sessions to end (DELETE).
+      res.writeHead(405, { 'content-type': 'application/json', allow: 'POST' });
+      res.end(JSON.stringify({ jsonrpc: '2.0', error: { code: -32000, message: 'Method not allowed.' }, id: null }));
+      return;
+    }
+    try {
+      let raw = '';
+      for await (const chunk of req) {
+        raw += chunk;
+        if (raw.length > 1024 * 1024) throw new Error('Request too large.');
+      }
+      const server = createServer(process.cwd(), { files: false });
+      const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined, enableJsonResponse: true });
+      res.on('close', () => {
+        void transport.close();
+        void server.close();
+      });
+      await server.connect(transport);
+      await transport.handleRequest(req, res, JSON.parse(raw));
+    } catch (e) {
+      if (!res.headersSent) {
+        res.writeHead(400, { 'content-type': 'application/json' });
+        res.end(JSON.stringify({ jsonrpc: '2.0', error: { code: -32700, message: (e as Error).message }, id: null }));
+      }
+    }
+  });
+  return new Promise((resolve, reject) => {
+    http.once('error', reject);
+    http.listen(port, host, () => resolve(http));
+  });
 }
