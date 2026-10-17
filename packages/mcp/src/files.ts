@@ -1,13 +1,14 @@
 import { closeSync, existsSync, openSync, readdirSync, readFileSync, readSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { readDocx } from './docx.ts';
+import { readPdf } from './pdf.ts';
 import { readXlsx, type Sheet } from './xlsx.ts';
 
 /** scan_pii and read_file_masked read files up to this size; detection is linear, about 0.15 s per MB. */
 export const MAX_FILE_BYTES = 100 * 1024 * 1024;
 /** The guard hook has 10 seconds, so for bigger text files it checks this much from the start. */
 export const GUARD_SAMPLE_BYTES = 5 * 1024 * 1024;
-/** Spreadsheets and documents must be unzipped whole; above this the guard reports them instead. */
+/** Spreadsheets, Word documents, and PDFs must be parsed whole; above this the guard reports them instead. */
 export const GUARD_MAX_ZIP_BYTES = 20 * 1024 * 1024;
 
 const SKIP_DIRS = new Set([
@@ -122,8 +123,11 @@ export function loadIgnore(root: string): (absPath: string) => boolean {
 export type Document =
   /** `sampled`: only the first `sampleBytes`, cut at a line break. */
   | { kind: 'text'; text: string; sampled?: boolean }
-  /** Spreadsheet sheets, or a Word document's text and tables (`unit: 'part'`), each as CSV. */
-  | { kind: 'sheets'; sheets: Sheet[]; unit?: 'sheet' | 'part' }
+  /**
+   * Spreadsheet sheets, a Word document's text and tables (`unit: 'part'`), or a PDF's pages (`unit: 'page'`).
+   * `unscanned` says what could not be read, such as scanned pages in an otherwise text-based PDF.
+   */
+  | { kind: 'sheets'; sheets: Sheet[]; unit?: 'sheet' | 'part' | 'page'; unscanned?: string }
   | { kind: 'skipped'; reason: string; dataBearing: boolean };
 
 export interface LoadOptions {
@@ -148,10 +152,21 @@ function readHead(file: string, bytes: number): string {
 
 const mb = (bytes: number) => `${Math.round(bytes / 1024 / 1024)} MB`;
 
+/** "2, 4-6, 9" */
+function pageList(pages: number[]): string {
+  const out: string[] = [];
+  for (let i = 0; i < pages.length; ) {
+    let j = i;
+    while (j + 1 < pages.length && pages[j + 1] === pages[j]! + 1) j++;
+    out.push(j > i ? `${pages[i]}-${pages[j]}` : `${pages[i]}`);
+    i = j + 1;
+  }
+  return out.join(', ');
+}
+
 // Formats that commonly hold personal data but cannot be read yet: they must be reported, not ignored.
 const UNSUPPORTED_DATA: Record<string, string> = {
   '.xls': 'Excel 97-2003 (.xls) is not supported; save it as .xlsx or .csv',
-  '.pdf': 'PDF is not supported yet',
   '.doc': 'Word 97-2003 (.doc) is not supported; save it as .docx',
   '.ods': 'OpenDocument spreadsheets are not supported yet',
   '.db': 'database file',
@@ -173,8 +188,8 @@ export function loadDocument(file: string, options: LoadOptions = {}): Document 
   const ext = path.extname(file).toLowerCase();
   const st = statSync(file);
   if (st.size > MAX_FILE_BYTES) return { kind: 'skipped', reason: `larger than ${mb(MAX_FILE_BYTES)}`, dataBearing: true };
-  const zipped = ext === '.xlsx' || ext === '.xlsm' || ext === '.docx';
-  if (zipped && options.maxZipBytes !== undefined && st.size > options.maxZipBytes) {
+  const parsedWhole = ext === '.xlsx' || ext === '.xlsm' || ext === '.docx' || ext === '.pdf';
+  if (parsedWhole && options.maxZipBytes !== undefined && st.size > options.maxZipBytes) {
     return { kind: 'skipped', reason: `larger than ${mb(options.maxZipBytes)}`, dataBearing: true };
   }
   if (ext === '.xlsx' || ext === '.xlsm') {
@@ -189,6 +204,29 @@ export function loadDocument(file: string, options: LoadOptions = {}): Document 
       return { kind: 'sheets', sheets: readDocx(readFileSync(file)), unit: 'part' };
     } catch (e) {
       return { kind: 'skipped', reason: `unreadable Word document: ${(e as Error).message}`, dataBearing: true };
+    }
+  }
+  if (ext === '.pdf') {
+    try {
+      const { pages, scanned, damaged, total } = readPdf(readFileSync(file));
+      if (!pages.length && (scanned.length || damaged.length)) {
+        const reason = damaged.length ? 'damaged PDF: no readable text' : 'PDF without a text layer (scanned); needs OCR';
+        return { kind: 'skipped', reason, dataBearing: true };
+      }
+      const notes: string[] = [];
+      if (scanned.length) {
+        const one = scanned.length === 1;
+        notes.push(`${one ? 'page' : 'pages'} ${pageList(scanned)} of ${total} ${one ? 'has' : 'have'} no text layer (scanned) and need${one ? 's' : ''} OCR`);
+      }
+      if (damaged.length) {
+        const one = damaged.length === 1;
+        notes.push(`${one ? 'page' : 'pages'} ${pageList(damaged)} of ${total} ${one ? 'is' : 'are'} damaged and could not be read`);
+      }
+      return { kind: 'sheets', sheets: pages, unit: 'page', unscanned: notes.join('; ') || undefined };
+    } catch (e) {
+      const message = (e as Error).message;
+      const reason = /encrypted/.test(message) ? 'encrypted PDF (password-protected)' : `unreadable PDF: ${message.replace(/\.$/, '')}`;
+      return { kind: 'skipped', reason, dataBearing: true };
     }
   }
   const unsupported = UNSUPPORTED_DATA[ext];

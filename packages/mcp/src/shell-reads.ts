@@ -8,8 +8,8 @@ import { existsSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { globToRegExp } from './files.ts';
 
-/** Text data formats; spreadsheets are binary and print nothing readable through `cat`. */
-export const SHELL_DATA_FILE = /\.(csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out)(\.\d+)?$/i;
+/** Text data formats, and PDF for `pdftotext x.pdf -`; spreadsheets are binary and print nothing readable through `cat`. */
+export const SHELL_DATA_FILE = /\.(csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out|pdf)(\.\d+)?$/i;
 
 export interface ShellRead {
   file: string;
@@ -24,7 +24,7 @@ const all: Select = (t) => t;
 const READERS = new Set([
   'cat', 'type', 'gc', 'get-content', 'more', 'less', 'bat', 'batcat', 'head', 'tail', 'nl', 'tac', 'sed', 'awk',
   'gawk', 'cut', 'sort', 'uniq', 'column', 'jq', 'yq', 'grep', 'egrep', 'fgrep', 'rg', 'ag', 'select-string', 'sls',
-  'import-csv', 'ipcsv', 'xxd', 'od', 'strings', 'csvlook', 'csvcut', 'mlr', 'paste', 'findstr',
+  'import-csv', 'ipcsv', 'xxd', 'od', 'strings', 'csvlook', 'csvcut', 'mlr', 'paste', 'findstr', 'pdftotext',
 ]);
 // Programs that pass their stdin through to the screen, reshaped.
 const FILTERS = new Set([
@@ -345,6 +345,11 @@ export function dataReadsInCommand(command: string, cwd: string, powershell = fa
       const seg = toSegment(words);
       if (!seg) continue;
       const narrow = selection(seg);
+      // `pdftotext in.pdf out.txt` writes a file; only `pdftotext in.pdf -` prints the text.
+      if (seg.program === 'pdftotext' && !seg.args.includes('-')) {
+        flow = [];
+        continue;
+      }
       if (WRITE_SINKS.has(seg.program) || (!READERS.has(seg.program) && !FILTERS.has(seg.program))) {
         flow = []; // written to a file, or consumed by a program whose output we cannot predict
         continue;

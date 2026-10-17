@@ -13,7 +13,7 @@ from .types import PiiType
 
 _FIELDS: list[tuple[PiiType, str]] = [
     # A column called "pasien" or "pelanggan" holds that person's name.
-    ('NAME', 'nama|name|full_?name|nama_?lengkap|first_?name|last_?name|middle_?name|given_?name|family_?name|surname|nama_?depan|nama_?tengah|nama_?belakang|nama_?panggilan|nickname|nama_?ibu_?kandung|mother_?s?_?maiden_?name|penerima|pengirim|recipient|pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner'),  # noqa: E501
+    ('NAME', 'nama|name|full_?name|nama_?lengkap|first_?name|last_?name|middle_?name|given_?name|family_?name|surname|nama_?depan|nama_?tengah|nama_?belakang|nama_?panggilan|nickname|nama_?ibu_?kandung|mother_?s?_?maiden_?name|penerima|pengirim|recipient|pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner|pemesan|pembeli|buyer|konsumen|atas_?nama|a_n'),  # noqa: E501
     ('ADDRESS', 'alamat|address|full_?address|street|street_?address|domisili|alamat_?domisili|alamat_?ktp|alamat_?rumah|alamat_?pengiriman|shipping_?address|home_?address|billing_?address'),  # noqa: E501
     ('NIK', 'nik|no_?ktp|nomor_?ktp|ktp|nomor_?induk_?kependudukan|national_?id'),
     ('KK', 'kk|no_?kk|nomor_?kk|kartu_?keluarga|no_?kartu_?keluarga|nomor_?kartu_?keluarga|family_?card(_?number)?'),
@@ -44,7 +44,7 @@ _FIELDS: list[tuple[PiiType, str]] = [
 _ENTITY = (
     'customer|pelanggan|nasabah|pasien|patient|user|pengguna|member|anggota|karyawan|employee|pegawai|siswa|student|'
     'mahasiswa|penerima|pengirim|recipient|sender|ibu|ayah|wali|orang_?tua|pemohon|applicant|debitur|peserta|pemilik|'
-    'owner|contact|kontak'
+    'owner|contact|kontak|pemesan|pembeli|buyer|konsumen'
 )
 _QUALIFIER = f'{_ENTITY}|lengkap|baru|lama|asli|utama|rumah|kantor|ktp|domisili|pengiriman|pribadi|aktif|1|2'
 
@@ -106,7 +106,7 @@ _DATE_LIKE = _js.compile(
 
 _ROLE_KEY = re.compile(
     r'pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|'
-    r'debitur|pemilik|owner|penerima|pengirim|recipient'
+    r'debitur|pemilik|owner|penerima|pengirim|recipient|pemesan|pembeli|buyer|konsumen'
 )
 
 _EMPTY = _js.compile(r'(?:-+|null|none|nil|n/?a|undefined|tidak ada|kosong|\?)', re.I)
@@ -121,6 +121,7 @@ _DIGIT_TYPES: frozenset[PiiType] = frozenset(('NIK', 'KK', 'NPWP', 'NIP', 'SIM',
 _PLACEHOLDER = re.compile(r'\[[A-Z_]+_[0-9]+\]')
 _CODE_LIKE = _js.compile(r'[{}<>`$\[\]]|=>|^\w+\.\w+\(')
 _PARENS = re.compile(r'[()]')
+_NICKNAME = _js.rx(r"\s+\([A-Z]?[a-z][A-Za-z .'-]*\)$")  # "(Ami)", not an acronym like "(GSS)"
 _DOTTED_IDENT = _js.compile(r'[a-z_$][\w$]*\.[a-z_$][\w$.]*', re.I)
 _HAS_LETTER = re.compile(r'[A-Za-z]')
 _NAME_BAD_CHARS = re.compile(r'[0-9_(){}\[\]<>=]')
@@ -132,7 +133,8 @@ _FIVE_DIGITS = re.compile(r'[0-9]{5}')
 
 def is_plausible_value(pii_type: PiiType, value: str, key: str) -> bool:
     """Values that are code, schema, or placeholders rather than someone's data."""
-    v = _js.trim(value)
+    # "Siti Aminah (Ami)": a nickname in brackets is part of the name, not a function call.
+    v = _NICKNAME.sub('', _js.trim(value)) if pii_type == 'NAME' else _js.trim(value)
     if not v or _EMPTY.fullmatch(v):
         return False
     if v.lower() in _TYPE_WORDS:

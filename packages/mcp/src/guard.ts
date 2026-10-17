@@ -11,13 +11,17 @@
 //   Source code is never blocked: example numbers in code are normal, and agents must be able to read
 //   it. Running a script on a data file is allowed: that is how data gets processed without being
 //   shown. Files in .samaranignore are allowed.
+// - PreToolUse, Read of what Samaran cannot check: asks the user first. That is a photo filed or named
+//   like someone's document (ktp/, selfie_budi.jpg, media/uploads/…; not the app's own assets), and a
+//   PDF that is scanned, encrypted, damaged, or read only in part.
 //
-// Exit code 2 blocks; stderr is shown to the user (prompts) or to Claude (tool calls).
+// Exit code 2 blocks; stderr is shown to the user (prompts) or to Claude (tool calls). Asking prints
+// a permissionDecision of "ask" on stdout, whose reason Claude Code shows in its permission prompt.
 // Anything unexpected exits 0: a broken guard must never break the session.
-import { statSync } from 'node:fs';
+import { existsSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { detectPii, partialMask, type PiiMatch, type PiiType } from '@lokal-id/core';
-import { GUARD_MAX_ZIP_BYTES, GUARD_SAMPLE_BYTES, globToRegExp, loadDocument, loadIgnore, walkFiles } from './files.ts';
+import { GUARD_MAX_ZIP_BYTES, GUARD_SAMPLE_BYTES, globToRegExp, loadDocument, loadIgnore, walkFiles, type Document } from './files.ts';
 import { dataReadsInCommand, SHELL_DATA_FILE } from './shell-reads.ts';
 
 // One of these is enough to hold a prompt or a file back: identity numbers, and labeled sensitive data.
@@ -28,8 +32,18 @@ const STRICT: PiiType[] = [
 // Common on their own (a support email, a sample phone number); a file with several is a data export.
 const BULK_THRESHOLD = 3;
 const BYPASS = /#izinkan-pii\b/i;
-const DATA_FILE = /\.(csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out|xlsx|xlsm)(\.\d+)?$/i;
+// Claude Code's Read sends a PDF to the model as is, pages and all.
+const DATA_FILE = /\.(csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out|xlsx|xlsm|docx|pdf)(\.\d+)?$/i;
 const GREP_MAX_FILES = 300;
+// Read sends images to the model too, and nothing in them can be checked without OCR.
+const IMAGE_FILE = /\.(jpe?g|png|heic|heif|webp|gif|bmp|tiff?)$/i;
+// Words in a path that point at someone's documents: the kind of document, or whose it is.
+const PERSONAL_PATH =
+  /(?:^|[^a-z])(?:e?ktp|kk|kartu[ _-]?keluarga|npwp|sim|paspor|passport|selfie|swafoto|identitas|identity|id[ _-]?card|akta|ijazah|slip[ _-]?gaji|rekening|tabungan|bpjs|kyc|verifikasi|verification|pelanggan|customers?|nasabah|pasien|patients?|karyawan|employees?|pegawai|pemohon|applicants?|debitur|peserta|siswa|students?)(?:[^a-z]|$)/i;
+// Folders where an app keeps what users upload.
+const UPLOAD_PATH = /(?:^|[\\/])(?:media|uploads?|storage|attachments?|lampiran|berkas|dokumen|documents?|scans?|private|var)(?:[\\/]|$)/i;
+// Folders of the app's own images: logos, icons, screenshots.
+const ASSET_PATH = /(?:^|[\\/])(?:assets?|icons?|images?|img|static|fonts?|docs?|screenshots?|\.github|design|branding|logos?)(?:[\\/]|$)/i;
 // Grep's `type` filter, for the types that are data formats.
 const GREP_TYPES: Record<string, RegExp> = {
   csv: /\.csv$/i, tsv: /\.tsv$/i, json: /\.(json|jsonl|ndjson)$/i, jsonl: /\.jsonl$/i, yaml: /\.ya?ml$/i,
@@ -120,20 +134,62 @@ function shownPii(full: string, shown: string, file: string): PiiMatch[] {
 const PROCESS_HINT =
   'To process the data, run a script that reads the file and writes its results to a file (or prints only counts), or use `write_file_unmasked`.';
 
-function readTool(file: string, shownAs: string, ignored: (f: string) => boolean): string | undefined {
-  if (!DATA_FILE.test(file) || ignored(file)) return undefined;
-  const texts = fileTexts(file);
-  const found = texts && verdict(texts);
-  if (!found) return undefined;
-  return [
-    `Samaran blocked reading ${shownAs}: it contains personal data (${summarize(found, false)}).`,
-    'Use the `read_file_masked` tool from the lokal MCP server instead: same content, with personal data replaced by stable placeholders.',
-    'Write results that need the real values with `write_file_unmasked`.',
-    'If the user confirms the file only holds fake data, they can add it to .samaranignore.',
-  ].join(' ');
+/** What the guard does with a prompt or tool call: block it (the message goes to Claude), or ask the user. */
+export type Verdict = { action: 'block' | 'ask'; message: string };
+const block = (message: string): Verdict => ({ action: 'block', message });
+
+/** Asks before Read sends what Samaran cannot check, in the user's language: the user answers the prompt. */
+function ask(shownAs: string, what: string): Verdict {
+  return {
+    action: 'ask',
+    message: [
+      `🛡️  Samaran: ${shownAs} ${what}, jadi isinya tidak bisa diperiksa dan akan dikirim ke model AI apa adanya.`,
+      'Izinkan hanya jika berkas ini tidak berisi data pribadi asli (KTP, selfie, formulir pelanggan).',
+      'Berkas contoh bisa dimasukkan ke .samaranignore supaya tidak ditanyakan lagi.',
+    ].join(' '),
+  };
 }
 
-function shellTool(command: string, cwd: string, powershell: boolean, ignored: (f: string) => boolean): string | undefined {
+/** An image that is probably someone's document: named or filed as one, and not among the app's own images. */
+function personalImage(file: string, root: string): boolean {
+  const rel = path.relative(root, file);
+  const where = rel.startsWith('..') || path.isAbsolute(rel) ? file : rel;
+  return PERSONAL_PATH.test(where) || (UPLOAD_PATH.test(path.dirname(where)) && !ASSET_PATH.test(path.dirname(where)));
+}
+
+function readTool(file: string, shownAs: string, root: string, ignored: (f: string) => boolean): Verdict | undefined {
+  if (ignored(file)) return undefined;
+  if (IMAGE_FILE.test(file)) {
+    return personalImage(file, root) && existsSync(file) ? ask(shownAs, 'mungkin foto KTP atau dokumen pribadi') : undefined;
+  }
+  if (!DATA_FILE.test(file)) return undefined;
+  let doc: Document;
+  try {
+    // A big export is checked from its first rows instead of being skipped: skipping once let a 6 MB CSV through.
+    doc = loadDocument(file, { sampleBytes: GUARD_SAMPLE_BYTES, maxZipBytes: GUARD_MAX_ZIP_BYTES });
+  } catch {
+    return undefined; // missing or unreadable: Read fails on its own
+  }
+  if (doc.kind === 'skipped') {
+    // What Samaran could not read (a scanned or encrypted PDF, a damaged spreadsheet) would reach the model unchecked.
+    return doc.dataBearing ? ask(shownAs, `tidak bisa dibaca Samaran (${doc.reason})`) : undefined;
+  }
+  const found = verdict(doc.kind === 'text' ? [doc.text] : doc.sheets.map((s) => s.csv));
+  if (found) {
+    return block(
+      [
+        `Samaran blocked reading ${shownAs}: it contains personal data (${summarize(found, false)}).`,
+        'Use the `read_file_masked` tool from the lokal MCP server instead: same content, with personal data replaced by stable placeholders.',
+        'Write results that need the real values with `write_file_unmasked`.',
+        'If the user confirms the file only holds fake data, they can add it to .samaranignore.',
+      ].join(' '),
+    );
+  }
+  if (doc.kind === 'sheets' && doc.unscanned) return ask(shownAs, `hanya terbaca sebagian (${doc.unscanned})`);
+  return undefined;
+}
+
+function shellTool(command: string, cwd: string, powershell: boolean, ignored: (f: string) => boolean): Verdict | undefined {
   const reads = dataReadsInCommand(command, cwd, powershell).filter((r) => !ignored(r.file));
   const matches: PiiMatch[] = [];
   const files = new Set<string>();
@@ -149,15 +205,15 @@ function shellTool(command: string, cwd: string, powershell: boolean, ignored: (
   const found = verdictOf(matches);
   if (!found) return undefined;
   const names = [...(files.size ? files : new Set(reads.map((r) => r.file)))].map((f) => path.relative(cwd, f) || f);
-  return [
+  return block([
     `Samaran blocked this command: it would print personal data from ${names.join(', ')} into the conversation (${summarize(found, false)}).`,
     'To look at the data, use the `read_file_masked` tool from the lokal MCP server (personal data replaced by stable placeholders).',
     PROCESS_HINT,
     'If the user confirms the file only holds fake data, they can add it to .samaranignore.',
-  ].join(' ');
+  ].join(' '));
 }
 
-function grepTool(input: NonNullable<HookInput['tool_input']>, cwd: string, ignored: (f: string) => boolean): string | undefined {
+function grepTool(input: NonNullable<HookInput['tool_input']>, cwd: string, ignored: (f: string) => boolean): Verdict | undefined {
   if (input.output_mode !== 'content' || !input.pattern) return undefined; // file names and counts are fine
   const target = path.resolve(cwd, input.path ?? '.');
   let candidates: string[];
@@ -203,26 +259,26 @@ function grepTool(input: NonNullable<HookInput['tool_input']>, cwd: string, igno
   const found = verdictOf(matches);
   if (!found) return undefined;
   const names = (files.length ? files : candidates).slice(0, 5).map((f) => path.relative(cwd, f) || f);
-  return [
+  return block([
     `Samaran blocked this search: the matching lines in ${names.join(', ')} contain personal data (${summarize(found, false)}).`,
     'Search with output_mode "files_with_matches" or "count", or read the file with `read_file_masked` from the lokal MCP server.',
     'Add a glob or type that leaves data files out if you meant to search code.',
-  ].join(' ');
+  ].join(' '));
 }
 
-/** Returns the message to block with, or undefined to allow. */
-export function evaluate(input: HookInput): string | undefined {
+/** Whether to block or ask, with the message; undefined to allow. */
+export function evaluate(input: HookInput): Verdict | undefined {
   if (process.env.SAMARAN_GUARD === 'off') return undefined;
 
   if (input.hook_event_name === 'UserPromptSubmit' && input.prompt) {
     if (BYPASS.test(input.prompt)) return undefined;
     const found = detectPii(input.prompt, { types: STRICT, minConfidence: 'high' });
     if (!found.length) return undefined;
-    return [
+    return block([
       `🛡️  Samaran menahan prompt ini: ada data pribadi ${summarize(found)}.`,
       'Prompt akan terkirim ke server model AI. Ganti dengan data contoh atau samarkan dulu,',
       'atau kirim ulang dengan menambahkan #izinkan-pii jika memang disengaja.',
-    ].join('\n');
+    ].join('\n'));
   }
 
   if (input.hook_event_name !== 'PreToolUse' || !input.tool_input) return undefined;
@@ -232,7 +288,13 @@ export function evaluate(input: HookInput): string | undefined {
   const tool = input.tool_input;
   switch (input.tool_name) {
     case 'Read':
-      return tool.file_path ? readTool(path.resolve(root, tool.file_path), tool.file_path, ignored) : undefined;
+      if (!tool.file_path) return undefined;
+      {
+        const file = path.resolve(root, tool.file_path);
+        const rel = path.relative(root, file);
+        const shownAs = rel && !rel.startsWith('..') && !path.isAbsolute(rel) ? rel.split(path.sep).join('/') : tool.file_path;
+        return readTool(file, shownAs, root, ignored);
+      }
     case 'Grep':
       return grepTool(tool, cwd, ignored);
     case 'Bash':
@@ -248,10 +310,14 @@ export async function runGuard(): Promise<void> {
   try {
     let raw = '';
     for await (const chunk of process.stdin) raw += chunk;
-    const message = evaluate(JSON.parse(raw) as HookInput);
-    if (message) {
-      process.stderr.write(`${message}\n`);
+    const verdict = evaluate(JSON.parse(raw) as HookInput);
+    if (verdict?.action === 'block') {
+      process.stderr.write(`${verdict.message}\n`);
       process.exitCode = 2;
+    } else if (verdict?.action === 'ask') {
+      // Claude Code shows the reason in its permission prompt, and asks in auto mode too.
+      const hookSpecificOutput = { hookEventName: 'PreToolUse', permissionDecision: 'ask', permissionDecisionReason: verdict.message };
+      process.stdout.write(`${JSON.stringify({ hookSpecificOutput })}\n`);
     }
   } catch (e) {
     process.stderr.write(`samaran-guard: ${(e as Error).message}\n`);

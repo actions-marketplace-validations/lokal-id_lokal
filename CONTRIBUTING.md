@@ -52,7 +52,7 @@ uv run mypy          # strict typing
 uv run ruff check src tests scripts
 ```
 
-The parity vectors in `python/tests/vectors` are generated from the TypeScript build. **Any change to `packages/core/src` must be mirrored in `python/src/lokal`**, then:
+The parity vectors in `python/tests/vectors` are generated from the TypeScript build. **Any change to `packages/core/src` must be mirrored in `python/src/lokal`, and any change to the file readers in `packages/mcp/src` (`files.ts`, `pdf.ts`, `xlsx.ts`, `docx.ts`) in `python/src/lokal/files`**, then:
 
 ```sh
 npm run build && node python/scripts/gen_vectors.mjs   # regenerate from TypeScript
@@ -71,6 +71,8 @@ After regenerating region data in `packages/core/data`, run `uv run python scrip
 | `packages/core/data/` | Region and postal code data (see its README to regenerate) |
 | `packages/mcp/src/server.ts` | MCP tools |
 | `packages/mcp/src/guard.ts`, `shell-reads.ts` | Samaran Guard hook and the shell command parser |
+| `packages/mcp/src/files.ts`, `pdf.ts`, `xlsx.ts`, `docx.ts` | File readers for `scan_pii`, `read_file_masked`, and the guard |
+| `packages/mcp/test/pdf-builder.ts` | Hand-built PDFs for the reader's tests and the Python parity vectors |
 | `skills/` | `SKILL.md` files |
 | `evals/` | End-to-end evaluation |
 | `python/src/lokal/` | The Python port: one module per TypeScript file, patterns copied verbatim |

@@ -246,6 +246,59 @@ test('email yang dieja manual dan nama tanpa label di chat', () => {
   }
 });
 
+test('nama berlabel berhenti di kata obrolan, emoji, dan kalimat berikutnya', () => {
+  const cases: Array<[string, string]> = [
+    ['Nama: Budi Santoso ya kak', 'Budi Santoso'],
+    ['Nama: Budi Santoso kak, mau tanya cicilan', 'Budi Santoso'],
+    ['nama: budi santoso dong', 'budi santoso'],
+    ['Nama: Budi Santoso 🙏', 'Budi Santoso'],
+    ['Nama: Budi Santoso🙏 makasih', 'Budi Santoso'],
+    ['Nama: Budi Santoso. Saya mau tanya', 'Budi Santoso'],
+    ['Nama: Siti Aminah! tolong dibantu', 'Siti Aminah'],
+    ['Nama: Budi Santoso terima kasih', 'Budi Santoso'],
+    ['Pemesan: Rina Wati sudah transfer kak', 'Rina Wati'],
+    ['Pembeli: Rina Wati', 'Rina Wati'],
+    ['A/N: Budi Santoso', 'Budi Santoso'],
+    // Not chat words: titles, initials, and name parts that look like them stay inside the name.
+    ['Nama: M. Rizki Ramadhan', 'M. Rizki Ramadhan'],
+    ['Nama: Dr. Ir. H. Ahmad Fauzi', 'Dr. Ir. H. Ahmad Fauzi'],
+    ['Nama: Lee Dong Hae', 'Lee Dong Hae'],
+    ['Nama: Ahmad bin Abdullah', 'Ahmad bin Abdullah'],
+    // A nickname in brackets is part of the name; it used to make the whole value look like code.
+    ['Nama: Siti Aminah (Ami)', 'Siti Aminah (Ami)'],
+  ];
+  for (const [text, name] of cases) assert.deepEqual(values(text, ['NAME']), [`NAME:${name}`], text);
+  assert.deepEqual(values('nama_pemesan,hp\nRina Wati (Rin),0812-3456-7890', ['NAME']), ['NAME:Rina Wati (Rin)']);
+  // Still code, not a name.
+  for (const code of ['nama: getName(user)', 'name: fullName (string)', 'pembeli: User']) {
+    assert.deepEqual(values(code, ['NAME']).filter((v) => v.includes('(')), [], code);
+  }
+});
+
+test('tabel ber-tab di tengah teks: salinan Excel/Word dan teks PDF', () => {
+  assert.deepEqual(values('Nama Pelanggan\tBudi Santoso\nNIK\t3201011508950001\nNo. HP\t0812-3456-7890'), [
+    'NAME:Budi Santoso', 'NIK:3201011508950001', 'PHONE:0812-3456-7890',
+  ]);
+  assert.deepEqual(values('Daftar peserta:\nNama\tNIK\tTelepon\nRina Wati\t3276014503920002\t0813-9999-0000\nHendra Gunawan\t1371011010850008\nTotal 2 orang'), [
+    'NAME:Rina Wati', 'NIK:3276014503920002', 'PHONE:0813-9999-0000', 'NAME:Hendra Gunawan', 'NIK:1371011010850008',
+  ]);
+  assert.deepEqual(values('Rekap nilai\r\nNo\tNama\tNilai\r\n1\tSiti Aminah\t90\r\n2\tDewi Lestari\t85', ['NAME']), [
+    'NAME:Siti Aminah', 'NAME:Dewi Lestari',
+  ]);
+  // "Nama<TAB>: Budi" is a labeled field; the tab table must not add a second, overlapping match.
+  assert.deepEqual(values('Nama\t: Budi Santoso\nAgama\t:\tIslam'), ['NAME:Budi Santoso', 'RELIGION:Islam']);
+  // Data files with tabs: an ID and a word that happens to be a field name, lowercase key-value pairs, code lists.
+  for (const benign of [
+    'n01687978\tagama\nn01688243\tfrilled lizard\nn01688961\tChamaeleo oweni',
+    '\t\t\tuser\tuser name\n\t\t\thost\thost name\n\t\t\tpid\tPID of the Vim process',
+    'dna\tUpper Grand Valley Dani\ndnb\tDumpu',
+    '|:wn|\t   :wn[ext][!]\t\twrite file and edit next file',
+  ]) {
+    // In the middle of a file; a header on the first line is a TSV header (detectCsvColumns).
+    assert.deepEqual(values(`...\n${benign}`), [], benign);
+  }
+});
+
 test('nilai yang ditemukan selalu sama persis dengan teks di posisinya', () => {
   // Rejoining "Siti   Aminah" with single spaces once made the mask stop short and leave "ah" visible.
   const texts = [

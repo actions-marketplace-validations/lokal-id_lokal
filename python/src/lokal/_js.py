@@ -100,6 +100,27 @@ def has_ws(s: str) -> bool:
     return _WS_RUN.search(s) is not None
 
 
+_DECIMAL = re.compile(r'[+-]?(?:Infinity|(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:[eE][+-]?[0-9]+)?)', re.ASCII)
+_RADIX = {
+    'x': (16, re.compile(r'[0-9a-fA-F]+')),
+    'o': (8, re.compile(r'[0-7]+')),
+    'b': (2, re.compile(r'[01]+')),
+}
+
+
+def number(s: str) -> float:
+    """``Number(s)`` for a string: trimmed, empty is 0, hex/octal/binary prefixes, anything else NaN."""
+    t = trim(s)
+    if not t:
+        return 0.0
+    if _DECIMAL.fullmatch(t):
+        return float(t.replace('Infinity', 'inf'))
+    radix = _RADIX.get(t[1:2].lower()) if t[:1] == '0' else None
+    if radix and radix[1].fullmatch(t[2:]):
+        return float(int(t[2:], radix[0]))
+    return math.nan
+
+
 def round_half_up(x: float | Decimal) -> int:
     """``Math.round`` for non-negative numbers, computed exactly (no float drift at .5)."""
     return int(Decimal(x).quantize(Decimal(1), rounding=ROUND_HALF_UP))

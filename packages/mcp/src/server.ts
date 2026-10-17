@@ -261,7 +261,7 @@ export function createServer(
     {
       title: 'Scan files for Indonesian personal data',
       description:
-        'Scan a file or directory (text, CSV, JSON, logs, SQL, .xlsx, .docx; up to 100 MB each) for personal data — identifiers (NIK, KK, NPWP, phone, email, bank account, BPJS, passport, SIM, NIP, card, plate, IP, coordinates), names, addresses, birth dates, and UU PDP categories (religion, marital status, gender, nationality, health, finances, criminal records, biometrics) — without revealing it: findings show only partially masked values. Also lists files it could not scan (PDF, .xls, .doc, images, archives). Use before reading data files and before committing fixtures or seeders.',
+        'Scan a file or directory (text, CSV, JSON, logs, SQL, .xlsx, .docx, text-based PDF; up to 100 MB each) for personal data — identifiers (NIK, KK, NPWP, phone, email, bank account, BPJS, passport, SIM, NIP, card, plate, IP, coordinates), names, addresses, birth dates, and UU PDP categories (religion, marital status, gender, nationality, health, finances, criminal records, biometrics) — without revealing it: findings show only partially masked values. Also lists files and pages it could not scan (scanned or encrypted PDFs, .xls, .doc, images, archives). Use before reading data files and before committing fixtures or seeders.',
       inputSchema: {
         path: z.string().default('.').describe('File or directory, relative to the project root'),
         types: piiTypes,
@@ -303,6 +303,7 @@ export function createServer(
           continue;
         }
         scanned++;
+        if (doc.kind === 'sheets' && doc.unscanned) skipped.push({ file: rel, reason: `partly scanned: ${doc.unscanned}`, dataBearing: true });
         let fileHasPii = false;
         for (const part of parts(doc)) {
           const matches = detectPii(part.text, { types, minConfidence: min_confidence });
@@ -364,7 +365,7 @@ export function createServer(
     {
       title: 'Read a file with personal data masked',
       description:
-        'Read a text, CSV, JSON, log, .xlsx or .docx file with Indonesian personal data replaced by stable placeholders ([NIK_1], [PHONE_2], [RELIGION_1] …). The same value always gets the same placeholder in this session, so joins, counts, grouping and deduplication still work. Real values never leave the user\'s machine. Spreadsheets come back as CSV, one block per sheet; Word documents as their text plus each table as CSV.',
+        'Read a text, CSV, JSON, log, .xlsx, .docx, or text-based PDF file with Indonesian personal data replaced by stable placeholders ([NIK_1], [PHONE_2], [RELIGION_1] …). The same value always gets the same placeholder in this session, so joins, counts, grouping and deduplication still work. Real values never leave the user\'s machine. Spreadsheets come back as CSV, one block per sheet; Word documents as their text plus each table as CSV; PDFs one block per page.',
       inputSchema: {
         path: z.string(),
         start_line: z.number().int().min(1).default(1),
@@ -384,7 +385,7 @@ export function createServer(
       if (doc.kind === 'skipped') return fail(`Cannot read ${target}: ${doc.reason}.`);
 
       // Paging through a table: keep the header in view of the detector so its columns stay masked.
-      const tabular = doc.kind === 'sheets' || /\.(csv|tsv)$/i.test(abs);
+      const tabular = (doc.kind === 'sheets' && doc.unit !== 'page') || /\.(csv|tsv)$/i.test(abs);
       const blocks: string[] = [];
       const all: PiiMatch[] = [];
       let textRange = '';
@@ -402,7 +403,7 @@ export function createServer(
           textRange = range;
           blocks.push(masked);
         } else {
-          const unit = doc.kind === 'sheets' && doc.unit === 'part' ? 'Part' : 'Sheet';
+          const unit = doc.kind === 'sheets' && doc.unit === 'part' ? 'Part' : doc.kind === 'sheets' && doc.unit === 'page' ? 'Page' : 'Sheet';
           blocks.push(`=== ${unit}: ${part.sheet} (${range}) ===\n${masked}`);
         }
       }
@@ -412,9 +413,12 @@ export function createServer(
           ? textRange
           : doc.unit === 'part'
             ? `Word document: text and ${doc.sheets.length - 1} table${doc.sheets.length === 2 ? '' : 's'}, tables as CSV`
-            : `${doc.sheets.length} sheet${doc.sheets.length === 1 ? '' : 's'}, as CSV`;
+            : doc.unit === 'page'
+              ? `PDF: ${doc.sheets.length} page${doc.sheets.length === 1 ? '' : 's'} with text`
+              : `${doc.sheets.length} sheet${doc.sheets.length === 1 ? '' : 's'}, as CSV`;
       const header = [
         `File: ${rel} (${what})`,
+        ...(doc.kind === 'sheets' && doc.unscanned ? [`Not read: ${doc.unscanned}. They may hold personal data, such as an ID card photo.`] : []),
         `Masked: ${all.length ? JSON.stringify(countByType(all.map((m) => m.type))) : 'nothing found'}`,
         '---',
       ];

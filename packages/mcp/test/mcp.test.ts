@@ -6,6 +6,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+import { samples } from './pdf-builder.ts';
 
 const CLI = path.resolve(import.meta.dirname, '../src/cli.ts');
 
@@ -115,7 +116,7 @@ test('scan_pii melapor tanpa membocorkan nilai, menghormati .samaranignore', asy
 test('scan_pii tidak pernah diam soal file yang tidak bisa dipindai', async () => {
   const { data } = await call('scan_pii', { path: 'ekspor' });
   assert.equal(data.notScanned.count, 2);
-  assert.deepEqual(data.notScanned.files, ['ekspor/laporan.pdf (PDF is not supported yet)']);
+  assert.deepEqual(data.notScanned.files, ['ekspor/laporan.pdf (unreadable PDF: No pages found)']);
   assert.match(data.warning, /NOT scanned/);
 });
 
@@ -195,6 +196,49 @@ test('guard: Read file data pelanggan diarahkan ke read_file_masked', () => {
   assert.equal(read(path.join(dir, 'test', 'fixture.json')).status, 0, '.samaranignore');
   assert.equal(read(path.join(dir, 'tidak-ada.txt')).status, 0);
   assert.equal(read(path.join(dir, 'ekspor', 'pelanggan.xlsx')).status, 2, 'spreadsheets are guarded too');
+});
+
+test('guard: foto dokumen dan PDF yang tidak terbaca ditanyakan dulu ke pengguna', () => {
+  const read = (file: string) =>
+    guard({ hook_event_name: 'PreToolUse', tool_name: 'Read', tool_input: { file_path: file }, cwd: dir });
+  const decision = (r: ReturnType<typeof read>) =>
+    r.stdout.trim() ? JSON.parse(r.stdout).hookSpecificOutput : undefined;
+  const files: Record<string, Buffer | string> = {
+    'var/media/kredit/ktp-budi.jpg': Buffer.from([0xff, 0xd8, 0xff, 0x00]),
+    'storage/app/uploads/IMG_2041.HEIC': 'x',
+    'arsip/selfie_siti.png': 'x',
+    'src/assets/logo.png': 'x',
+    'public/images/hero.webp': 'x',
+    'media/brand/icons/menu.png': 'x',
+    'contoh/ktp-dummy.jpg': 'x',
+    'scan/terkunci.pdf': samples().encrypted!,
+    'scan/lampiran.pdf': samples().scanned!,
+  };
+  for (const [name, data] of Object.entries(files)) {
+    mkdirSync(path.dirname(path.join(dir, name)), { recursive: true });
+    writeFileSync(path.join(dir, name), data);
+  }
+  writeFileSync(path.join(dir, '.samaranignore'), 'test/\ncontoh/\n');
+
+  for (const name of ['var/media/kredit/ktp-budi.jpg', 'storage/app/uploads/IMG_2041.HEIC', 'arsip/selfie_siti.png', 'ekspor/ktp.jpg']) {
+    const r = read(path.join(dir, name));
+    assert.equal(r.status, 0, name);
+    const d = decision(r);
+    assert.equal(d?.hookEventName, 'PreToolUse', name);
+    assert.equal(d?.permissionDecision, 'ask', name);
+    assert.match(d.permissionDecisionReason, /foto KTP atau dokumen pribadi/);
+  }
+  // The app's own images, files listed in .samaranignore, and files that do not exist are not asked about.
+  for (const name of ['src/assets/logo.png', 'public/images/hero.webp', 'media/brand/icons/menu.png', 'contoh/ktp-dummy.jpg', 'ktp/tidak-ada.jpg']) {
+    const r = read(path.join(dir, name));
+    assert.equal(r.status, 0, name);
+    assert.equal(decision(r), undefined, name);
+  }
+  // PDFs Samaran cannot fully read; the one whose text has personal data is blocked instead.
+  assert.match(decision(read(path.join(dir, 'scan/terkunci.pdf'))).permissionDecisionReason, /encrypted PDF/);
+  assert.match(decision(read(path.join(dir, 'scan/lampiran.pdf'))).permissionDecisionReason, /pages 2-3 of 3 have no text layer/);
+  assert.match(decision(read(path.join(dir, 'ekspor/laporan.pdf'))).permissionDecisionReason, /unreadable PDF/);
+  writeFileSync(path.join(dir, '.samaranignore'), 'test/\n');
 });
 
 test('guard: Bash/PowerShell yang mencetak file data ditahan, skrip pengolah diloloskan', () => {
@@ -313,4 +357,44 @@ test('file data di atas 5 MB dipindai, dan guard memeriksa awalnya alih-alih mel
   assert.equal(shell('grep Bogor besar/unik.csv'), 2);
   assert.equal(shell('head -1 besar/unik.csv'), 0);
   assert.ok(Date.now() - t0 < 12000, `${Date.now() - t0} ms for three hook runs`);
+});
+
+test('PDF: teks dipindai dan disamarkan, halaman hasil scan dilaporkan, guard menahan Read', async () => {
+  mkdirSync(path.join(dir, 'pdf'), { recursive: true });
+  for (const f of ['invoice.pdf', 'surat-keterangan.pdf']) copyFileSync(path.join(import.meta.dirname, 'fixtures', f), path.join(dir, 'pdf', f));
+  const scan = await call('scan_pii', { path: 'pdf' });
+  assert.equal(scan.data.filesScanned, 2);
+  assert.equal(scan.data.filesWithPii, 2);
+  assert.equal(scan.data.totals.NIK, 4);
+  assert.ok(scan.data.findings.some((f: any) => f.file === 'pdf/invoice.pdf' && f.sheet === 'Halaman 1' && f.type === 'NAME'));
+  assert.deepEqual(scan.data.notScanned.files, [
+    'pdf/surat-keterangan.pdf (partly scanned: page 2 of 3 has no text layer (scanned) and needs OCR)',
+  ]);
+  for (const secret of ['3201011508950001', 'Budi Santoso', 'Rina Wati', '0812-3456-7890']) assert.ok(!scan.text.includes(secret), secret);
+
+  const invoice = await call('read_file_masked', { path: 'pdf/invoice.pdf' });
+  assert.match(invoice.text, /\(PDF: 1 page with text\)/);
+  assert.match(invoice.text, /=== Page: Halaman 1 \(lines 1-\d+ of \d+\) ===/);
+  assert.match(invoice.text, /Nama Pelanggan\t\[NAME_\d\]\nNIK\t\[NIK_\d\]/);
+  for (const secret of ['Budi Santoso', 'Siti Aminah', 'Rina Wati', 'Hendra Gunawan', '3276014503920002', '0857-1111-2222', 'budi.santoso@gmail.com', 'diabetes']) {
+    assert.ok(!invoice.text.includes(secret), `${secret} leaked`);
+  }
+  const surat = await call('read_file_masked', { path: 'pdf/surat-keterangan.pdf' });
+  assert.match(surat.text, /Not read: page 2 of 3 has no text layer/);
+  assert.match(surat.text, /=== Page: Halaman 3 /);
+  assert.ok(!surat.text.includes('Dewi Lestari'));
+
+  const read = (file: string) =>
+    guard({ hook_event_name: 'PreToolUse', tool_name: 'Read', tool_input: { file_path: path.join(dir, 'pdf', file) }, cwd: dir });
+  const blocked = read('invoice.pdf');
+  assert.equal(blocked.status, 2, blocked.stderr);
+  assert.match(blocked.stderr, /read_file_masked/);
+  assert.ok(!blocked.stderr.includes('3201011508950001'));
+  assert.equal(read('surat-keterangan.pdf').status, 2);
+  const shell = (command: string) =>
+    guard({ hook_event_name: 'PreToolUse', tool_name: 'Bash', tool_input: { command }, cwd: dir }).status;
+  assert.equal(shell('pdftotext -layout pdf/invoice.pdf -'), 2, 'prints the text');
+  assert.equal(shell('pdftotext pdf/invoice.pdf - | head -20'), 2);
+  assert.equal(shell('pdftotext pdf/invoice.pdf invoice.txt'), 0, 'writes a file instead');
+  assert.equal(shell('pdfinfo pdf/invoice.pdf'), 0);
 });

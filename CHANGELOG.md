@@ -4,6 +4,22 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+### Added
+
+- **PDF support** in `scan_pii`, `read_file_masked`, and the guard, without new dependencies. Text-based PDFs (invoices, letters, statements, and reports from browsers, Word, or PDF libraries) are read page by page: table columns are kept apart by tabs, and filled-in form fields come out as `field_name: value`, so a credit application's `nama_pemohon` and `nik` are masked. Comments and stamps are read too. Scanned pages have no text layer and are reported as needing OCR, also when only some pages of a PDF are scanned; encrypted PDFs are reported as such. On 60 PDFs made with Apache FOP, Acrobat Distiller, Word, InDesign, and Illustrator, the extracted words match Poppler's `pdftotext` 99.2–100% on 58; on the other two, one-line templates, Lokal reads an "fi" ligature that `pdftotext` splits. A 1,000-page PDF is checked by the guard in under 2 seconds.
+- The guard checks `Read` of `.pdf` and `.docx` files, since Claude Code sends a PDF's pages to the model, and `pdftotext file.pdf -`.
+- **The guard asks before `Read` sends what Samaran cannot check.** A photo named or filed like someone's document (`ktp-budi.jpg`, `selfie_siti.png`, images under `media/`, `uploads/`, or `storage/`, but not the app's `assets/` or `images/`) and a scanned, encrypted, or damaged PDF now bring up Claude Code's permission prompt with the reason, instead of going to the model unseen. Previously a KTP photo in an upload folder was read without a word.
+- **`lokal.files` for Python**: the MCP server's file readers, with the same results, for backends. `scan_path('var/media')` reports personal data per file, sheet, and page with partially masked previews, and lists what it could not read (photos, scanned pages, encrypted PDFs); `load_document()` turns a CSV, Excel, Word, or PDF file into text parts to mask. Parity vectors cover the fixtures, hand-built PDFs, and damaged copies; 63 real PDFs of up to 1,000 pages gave identical text.
+- Samaran reads tab-separated tables anywhere in a text, as copied from Excel or Word or extracted from a PDF: `Nama Pelanggan<TAB>Budi Santoso`, and a `Nama<TAB>NIK<TAB>Telepon` header followed by rows. Tested against 64,000 files from Git for Windows and a Python installation, 1,300 of them with tabs: no new matches.
+
+### Fixed
+
+- A small `.xlsx` or `.docx` built to decompress to gigabytes could exhaust memory in `scan_pii`, `read_file_masked`, or the guard. Each file inside the ZIP is now limited to 256 MB, and damaged ZIPs are reported with a clear reason.
+- A list of labels and values at the start of a text (`Nama<TAB>Budi` then `NIK<TAB>3201…`) was read as a table with a header, so the labels below it were masked as names.
+- **A name with a nickname in brackets was not masked at all**: `Nama: Siti Aminah (Ami)` and a CSV cell `Rina Wati (Rin)` looked like a function call and were skipped. A trailing `(Nickname)` now counts as part of the name.
+- `Pemesan:`, `Pembeli:`, `Buyer:`, `Konsumen:`, `Atas nama:`, and `A/N:` are name labels, as are columns like `nama_pemesan` and `alamat_pembeli`. Marketplace and CRM exports use them for the customer.
+- A labeled name no longer swallows the chat around it: `Nama: Budi Santoso ya kak 🙏` masks only `Budi Santoso`. The value ends at an emoji, `!` or `?`, a lowercase chat word (`ya`, `kak`, `dong`, `sudah`, `tadi` …), or the start of the next sentence (`Saya`, `Mohon`, `Terima kasih` …). Titles, initials, and names such as `Lee Dong Hae` and `Ahmad bin Abdullah` are kept whole.
+
 ### Changed
 
 - npm releases are built, tested, and published by GitHub Actions from the release tag with Trusted Publishing, and carry provenance attestations. The same workflow lists the server in the official MCP Registry as `io.github.lokal-id/lokal`.

@@ -155,7 +155,7 @@ npm install @lokal-id/core     # TypeScript / JavaScript
 pip install lokal-id           # Python 3.10+
 ```
 
-Paket Python adalah port dari `@lokal-id/core` dengan aturan dan data yang sama, dan sudah diverifikasi terhadap ribuan hasil versi TypeScript. Versi Python juga mendukung nominal `Decimal`, objek `date`, hasil berupa dataclass, dan filter `logging` untuk backend. Lihat [`python/`](python#readme).
+Paket Python adalah port dari `@lokal-id/core` dengan aturan dan data yang sama, dan sudah diverifikasi terhadap ribuan hasil versi TypeScript. Versi Python juga mendukung nominal `Decimal`, objek `date`, hasil berupa dataclass, filter `logging` untuk backend, dan `lokal.files`, yaitu pembaca file milik server MCP, untuk memindai folder upload (`scan_pii` versi backend) atau menyamarkan PDF sebelum dikirim ke LLM. Lihat [`python/`](python#readme).
 
 ## Pemakaian
 
@@ -236,8 +236,8 @@ samaran.unmask(reply);           // placeholder diganti lagi dengan data asli
 | `lookup_kode_pos` | Kode pos → kelurahan/desa, atau semua kode pos di suatu wilayah |
 | `list_holidays` | Libur nasional dan cuti bersama (SKB 2026, 2027) |
 | `working_days` | Hari kerja, tenggat SLA, estimasi pengiriman |
-| `scan_pii` | Pindai file dan folder (teks, CSV, JSON, log, SQL, `.xlsx`, `.docx`, sampai 100 MB per file) untuk data pribadi. Hanya menampilkan nilai yang sudah disamarkan sebagian, dan **melaporkan file yang tidak bisa dipindai** (PDF, `.xls`, `.doc`, gambar) |
-| `read_file_masked` | Baca file, termasuk sheet `.xlsx` dan dokumen `.docx` (teks dan tabel), dengan data pribadi diganti placeholder yang stabil |
+| `scan_pii` | Pindai file dan folder (teks, CSV, JSON, log, SQL, `.xlsx`, `.docx`, PDF berbasis teks, sampai 100 MB per file) untuk data pribadi. Hanya menampilkan nilai yang sudah disamarkan sebagian, dan **melaporkan file dan halaman yang tidak bisa dipindai** (PDF hasil scan atau terenkripsi, `.xls`, `.doc`, gambar) |
+| `read_file_masked` | Baca file, termasuk sheet `.xlsx`, dokumen `.docx` (teks dan tabel), dan PDF (teks halaman, tabel, dan isian formulir), dengan data pribadi diganti placeholder yang stabil |
 | `write_file_unmasked` | Tulis hasil kerja dengan placeholder dipulihkan, di komputer kamu |
 
 ### Samaran Guard
@@ -246,6 +246,7 @@ Otomatis aktif lewat plugin Claude Code.
 
 - **Prompt** berisi nomor identitas (NIK, KK, NPWP, paspor, SIM, NIP, rekening, BPJS, kartu) atau data kesehatan, catatan kriminal, dan biometrik yang berlabel ditahan sebelum terkirim. Tambahkan `#izinkan-pii` kalau memang disengaja.
 - **Pembacaan file data** (CSV, Excel, JSON, log, SQL dump, YAML, …) yang berisi data pribadi diblokir, dan Claude diarahkan ke `read_file_masked`. Ini berlaku untuk tool `Read`, `Grep` mode isi, dan perintah shell seperti `cat`, `head`, `grep`, `sed -n`, `awk`, `cut`, `Get-Content`, dan `Import-Csv | Select-Object`.
+- **Foto dan PDF yang tidak bisa dibaca Samaran ditanyakan dulu.** `Read` mengirim gambar dan PDF ke model apa adanya. Untuk foto yang nama atau foldernya seperti dokumen orang (`ktp-budi.jpg`, `selfie_siti.png`, apa pun di `media/`, `uploads/`, atau `storage/` kecuali `assets/` dan `images/` milik aplikasi) dan untuk PDF hasil scan, terenkripsi, atau rusak, Claude Code menampilkan dialog izin beserta alasannya. PDF yang teksnya berisi data pribadi diblokir seperti file data.
 - **Yang dihitung hanya bagian yang benar-benar tercetak.** `head -1 data.csv` (header saja), `wc -l`, `grep -c`, dan `sort data.csv > hasil.csv` tetap jalan.
 - **Tidak diblokir:** file kode sumber, karena contoh nomor di kode itu wajar dan agent harus bisa membacanya, dan skrip yang dijalankan pada file data (`node olah.js data.csv`), karena begitulah data diolah tanpa ditampilkan ke model.
 - File berisi data palsu (fixture, seeder) bisa didaftarkan di `.samaranignore`:
@@ -292,7 +293,7 @@ Ini sampel kecil yang disusun dari keseharian developer Indonesia. Jangan dibaca
 
 - **Deteksi berbasis pola dan mengutamakan presisi.** Nama dikenali dari label, header kolom dan key JSON, pengirim di export chat, frasa pengantar ("nama saya budi", "atas nama", "a.n.", "halo kak ini rina,"), sapaan ("Pak Joko", "bapak ahmad"), dan ucapan yang dilaporkan ("tadi budi bilang"), termasuk huruf kecil. Nama yang terselip di kalimat tanpa penanda apa pun ("pesanan budi belum sampai"), data kesehatan atau keuangan dengan kalimat tidak biasa, dan data anak yang tidak ditandai sebagai data anak masih bisa lolos. Anggap Samaran sebagai jaring pengaman yang kuat, bukan jaminan.
 - **Diuji terhadap salah deteksi** di 12 MB kode open source dan teks lengkap UU 27/2022, tanpa satu pun deteksi nama berkeyakinan tinggi. Deteksi nama di chat menangkap 29 dari 29 kalimat uji berisi nama dan tidak salah tangkap di 26 kalimat chat biasa. Kalimatnya disusun untuk tes, jadi akurasi di chat asli bisa lebih rendah.
-- **Tidak semua format terbaca.** PDF, `.xls` dan `.doc` lama, gambar (foto KTP, selfie), dan arsip tidak dipindai. `scan_pii` melaporkannya sebagai *tidak terpindai*, bukan *bersih*, dan guard tidak mencegatnya. File di atas 100 MB juga dilaporkan. Untuk file data di atas 5 MB, guard memeriksa 5 MB pertamanya supaya tetap di bawah batas waktu hook 10 detik.
+- **Tidak semua format terbaca.** PDF terbaca kalau punya lapisan teks, seperti invoice, surat, rekening koran, dan formulir dari browser, Word, atau library PDF. Halaman hasil scan, PDF terenkripsi, `.xls` dan `.doc` lama, gambar (foto KTP, selfie), dan arsip tidak dipindai. `scan_pii` melaporkannya sebagai *tidak terpindai*, bukan *bersih*, termasuk halaman scan di dalam PDF yang selebihnya terbaca. Guard bertanya dulu sebelum `Read` mengirim PDF seperti itu, atau foto yang tampak seperti dokumen orang, ke model; guard tidak bisa membedakan foto KTP dari gambar lain, jadi foto dinilai dari nama dan foldernya. File di atas 100 MB juga dilaporkan. Untuk file data di atas 5 MB, guard memeriksa 5 MB pertamanya, dan spreadsheet, dokumen Word, serta PDF di atas 20 MB dilaporkan alih-alih diurai, supaya tetap di bawah batas waktu hook 10 detik.
 - **Validasi NIK dan NPWP hanya struktur.** Tidak bisa memastikan nomornya terdaftar di Dukcapil atau DJP.
 - **Deteksi operator memakai prefix nomor**, yang cocok dengan daftar alokasi publik, termasuk merger XLSmart 2025. Indonesia belum punya *number portability* (gugatannya masih di MK, perkara 319/PUU-XXIV/2026), jadi prefix masih bisa diandalkan. Kode area telepon rumah baru mencakup 19 kota besar.
 - **Guard mencegat prompt, `Read`, `Grep`, dan perintah shell umum.** Skrip yang sengaja mencetak isi file data, atau perintah seperti `python -c "print(open(...).read())"`, tidak bisa dicegat 100%. Untuk itu skill `samaran` yang mengarahkan agent.
@@ -307,7 +308,8 @@ Ini sampel kecil yang disusun dari keseharian developer Indonesia. Jangan dibaca
 - [ ] **Kapan**: parser waktu khas Indonesia (`besok abis maghrib`, `lusa jam 7an`, `tanggal muda`) dengan waktu sholat berbasis lokasi
 - [ ] **Warga**: generator data uji yang konsisten (NIK sesuai tanggal lahir dan wilayah, nama sesuai daerah)
 - [x] Dukungan `.docx` di Samaran (teks dan tabel)
-- [ ] Dukungan PDF berbasis teks di Samaran; OCR untuk foto KTP
+- [x] Dukungan PDF berbasis teks di Samaran (teks halaman, tabel, isian formulir)
+- [ ] OCR untuk PDF hasil scan dan foto KTP
 - [ ] Parser alamat bebas → kode wilayah
 - [ ] Transport HTTP untuk ChatGPT dan agent berbasis web
 - [x] Library Python (`lokal-id`) dengan hasil yang sama dengan TypeScript

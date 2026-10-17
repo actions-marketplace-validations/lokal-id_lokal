@@ -27,7 +27,7 @@ These are known limitations, documented in the [README](README.md#limitations). 
 
 - Personal data that the detectors do not recognize (use the *Detection report* issue template, with made-up data)
 - Scripts that deliberately print a data file, such as `python -c "print(open(...).read())"`
-- File formats that are reported as *not scanned* (PDF, `.xls`, images)
+- File formats that are reported as *not scanned* (scanned or encrypted PDFs, `.xls`, images)
 - The guard allowing a command when its input is malformed. It fails open on purpose, so that a bug in the guard cannot lock you out of your agent
 
 ## Supported versions

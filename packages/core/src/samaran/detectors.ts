@@ -467,7 +467,13 @@ function detectStreetAddresses(text: string): PiiMatch[] {
   return out;
 }
 
-const NAME_STOP = /\s(?:dan|dengan|yang|nik|hp|no|nomor|umur|usia|alamat|email|tinggal|lahir|asal|dari|di|ke|untuk|sebagai|mau|ingin|minta|tolong)\b/i;
+const NAME_STOP =
+  /\s(?:dan|dengan|yang|nik|hp|no|nomor|umur|usia|alamat|email|tinggal|lahir|asal|dari|di|ke|untuk|sebagai|mau|ingin|minta|tolong|saya|aku|gue|gua|gw|mohon|terima|makasih|thanks|thank|thx|tks|trims|bisa|boleh|apakah|kapan|berapa|gimana|bagaimana|kenapa|mengapa|tanya|nanya|sudah|udah|sdh|belum|blm|akan|sedang)\b/i;
+// Chat words after a name: "Nama: Budi Santoso ya kak". Lowercase only, so "Lee Dong Hae" keeps its "Dong".
+const NAME_STOP_CHAT =
+  /\s(?:ya|yah|yaa|iya|kak|kakak|gan|sis|min|pak|bu|dong|deh|sih|kok|nih|aja|saja|juga|lho|loh|ok|oke|okay|lagi|baru|tadi|kemarin|kemaren|besok|nanti|sekarang)\b/;
+// A name ends at an emoji, a pictograph, or ! and ?: "Nama: Budi Santoso 🙏".
+const NAME_END = /[!?\u2190-\u2bff\ud800-\udfff\ufe0f]/;
 const MULTI_PART: ReadonlySet<PiiType> = new Set(['ADDRESS', 'BIRTH_DATE', 'HEALTH', 'GEO']);
 
 /**
@@ -519,8 +525,10 @@ function cutValue(type: PiiType, raw: string): string {
     v = v.split(',')[0]!;
   }
   if (type === 'NAME') {
-    const stop = v.search(NAME_STOP);
-    if (stop >= 0) v = v.slice(0, stop);
+    for (const re of [NAME_END, NAME_STOP, NAME_STOP_CHAT]) {
+      const stop = v.search(re);
+      if (stop >= 0) v = v.slice(0, stop);
+    }
     const digit = v.search(/\d/);
     if (digit >= 0) v = v.slice(0, digit);
     v = takeWords(v, 5);
@@ -669,6 +677,9 @@ function detectCsvColumns(text: string): PiiMatch[] {
   }
   const columns = headerFields.map((h) => fieldType(h));
   if (!columns.some(Boolean)) return [];
+  // "Nama<TAB>Budi Santoso" then "NIK<TAB>3201…" is a list of labels and values, not a table with a header.
+  const second = csvFields(secondLine, delimiter);
+  if (columns.some((t, i) => t && fieldType(secondLine.slice(second[i]!.start, second[i]!.end).trim()))) return [];
 
   const out: PiiMatch[] = [];
   let offset = firstBreak + 1;
@@ -684,6 +695,62 @@ function detectCsvColumns(text: string): PiiMatch[] {
       out.push(match(type, start, value, isGenericNameKey(headerFields[idx]!) ? 'medium' : 'high'));
     });
     offset += rawLine.length + 1;
+  }
+  return out;
+}
+
+/**
+ * Tab-separated tables anywhere in the text: cells copied from Excel or Word, and tables in PDF text, where a wide
+ * gap between cells becomes a tab. "Nama Pelanggan<TAB>Budi Santoso" is a label and its value. A row of short
+ * cells with at least one field name, followed by rows with as many cells or fewer, is a table with typed columns.
+ */
+function detectTabTables(text: string): PiiMatch[] {
+  if (!text.includes('\t')) return [];
+  const out: PiiMatch[] = [];
+  let header: string[] | undefined;
+  let columns: Array<PiiType | undefined> = [];
+  let pos = 0;
+  while (pos <= text.length) {
+    let end = text.indexOf('\n', pos);
+    if (end === -1) end = text.length;
+    const line = text.slice(pos, end > pos && text[end - 1] === '\r' ? end - 1 : end);
+    const cells: Array<{ start: number; value: string }> = [];
+    if (line.includes('\t')) {
+      let at = 0;
+      for (const part of line.split('\t')) {
+        const value = part.trim();
+        cells.push({ start: pos + at + (value ? part.indexOf(value) : 0), value });
+        at += part.length + 1;
+      }
+    }
+    const filled = cells.filter((c) => c.value);
+    if (header && filled.length >= 2 && cells.length <= header.length) {
+      cells.forEach((c, i) => {
+        const type = columns[i];
+        if (!type || !c.value || !isPlausibleValue(type, c.value, header![i]!)) return;
+        out.push(match(type, c.start, c.value, isGenericNameKey(header![i]!) ? 'medium' : 'high'));
+      });
+    } else {
+      header = undefined;
+      const types = cells.map((c) => (c.value ? fieldType(c.value) : undefined));
+      const [label, value] = filled;
+      if (filled.length === 2 && /^[A-Z]/.test(label!.value) && fieldType(label!.value) && !fieldType(value!.value)) {
+        // "Nama Pelanggan<TAB>Budi Santoso". "Nama<TAB>: Budi" is a labeled field, found by detectLabeledFields.
+        const type = fieldType(label!.value)!;
+        if (!/^[:=]/.test(value!.value) && isPlausibleValue(type, value!.value, label!.value)) {
+          out.push(match(type, value!.start, value!.value, isGenericNameKey(label!.value) ? 'medium' : 'high'));
+        }
+      } else if (
+        filled.length >= 2 &&
+        filled.every((c) => c.value.length <= 40 && /[A-Za-z]/.test(c.value) && !/[.!?]$|\d{3}/.test(c.value)) &&
+        // Data files have tabs too ("n01687978<TAB>agama"): a document table's header is capitalized, or names two fields.
+        (types.filter(Boolean).length >= 2 || (types.some(Boolean) && filled.every((c) => /^[A-Z]/.test(c.value))))
+      ) {
+        header = cells.map((c) => c.value);
+        columns = types;
+      }
+    }
+    pos = end + 1;
   }
   return out;
 }
@@ -707,6 +774,7 @@ const DETECTORS: Array<(text: string) => PiiMatch[]> = [
   detectStreetAddresses,
   detectLabeledFields,
   detectCsvColumns,
+  detectTabTables,
 ];
 
 export interface DetectOptions {

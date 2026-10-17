@@ -8,6 +8,9 @@ export interface Sheet {
   csv: string;
 }
 
+/** A file inside the ZIP may not decompress to more than this: a small .xlsx can hide gigabytes. */
+const MAX_ENTRY_BYTES = 256 * 1024 * 1024;
+
 export function unzip(buf: Buffer): Map<string, Buffer> {
   const files = new Map<string, Buffer>();
   let eocd = -1;
@@ -18,31 +21,49 @@ export function unzip(buf: Buffer): Map<string, Buffer> {
     }
   }
   if (eocd < 0) throw new Error('Not a ZIP/xlsx file.');
-  const entries = buf.readUInt16LE(eocd + 10);
-  let p = buf.readUInt32LE(eocd + 16);
+  // Offsets come from the file; one that points outside it means the ZIP is damaged.
+  const corrupt = () => new Error('Corrupt ZIP central directory.');
+  const u16 = (at: number) => {
+    if (at < 0 || at + 2 > buf.length) throw corrupt();
+    return buf.readUInt16LE(at);
+  };
+  const u32 = (at: number) => {
+    if (at < 0 || at + 4 > buf.length) throw corrupt();
+    return buf.readUInt32LE(at);
+  };
+  const entries = u16(eocd + 10);
+  let p = u32(eocd + 16);
   for (let n = 0; n < entries; n++) {
-    if (buf.readUInt32LE(p) !== 0x02014b50) throw new Error('Corrupt ZIP central directory.');
-    const method = buf.readUInt16LE(p + 10);
-    const compressed = buf.readUInt32LE(p + 20);
-    const nameLen = buf.readUInt16LE(p + 28);
-    const extraLen = buf.readUInt16LE(p + 30);
-    const commentLen = buf.readUInt16LE(p + 32);
-    const local = buf.readUInt32LE(p + 42);
-    const name = buf.toString('utf8', p + 46, p + 46 + nameLen);
+    if (u32(p) !== 0x02014b50) throw corrupt();
+    const method = u16(p + 10);
+    const compressed = u32(p + 20);
+    const nameLen = u16(p + 28);
+    const extraLen = u16(p + 30);
+    const commentLen = u16(p + 32);
+    const local = u32(p + 42);
+    const name = buf.toString('utf8', p + 46, Math.min(buf.length, p + 46 + nameLen));
     p += 46 + nameLen + extraLen + commentLen;
 
-    const dataStart = local + 30 + buf.readUInt16LE(local + 26) + buf.readUInt16LE(local + 28);
+    const dataStart = local + 30 + u16(local + 26) + u16(local + 28);
     const data = buf.subarray(dataStart, dataStart + compressed);
     if (method === 0) files.set(name, data);
-    else if (method === 8) files.set(name, inflateRawSync(data));
+    else if (method === 8) {
+      try {
+        files.set(name, inflateRawSync(data, { maxOutputLength: MAX_ENTRY_BYTES }));
+      } catch (e) {
+        throw new Error(e instanceof RangeError ? 'A file in the ZIP is too large to decompress.' : 'Corrupt ZIP data.');
+      }
+    }
   }
   return files;
 }
 
 export function decodeXml(s: string): string {
   return s.replace(/&(amp|lt|gt|quot|apos|#(\d+)|#x([0-9a-f]+));/gi, (all, name: string, dec?: string, hex?: string) => {
-    if (dec) return String.fromCodePoint(Number(dec));
-    if (hex) return String.fromCodePoint(parseInt(hex, 16));
+    if (dec || hex) {
+      const cp = dec ? Number(dec) : parseInt(hex!, 16);
+      return cp <= 0x10ffff ? String.fromCodePoint(cp) : all;
+    }
     return ({ amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" } as Record<string, string>)[name.toLowerCase()] ?? all;
   });
 }

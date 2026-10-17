@@ -4,7 +4,7 @@ import type { PiiType } from './types.ts';
 
 const FIELDS: Array<[PiiType, string]> = [
   // A column called "pasien" or "pelanggan" holds that person's name.
-  ['NAME', 'nama|name|full_?name|nama_?lengkap|first_?name|last_?name|middle_?name|given_?name|family_?name|surname|nama_?depan|nama_?tengah|nama_?belakang|nama_?panggilan|nickname|nama_?ibu_?kandung|mother_?s?_?maiden_?name|penerima|pengirim|recipient|pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner'],
+  ['NAME', 'nama|name|full_?name|nama_?lengkap|first_?name|last_?name|middle_?name|given_?name|family_?name|surname|nama_?depan|nama_?tengah|nama_?belakang|nama_?panggilan|nickname|nama_?ibu_?kandung|mother_?s?_?maiden_?name|penerima|pengirim|recipient|pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner|pemesan|pembeli|buyer|konsumen|atas_?nama|a_n'],
   ['ADDRESS', 'alamat|address|full_?address|street|street_?address|domisili|alamat_?domisili|alamat_?ktp|alamat_?rumah|alamat_?pengiriman|shipping_?address|home_?address|billing_?address'],
   ['NIK', 'nik|no_?ktp|nomor_?ktp|ktp|nomor_?induk_?kependudukan|national_?id'],
   ['KK', 'kk|no_?kk|nomor_?kk|kartu_?keluarga|no_?kartu_?keluarga|nomor_?kartu_?keluarga|family_?card(_?number)?'],
@@ -33,7 +33,7 @@ const FIELDS: Array<[PiiType, string]> = [
 
 // "nama_pelanggan", "customer_phone", "alamat_pengiriman": the field, optionally qualified by whose it is.
 const ENTITY =
-  'customer|pelanggan|nasabah|pasien|patient|user|pengguna|member|anggota|karyawan|employee|pegawai|siswa|student|mahasiswa|penerima|pengirim|recipient|sender|ibu|ayah|wali|orang_?tua|pemohon|applicant|debitur|peserta|pemilik|owner|contact|kontak';
+  'customer|pelanggan|nasabah|pasien|patient|user|pengguna|member|anggota|karyawan|employee|pegawai|siswa|student|mahasiswa|penerima|pengirim|recipient|sender|ibu|ayah|wali|orang_?tua|pemohon|applicant|debitur|peserta|pemilik|owner|contact|kontak|pemesan|pembeli|buyer|konsumen';
 const QUALIFIER = `${ENTITY}|lengkap|baru|lama|asli|utama|rumah|kantor|ktp|domisili|pengiriman|pribadi|aktif|1|2`;
 
 const KEY_RES: Array<[PiiType, RegExp]> = FIELDS.map(([type, alts]) => [
@@ -79,8 +79,9 @@ const DATE_LIKE =
   /\d{1,4}[-/. ]\d{1,2}[-/. ]\d{1,4}|\d{1,2}\s+[A-Za-z]{3,9}\.?\s+\d{4}|\b(?:19|20)\d{2}\b/;
 
 const ROLE_KEY =
-  /^(pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner|penerima|pengirim|recipient)$/;
+  /^(pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner|penerima|pengirim|recipient|pemesan|pembeli|buyer|konsumen)$/;
 
+const NICKNAME = /\s+\([A-Z]?[a-z][A-Za-z .'-]*\)$/; // "(Ami)", not an acronym like "(GSS)"
 const EMPTY = /^(?:-+|null|none|nil|n\/?a|undefined|tidak ada|kosong|\?)$/i;
 const TYPE_WORDS = new Set([
   'string', 'number', 'boolean', 'bool', 'int', 'integer', 'bigint', 'varchar', 'char', 'text', 'date', 'datetime',
@@ -94,7 +95,8 @@ const DIGIT_TYPES: ReadonlySet<PiiType> = new Set([
 
 /** Values that are code, schema, or placeholders rather than someone's data. */
 export function isPlausibleValue(type: PiiType, value: string, key: string): boolean {
-  const v = value.trim();
+  // "Siti Aminah (Ami)": a nickname in brackets is part of the name, not a function call.
+  const v = type === 'NAME' ? value.trim().replace(NICKNAME, '') : value.trim();
   if (!v || EMPTY.test(v)) return false;
   if (TYPE_WORDS.has(v.toLowerCase())) return false;
   if (/^\[[A-Z_]+_\d+\]$/.test(v)) return false; // already masked

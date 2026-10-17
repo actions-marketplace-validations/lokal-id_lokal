@@ -155,7 +155,7 @@ npm install @lokal-id/core     # TypeScript / JavaScript
 pip install lokal-id           # Python 3.10+
 ```
 
-The Python package is a port of `@lokal-id/core` with the same rules and data, verified against thousands of TypeScript outputs. It adds `Decimal` money, `date` objects, dataclass results, and a `logging` filter for backends. See [`python/`](python#readme).
+The Python package is a port of `@lokal-id/core` with the same rules and data, verified against thousands of TypeScript outputs. It adds `Decimal` money, `date` objects, dataclass results, a `logging` filter for backends, and `lokal.files`, the MCP server's file readers, to scan an upload folder (`scan_pii` for your backend) or mask a PDF before it reaches an LLM. See [`python/`](python#readme).
 
 ## Usage
 
@@ -236,8 +236,8 @@ samaran.unmask(reply);           // placeholders are replaced with the original 
 | `lookup_kode_pos` | Postal code → villages, or all postal codes in a region |
 | `list_holidays` | National holidays and *cuti bersama* (SKB 2026, 2027) |
 | `working_days` | Business days, SLA due dates, delivery estimates |
-| `scan_pii` | Scan files and folders (text, CSV, JSON, logs, SQL, `.xlsx`, `.docx`, up to 100 MB each) for personal data. Shows partially masked values only, and **reports files it could not scan** (PDF, `.xls`, `.doc`, images) |
-| `read_file_masked` | Read a file, including `.xlsx` sheets and `.docx` documents (text and tables), with personal data replaced by stable placeholders |
+| `scan_pii` | Scan files and folders (text, CSV, JSON, logs, SQL, `.xlsx`, `.docx`, text-based PDF, up to 100 MB each) for personal data. Shows partially masked values only, and **reports files and pages it could not scan** (scanned or encrypted PDFs, `.xls`, `.doc`, images) |
+| `read_file_masked` | Read a file, including `.xlsx` sheets, `.docx` documents (text and tables), and PDFs (page text, tables, and filled-in form fields), with personal data replaced by stable placeholders |
 | `write_file_unmasked` | Write results with placeholders restored, on your machine |
 
 ### Samaran Guard
@@ -246,6 +246,7 @@ Enabled automatically by the Claude Code plugin.
 
 - **Prompts** containing ID numbers (NIK, KK, NPWP, passport, SIM, NIP, bank account, BPJS, card) or labeled health, criminal, or biometric data are held before they are sent. Add `#izinkan-pii` to send anyway.
 - **Reads of data files** (CSV, Excel, JSON, logs, SQL dumps, YAML, …) that contain personal data are blocked, and Claude is pointed to `read_file_masked`. This covers the `Read` tool, `Grep` in content mode, and shell commands such as `cat`, `head`, `grep`, `sed -n`, `awk`, `cut`, `Get-Content`, and `Import-Csv | Select-Object`.
+- **Photos and PDFs Samaran cannot read are asked about first.** `Read` sends images and PDFs to the model as they are. For a photo named or filed like someone's document (`ktp-budi.jpg`, `selfie_siti.png`, anything under `media/`, `uploads/`, or `storage/` except the app's own `assets/` and `images/`) and for a scanned, encrypted, or damaged PDF, Claude Code shows a permission prompt with the reason. A PDF whose text contains personal data is blocked as a data file.
 - **Only what would be printed counts.** `head -1 data.csv` (the header), `wc -l`, `grep -c`, and `sort data.csv > out.csv` still run.
 - **Not blocked:** source code, where sample numbers are normal and the agent must be able to read them, and scripts run on data files (`node process.js data.csv`), which is how data gets processed without being shown to the model.
 - List files that contain fake data (fixtures, seeders) in `.samaranignore`:
@@ -292,7 +293,7 @@ This is a small sample built around everyday tasks for Indonesian developers. Do
 
 - **Detection is pattern-based and favors precision.** Names are found through labels, column headers and JSON keys, chat export senders, introductions ("nama saya budi", "atas nama", "a.n.", "halo kak ini rina,"), honorifics ("Pak Joko", "bapak ahmad"), and reported speech ("tadi budi bilang"), including lowercase. A name dropped into a sentence with no cue at all ("pesanan budi belum sampai"), unusually phrased health or financial data, and children's data that is not marked as such can still slip through. Treat Samaran as a strong safety net, not a guarantee.
 - **Tested for false positives** on 12 MB of open-source code and the full text of UU 27/2022, with no high-confidence name detections. Chat name detection caught 29 of 29 test sentences with names and flagged 0 of 26 ordinary chat sentences. The sentences were written for the test suite, so accuracy on real chats may be lower.
-- **Not every format is read.** PDF, legacy `.xls` and `.doc`, images (ID card photos, selfies), and archives are not scanned. `scan_pii` reports them as *not scanned*, never as clean, and the guard does not intercept them. Files over 100 MB are reported too. For data files over 5 MB the guard checks the first 5 MB, to stay within the hook's 10-second limit.
+- **Not every format is read.** PDFs are read when they have a text layer, as invoices, letters, statements, and forms from a browser, Word, or a PDF library do. Scanned pages, encrypted PDFs, legacy `.xls` and `.doc`, images (ID card photos, selfies), and archives are not scanned. `scan_pii` reports them as *not scanned*, never as clean, including scanned pages inside an otherwise readable PDF. The guard asks before `Read` sends such a PDF, or a photo that looks like someone's document, to the model; it cannot tell a KTP photo from any other picture, so it judges photos by name and folder. Files over 100 MB are reported too. For data files over 5 MB the guard checks the first 5 MB, and it reports spreadsheets, Word documents, and PDFs over 20 MB instead of parsing them, to stay within the hook's 10-second limit.
 - **NIK and NPWP checks are structural.** They cannot confirm that a number is registered with Dukcapil or the tax office.
 - **Carrier detection uses number prefixes,** which match the public allocation list, including the 2025 XLSmart merger. Indonesia has no mobile number portability yet (a case is pending at the Constitutional Court, 319/PUU-XXIV/2026), so prefixes are still reliable. Landline area codes cover 19 major cities.
 - **The guard intercepts prompts, `Read`, `Grep`, and common shell readers.** A script that deliberately prints a data file, or something like `python -c "print(open(...).read())"`, cannot be caught every time. The `samaran` skill steers the agent away from that.
@@ -307,7 +308,8 @@ This is a small sample built around everyday tasks for Indonesian developers. Do
 - [ ] **Kapan**: Indonesian time expressions (`besok abis maghrib`, `lusa jam 7an`, `tanggal muda`) with location-based prayer times
 - [ ] **Warga**: consistent synthetic test data (NIK matching birth date and region, region-appropriate names)
 - [x] `.docx` support in Samaran (text and tables)
-- [ ] Text-based PDF support in Samaran; OCR for scanned ID cards
+- [x] Text-based PDF support in Samaran (page text, tables, form fields)
+- [ ] OCR for scanned PDFs and ID card photos
 - [ ] Free-text address parser → region codes
 - [ ] HTTP transport for ChatGPT and web-based agents
 - [x] Python library (`lokal-id`) with the same results as TypeScript

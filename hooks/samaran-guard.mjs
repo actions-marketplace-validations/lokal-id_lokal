@@ -1,5 +1,5 @@
 // packages/mcp/src/guard.ts
-import { statSync as statSync3 } from "node:fs";
+import { existsSync as existsSync3, statSync as statSync3 } from "node:fs";
 import path3 from "node:path";
 
 // packages/core/dist/provinces.js
@@ -276,7 +276,7 @@ var HOLIDAY_YEARS = Object.keys(DATA).map(Number);
 // packages/core/dist/samaran/fields.js
 var FIELDS = [
   // A column called "pasien" or "pelanggan" holds that person's name.
-  ["NAME", "nama|name|full_?name|nama_?lengkap|first_?name|last_?name|middle_?name|given_?name|family_?name|surname|nama_?depan|nama_?tengah|nama_?belakang|nama_?panggilan|nickname|nama_?ibu_?kandung|mother_?s?_?maiden_?name|penerima|pengirim|recipient|pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner"],
+  ["NAME", "nama|name|full_?name|nama_?lengkap|first_?name|last_?name|middle_?name|given_?name|family_?name|surname|nama_?depan|nama_?tengah|nama_?belakang|nama_?panggilan|nickname|nama_?ibu_?kandung|mother_?s?_?maiden_?name|penerima|pengirim|recipient|pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner|pemesan|pembeli|buyer|konsumen|atas_?nama|a_n"],
   ["ADDRESS", "alamat|address|full_?address|street|street_?address|domisili|alamat_?domisili|alamat_?ktp|alamat_?rumah|alamat_?pengiriman|shipping_?address|home_?address|billing_?address"],
   ["NIK", "nik|no_?ktp|nomor_?ktp|ktp|nomor_?induk_?kependudukan|national_?id"],
   ["KK", "kk|no_?kk|nomor_?kk|kartu_?keluarga|no_?kartu_?keluarga|nomor_?kartu_?keluarga|family_?card(_?number)?"],
@@ -302,7 +302,7 @@ var FIELDS = [
   // Not "signature" or "face": in code those are crypto signatures and UI faces.
   ["BIOMETRIC", "sidik_?jari|fingerprint|foto_?ktp|foto_?wajah|foto_?selfie|selfie|selfie_?ktp|face_?image|face_?photo|face_?embedding|biometri|biometric|biometrik|iris|retina|dna|genetik|genetic|voiceprint|voice_?print|tanda_?tangan|ttd"]
 ];
-var ENTITY = "customer|pelanggan|nasabah|pasien|patient|user|pengguna|member|anggota|karyawan|employee|pegawai|siswa|student|mahasiswa|penerima|pengirim|recipient|sender|ibu|ayah|wali|orang_?tua|pemohon|applicant|debitur|peserta|pemilik|owner|contact|kontak";
+var ENTITY = "customer|pelanggan|nasabah|pasien|patient|user|pengguna|member|anggota|karyawan|employee|pegawai|siswa|student|mahasiswa|penerima|pengirim|recipient|sender|ibu|ayah|wali|orang_?tua|pemohon|applicant|debitur|peserta|pemilik|owner|contact|kontak|pemesan|pembeli|buyer|konsumen";
 var QUALIFIER = `${ENTITY}|lengkap|baru|lama|asli|utama|rumah|kantor|ktp|domisili|pengiriman|pribadi|aktif|1|2`;
 var KEY_RES = FIELDS.map(([type, alts]) => [
   type,
@@ -331,7 +331,8 @@ var GENDER_WORD = /^(?:laki-?\s?laki|lelaki|perempuan|pria|wanita|male|female|ma
 var GENDER_VALUE = { test: (v) => /^[LPMF]$/.test(v) || GENDER_WORD.test(v) };
 var DATE_KEY = /tanggal|tgl|date|dob|birthday|birthdate|ttl/;
 var DATE_LIKE = /\d{1,4}[-/. ]\d{1,2}[-/. ]\d{1,4}|\d{1,2}\s+[A-Za-z]{3,9}\.?\s+\d{4}|\b(?:19|20)\d{2}\b/;
-var ROLE_KEY = /^(pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner|penerima|pengirim|recipient)$/;
+var ROLE_KEY = /^(pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner|penerima|pengirim|recipient|pemesan|pembeli|buyer|konsumen)$/;
+var NICKNAME = /\s+\([A-Z]?[a-z][A-Za-z .'-]*\)$/;
 var EMPTY = /^(?:-+|null|none|nil|n\/?a|undefined|tidak ada|kosong|\?)$/i;
 var TYPE_WORDS = /* @__PURE__ */ new Set([
   "string",
@@ -382,7 +383,7 @@ var DIGIT_TYPES = /* @__PURE__ */ new Set([
   "CARD"
 ]);
 function isPlausibleValue(type, value, key) {
-  const v = value.trim();
+  const v = type === "NAME" ? value.trim().replace(NICKNAME, "") : value.trim();
   if (!v || EMPTY.test(v))
     return false;
   if (TYPE_WORDS.has(v.toLowerCase()))
@@ -904,7 +905,9 @@ function detectStreetAddresses(text) {
     out.push(match("ADDRESS", m.index, m[0], "medium"));
   return out;
 }
-var NAME_STOP = /\s(?:dan|dengan|yang|nik|hp|no|nomor|umur|usia|alamat|email|tinggal|lahir|asal|dari|di|ke|untuk|sebagai|mau|ingin|minta|tolong)\b/i;
+var NAME_STOP = /\s(?:dan|dengan|yang|nik|hp|no|nomor|umur|usia|alamat|email|tinggal|lahir|asal|dari|di|ke|untuk|sebagai|mau|ingin|minta|tolong|saya|aku|gue|gua|gw|mohon|terima|makasih|thanks|thank|thx|tks|trims|bisa|boleh|apakah|kapan|berapa|gimana|bagaimana|kenapa|mengapa|tanya|nanya|sudah|udah|sdh|belum|blm|akan|sedang)\b/i;
+var NAME_STOP_CHAT = /\s(?:ya|yah|yaa|iya|kak|kakak|gan|sis|min|pak|bu|dong|deh|sih|kok|nih|aja|saja|juga|lho|loh|ok|oke|okay|lagi|baru|tadi|kemarin|kemaren|besok|nanti|sekarang)\b/;
+var NAME_END = /[!?\u2190-\u2bff\ud800-\udfff\ufe0f]/;
 var MULTI_PART = /* @__PURE__ */ new Set(["ADDRESS", "BIRTH_DATE", "HEALTH", "GEO"]);
 function takeWords(s, n) {
   return s.split(/(\s+)/).slice(0, Math.max(0, 2 * n - 1)).join("");
@@ -950,9 +953,11 @@ function cutValue(type, raw) {
     v = v.split(",")[0];
   }
   if (type === "NAME") {
-    const stop = v.search(NAME_STOP);
-    if (stop >= 0)
-      v = v.slice(0, stop);
+    for (const re of [NAME_END, NAME_STOP, NAME_STOP_CHAT]) {
+      const stop = v.search(re);
+      if (stop >= 0)
+        v = v.slice(0, stop);
+    }
     const digit = v.search(/\d/);
     if (digit >= 0)
       v = v.slice(0, digit);
@@ -1092,6 +1097,9 @@ function detectCsvColumns(text) {
   const columns = headerFields.map((h) => fieldType(h));
   if (!columns.some(Boolean))
     return [];
+  const second = csvFields(secondLine, delimiter);
+  if (columns.some((t, i) => t && fieldType(secondLine.slice(second[i].start, second[i].end).trim())))
+    return [];
   const out = [];
   let offset = firstBreak + 1;
   for (const rawLine of text.slice(offset).split("\n")) {
@@ -1106,6 +1114,54 @@ function detectCsvColumns(text) {
       out.push(match(type, start, value, isGenericNameKey(headerFields[idx]) ? "medium" : "high"));
     });
     offset += rawLine.length + 1;
+  }
+  return out;
+}
+function detectTabTables(text) {
+  if (!text.includes("	"))
+    return [];
+  const out = [];
+  let header;
+  let columns = [];
+  let pos = 0;
+  while (pos <= text.length) {
+    let end = text.indexOf("\n", pos);
+    if (end === -1)
+      end = text.length;
+    const line = text.slice(pos, end > pos && text[end - 1] === "\r" ? end - 1 : end);
+    const cells = [];
+    if (line.includes("	")) {
+      let at = 0;
+      for (const part of line.split("	")) {
+        const value = part.trim();
+        cells.push({ start: pos + at + (value ? part.indexOf(value) : 0), value });
+        at += part.length + 1;
+      }
+    }
+    const filled = cells.filter((c) => c.value);
+    if (header && filled.length >= 2 && cells.length <= header.length) {
+      cells.forEach((c, i) => {
+        const type = columns[i];
+        if (!type || !c.value || !isPlausibleValue(type, c.value, header[i]))
+          return;
+        out.push(match(type, c.start, c.value, isGenericNameKey(header[i]) ? "medium" : "high"));
+      });
+    } else {
+      header = void 0;
+      const types = cells.map((c) => c.value ? fieldType(c.value) : void 0);
+      const [label, value] = filled;
+      if (filled.length === 2 && /^[A-Z]/.test(label.value) && fieldType(label.value) && !fieldType(value.value)) {
+        const type = fieldType(label.value);
+        if (!/^[:=]/.test(value.value) && isPlausibleValue(type, value.value, label.value)) {
+          out.push(match(type, value.start, value.value, isGenericNameKey(label.value) ? "medium" : "high"));
+        }
+      } else if (filled.length >= 2 && filled.every((c) => c.value.length <= 40 && /[A-Za-z]/.test(c.value) && !/[.!?]$|\d{3}/.test(c.value)) && // Data files have tabs too ("n01687978<TAB>agama"): a document table's header is capitalized, or names two fields.
+      (types.filter(Boolean).length >= 2 || types.some(Boolean) && filled.every((c) => /^[A-Z]/.test(c.value)))) {
+        header = cells.map((c) => c.value);
+        columns = types;
+      }
+    }
+    pos = end + 1;
   }
   return out;
 }
@@ -1127,7 +1183,8 @@ var DETECTORS = [
   detectSqlInserts,
   detectStreetAddresses,
   detectLabeledFields,
-  detectCsvColumns
+  detectCsvColumns,
+  detectTabTables
 ];
 function detectPii(text, options = {}) {
   for (const t of [...options.types ?? [], ...options.exclude ?? []]) {
@@ -1214,6 +1271,7 @@ import path from "node:path";
 
 // packages/mcp/src/xlsx.ts
 import { inflateRawSync } from "node:zlib";
+var MAX_ENTRY_BYTES = 256 * 1024 * 1024;
 function unzip(buf) {
   const files = /* @__PURE__ */ new Map();
   let eocd = -1;
@@ -1224,29 +1282,46 @@ function unzip(buf) {
     }
   }
   if (eocd < 0) throw new Error("Not a ZIP/xlsx file.");
-  const entries = buf.readUInt16LE(eocd + 10);
-  let p = buf.readUInt32LE(eocd + 16);
+  const corrupt = () => new Error("Corrupt ZIP central directory.");
+  const u16 = (at) => {
+    if (at < 0 || at + 2 > buf.length) throw corrupt();
+    return buf.readUInt16LE(at);
+  };
+  const u32 = (at) => {
+    if (at < 0 || at + 4 > buf.length) throw corrupt();
+    return buf.readUInt32LE(at);
+  };
+  const entries = u16(eocd + 10);
+  let p = u32(eocd + 16);
   for (let n = 0; n < entries; n++) {
-    if (buf.readUInt32LE(p) !== 33639248) throw new Error("Corrupt ZIP central directory.");
-    const method = buf.readUInt16LE(p + 10);
-    const compressed = buf.readUInt32LE(p + 20);
-    const nameLen = buf.readUInt16LE(p + 28);
-    const extraLen = buf.readUInt16LE(p + 30);
-    const commentLen = buf.readUInt16LE(p + 32);
-    const local = buf.readUInt32LE(p + 42);
-    const name = buf.toString("utf8", p + 46, p + 46 + nameLen);
+    if (u32(p) !== 33639248) throw corrupt();
+    const method = u16(p + 10);
+    const compressed = u32(p + 20);
+    const nameLen = u16(p + 28);
+    const extraLen = u16(p + 30);
+    const commentLen = u16(p + 32);
+    const local = u32(p + 42);
+    const name = buf.toString("utf8", p + 46, Math.min(buf.length, p + 46 + nameLen));
     p += 46 + nameLen + extraLen + commentLen;
-    const dataStart = local + 30 + buf.readUInt16LE(local + 26) + buf.readUInt16LE(local + 28);
+    const dataStart = local + 30 + u16(local + 26) + u16(local + 28);
     const data = buf.subarray(dataStart, dataStart + compressed);
     if (method === 0) files.set(name, data);
-    else if (method === 8) files.set(name, inflateRawSync(data));
+    else if (method === 8) {
+      try {
+        files.set(name, inflateRawSync(data, { maxOutputLength: MAX_ENTRY_BYTES }));
+      } catch (e) {
+        throw new Error(e instanceof RangeError ? "A file in the ZIP is too large to decompress." : "Corrupt ZIP data.");
+      }
+    }
   }
   return files;
 }
 function decodeXml(s) {
   return s.replace(/&(amp|lt|gt|quot|apos|#(\d+)|#x([0-9a-f]+));/gi, (all2, name, dec, hex) => {
-    if (dec) return String.fromCodePoint(Number(dec));
-    if (hex) return String.fromCodePoint(parseInt(hex, 16));
+    if (dec || hex) {
+      const cp = dec ? Number(dec) : parseInt(hex, 16);
+      return cp <= 1114111 ? String.fromCodePoint(cp) : all2;
+    }
     return { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'" }[name.toLowerCase()] ?? all2;
   });
 }
@@ -1340,6 +1415,940 @@ function readDocx(buf) {
     )
   );
   return [{ name: "Dokumen", csv: texts.filter(Boolean).join("\n\n") }, ...tables];
+}
+
+// packages/mcp/src/pdf.ts
+import { constants, inflateRawSync as inflateRawSync2, inflateSync } from "node:zlib";
+var Name = class {
+  v;
+  constructor(v) {
+    this.v = v;
+  }
+};
+var Str = class {
+  v;
+  constructor(v) {
+    this.v = v;
+  }
+};
+var Ref = class {
+  num;
+  gen;
+  constructor(num, gen) {
+    this.num = num;
+    this.gen = gen;
+  }
+};
+var Op = class {
+  v;
+  constructor(v) {
+    this.v = v;
+  }
+};
+var Stream = class {
+  dict;
+  raw;
+  /** The file ends inside this stream: a cut-off download or a partial copy. */
+  truncated;
+  constructor(dict, raw, truncated = false) {
+    this.dict = dict;
+    this.raw = raw;
+    this.truncated = truncated;
+  }
+};
+var isSpace = (c) => c === 32 || c === 10 || c === 13 || c === 9 || c === 12 || c === 0;
+var isDelim = (c) => c === 40 || c === 41 || c === 60 || c === 62 || c === 91 || c === 93 || c === 123 || c === 125 || c === 47 || c === 37;
+var NUMBER = /^[+-]?(?:\d+\.?\d*|\.\d+)$/;
+var MAX_DEPTH = 64;
+var Lexer = class {
+  pos = 0;
+  s;
+  constructor(s) {
+    this.s = s;
+  }
+  skip() {
+    const s = this.s;
+    while (this.pos < s.length) {
+      const c = s.charCodeAt(this.pos);
+      if (c === 37) {
+        while (this.pos < s.length && s[this.pos] !== "\n" && s[this.pos] !== "\r") this.pos++;
+      } else if (isSpace(c)) this.pos++;
+      else break;
+    }
+  }
+  regular() {
+    const start = this.pos;
+    while (this.pos < this.s.length) {
+      const c = this.s.charCodeAt(this.pos);
+      if (isSpace(c) || isDelim(c)) break;
+      this.pos++;
+    }
+    return this.s.slice(start, this.pos);
+  }
+  /** The next value or operator, or undefined at the end. */
+  value(depth = 0) {
+    if (depth > MAX_DEPTH) throw new Error("PDF nesting too deep.");
+    this.skip();
+    const s = this.s;
+    if (this.pos >= s.length) return void 0;
+    const c = s[this.pos];
+    if (c === "/") {
+      this.pos++;
+      return new Name(this.regular().replace(/#([0-9A-Fa-f]{2})/g, (_, h) => String.fromCharCode(parseInt(h, 16))));
+    }
+    if (c === "(") return this.literal();
+    if (c === "<") {
+      if (s[this.pos + 1] === "<") {
+        this.pos += 2;
+        const dict = /* @__PURE__ */ new Map();
+        for (; ; ) {
+          this.skip();
+          if (this.pos >= s.length) break;
+          if (s[this.pos] === ">" && s[this.pos + 1] === ">") {
+            this.pos += 2;
+            break;
+          }
+          const key = this.value(depth + 1);
+          if (key === void 0) break;
+          if (!(key instanceof Name)) continue;
+          const val = this.value(depth + 1);
+          if (val === void 0) break;
+          dict.set(key.v, val);
+        }
+        return dict;
+      }
+      const close = s.indexOf(">", this.pos);
+      const hex = s.slice(this.pos + 1, close < 0 ? s.length : close).replace(/[^0-9A-Fa-f]/g, "");
+      this.pos = close < 0 ? s.length : close + 1;
+      let bytes = "";
+      for (let i = 0; i < hex.length; i += 2) bytes += String.fromCharCode(parseInt(hex.slice(i, i + 2).padEnd(2, "0"), 16));
+      return new Str(bytes);
+    }
+    if (c === "[") {
+      this.pos++;
+      const arr = [];
+      for (; ; ) {
+        this.skip();
+        if (this.pos >= s.length) break;
+        if (s[this.pos] === "]") {
+          this.pos++;
+          break;
+        }
+        const v = this.value(depth + 1);
+        if (v === void 0) break;
+        arr.push(v);
+      }
+      return arr;
+    }
+    const token = this.regular();
+    if (!token) {
+      this.pos++;
+      return new Op(c);
+    }
+    if (NUMBER.test(token)) {
+      const n = Number(token);
+      if (/^\d+$/.test(token)) {
+        const save = this.pos;
+        this.skip();
+        const gen = this.regular();
+        if (/^\d+$/.test(gen)) {
+          this.skip();
+          if (s[this.pos] === "R" && (this.pos + 1 >= s.length || isSpace(s.charCodeAt(this.pos + 1)) || isDelim(s.charCodeAt(this.pos + 1)))) {
+            this.pos++;
+            return new Ref(n, Number(gen));
+          }
+        }
+        this.pos = save;
+      }
+      return n;
+    }
+    if (token === "true") return true;
+    if (token === "false") return false;
+    if (token === "null") return null;
+    return new Op(token);
+  }
+  literal() {
+    const s = this.s;
+    let depth = 1;
+    let out = "";
+    this.pos++;
+    while (this.pos < s.length) {
+      const c = s[this.pos++];
+      if (c === "\\") {
+        const n = s[this.pos++];
+        if (n === void 0) break;
+        if (n >= "0" && n <= "7") {
+          let oct = n;
+          while (oct.length < 3 && s[this.pos] >= "0" && s[this.pos] <= "7") oct += s[this.pos++];
+          out += String.fromCharCode(parseInt(oct, 8) & 255);
+        } else if (n === "\r") {
+          if (s[this.pos] === "\n") this.pos++;
+        } else if (n !== "\n") {
+          out += { n: "\n", r: "\r", t: "	", b: "\b", f: "\f" }[n] ?? n;
+        }
+      } else if (c === "(") {
+        depth++;
+        out += c;
+      } else if (c === ")") {
+        if (--depth === 0) break;
+        out += c;
+      } else out += c;
+    }
+    return new Str(out);
+  }
+};
+var MAX_STREAM_BYTES = 64 * 1024 * 1024;
+function ascii85(data) {
+  const out = [];
+  let group = [];
+  const body = data.replace(/^\s*<~/, "");
+  for (let i = 0; i < body.length; i++) {
+    const ch = body[i];
+    if (ch === "~") break;
+    if (ch === "z" && group.length === 0) {
+      out.push(0, 0, 0, 0);
+      continue;
+    }
+    const code = ch.charCodeAt(0);
+    if (code < 33 || code > 117) continue;
+    group.push(code - 33);
+    if (group.length === 5) {
+      const n = group.reduce((acc, d) => acc * 85 + d, 0);
+      out.push(n >>> 24 & 255, n >>> 16 & 255, n >>> 8 & 255, n & 255);
+      group = [];
+    }
+  }
+  if (group.length > 1) {
+    const size = group.length;
+    while (group.length < 5) group.push(84);
+    const n = group.reduce((acc, d) => acc * 85 + d, 0);
+    out.push(...[n >>> 24 & 255, n >>> 16 & 255, n >>> 8 & 255, n & 255].slice(0, size - 1));
+  }
+  return Buffer.from(out);
+}
+function inflate(data) {
+  const options = { finishFlush: constants.Z_SYNC_FLUSH, maxOutputLength: MAX_STREAM_BYTES };
+  const tooLarge = (e) => e instanceof RangeError ? new Error("A PDF stream is too large to decompress.") : e;
+  try {
+    return inflateSync(data, options);
+  } catch (e) {
+    if (e instanceof RangeError) throw tooLarge(e);
+    try {
+      return inflateRawSync2(data, options);
+    } catch (raw) {
+      throw raw instanceof RangeError ? tooLarge(raw) : e;
+    }
+  }
+}
+var Pdf = class {
+  objects = /* @__PURE__ */ new Map();
+  decoded = /* @__PURE__ */ new Map();
+  fonts = /* @__PURE__ */ new Map();
+  truncated = /* @__PURE__ */ new Set();
+  trailers = [];
+  constructor(buf) {
+    const s = buf.toString("latin1");
+    const objRe = /(\d+)\s+(\d+)\s+obj\b/g;
+    for (let m = objRe.exec(s); m; m = objRe.exec(s)) {
+      const lx = new Lexer(s);
+      lx.pos = objRe.lastIndex;
+      let value;
+      try {
+        value = lx.value();
+      } catch {
+        continue;
+      }
+      if (value === void 0) break;
+      lx.skip();
+      if (lx.pos >= s.length && value instanceof Map) this.truncated.add(value);
+      if (value instanceof Map && s.startsWith("stream", lx.pos)) {
+        let start = lx.pos + 6;
+        if (s[start] === "\r") start++;
+        if (s[start] === "\n") start++;
+        const length = value.get("Length");
+        let end = -1;
+        if (typeof length === "number" && Number.isInteger(length) && length >= 0 && start + length <= s.length) {
+          const after = s.slice(start + length, start + length + 32);
+          if (/^\s*endstream/.test(after)) end = start + length;
+        }
+        let truncated = false;
+        if (end < 0) {
+          end = s.indexOf("endstream", start);
+          if (end < 0) {
+            end = s.length;
+            truncated = true;
+          }
+          if (s[end - 1] === "\n") end--;
+          if (s[end - 1] === "\r") end--;
+        }
+        value = new Stream(value, buf.subarray(start, Math.max(start, end)), truncated);
+        objRe.lastIndex = Math.max(end, start);
+      } else {
+        objRe.lastIndex = Math.max(objRe.lastIndex, lx.pos);
+      }
+      if (value instanceof Stream && this.nameOf(value.dict.get("Type")) === "XRef") this.trailers.push(value.dict);
+      this.objects.set(Number(m[1]), { value, at: m.index });
+    }
+    for (const m of s.matchAll(/trailer\s*<</g)) {
+      const lx = new Lexer(s);
+      lx.pos = m.index + 7;
+      const t = lx.value();
+      if (t instanceof Map) this.trailers.push(t);
+    }
+    if (this.trailers.some((t) => t.has("Encrypt"))) throw new Error("The PDF is encrypted (password-protected).");
+    this.expandObjectStreams();
+  }
+  expandObjectStreams() {
+    for (const [, { value, at }] of [...this.objects]) {
+      if (!(value instanceof Stream) || this.nameOf(value.dict.get("Type")) !== "ObjStm") continue;
+      let data;
+      try {
+        data = this.data(value);
+      } catch {
+        continue;
+      }
+      const n = this.num(value.dict.get("N"));
+      const first = this.num(value.dict.get("First"));
+      const lx = new Lexer(data);
+      const header = [];
+      for (let i = 0; i < 2 * n; i++) {
+        const v = lx.value();
+        if (typeof v !== "number") break;
+        header.push(v);
+      }
+      for (let i = 0; i + 1 < header.length; i += 2) {
+        const num = header[i];
+        const pos = first + header[i + 1];
+        if (!Number.isInteger(num) || !Number.isInteger(pos) || pos < 0) continue;
+        const existing = this.objects.get(num);
+        if (existing && existing.at > at) continue;
+        const ox = new Lexer(data);
+        ox.pos = pos;
+        try {
+          const v = ox.value();
+          if (v !== void 0) this.objects.set(num, { value: v, at });
+        } catch {
+        }
+      }
+    }
+  }
+  resolve(v) {
+    for (let i = 0; i < 32 && v instanceof Ref; i++) v = this.objects.get(v.num)?.value;
+    return v instanceof Ref ? void 0 : v;
+  }
+  dict(v) {
+    const r = this.resolve(v);
+    if (r instanceof Stream) return r.dict;
+    return r instanceof Map ? r : void 0;
+  }
+  nameOf(v) {
+    const r = this.resolve(v);
+    return r instanceof Name ? r.v : void 0;
+  }
+  num(v, fallback = 0) {
+    const r = this.resolve(v);
+    return typeof r === "number" ? r : fallback;
+  }
+  /** A stream's decoded bytes, as a latin1 string. */
+  data(stream) {
+    const cached = this.decoded.get(stream);
+    if (cached !== void 0) return cached;
+    const filters = this.resolve(stream.dict.get("Filter"));
+    const list = (Array.isArray(filters) ? filters : filters === void 0 ? [] : [filters]).map((f) => this.nameOf(f));
+    let buf = stream.raw;
+    for (const f of list) {
+      if (f === "FlateDecode" || f === "Fl") buf = inflate(buf);
+      else if (f === "ASCII85Decode" || f === "A85") buf = ascii85(buf.toString("latin1"));
+      else if (f === "ASCIIHexDecode" || f === "AHx") buf = Buffer.from(buf.toString("latin1").replace(/>[\s\S]*$/, "").replace(/[^0-9A-Fa-f]/g, ""), "hex");
+      else throw new Error(`Unsupported PDF filter ${f}.`);
+    }
+    const out = buf.toString("latin1");
+    this.decoded.set(stream, out);
+    return out;
+  }
+  /** Pages in reading order, each with the resources it inherits. */
+  pages() {
+    const out = [];
+    const seen = /* @__PURE__ */ new Set();
+    const walk = (node, inherited, depth) => {
+      if (!node || seen.has(node) || depth > 64 || out.length >= 1e4) return;
+      seen.add(node);
+      const resources = this.dict(node.get("Resources")) ?? inherited;
+      const kids = this.resolve(node.get("Kids"));
+      if (Array.isArray(kids)) for (const k of kids) walk(this.dict(k), resources, depth + 1);
+      else out.push({ page: node, resources });
+    };
+    for (const t of [...this.trailers].reverse()) {
+      const catalog = this.dict(t.get("Root"));
+      if (catalog) {
+        walk(this.dict(catalog.get("Pages")), void 0, 0);
+        if (out.length) return out;
+      }
+    }
+    for (const [, { value }] of [...this.objects].sort((a, b) => a[0] - b[0])) {
+      const d = value instanceof Map ? value : void 0;
+      if (d && this.nameOf(d.get("Type")) === "Page") out.push({ page: d, resources: this.dict(d.get("Resources")) });
+    }
+    return out;
+  }
+  font(ref) {
+    const dict = this.dict(ref);
+    if (!dict) return void 0;
+    let font = this.fonts.get(dict);
+    if (!font) {
+      font = new Font(this, dict);
+      this.fonts.set(dict, font);
+    }
+    return font;
+  }
+};
+var decodeTable = (label) => {
+  try {
+    const dec = new TextDecoder(label);
+    return Array.from({ length: 256 }, (_, i) => dec.decode(new Uint8Array([i])));
+  } catch {
+    return Array.from({ length: 256 }, (_, i) => String.fromCharCode(i));
+  }
+};
+var WIN_ANSI = decodeTable("windows-1252");
+var MAC_ROMAN = decodeTable("macintosh");
+var STANDARD = WIN_ANSI.map((c, i) => i === 39 ? "\u2019" : i === 96 ? "\u2018" : c);
+var GLYPHS = {
+  space: " ",
+  exclam: "!",
+  quotedbl: '"',
+  numbersign: "#",
+  dollar: "$",
+  percent: "%",
+  ampersand: "&",
+  quotesingle: "'",
+  parenleft: "(",
+  parenright: ")",
+  asterisk: "*",
+  plus: "+",
+  comma: ",",
+  hyphen: "-",
+  period: ".",
+  slash: "/",
+  zero: "0",
+  one: "1",
+  two: "2",
+  three: "3",
+  four: "4",
+  five: "5",
+  six: "6",
+  seven: "7",
+  eight: "8",
+  nine: "9",
+  colon: ":",
+  semicolon: ";",
+  less: "<",
+  equal: "=",
+  greater: ">",
+  question: "?",
+  at: "@",
+  bracketleft: "[",
+  backslash: "\\",
+  bracketright: "]",
+  asciicircum: "^",
+  underscore: "_",
+  grave: "`",
+  braceleft: "{",
+  bar: "|",
+  braceright: "}",
+  asciitilde: "~",
+  bullet: "\u2022",
+  endash: "\u2013",
+  emdash: "\u2014",
+  quoteleft: "\u2018",
+  quoteright: "\u2019",
+  quotedblleft: "\u201C",
+  quotedblright: "\u201D",
+  quotesinglbase: "\u201A",
+  quotedblbase: "\u201E",
+  ellipsis: "\u2026",
+  Euro: "\u20AC",
+  minus: "\u2212",
+  nbspace: "\xA0",
+  fi: "fi",
+  fl: "fl",
+  ff: "ff",
+  ffi: "ffi",
+  ffl: "ffl",
+  f_i: "fi",
+  f_l: "fl",
+  f_f: "ff",
+  degree: "\xB0",
+  copyright: "\xA9",
+  registered: "\xAE",
+  trademark: "\u2122",
+  section: "\xA7",
+  paragraph: "\xB6",
+  periodcentered: "\xB7",
+  multiply: "\xD7",
+  divide: "\xF7",
+  plusminus: "\xB1"
+};
+var ACCENTED = /^([A-Za-z])(acute|grave|circumflex|dieresis|tilde|ring|cedilla|caron)$/;
+var COMBINING = {
+  acute: "\u0301",
+  grave: "\u0300",
+  circumflex: "\u0302",
+  dieresis: "\u0308",
+  tilde: "\u0303",
+  ring: "\u030A",
+  cedilla: "\u0327",
+  caron: "\u030C"
+};
+function glyphToUnicode(name) {
+  if (Object.hasOwn(GLYPHS, name)) return GLYPHS[name];
+  if (/^[A-Za-z]$/.test(name)) return name;
+  let m = /^uni([0-9A-Fa-f]{4})+$/.exec(name);
+  if (m) return String.fromCharCode(...name.slice(3).match(/.{4}/g).map((h) => parseInt(h, 16)));
+  m = /^u([0-9A-Fa-f]{4,6})$/.exec(name);
+  if (m) {
+    const cp = parseInt(m[1], 16);
+    return cp <= 1114111 ? String.fromCodePoint(cp) : void 0;
+  }
+  m = ACCENTED.exec(name);
+  if (m) return (m[1] + COMBINING[m[2]]).normalize("NFC");
+  const dot = name.indexOf(".");
+  if (dot > 0) return glyphToUnicode(name.slice(0, dot));
+  return void 0;
+}
+function utf16be(bytes) {
+  let out = "";
+  for (let i = 0; i + 1 < bytes.length; i += 2) out += String.fromCharCode(bytes.charCodeAt(i) << 8 | bytes.charCodeAt(i + 1));
+  return out;
+}
+function bytesToInt(bytes) {
+  let n = 0;
+  for (let i = 0; i < bytes.length; i++) n = n * 256 + bytes.charCodeAt(i);
+  return n;
+}
+function intToBytes(n, length) {
+  let out = "";
+  for (let i = 0; i < length; i++) {
+    out = String.fromCharCode(n % 256) + out;
+    n = Math.floor(n / 256);
+  }
+  return out;
+}
+function parseCMap(text) {
+  const map = /* @__PURE__ */ new Map();
+  const ranges = [];
+  const lx = new Lexer(text);
+  const operands = [];
+  for (let v = lx.value(); v !== void 0; v = lx.value()) {
+    if (!(v instanceof Op)) {
+      operands.push(v);
+      continue;
+    }
+    if (v.v === "endcodespacerange") {
+      for (let i = 0; i + 1 < operands.length; i += 2) {
+        const [lo, hi] = [operands[i], operands[i + 1]];
+        if (lo instanceof Str && hi instanceof Str && lo.v.length === hi.v.length) ranges.push([lo.v, hi.v]);
+      }
+    } else if (v.v === "endbfchar") {
+      for (let i = 0; i + 1 < operands.length; i += 2) {
+        const [src, dst] = [operands[i], operands[i + 1]];
+        if (src instanceof Str && dst instanceof Str) map.set(src.v, utf16be(dst.v));
+        else if (src instanceof Str && dst instanceof Name) map.set(src.v, glyphToUnicode(dst.v) ?? "");
+      }
+    } else if (v.v === "endbfrange") {
+      for (let i = 0; i + 2 < operands.length; i += 3) {
+        const [lo, hi, dst] = [operands[i], operands[i + 1], operands[i + 2]];
+        if (!(lo instanceof Str && hi instanceof Str)) continue;
+        const from = bytesToInt(lo.v);
+        const to = Math.min(bytesToInt(hi.v), from + 65535);
+        for (let code = from; code <= to; code++) {
+          const key = intToBytes(code, lo.v.length);
+          if (Array.isArray(dst)) {
+            const d = dst[code - from];
+            if (d instanceof Str) map.set(key, utf16be(d.v));
+          } else if (dst instanceof Str && dst.v.length >= 2) {
+            const base = utf16be(dst.v);
+            map.set(key, base.slice(0, -1) + String.fromCharCode(base.charCodeAt(base.length - 1) + code - from));
+          }
+        }
+      }
+    }
+    if (v.v.startsWith("end") || v.v.startsWith("begin")) operands.length = 0;
+  }
+  return { map, ranges };
+}
+var Font = class {
+  toUnicode;
+  ranges = [];
+  composite;
+  encoding;
+  widths = /* @__PURE__ */ new Map();
+  defaultWidth;
+  constructor(pdf, dict) {
+    this.composite = pdf.nameOf(dict.get("Subtype")) === "Type0";
+    const tu = pdf.resolve(dict.get("ToUnicode"));
+    if (tu instanceof Stream) {
+      try {
+        this.toUnicode = parseCMap(pdf.data(tu)).map;
+      } catch {
+      }
+    }
+    let encoding = WIN_ANSI;
+    const enc = pdf.resolve(dict.get("Encoding"));
+    if (this.composite && enc instanceof Stream) {
+      try {
+        this.ranges = parseCMap(pdf.data(enc)).ranges;
+      } catch {
+      }
+    }
+    const named = (n) => n === "MacRomanEncoding" ? MAC_ROMAN : n === "StandardEncoding" ? STANDARD : WIN_ANSI;
+    if (enc instanceof Name) encoding = named(enc.v);
+    else if (enc instanceof Map) {
+      encoding = [...named(pdf.nameOf(enc.get("BaseEncoding")))];
+      const diffs = pdf.resolve(enc.get("Differences"));
+      if (Array.isArray(diffs)) {
+        let code = 0;
+        for (const d of diffs) {
+          if (typeof d === "number") code = d;
+          else if (d instanceof Name) {
+            if (code >= 0 && code < 256) encoding[code] = glyphToUnicode(d.v) ?? "";
+            code++;
+          }
+        }
+      }
+    }
+    this.encoding = encoding;
+    if (this.composite) {
+      const descendants = pdf.resolve(dict.get("DescendantFonts"));
+      const cid = pdf.dict(Array.isArray(descendants) ? descendants[0] : void 0);
+      this.defaultWidth = pdf.num(cid?.get("DW"), 1e3);
+      const w = pdf.resolve(cid?.get("W"));
+      if (Array.isArray(w)) {
+        for (let i = 0; i < w.length; ) {
+          const first = pdf.num(w[i]);
+          const next = pdf.resolve(w[i + 1]);
+          if (Array.isArray(next)) {
+            next.forEach((width, j) => this.widths.set(first + j, pdf.num(width)));
+            i += 2;
+          } else {
+            const last = pdf.num(next);
+            const width = pdf.num(w[i + 2]);
+            for (let c = first; c <= last && c - first < 65536; c++) this.widths.set(c, width);
+            i += 3;
+          }
+        }
+      }
+    } else {
+      const first = pdf.num(dict.get("FirstChar"));
+      const widths = pdf.resolve(dict.get("Widths"));
+      if (Array.isArray(widths)) widths.forEach((w, i) => this.widths.set(first + i, pdf.num(w)));
+      const descriptor = pdf.dict(dict.get("FontDescriptor"));
+      const base = pdf.nameOf(dict.get("BaseFont")) ?? "";
+      this.defaultWidth = pdf.num(descriptor?.get("MissingWidth"), 0) || (/Courier/.test(base) ? 600 : 500);
+    }
+  }
+  /** Splits a string into character codes. */
+  codes(bytes) {
+    const out = [];
+    if (!this.composite) {
+      for (let i = 0; i < bytes.length; i++) out.push(bytes[i]);
+      return out;
+    }
+    for (let i = 0; i < bytes.length; ) {
+      let len = 0;
+      for (let n = 1; n <= 4 && !len; n++) {
+        const code = bytes.slice(i, i + n);
+        if (code.length === n && this.ranges.some(([lo, hi]) => lo.length === n && code >= lo && code <= hi)) len = n;
+      }
+      if (!len) len = this.composite ? 2 : 1;
+      out.push(bytes.slice(i, i + len));
+      i += len;
+    }
+    return out;
+  }
+  text(code) {
+    const mapped = this.toUnicode?.get(code) ?? (code.length === 1 ? this.toUnicode?.get(`\0${code}`) : void 0);
+    if (mapped !== void 0) return mapped;
+    if (code.length === 1) return this.encoding[code.charCodeAt(0)] ?? "";
+    return "";
+  }
+  width(code) {
+    return this.widths.get(bytesToInt(code)) ?? this.defaultWidth;
+  }
+};
+var IDENTITY = [1, 0, 0, 1, 0, 0];
+var mul = (m, n) => [
+  m[0] * n[0] + m[1] * n[2],
+  m[0] * n[1] + m[1] * n[3],
+  m[2] * n[0] + m[3] * n[2],
+  m[2] * n[1] + m[3] * n[3],
+  m[4] * n[0] + m[5] * n[2] + n[4],
+  m[4] * n[1] + m[5] * n[3] + n[5]
+];
+var TextWriter = class {
+  out = "";
+  /** Text was shown in a font the file does not have (it was cut off or damaged). */
+  missingFont = false;
+  last;
+  /** Text drawn from (x0, y0) to (x1, y1) in device space, at an effective font size. */
+  add(text, x0, y0, x1, y1, size) {
+    if (!text) return;
+    const last = this.last;
+    if (last && this.out) {
+      const tolerance = Math.max(size, last.size) * 0.5;
+      const end = this.out.charCodeAt(this.out.length - 1);
+      if (Math.abs(y0 - last.y) > tolerance) {
+        if (end !== 10) this.out += "\n";
+      } else {
+        const gap = x0 - last.x;
+        if ((gap > size * 0.15 || gap < -size) && end !== 32 && end !== 9 && end !== 10 && text[0] !== " ") {
+          this.out += gap > size * 0.8 ? "	" : " ";
+        }
+      }
+    }
+    this.out += text;
+    this.last = { x: x1, y: y1, size };
+  }
+  breakLine() {
+    if (this.out && !this.out.endsWith("\n")) this.out += "\n";
+    this.last = void 0;
+  }
+  /** A line of its own, such as a form field. */
+  line(text) {
+    if (!text) return;
+    this.breakLine();
+    this.out += `${text}
+`;
+  }
+};
+function textString(bytes) {
+  if (bytes.startsWith("\xFE\xFF")) return utf16be(bytes.slice(2));
+  if (bytes.startsWith("\xEF\xBB\xBF")) return Buffer.from(bytes.slice(3), "latin1").toString("utf8");
+  return bytes;
+}
+function fieldLine(pdf, widget) {
+  const names = [];
+  let value;
+  let node = widget;
+  for (let depth = 0; node && depth < 32; depth++) {
+    const t = pdf.resolve(node.get("T"));
+    if (t instanceof Str) names.unshift(textString(t.v));
+    if (value === void 0 && node.has("V")) value = pdf.resolve(node.get("V"));
+    node = pdf.dict(node.get("Parent"));
+  }
+  const one = (v) => v instanceof Str ? textString(v.v) : v instanceof Name && v.v !== "Off" ? v.v : "";
+  const text = (Array.isArray(value) ? value.map((v) => one(pdf.resolve(v))).filter(Boolean).join(", ") : one(value)).replace(/\s*[\r\n]+\s*/g, ", ").trim();
+  return text ? `${names.join(".") || "field"}: ${text}` : void 0;
+}
+function annotations(pdf, page, writer) {
+  const annots = pdf.resolve(page.get("Annots"));
+  if (!Array.isArray(annots)) return;
+  for (const ref of annots.slice(0, 5e3)) {
+    const a = pdf.dict(ref);
+    const subtype = a && pdf.nameOf(a.get("Subtype"));
+    if (!a || subtype === "Popup" || subtype === "Link") continue;
+    if (subtype === "Widget") {
+      const field = fieldLine(pdf, a);
+      if (field) writer.line(field);
+      continue;
+    }
+    let appearance = pdf.resolve(pdf.dict(a.get("AP"))?.get("N"));
+    if (appearance instanceof Map) appearance = pdf.resolve(appearance.get(pdf.nameOf(a.get("AS")) ?? ""));
+    if (appearance instanceof Stream) {
+      const rect = pdf.resolve(a.get("Rect"));
+      const bbox = pdf.resolve(appearance.dict.get("BBox"));
+      const at = (arr, i) => Array.isArray(arr) ? pdf.num(arr[i]) : 0;
+      const ctm = [1, 0, 0, 1, Math.min(at(rect, 0), at(rect, 2)) - at(bbox, 0), Math.min(at(rect, 1), at(rect, 3)) - at(bbox, 1)];
+      writer.breakLine();
+      try {
+        runContent(pdf, pdf.data(appearance), pdf.dict(appearance.dict.get("Resources")), ctm, writer, 1);
+      } catch {
+      }
+      writer.breakLine();
+      continue;
+    }
+    const contents = pdf.resolve(a.get("Contents"));
+    if (contents instanceof Str) writer.line(textString(contents.v).replace(/\s*[\r\n]+\s*/g, " ").trim());
+  }
+}
+function runContent(pdf, content, resources, ctm, writer, depth) {
+  const lx = new Lexer(content);
+  const operands = [];
+  const stack = [];
+  let tm = IDENTITY;
+  let lm = IDENTITY;
+  let font;
+  let size = 0;
+  let charSpacing = 0;
+  let wordSpacing = 0;
+  let scale = 1;
+  let leading = 0;
+  let rise = 0;
+  const fontsDict = pdf.dict(resources?.get("Font"));
+  const xobjects = pdf.dict(resources?.get("XObject"));
+  const moveLine = (tx, ty) => {
+    lm = mul([1, 0, 0, 1, tx, ty], lm);
+    tm = lm;
+  };
+  const show = (bytes) => {
+    if (!font) {
+      if (bytes) writer.missingFont = true;
+      return;
+    }
+    const start = mul([1, 0, 0, 1, 0, rise], mul(tm, ctm));
+    let text = "";
+    for (const code of font.codes(bytes)) {
+      text += font.text(code);
+      const advance = (font.width(code) / 1e3 * size + charSpacing + (code === " " ? wordSpacing : 0)) * scale;
+      tm = mul([1, 0, 0, 1, advance, 0], tm);
+    }
+    const end = mul(tm, ctm);
+    const effective = Math.abs(size) * Math.sqrt(start[2] * start[2] + start[3] * start[3]) || 1;
+    writer.add(text, start[4], start[5], end[4], end[5], effective);
+  };
+  const kern = (n) => {
+    tm = mul([1, 0, 0, 1, -n / 1e3 * size * scale, 0], tm);
+  };
+  for (let v = lx.value(); v !== void 0; v = lx.value()) {
+    if (!(v instanceof Op)) {
+      if (operands.length < 64) operands.push(v);
+      continue;
+    }
+    const n = (i) => typeof operands[i] === "number" ? operands[i] : 0;
+    switch (v.v) {
+      case "q":
+        if (stack.length < 64) stack.push(ctm);
+        break;
+      case "Q":
+        ctm = stack.pop() ?? ctm;
+        break;
+      case "cm":
+        ctm = mul([n(0), n(1), n(2), n(3), n(4), n(5)], ctm);
+        break;
+      case "BT":
+        tm = lm = IDENTITY;
+        break;
+      case "Tf":
+        font = operands[0] instanceof Name ? pdf.font(fontsDict?.get(operands[0].v)) : void 0;
+        size = n(1);
+        break;
+      case "Tc":
+        charSpacing = n(0);
+        break;
+      case "Tw":
+        wordSpacing = n(0);
+        break;
+      case "Tz":
+        scale = n(0) / 100;
+        break;
+      case "TL":
+        leading = n(0);
+        break;
+      case "Ts":
+        rise = n(0);
+        break;
+      case "Td":
+        moveLine(n(0), n(1));
+        break;
+      case "TD":
+        leading = -n(1);
+        moveLine(n(0), n(1));
+        break;
+      case "Tm":
+        lm = tm = [n(0), n(1), n(2), n(3), n(4), n(5)];
+        break;
+      case "T*":
+        moveLine(0, -leading);
+        break;
+      case "Tj":
+        if (operands[0] instanceof Str) show(operands[0].v);
+        break;
+      case "'":
+        moveLine(0, -leading);
+        if (operands[0] instanceof Str) show(operands[0].v);
+        break;
+      case '"':
+        wordSpacing = n(0);
+        charSpacing = n(1);
+        moveLine(0, -leading);
+        if (operands[2] instanceof Str) show(operands[2].v);
+        break;
+      case "TJ":
+        if (Array.isArray(operands[0])) {
+          for (const item of operands[0]) {
+            if (item instanceof Str) show(item.v);
+            else if (typeof item === "number") kern(item);
+          }
+        }
+        break;
+      case "Do": {
+        const xobject = operands[0] instanceof Name ? pdf.resolve(xobjects?.get(operands[0].v)) : void 0;
+        if (xobject instanceof Stream && pdf.nameOf(xobject.dict.get("Subtype")) === "Form" && depth < 8) {
+          const matrix = pdf.resolve(xobject.dict.get("Matrix"));
+          const m = Array.isArray(matrix) && matrix.length === 6 ? matrix.map((x) => pdf.num(x)) : IDENTITY;
+          let data;
+          try {
+            data = pdf.data(xobject);
+          } catch {
+            data = void 0;
+          }
+          if (data !== void 0) runContent(pdf, data, pdf.dict(xobject.dict.get("Resources")) ?? resources, mul(m, ctm), writer, depth + 1);
+        }
+        break;
+      }
+      case "ID": {
+        const end = /\sEI(?=[\s]|$)/g;
+        end.lastIndex = lx.pos;
+        const m = end.exec(content);
+        lx.pos = m ? m.index + m[0].length : content.length;
+        break;
+      }
+    }
+    operands.length = 0;
+  }
+}
+function extractPages(buf) {
+  if (buf.subarray(0, 1024).indexOf("%PDF-") < 0) throw new Error("Not a PDF file.");
+  const pdf = new Pdf(buf);
+  const pages = pdf.pages();
+  if (!pages.length) throw new Error("No pages found.");
+  return pages.map(({ page, resources }) => {
+    let damaged = pdf.truncated.has(page);
+    const contents = pdf.resolve(page.get("Contents"));
+    const list = Array.isArray(contents) ? contents.map((c) => pdf.resolve(c)) : page.has("Contents") ? [contents] : [];
+    const parts = [];
+    for (const s of list) {
+      if (!(s instanceof Stream) || s.truncated) damaged = true;
+      if (!(s instanceof Stream)) continue;
+      try {
+        parts.push(pdf.data(s));
+      } catch {
+        damaged = true;
+      }
+    }
+    const writer = new TextWriter();
+    try {
+      runContent(pdf, parts.join("\n"), resources, IDENTITY, writer, 0);
+    } catch {
+      damaged = true;
+    }
+    annotations(pdf, page, writer);
+    if (writer.missingFont) damaged = true;
+    const text = writer.out.split("\n").map((l) => l.replace(/[ \t]+$/, "")).join("\n").trim();
+    return { text, damaged, blank: !damaged && !parts.some((p) => /\S/.test(p)) };
+  });
+}
+function readPdf(buf) {
+  const pages = [];
+  const scanned = [];
+  const damaged = [];
+  const all2 = extractPages(buf);
+  all2.forEach(({ text, damaged: broken, blank }, i) => {
+    if (text.replace(/\s/g, "")) pages.push({ name: `Halaman ${i + 1}`, csv: text });
+    else if (broken) damaged.push(i + 1);
+    else if (!blank) scanned.push(i + 1);
+  });
+  return { pages, scanned, damaged, total: all2.length };
 }
 
 // packages/mcp/src/files.ts
@@ -1454,9 +2463,18 @@ function readHead(file, bytes) {
   }
 }
 var mb = (bytes) => `${Math.round(bytes / 1024 / 1024)} MB`;
+function pageList(pages) {
+  const out = [];
+  for (let i = 0; i < pages.length; ) {
+    let j = i;
+    while (j + 1 < pages.length && pages[j + 1] === pages[j] + 1) j++;
+    out.push(j > i ? `${pages[i]}-${pages[j]}` : `${pages[i]}`);
+    i = j + 1;
+  }
+  return out.join(", ");
+}
 var UNSUPPORTED_DATA = {
   ".xls": "Excel 97-2003 (.xls) is not supported; save it as .xlsx or .csv",
-  ".pdf": "PDF is not supported yet",
   ".doc": "Word 97-2003 (.doc) is not supported; save it as .docx",
   ".ods": "OpenDocument spreadsheets are not supported yet",
   ".db": "database file",
@@ -1476,8 +2494,8 @@ function loadDocument(file, options = {}) {
   const ext = path.extname(file).toLowerCase();
   const st = statSync(file);
   if (st.size > MAX_FILE_BYTES) return { kind: "skipped", reason: `larger than ${mb(MAX_FILE_BYTES)}`, dataBearing: true };
-  const zipped = ext === ".xlsx" || ext === ".xlsm" || ext === ".docx";
-  if (zipped && options.maxZipBytes !== void 0 && st.size > options.maxZipBytes) {
+  const parsedWhole = ext === ".xlsx" || ext === ".xlsm" || ext === ".docx" || ext === ".pdf";
+  if (parsedWhole && options.maxZipBytes !== void 0 && st.size > options.maxZipBytes) {
     return { kind: "skipped", reason: `larger than ${mb(options.maxZipBytes)}`, dataBearing: true };
   }
   if (ext === ".xlsx" || ext === ".xlsm") {
@@ -1494,6 +2512,29 @@ function loadDocument(file, options = {}) {
       return { kind: "skipped", reason: `unreadable Word document: ${e.message}`, dataBearing: true };
     }
   }
+  if (ext === ".pdf") {
+    try {
+      const { pages, scanned, damaged, total } = readPdf(readFileSync(file));
+      if (!pages.length && (scanned.length || damaged.length)) {
+        const reason = damaged.length ? "damaged PDF: no readable text" : "PDF without a text layer (scanned); needs OCR";
+        return { kind: "skipped", reason, dataBearing: true };
+      }
+      const notes = [];
+      if (scanned.length) {
+        const one = scanned.length === 1;
+        notes.push(`${one ? "page" : "pages"} ${pageList(scanned)} of ${total} ${one ? "has" : "have"} no text layer (scanned) and need${one ? "s" : ""} OCR`);
+      }
+      if (damaged.length) {
+        const one = damaged.length === 1;
+        notes.push(`${one ? "page" : "pages"} ${pageList(damaged)} of ${total} ${one ? "is" : "are"} damaged and could not be read`);
+      }
+      return { kind: "sheets", sheets: pages, unit: "page", unscanned: notes.join("; ") || void 0 };
+    } catch (e) {
+      const message = e.message;
+      const reason = /encrypted/.test(message) ? "encrypted PDF (password-protected)" : `unreadable PDF: ${message.replace(/\.$/, "")}`;
+      return { kind: "skipped", reason, dataBearing: true };
+    }
+  }
   const unsupported = UNSUPPORTED_DATA[ext];
   if (unsupported) return { kind: "skipped", reason: unsupported, dataBearing: true };
   if (!isTextFile(file)) return { kind: "skipped", reason: "binary file", dataBearing: false };
@@ -1506,7 +2547,7 @@ function loadDocument(file, options = {}) {
 // packages/mcp/src/shell-reads.ts
 import { existsSync as existsSync2, readdirSync as readdirSync2, statSync as statSync2 } from "node:fs";
 import path2 from "node:path";
-var SHELL_DATA_FILE = /\.(csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out)(\.\d+)?$/i;
+var SHELL_DATA_FILE = /\.(csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out|pdf)(\.\d+)?$/i;
 var all = (t) => t;
 var READERS = /* @__PURE__ */ new Set([
   "cat",
@@ -1546,7 +2587,8 @@ var READERS = /* @__PURE__ */ new Set([
   "csvcut",
   "mlr",
   "paste",
-  "findstr"
+  "findstr",
+  "pdftotext"
 ]);
 var FILTERS = /* @__PURE__ */ new Set([
   ...READERS,
@@ -1834,6 +2876,10 @@ function dataReadsInCommand(command, cwd, powershell = false) {
       const seg = toSegment(words);
       if (!seg) continue;
       const narrow = selection(seg);
+      if (seg.program === "pdftotext" && !seg.args.includes("-")) {
+        flow = [];
+        continue;
+      }
       if (WRITE_SINKS.has(seg.program) || !READERS.has(seg.program) && !FILTERS.has(seg.program)) {
         flow = [];
         continue;
@@ -1868,8 +2914,12 @@ var STRICT = [
 ];
 var BULK_THRESHOLD = 3;
 var BYPASS = /#izinkan-pii\b/i;
-var DATA_FILE = /\.(csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out|xlsx|xlsm)(\.\d+)?$/i;
+var DATA_FILE = /\.(csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out|xlsx|xlsm|docx|pdf)(\.\d+)?$/i;
 var GREP_MAX_FILES = 300;
+var IMAGE_FILE = /\.(jpe?g|png|heic|heif|webp|gif|bmp|tiff?)$/i;
+var PERSONAL_PATH = /(?:^|[^a-z])(?:e?ktp|kk|kartu[ _-]?keluarga|npwp|sim|paspor|passport|selfie|swafoto|identitas|identity|id[ _-]?card|akta|ijazah|slip[ _-]?gaji|rekening|tabungan|bpjs|kyc|verifikasi|verification|pelanggan|customers?|nasabah|pasien|patients?|karyawan|employees?|pegawai|pemohon|applicants?|debitur|peserta|siswa|students?)(?:[^a-z]|$)/i;
+var UPLOAD_PATH = /(?:^|[\\/])(?:media|uploads?|storage|attachments?|lampiran|berkas|dokumen|documents?|scans?|private|var)(?:[\\/]|$)/i;
+var ASSET_PATH = /(?:^|[\\/])(?:assets?|icons?|images?|img|static|fonts?|docs?|screenshots?|\.github|design|branding|logos?)(?:[\\/]|$)/i;
 var GREP_TYPES = {
   csv: /\.csv$/i,
   tsv: /\.tsv$/i,
@@ -1926,17 +2976,50 @@ function shownPii(full, shown, file) {
   return inFile.length >= direct.length ? inFile : direct;
 }
 var PROCESS_HINT = "To process the data, run a script that reads the file and writes its results to a file (or prints only counts), or use `write_file_unmasked`.";
-function readTool(file, shownAs, ignored) {
-  if (!DATA_FILE.test(file) || ignored(file)) return void 0;
-  const texts = fileTexts(file);
-  const found = texts && verdict(texts);
-  if (!found) return void 0;
-  return [
-    `Samaran blocked reading ${shownAs}: it contains personal data (${summarize(found, false)}).`,
-    "Use the `read_file_masked` tool from the lokal MCP server instead: same content, with personal data replaced by stable placeholders.",
-    "Write results that need the real values with `write_file_unmasked`.",
-    "If the user confirms the file only holds fake data, they can add it to .samaranignore."
-  ].join(" ");
+var block = (message) => ({ action: "block", message });
+function ask(shownAs, what) {
+  return {
+    action: "ask",
+    message: [
+      `\u{1F6E1}\uFE0F  Samaran: ${shownAs} ${what}, jadi isinya tidak bisa diperiksa dan akan dikirim ke model AI apa adanya.`,
+      "Izinkan hanya jika berkas ini tidak berisi data pribadi asli (KTP, selfie, formulir pelanggan).",
+      "Berkas contoh bisa dimasukkan ke .samaranignore supaya tidak ditanyakan lagi."
+    ].join(" ")
+  };
+}
+function personalImage(file, root) {
+  const rel = path3.relative(root, file);
+  const where = rel.startsWith("..") || path3.isAbsolute(rel) ? file : rel;
+  return PERSONAL_PATH.test(where) || UPLOAD_PATH.test(path3.dirname(where)) && !ASSET_PATH.test(path3.dirname(where));
+}
+function readTool(file, shownAs, root, ignored) {
+  if (ignored(file)) return void 0;
+  if (IMAGE_FILE.test(file)) {
+    return personalImage(file, root) && existsSync3(file) ? ask(shownAs, "mungkin foto KTP atau dokumen pribadi") : void 0;
+  }
+  if (!DATA_FILE.test(file)) return void 0;
+  let doc;
+  try {
+    doc = loadDocument(file, { sampleBytes: GUARD_SAMPLE_BYTES, maxZipBytes: GUARD_MAX_ZIP_BYTES });
+  } catch {
+    return void 0;
+  }
+  if (doc.kind === "skipped") {
+    return doc.dataBearing ? ask(shownAs, `tidak bisa dibaca Samaran (${doc.reason})`) : void 0;
+  }
+  const found = verdict(doc.kind === "text" ? [doc.text] : doc.sheets.map((s) => s.csv));
+  if (found) {
+    return block(
+      [
+        `Samaran blocked reading ${shownAs}: it contains personal data (${summarize(found, false)}).`,
+        "Use the `read_file_masked` tool from the lokal MCP server instead: same content, with personal data replaced by stable placeholders.",
+        "Write results that need the real values with `write_file_unmasked`.",
+        "If the user confirms the file only holds fake data, they can add it to .samaranignore."
+      ].join(" ")
+    );
+  }
+  if (doc.kind === "sheets" && doc.unscanned) return ask(shownAs, `hanya terbaca sebagian (${doc.unscanned})`);
+  return void 0;
 }
 function shellTool(command, cwd, powershell, ignored) {
   const reads = dataReadsInCommand(command, cwd, powershell).filter((r) => !ignored(r.file));
@@ -1954,12 +3037,12 @@ function shellTool(command, cwd, powershell, ignored) {
   const found = verdictOf(matches);
   if (!found) return void 0;
   const names = [...files.size ? files : new Set(reads.map((r) => r.file))].map((f) => path3.relative(cwd, f) || f);
-  return [
+  return block([
     `Samaran blocked this command: it would print personal data from ${names.join(", ")} into the conversation (${summarize(found, false)}).`,
     "To look at the data, use the `read_file_masked` tool from the lokal MCP server (personal data replaced by stable placeholders).",
     PROCESS_HINT,
     "If the user confirms the file only holds fake data, they can add it to .samaranignore."
-  ].join(" ");
+  ].join(" "));
 }
 function grepTool(input, cwd, ignored) {
   if (input.output_mode !== "content" || !input.pattern) return void 0;
@@ -2002,11 +3085,11 @@ function grepTool(input, cwd, ignored) {
   const found = verdictOf(matches);
   if (!found) return void 0;
   const names = (files.length ? files : candidates).slice(0, 5).map((f) => path3.relative(cwd, f) || f);
-  return [
+  return block([
     `Samaran blocked this search: the matching lines in ${names.join(", ")} contain personal data (${summarize(found, false)}).`,
     'Search with output_mode "files_with_matches" or "count", or read the file with `read_file_masked` from the lokal MCP server.',
     "Add a glob or type that leaves data files out if you meant to search code."
-  ].join(" ");
+  ].join(" "));
 }
 function evaluate(input) {
   if (process.env.SAMARAN_GUARD === "off") return void 0;
@@ -2014,11 +3097,11 @@ function evaluate(input) {
     if (BYPASS.test(input.prompt)) return void 0;
     const found = detectPii(input.prompt, { types: STRICT, minConfidence: "high" });
     if (!found.length) return void 0;
-    return [
+    return block([
       `\u{1F6E1}\uFE0F  Samaran menahan prompt ini: ada data pribadi ${summarize(found)}.`,
       "Prompt akan terkirim ke server model AI. Ganti dengan data contoh atau samarkan dulu,",
       "atau kirim ulang dengan menambahkan #izinkan-pii jika memang disengaja."
-    ].join("\n");
+    ].join("\n"));
   }
   if (input.hook_event_name !== "PreToolUse" || !input.tool_input) return void 0;
   const root = process.env.CLAUDE_PROJECT_DIR ?? input.cwd ?? process.cwd();
@@ -2027,7 +3110,13 @@ function evaluate(input) {
   const tool = input.tool_input;
   switch (input.tool_name) {
     case "Read":
-      return tool.file_path ? readTool(path3.resolve(root, tool.file_path), tool.file_path, ignored) : void 0;
+      if (!tool.file_path) return void 0;
+      {
+        const file = path3.resolve(root, tool.file_path);
+        const rel = path3.relative(root, file);
+        const shownAs = rel && !rel.startsWith("..") && !path3.isAbsolute(rel) ? rel.split(path3.sep).join("/") : tool.file_path;
+        return readTool(file, shownAs, root, ignored);
+      }
     case "Grep":
       return grepTool(tool, cwd, ignored);
     case "Bash":
@@ -2042,11 +3131,15 @@ async function runGuard() {
   try {
     let raw = "";
     for await (const chunk of process.stdin) raw += chunk;
-    const message = evaluate(JSON.parse(raw));
-    if (message) {
-      process.stderr.write(`${message}
+    const verdict2 = evaluate(JSON.parse(raw));
+    if (verdict2?.action === "block") {
+      process.stderr.write(`${verdict2.message}
 `);
       process.exitCode = 2;
+    } else if (verdict2?.action === "ask") {
+      const hookSpecificOutput = { hookEventName: "PreToolUse", permissionDecision: "ask", permissionDecisionReason: verdict2.message };
+      process.stdout.write(`${JSON.stringify({ hookSpecificOutput })}
+`);
     }
   } catch (e) {
     process.stderr.write(`samaran-guard: ${e.message}

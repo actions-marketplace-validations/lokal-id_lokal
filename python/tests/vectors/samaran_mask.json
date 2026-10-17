@@ -5443,6 +5443,825 @@
   "high": []
  },
  {
+  "text": "nama berlabel berhenti di kata obrolan, emoji, dan kalimat berikutnya",
+  "placeholder": "nama berlabel berhenti di kata obrolan, emoji, dan kalimat berikutnya",
+  "vault": [],
+  "partial": "nama berlabel berhenti di kata obrolan, emoji, dan kalimat berikutnya",
+  "noFinanceNoName": "nama berlabel berhenti di kata obrolan, emoji, dan kalimat berikutnya",
+  "high": []
+ },
+ {
+  "text": "Nama: Budi Santoso ya kak",
+  "placeholder": "Nama: [NAME_1] ya kak",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ]
+  ],
+  "partial": "Nama: B*** S*** ya kak",
+  "noFinanceNoName": "Nama: Budi Santoso ya kak",
+  "high": [
+   "Budi Santoso"
+  ]
+ },
+ {
+  "text": "Budi Santoso",
+  "placeholder": "Budi Santoso",
+  "vault": [],
+  "partial": "Budi Santoso",
+  "noFinanceNoName": "Budi Santoso",
+  "high": []
+ },
+ {
+  "text": "Nama: Budi Santoso kak, mau tanya cicilan",
+  "placeholder": "Nama: [NAME_1] kak, mau tanya cicilan",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ]
+  ],
+  "partial": "Nama: B*** S*** kak, mau tanya cicilan",
+  "noFinanceNoName": "Nama: Budi Santoso kak, mau tanya cicilan",
+  "high": [
+   "Budi Santoso"
+  ]
+ },
+ {
+  "text": "Budi Santoso",
+  "placeholder": "Budi Santoso",
+  "vault": [],
+  "partial": "Budi Santoso",
+  "noFinanceNoName": "Budi Santoso",
+  "high": []
+ },
+ {
+  "text": "nama: budi santoso dong",
+  "placeholder": "nama: [NAME_1] dong",
+  "vault": [
+   [
+    "[NAME_1]",
+    "budi santoso"
+   ]
+  ],
+  "partial": "nama: b*** s*** dong",
+  "noFinanceNoName": "nama: budi santoso dong",
+  "high": [
+   "budi santoso"
+  ]
+ },
+ {
+  "text": "budi santoso",
+  "placeholder": "budi santoso",
+  "vault": [],
+  "partial": "budi santoso",
+  "noFinanceNoName": "budi santoso",
+  "high": []
+ },
+ {
+  "text": "Nama: Budi Santoso 🙏",
+  "placeholder": "Nama: [NAME_1] 🙏",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ]
+  ],
+  "partial": "Nama: B*** S*** 🙏",
+  "noFinanceNoName": "Nama: Budi Santoso 🙏",
+  "high": [
+   "Budi Santoso"
+  ]
+ },
+ {
+  "text": "Budi Santoso",
+  "placeholder": "Budi Santoso",
+  "vault": [],
+  "partial": "Budi Santoso",
+  "noFinanceNoName": "Budi Santoso",
+  "high": []
+ },
+ {
+  "text": "Nama: Budi Santoso🙏 makasih",
+  "placeholder": "Nama: [NAME_1]🙏 makasih",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ]
+  ],
+  "partial": "Nama: B*** S***🙏 makasih",
+  "noFinanceNoName": "Nama: Budi Santoso🙏 makasih",
+  "high": [
+   "Budi Santoso"
+  ]
+ },
+ {
+  "text": "Budi Santoso",
+  "placeholder": "Budi Santoso",
+  "vault": [],
+  "partial": "Budi Santoso",
+  "noFinanceNoName": "Budi Santoso",
+  "high": []
+ },
+ {
+  "text": "Nama: Budi Santoso. Saya mau tanya",
+  "placeholder": "Nama: [NAME_1]. Saya mau tanya",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ]
+  ],
+  "partial": "Nama: B*** S***. Saya mau tanya",
+  "noFinanceNoName": "Nama: Budi Santoso. Saya mau tanya",
+  "high": [
+   "Budi Santoso"
+  ]
+ },
+ {
+  "text": "Budi Santoso",
+  "placeholder": "Budi Santoso",
+  "vault": [],
+  "partial": "Budi Santoso",
+  "noFinanceNoName": "Budi Santoso",
+  "high": []
+ },
+ {
+  "text": "Nama: Siti Aminah! tolong dibantu",
+  "placeholder": "Nama: [NAME_1]! tolong dibantu",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Siti Aminah"
+   ]
+  ],
+  "partial": "Nama: S*** A***! tolong dibantu",
+  "noFinanceNoName": "Nama: Siti Aminah! tolong dibantu",
+  "high": [
+   "Siti Aminah"
+  ]
+ },
+ {
+  "text": "Siti Aminah",
+  "placeholder": "Siti Aminah",
+  "vault": [],
+  "partial": "Siti Aminah",
+  "noFinanceNoName": "Siti Aminah",
+  "high": []
+ },
+ {
+  "text": "Nama: Budi Santoso terima kasih",
+  "placeholder": "Nama: [NAME_1] terima kasih",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ]
+  ],
+  "partial": "Nama: B*** S*** terima kasih",
+  "noFinanceNoName": "Nama: Budi Santoso terima kasih",
+  "high": [
+   "Budi Santoso"
+  ]
+ },
+ {
+  "text": "Budi Santoso",
+  "placeholder": "Budi Santoso",
+  "vault": [],
+  "partial": "Budi Santoso",
+  "noFinanceNoName": "Budi Santoso",
+  "high": []
+ },
+ {
+  "text": "Pemesan: Rina Wati sudah transfer kak",
+  "placeholder": "Pemesan: [NAME_1] sudah transfer kak",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Rina Wati"
+   ]
+  ],
+  "partial": "Pemesan: R*** W*** sudah transfer kak",
+  "noFinanceNoName": "Pemesan: Rina Wati sudah transfer kak",
+  "high": [
+   "Rina Wati"
+  ]
+ },
+ {
+  "text": "Rina Wati",
+  "placeholder": "Rina Wati",
+  "vault": [],
+  "partial": "Rina Wati",
+  "noFinanceNoName": "Rina Wati",
+  "high": []
+ },
+ {
+  "text": "Pembeli: Rina Wati",
+  "placeholder": "Pembeli: [NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Rina Wati"
+   ]
+  ],
+  "partial": "Pembeli: R*** W***",
+  "noFinanceNoName": "Pembeli: Rina Wati",
+  "high": [
+   "Rina Wati"
+  ]
+ },
+ {
+  "text": "Rina Wati",
+  "placeholder": "Rina Wati",
+  "vault": [],
+  "partial": "Rina Wati",
+  "noFinanceNoName": "Rina Wati",
+  "high": []
+ },
+ {
+  "text": "A/N: Budi Santoso",
+  "placeholder": "A/N: [NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ]
+  ],
+  "partial": "A/N: B*** S***",
+  "noFinanceNoName": "A/N: Budi Santoso",
+  "high": [
+   "Budi Santoso"
+  ]
+ },
+ {
+  "text": "Budi Santoso",
+  "placeholder": "Budi Santoso",
+  "vault": [],
+  "partial": "Budi Santoso",
+  "noFinanceNoName": "Budi Santoso",
+  "high": []
+ },
+ {
+  "text": "Nama: M. Rizki Ramadhan",
+  "placeholder": "Nama: [NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "M. Rizki Ramadhan"
+   ]
+  ],
+  "partial": "Nama: M*** R*** R***",
+  "noFinanceNoName": "Nama: M. Rizki Ramadhan",
+  "high": [
+   "M. Rizki Ramadhan"
+  ]
+ },
+ {
+  "text": "M. Rizki Ramadhan",
+  "placeholder": "M. Rizki Ramadhan",
+  "vault": [],
+  "partial": "M. Rizki Ramadhan",
+  "noFinanceNoName": "M. Rizki Ramadhan",
+  "high": []
+ },
+ {
+  "text": "Nama: Dr. Ir. H. Ahmad Fauzi",
+  "placeholder": "Nama: [NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Dr. Ir. H. Ahmad Fauzi"
+   ]
+  ],
+  "partial": "Nama: D*** I*** H*** A*** F***",
+  "noFinanceNoName": "Nama: Dr. Ir. H. Ahmad Fauzi",
+  "high": [
+   "Dr. Ir. H. Ahmad Fauzi"
+  ]
+ },
+ {
+  "text": "Dr. Ir. H. Ahmad Fauzi",
+  "placeholder": "Dr. Ir. H. Ahmad Fauzi",
+  "vault": [],
+  "partial": "Dr. Ir. H. Ahmad Fauzi",
+  "noFinanceNoName": "Dr. Ir. H. Ahmad Fauzi",
+  "high": []
+ },
+ {
+  "text": "Nama: Lee Dong Hae",
+  "placeholder": "Nama: [NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Lee Dong Hae"
+   ]
+  ],
+  "partial": "Nama: L*** D*** H***",
+  "noFinanceNoName": "Nama: Lee Dong Hae",
+  "high": [
+   "Lee Dong Hae"
+  ]
+ },
+ {
+  "text": "Lee Dong Hae",
+  "placeholder": "Lee Dong Hae",
+  "vault": [],
+  "partial": "Lee Dong Hae",
+  "noFinanceNoName": "Lee Dong Hae",
+  "high": []
+ },
+ {
+  "text": "Nama: Ahmad bin Abdullah",
+  "placeholder": "Nama: [NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Ahmad bin Abdullah"
+   ]
+  ],
+  "partial": "Nama: A*** b*** A***",
+  "noFinanceNoName": "Nama: Ahmad bin Abdullah",
+  "high": [
+   "Ahmad bin Abdullah"
+  ]
+ },
+ {
+  "text": "Ahmad bin Abdullah",
+  "placeholder": "Ahmad bin Abdullah",
+  "vault": [],
+  "partial": "Ahmad bin Abdullah",
+  "noFinanceNoName": "Ahmad bin Abdullah",
+  "high": []
+ },
+ {
+  "text": "Nama: Siti Aminah (Ami)",
+  "placeholder": "Nama: [NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Siti Aminah (Ami)"
+   ]
+  ],
+  "partial": "Nama: S*** A*** (***",
+  "noFinanceNoName": "Nama: Siti Aminah (Ami)",
+  "high": [
+   "Siti Aminah (Ami)"
+  ]
+ },
+ {
+  "text": "Siti Aminah (Ami)",
+  "placeholder": "Siti Aminah (Ami)",
+  "vault": [],
+  "partial": "Siti Aminah (Ami)",
+  "noFinanceNoName": "Siti Aminah (Ami)",
+  "high": []
+ },
+ {
+  "text": "NAME",
+  "placeholder": "NAME",
+  "vault": [],
+  "partial": "NAME",
+  "noFinanceNoName": "NAME",
+  "high": []
+ },
+ {
+  "text": "nama_pemesan,hp\nRina Wati (Rin),0812-3456-7890",
+  "placeholder": "nama_pemesan,hp\n[NAME_1],[PHONE_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Rina Wati (Rin)"
+   ],
+   [
+    "[PHONE_1]",
+    "0812-3456-7890"
+   ]
+  ],
+  "partial": "nama_pemesan,hp\nR*** W*** (***,0812****7890",
+  "noFinanceNoName": "nama_pemesan,hp\nRina Wati (Rin),[PHONE_1]",
+  "high": [
+   "Rina Wati (Rin)",
+   "0812-3456-7890"
+  ]
+ },
+ {
+  "text": "NAME",
+  "placeholder": "NAME",
+  "vault": [],
+  "partial": "NAME",
+  "noFinanceNoName": "NAME",
+  "high": []
+ },
+ {
+  "text": "NAME:Rina Wati (Rin)",
+  "placeholder": "NAME:[NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Rina Wati (Rin)"
+   ]
+  ],
+  "partial": "NAME:R*** W*** (***",
+  "noFinanceNoName": "NAME:Rina Wati (Rin)",
+  "high": []
+ },
+ {
+  "text": "nama: getName(user)",
+  "placeholder": "nama: getName(user)",
+  "vault": [],
+  "partial": "nama: getName(user)",
+  "noFinanceNoName": "nama: getName(user)",
+  "high": []
+ },
+ {
+  "text": "name: fullName (string)",
+  "placeholder": "name: fullName (string)",
+  "vault": [],
+  "partial": "name: fullName (string)",
+  "noFinanceNoName": "name: fullName (string)",
+  "high": []
+ },
+ {
+  "text": "pembeli: User",
+  "placeholder": "pembeli: [NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "User"
+   ]
+  ],
+  "partial": "pembeli: U***",
+  "noFinanceNoName": "pembeli: User",
+  "high": [
+   "User"
+  ]
+ },
+ {
+  "text": "NAME",
+  "placeholder": "NAME",
+  "vault": [],
+  "partial": "NAME",
+  "noFinanceNoName": "NAME",
+  "high": []
+ },
+ {
+  "text": "(",
+  "placeholder": "(",
+  "vault": [],
+  "partial": "(",
+  "noFinanceNoName": "(",
+  "high": []
+ },
+ {
+  "text": "tabel ber-tab di tengah teks: salinan Excel/Word dan teks PDF",
+  "placeholder": "tabel ber-tab di tengah teks: salinan Excel/Word dan teks PDF",
+  "vault": [],
+  "partial": "tabel ber-tab di tengah teks: salinan Excel/Word dan teks PDF",
+  "noFinanceNoName": "tabel ber-tab di tengah teks: salinan Excel/Word dan teks PDF",
+  "high": []
+ },
+ {
+  "text": "Nama Pelanggan\tBudi Santoso\nNIK\t3201011508950001\nNo. HP\t0812-3456-7890",
+  "placeholder": "Nama Pelanggan\t[NAME_1]\nNIK\t[NIK_1]\nNo. HP\t[PHONE_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ],
+   [
+    "[NIK_1]",
+    "3201011508950001"
+   ],
+   [
+    "[PHONE_1]",
+    "0812-3456-7890"
+   ]
+  ],
+  "partial": "Nama Pelanggan\tB*** S***\nNIK\t3201********0001\nNo. HP\t0812****7890",
+  "noFinanceNoName": "Nama Pelanggan\tBudi Santoso\nNIK\t[NIK_1]\nNo. HP\t[PHONE_1]",
+  "high": [
+   "Budi Santoso",
+   "3201011508950001",
+   "0812-3456-7890"
+  ]
+ },
+ {
+  "text": "NAME:Budi Santoso",
+  "placeholder": "NAME:[NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ]
+  ],
+  "partial": "NAME:B*** S***",
+  "noFinanceNoName": "NAME:Budi Santoso",
+  "high": []
+ },
+ {
+  "text": "NIK:3201011508950001",
+  "placeholder": "NIK:[NIK_1]",
+  "vault": [
+   [
+    "[NIK_1]",
+    "3201011508950001"
+   ]
+  ],
+  "partial": "NIK:3201********0001",
+  "noFinanceNoName": "NIK:[NIK_1]",
+  "high": [
+   "3201011508950001"
+  ]
+ },
+ {
+  "text": "PHONE:0812-3456-7890",
+  "placeholder": "PHONE:[PHONE_1]",
+  "vault": [
+   [
+    "[PHONE_1]",
+    "0812-3456-7890"
+   ]
+  ],
+  "partial": "PHONE:0812****7890",
+  "noFinanceNoName": "PHONE:[PHONE_1]",
+  "high": [
+   "0812-3456-7890"
+  ]
+ },
+ {
+  "text": "Daftar peserta:\nNama\tNIK\tTelepon\nRina Wati\t3276014503920002\t0813-9999-0000\nHendra Gunawan\t1371011010850008\nTotal 2 orang",
+  "placeholder": "Daftar peserta:\nNama\tNIK\tTelepon\n[NAME_1]\t[NIK_1]\t[PHONE_1]\n[NAME_2]\t[NIK_2]\nTotal 2 orang",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Rina Wati"
+   ],
+   [
+    "[NIK_1]",
+    "3276014503920002"
+   ],
+   [
+    "[PHONE_1]",
+    "0813-9999-0000"
+   ],
+   [
+    "[NAME_2]",
+    "Hendra Gunawan"
+   ],
+   [
+    "[NIK_2]",
+    "1371011010850008"
+   ]
+  ],
+  "partial": "Daftar peserta:\nNama\tNIK\tTelepon\nR*** W***\t3276********0002\t0813****0000\nH*** G***\t1371********0008\nTotal 2 orang",
+  "noFinanceNoName": "Daftar peserta:\nNama\tNIK\tTelepon\nRina Wati\t[NIK_1]\t[PHONE_1]\nHendra Gunawan\t[NIK_2]\nTotal 2 orang",
+  "high": [
+   "Rina Wati",
+   "3276014503920002",
+   "0813-9999-0000",
+   "Hendra Gunawan",
+   "1371011010850008"
+  ]
+ },
+ {
+  "text": "NAME:Rina Wati",
+  "placeholder": "NAME:[NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Rina Wati"
+   ]
+  ],
+  "partial": "NAME:R*** W***",
+  "noFinanceNoName": "NAME:Rina Wati",
+  "high": []
+ },
+ {
+  "text": "NIK:3276014503920002",
+  "placeholder": "NIK:[NIK_1]",
+  "vault": [
+   [
+    "[NIK_1]",
+    "3276014503920002"
+   ]
+  ],
+  "partial": "NIK:3276********0002",
+  "noFinanceNoName": "NIK:[NIK_1]",
+  "high": [
+   "3276014503920002"
+  ]
+ },
+ {
+  "text": "PHONE:0813-9999-0000",
+  "placeholder": "PHONE:[PHONE_1]",
+  "vault": [
+   [
+    "[PHONE_1]",
+    "0813-9999-0000"
+   ]
+  ],
+  "partial": "PHONE:0813****0000",
+  "noFinanceNoName": "PHONE:[PHONE_1]",
+  "high": [
+   "0813-9999-0000"
+  ]
+ },
+ {
+  "text": "NAME:Hendra Gunawan",
+  "placeholder": "NAME:[NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Hendra Gunawan"
+   ]
+  ],
+  "partial": "NAME:H*** G***",
+  "noFinanceNoName": "NAME:Hendra Gunawan",
+  "high": []
+ },
+ {
+  "text": "NIK:1371011010850008",
+  "placeholder": "NIK:[NIK_1]",
+  "vault": [
+   [
+    "[NIK_1]",
+    "1371011010850008"
+   ]
+  ],
+  "partial": "NIK:1371********0008",
+  "noFinanceNoName": "NIK:[NIK_1]",
+  "high": [
+   "1371011010850008"
+  ]
+ },
+ {
+  "text": "Rekap nilai\r\nNo\tNama\tNilai\r\n1\tSiti Aminah\t90\r\n2\tDewi Lestari\t85",
+  "placeholder": "Rekap nilai\r\nNo\tNama\tNilai\r\n1\t[NAME_1]\t90\r\n2\t[NAME_2]\t85",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Siti Aminah"
+   ],
+   [
+    "[NAME_2]",
+    "Dewi Lestari"
+   ]
+  ],
+  "partial": "Rekap nilai\r\nNo\tNama\tNilai\r\n1\tS*** A***\t90\r\n2\tD*** L***\t85",
+  "noFinanceNoName": "Rekap nilai\r\nNo\tNama\tNilai\r\n1\tSiti Aminah\t90\r\n2\tDewi Lestari\t85",
+  "high": [
+   "Siti Aminah",
+   "Dewi Lestari"
+  ]
+ },
+ {
+  "text": "NAME",
+  "placeholder": "NAME",
+  "vault": [],
+  "partial": "NAME",
+  "noFinanceNoName": "NAME",
+  "high": []
+ },
+ {
+  "text": "NAME:Siti Aminah",
+  "placeholder": "NAME:[NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Siti Aminah"
+   ]
+  ],
+  "partial": "NAME:S*** A***",
+  "noFinanceNoName": "NAME:Siti Aminah",
+  "high": []
+ },
+ {
+  "text": "NAME:Dewi Lestari",
+  "placeholder": "NAME:[NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Dewi Lestari"
+   ]
+  ],
+  "partial": "NAME:D*** L***",
+  "noFinanceNoName": "NAME:Dewi Lestari",
+  "high": []
+ },
+ {
+  "text": "Nama\t: Budi Santoso\nAgama\t:\tIslam",
+  "placeholder": "Nama\t: [NAME_1]\nAgama\t:\t[RELIGION_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ],
+   [
+    "[RELIGION_1]",
+    "Islam"
+   ]
+  ],
+  "partial": "Nama\t: B*** S***\nAgama\t:\t***",
+  "noFinanceNoName": "Nama\t: Budi Santoso\nAgama\t:\t[RELIGION_1]",
+  "high": [
+   "Budi Santoso",
+   "Islam"
+  ]
+ },
+ {
+  "text": "NAME:Budi Santoso",
+  "placeholder": "NAME:[NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ]
+  ],
+  "partial": "NAME:B*** S***",
+  "noFinanceNoName": "NAME:Budi Santoso",
+  "high": []
+ },
+ {
+  "text": "RELIGION:Islam",
+  "placeholder": "RELIGION:[RELIGION_1]",
+  "vault": [
+   [
+    "[RELIGION_1]",
+    "Islam"
+   ]
+  ],
+  "partial": "RELIGION:***",
+  "noFinanceNoName": "RELIGION:[RELIGION_1]",
+  "high": [
+   "Islam"
+  ]
+ },
+ {
+  "text": "n01687978\tagama\nn01688243\tfrilled lizard\nn01688961\tChamaeleo oweni",
+  "placeholder": "n01687978\tagama\nn01688243\t[RELIGION_1]\nn01688961\t[RELIGION_2]",
+  "vault": [
+   [
+    "[RELIGION_1]",
+    "frilled lizard"
+   ],
+   [
+    "[RELIGION_2]",
+    "Chamaeleo oweni"
+   ]
+  ],
+  "partial": "n01687978\tagama\nn01688243\t***\nn01688961\t***",
+  "noFinanceNoName": "n01687978\tagama\nn01688243\t[RELIGION_1]\nn01688961\t[RELIGION_2]",
+  "high": [
+   "frilled lizard",
+   "Chamaeleo oweni"
+  ]
+ },
+ {
+  "text": "\t\t\tuser\tuser name\n\t\t\thost\thost name\n\t\t\tpid\tPID of the Vim process",
+  "placeholder": "\t\t\tuser\tuser name\n\t\t\thost\t[NAME_1]\n\t\t\tpid\t[NAME_2]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "host name"
+   ],
+   [
+    "[NAME_2]",
+    "PID of the Vim process"
+   ]
+  ],
+  "partial": "\t\t\tuser\tuser name\n\t\t\thost\th*** n***\n\t\t\tpid\tP*** o*** t*** V*** p***",
+  "noFinanceNoName": "\t\t\tuser\tuser name\n\t\t\thost\thost name\n\t\t\tpid\tPID of the Vim process",
+  "high": [
+   "host name",
+   "PID of the Vim process"
+  ]
+ },
+ {
+  "text": "dna\tUpper Grand Valley Dani\ndnb\tDumpu",
+  "placeholder": "dna\tUpper Grand Valley Dani\n[BIOMETRIC_1]\tDumpu",
+  "vault": [
+   [
+    "[BIOMETRIC_1]",
+    "dnb"
+   ]
+  ],
+  "partial": "dna\tUpper Grand Valley Dani\n***\tDumpu",
+  "noFinanceNoName": "dna\tUpper Grand Valley Dani\n[BIOMETRIC_1]\tDumpu",
+  "high": [
+   "dnb"
+  ]
+ },
+ {
+  "text": "|:wn|\t   :wn[ext][!]\t\twrite file and edit next file",
+  "placeholder": "|:wn|\t   :wn[ext][!]\t\twrite file and edit next file",
+  "vault": [],
+  "partial": "|:wn|\t   :wn[ext][!]\t\twrite file and edit next file",
+  "noFinanceNoName": "|:wn|\t   :wn[ext][!]\t\twrite file and edit next file",
+  "high": []
+ },
+ {
   "text": "nilai yang ditemukan selalu sama persis dengan teks di posisinya",
   "placeholder": "nilai yang ditemukan selalu sama persis dengan teks di posisinya",
   "vault": [],
@@ -5979,887 +6798,5 @@
    "Islam",
    "Kawin"
   ]
- },
- {
-  "text": "RELIGION:Islam",
-  "placeholder": "RELIGION:[RELIGION_1]",
-  "vault": [
-   [
-    "[RELIGION_1]",
-    "Islam"
-   ]
-  ],
-  "partial": "RELIGION:***",
-  "noFinanceNoName": "RELIGION:[RELIGION_1]",
-  "high": [
-   "Islam"
-  ]
- },
- {
-  "text": "MARITAL_STATUS:Kawin",
-  "placeholder": "MARITAL_STATUS:[MARITAL_STATUS_1]",
-  "vault": [
-   [
-    "[MARITAL_STATUS_1]",
-    "Kawin"
-   ]
-  ],
-  "partial": "MARITAL_STATUS:***",
-  "noFinanceNoName": "MARITAL_STATUS:[MARITAL_STATUS_1]",
-  "high": [
-   "Kawin"
-  ]
- },
- {
-  "text": "Agama: Islam Status Perkawinan: Kawin",
-  "placeholder": "Agama: [RELIGION_1] Status Perkawinan: [MARITAL_STATUS_1]",
-  "vault": [
-   [
-    "[RELIGION_1]",
-    "Islam"
-   ],
-   [
-    "[MARITAL_STATUS_1]",
-    "Kawin"
-   ]
-  ],
-  "partial": "Agama: *** Status Perkawinan: ***",
-  "noFinanceNoName": "Agama: [RELIGION_1] Status Perkawinan: [MARITAL_STATUS_1]",
-  "high": [
-   "Islam",
-   "Kawin"
-  ]
- },
- {
-  "text": "RELIGION:Islam",
-  "placeholder": "RELIGION:[RELIGION_1]",
-  "vault": [
-   [
-    "[RELIGION_1]",
-    "Islam"
-   ]
-  ],
-  "partial": "RELIGION:***",
-  "noFinanceNoName": "RELIGION:[RELIGION_1]",
-  "high": [
-   "Islam"
-  ]
- },
- {
-  "text": "MARITAL_STATUS:Kawin",
-  "placeholder": "MARITAL_STATUS:[MARITAL_STATUS_1]",
-  "vault": [
-   [
-    "[MARITAL_STATUS_1]",
-    "Kawin"
-   ]
-  ],
-  "partial": "MARITAL_STATUS:***",
-  "noFinanceNoName": "MARITAL_STATUS:[MARITAL_STATUS_1]",
-  "high": [
-   "Kawin"
-  ]
- },
- {
-  "text": "dia beragama Katolik",
-  "placeholder": "dia beragama [RELIGION_1]",
-  "vault": [
-   [
-    "[RELIGION_1]",
-    "Katolik"
-   ]
-  ],
-  "partial": "dia beragama ***",
-  "noFinanceNoName": "dia beragama [RELIGION_1]",
-  "high": [
-   "Katolik"
-  ]
- },
- {
-  "text": "RELIGION:Katolik",
-  "placeholder": "RELIGION:[RELIGION_1]",
-  "vault": [
-   [
-    "[RELIGION_1]",
-    "Katolik"
-   ]
-  ],
-  "partial": "RELIGION:***",
-  "noFinanceNoName": "RELIGION:[RELIGION_1]",
-  "high": [
-   "Katolik"
-  ]
- },
- {
-  "text": "Jenis Kelamin: Perempuan; Kewarganegaraan: WNI",
-  "placeholder": "Jenis Kelamin: [GENDER_1]; Kewarganegaraan: [NATIONALITY_1]",
-  "vault": [
-   [
-    "[GENDER_1]",
-    "Perempuan"
-   ],
-   [
-    "[NATIONALITY_1]",
-    "WNI"
-   ]
-  ],
-  "partial": "Jenis Kelamin: ***; Kewarganegaraan: ***",
-  "noFinanceNoName": "Jenis Kelamin: [GENDER_1]; Kewarganegaraan: [NATIONALITY_1]",
-  "high": [
-   "Perempuan",
-   "WNI"
-  ]
- },
- {
-  "text": "GENDER:Perempuan",
-  "placeholder": "GENDER:[GENDER_1]",
-  "vault": [
-   [
-    "[GENDER_1]",
-    "Perempuan"
-   ]
-  ],
-  "partial": "GENDER:***",
-  "noFinanceNoName": "GENDER:[GENDER_1]",
-  "high": [
-   "Perempuan"
-  ]
- },
- {
-  "text": "NATIONALITY:WNI",
-  "placeholder": "NATIONALITY:[NATIONALITY_1]",
-  "vault": [
-   [
-    "[NATIONALITY_1]",
-    "WNI"
-   ]
-  ],
-  "partial": "NATIONALITY:***",
-  "noFinanceNoName": "NATIONALITY:[NATIONALITY_1]",
-  "high": [
-   "WNI"
-  ]
- },
- {
-  "text": "tanggal dan tempat lahir",
-  "placeholder": "tanggal dan tempat lahir",
-  "vault": [],
-  "partial": "tanggal dan tempat lahir",
-  "noFinanceNoName": "tanggal dan tempat lahir",
-  "high": []
- },
- {
-  "text": "lahir 15 Agustus 1995, tgl lahir 15-08-1995",
-  "placeholder": "lahir [BIRTH_DATE_1], tgl lahir [BIRTH_DATE_2]",
-  "vault": [
-   [
-    "[BIRTH_DATE_1]",
-    "15 Agustus 1995"
-   ],
-   [
-    "[BIRTH_DATE_2]",
-    "15-08-1995"
-   ]
-  ],
-  "partial": "lahir ***, tgl lahir ***",
-  "noFinanceNoName": "lahir [BIRTH_DATE_1], tgl lahir [BIRTH_DATE_2]",
-  "high": [
-   "15 Agustus 1995",
-   "15-08-1995"
-  ]
- },
- {
-  "text": "BIRTH_DATE:15 Agustus 1995",
-  "placeholder": "BIRTH_DATE:[BIRTH_DATE_1]",
-  "vault": [
-   [
-    "[BIRTH_DATE_1]",
-    "15 Agustus 1995"
-   ]
-  ],
-  "partial": "BIRTH_DATE:***",
-  "noFinanceNoName": "BIRTH_DATE:[BIRTH_DATE_1]",
-  "high": [
-   "15 Agustus 1995"
-  ]
- },
- {
-  "text": "BIRTH_DATE:15-08-1995",
-  "placeholder": "BIRTH_DATE:[BIRTH_DATE_1]",
-  "vault": [
-   [
-    "[BIRTH_DATE_1]",
-    "15-08-1995"
-   ]
-  ],
-  "partial": "BIRTH_DATE:***",
-  "noFinanceNoName": "BIRTH_DATE:[BIRTH_DATE_1]",
-  "high": [
-   "15-08-1995"
-  ]
- },
- {
-  "text": "Tempat/Tgl Lahir : BOGOR, 15-08-1995",
-  "placeholder": "Tempat/Tgl Lahir : [BIRTH_DATE_1]",
-  "vault": [
-   [
-    "[BIRTH_DATE_1]",
-    "BOGOR, 15-08-1995"
-   ]
-  ],
-  "partial": "Tempat/Tgl Lahir : ***",
-  "noFinanceNoName": "Tempat/Tgl Lahir : [BIRTH_DATE_1]",
-  "high": [
-   "BOGOR, 15-08-1995"
-  ]
- },
- {
-  "text": "BIRTH_DATE:BOGOR, 15-08-1995",
-  "placeholder": "BIRTH_DATE:[BIRTH_DATE_1]",
-  "vault": [
-   [
-    "[BIRTH_DATE_1]",
-    "BOGOR, 15-08-1995"
-   ]
-  ],
-  "partial": "BIRTH_DATE:***",
-  "noFinanceNoName": "BIRTH_DATE:[BIRTH_DATE_1]",
-  "high": [
-   "BOGOR, 15-08-1995"
-  ]
- },
- {
-  "text": "data pribadi spesifik: kesehatan",
-  "placeholder": "data pribadi spesifik: kesehatan",
-  "vault": [],
-  "partial": "data pribadi spesifik: kesehatan",
-  "noFinanceNoName": "data pribadi spesifik: kesehatan",
-  "high": []
- },
- {
-  "text": "Pasien didiagnosis HIV dan diabetes tipe 2",
-  "placeholder": "Pasien didiagnosis [HEALTH_1]",
-  "vault": [
-   [
-    "[HEALTH_1]",
-    "HIV dan diabetes tipe 2"
-   ]
-  ],
-  "partial": "Pasien didiagnosis ***",
-  "noFinanceNoName": "Pasien didiagnosis [HEALTH_1]",
-  "high": [
-   "HIV dan diabetes tipe 2"
-  ]
- },
- {
-  "text": "HEALTH:HIV dan diabetes tipe 2",
-  "placeholder": "HEALTH:HIV dan diabetes tipe 2",
-  "vault": [],
-  "partial": "HEALTH:HIV dan diabetes tipe 2",
-  "noFinanceNoName": "HEALTH:HIV dan diabetes tipe 2",
-  "high": []
- },
- {
-  "text": "anak saya positif covid, ibu saya pasien kanker payudara",
-  "placeholder": "anak saya positif [HEALTH_1], ibu saya pasien [HEALTH_2]",
-  "vault": [
-   [
-    "[HEALTH_1]",
-    "covid"
-   ],
-   [
-    "[HEALTH_2]",
-    "kanker payudara"
-   ]
-  ],
-  "partial": "anak saya positif ***, ibu saya pasien ***",
-  "noFinanceNoName": "anak saya positif [HEALTH_1], ibu saya pasien [HEALTH_2]",
-  "high": []
- },
- {
-  "text": "HEALTH:covid",
-  "placeholder": "HEALTH:covid",
-  "vault": [],
-  "partial": "HEALTH:covid",
-  "noFinanceNoName": "HEALTH:covid",
-  "high": []
- },
- {
-  "text": "HEALTH:kanker payudara",
-  "placeholder": "HEALTH:kanker payudara",
-  "vault": [],
-  "partial": "HEALTH:kanker payudara",
-  "noFinanceNoName": "HEALTH:kanker payudara",
-  "high": []
- },
- {
-  "text": "perusahaan menderita kerugian, tanggapan positif dari pelanggan",
-  "placeholder": "perusahaan menderita kerugian, tanggapan positif dari pelanggan",
-  "vault": [],
-  "partial": "perusahaan menderita kerugian, tanggapan positif dari pelanggan",
-  "noFinanceNoName": "perusahaan menderita kerugian, tanggapan positif dari pelanggan",
-  "high": []
- },
- {
-  "text": "data pribadi spesifik: keuangan, catatan kejahatan, biometrik",
-  "placeholder": "data pribadi spesifik: keuangan, catatan kejahatan, biometrik",
-  "vault": [],
-  "partial": "data pribadi spesifik: keuangan, catatan kejahatan, biometrik",
-  "noFinanceNoName": "data pribadi spesifik: keuangan, catatan kejahatan, biometrik",
-  "high": []
- },
- {
-  "text": "Gaji saya 8 juta, saldo rekening 25 juta",
-  "placeholder": "Gaji saya [FINANCIAL_1], saldo rekening [FINANCIAL_2]",
-  "vault": [
-   [
-    "[FINANCIAL_1]",
-    "8 juta"
-   ],
-   [
-    "[FINANCIAL_2]",
-    "25 juta"
-   ]
-  ],
-  "partial": "Gaji saya ***, saldo rekening ***",
-  "noFinanceNoName": "Gaji saya 8 juta, saldo rekening 25 juta",
-  "high": []
- },
- {
-  "text": "FINANCIAL:8 juta",
-  "placeholder": "FINANCIAL:8 juta",
-  "vault": [],
-  "partial": "FINANCIAL:8 juta",
-  "noFinanceNoName": "FINANCIAL:8 juta",
-  "high": []
- },
- {
-  "text": "FINANCIAL:25 juta",
-  "placeholder": "FINANCIAL:25 juta",
-  "vault": [],
-  "partial": "FINANCIAL:25 juta",
-  "noFinanceNoName": "FINANCIAL:25 juta",
-  "high": []
- },
- {
-  "text": "pendapatan perusahaan naik 20 persen",
-  "placeholder": "pendapatan perusahaan naik 20 persen",
-  "vault": [],
-  "partial": "pendapatan perusahaan naik 20 persen",
-  "noFinanceNoName": "pendapatan perusahaan naik 20 persen",
-  "high": []
- },
- {
-  "text": "Catatan Kriminal: pernah ditahan 2019",
-  "placeholder": "Catatan Kriminal: [CRIMINAL_RECORD_1]",
-  "vault": [
-   [
-    "[CRIMINAL_RECORD_1]",
-    "pernah ditahan 2019"
-   ]
-  ],
-  "partial": "Catatan Kriminal: ***",
-  "noFinanceNoName": "Catatan Kriminal: [CRIMINAL_RECORD_1]",
-  "high": [
-   "pernah ditahan 2019"
-  ]
- },
- {
-  "text": "CRIMINAL_RECORD:pernah ditahan 2019",
-  "placeholder": "CRIMINAL_RECORD:[CRIMINAL_RECORD_1]",
-  "vault": [
-   [
-    "[CRIMINAL_RECORD_1]",
-    "pernah ditahan 2019"
-   ]
-  ],
-  "partial": "CRIMINAL_RECORD:***",
-  "noFinanceNoName": "CRIMINAL_RECORD:[CRIMINAL_RECORD_1]",
-  "high": [
-   "pernah ditahan 2019"
-  ]
- },
- {
-  "text": "foto_ktp: uploads/ktp/8812.jpg",
-  "placeholder": "foto_ktp: [BIOMETRIC_1]",
-  "vault": [
-   [
-    "[BIOMETRIC_1]",
-    "uploads/ktp/8812.jpg"
-   ]
-  ],
-  "partial": "foto_ktp: ***",
-  "noFinanceNoName": "foto_ktp: [BIOMETRIC_1]",
-  "high": [
-   "uploads/ktp/8812.jpg"
-  ]
- },
- {
-  "text": "BIOMETRIC:uploads/ktp/8812.jpg",
-  "placeholder": "BIOMETRIC:[BIOMETRIC_1]",
-  "vault": [
-   [
-    "[BIOMETRIC_1]",
-    "uploads/ktp/8812.jpg"
-   ]
-  ],
-  "partial": "BIOMETRIC:***",
-  "noFinanceNoName": "BIOMETRIC:[BIOMETRIC_1]",
-  "high": [
-   "uploads/ktp/8812.jpg"
-  ]
- },
- {
-  "text": "spesifik",
-  "placeholder": "spesifik",
-  "vault": [],
-  "partial": "spesifik",
-  "noFinanceNoName": "spesifik",
-  "high": []
- },
- {
-  "text": "spesifik",
-  "placeholder": "spesifik",
-  "vault": [],
-  "partial": "spesifik",
-  "noFinanceNoName": "spesifik",
-  "high": []
- },
- {
-  "text": "umum",
-  "placeholder": "umum",
-  "vault": [],
-  "partial": "umum",
-  "noFinanceNoName": "umum",
-  "high": []
- },
- {
-  "text": "pengenal: KK, paspor, SIM, NIP, IP, koordinat",
-  "placeholder": "pengenal: KK, paspor, SIM, NIP, IP, koordinat",
-  "vault": [],
-  "partial": "pengenal: KK, paspor, SIM, NIP, IP, koordinat",
-  "noFinanceNoName": "pengenal: KK, paspor, SIM, NIP, IP, koordinat",
-  "high": []
- },
- {
-  "text": "No KK 3201010101200001",
-  "placeholder": "No KK [KK_1]",
-  "vault": [
-   [
-    "[KK_1]",
-    "3201010101200001"
-   ]
-  ],
-  "partial": "No KK 3201********0001",
-  "noFinanceNoName": "No KK [KK_1]",
-  "high": [
-   "3201010101200001"
-  ]
- },
- {
-  "text": "KK:3201010101200001",
-  "placeholder": "KK:[KK_1]",
-  "vault": [
-   [
-    "[KK_1]",
-    "3201010101200001"
-   ]
-  ],
-  "partial": "KK:3201********0001",
-  "noFinanceNoName": "KK:[KK_1]",
-  "high": [
-   "3201010101200001"
-  ]
- },
- {
-  "text": "Paspor: A1234567",
-  "placeholder": "Paspor: [PASSPORT_1]",
-  "vault": [
-   [
-    "[PASSPORT_1]",
-    "A1234567"
-   ]
-  ],
-  "partial": "Paspor: A*****67",
-  "noFinanceNoName": "Paspor: [PASSPORT_1]",
-  "high": [
-   "A1234567"
-  ]
- },
- {
-  "text": "PASSPORT:A1234567",
-  "placeholder": "PASSPORT:[PASSPORT_1]",
-  "vault": [
-   [
-    "[PASSPORT_1]",
-    "A1234567"
-   ]
-  ],
-  "partial": "PASSPORT:A*****67",
-  "noFinanceNoName": "PASSPORT:[PASSPORT_1]",
-  "high": [
-   "A1234567"
-  ]
- },
- {
-  "text": "No SIM 950812345678",
-  "placeholder": "No SIM [SIM_1]",
-  "vault": [
-   [
-    "[SIM_1]",
-    "950812345678"
-   ]
-  ],
-  "partial": "No SIM *********678",
-  "noFinanceNoName": "No SIM [SIM_1]",
-  "high": [
-   "950812345678"
-  ]
- },
- {
-  "text": "SIM:950812345678",
-  "placeholder": "SIM:[SIM_1]",
-  "vault": [
-   [
-    "[SIM_1]",
-    "950812345678"
-   ]
-  ],
-  "partial": "SIM:*********678",
-  "noFinanceNoName": "SIM:[SIM_1]",
-  "high": [
-   "950812345678"
-  ]
- },
- {
-  "text": "NIP 19950815 202012 1 001",
-  "placeholder": "NIP [NIP_1]",
-  "vault": [
-   [
-    "[NIP_1]",
-    "19950815 202012 1 001"
-   ]
-  ],
-  "partial": "NIP ***************001",
-  "noFinanceNoName": "NIP [NIP_1]",
-  "high": [
-   "19950815 202012 1 001"
-  ]
- },
- {
-  "text": "NIP:19950815 202012 1 001",
-  "placeholder": "NIP:[NIP_1]",
-  "vault": [
-   [
-    "[NIP_1]",
-    "19950815 202012 1 001"
-   ]
-  ],
-  "partial": "NIP:***************001",
-  "noFinanceNoName": "NIP:[NIP_1]",
-  "high": [
-   "19950815 202012 1 001"
-  ]
- },
- {
-  "text": "login dari 182.253.10.15 versi 1.2.3.4, bind 0.0.0.0",
-  "placeholder": "login dari [IP_1] versi 1.2.3.4, bind 0.0.0.0",
-  "vault": [
-   [
-    "[IP_1]",
-    "182.253.10.15"
-   ]
-  ],
-  "partial": "login dari 182.253.*.* versi 1.2.3.4, bind 0.0.0.0",
-  "noFinanceNoName": "login dari [IP_1] versi 1.2.3.4, bind 0.0.0.0",
-  "high": [
-   "182.253.10.15"
-  ]
- },
- {
-  "text": "IP:182.253.10.15",
-  "placeholder": "IP:[IP_1]",
-  "vault": [
-   [
-    "[IP_1]",
-    "182.253.10.15"
-   ]
-  ],
-  "partial": "IP:182.253.*.*",
-  "noFinanceNoName": "IP:[IP_1]",
-  "high": [
-   "182.253.10.15"
-  ]
- },
- {
-  "text": "lokasi -6.200000, 106.816666",
-  "placeholder": "lokasi [GEO_1]",
-  "vault": [
-   [
-    "[GEO_1]",
-    "-6.200000, 106.816666"
-   ]
-  ],
-  "partial": "lokasi -6.2***, 106.8***",
-  "noFinanceNoName": "lokasi [GEO_1]",
-  "high": [
-   "-6.200000, 106.816666"
-  ]
- },
- {
-  "text": "GEO:-6.200000, 106.816666",
-  "placeholder": "GEO:[GEO_1]",
-  "vault": [
-   [
-    "[GEO_1]",
-    "-6.200000, 106.816666"
-   ]
-  ],
-  "partial": "GEO:-6.2***, 106.8***",
-  "noFinanceNoName": "GEO:[GEO_1]",
-  "high": [
-   "-6.200000, 106.816666"
-  ]
- },
- {
-  "text": "No SIM 950812345678, NIK 3201011508950001",
-  "placeholder": "No SIM [SIM_1], NIK [NIK_1]",
-  "vault": [
-   [
-    "[SIM_1]",
-    "950812345678"
-   ],
-   [
-    "[NIK_1]",
-    "3201011508950001"
-   ]
-  ],
-  "partial": "No SIM *********678, NIK 3201********0001",
-  "noFinanceNoName": "No SIM [SIM_1], NIK [NIK_1]",
-  "high": [
-   "950812345678",
-   "3201011508950001"
-  ]
- },
- {
-  "text": "SIM:950812345678",
-  "placeholder": "SIM:[SIM_1]",
-  "vault": [
-   [
-    "[SIM_1]",
-    "950812345678"
-   ]
-  ],
-  "partial": "SIM:*********678",
-  "noFinanceNoName": "SIM:[SIM_1]",
-  "high": [
-   "950812345678"
-  ]
- },
- {
-  "text": "NIK:3201011508950001",
-  "placeholder": "NIK:[NIK_1]",
-  "vault": [
-   [
-    "[NIK_1]",
-    "3201011508950001"
-   ]
-  ],
-  "partial": "NIK:3201********0001",
-  "noFinanceNoName": "NIK:[NIK_1]",
-  "high": [
-   "3201011508950001"
-  ]
- },
- {
-  "text": "kolom sensitif di CSV dan JSON ikut disamarkan",
-  "placeholder": "kolom sensitif di CSV dan JSON ikut disamarkan",
-  "vault": [],
-  "partial": "kolom sensitif di CSV dan JSON ikut disamarkan",
-  "noFinanceNoName": "kolom sensitif di CSV dan JSON ikut disamarkan",
-  "high": []
- },
- {
-  "text": "nama,agama,diagnosa,gaji,jk\nBudi Santoso,Islam,Hipertensi,8000000,L",
-  "placeholder": "nama,agama,diagnosa,gaji,jk\n[NAME_1],[RELIGION_1],[HEALTH_1],[FINANCIAL_1],[GENDER_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Budi Santoso"
-   ],
-   [
-    "[RELIGION_1]",
-    "Islam"
-   ],
-   [
-    "[HEALTH_1]",
-    "Hipertensi"
-   ],
-   [
-    "[FINANCIAL_1]",
-    "8000000"
-   ],
-   [
-    "[GENDER_1]",
-    "L"
-   ]
-  ],
-  "partial": "nama,agama,diagnosa,gaji,jk\nB*** S***,***,***,***,***",
-  "noFinanceNoName": "nama,agama,diagnosa,gaji,jk\nBudi Santoso,[RELIGION_1],[HEALTH_1],8000000,[GENDER_1]",
-  "high": [
-   "Budi Santoso",
-   "Islam",
-   "Hipertensi",
-   "8000000",
-   "L"
-  ]
- },
- {
-  "text": "NAME:Budi Santoso",
-  "placeholder": "NAME:[NAME_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Budi Santoso"
-   ]
-  ],
-  "partial": "NAME:B*** S***",
-  "noFinanceNoName": "NAME:Budi Santoso",
-  "high": []
- },
- {
-  "text": "RELIGION:Islam",
-  "placeholder": "RELIGION:[RELIGION_1]",
-  "vault": [
-   [
-    "[RELIGION_1]",
-    "Islam"
-   ]
-  ],
-  "partial": "RELIGION:***",
-  "noFinanceNoName": "RELIGION:[RELIGION_1]",
-  "high": [
-   "Islam"
-  ]
- },
- {
-  "text": "HEALTH:Hipertensi",
-  "placeholder": "HEALTH:Hipertensi",
-  "vault": [],
-  "partial": "HEALTH:Hipertensi",
-  "noFinanceNoName": "HEALTH:Hipertensi",
-  "high": []
- },
- {
-  "text": "FINANCIAL:8000000",
-  "placeholder": "FINANCIAL:8000000",
-  "vault": [],
-  "partial": "FINANCIAL:8000000",
-  "noFinanceNoName": "FINANCIAL:8000000",
-  "high": []
- },
- {
-  "text": "GENDER:L",
-  "placeholder": "GENDER:[GENDER_1]",
-  "vault": [
-   [
-    "[GENDER_1]",
-    "L"
-   ]
-  ],
-  "partial": "GENDER:***",
-  "noFinanceNoName": "GENDER:[GENDER_1]",
-  "high": [
-   "L"
-  ]
- },
- {
-  "text": "{\"nama_pelanggan\": \"siti\", \"tgl_lahir\": \"1995-08-15\", \"gol_darah\": \"O\"}",
-  "placeholder": "{\"nama_pelanggan\": \"[NAME_1]\", \"tgl_lahir\": \"[BIRTH_DATE_1]\", \"gol_darah\": \"[HEALTH_1]\"}",
-  "vault": [
-   [
-    "[NAME_1]",
-    "siti"
-   ],
-   [
-    "[BIRTH_DATE_1]",
-    "1995-08-15"
-   ],
-   [
-    "[HEALTH_1]",
-    "O"
-   ]
-  ],
-  "partial": "{\"nama_pelanggan\": \"s***\", \"tgl_lahir\": \"***\", \"gol_darah\": \"***\"}",
-  "noFinanceNoName": "{\"nama_pelanggan\": \"siti\", \"tgl_lahir\": \"[BIRTH_DATE_1]\", \"gol_darah\": \"[HEALTH_1]\"}",
-  "high": [
-   "siti",
-   "1995-08-15",
-   "O"
-  ]
- },
- {
-  "text": "NAME:siti",
-  "placeholder": "NAME:siti",
-  "vault": [],
-  "partial": "NAME:siti",
-  "noFinanceNoName": "NAME:siti",
-  "high": []
- },
- {
-  "text": "BIRTH_DATE:1995-08-15",
-  "placeholder": "BIRTH_DATE:[BIRTH_DATE_1]",
-  "vault": [
-   [
-    "[BIRTH_DATE_1]",
-    "1995-08-15"
-   ]
-  ],
-  "partial": "BIRTH_DATE:***",
-  "noFinanceNoName": "BIRTH_DATE:[BIRTH_DATE_1]",
-  "high": [
-   "1995-08-15"
-  ]
- },
- {
-  "text": "HEALTH:O",
-  "placeholder": "HEALTH:O",
-  "vault": [],
-  "partial": "HEALTH:O",
-  "noFinanceNoName": "HEALTH:O",
-  "high": []
- },
- {
-  "text": "GET /daftar?nama=Budi&email=budi@x.id&hp=081234567890",
-  "placeholder": "GET /daftar?nama=[NAME_1]&email=[EMAIL_1]&hp=[PHONE_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Budi"
-   ],
-   [
-    "[EMAIL_1]",
-    "budi@x.id"
-   ],
-   [
-    "[PHONE_1]",
-    "081234567890"
-   ]
-  ],
-  "partial": "GET /daftar?nama=B***&email=b***@x.id&hp=0812****7890",
-  "noFinanceNoName": "GET /daftar?nama=Budi&email=[EMAIL_1]&hp=[PHONE_1]",
-  "high": [
-   "Budi",
-   "budi@x.id",
-   "081234567890"
-  ]
- },
- {
-  "text": "NAME:Budi",
-  "placeholder": "NAME:Budi",
-  "vault": [],
-  "partial": "NAME:Budi",
-  "noFinanceNoName": "NAME:Budi",
-  "high": []
  }
 ]

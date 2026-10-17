@@ -102,6 +102,32 @@ logging.info('refund ke rek BCA %s, HP %s', '1234567890', '0812-3456-7890')
 
 The filter masks the formatted message, tracebacks, and stack info. Attach it to handlers, not loggers, so records from every logger pass through it.
 
+### Files: uploads, exports, and documents
+
+`lokal.files` reads the same formats as the MCP server: text, CSV, JSON, logs, SQL, `.xlsx`, `.docx`, and text-based PDF, including filled-in PDF form fields. Scan an upload folder from a Django or FastAPI backend, or turn a document into text to mask before it goes to an LLM:
+
+```python
+from lokal import Samaran
+from lokal.files import load_document, scan_path
+
+report = scan_path('var/media', exclude=['FINANCIAL'])
+report.totals                       # {'NIK': 12, 'NAME': 9, 'PHONE': 7, ...}
+report.findings[0]                  # Finding(file='kredit/formulir.pdf', part='Halaman 1', line=4, type='NIK',
+                                    #         confidence='high', uu_pdp='umum', preview='3201********0001')
+[(n.file, n.reason) for n in report.not_scanned]
+# [('ktp/budi.jpg', 'image (may be a KTP or selfie photo)'),
+#  ('kredit/lampiran.pdf', 'partly scanned: page 2 of 3 has no text layer (scanned) and needs OCR')]
+
+doc = load_document('var/media/kredit/formulir.pdf')
+s = Samaran()
+masked = [(part.name, s.mask(part.text).text) for part in doc.parts]   # one part per page, sheet, or table
+```
+
+- Findings never contain the values, only partial masks, so a report can be logged or shown in an admin page.
+- Files that may hold personal data but cannot be read (photos, scanned or encrypted PDFs, `.xls`, archives) are listed in `not_scanned`, never treated as clean. `report.clean` is true only when nothing was found and nothing was left unread.
+- Folders skip `node_modules`, `.git`, virtualenvs, and build output, and honor `.samaranignore` at the folder root for fixtures that hold only fake data.
+- Pure Python, like the rest of the package. A PDF of 1,000 pages takes about 6 seconds; most documents take milliseconds.
+
 ### Validating API input
 
 ```python
@@ -131,7 +157,7 @@ class Pelanggan(BaseModel):
 
 ## Same results as TypeScript
 
-The test suite replays vectors generated from `@lokal-id/core`: hundreds of NIK, NPWP, phone, and Rupiah inputs, every day of 2026 and 2027, all 91,000 regions with their postal codes, and 2,700 texts for Samaran, including WhatsApp exports, SQL dumps, emoji, no-break spaces, and CRLF. Python must return exactly what TypeScript returns. On top of that, 40,000 random texts and 11 MB of real files gave identical matches during development.
+The test suite replays vectors generated from `@lokal-id/core`: hundreds of NIK, NPWP, phone, and Rupiah inputs, every day of 2026 and 2027, all 91,000 regions with their postal codes, and 2,700 texts for Samaran, including WhatsApp exports, SQL dumps, emoji, no-break spaces, and CRLF. Python must return exactly what TypeScript returns. The file readers are checked the same way against the MCP server's: real PDFs from Chrome and ReportLab, an Excel export, a Word letter, hand-built PDFs for each structure the reader handles, and damaged copies of them. On top of that, 40,000 random texts, 11 MB of real files, and 63 real PDFs of up to 1,000 pages gave identical results during development.
 
 To get there the port keeps JavaScript semantics where they differ from Python's: ASCII `\d`, `\w` and `\b`; JavaScript's whitespace set; `Math.round` instead of round-half-even; regex lengths counted in UTF-16 units, as a JavaScript regex counts them.
 

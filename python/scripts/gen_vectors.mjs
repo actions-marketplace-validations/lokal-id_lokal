@@ -1,4 +1,5 @@
-// Generates the parity vectors in python/tests/vectors from the TypeScript build of @lokal-id/core.
+// Generates the parity vectors in python/tests/vectors from the TypeScript build of @lokal-id/core, and from the
+// MCP server's file readers (packages/mcp/src/files.ts and the PDF, Excel, and Word readers it uses).
 // The Python test suite replays every input and requires the exact same output.
 //
 //   npm run build && node python/scripts/gen_vectors.mjs          # rewrite the vectors
@@ -239,6 +240,8 @@ const fragments = [
   last_name: Rahayu
   phone: "+6281298765432"`,
   'GET /cari?nama=Budi%20Santoso&nik=3201011508950001&email=budi@gmail.com',
+  'Nama Pelanggan\tBudi Santoso', 'Nama\tNIK\tTelepon\nRina Wati\t3276014503920002\t0813-9999-0000', 'No\tNama\n1\tSiti Aminah',
+  'Nama: Budi Santoso ya kak', 'Pemesan: Rina Wati sudah transfer', 'Nama: Siti Aminah (Ami)', 'Nama: Lee Dong Hae!',
   'Pasien:   Siti   Aminah, diagnosa: Hipertensi', 'Rp1.250.000', 'Versi 3.2.1', 'Ibu Kota Nusantara', 'call 1500888',
 ];
 const noise = [' ', ', ', '. ', '\n', '\r\n', ' 😭 ', ' ', ' ', ' — ', '\t', ': ', ' | ', '; ', ' 🇮🇩 ', '﻿'];
@@ -278,6 +281,46 @@ emit('samaran_partial.json', core.PII_TYPES.flatMap((type) =>
     type, value, out: core.partialMask(type, value),
   }))));
 
+// ---------------------------------------------------------------- documents (the MCP server's file readers)
+// lokal.files ports packages/mcp/src/{files,pdf,xlsx,docx}.ts. Each document goes through loadDocument under its
+// file name; Python writes the same bytes under the same name and must load the same thing.
+{
+  const toUrl = (p) => `file:///${path.join(ROOT, p).replace(/\\/g, '/')}`;
+  const { loadDocument } = await import(toUrl('packages/mcp/src/files.ts'));
+  const { samples } = await import(toUrl('packages/mcp/test/pdf-builder.ts'));
+  const { mkdtempSync, rmSync } = await import('node:fs');
+  const { tmpdir } = await import('node:os');
+  const fixtures = path.join(ROOT, 'packages/mcp/test/fixtures');
+  const docsIn = [];
+  for (const f of readdirSync(fixtures).sort()) docsIn.push([f, readFileSync(path.join(fixtures, f))]);
+  for (const [name, buf] of Object.entries(samples())) docsIn.push([`${name}.pdf`, buf]);
+  // Damaged copies: cut off at several points, and with bytes overwritten inside compressed data.
+  for (const [name, buf] of Object.entries(samples()).slice(0, 8)) {
+    for (const cut of [0.35, 0.7, 0.9]) docsIn.push([`${name}-cut${cut * 100}.pdf`, buf.subarray(0, Math.floor(buf.length * cut))]);
+    const flipped = Buffer.from(buf);
+    for (let i = 200; i < flipped.length; i += 97) flipped[i] ^= 0x5a;
+    docsIn.push([`${name}-flipped.pdf`, flipped]);
+  }
+  const formulir = readFileSync(path.join(fixtures, 'formulir.pdf'));
+  for (const cut of [0.5, 0.8]) docsIn.push([`formulir-cut${cut * 100}.pdf`, formulir.subarray(0, Math.floor(formulir.length * cut))]);
+  docsIn.push(['pelanggan-bom.csv', Buffer.concat([Buffer.from([0xef, 0xbb, 0xbf]), Buffer.from('nama,nik\nBudi,3201011508950001\n')])]);
+  docsIn.push(['rusak.log', Buffer.from([0x6e, 0x69, 0x6b, 0x3d, 0xc3, 0x28, 0x31, 0xe2, 0x82, 0x0a, 0xf0, 0x9f, 0x98, 0x80, 0xed, 0xa0, 0x80, 0x0a])]);
+  docsIn.push(['data.bin', Buffer.from([1, 2, 0, 3])]);
+  docsIn.push(['ktp.jpg', Buffer.from([0xff, 0xd8, 0xff, 0x00])]);
+  docsIn.push(['lama.xls', Buffer.from([0xd0, 0xcf, 0x11, 0xe0])]);
+  docsIn.push(['bukan.xlsx', Buffer.from('bukan zip')]);
+  docsIn.push(['bukan.docx', Buffer.from('PK\x03\x04 rusak')]);
+
+  const dir = mkdtempSync(path.join(tmpdir(), 'lokal-vectors-'));
+  const documents = docsIn.map(([name, buf]) => {
+    const file = path.join(dir, name);
+    writeFileSync(file, buf);
+    return { name, data: buf.toString('base64'), out: plain(loadDocument(file)) };
+  });
+  rmSync(dir, { recursive: true, force: true });
+  emit('documents.json', documents);
+}
+
 // ---------------------------------------------------------------- write / check
 mkdirSync(OUT, { recursive: true });
 let stale = 0;
@@ -288,6 +331,12 @@ for (const [name, content] of Object.entries(files)) {
     current = readFileSync(file, 'utf8');
   } catch {}
   if (current === content) continue;
+  // Hand-built PDFs are deflated by this Node's zlib, whose bytes can differ between builds and CPUs. What the
+  // readers make of them is what has to stay the same.
+  if (name === 'documents.json' && current) {
+    const outs = (json) => JSON.stringify(JSON.parse(json).map(({ name: n, out }) => [n, out]));
+    if (outs(current) === outs(content)) continue;
+  }
   stale++;
   if (check) console.error(`out of date: ${name}`);
   else writeFileSync(file, content);

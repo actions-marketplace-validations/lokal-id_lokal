@@ -636,7 +636,19 @@ def _detect_street_addresses(text: str) -> list[PiiMatch]:
     return out
 
 
-_NAME_STOP = rx(r'\s(?:dan|dengan|yang|nik|hp|no|nomor|umur|usia|alamat|email|tinggal|lahir|asal|dari|di|ke|untuk|sebagai|mau|ingin|minta|tolong)\b', 'i')  # noqa: E501
+_NAME_STOP = rx(
+    r'\s(?:dan|dengan|yang|nik|hp|no|nomor|umur|usia|alamat|email|tinggal|lahir|asal|dari|di|ke|untuk|sebagai|mau|'
+    r'ingin|minta|tolong|saya|aku|gue|gua|gw|mohon|terima|makasih|thanks|thank|thx|tks|trims|bisa|boleh|apakah|kapan|'
+    r'berapa|gimana|bagaimana|kenapa|mengapa|tanya|nanya|sudah|udah|sdh|belum|blm|akan|sedang)\b',
+    'i',
+)
+# Chat words after a name: "Nama: Budi Santoso ya kak". Lowercase only, so "Lee Dong Hae" keeps its "Dong".
+_NAME_STOP_CHAT = rx(
+    r'\s(?:ya|yah|yaa|iya|kak|kakak|gan|sis|min|pak|bu|dong|deh|sih|kok|nih|aja|saja|juga|lho|loh|ok|oke|okay|lagi|'
+    r'baru|tadi|kemarin|kemaren|besok|nanti|sekarang)\b'
+)
+# A name ends at an emoji, a pictograph, or ! and ?. Detectors see UTF-16, so an emoji is a surrogate pair here.
+_NAME_END = rx(r'[!?\u2190-\u2bff\ud800-\udfff\ufe0f]')
 _MULTI_PART: frozenset[PiiType] = frozenset(('ADDRESS', 'BIRTH_DATE', 'HEALTH', 'GEO'))
 _VALUE_END = rx(r'[;|&]')
 _NEXT_PAIR = rx(r'\s+[A-Za-z_][\w.-]*=(?!=)')
@@ -704,9 +716,10 @@ def _cut_value(pii_type: PiiType, raw: str) -> str:
     else:
         v = v.split(',')[0]
     if pii_type == 'NAME':
-        stop = _js_search(_NAME_STOP, v)
-        if stop >= 0:
-            v = v[:stop]
+        for pattern in (_NAME_END, _NAME_STOP, _NAME_STOP_CHAT):
+            stop = _js_search(pattern, v)
+            if stop >= 0:
+                v = v[:stop]
         digit = _js_search(_FIRST_DIGIT, v)
         if digit >= 0:
             v = v[:digit]
@@ -884,6 +897,10 @@ def _detect_csv_columns(text: str) -> list[PiiMatch]:
     columns = [field_type(h) for h in header_fields]
     if not any(columns):
         return []
+    # "Nama<TAB>Budi Santoso" then "NIK<TAB>3201…" is a list of labels and values, not a table with a header.
+    second = _csv_fields(second_line, delimiter)
+    if any(t and field_type(_js.trim(second_line[second[i][0] : second[i][1]])) for i, t in enumerate(columns)):
+        return []
 
     out: list[PiiMatch] = []
     offset = first_break + 1
@@ -899,6 +916,77 @@ def _detect_csv_columns(text: str) -> list[PiiMatch]:
             # A plain "name" column can hold product names as easily as people.
             out.append(_match(t, start, value, 'medium' if is_generic_name_key(header_fields[idx]) else 'high'))
         offset += len(raw_line) + 1
+    return out
+
+
+_HAS_LETTER = re.compile(r'[A-Za-z]')
+_NOT_A_HEADER_CELL = rx(r'[.!?]$|\d{3}')
+_KV_SEPARATOR_VALUE = re.compile(r'[:=]')
+
+
+def _starts_upper(s: str) -> bool:
+    return 'A' <= s[:1] <= 'Z'
+
+
+def _detect_tab_tables(text: str) -> list[PiiMatch]:
+    """Tab-separated tables anywhere in the text: cells copied from Excel or Word, and tables in PDF text.
+
+    In PDF text a wide gap between cells becomes a tab. "Nama Pelanggan<TAB>Budi Santoso" is a label and its value.
+    A row of short cells with at least one field name, followed by rows with as many cells or fewer, is a table with
+    typed columns.
+    """
+    if '\t' not in text:
+        return []
+    out: list[PiiMatch] = []
+    header: Optional[list[str]] = None
+    columns: list[Optional[PiiType]] = []
+    pos = 0
+    while pos <= len(text):
+        end = text.find('\n', pos)
+        if end == -1:
+            end = len(text)
+        line = text[pos : end - 1 if end > pos and text[end - 1] == '\r' else end]
+        cells: list[tuple[int, str]] = []
+        if '\t' in line:
+            at = 0
+            for part in line.split('\t'):
+                value = _js.trim(part)
+                cells.append((pos + at + (part.find(value) if value else 0), value))
+                at += len(part) + 1
+        filled = [c for c in cells if c[1]]
+        if header is not None and len(filled) >= 2 and len(cells) <= len(header):
+            for i, (start, value) in enumerate(cells):
+                t = columns[i]
+                if not t or not value or not is_plausible_value(t, value, header[i]):
+                    continue
+                out.append(_match(t, start, value, 'medium' if is_generic_name_key(header[i]) else 'high'))
+        else:
+            header = None
+            types = [field_type(value) if value else None for _, value in cells]
+            if (
+                len(filled) == 2 and _starts_upper(filled[0][1]) and field_type(filled[0][1])
+                and not field_type(filled[1][1])
+            ):
+                # "Nama Pelanggan<TAB>Budi Santoso". "Nama<TAB>: Budi" is a labeled field, found by _detect_labeled_fields.
+                (_, label), (value_start, value) = filled
+                t = field_type(label)
+                if t and not _KV_SEPARATOR_VALUE.match(value) and is_plausible_value(t, value, label):
+                    out.append(_match(t, value_start, value, 'medium' if is_generic_name_key(label) else 'high'))
+            elif (
+                len(filled) >= 2
+                and all(
+                    len(v) <= 40 and _HAS_LETTER.search(v) and not _NOT_A_HEADER_CELL.search(v) for _, v in filled
+                )
+                # Data files have tabs too ("n01687978<TAB>agama"): a document table's header is capitalized, or
+                # names two fields.
+                and (
+                    sum(1 for t in types if t) >= 2
+                    or (any(types) and all(_starts_upper(v) for _, v in filled))
+                )
+            ):
+                header = [value for _, value in cells]
+                columns = types
+        pos = end + 1
     return out
 
 
@@ -921,6 +1009,7 @@ _DETECTORS: tuple[Callable[[str], list[PiiMatch]], ...] = (
     _detect_street_addresses,
     _detect_labeled_fields,
     _detect_csv_columns,
+    _detect_tab_tables,
 )
 
 
