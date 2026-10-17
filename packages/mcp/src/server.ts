@@ -34,7 +34,7 @@ import {
 } from '@lokal-id/core/wilayah';
 import { loadDocument, loadIgnore, resolveInRoot, toPosix, walkFiles, type Document } from './files.ts';
 
-const VERSION = '0.2.2';
+const VERSION = '0.3.0';
 const FILE_LIMIT = 5000;
 
 const INSTRUCTIONS = `Lokal makes you Indonesia-ready.

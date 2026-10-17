@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-17
+
+npm (`@lokal-id/core`, `@lokal-id/mcp`) and PyPI (`lokal-id`).
+
 ### Added
 
 - **PDF support** in `scan_pii`, `read_file_masked`, and the guard, without new dependencies. Text-based PDFs (invoices, letters, statements, and reports from browsers, Word, or PDF libraries) are read page by page: table columns are kept apart by tabs, and filled-in form fields come out as `field_name: value`, so a credit application's `nama_pemohon` and `nik` are masked. Comments and stamps are read too. Scanned pages have no text layer and are reported as needing OCR, also when only some pages of a PDF are scanned; encrypted PDFs are reported as such. On 60 PDFs made with Apache FOP, Acrobat Distiller, Word, InDesign, and Illustrator, the extracted words match Poppler's `pdftotext` 99.2–100% on 58; on the other two, one-line templates, Lokal reads an "fi" ligature that `pdftotext` splits. A 1,000-page PDF is checked by the guard in under 2 seconds.
@@ -81,7 +85,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.2.2...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/lokal-id/lokal/compare/v0.2.2...v0.3.0
 [0.2.3]: https://github.com/lokal-id/lokal/releases/tag/py-v0.2.3
 [0.2.2]: https://github.com/lokal-id/lokal/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/lokal-id/lokal/compare/v0.2.0...v0.2.1

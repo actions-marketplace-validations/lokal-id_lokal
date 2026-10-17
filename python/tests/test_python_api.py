@@ -67,7 +67,12 @@ def test_invalid_options_fail_early() -> None:
 
 
 def test_version_and_package_data() -> None:
-    assert lokal.__version__ == '0.2.3'
+    import re
+    from pathlib import Path
+
+    # Python 3.10 has no tomllib; the version line is enough.
+    pyproject = (Path(__file__).parents[1] / 'pyproject.toml').read_text(encoding='utf-8')
+    assert lokal.__version__ == re.search(r'^version = "([^"]+)"', pyproject, re.M).group(1)  # type: ignore[union-attr]
     from importlib import resources
 
     names = {p.name for p in resources.files('lokal').joinpath('data').iterdir()}
