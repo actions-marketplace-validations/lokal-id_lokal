@@ -1,4 +1,5 @@
-// Checks that every place holding the npm release version agrees, and with the tag if one is given.
+// Checks that every place holding the npm release version agrees, including the server version the plugin's .mcp.json
+// starts, and with the tag if one is given.
 //   node scripts/check-release.mjs          all versions match each other
 //   node scripts/check-release.mjs v0.2.3   ...and match the tag
 import { readFileSync } from 'node:fs';
@@ -19,6 +20,8 @@ const found = {
   'packages/mcp/package.json dependencies["@lokal-id/core"]': mcp.dependencies[core.name]?.replace(/^\^/, ''),
   'packages/mcp/src/server.ts VERSION': serverTs,
   '.claude-plugin/plugin.json': json('.claude-plugin/plugin.json').version,
+  // The plugin starts the MCP server with npx; a pinned version keeps the two in step and gets past npx's cache.
+  '.mcp.json npx @lokal-id/mcp@<version>': json('.mcp.json').lokal.args.find((a) => a.startsWith(`${mcp.name}@`))?.slice(mcp.name.length + 1),
   'server.json version': server.version,
   [`server.json packages[${mcp.name}].version`]: npmEntry?.version,
 };
