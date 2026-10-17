@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+### Changed
+
+- The release lists a new version in the MCP Registry only once npm serves both `@lokal-id/core` and `@lokal-id/mcp`. For 0.4.0 the registry listed the server while npm was still processing `@lokal-id/core` (11 minutes, against 2 for `@lokal-id/mcp`), so installing `@lokal-id/mcp@0.4.0` in that window failed. The release now waits up to 30 minutes.
+
 ## [0.4.0] - 2026-10-17
 
 npm (`@lokal-id/core`, `@lokal-id/mcp`) and PyPI (`lokal-id`).
