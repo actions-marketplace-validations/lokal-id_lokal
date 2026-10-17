@@ -91,15 +91,16 @@ jobs:
             echo "published=true" >> "$GITHUB_OUTPUT"
           fi
       # The registry checks that the npm package declares mcpName, so wait until npm serves the new version.
+      # That took 6 minutes for 0.3.0.
       - name: Wait for npm
         if: steps.existing.outputs.published != 'true'
         run: |
           version=$(node -p "require('./server.json').version")
-          for attempt in $(seq 1 30); do
+          for attempt in $(seq 1 90); do
             if [ "$(npm view "@lokal-id/mcp@$version" mcpName 2> /dev/null)" = "$(node -p "require('./server.json').name")" ]; then exit 0; fi
             sleep 10
           done
-          echo "::error::@lokal-id/mcp@$version with mcpName is not on npm after 5 minutes"
+          echo "::error::@lokal-id/mcp@$version with mcpName is not on npm after 15 minutes"
           exit 1
       - name: Validate server.json
         if: steps.existing.outputs.published != 'true'
