@@ -11,9 +11,11 @@ membangun aplikasi yang benar untuk Indonesia, sambil menjaga data pribadi pengg
 [![npm @lokal-id/core](https://img.shields.io/npm/v/@lokal-id/core?label=%40lokal-id%2Fcore&color=cb3837)](https://www.npmjs.com/package/@lokal-id/core)
 [![PyPI lokal-id](https://img.shields.io/pypi/v/lokal-id?label=lokal-id&color=3775a9)](https://pypi.org/project/lokal-id/)
 [![CI](https://github.com/lokal-id/lokal/actions/workflows/ci.yml/badge.svg)](https://github.com/lokal-id/lokal/actions/workflows/ci.yml)
+[![npm provenance](https://img.shields.io/badge/npm-provenance-2ea44f?logo=npm)](SECURITY.md#how-releases-are-protected)
+[![Third-party dependencies: 0](https://img.shields.io/badge/third--party%20dependencies-0-2ea44f)](SECURITY.md#how-releases-are-protected)
 [![Lisensi: MIT](https://img.shields.io/badge/lisensi-MIT-blue.svg)](LICENSE)
 [![Node.js >= 20](https://img.shields.io/badge/node-%3E%3D20-339933?logo=node.js&logoColor=white)](https://nodejs.org)
-[![MCP](https://img.shields.io/badge/MCP-stdio-6e56cf)](https://modelcontextprotocol.io)
+[![MCP](https://img.shields.io/badge/MCP-stdio%20%7C%20HTTP-6e56cf)](https://modelcontextprotocol.io)
 
 [Mulai cepat](#mulai-cepat) ·
 [Fitur](#fitur) ·
@@ -21,6 +23,10 @@ membangun aplikasi yang benar untuk Indonesia, sambil menjaga data pribadi pengg
 [Hasil eval](#hasil-eval) ·
 [Batasan](#batasan) ·
 [**English**](README.md)
+
+<br>
+
+<img src="docs/assets/demo.id.svg" alt="CSV yang sama, dibaca agent AI tanpa Lokal dan dengan Lokal." width="100%">
 
 </div>
 

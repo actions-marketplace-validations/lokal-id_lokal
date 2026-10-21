@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 500" width="920" height="500" role="img" aria-label="Terminal animasi. Tanpa Lokal, agent AI membaca pelanggan.csv dan nama, NIK, serta nomor HP asli terkirim ke penyedia model. Dengan Lokal, agent membaca file yang sama lewat read_file_masked dan hanya melihat [NAME_1], [NIK_1], dan [PHONE_1], menemukan baris yang salah, lalu menulis perbaikannya dengan write_file_unmasked yang memulihkan nilai asli di komputer.">
+<title>Terminal animasi. Tanpa Lokal, agent AI membaca pelanggan.csv dan nama, NIK, serta nomor HP asli terkirim ke penyedia model. Dengan Lokal, agent membaca file yang sama lewat read_file_masked dan hanya melihat [NAME_1], [NIK_1], dan [PHONE_1], menemukan baris yang salah, lalu menulis perbaikannya dengan write_file_unmasked yang memulihkan nilai asli di komputer.</title>
+<style>
+:root{--bg:#0d1117;--bar:#161b22;--fg:#e6edf3;--dim:#8b949e;--tool:#d2a8ff;--bad:#ff7b72;--bad-bg:rgba(248,81,73,.16);--good:#3fb950;--good-bg:rgba(63,185,80,.14);--warn:#ffa657}
+text{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-size:14px;fill:var(--fg)}
+.label{font-weight:700;letter-spacing:.02em}.prompt{fill:#79c0ff}.tool{fill:var(--tool)}.dim{fill:var(--dim)}
+.leak{fill:#ffa198}.masked{fill:#7ee787}.warn{fill:var(--warn)}.ok{fill:var(--good)}.text{fill:var(--fg)}
+.ln{opacity:0}
+@keyframes l0{0%,0.00%{opacity:0;transform:translateY(4px)}1.50%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes l1{0%,4.24%{opacity:0;transform:translateY(4px)}5.74%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes l2{0%,8.47%{opacity:0;transform:translateY(4px)}9.97%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes l3{0%,12.71%{opacity:0;transform:translateY(4px)}14.21%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes l4{0%,16.94%{opacity:0;transform:translateY(4px)}18.44%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes l5{0%,21.18%{opacity:0;transform:translateY(4px)}22.68%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes l6{0%,25.41%{opacity:0;transform:translateY(4px)}26.91%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes l8{0%,33.88%{opacity:0;transform:translateY(4px)}35.38%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes l9{0%,38.12%{opacity:0;transform:translateY(4px)}39.62%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes l10{0%,42.35%{opacity:0;transform:translateY(4px)}43.85%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes l11{0%,46.59%{opacity:0;transform:translateY(4px)}48.09%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes l12{0%,50.82%{opacity:0;transform:translateY(4px)}52.32%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes l13{0%,55.06%{opacity:0;transform:translateY(4px)}56.56%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes l14{0%,59.29%{opacity:0;transform:translateY(4px)}60.79%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes l15{0%,63.53%{opacity:0;transform:translateY(4px)}65.03%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes l16{0%,67.76%{opacity:0;transform:translateY(4px)}69.26%,94%{opacity:1;transform:none}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.ln{animation:none!important;opacity:1}}
+</style>
+<rect width="920" height="500" rx="12" fill="var(--bg)"/>
+<path d="M0 12a12 12 0 0 1 12-12h896a12 12 0 0 1 12 12v24H0z" fill="var(--bar)"/>
+<circle cx="22" cy="18" r="6" fill="#ff5f57"/><circle cx="42" cy="18" r="6" fill="#febc2e"/><circle cx="62" cy="18" r="6" fill="#28c840"/>
+<text x="460" y="23" text-anchor="middle" class="dim" style="font-size:13px">claude — ~/toko-online</text>
+  <g class="ln" style="animation:l0 16s linear infinite"><circle cx="33" cy="59" r="5" fill="var(--bad)"/><text x="46" y="64" class="label" fill="var(--bad)">Tanpa Lokal</text></g>
+  <text x="28" y="88" class="ln prompt" style="animation:l1 16s linear infinite">&gt; kenapa import pelanggan.csv gagal?</text>
+  <text x="28" y="112" class="ln tool" style="animation:l2 16s linear infinite">● Read(pelanggan.csv)</text>
+  <text x="50" y="136" class="ln dim" style="animation:l3 16s linear infinite">nama,nik,telepon</text>
+  <g class="ln" style="animation:l4 16s linear infinite"><rect x="44" y="143" width="355" height="23" rx="4" fill="var(--bad-bg)"/><text x="50" y="160" class="leak">Budi Santoso,3201011508950001,0812-3456-7890</text></g>
+  <g class="ln" style="animation:l5 16s linear infinite"><rect x="44" y="167" width="332" height="23" rx="4" fill="var(--bad-bg)"/><text x="50" y="184" class="leak">Siti Aminah,081398765432,3276014503920002</text></g>
+  <text x="50" y="208" class="ln warn" style="animation:l6 16s linear infinite">↑ terkirim apa adanya ke penyedia model</text>
+  
+  <g class="ln" style="animation:l8 16s linear infinite"><circle cx="33" cy="251" r="5" fill="var(--good)"/><text x="46" y="256" class="label" fill="var(--good)">Dengan Lokal</text></g>
+  <text x="28" y="280" class="ln prompt" style="animation:l9 16s linear infinite">&gt; kenapa import pelanggan.csv gagal?</text>
+  <text x="28" y="304" class="ln tool" style="animation:l10 16s linear infinite">● lokal · read_file_masked(pelanggan.csv)</text>
+  <text x="50" y="328" class="ln dim" style="animation:l11 16s linear infinite">nama,nik,telepon</text>
+  <g class="ln" style="animation:l12 16s linear infinite"><rect x="44" y="335" width="215" height="23" rx="4" fill="var(--good-bg)"/><text x="50" y="352" class="masked">[NAME_1],[NIK_1],[PHONE_1]</text></g>
+  <g class="ln" style="animation:l13 16s linear infinite"><rect x="44" y="359" width="215" height="23" rx="4" fill="var(--good-bg)"/><text x="50" y="376" class="masked">[NAME_2],[PHONE_2],[NIK_2]</text></g>
+  <text x="28" y="400" class="ln text" style="animation:l14 16s linear infinite">● Baris 2 berisi nomor HP di kolom nik. Saya perbaiki.</text>
+  <text x="28" y="424" class="ln tool" style="animation:l15 16s linear infinite">● lokal · write_file_unmasked(pelanggan.csv)</text>
+  <text x="50" y="448" class="ln ok" style="animation:l16 16s linear infinite">✓ nilai asli ditulis kembali di komputermu; model tidak pernah melihatnya</text>
+</svg>

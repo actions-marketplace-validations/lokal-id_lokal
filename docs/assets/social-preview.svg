@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640">
+<style>
+text{font-family:"Segoe UI",Inter,system-ui,-apple-system,sans-serif;fill:#e6edf3}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+</style>
+<rect width="1280" height="640" fill="#0d1117"/>
+<rect x="0" y="0" width="1280" height="8" fill="#e5484d"/>
+<rect x="0" y="8" width="1280" height="8" fill="#f0f0f0"/>
+<text x="96" y="200" style="font-size:112px;font-weight:800;letter-spacing:-2px">Lokal</text>
+<text x="96" y="268" style="font-size:40px;font-weight:600">Make AI coding agents Indonesia-ready</text>
+<text x="96" y="320" style="font-size:28px;fill:#8b949e">Indonesian conventions for agents. Personal data kept out of the model.</text>
+
+<g class="mono" style="font-size:30px">
+  <rect x="96" y="380" width="1088" height="132" rx="14" fill="#161b22" stroke="#30363d"/>
+  <text x="128" y="432" class="mono" style="fill:#ffa198">Budi Santoso,3201011508950001,0812-3456-7890</text>
+  <text x="1152" y="432" class="mono" text-anchor="end" style="font-size:24px;fill:#8b949e">your file</text>
+  <text x="128" y="484" class="mono" style="fill:#7ee787">[NAME_1],[NIK_1],[PHONE_1]</text>
+  <text x="1152" y="484" class="mono" text-anchor="end" style="font-size:24px;fill:#8b949e">what the model sees</text>
+</g>
+
+<text x="96" y="580" class="mono" style="font-size:26px;fill:#79c0ff">github.com/lokal-id/lokal</text>
+<text x="1184" y="580" text-anchor="end" style="font-size:24px;fill:#8b949e">Claude Code · Cursor · Codex · Gemini CLI · MCP · npm · PyPI</text>
+</svg>

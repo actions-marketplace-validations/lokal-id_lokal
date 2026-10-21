@@ -11,9 +11,11 @@ build apps that are correct for Indonesia, while keeping your users' personal da
 [![npm @lokal-id/core](https://img.shields.io/npm/v/@lokal-id/core?label=%40lokal-id%2Fcore&color=cb3837)](https://www.npmjs.com/package/@lokal-id/core)
 [![PyPI lokal-id](https://img.shields.io/pypi/v/lokal-id?label=lokal-id&color=3775a9)](https://pypi.org/project/lokal-id/)
 [![CI](https://github.com/lokal-id/lokal/actions/workflows/ci.yml/badge.svg)](https://github.com/lokal-id/lokal/actions/workflows/ci.yml)
+[![npm provenance](https://img.shields.io/badge/npm-provenance-2ea44f?logo=npm)](SECURITY.md#how-releases-are-protected)
+[![Third-party dependencies: 0](https://img.shields.io/badge/third--party%20dependencies-0-2ea44f)](SECURITY.md#how-releases-are-protected)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Node.js >= 20](https://img.shields.io/badge/node-%3E%3D20-339933?logo=node.js&logoColor=white)](https://nodejs.org)
-[![MCP](https://img.shields.io/badge/MCP-stdio-6e56cf)](https://modelcontextprotocol.io)
+[![MCP](https://img.shields.io/badge/MCP-stdio%20%7C%20HTTP-6e56cf)](https://modelcontextprotocol.io)
 
 [Quick start](#quick-start) ·
 [Features](#features) ·
@@ -21,6 +23,10 @@ build apps that are correct for Indonesia, while keeping your users' personal da
 [Evaluation](#evaluation) ·
 [Limitations](#limitations) ·
 [**Bahasa Indonesia**](README.id.md)
+
+<br>
+
+<img src="docs/assets/demo.svg" alt="The same CSV, read by an AI agent without Lokal and with it." width="100%">
 
 </div>
 
