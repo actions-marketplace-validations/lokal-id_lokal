@@ -2469,6 +2469,81 @@
   "matches": []
  },
  {
+  "text": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
+  "matches": []
+ },
+ {
+  "text": "uji",
+  "matches": []
+ },
+ {
+  "text": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
+  "matches": []
+ },
+ {
+  "text": "Budi Santoso",
+  "matches": []
+ },
+ {
+  "text": "3201011508950001",
+  "matches": [
+   [
+    "NIK",
+    0,
+    16,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Siti Aminah",
+  "matches": []
+ },
+ {
+  "text": "3201014408960002",
+  "matches": [
+   [
+    "NIK",
+    0,
+    16,
+    "3201014408960002",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tBudi Santoso\t3201011508950001\n\\.\n",
+  "matches": [
+   [
+    "NAME",
+    52,
+    64,
+    "Budi Santoso",
+    "high"
+   ],
+   [
+    "NIK",
+    65,
+    81,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "([^",
+  "matches": []
+ },
+ {
+  "text": "\n",
+  "matches": []
+ },
+ {
+  "text": "\t",
+  "matches": []
+ },
+ {
   "text": "Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK",
   "matches": []
  },
@@ -5113,6 +5188,293 @@
  {
   "text": "Kopi Gayo",
   "matches": []
+ },
+ {
+  "text": "dump SQL tanpa nama kolom: mysqldump membaca kolom dari CREATE TABLE",
+  "matches": []
+ },
+ {
+  "text": "CREATE TABLE `pelanggan` (\n",
+  "matches": []
+ },
+ {
+  "text": "  `id` int NOT NULL AUTO_INCREMENT,\n",
+  "matches": []
+ },
+ {
+  "text": "tanpa, nama",
+  "matches": []
+ },
+ {
+  "text": "nomor (hp)",
+  "matches": []
+ },
+ {
+  "text": "  `nik` char(16),\n",
+  "matches": []
+ },
+ {
+  "text": "  PRIMARY KEY (`id`),\n",
+  "matches": []
+ },
+ {
+  "text": "  KEY `idx_nik` (`nik`)\n",
+  "matches": []
+ },
+ {
+  "text": ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n",
+  "matches": []
+ },
+ {
+  "text": "Budi Santoso",
+  "matches": []
+ },
+ {
+  "text": "081234567890",
+  "matches": [
+   [
+    "PHONE",
+    0,
+    12,
+    "081234567890",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "3201011508950001",
+  "matches": [
+   [
+    "NIK",
+    0,
+    16,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Siti Aminah",
+  "matches": []
+ },
+ {
+  "text": "3201014408960002",
+  "matches": [
+   [
+    "NIK",
+    0,
+    16,
+    "3201014408960002",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "CREATE TABLE `produk` (`id` int, `nama` varchar(50));\n",
+  "matches": []
+ },
+ {
+  "text": "Kopi Susu Gula Aren",
+  "matches": []
+ },
+ {
+  "text": "Hendra Gunawan",
+  "matches": []
+ },
+ {
+  "text": "NAME:Budi Santoso",
+  "matches": [
+   [
+    "NAME",
+    5,
+    17,
+    "Budi Santoso",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "PHONE:081234567890",
+  "matches": [
+   [
+    "PHONE",
+    6,
+    18,
+    "081234567890",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "NIK:3201011508950001",
+  "matches": [
+   [
+    "NIK",
+    4,
+    20,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "NAME:Siti Aminah",
+  "matches": [
+   [
+    "NAME",
+    5,
+    16,
+    "Siti Aminah",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "NIK:3201014408960002",
+  "matches": [
+   [
+    "NIK",
+    4,
+    20,
+    "3201014408960002",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "CREATE TABLE public.\"Pasien\" (\n    id integer,\n    nama_lengkap text,\n    diagnosa text\n);\n",
+  "matches": []
+ },
+ {
+  "text": "Rina Wati",
+  "matches": []
+ },
+ {
+  "text": "Diabetes tipe 2",
+  "matches": []
+ },
+ {
+  "text": "NAME:Rina Wati",
+  "matches": [
+   [
+    "NAME",
+    5,
+    14,
+    "Rina Wati",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "HEALTH:Diabetes tipe 2",
+  "matches": []
+ },
+ {
+  "text": "dump SQL: blok COPY dari pg_dump",
+  "matches": []
+ },
+ {
+  "text": "COPY public.pelanggan (id, nama, alamat, no_hp) FROM stdin;\n",
+  "matches": []
+ },
+ {
+  "text": "1\tBudi Santoso\tJl. Melati No. 5\t081234567890\n",
+  "matches": [
+   [
+    "ADDRESS",
+    15,
+    31,
+    "Jl. Melati No. 5",
+    "high"
+   ],
+   [
+    "PHONE",
+    32,
+    44,
+    "081234567890",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "2\t\\N\tJl. Mawar No. 3\t\\N\n",
+  "matches": [
+   [
+    "ADDRESS",
+    5,
+    20,
+    "Jl. Mawar No. 3",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "\\.\n",
+  "matches": []
+ },
+ {
+  "text": "COPY public.produk (id, nama) FROM stdin;\n",
+  "matches": []
+ },
+ {
+  "text": "1\tKopi Gayo\n",
+  "matches": []
+ },
+ {
+  "text": "\\.\n",
+  "matches": []
+ },
+ {
+  "text": "3\tBukan Baris COPY\tx\tx\n",
+  "matches": []
+ },
+ {
+  "text": "NAME:Budi Santoso",
+  "matches": [
+   [
+    "NAME",
+    5,
+    17,
+    "Budi Santoso",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "ADDRESS:Jl. Melati No. 5",
+  "matches": [
+   [
+    "ADDRESS",
+    8,
+    24,
+    "Jl. Melati No. 5",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "PHONE:081234567890",
+  "matches": [
+   [
+    "PHONE",
+    6,
+    18,
+    "081234567890",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "ADDRESS:Jl. Mawar No. 3",
+  "matches": [
+   [
+    "ADDRESS",
+    8,
+    23,
+    "Jl. Mawar No. 3",
+    "high"
+   ]
+  ]
  },
  {
   "text": "email yang dieja manual dan nama tanpa label di chat",
@@ -58296,6 +58658,442 @@
     25,
     35,
     "1234567890",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "CREATE TABLE `pelanggan` (\n  `id` int NOT NULL AUTO_INCREMENT,\n  `nama` varchar(100) DEFAULT 'tanpa, nama',\n  `telepon` varchar(20) COMMENT 'nomor (hp)',\n  `nik` char(16),\n  `diagnosa` text,\n  PRIMARY KEY (`id`),\n  KEY `idx_nik` (`nik`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\nINSERT INTO `pelanggan` VALUES (1,'Budi Santoso','081234567890','3201011508950001','Diabetes tipe 2'),(2,'Siti Aminah',NULL,3201014408960002,NULL),(3,'O''Brien Siregar','+62 812-9876-5432','3578014607910004','hipertensi');\n",
+  "matches": [
+   [
+    "NAME",
+    313,
+    325,
+    "Budi Santoso",
+    "high"
+   ],
+   [
+    "PHONE",
+    328,
+    340,
+    "081234567890",
+    "high"
+   ],
+   [
+    "NIK",
+    343,
+    359,
+    "3201011508950001",
+    "high"
+   ],
+   [
+    "HEALTH",
+    362,
+    377,
+    "Diabetes tipe 2",
+    "high"
+   ],
+   [
+    "NAME",
+    384,
+    395,
+    "Siti Aminah",
+    "high"
+   ],
+   [
+    "NIK",
+    402,
+    418,
+    "3201014408960002",
+    "high"
+   ],
+   [
+    "NAME",
+    429,
+    445,
+    "O''Brien Siregar",
+    "high"
+   ],
+   [
+    "PHONE",
+    448,
+    465,
+    "+62 812-9876-5432",
+    "high"
+   ],
+   [
+    "NIK",
+    468,
+    484,
+    "3578014607910004",
+    "high"
+   ],
+   [
+    "HEALTH",
+    487,
+    497,
+    "hipertensi",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "CREATE TABLE `pelanggan` (\n  `id` int NOT NULL AUTO_INCREMENT,\n  `nama` varchar(100) DEFAULT 'tanpa, nama',\n  `telepon` varchar(20) COMMENT 'nomor (hp)',\n  `nik` char(16),\n  `diagnosa` text,\n  PRIMARY KEY (`id`),\n  KEY `idx_nik` (`nik`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\nINSERT IGNORE INTO pelanggan VALUES (1,'Budi Santoso','081234567890','3201011508950001','Diabetes tipe 2');\nINSERT IGNORE INTO pelanggan VALUES (2,'Siti Aminah',NULL,3201014408960002,NULL);\nINSERT IGNORE INTO pelanggan VALUES (3,'O''Brien Siregar','+62 812-9876-5432','3578014607910004','hipertensi');",
+  "matches": [
+   [
+    "NAME",
+    318,
+    330,
+    "Budi Santoso",
+    "high"
+   ],
+   [
+    "PHONE",
+    333,
+    345,
+    "081234567890",
+    "high"
+   ],
+   [
+    "NIK",
+    348,
+    364,
+    "3201011508950001",
+    "high"
+   ],
+   [
+    "HEALTH",
+    367,
+    382,
+    "Diabetes tipe 2",
+    "high"
+   ],
+   [
+    "NAME",
+    426,
+    437,
+    "Siti Aminah",
+    "high"
+   ],
+   [
+    "NIK",
+    444,
+    460,
+    "3201014408960002",
+    "high"
+   ],
+   [
+    "NAME",
+    508,
+    524,
+    "O''Brien Siregar",
+    "high"
+   ],
+   [
+    "PHONE",
+    527,
+    544,
+    "+62 812-9876-5432",
+    "high"
+   ],
+   [
+    "NIK",
+    547,
+    563,
+    "3578014607910004",
+    "high"
+   ],
+   [
+    "HEALTH",
+    566,
+    576,
+    "hipertensi",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "CREATE TABLE public.\"Pasien\" (\n    id integer NOT NULL,\n    nama_lengkap text,\n    alamat text,\n    no_hp character varying(20),\n    CONSTRAINT pasien_pkey PRIMARY KEY (id)\n);\nCOPY public.\"Pasien\" (id, nama_lengkap, alamat, no_hp) FROM stdin;\n1\tRina Wati\tJl. Melati No. 5 RT 03/RW 07\t081234567890\n2\t\\N\tJl. Mawar No. 3\t\\N\n3\tDewi Lestari\t\\N\t0813-9999-0000\n\\.\nCOPY public.produk (id, nama) FROM stdin;\n1\tKopi Gayo\n\\.\nINSERT INTO public.\"Pasien\" VALUES (4, 'Hendra Gunawan', 'Gg. Kenari No. 12', '0812-1111-2222');\nINSERT INTO log VALUES (1, 'Agus Salim');\n",
+  "matches": [
+   [
+    "NAME",
+    245,
+    254,
+    "Rina Wati",
+    "high"
+   ],
+   [
+    "ADDRESS",
+    255,
+    283,
+    "Jl. Melati No. 5 RT 03/RW 07",
+    "high"
+   ],
+   [
+    "PHONE",
+    284,
+    296,
+    "081234567890",
+    "high"
+   ],
+   [
+    "ADDRESS",
+    302,
+    317,
+    "Jl. Mawar No. 3",
+    "high"
+   ],
+   [
+    "NAME",
+    323,
+    335,
+    "Dewi Lestari",
+    "high"
+   ],
+   [
+    "PHONE",
+    339,
+    353,
+    "0813-9999-0000",
+    "high"
+   ],
+   [
+    "NAME",
+    454,
+    468,
+    "Hendra Gunawan",
+    "high"
+   ],
+   [
+    "ADDRESS",
+    472,
+    489,
+    "Gg. Kenari No. 12",
+    "high"
+   ],
+   [
+    "PHONE",
+    493,
+    507,
+    "0812-1111-2222",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "CREATE TABLE `pelanggan` (\n  `id` int NOT NULL AUTO_INCREMENT,\n  `nama` varchar(100) DEFAULT 'tanpa, nama',\n  `telepon` varchar(20) COMMENT 'nomor (hp)',\n  `nik` char(16),\n  `diagnosa` text,\n  PRIMARY KEY (`id`),\n  KEY `idx_nik` (`nik`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\r\nINSERT INTO `pelanggan` VALUES (1,'Budi Santoso','081234567890','3201011508950001','Diabetes tipe 2'),(2,'Siti Aminah',NULL,3201014408960002,NULL),(3,'O''Brien Siregar','+62 812-9876-5432','3578014607910004','hipertensi');\r\n",
+  "matches": [
+   [
+    "NAME",
+    314,
+    326,
+    "Budi Santoso",
+    "high"
+   ],
+   [
+    "PHONE",
+    329,
+    341,
+    "081234567890",
+    "high"
+   ],
+   [
+    "NIK",
+    344,
+    360,
+    "3201011508950001",
+    "high"
+   ],
+   [
+    "HEALTH",
+    363,
+    378,
+    "Diabetes tipe 2",
+    "high"
+   ],
+   [
+    "NAME",
+    385,
+    396,
+    "Siti Aminah",
+    "high"
+   ],
+   [
+    "NIK",
+    403,
+    419,
+    "3201014408960002",
+    "high"
+   ],
+   [
+    "NAME",
+    430,
+    446,
+    "O''Brien Siregar",
+    "high"
+   ],
+   [
+    "PHONE",
+    449,
+    466,
+    "+62 812-9876-5432",
+    "high"
+   ],
+   [
+    "NIK",
+    469,
+    485,
+    "3578014607910004",
+    "high"
+   ],
+   [
+    "HEALTH",
+    488,
+    498,
+    "hipertensi",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "CREATE TABLE `pelanggan` (\n  `id` int NOT NULL AUTO_INCREMENT,\n  `nama` varchar(100) DEFAULT 'tanpa, nama',\n  `telepon` varchar(20) COMMENT 'nomor (hp)',\n  `nik` char(16),\n  `diagnosa` text,\n  PRIMARY KEY (`id`),\n  KEY `idx_nik` (`nik`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\r\nINSERT IGNORE INTO pelanggan VALUES (1,'Budi Santoso','081234567890','3201011508950001','Diabetes tipe 2');\r\nINSERT IGNORE INTO pelanggan VALUES (2,'Siti Aminah',NULL,3201014408960002,NULL);\r\nINSERT IGNORE INTO pelanggan VALUES (3,'O''Brien Siregar','+62 812-9876-5432','3578014607910004','hipertensi');",
+  "matches": [
+   [
+    "NAME",
+    319,
+    331,
+    "Budi Santoso",
+    "high"
+   ],
+   [
+    "PHONE",
+    334,
+    346,
+    "081234567890",
+    "high"
+   ],
+   [
+    "NIK",
+    349,
+    365,
+    "3201011508950001",
+    "high"
+   ],
+   [
+    "HEALTH",
+    368,
+    383,
+    "Diabetes tipe 2",
+    "high"
+   ],
+   [
+    "NAME",
+    428,
+    439,
+    "Siti Aminah",
+    "high"
+   ],
+   [
+    "NIK",
+    446,
+    462,
+    "3201014408960002",
+    "high"
+   ],
+   [
+    "NAME",
+    511,
+    527,
+    "O''Brien Siregar",
+    "high"
+   ],
+   [
+    "PHONE",
+    530,
+    547,
+    "+62 812-9876-5432",
+    "high"
+   ],
+   [
+    "NIK",
+    550,
+    566,
+    "3578014607910004",
+    "high"
+   ],
+   [
+    "HEALTH",
+    569,
+    579,
+    "hipertensi",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "CREATE TABLE public.\"Pasien\" (\r\n    id integer NOT NULL,\r\n    nama_lengkap text,\r\n    alamat text,\r\n    no_hp character varying(20),\r\n    CONSTRAINT pasien_pkey PRIMARY KEY (id)\r\n);\r\nCOPY public.\"Pasien\" (id, nama_lengkap, alamat, no_hp) FROM stdin;\r\n1\tRina Wati\tJl. Melati No. 5 RT 03/RW 07\t081234567890\r\n2\t\\N\tJl. Mawar No. 3\t\\N\r\n3\tDewi Lestari\t\\N\t0813-9999-0000\r\n\\.\r\nCOPY public.produk (id, nama) FROM stdin;\r\n1\tKopi Gayo\r\n\\.\r\nINSERT INTO public.\"Pasien\" VALUES (4, 'Hendra Gunawan', 'Gg. Kenari No. 12', '0812-1111-2222');\r\nINSERT INTO log VALUES (1, 'Agus Salim');\r\n",
+  "matches": [
+   [
+    "NAME",
+    253,
+    262,
+    "Rina Wati",
+    "high"
+   ],
+   [
+    "ADDRESS",
+    263,
+    291,
+    "Jl. Melati No. 5 RT 03/RW 07",
+    "high"
+   ],
+   [
+    "PHONE",
+    292,
+    304,
+    "081234567890",
+    "high"
+   ],
+   [
+    "ADDRESS",
+    311,
+    326,
+    "Jl. Mawar No. 3",
+    "high"
+   ],
+   [
+    "NAME",
+    333,
+    345,
+    "Dewi Lestari",
+    "high"
+   ],
+   [
+    "PHONE",
+    349,
+    363,
+    "0813-9999-0000",
+    "high"
+   ],
+   [
+    "NAME",
+    469,
+    483,
+    "Hendra Gunawan",
+    "high"
+   ],
+   [
+    "ADDRESS",
+    487,
+    504,
+    "Gg. Kenari No. 12",
+    "high"
+   ],
+   [
+    "PHONE",
+    508,
+    522,
+    "0812-1111-2222",
     "high"
    ]
   ]

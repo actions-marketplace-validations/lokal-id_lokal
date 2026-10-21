@@ -42,6 +42,23 @@ test('Kembaran: CSV pelanggan tanpa satu pun nilai asli, tetap konsisten dan val
   assert.match(budi![5]!, /^"Jl\. [A-Z][a-z]+(?: [A-Z][a-z]+)? No\. \d+ RT 0\d\/RW 0\d, Cibinong"$/);
 });
 
+test('Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris', () => {
+  const k = new Kembaran({ secret: 'uji' });
+  const my = k.text(
+    'CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n' +
+      "INSERT INTO `pelanggan` VALUES (1,'Budi Santoso','3201011508950001'),(2,'Siti Aminah','3201014408960002');\n",
+  );
+  const pg = k.text('COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tBudi Santoso\t3201011508950001\n\\.\n');
+  for (const out of [my, pg]) {
+    assert.doesNotMatch(out.text, /Budi|Siti|3201011508950001/);
+    assert.ok(out.replaced.NAME! >= 1 && out.replaced.NIK! >= 1, JSON.stringify(out.replaced));
+  }
+  // The same customer gets the same stand-in in both dumps.
+  const name = /VALUES \(1,'([^']+)'/.exec(my.text)![1]!;
+  assert.equal(pg.text.split('\n')[1]!.split('\t')[1], name);
+  assert.match(pg.text, /\n\\\.\n$/);
+});
+
 test('Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK', () => {
   const k = new Kembaran({ secret: 'uji' });
   const a = k.text("INSERT INTO pelanggan (nama, nik, rekening) VALUES ('Budi Santoso', '3201011508950001', '1234567890');").text;

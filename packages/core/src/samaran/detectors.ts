@@ -409,48 +409,136 @@ const DIGITS_AT = /\d+/y;
 const THING_TABLE =
   /produk|product|barang|item|sku|kategori|categor|menu|toko|store|shop|merchant|brand|merek|layanan|service|paket|package|kota|city|provinsi|province|wilayah|region|kecamatan|kelurahan|desa|district|bank|kurir|courier|ekspedisi|tag|role|permission|setting|config|status|metode|method/i;
 
-/** `INSERT INTO pelanggan (nama, nik, …) VALUES ('Hendra', '1371…'), (…);` with values matched to their columns. */
-function detectSqlInserts(text: string): PiiMatch[] {
-  const out: PiiMatch[] = [];
-  const insert = /\bINSERT\s+INTO\s+([`"\w.]+)\s*\(([^)]{1,2000})\)\s*VALUES\s*/gi;
-  for (const m of text.matchAll(insert)) {
-    const thingTable = THING_TABLE.test(m[1]!);
-    const columns = m[2]!.split(',').map((c) => c.trim().replace(/^[`"[]|[`"\]]$/g, ''));
-    // `produk.nama` is a product; only a person's table makes a bare "nama" column a name.
-    const types = columns.map((c) => (thingTable && /^(?:nama|name|title|judul)$/i.test(c) ? undefined : fieldType(c)));
-    if (!types.some(Boolean)) continue;
-    let i = m.index + m[0].length;
-    let col = 0;
-    let depth = 0;
-    // Walk the tuples character by character so quoted commas and parentheses stay inside their value.
-    while (i < text.length) {
+const COLUMN_QUOTES = /^[`"[]|[`"\]]$/g;
+const COLUMN_NAME = /^(?:`[^`]+`|"[^"]+"|\[[^\]]+\]|[\w$]+)/;
+const NOT_A_COLUMN = /^(?:PRIMARY|KEY|UNIQUE|CONSTRAINT|INDEX|FOREIGN|CHECK|FULLTEXT|SPATIAL|EXCLUDE|LIKE|PERIOD)\b/i;
+const CREATE_TABLE = /\bCREATE\s+(?:(?:GLOBAL\s+|LOCAL\s+)?(?:TEMP|TEMPORARY|UNLOGGED)\s+)?TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?([`"\w.]+)\s*\(/gi;
+const INSERT_COLUMNS = /\b(?:INSERT|REPLACE)\s+(?:IGNORE\s+)?INTO\s+([`"\w.]+)\s*\(([^)]{1,2000})\)\s*VALUES\s*/gi;
+const INSERT_VALUES = /\b(?:INSERT|REPLACE)\s+(?:IGNORE\s+)?INTO\s+([`"\w.]+)\s+VALUES\s*/gi;
+const COPY_FROM_STDIN = /^COPY\s+([`"\w.]+)\s*\(([^)]{1,2000})\)\s+FROM\s+stdin;\r?\n/gim;
+
+/** `public.pelanggan`, `"pelanggan"`, and `` `pelanggan` `` name the same table. */
+function tableKey(name: string): string {
+  return name.replace(/[`"]/g, '').split('.').pop()!.toLowerCase();
+}
+
+function columnTypes(table: string, columns: string[]): Array<PiiType | undefined> {
+  // `produk.nama` is a product; only a person's table makes a bare "nama" column a name.
+  const thingTable = THING_TABLE.test(table);
+  return columns.map((c) => (thingTable && /^(?:nama|name|title|judul)$/i.test(c) ? undefined : fieldType(c)));
+}
+
+/**
+ * The columns of every `CREATE TABLE` in the text, in order, so that rows without column names (`INSERT INTO t
+ * VALUES (…)` as mysqldump and `pg_dump --inserts` write them) can still be read by column.
+ */
+function createdTables(text: string): Map<string, string[]> {
+  const tables = new Map<string, string[]>();
+  for (const m of text.matchAll(CREATE_TABLE)) {
+    const columns: string[] = [];
+    let depth = 1;
+    let from = m.index + m[0].length;
+    const limit = Math.min(text.length, from + 100_000);
+    const take = (to: number) => {
+      const item = text.slice(from, to).trim();
+      const name = COLUMN_NAME.exec(item);
+      if (name && !NOT_A_COLUMN.test(item)) columns.push(name[0].replace(COLUMN_QUOTES, ''));
+    };
+    for (let i = from; i < limit && depth > 0; i++) {
       const ch = text[i]!;
-      if (ch === "'" || ch === '"') {
+      if (ch === "'") {
+        // A default or comment: `DEFAULT 'a,b'`, `COMMENT 'nama (lengkap)'`.
         let j = i + 1;
-        while (j < text.length && !(text[j] === ch && text[j + 1] !== ch)) j += text[j] === ch || text[j] === '\\' ? 2 : 1;
-        const type = depth === 1 ? types[col] : undefined;
-        const value = text.slice(i + 1, j);
-        if (type && isPlausibleValue(type, value, columns[col]!)) out.push(match(type, i + 1, value, 'high'));
-        i = j + 1;
-        continue;
+        while (j < limit && !(text[j] === "'" && text[j + 1] !== "'")) j += text[j] === "'" || text[j] === '\\' ? 2 : 1;
+        i = j;
+      } else if (ch === '(') depth++;
+      else if (ch === ')') {
+        if (--depth === 0) take(i);
+      } else if (ch === ',' && depth === 1) {
+        take(i);
+        from = i + 1;
       }
-      if (ch === '(') {
-        depth++;
-        if (depth === 1) col = 0;
-      } else if (ch === ')') depth--;
-      else if (ch === ',' && depth === 1) col++;
-      else if (ch === ';' && depth === 0) break;
-      else if (depth === 0 && !/[\s,]/.test(ch)) break;
-      else if (depth === 1 && /\d/.test(ch) && /[(,\s]/.test(text[i - 1]!)) {
-        // An unquoted number in a personal column: `nik` stored as BIGINT.
-        DIGITS_AT.lastIndex = i;
-        const num = DIGITS_AT.exec(text)![0];
-        const type = types[col];
-        if (type && isPlausibleValue(type, num, columns[col]!)) out.push(match(type, i, num, 'high'));
-        i += num.length;
-        continue;
-      }
-      i++;
+    }
+    if (depth === 0) tables.set(tableKey(m[1]!), columns);
+  }
+  return tables;
+}
+
+/** Walks the VALUES tuples from `i`, matching each value to its column. */
+function sqlValues(text: string, i: number, types: Array<PiiType | undefined>, columns: string[], out: PiiMatch[]): void {
+  let col = 0;
+  let depth = 0;
+  // Walk the tuples character by character so quoted commas and parentheses stay inside their value.
+  while (i < text.length) {
+    const ch = text[i]!;
+    if (ch === "'" || ch === '"') {
+      let j = i + 1;
+      while (j < text.length && !(text[j] === ch && text[j + 1] !== ch)) j += text[j] === ch || text[j] === '\\' ? 2 : 1;
+      const type = depth === 1 ? types[col] : undefined;
+      const value = text.slice(i + 1, j);
+      if (type && isPlausibleValue(type, value, columns[col]!)) out.push(match(type, i + 1, value, 'high'));
+      i = j + 1;
+      continue;
+    }
+    if (ch === '(') {
+      depth++;
+      if (depth === 1) col = 0;
+    } else if (ch === ')') depth--;
+    else if (ch === ',' && depth === 1) col++;
+    else if (ch === ';' && depth === 0) break;
+    else if (depth === 0 && !/[\s,]/.test(ch)) break;
+    else if (depth === 1 && /\d/.test(ch) && /[(,\s]/.test(text[i - 1]!)) {
+      // An unquoted number in a personal column: `nik` stored as BIGINT.
+      DIGITS_AT.lastIndex = i;
+      const num = DIGITS_AT.exec(text)![0];
+      const type = types[col];
+      if (type && isPlausibleValue(type, num, columns[col]!)) out.push(match(type, i, num, 'high'));
+      i += num.length;
+      continue;
+    }
+    i++;
+  }
+}
+
+/**
+ * SQL dumps, with values matched to their columns: `INSERT INTO pelanggan (nama, nik, …) VALUES ('Hendra', '1371…'),
+ * (…);`, rows without column names under a `CREATE TABLE` (mysqldump, `pg_dump --inserts`), and `COPY … FROM stdin`
+ * blocks (pg_dump's default), whose rows are tab-separated.
+ */
+function detectSqlInserts(text: string): PiiMatch[] {
+  if (!/\b(?:INTO|COPY)\b/i.test(text)) return [];
+  const out: PiiMatch[] = [];
+  for (const m of text.matchAll(INSERT_COLUMNS)) {
+    const columns = m[2]!.split(',').map((c) => c.trim().replace(COLUMN_QUOTES, ''));
+    const types = columnTypes(m[1]!, columns);
+    if (types.some(Boolean)) sqlValues(text, m.index + m[0].length, types, columns, out);
+  }
+  let tables: Map<string, string[]> | undefined;
+  for (const m of text.matchAll(INSERT_VALUES)) {
+    tables ??= createdTables(text);
+    const columns = tables.get(tableKey(m[1]!));
+    if (!columns) continue;
+    const types = columnTypes(m[1]!, columns);
+    if (types.some(Boolean)) sqlValues(text, m.index + m[0].length, types, columns, out);
+  }
+  for (const m of text.matchAll(COPY_FROM_STDIN)) {
+    const columns = m[2]!.split(',').map((c) => c.trim().replace(COLUMN_QUOTES, ''));
+    const types = columnTypes(m[1]!, columns);
+    if (!types.some(Boolean)) continue;
+    let pos = m.index + m[0].length;
+    while (pos < text.length) {
+      let end = text.indexOf('\n', pos);
+      if (end === -1) end = text.length;
+      const line = text.slice(pos, end > pos && text[end - 1] === '\r' ? end - 1 : end);
+      if (line === '\\.') break;
+      let at = pos;
+      line.split('\t').forEach((cell, idx) => {
+        const type = types[idx];
+        // \N is NULL.
+        if (type && cell !== '\\N' && isPlausibleValue(type, cell, columns[idx]!)) out.push(match(type, at, cell, 'high'));
+        at += cell.length + 1;
+      });
+      pos = end + 1;
     }
   }
   return out;

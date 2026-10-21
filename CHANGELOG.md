@@ -4,6 +4,14 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-10-21
+
+npm (`@lokal-id/core`, `@lokal-id/mcp`) and PyPI (`lokal-id`).
+
+### Fixed
+
+- **Names in default `mysqldump` and `pg_dump` output were not masked or replaced.** Rows without column names (`INSERT INTO pelanggan VALUES (1,'Budi Santoso',…)`) are now read by the columns of the dump's `CREATE TABLE`, and pg_dump's `COPY … FROM stdin` blocks by their column list, so `scan_pii`, `read_file_masked`, the guard, and Kembaran treat them like `INSERT` with column names. NIK, phone numbers, and e-mail were already caught by their format; names, addresses, and health values in those rows were left as they were. `REPLACE INTO` and `INSERT IGNORE` are read too. A 100,000-row mysqldump is read in about a second.
+
 ### Changed
 
 - The release lists a new version in the MCP Registry only once npm serves both `@lokal-id/core` and `@lokal-id/mcp`. For 0.4.0 the registry listed the server while npm was still processing `@lokal-id/core` (11 minutes, against 2 for `@lokal-id/mcp`), so installing `@lokal-id/mcp@0.4.0` in that window failed. The release now waits up to 30 minutes.
@@ -112,7 +120,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/lokal-id/lokal/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/lokal-id/lokal/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/lokal-id/lokal/compare/v0.2.2...v0.3.0
 [0.2.3]: https://github.com/lokal-id/lokal/releases/tag/py-v0.2.3

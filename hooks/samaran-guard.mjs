@@ -844,53 +844,136 @@ function detectChatSenders(text) {
 }
 var DIGITS_AT = /\d+/y;
 var THING_TABLE = /produk|product|barang|item|sku|kategori|categor|menu|toko|store|shop|merchant|brand|merek|layanan|service|paket|package|kota|city|provinsi|province|wilayah|region|kecamatan|kelurahan|desa|district|bank|kurir|courier|ekspedisi|tag|role|permission|setting|config|status|metode|method/i;
+var COLUMN_QUOTES = /^[`"[]|[`"\]]$/g;
+var COLUMN_NAME = /^(?:`[^`]+`|"[^"]+"|\[[^\]]+\]|[\w$]+)/;
+var NOT_A_COLUMN = /^(?:PRIMARY|KEY|UNIQUE|CONSTRAINT|INDEX|FOREIGN|CHECK|FULLTEXT|SPATIAL|EXCLUDE|LIKE|PERIOD)\b/i;
+var CREATE_TABLE = /\bCREATE\s+(?:(?:GLOBAL\s+|LOCAL\s+)?(?:TEMP|TEMPORARY|UNLOGGED)\s+)?TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?([`"\w.]+)\s*\(/gi;
+var INSERT_COLUMNS = /\b(?:INSERT|REPLACE)\s+(?:IGNORE\s+)?INTO\s+([`"\w.]+)\s*\(([^)]{1,2000})\)\s*VALUES\s*/gi;
+var INSERT_VALUES = /\b(?:INSERT|REPLACE)\s+(?:IGNORE\s+)?INTO\s+([`"\w.]+)\s+VALUES\s*/gi;
+var COPY_FROM_STDIN = /^COPY\s+([`"\w.]+)\s*\(([^)]{1,2000})\)\s+FROM\s+stdin;\r?\n/gim;
+function tableKey(name) {
+  return name.replace(/[`"]/g, "").split(".").pop().toLowerCase();
+}
+function columnTypes(table, columns) {
+  const thingTable = THING_TABLE.test(table);
+  return columns.map((c) => thingTable && /^(?:nama|name|title|judul)$/i.test(c) ? void 0 : fieldType(c));
+}
+function createdTables(text) {
+  const tables = /* @__PURE__ */ new Map();
+  for (const m of text.matchAll(CREATE_TABLE)) {
+    const columns = [];
+    let depth = 1;
+    let from = m.index + m[0].length;
+    const limit = Math.min(text.length, from + 1e5);
+    const take = (to) => {
+      const item = text.slice(from, to).trim();
+      const name = COLUMN_NAME.exec(item);
+      if (name && !NOT_A_COLUMN.test(item))
+        columns.push(name[0].replace(COLUMN_QUOTES, ""));
+    };
+    for (let i = from; i < limit && depth > 0; i++) {
+      const ch = text[i];
+      if (ch === "'") {
+        let j = i + 1;
+        while (j < limit && !(text[j] === "'" && text[j + 1] !== "'"))
+          j += text[j] === "'" || text[j] === "\\" ? 2 : 1;
+        i = j;
+      } else if (ch === "(")
+        depth++;
+      else if (ch === ")") {
+        if (--depth === 0)
+          take(i);
+      } else if (ch === "," && depth === 1) {
+        take(i);
+        from = i + 1;
+      }
+    }
+    if (depth === 0)
+      tables.set(tableKey(m[1]), columns);
+  }
+  return tables;
+}
+function sqlValues(text, i, types, columns, out) {
+  let col = 0;
+  let depth = 0;
+  while (i < text.length) {
+    const ch = text[i];
+    if (ch === "'" || ch === '"') {
+      let j = i + 1;
+      while (j < text.length && !(text[j] === ch && text[j + 1] !== ch))
+        j += text[j] === ch || text[j] === "\\" ? 2 : 1;
+      const type = depth === 1 ? types[col] : void 0;
+      const value = text.slice(i + 1, j);
+      if (type && isPlausibleValue(type, value, columns[col]))
+        out.push(match(type, i + 1, value, "high"));
+      i = j + 1;
+      continue;
+    }
+    if (ch === "(") {
+      depth++;
+      if (depth === 1)
+        col = 0;
+    } else if (ch === ")")
+      depth--;
+    else if (ch === "," && depth === 1)
+      col++;
+    else if (ch === ";" && depth === 0)
+      break;
+    else if (depth === 0 && !/[\s,]/.test(ch))
+      break;
+    else if (depth === 1 && /\d/.test(ch) && /[(,\s]/.test(text[i - 1])) {
+      DIGITS_AT.lastIndex = i;
+      const num = DIGITS_AT.exec(text)[0];
+      const type = types[col];
+      if (type && isPlausibleValue(type, num, columns[col]))
+        out.push(match(type, i, num, "high"));
+      i += num.length;
+      continue;
+    }
+    i++;
+  }
+}
 function detectSqlInserts(text) {
+  if (!/\b(?:INTO|COPY)\b/i.test(text))
+    return [];
   const out = [];
-  const insert = /\bINSERT\s+INTO\s+([`"\w.]+)\s*\(([^)]{1,2000})\)\s*VALUES\s*/gi;
-  for (const m of text.matchAll(insert)) {
-    const thingTable = THING_TABLE.test(m[1]);
-    const columns = m[2].split(",").map((c) => c.trim().replace(/^[`"[]|[`"\]]$/g, ""));
-    const types = columns.map((c) => thingTable && /^(?:nama|name|title|judul)$/i.test(c) ? void 0 : fieldType(c));
+  for (const m of text.matchAll(INSERT_COLUMNS)) {
+    const columns = m[2].split(",").map((c) => c.trim().replace(COLUMN_QUOTES, ""));
+    const types = columnTypes(m[1], columns);
+    if (types.some(Boolean))
+      sqlValues(text, m.index + m[0].length, types, columns, out);
+  }
+  let tables;
+  for (const m of text.matchAll(INSERT_VALUES)) {
+    tables ??= createdTables(text);
+    const columns = tables.get(tableKey(m[1]));
+    if (!columns)
+      continue;
+    const types = columnTypes(m[1], columns);
+    if (types.some(Boolean))
+      sqlValues(text, m.index + m[0].length, types, columns, out);
+  }
+  for (const m of text.matchAll(COPY_FROM_STDIN)) {
+    const columns = m[2].split(",").map((c) => c.trim().replace(COLUMN_QUOTES, ""));
+    const types = columnTypes(m[1], columns);
     if (!types.some(Boolean))
       continue;
-    let i = m.index + m[0].length;
-    let col = 0;
-    let depth = 0;
-    while (i < text.length) {
-      const ch = text[i];
-      if (ch === "'" || ch === '"') {
-        let j = i + 1;
-        while (j < text.length && !(text[j] === ch && text[j + 1] !== ch))
-          j += text[j] === ch || text[j] === "\\" ? 2 : 1;
-        const type = depth === 1 ? types[col] : void 0;
-        const value = text.slice(i + 1, j);
-        if (type && isPlausibleValue(type, value, columns[col]))
-          out.push(match(type, i + 1, value, "high"));
-        i = j + 1;
-        continue;
-      }
-      if (ch === "(") {
-        depth++;
-        if (depth === 1)
-          col = 0;
-      } else if (ch === ")")
-        depth--;
-      else if (ch === "," && depth === 1)
-        col++;
-      else if (ch === ";" && depth === 0)
+    let pos = m.index + m[0].length;
+    while (pos < text.length) {
+      let end = text.indexOf("\n", pos);
+      if (end === -1)
+        end = text.length;
+      const line = text.slice(pos, end > pos && text[end - 1] === "\r" ? end - 1 : end);
+      if (line === "\\.")
         break;
-      else if (depth === 0 && !/[\s,]/.test(ch))
-        break;
-      else if (depth === 1 && /\d/.test(ch) && /[(,\s]/.test(text[i - 1])) {
-        DIGITS_AT.lastIndex = i;
-        const num = DIGITS_AT.exec(text)[0];
-        const type = types[col];
-        if (type && isPlausibleValue(type, num, columns[col]))
-          out.push(match(type, i, num, "high"));
-        i += num.length;
-        continue;
-      }
-      i++;
+      let at = pos;
+      line.split("	").forEach((cell, idx) => {
+        const type = types[idx];
+        if (type && cell !== "\\N" && isPlausibleValue(type, cell, columns[idx]))
+          out.push(match(type, at, cell, "high"));
+        at += cell.length + 1;
+      });
+      pos = end + 1;
     }
   }
   return out;

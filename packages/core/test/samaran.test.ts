@@ -237,6 +237,42 @@ test('dump SQL: nilai dicocokkan dengan kolomnya', () => {
   assert.deepEqual(values("INSERT INTO produk (nama, harga) VALUES ('Kopi Gayo', 85000);"), []);
 });
 
+test('dump SQL tanpa nama kolom: mysqldump membaca kolom dari CREATE TABLE', () => {
+  const sql =
+    'CREATE TABLE `pelanggan` (\n' +
+    '  `id` int NOT NULL AUTO_INCREMENT,\n' +
+    "  `nama` varchar(100) DEFAULT 'tanpa, nama',\n" +
+    "  `telepon` varchar(20) COMMENT 'nomor (hp)',\n" +
+    '  `nik` char(16),\n' +
+    '  PRIMARY KEY (`id`),\n' +
+    '  KEY `idx_nik` (`nik`)\n' +
+    ') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n' +
+    "INSERT INTO `pelanggan` VALUES (1,'Budi Santoso','081234567890','3201011508950001'),(2,'Siti Aminah',NULL,'3201014408960002');\n" +
+    'CREATE TABLE `produk` (`id` int, `nama` varchar(50));\n' +
+    "INSERT INTO `produk` VALUES (1,'Kopi Susu Gula Aren');\n" +
+    "INSERT INTO `log` VALUES (1,'Hendra Gunawan');\n";
+  assert.deepEqual(values(sql), [
+    'NAME:Budi Santoso', 'PHONE:081234567890', 'NIK:3201011508950001', 'NAME:Siti Aminah', 'NIK:3201014408960002',
+  ]);
+  // pg_dump --inserts, with a schema and the table name in quotes.
+  const pg = 'CREATE TABLE public."Pasien" (\n    id integer,\n    nama_lengkap text,\n    diagnosa text\n);\n' +
+    "INSERT INTO public.\"Pasien\" VALUES (1, 'Rina Wati', 'Diabetes tipe 2');\n";
+  assert.deepEqual(values(pg), ['NAME:Rina Wati', 'HEALTH:Diabetes tipe 2']);
+});
+
+test('dump SQL: blok COPY dari pg_dump', () => {
+  const sql =
+    'COPY public.pelanggan (id, nama, alamat, no_hp) FROM stdin;\n' +
+    '1\tBudi Santoso\tJl. Melati No. 5\t081234567890\n' +
+    '2\t\\N\tJl. Mawar No. 3\t\\N\n' +
+    '\\.\n' +
+    'COPY public.produk (id, nama) FROM stdin;\n' +
+    '1\tKopi Gayo\n' +
+    '\\.\n' +
+    '3\tBukan Baris COPY\tx\tx\n';
+  assert.deepEqual(values(sql), ['NAME:Budi Santoso', 'ADDRESS:Jl. Melati No. 5', 'PHONE:081234567890', 'ADDRESS:Jl. Mawar No. 3']);
+});
+
 test('email yang dieja manual dan nama tanpa label di chat', () => {
   assert.deepEqual(values('kirim ke siti.rahayu88 [at] gmail [dot] com ya'), ['EMAIL:siti.rahayu88 [at] gmail [dot] com']);
   assert.deepEqual(values('halo kak ini rina, pesanan saya batal', ['NAME']), ['NAME:rina']);

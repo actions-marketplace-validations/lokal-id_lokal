@@ -2778,6 +2778,120 @@
   "high": []
  },
  {
+  "text": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
+  "placeholder": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
+  "vault": [],
+  "partial": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
+  "noFinanceNoName": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
+  "high": []
+ },
+ {
+  "text": "uji",
+  "placeholder": "uji",
+  "vault": [],
+  "partial": "uji",
+  "noFinanceNoName": "uji",
+  "high": []
+ },
+ {
+  "text": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
+  "placeholder": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
+  "vault": [],
+  "partial": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
+  "noFinanceNoName": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
+  "high": []
+ },
+ {
+  "text": "Budi Santoso",
+  "placeholder": "Budi Santoso",
+  "vault": [],
+  "partial": "Budi Santoso",
+  "noFinanceNoName": "Budi Santoso",
+  "high": []
+ },
+ {
+  "text": "3201011508950001",
+  "placeholder": "[NIK_1]",
+  "vault": [
+   [
+    "[NIK_1]",
+    "3201011508950001"
+   ]
+  ],
+  "partial": "3201********0001",
+  "noFinanceNoName": "[NIK_1]",
+  "high": [
+   "3201011508950001"
+  ]
+ },
+ {
+  "text": "Siti Aminah",
+  "placeholder": "Siti Aminah",
+  "vault": [],
+  "partial": "Siti Aminah",
+  "noFinanceNoName": "Siti Aminah",
+  "high": []
+ },
+ {
+  "text": "3201014408960002",
+  "placeholder": "[NIK_1]",
+  "vault": [
+   [
+    "[NIK_1]",
+    "3201014408960002"
+   ]
+  ],
+  "partial": "3201********0002",
+  "noFinanceNoName": "[NIK_1]",
+  "high": [
+   "3201014408960002"
+  ]
+ },
+ {
+  "text": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tBudi Santoso\t3201011508950001\n\\.\n",
+  "placeholder": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\t[NAME_1]\t[NIK_1]\n\\.\n",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ],
+   [
+    "[NIK_1]",
+    "3201011508950001"
+   ]
+  ],
+  "partial": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tB*** S***\t3201********0001\n\\.\n",
+  "noFinanceNoName": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tBudi Santoso\t[NIK_1]\n\\.\n",
+  "high": [
+   "Budi Santoso",
+   "3201011508950001"
+  ]
+ },
+ {
+  "text": "([^",
+  "placeholder": "([^",
+  "vault": [],
+  "partial": "([^",
+  "noFinanceNoName": "([^",
+  "high": []
+ },
+ {
+  "text": "\n",
+  "placeholder": "\n",
+  "vault": [],
+  "partial": "\n",
+  "noFinanceNoName": "\n",
+  "high": []
+ },
+ {
+  "text": "\t",
+  "placeholder": "\t",
+  "vault": [],
+  "partial": "\t",
+  "noFinanceNoName": "\t",
+  "high": []
+ },
+ {
   "text": "Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK",
   "placeholder": "Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK",
   "vault": [],
@@ -6081,125 +6195,6 @@
   ],
   "partial": "paket untuk bapak a*** f***",
   "noFinanceNoName": "paket untuk bapak ahmad fauzi",
-  "high": []
- },
- {
-  "text": "ahmad fauzi",
-  "placeholder": "ahmad fauzi",
-  "vault": [],
-  "partial": "ahmad fauzi",
-  "noFinanceNoName": "ahmad fauzi",
-  "high": []
- },
- {
-  "text": "anak saya bernama Muhammad Rizky",
-  "placeholder": "anak saya bernama [NAME_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Muhammad Rizky"
-   ]
-  ],
-  "partial": "anak saya bernama M*** R***",
-  "noFinanceNoName": "anak saya bernama Muhammad Rizky",
-  "high": [
-   "Muhammad Rizky"
-  ]
- },
- {
-  "text": "Muhammad Rizky",
-  "placeholder": "Muhammad Rizky",
-  "vault": [],
-  "partial": "Muhammad Rizky",
-  "noFinanceNoName": "Muhammad Rizky",
-  "high": []
- },
- {
-  "text": "halo, dengan Agus Salim di sini",
-  "placeholder": "halo, dengan [NAME_1] di sini",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Agus Salim"
-   ]
-  ],
-  "partial": "halo, dengan A*** S*** di sini",
-  "noFinanceNoName": "halo, dengan Agus Salim di sini",
-  "high": []
- },
- {
-  "text": "Agus Salim",
-  "placeholder": "Agus Salim",
-  "vault": [],
-  "partial": "Agus Salim",
-  "noFinanceNoName": "Agus Salim",
-  "high": []
- },
- {
-  "text": "nama lengkap saya adalah Nur Aisyah binti Ahmad",
-  "placeholder": "nama lengkap saya adalah [NAME_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Nur Aisyah binti Ahmad"
-   ]
-  ],
-  "partial": "nama lengkap saya adalah N*** A*** b*** A***",
-  "noFinanceNoName": "nama lengkap saya adalah Nur Aisyah binti Ahmad",
-  "high": [
-   "Nur Aisyah binti Ahmad"
-  ]
- },
- {
-  "text": "Nur Aisyah binti Ahmad",
-  "placeholder": "Nur Aisyah binti Ahmad",
-  "vault": [],
-  "partial": "Nur Aisyah binti Ahmad",
-  "noFinanceNoName": "Nur Aisyah binti Ahmad",
-  "high": []
- },
- {
-  "text": "NAMA SAYA ANDI WIJAYA MAU KOMPLAIN",
-  "placeholder": "NAMA SAYA [NAME_1] MAU KOMPLAIN",
-  "vault": [
-   [
-    "[NAME_1]",
-    "ANDI WIJAYA"
-   ]
-  ],
-  "partial": "NAMA SAYA A*** W*** MAU KOMPLAIN",
-  "noFinanceNoName": "NAMA SAYA ANDI WIJAYA MAU KOMPLAIN",
-  "high": [
-   "ANDI WIJAYA"
-  ]
- },
- {
-  "text": "ANDI WIJAYA",
-  "placeholder": "ANDI WIJAYA",
-  "vault": [],
-  "partial": "ANDI WIJAYA",
-  "noFinanceNoName": "ANDI WIJAYA",
-  "high": []
- },
- {
-  "text": "kak barangnya buat mbak yuni ya",
-  "placeholder": "kak barangnya buat mbak [NAME_1] ya",
-  "vault": [
-   [
-    "[NAME_1]",
-    "yuni"
-   ]
-  ],
-  "partial": "kak barangnya buat mbak y*** ya",
-  "noFinanceNoName": "kak barangnya buat mbak yuni ya",
-  "high": []
- },
- {
-  "text": "yuni",
-  "placeholder": "yuni",
-  "vault": [],
-  "partial": "yuni",
-  "noFinanceNoName": "yuni",
   "high": []
  }
 ]

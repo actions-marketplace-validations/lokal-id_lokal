@@ -34,6 +34,22 @@ def test_matches_typescript(variant: dict[str, Any]) -> None:
         assert k.text(text).to_dict() == want, text
 
 
+def test_default_mysqldump_and_pg_dump() -> None:
+    k = Kembaran(secret='uji')
+    my = k.text(
+        'CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n'
+        "INSERT INTO `pelanggan` VALUES (1,'Budi Santoso','3201011508950001'),(2,'Siti Aminah','3201014408960002');\n"
+    )
+    pg = k.text('COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tBudi Santoso\t3201011508950001\n\\.\n')
+    for out in (my, pg):
+        assert 'Budi' not in out.text and 'Siti' not in out.text and '3201011508950001' not in out.text
+        assert out.replaced['NAME'] >= 1 and out.replaced['NIK'] >= 1
+    # The same customer gets the same stand-in in both dumps.
+    name = my.text.split("VALUES (1,'")[1].split("'")[0]
+    assert pg.text.split('\n')[1].split('\t')[1] == name
+    assert pg.text.endswith('\n\\.\n')
+
+
 def test_stand_ins_are_valid_and_consistent() -> None:
     k = Kembaran(secret='uji')
     out = k.text('nama,nik,hp\nBudi Santoso,3201011508950001,0812-3456-7890\nBudi Santoso,3201011508950001,081234567890')

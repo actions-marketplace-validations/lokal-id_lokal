@@ -1032,6 +1032,57 @@
     "replaced": {}
    },
    {
+    "text": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
+    "replaced": {}
+   },
+   {
+    "text": "uji",
+    "replaced": {}
+   },
+   {
+    "text": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
+    "replaced": {}
+   },
+   {
+    "text": "Budi Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "3201011503953074",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "Siti Aminah",
+    "replaced": {}
+   },
+   {
+    "text": "3201014810962447",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tFajar Halim\t3201011503953074\n\\.\n",
+    "replaced": {
+     "NAME": 1,
+     "NIK": 1
+    }
+   },
+   {
+    "text": "([^",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": "\t",
+    "replaced": {}
+   },
+   {
     "text": "Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK",
     "replaced": {}
    },
@@ -2044,72 +2095,6 @@
     "text": "Halo kak, saya mau komplain. Nama: Fajar Halim",
     "replaced": {
      "NAME": 1
-    }
-   },
-   {
-    "text": "NIK 3201011503953074, NPWP 05.374.811.8-167.706",
-    "replaced": {
-     "NIK": 1,
-     "NPWP": 1
-    }
-   },
-   {
-    "text": "HP 0812-1827-5350 atau email rahmat.hutapea40@example.com",
-    "replaced": {
-     "PHONE": 1,
-     "EMAIL": 1
-    }
-   },
-   {
-    "text": "Refund ke rek BCA 9484756734 a.n. Fajar Halim ya",
-    "replaced": {
-     "BANK_ACCOUNT": 1,
-     "NAME": 1
-    }
-   },
-   {
-    "text": "Alamat Jl. Harapan No. 6 RT 04/RW 06, motor B 2052 GOD",
-    "replaced": {
-     "ADDRESS": 1,
-     "PLATE": 1
-    }
-   },
-   {
-    "text": "\n",
-    "replaced": {}
-   },
-   {
-    "text": "mendeteksi semua jenis PII khas Indonesia dalam satu chat",
-    "replaced": {}
-   },
-   {
-    "text": "NAME:Fajar Halim",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "NIK:3201011503953074",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "NPWP:05.374.811.8-167.706",
-    "replaced": {
-     "NPWP": 1
-    }
-   },
-   {
-    "text": "PHONE:0812-1827-5350",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "EMAIL:rahmat.hutapea40@example.com",
-    "replaced": {
-     "EMAIL": 1
     }
    }
   ]
@@ -3148,6 +3133,57 @@
     "replaced": {}
    },
    {
+    "text": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
+    "replaced": {}
+   },
+   {
+    "text": "uji",
+    "replaced": {}
+   },
+   {
+    "text": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
+    "replaced": {}
+   },
+   {
+    "text": "Budi Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "3201011508955680",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "Siti Aminah",
+    "replaced": {}
+   },
+   {
+    "text": "3201014408961792",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tArif Matondang\t3201011508955680\n\\.\n",
+    "replaced": {
+     "NAME": 1,
+     "NIK": 1
+    }
+   },
+   {
+    "text": "([^",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": "\t",
+    "replaced": {}
+   },
+   {
     "text": "Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK",
     "replaced": {}
    },
@@ -4160,72 +4196,6 @@
     "text": "Halo kak, saya mau komplain. Nama: Arif Matondang",
     "replaced": {
      "NAME": 1
-    }
-   },
-   {
-    "text": "NIK 3201011508955680, NPWP 01.946.582.0-271.666",
-    "replaced": {
-     "NIK": 1,
-     "NPWP": 1
-    }
-   },
-   {
-    "text": "HP 0812-7002-3934 atau email fransiska.kartini77@example.com",
-    "replaced": {
-     "PHONE": 1,
-     "EMAIL": 1
-    }
-   },
-   {
-    "text": "Refund ke rek BCA 6536168079 a.n. Arif Matondang ya",
-    "replaced": {
-     "BANK_ACCOUNT": 1,
-     "NAME": 1
-    }
-   },
-   {
-    "text": "Alamat Jl. Swadaya No. 6 RT 06/RW 04, motor B 5418 NBV",
-    "replaced": {
-     "ADDRESS": 1,
-     "PLATE": 1
-    }
-   },
-   {
-    "text": "\n",
-    "replaced": {}
-   },
-   {
-    "text": "mendeteksi semua jenis PII khas Indonesia dalam satu chat",
-    "replaced": {}
-   },
-   {
-    "text": "NAME:Arif Matondang",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "NIK:3201011508955680",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "NPWP:01.946.582.0-271.666",
-    "replaced": {
-     "NPWP": 1
-    }
-   },
-   {
-    "text": "PHONE:0812-7002-3934",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "EMAIL:fransiska.kartini77@example.com",
-    "replaced": {
-     "EMAIL": 1
     }
    }
   ]
@@ -5258,6 +5228,56 @@
     "replaced": {}
    },
    {
+    "text": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
+    "replaced": {}
+   },
+   {
+    "text": "uji",
+    "replaced": {}
+   },
+   {
+    "text": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
+    "replaced": {}
+   },
+   {
+    "text": "Budi Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "3201010607955083",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "Siti Aminah",
+    "replaced": {}
+   },
+   {
+    "text": "3201016306965498",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tBudi Santoso\t3201010607955083\n\\.\n",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "([^",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": "\t",
+    "replaced": {}
+   },
+   {
     "text": "Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK",
     "replaced": {}
    },
@@ -6269,69 +6289,6 @@
    {
     "text": "Halo kak, saya mau komplain. Nama: Budi Santoso",
     "replaced": {}
-   },
-   {
-    "text": "NIK 3201010607955083, NPWP 05.682.577.4-701.119",
-    "replaced": {
-     "NIK": 1,
-     "NPWP": 1
-    }
-   },
-   {
-    "text": "HP 0812-5024-6610 atau email paulus.effendi82@example.com",
-    "replaced": {
-     "PHONE": 1,
-     "EMAIL": 1
-    }
-   },
-   {
-    "text": "Refund ke rek BCA 4530618462 a.n. Budi Santoso ya",
-    "replaced": {
-     "BANK_ACCOUNT": 1
-    }
-   },
-   {
-    "text": "Alamat Jl. Swadaya No. 7 RT 07/RW 03, motor B 6367 ZST",
-    "replaced": {
-     "ADDRESS": 1,
-     "PLATE": 1
-    }
-   },
-   {
-    "text": "\n",
-    "replaced": {}
-   },
-   {
-    "text": "mendeteksi semua jenis PII khas Indonesia dalam satu chat",
-    "replaced": {}
-   },
-   {
-    "text": "NAME:Budi Santoso",
-    "replaced": {}
-   },
-   {
-    "text": "NIK:3201010607955083",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "NPWP:05.682.577.4-701.119",
-    "replaced": {
-     "NPWP": 1
-    }
-   },
-   {
-    "text": "PHONE:0812-5024-6610",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "EMAIL:paulus.effendi82@example.com",
-    "replaced": {
-     "EMAIL": 1
-    }
    }
   ]
  }

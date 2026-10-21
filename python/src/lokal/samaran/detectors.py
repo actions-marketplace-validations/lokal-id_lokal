@@ -551,25 +551,119 @@ _THING_TABLE = rx(
     r'produk|product|barang|item|sku|kategori|categor|menu|toko|store|shop|merchant|brand|merek|layanan|service|paket|package|kota|city|provinsi|province|wilayah|region|kecamatan|kelurahan|desa|district|bank|kurir|courier|ekspedisi|tag|role|permission|setting|config|status|metode|method',  # noqa: E501
     'i',
 )
-_INSERT = rx(r'\bINSERT\s+INTO\s+([`"\w.]+)\s*\(([^)]{1,2000})\)\s*VALUES\s*', 'gi')
 _COLUMN_QUOTES = rx(r'^[`"[]|[`"\]]$', 'g')
+_COLUMN_NAME = rx(r'^(?:`[^`]+`|"[^"]+"|\[[^\]]+\]|[\w$]+)')
+_NOT_A_COLUMN = rx(r'^(?:PRIMARY|KEY|UNIQUE|CONSTRAINT|INDEX|FOREIGN|CHECK|FULLTEXT|SPATIAL|EXCLUDE|LIKE|PERIOD)\b', 'i')
+_CREATE_TABLE = rx(
+    r'\bCREATE\s+(?:(?:GLOBAL\s+|LOCAL\s+)?(?:TEMP|TEMPORARY|UNLOGGED)\s+)?TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?([`"\w.]+)\s*\(',
+    'gi',
+)
+_INSERT_COLUMNS = rx(r'\b(?:INSERT|REPLACE)\s+(?:IGNORE\s+)?INTO\s+([`"\w.]+)\s*\(([^)]{1,2000})\)\s*VALUES\s*', 'gi')
+_INSERT_VALUES = rx(r'\b(?:INSERT|REPLACE)\s+(?:IGNORE\s+)?INTO\s+([`"\w.]+)\s+VALUES\s*', 'gi')
+_COPY_FROM_STDIN = rx(r'^COPY\s+([`"\w.]+)\s*\(([^)]{1,2000})\)\s+FROM\s+stdin;\r?\n', 'gim')
+_SQL_DUMP = rx(r'\b(?:INTO|COPY)\b', 'i')
+_TABLE_QUOTES = re.compile(r'[`"]')
 _GENERIC_COLUMN = rx(r'^(?:nama|name|title|judul)$', 'i')
 _SQL_SPACE_OR_COMMA = _js.WS_SET | {','}
 _SQL_BEFORE_NUMBER = _js.WS_SET | {'(', ','}
 _LEADING_DIGITS = re.compile(r'[0-9]+')
 
 
+def _table_key(name: str) -> str:
+    """``public.pelanggan``, ``"pelanggan"``, and ```pelanggan``` name the same table."""
+    return _TABLE_QUOTES.sub('', name).split('.')[-1].lower()
+
+
+def _column_types(table: str, columns: list[str]) -> list[Optional[PiiType]]:
+    # `produk.nama` is a product; only a person's table makes a bare "nama" column a name.
+    thing_table = _THING_TABLE.search(table) is not None
+    return [None if thing_table and _GENERIC_COLUMN.search(c) else field_type(c) for c in columns]
+
+
+def _add_column(columns: list[str], definition: str) -> None:
+    item = _js.trim(definition)
+    name = _COLUMN_NAME.search(item)
+    if name and not _NOT_A_COLUMN.search(item):
+        columns.append(_COLUMN_QUOTES.sub('', name.group(0)))
+
+
+def _created_tables(text: str) -> dict[str, list[str]]:
+    """The columns of every ``CREATE TABLE``, so rows without column names (mysqldump) can be read by column."""
+    tables: dict[str, list[str]] = {}
+    for m in _CREATE_TABLE.finditer(text):
+        columns: list[str] = []
+        depth = 1
+        start = m.end()
+        limit = min(len(text), start + 100_000)
+        i = start
+        while i < limit and depth > 0:
+            ch = text[i]
+            if ch == "'":
+                # A default or comment: `DEFAULT 'a,b'`, `COMMENT 'nama (lengkap)'`.
+                j = i + 1
+                while j < limit and not (text[j] == "'" and (j + 1 >= len(text) or text[j + 1] != "'")):
+                    j += 2 if text[j] == "'" or text[j] == '\\' else 1
+                i = j
+            elif ch == '(':
+                depth += 1
+            elif ch == ')':
+                depth -= 1
+                if depth == 0:
+                    _add_column(columns, text[start:i])
+            elif ch == ',' and depth == 1:
+                _add_column(columns, text[start:i])
+                start = i + 1
+            i += 1
+        if depth == 0:
+            tables[_table_key(m.group(1))] = columns
+    return tables
+
+
 def _detect_sql_inserts(text: str) -> list[PiiMatch]:
-    """``INSERT INTO pelanggan (nama, nik, …) VALUES ('Hendra', '1371…'), (…);`` with values matched to columns."""
+    """SQL dumps, with values matched to their columns.
+
+    ``INSERT INTO pelanggan (nama, nik, …) VALUES ('Hendra', '1371…'), (…);``, rows without column names under a
+    ``CREATE TABLE`` (mysqldump, ``pg_dump --inserts``), and ``COPY … FROM stdin`` blocks (pg_dump's default).
+    """
+    if not _SQL_DUMP.search(text):
+        return []
     out: list[PiiMatch] = []
-    for m in _INSERT.finditer(text):
-        thing_table = _THING_TABLE.search(m.group(1)) is not None
+    for m in _INSERT_COLUMNS.finditer(text):
         columns = [_COLUMN_QUOTES.sub('', _js.trim(c)) for c in m.group(2).split(',')]
-        # `produk.nama` is a product; only a person's table makes a bare "nama" column a name.
-        types = [None if thing_table and _GENERIC_COLUMN.search(c) else field_type(c) for c in columns]
+        types = _column_types(m.group(1), columns)
+        if any(types):
+            out.extend(_sql_values(text, m.end(), types, columns))
+    tables: Optional[dict[str, list[str]]] = None
+    for m in _INSERT_VALUES.finditer(text):
+        if tables is None:
+            tables = _created_tables(text)
+        created = tables.get(_table_key(m.group(1)))
+        if created is None:
+            continue
+        types = _column_types(m.group(1), created)
+        if any(types):
+            out.extend(_sql_values(text, m.end(), types, created))
+    for m in _COPY_FROM_STDIN.finditer(text):
+        columns = [_COLUMN_QUOTES.sub('', _js.trim(c)) for c in m.group(2).split(',')]
+        types = _column_types(m.group(1), columns)
         if not any(types):
             continue
-        out.extend(_sql_values(text, m.end(), types, columns))
+        pos = m.end()
+        while pos < len(text):
+            end = text.find('\n', pos)
+            if end == -1:
+                end = len(text)
+            line = text[pos : end - 1 if end > pos and text[end - 1] == '\r' else end]
+            if line == '\\.':
+                break
+            at = pos
+            for idx, cell in enumerate(line.split('\t')):
+                t = types[idx] if idx < len(types) else None
+                # \N is NULL.
+                if t and cell != '\\N' and is_plausible_value(t, cell, columns[idx]):
+                    out.append(_match(t, at, cell, 'high'))
+                at += len(cell) + 1
+            pos = end + 1
     return out
 
 

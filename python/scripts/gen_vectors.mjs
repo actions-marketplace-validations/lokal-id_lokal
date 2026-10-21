@@ -250,6 +250,49 @@ for (let i = 0; i < 1500; i++) {
   for (let j = int(1, 6); j > 0; j--) t += pick(noise) + pick(fragments);
   add(t);
 }
+// SQL dumps as mysqldump and pg_dump write them: rows without column names under a CREATE TABLE, and COPY blocks.
+const createPelanggan = [
+  'CREATE TABLE `pelanggan` (',
+  '  `id` int NOT NULL AUTO_INCREMENT,',
+  "  `nama` varchar(100) DEFAULT 'tanpa, nama',",
+  "  `telepon` varchar(20) COMMENT 'nomor (hp)',",
+  '  `nik` char(16),',
+  '  `diagnosa` text,',
+  '  PRIMARY KEY (`id`),',
+  '  KEY `idx_nik` (`nik`)',
+  ') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;',
+].join('\n');
+const sqlRows = [
+  "(1,'Budi Santoso','081234567890','3201011508950001','Diabetes tipe 2')",
+  "(2,'Siti Aminah',NULL,3201014408960002,NULL)",
+  "(3,'O''Brien Siregar','+62 812-9876-5432','3578014607910004','hipertensi')",
+];
+for (const eol of ['\n', '\r\n']) {
+  add([createPelanggan, `INSERT INTO \`pelanggan\` VALUES ${sqlRows.join(',')};`, ''].join(eol));
+  add([createPelanggan, ...sqlRows.map((r) => `INSERT IGNORE INTO pelanggan VALUES ${r};`)].join(eol));
+  add(
+    [
+      'CREATE TABLE public."Pasien" (',
+      '    id integer NOT NULL,',
+      '    nama_lengkap text,',
+      '    alamat text,',
+      '    no_hp character varying(20),',
+      '    CONSTRAINT pasien_pkey PRIMARY KEY (id)',
+      ');',
+      'COPY public."Pasien" (id, nama_lengkap, alamat, no_hp) FROM stdin;',
+      '1\tRina Wati\tJl. Melati No. 5 RT 03/RW 07\t081234567890',
+      '2\t\\N\tJl. Mawar No. 3\t\\N',
+      '3\tDewi Lestari\t\\N\t0813-9999-0000',
+      '\\.',
+      'COPY public.produk (id, nama) FROM stdin;',
+      '1\tKopi Gayo',
+      '\\.',
+      "INSERT INTO public.\"Pasien\" VALUES (4, 'Hendra Gunawan', 'Gg. Kenari No. 12', '0812-1111-2222');",
+      "INSERT INTO log VALUES (1, 'Agus Salim');",
+      '',
+    ].join(eol),
+  );
+}
 
 const detected = docs.map((text) => ({
   text,
