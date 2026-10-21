@@ -6,7 +6,10 @@ text{font-family:"Segoe UI",Inter,system-ui,-apple-system,sans-serif;fill:#e6edf
 <rect width="1280" height="640" fill="#0d1117"/>
 <rect x="0" y="0" width="1280" height="8" fill="#e5484d"/>
 <rect x="0" y="8" width="1280" height="8" fill="#f0f0f0"/>
-<text x="96" y="200" style="font-size:112px;font-weight:800;letter-spacing:-2px">Lokal</text>
+<g transform="translate(96 92) scale(0.25)"><rect width="512" height="512" rx="112" fill="#E5262E"/><g fill="none" stroke="#fff" stroke-linecap="butt" stroke-linejoin="miter">
+<path d="M156 120H112V392H156" stroke-width="40"/><path d="M356 120H400V392H356" stroke-width="40"/>
+<path d="M222 156V340H312" stroke-width="54"/></g></g>
+<text x="248" y="200" style="font-size:112px;font-weight:800;letter-spacing:-2px">Lokal</text>
 <text x="96" y="268" style="font-size:40px;font-weight:600">Make AI coding agents Indonesia-ready</text>
 <text x="96" y="320" style="font-size:28px;fill:#8b949e">Indonesian conventions for agents. Personal data kept out of the model.</text>
 

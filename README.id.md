@@ -1,6 +1,11 @@
 <div align="center">
 
-# Lokal
+<h1>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/logo/lokal-wordmark-white.svg">
+    <img src="docs/assets/logo/lokal-wordmark.svg" alt="Lokal" height="72">
+  </picture>
+</h1>
 
 **Bikin AI agent paham Indonesia.**
 
