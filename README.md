@@ -325,12 +325,15 @@ It runs on ChatGPT, Claude, Gemini, Copilot, Perplexity, DeepSeek, Grok, and Le 
 
 Seeders, fixtures, and dumps copied from production end up in git, and from there in every clone, fork, and CI log. `lokal-mcp scan` finds Indonesian personal data before it is committed. With `--staged` or `--diff` it checks only the lines a commit or pull request adds, so a repository that already holds test data can turn it on today.
 
-**GitHub Actions.** Each value is marked on the changed line of the pull request, and the job fails:
+**GitHub Actions.** Each value is marked on the changed line of the pull request, and the job fails ([see an example pull request](https://github.com/lokal-id/action-test/pull/1/files)):
 
 ```yaml
 # .github/workflows/pii.yml
 name: PII
-on: [pull_request, push]
+on:
+  pull_request:
+  push:
+    branches: [main]
 permissions:
   contents: read
 jobs:

@@ -325,12 +325,15 @@ Berjalan di ChatGPT, Claude, Gemini, Copilot, Perplexity, DeepSeek, Grok, dan Le
 
 Seeder, fixture, dan dump yang disalin dari production sering ikut ter-commit, lalu tersebar ke setiap clone, fork, dan log CI. `lokal-mcp scan` menemukan data pribadi Indonesia sebelum di-commit. Dengan `--staged` atau `--diff`, yang diperiksa hanya baris yang ditambahkan commit atau pull request, jadi repository yang sudah berisi data tes bisa langsung memakainya.
 
-**GitHub Actions.** Setiap nilai ditandai di baris yang berubah pada pull request, dan job gagal:
+**GitHub Actions.** Setiap nilai ditandai di baris yang berubah pada pull request, dan job gagal ([lihat contoh pull request](https://github.com/lokal-id/action-test/pull/1/files)):
 
 ```yaml
 # .github/workflows/pii.yml
 name: PII
-on: [pull_request, push]
+on:
+  pull_request:
+  push:
+    branches: [main]
 permissions:
   contents: read
 jobs:
