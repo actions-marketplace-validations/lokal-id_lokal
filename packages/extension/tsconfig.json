@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": [],
+    "noEmit": true
+  },
+  "include": ["src", "../core/src/samaran", "../core/src/nik.ts", "../core/src/phone.ts", "../core/src/provinces.ts"]
+}

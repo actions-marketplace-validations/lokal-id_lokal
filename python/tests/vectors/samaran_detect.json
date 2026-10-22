@@ -4366,6 +4366,49 @@
   ]
  },
  {
+  "text": "Alamat: Jl. Melati No. 12, Kel. Sukamaju, Kec. Cibeunying, Bandung. Rekening BCA 1234567890.",
+  "matches": [
+   [
+    "ADDRESS",
+    8,
+    66,
+    "Jl. Melati No. 12, Kel. Sukamaju, Kec. Cibeunying, Bandung",
+    "high"
+   ],
+   [
+    "BANK_ACCOUNT",
+    81,
+    91,
+    "1234567890",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "ADDRESS:Jl. Melati No. 12, Kel. Sukamaju, Kec. Cibeunying, Bandung",
+  "matches": [
+   [
+    "ADDRESS",
+    8,
+    66,
+    "Jl. Melati No. 12, Kel. Sukamaju, Kec. Cibeunying, Bandung",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "BANK_ACCOUNT:1234567890",
+  "matches": [
+   [
+    "BANK_ACCOUNT",
+    13,
+    23,
+    "1234567890",
+    "high"
+   ]
+  ]
+ },
+ {
   "text": "kalimat berkoma bukan header CSV",
   "matches": []
  },
@@ -7720,6 +7763,62 @@
  },
  {
   "text": "3201********0001",
+  "matches": []
+ },
+ {
+  "text": "key ip hanya untuk alamat IP, bukan versi paket di lockfile",
+  "matches": []
+ },
+ {
+  "text": "\"ip-address\": \"^10.2.0\"",
+  "matches": []
+ },
+ {
+  "text": "ip_address: 2.0.1",
+  "matches": []
+ },
+ {
+  "text": "client_ip: 182.253.10.15",
+  "matches": [
+   [
+    "IP",
+    11,
+    24,
+    "182.253.10.15",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "IP:182.253.10.15",
+  "matches": [
+   [
+    "IP",
+    3,
+    16,
+    "182.253.10.15",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "\"remote_addr\": \"2001:db8::1\"",
+  "matches": [
+   [
+    "IP",
+    16,
+    27,
+    "2001:db8::1",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": ":",
+  "matches": []
+ },
+ {
+  "text": "IP",
   "matches": []
  },
  {

@@ -29,10 +29,13 @@ try {
   assert.equal((await call('anonymize_file', { paths: ['pelanggan.csv'], output: 'staging.csv', secret: 's' })).files[0].replaced.NIK, 1);
   await client.close();
 
-  const run = (args, input) => spawnSync(process.execPath, [CLI, ...args], { input, encoding: 'utf8', env: { ...process.env, CLAUDE_PROJECT_DIR: dir } });
+  const run = (args, input) => spawnSync(process.execPath, [CLI, ...args], { input, encoding: 'utf8', cwd: dir, env: { ...process.env, CLAUDE_PROJECT_DIR: dir } });
   assert.equal(run(['guard'], JSON.stringify({ hook_event_name: 'UserPromptSubmit', prompt: 'NIK 3201011508950001' })).status, 2);
-  for (const command of ['kembaran', 'proxy']) assert.equal(run([command, '--help']).status, 0, command);
-  console.log(`bundle ok: ${tools.length} tools, guard, kembaran, proxy`);
+  const scan = run(['scan', 'pelanggan.csv', '--format', 'json']);
+  assert.equal(scan.status, 1, scan.stderr);
+  assert.equal(JSON.parse(scan.stdout).findings.filter((f) => f.type === 'NIK').length, 1);
+  for (const command of ['kembaran', 'proxy', 'scan']) assert.equal(run([command, '--help']).status, 0, command);
+  console.log(`bundle ok: ${tools.length} tools, guard, kembaran, proxy, scan`);
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

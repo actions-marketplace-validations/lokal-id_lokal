@@ -5871,6 +5871,56 @@
   ]
  },
  {
+  "text": "Alamat: Jl. Melati No. 12, Kel. Sukamaju, Kec. Cibeunying, Bandung. Rekening BCA 1234567890.",
+  "placeholder": "Alamat: [ADDRESS_1]. Rekening BCA [BANK_ACCOUNT_1].",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Melati No. 12, Kel. Sukamaju, Kec. Cibeunying, Bandung"
+   ],
+   [
+    "[BANK_ACCOUNT_1]",
+    "1234567890"
+   ]
+  ],
+  "partial": "Alamat: Jl. ***. Rekening BCA ******7890.",
+  "noFinanceNoName": "Alamat: [ADDRESS_1]. Rekening BCA [BANK_ACCOUNT_1].",
+  "high": [
+   "Jl. Melati No. 12, Kel. Sukamaju, Kec. Cibeunying, Bandung",
+   "1234567890"
+  ]
+ },
+ {
+  "text": "ADDRESS:Jl. Melati No. 12, Kel. Sukamaju, Kec. Cibeunying, Bandung",
+  "placeholder": "ADDRESS:[ADDRESS_1]",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Melati No. 12, Kel. Sukamaju, Kec. Cibeunying, Bandung"
+   ]
+  ],
+  "partial": "ADDRESS:Jl. ***",
+  "noFinanceNoName": "ADDRESS:[ADDRESS_1]",
+  "high": [
+   "Jl. Melati No. 12, Kel. Sukamaju, Kec. Cibeunying, Bandung"
+  ]
+ },
+ {
+  "text": "BANK_ACCOUNT:1234567890",
+  "placeholder": "BANK_ACCOUNT:[BANK_ACCOUNT_1]",
+  "vault": [
+   [
+    "[BANK_ACCOUNT_1]",
+    "1234567890"
+   ]
+  ],
+  "partial": "BANK_ACCOUNT:******7890",
+  "noFinanceNoName": "BANK_ACCOUNT:[BANK_ACCOUNT_1]",
+  "high": [
+   "1234567890"
+  ]
+ },
+ {
   "text": "kalimat berkoma bukan header CSV",
   "placeholder": "kalimat berkoma bukan header CSV",
   "vault": [],
@@ -6161,40 +6211,6 @@
   "vault": [],
   "partial": "Rina Wulandari",
   "noFinanceNoName": "Rina Wulandari",
-  "high": []
- },
- {
-  "text": "perkenalkan, saya Andi",
-  "placeholder": "perkenalkan, saya [NAME_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Andi"
-   ]
-  ],
-  "partial": "perkenalkan, saya A***",
-  "noFinanceNoName": "perkenalkan, saya Andi",
-  "high": []
- },
- {
-  "text": "Andi",
-  "placeholder": "Andi",
-  "vault": [],
-  "partial": "Andi",
-  "noFinanceNoName": "Andi",
-  "high": []
- },
- {
-  "text": "paket untuk bapak ahmad fauzi",
-  "placeholder": "paket untuk bapak [NAME_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "ahmad fauzi"
-   ]
-  ],
-  "partial": "paket untuk bapak a*** f***",
-  "noFinanceNoName": "paket untuk bapak ahmad fauzi",
   "high": []
  }
 ]

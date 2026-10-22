@@ -401,6 +401,8 @@ function isPlausibleValue(type, value, key) {
     return false;
   if ((type === "GEO" || type === "IP") && digitCount < 2)
     return false;
+  if (type === "IP" && !/^(?:\d{1,3}\.){3}\d{1,3}/.test(v) && !v.includes(":"))
+    return false;
   if (type === "EMAIL" && !v.includes("@"))
     return false;
   if (type === "GENDER" && !GENDER_VALUE.test(v))
@@ -1029,6 +1031,15 @@ function cutValue(type, raw) {
       v = v.slice(0, end);
   }
   if (MULTI_PART.has(type)) {
+    for (const m of v.matchAll(/([A-Za-z]*)\.\s+/g)) {
+      if (m[1].length < 4)
+        continue;
+      const lead = v.slice(m.index + m[0].length).split(/\s+/).slice(0, 3);
+      if (lead.some((_, i) => fieldType(lead.slice(0, i + 1).join(" ")))) {
+        v = v.slice(0, m.index + m[1].length);
+        break;
+      }
+    }
     const parts = v.split(",");
     let keep = 1;
     for (; keep < parts.length; keep++) {
@@ -2590,50 +2601,53 @@ var UNSUPPORTED_DATA = {
   ".heic": "image (may be a KTP or selfie photo)",
   ".webp": "image (may be a KTP or selfie photo)"
 };
-function loadDocument(file, options = {}) {
-  const ext = path.extname(file).toLowerCase();
-  const st = statSync(file);
-  if (st.size > MAX_FILE_BYTES) return { kind: "skipped", reason: `larger than ${mb(MAX_FILE_BYTES)}`, dataBearing: true };
-  const parsedWhole = ext === ".xlsx" || ext === ".xlsm" || ext === ".docx" || ext === ".pdf";
-  if (parsedWhole && options.maxZipBytes !== void 0 && st.size > options.maxZipBytes) {
-    return { kind: "skipped", reason: `larger than ${mb(options.maxZipBytes)}`, dataBearing: true };
-  }
+var PARSED_WHOLE = /* @__PURE__ */ new Set([".xlsx", ".xlsm", ".docx", ".pdf"]);
+function parseWhole(ext, buf) {
   if (ext === ".xlsx" || ext === ".xlsm") {
     try {
-      return { kind: "sheets", sheets: readXlsx(readFileSync(file)) };
+      return { kind: "sheets", sheets: readXlsx(buf) };
     } catch (e) {
       return { kind: "skipped", reason: `unreadable spreadsheet: ${e.message}`, dataBearing: true };
     }
   }
   if (ext === ".docx") {
     try {
-      return { kind: "sheets", sheets: readDocx(readFileSync(file)), unit: "part" };
+      return { kind: "sheets", sheets: readDocx(buf), unit: "part" };
     } catch (e) {
       return { kind: "skipped", reason: `unreadable Word document: ${e.message}`, dataBearing: true };
     }
   }
-  if (ext === ".pdf") {
-    try {
-      const { pages, scanned, damaged, total } = readPdf(readFileSync(file));
-      if (!pages.length && (scanned.length || damaged.length)) {
-        const reason = damaged.length ? "damaged PDF: no readable text" : "PDF without a text layer (scanned); needs OCR";
-        return { kind: "skipped", reason, dataBearing: true };
-      }
-      const notes = [];
-      if (scanned.length) {
-        const one = scanned.length === 1;
-        notes.push(`${one ? "page" : "pages"} ${pageList(scanned)} of ${total} ${one ? "has" : "have"} no text layer (scanned) and need${one ? "s" : ""} OCR`);
-      }
-      if (damaged.length) {
-        const one = damaged.length === 1;
-        notes.push(`${one ? "page" : "pages"} ${pageList(damaged)} of ${total} ${one ? "is" : "are"} damaged and could not be read`);
-      }
-      return { kind: "sheets", sheets: pages, unit: "page", unscanned: notes.join("; ") || void 0 };
-    } catch (e) {
-      const message = e.message;
-      const reason = /encrypted/.test(message) ? "encrypted PDF (password-protected)" : `unreadable PDF: ${message.replace(/\.$/, "")}`;
+  try {
+    const { pages, scanned, damaged, total } = readPdf(buf);
+    if (!pages.length && (scanned.length || damaged.length)) {
+      const reason = damaged.length ? "damaged PDF: no readable text" : "PDF without a text layer (scanned); needs OCR";
       return { kind: "skipped", reason, dataBearing: true };
     }
+    const notes = [];
+    if (scanned.length) {
+      const one = scanned.length === 1;
+      notes.push(`${one ? "page" : "pages"} ${pageList(scanned)} of ${total} ${one ? "has" : "have"} no text layer (scanned) and need${one ? "s" : ""} OCR`);
+    }
+    if (damaged.length) {
+      const one = damaged.length === 1;
+      notes.push(`${one ? "page" : "pages"} ${pageList(damaged)} of ${total} ${one ? "is" : "are"} damaged and could not be read`);
+    }
+    return { kind: "sheets", sheets: pages, unit: "page", unscanned: notes.join("; ") || void 0 };
+  } catch (e) {
+    const message = e.message;
+    const reason = /encrypted/.test(message) ? "encrypted PDF (password-protected)" : `unreadable PDF: ${message.replace(/\.$/, "")}`;
+    return { kind: "skipped", reason, dataBearing: true };
+  }
+}
+function loadDocument(file, options = {}) {
+  const ext = path.extname(file).toLowerCase();
+  const st = statSync(file);
+  if (st.size > MAX_FILE_BYTES) return { kind: "skipped", reason: `larger than ${mb(MAX_FILE_BYTES)}`, dataBearing: true };
+  if (PARSED_WHOLE.has(ext)) {
+    if (options.maxZipBytes !== void 0 && st.size > options.maxZipBytes) {
+      return { kind: "skipped", reason: `larger than ${mb(options.maxZipBytes)}`, dataBearing: true };
+    }
+    return parseWhole(ext, readFileSync(file));
   }
   const unsupported = UNSUPPORTED_DATA[ext];
   if (unsupported) return { kind: "skipped", reason: unsupported, dataBearing: true };

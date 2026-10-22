@@ -4,6 +4,7 @@
 // lokal-mcp guard            → hook for Claude Code, Codex CLI, Cursor, and Gemini CLI (reads the event from stdin)
 // lokal-mcp proxy            → Samaran Proxy: masks personal data in OpenAI and Anthropic API calls
 // lokal-mcp kembaran         → replaces personal data in dumps and exports with realistic stand-ins
+// lokal-mcp scan             → finds personal data in files before they are committed (pre-commit hooks, CI)
 const [command, ...args] = process.argv.slice(2);
 const option = (name: string) => {
   const i = args.indexOf(`--${name}`);
@@ -16,6 +17,9 @@ if (command === 'guard') {
 } else if (command === 'kembaran') {
   const { runKembaran } = await import('./kembaran-files.ts');
   runKembaran(args);
+} else if (command === 'scan') {
+  const { runScan } = await import('./scan.ts');
+  runScan(args);
 } else if (command === 'proxy') {
   const { runProxy } = await import('./proxy.ts');
   await runProxy(args);
@@ -29,6 +33,6 @@ if (command === 'guard') {
   const { runServer } = await import('./server.ts');
   await runServer();
 } else {
-  process.stderr.write('Usage: lokal-mcp [serve [--http [--port 3000] [--host 127.0.0.1]] | guard | proxy [--help] | kembaran [--help]]\n');
+  process.stderr.write('Usage: lokal-mcp [serve [--http [--port 3000] [--host 127.0.0.1]] | guard | proxy [--help] | kembaran [--help] | scan [--help]]\n');
   process.exitCode = 1;
 }

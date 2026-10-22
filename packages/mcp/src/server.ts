@@ -39,7 +39,7 @@ import {
 import { loadDocument, loadIgnore, resolveInRoot, toPosix, walkFiles, type Document } from './files.ts';
 import { anonymizeFiles, KEMBARAN_NOTE } from './kembaran-files.ts';
 
-const VERSION = '0.4.1';
+const VERSION = '0.5.0';
 const FILE_LIMIT = 5000;
 
 const INSTRUCTIONS = `Lokal makes you Indonesia-ready.

@@ -745,6 +745,7 @@ _NAME_STOP_CHAT = rx(
 _NAME_END = rx(r'[!?\u2190-\u2bff\ud800-\udfff\ufe0f]')
 _MULTI_PART: frozenset[PiiType] = frozenset(('ADDRESS', 'BIRTH_DATE', 'HEALTH', 'GEO'))
 _SENTENCE_END = rx(r'\.\s+[A-Z]')
+_SENTENCE_BREAK = rx(r'([A-Za-z]*)\.\s+', 'g')
 _VALUE_END = rx(r'[;|&]')
 _NEXT_PAIR = rx(r'\s+[A-Za-z_][\w.-]*=(?!=)')
 _WS_ONE = rx(r'\s')
@@ -804,6 +805,15 @@ def _cut_value(pii_type: PiiType, raw: str) -> str:
         if end >= 0:
             v = v[:end]
     if pii_type in _MULTI_PART:
+        # "Alamat: Jl. Melati 12, Bandung. Rekening BCA 123…": a sentence that opens with a field name is the next
+        # field. Not after "Jl." or "Kec.", whose next word is part of the address.
+        for m in _SENTENCE_BREAK.finditer(v):
+            if len(m.group(1)) < 4:
+                continue
+            lead = _js.split_ws(v[m.end():])[:3]
+            if any(field_type(' '.join(lead[: i + 1])) for i in range(len(lead))):
+                v = v[: m.start() + len(m.group(1))]
+                break
         # "Alamat: Jl. Mawar No. 5, Depok, HP 0812…": keep commas until a segment opens with a field name.
         parts = v.split(',')
         keep = 1

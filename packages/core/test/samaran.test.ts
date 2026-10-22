@@ -114,6 +114,13 @@ test('label "Nama:" di awal baris tidak menelan field lain di baris yang sama', 
     detectPii('alamat: Jl. Mawar No. 5, Depok, HP 0812-3456-7890').map((m) => `${m.type}:${m.value}`),
     ['ADDRESS:Jl. Mawar No. 5, Depok', 'PHONE:0812-3456-7890'],
   );
+  // A new sentence that opens with a field name ends the address; "Kel." and "Kec." do not.
+  assert.deepEqual(
+    detectPii('Alamat: Jl. Melati No. 12, Kel. Sukamaju, Kec. Cibeunying, Bandung. Rekening BCA 1234567890.').map(
+      (m) => `${m.type}:${m.value}`,
+    ),
+    ['ADDRESS:Jl. Melati No. 12, Kel. Sukamaju, Kec. Cibeunying, Bandung', 'BANK_ACCOUNT:1234567890'],
+  );
 });
 
 test('kalimat berkoma bukan header CSV', () => {

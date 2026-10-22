@@ -95,3 +95,10 @@ def test_mask_and_partial_for_new_types() -> None:
     assert partial_mask('IP', '182.253.10.15') == '182.253.*.*'
     assert partial_mask('HEALTH', 'HIV') == '***'
     assert partial_mask('KK', '3201010101200001') == '3201********0001'
+
+
+def test_ip_key_needs_an_address_not_a_lockfile_version() -> None:
+    assert found('"ip-address": "^10.2.0"') == []
+    assert found('ip_address: 2.0.1') == []
+    assert found('client_ip: 182.253.10.15') == ['IP:182.253.10.15']
+    assert [x.split(':')[0] for x in found('"remote_addr": "2001:db8::1"')] == ['IP']

@@ -1,0 +1,8 @@
+{
+  "name": {
+    "message": "Lokal: data pribadi tidak terkirim ke AI"
+  },
+  "description": {
+    "message": "Menyamarkan NIK, nomor HP, rekening, nama, dan data UU PDP sebelum terkirim ke ChatGPT, Claude, atau Gemini. Jalan offline."
+  }
+}

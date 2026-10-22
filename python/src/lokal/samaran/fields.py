@@ -131,6 +131,9 @@ _STARTS_UPPER = re.compile(r'^[A-Z]')
 _FIVE_DIGITS = re.compile(r'[0-9]{5}')
 
 
+_IPV4_START = re.compile(r'(?:[0-9]{1,3}\.){3}[0-9]{1,3}')
+
+
 def is_plausible_value(pii_type: PiiType, value: str, key: str) -> bool:
     """Values that are code, schema, or placeholders rather than someone's data."""
     # "Siti Aminah (Ami)": a nickname in brackets is part of the name, not a function call.
@@ -152,6 +155,9 @@ def is_plausible_value(pii_type: PiiType, value: str, key: str) -> bool:
     if pii_type in _DIGIT_TYPES and digit_count < 6:
         return False
     if pii_type in ('GEO', 'IP') and digit_count < 2:
+        return False
+    # `"ip-address": "^10.2.0"` in a lockfile is a package version; an address is a dotted quad or IPv6.
+    if pii_type == 'IP' and not _IPV4_START.match(v) and ':' not in v:
         return False
     if pii_type == 'EMAIL' and '@' not in v:
         return False

@@ -606,6 +606,16 @@ function cutValue(type: PiiType, raw: string): string {
     if (end >= 0) v = v.slice(0, end);
   }
   if (MULTI_PART.has(type)) {
+    // "Alamat: Jl. Melati 12, Bandung. Rekening BCA 123…": a sentence that opens with a field name is the next field.
+    // Not after "Jl." or "Kec.", whose next word is part of the address.
+    for (const m of v.matchAll(/([A-Za-z]*)\.\s+/g)) {
+      if (m[1]!.length < 4) continue;
+      const lead = v.slice(m.index + m[0].length).split(/\s+/).slice(0, 3);
+      if (lead.some((_, i) => fieldType(lead.slice(0, i + 1).join(' ')))) {
+        v = v.slice(0, m.index + m[1]!.length);
+        break;
+      }
+    }
     // "Alamat: Jl. Mawar No. 5, Depok, HP 0812…": keep commas until a segment opens with a field name.
     const parts = v.split(',');
     let keep = 1;

@@ -107,6 +107,8 @@ export function isPlausibleValue(type: PiiType, value: string, key: string): boo
   const digitCount = v.replace(/\D/g, '').length;
   if (DIGIT_TYPES.has(type) && digitCount < 6) return false;
   if ((type === 'GEO' || type === 'IP') && digitCount < 2) return false;
+  // `"ip-address": "^10.2.0"` in a lockfile is a package version; an address is a dotted quad or IPv6.
+  if (type === 'IP' && !/^(?:\d{1,3}\.){3}\d{1,3}/.test(v) && !v.includes(':')) return false;
   if (type === 'EMAIL' && !v.includes('@')) return false;
   // `gender: "m"` in an i18n file is grammatical gender; a person's is one of these.
   if (type === 'GENDER' && !GENDER_VALUE.test(v)) return false;

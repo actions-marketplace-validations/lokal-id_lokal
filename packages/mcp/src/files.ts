@@ -183,51 +183,57 @@ const UNSUPPORTED_DATA: Record<string, string> = {
   '.webp': 'image (may be a KTP or selfie photo)',
 };
 
-/** Loads a file for scanning: as text, as spreadsheet sheets, or as an explicit skip with a reason. */
-export function loadDocument(file: string, options: LoadOptions = {}): Document {
-  const ext = path.extname(file).toLowerCase();
-  const st = statSync(file);
-  if (st.size > MAX_FILE_BYTES) return { kind: 'skipped', reason: `larger than ${mb(MAX_FILE_BYTES)}`, dataBearing: true };
-  const parsedWhole = ext === '.xlsx' || ext === '.xlsm' || ext === '.docx' || ext === '.pdf';
-  if (parsedWhole && options.maxZipBytes !== undefined && st.size > options.maxZipBytes) {
-    return { kind: 'skipped', reason: `larger than ${mb(options.maxZipBytes)}`, dataBearing: true };
-  }
+const PARSED_WHOLE = new Set(['.xlsx', '.xlsm', '.docx', '.pdf']);
+
+/** Spreadsheets, Word documents, and PDFs: parsed as a whole into sheets, parts, or pages. */
+function parseWhole(ext: string, buf: Buffer): Document {
   if (ext === '.xlsx' || ext === '.xlsm') {
     try {
-      return { kind: 'sheets', sheets: readXlsx(readFileSync(file)) };
+      return { kind: 'sheets', sheets: readXlsx(buf) };
     } catch (e) {
       return { kind: 'skipped', reason: `unreadable spreadsheet: ${(e as Error).message}`, dataBearing: true };
     }
   }
   if (ext === '.docx') {
     try {
-      return { kind: 'sheets', sheets: readDocx(readFileSync(file)), unit: 'part' };
+      return { kind: 'sheets', sheets: readDocx(buf), unit: 'part' };
     } catch (e) {
       return { kind: 'skipped', reason: `unreadable Word document: ${(e as Error).message}`, dataBearing: true };
     }
   }
-  if (ext === '.pdf') {
-    try {
-      const { pages, scanned, damaged, total } = readPdf(readFileSync(file));
-      if (!pages.length && (scanned.length || damaged.length)) {
-        const reason = damaged.length ? 'damaged PDF: no readable text' : 'PDF without a text layer (scanned); needs OCR';
-        return { kind: 'skipped', reason, dataBearing: true };
-      }
-      const notes: string[] = [];
-      if (scanned.length) {
-        const one = scanned.length === 1;
-        notes.push(`${one ? 'page' : 'pages'} ${pageList(scanned)} of ${total} ${one ? 'has' : 'have'} no text layer (scanned) and need${one ? 's' : ''} OCR`);
-      }
-      if (damaged.length) {
-        const one = damaged.length === 1;
-        notes.push(`${one ? 'page' : 'pages'} ${pageList(damaged)} of ${total} ${one ? 'is' : 'are'} damaged and could not be read`);
-      }
-      return { kind: 'sheets', sheets: pages, unit: 'page', unscanned: notes.join('; ') || undefined };
-    } catch (e) {
-      const message = (e as Error).message;
-      const reason = /encrypted/.test(message) ? 'encrypted PDF (password-protected)' : `unreadable PDF: ${message.replace(/\.$/, '')}`;
+  try {
+    const { pages, scanned, damaged, total } = readPdf(buf);
+    if (!pages.length && (scanned.length || damaged.length)) {
+      const reason = damaged.length ? 'damaged PDF: no readable text' : 'PDF without a text layer (scanned); needs OCR';
       return { kind: 'skipped', reason, dataBearing: true };
     }
+    const notes: string[] = [];
+    if (scanned.length) {
+      const one = scanned.length === 1;
+      notes.push(`${one ? 'page' : 'pages'} ${pageList(scanned)} of ${total} ${one ? 'has' : 'have'} no text layer (scanned) and need${one ? 's' : ''} OCR`);
+    }
+    if (damaged.length) {
+      const one = damaged.length === 1;
+      notes.push(`${one ? 'page' : 'pages'} ${pageList(damaged)} of ${total} ${one ? 'is' : 'are'} damaged and could not be read`);
+    }
+    return { kind: 'sheets', sheets: pages, unit: 'page', unscanned: notes.join('; ') || undefined };
+  } catch (e) {
+    const message = (e as Error).message;
+    const reason = /encrypted/.test(message) ? 'encrypted PDF (password-protected)' : `unreadable PDF: ${message.replace(/\.$/, '')}`;
+    return { kind: 'skipped', reason, dataBearing: true };
+  }
+}
+
+/** Loads a file for scanning: as text, as spreadsheet sheets, or as an explicit skip with a reason. */
+export function loadDocument(file: string, options: LoadOptions = {}): Document {
+  const ext = path.extname(file).toLowerCase();
+  const st = statSync(file);
+  if (st.size > MAX_FILE_BYTES) return { kind: 'skipped', reason: `larger than ${mb(MAX_FILE_BYTES)}`, dataBearing: true };
+  if (PARSED_WHOLE.has(ext)) {
+    if (options.maxZipBytes !== undefined && st.size > options.maxZipBytes) {
+      return { kind: 'skipped', reason: `larger than ${mb(options.maxZipBytes)}`, dataBearing: true };
+    }
+    return parseWhole(ext, readFileSync(file));
   }
   const unsupported = UNSUPPORTED_DATA[ext];
   if (unsupported) return { kind: 'skipped', reason: unsupported, dataBearing: true };
@@ -236,4 +242,15 @@ export function loadDocument(file: string, options: LoadOptions = {}): Document 
     return { kind: 'text', text: readHead(file, options.sampleBytes), sampled: true };
   }
   return { kind: 'text', text: readFileSync(file, 'utf8') };
+}
+
+/** Like loadDocument, for content that is not on disk, such as a file staged in git. */
+export function loadBuffer(name: string, buf: Buffer): Document {
+  const ext = path.extname(name).toLowerCase();
+  if (buf.length > MAX_FILE_BYTES) return { kind: 'skipped', reason: `larger than ${mb(MAX_FILE_BYTES)}`, dataBearing: true };
+  if (PARSED_WHOLE.has(ext)) return parseWhole(ext, buf);
+  const unsupported = UNSUPPORTED_DATA[ext];
+  if (unsupported) return { kind: 'skipped', reason: unsupported, dataBearing: true };
+  if (buf.subarray(0, 8000).includes(0)) return { kind: 'skipped', reason: 'binary file', dataBearing: false };
+  return { kind: 'text', text: buf.toString('utf8') };
 }

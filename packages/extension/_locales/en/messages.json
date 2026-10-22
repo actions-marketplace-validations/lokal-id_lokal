@@ -1,0 +1,8 @@
+{
+  "name": {
+    "message": "Lokal: keep Indonesian personal data out of AI chats"
+  },
+  "description": {
+    "message": "Masks NIK, phone numbers, bank accounts, names, and UU PDP data before you send them to ChatGPT, Claude, or Gemini. Runs offline."
+  }
+}

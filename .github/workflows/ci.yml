@@ -43,6 +43,9 @@ jobs:
       - name: Release versions agree
         if: matrix.os == 'ubuntu-latest'
         run: node scripts/check-release.mjs
+      - name: The browser extension builds
+        if: matrix.os == 'ubuntu-latest'
+        run: node scripts/build-extension.mjs
 
   python:
     name: Python ${{ matrix.python }} (${{ matrix.os }})

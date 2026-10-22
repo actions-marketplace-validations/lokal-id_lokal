@@ -1,0 +1,100 @@
+# GitHub Action: fails a pull request or push that adds Indonesian personal data (NIK, KK, NPWP, phone numbers, bank
+# accounts, names, health data, …) to the repository, and marks each value on the changed line. It runs
+# `lokal-mcp scan` from the @lokal-id/mcp release with the same version as this action, published to npm with
+# provenance. Nothing is sent anywhere: the scan runs on the runner, and findings show partially masked values only.
+#
+#   - uses: actions/checkout@v5
+#   - uses: lokal-id/lokal@v0.5.0
+name: Lokal PII Scan
+description: Stop Indonesian personal data (NIK, phone numbers, bank accounts, health data, UU PDP) from being committed.
+author: lokal-id
+branding:
+  icon: shield
+  color: red
+
+inputs:
+  scope:
+    description: >-
+      "changes" (default) checks only the lines a pull request or push adds, so existing fixtures do not fail the
+      first run. "all" checks every file git tracks under `path`.
+    default: changes
+  path:
+    description: Folder or file to check when scope is "all".
+    default: .
+  base:
+    description: Commit or ref to compare with when scope is "changes". Defaults to the pull request's base, or the commit before the push.
+    default: ''
+  min-confidence:
+    description: '"high" (default) or "medium". Medium also reports values found without a label or column name, with more false positives.'
+    default: high
+  types:
+    description: Only these types, comma-separated, e.g. NIK,KK,PHONE,BANK_ACCOUNT. Empty means all 25.
+    default: ''
+  strict:
+    description: Also fail when a changed file that may hold personal data could not be read (encrypted PDF, .xls, archive).
+    default: 'false'
+  fail:
+    description: Fail the job when personal data is found. Set to "false" to only annotate.
+    default: 'true'
+
+runs:
+  using: composite
+  steps:
+    - name: Scan for Indonesian personal data
+      shell: bash
+      env:
+        LOKAL_VERSION: 0.5.0
+        INPUT_SCOPE: ${{ inputs.scope }}
+        INPUT_PATH: ${{ inputs.path }}
+        INPUT_BASE: ${{ inputs.base }}
+        INPUT_MIN_CONFIDENCE: ${{ inputs.min-confidence }}
+        INPUT_TYPES: ${{ inputs.types }}
+        INPUT_STRICT: ${{ inputs.strict }}
+        INPUT_FAIL: ${{ inputs.fail }}
+        PR_BASE: ${{ github.event.pull_request.base.sha }}
+        PUSH_BEFORE: ${{ github.event.before }}
+        npm_config_ignore_scripts: 'true'
+        npm_config_audit: 'false'
+        npm_config_fund: 'false'
+        npm_config_update_notifier: 'false'
+      run: |
+        set -euo pipefail
+        args=(--format github --min-confidence "$INPUT_MIN_CONFIDENCE")
+        if [ -n "$INPUT_TYPES" ]; then args+=(--types "$INPUT_TYPES"); fi
+        if [ "$INPUT_STRICT" = true ]; then args+=(--strict); fi
+        if [ "$INPUT_FAIL" = false ]; then args+=(--no-fail); fi
+
+        case "$INPUT_SCOPE" in
+          all)
+            args+=("$INPUT_PATH")
+            ;;
+          changes)
+            base="$INPUT_BASE"
+            if [ -z "$base" ] && [ -n "$PR_BASE" ]; then base="$PR_BASE"; fi
+            if [ -z "$base" ] && [ -n "$PUSH_BEFORE" ] && [ "$PUSH_BEFORE" != 0000000000000000000000000000000000000000 ]; then base="$PUSH_BEFORE"; fi
+            if [ -z "$base" ]; then
+              # A new branch has no "before": check the commit that was pushed.
+              git rev-parse -q --verify 'HEAD^{commit}' >/dev/null
+              if ! git rev-parse -q --verify 'HEAD^1' >/dev/null; then git fetch -q --no-tags --deepen=1 origin "$(git rev-parse HEAD)" || true; fi
+              base="$(git rev-parse -q --verify 'HEAD^1' || true)"
+            fi
+            if [ -z "$base" ]; then
+              echo "::notice title=Lokal PII Scan::No earlier commit to compare with; checking every file."
+              args+=(.)
+            else
+              if ! git cat-file -e "${base}^{commit}" 2>/dev/null; then
+                git fetch -q --no-tags --depth=1 origin "$base" || {
+                  echo "::error title=Lokal PII Scan::Cannot fetch the base commit $base. Check out with fetch-depth: 0, or keep persist-credentials on for private repositories."
+                  exit 2
+                }
+              fi
+              args+=(--diff "$base")
+            fi
+            ;;
+          *)
+            echo "::error title=Lokal PII Scan::scope must be \"changes\" or \"all\", not \"$INPUT_SCOPE\"."
+            exit 2
+            ;;
+        esac
+
+        npx --yes "@lokal-id/mcp@${LOKAL_VERSION}" scan "${args[@]}"

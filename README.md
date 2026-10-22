@@ -62,6 +62,8 @@ Lokal fixes both: it teaches agents Indonesian conventions, gives them accurate 
 - **Samaran Guard.** A hook for Claude Code, Codex CLI, Cursor, and Gemini CLI that stops prompts containing ID numbers and redirects reads of customer data files (`Read`, `Grep`, `cat`, `Get-Content`, …) to a masked view.
 - **Kembaran.** Copies production dumps and exports for staging with every person replaced by a realistic stand-in: a valid NIK in the same district, a phone number on the same operator, consistent across tables.
 - **Samaran Proxy.** An OpenAI- and Anthropic-compatible endpoint that masks personal data in every LLM call your app makes and restores it in the answers, streaming included. Change the base URL, not the code.
+- **Lokal Scan.** A GitHub Action and pre-commit hook that stop personal data from being committed. It checks only the lines a pull request adds and marks each value on the changed line.
+- **Browser extension.** Masks personal data pasted or typed into ChatGPT, Claude, Gemini, and other AI chats, and restores it when you copy the answer.
 - **Works with any agent.** Claude Code plugin, stdio MCP server for Cursor, Claude Desktop, VS Code, Windsurf, and Codex, an HTTP server for ChatGPT and Claude.ai connectors, plus TypeScript and Python libraries with identical results.
 - **Local and offline.** Data ships with the package. No network calls, no telemetry, and unmasking happens on your machine.
 
@@ -309,6 +311,73 @@ Slamet Matondang,3201012409953895,24-09-1995,0812-8655-8077,rini.pertiwi10@examp
 
 A stand-in phone number can still belong to someone, so keep staging from sending SMS or WhatsApp. Text files only (SQL dumps, CSV, JSON, logs) up to 100 MB; about 2 MB/s in TypeScript.
 
+### Browser extension: for ChatGPT, Claude, and Gemini on the web
+
+Not everyone pastes customer data through an agent. Customer service, HR, and finance teams paste it into ChatGPT or Claude in the browser. The Lokal extension masks personal data as it is pasted or before a message is sent, so the site receives `[NIK_1]` and `[PHONE_1]`:
+
+- Placeholders in the answer are highlighted; point at one to see the real value.
+- Copying the answer, with Ctrl+C or the site's copy button, puts the real values back.
+- Real values are never written into the site's page, where its scripts could read them, and are forgotten when the browser closes. No server, no network requests.
+
+It runs on ChatGPT, Claude, Gemini, Copilot, Perplexity, DeepSeek, Grok, and Le Chat, in Chrome, Edge, and other Chromium browsers. It is not in the Chrome Web Store yet: download `lokal-extension-<version>.zip` from the [latest release](https://github.com/lokal-id/lokal/releases/latest), unzip it, and load the folder with **Load unpacked** (see [packages/extension](packages/extension/README.md), which also lists its limitations: attached files are not masked).
+
+### Lokal Scan: keep personal data out of the repository
+
+Seeders, fixtures, and dumps copied from production end up in git, and from there in every clone, fork, and CI log. `lokal-mcp scan` finds Indonesian personal data before it is committed. With `--staged` or `--diff` it checks only the lines a commit or pull request adds, so a repository that already holds test data can turn it on today.
+
+**GitHub Actions.** Each value is marked on the changed line of the pull request, and the job fails:
+
+```yaml
+# .github/workflows/pii.yml
+name: PII
+on: [pull_request, push]
+permissions:
+  contents: read
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: lokal-id/lokal@v0.5.0
+        # with:
+        #   scope: all              # every tracked file, not only the changes
+        #   min-confidence: medium  # also values without a label or column name
+        #   types: NIK,KK,PHONE     # only these types
+        #   fail: false             # annotate without failing
+```
+
+**Pre-commit hook.** With [pre-commit](https://pre-commit.com):
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: local
+    hooks:
+      - id: lokal-scan
+        name: Indonesian personal data
+        entry: lokal-mcp scan --staged
+        language: node
+        additional_dependencies: ['@lokal-id/mcp@0.5.0']
+        pass_filenames: false
+```
+
+With Husky, put `npx lokal-mcp scan --staged` in `.husky/pre-commit` after `npm i -D @lokal-id/mcp`. Without either, the same line in `.git/hooks/pre-commit` works.
+
+**Command line:**
+
+```console
+$ npx @lokal-id/mcp scan --staged
+seed/pelanggan.csv:14: NIK 3201********0001
+seed/pelanggan.csv:14: PHONE 0812****7890
+
+Found 2 personal data value(s) in 1 file(s).
+```
+
+- `scan [path…]` checks every file git tracks (or every file, outside a repository); `--diff origin/main` checks a branch; `--format json` and `--format github` are for tools. Exit code 1 means something was found.
+- Findings show partially masked values only, because CI logs are often public. Nothing leaves the machine.
+- Files that only hold made-up data go in `.samaranignore`. A single line is skipped when it contains `samaran-ignore`, such as `const nik = '3201011508950001'; // samaran-ignore`.
+- Spreadsheets, Word documents, and PDFs in a change are checked whole. Files that could not be read (encrypted PDFs, `.xls`, archives) are reported as warnings, or fail the check with `--strict`.
+
 ### MCP tools
 
 | Tool | What it does |
@@ -467,13 +536,14 @@ Have an idea? [Open an issue](https://github.com/lokal-id/lokal/issues).
 ## Project structure
 
 ```text
-packages/core     @lokal-id/core: logic and bundled data
-packages/mcp      @lokal-id/mcp: MCP server and Samaran Guard
-python/           lokal-id: the Python port, with parity tests against TypeScript
-skills/           SKILL.md files for Claude, Codex, and other agents
-hooks/            Claude Code hook (bundled, no dependencies)
-evals/            end-to-end evaluation against real Claude Code sessions
-.claude-plugin/   plugin and marketplace manifests
+packages/core       @lokal-id/core: logic and bundled data
+packages/mcp        @lokal-id/mcp: MCP server and Samaran Guard
+packages/extension  browser extension for ChatGPT, Claude, Gemini, and other AI chats
+python/             lokal-id: the Python port, with parity tests against TypeScript
+skills/             SKILL.md files for Claude, Codex, and other agents
+hooks/              Claude Code hook (bundled, no dependencies)
+evals/              end-to-end evaluation against real Claude Code sessions
+.claude-plugin/     plugin and marketplace manifests
 ```
 
 ## Contributing

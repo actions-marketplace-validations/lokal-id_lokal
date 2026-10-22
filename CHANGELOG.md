@@ -4,6 +4,20 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-22
+
+npm (`@lokal-id/core`, `@lokal-id/mcp`), PyPI (`lokal-id`), the GitHub Action, and the browser extension.
+
+### Added
+
+- **Lokal Scan: `lokal-mcp scan` and a GitHub Action** stop Indonesian personal data from being committed. `--staged` checks the lines staged for a commit, for pre-commit hooks; `--diff <ref>` checks the lines a branch adds, for CI. A repository that already holds test data can turn it on without cleaning up first. Without either option it checks every file git tracks. Findings show partially masked values only, as text, JSON, or GitHub annotations with a job summary. Files in `.samaranignore` and lines containing `samaran-ignore` are skipped. Spreadsheets, Word documents, and PDFs are checked whole, and files that cannot be read are reported (`--strict` fails on them). The action (`uses: lokal-id/lokal@v0.5.0`) runs the scanner from the npm release of the same version.
+- **Browser extension** for ChatGPT, Claude, Gemini, Copilot, Perplexity, DeepSeek, Grok, and Le Chat (Chrome, Edge, and other Chromium browsers). Personal data is masked when it is pasted, and typed data before Enter or the send button sends it. Placeholders in the conversation are highlighted, pointing at one shows the real value, and copying an answer, with Ctrl+C or the site's copy button, restores the real values. They are never written into the site's page and are kept only in the browser's session memory. The same value gets the same placeholder in every tab. Attached files are not masked yet. Not in the Chrome Web Store yet: download `lokal-extension-0.5.0.zip` from the GitHub release, unzip it, and load the folder with **Load unpacked**.
+
+### Fixed
+
+- A JSON or YAML key named like an IP address field no longer marks a package version as an IP address: `"ip-address": "^10.2.0"` in `package-lock.json` was reported. An IP value must now be a dotted quad or contain `:` (IPv6).
+- A labeled address no longer runs into the next sentence when that sentence opens with another field: in `Alamat: Jl. Melati No. 12, Bandung. Rekening BCA 1234567890.` the bank account was masked as part of `[ADDRESS_1]`. It is now its own `[BANK_ACCOUNT_1]`. Abbreviations inside an address (`Jl.`, `Kel.`, `Kec.`) do not end it.
+
 ## [0.4.1] - 2026-10-21
 
 npm (`@lokal-id/core`, `@lokal-id/mcp`) and PyPI (`lokal-id`).
@@ -120,7 +134,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/lokal-id/lokal/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/lokal-id/lokal/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/lokal-id/lokal/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/lokal-id/lokal/compare/v0.2.2...v0.3.0

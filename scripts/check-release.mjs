@@ -23,6 +23,8 @@ const found = {
   '.claude-plugin/plugin.json': json('.claude-plugin/plugin.json').version,
   // The plugin starts the MCP server with npx; a pinned version keeps the two in step and gets past npx's cache.
   '.mcp.json npx @lokal-id/mcp@<version>': json('.mcp.json').lokal.args.find((a) => a.startsWith(`${mcp.name}@`))?.slice(mcp.name.length + 1),
+  // The GitHub Action runs the scanner from the npm release of the same version as its tag.
+  'action.yml LOKAL_VERSION': read('action.yml').match(/LOKAL_VERSION: (\S+)/)?.[1],
   'server.json version': server.version,
   [`server.json packages[${mcp.name}].version`]: npmEntry?.version,
 };

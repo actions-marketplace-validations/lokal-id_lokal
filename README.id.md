@@ -62,6 +62,8 @@ Lokal menangani keduanya: mengajari agent konvensi Indonesia, memberinya data ac
 - **Samaran Guard.** Hook untuk Claude Code, Codex CLI, Cursor, dan Gemini CLI yang menahan prompt berisi nomor identitas dan mengalihkan pembacaan file data pelanggan (`Read`, `Grep`, `cat`, `Get-Content`, …) ke versi tersamar.
 - **Kembaran.** Menyalin dump dan ekspor produksi untuk staging dengan setiap orang diganti kembaran yang realistis: NIK valid di kecamatan yang sama, nomor HP di operator yang sama, konsisten antartabel.
 - **Samaran Proxy.** Endpoint yang kompatibel dengan OpenAI dan Anthropic. Proxy menyamarkan data pribadi di setiap panggilan LLM dari aplikasimu dan memulihkannya di jawaban, termasuk saat streaming. Cukup ganti base URL, kodenya tidak perlu diubah.
+- **Lokal Scan.** GitHub Action dan pre-commit hook yang mencegah data pribadi ter-commit. Hanya baris yang ditambahkan pull request yang diperiksa, dan setiap nilai ditandai di baris yang berubah.
+- **Ekstensi browser.** Menyamarkan data pribadi yang ditempel atau diketik ke ChatGPT, Claude, Gemini, dan chat AI lain, lalu memulihkannya saat jawaban disalin.
 - **Jalan di agent mana pun.** Plugin Claude Code, MCP server stdio untuk Cursor, Claude Desktop, VS Code, Windsurf, dan Codex, server HTTP untuk konektor ChatGPT dan Claude.ai, plus library TypeScript dan Python yang hasilnya identik.
 - **Lokal dan offline.** Data ikut di dalam paket. Tidak ada panggilan jaringan, tidak ada telemetri, dan pemulihan data terjadi di komputer kamu.
 
@@ -309,6 +311,73 @@ Slamet Matondang,3201012409953895,24-09-1995,0812-8655-8077,rini.pertiwi10@examp
 
 Nomor HP palsu tetap bisa kebetulan milik orang lain, jadi cegah staging mengirim SMS atau WhatsApp. Hanya file teks (SQL dump, CSV, JSON, log) sampai 100 MB; sekitar 2 MB/detik di TypeScript.
 
+### Ekstensi browser: untuk ChatGPT, Claude, dan Gemini versi web
+
+Tidak semua orang menempel data pelanggan lewat agent. Tim CS, HR, dan finance menempelnya ke ChatGPT atau Claude di browser. Ekstensi Lokal menyamarkan data pribadi saat ditempel atau sebelum pesan dikirim, jadi situs hanya menerima `[NIK_1]` dan `[PHONE_1]`:
+
+- Placeholder di jawaban disorot; arahkan kursor ke placeholder untuk melihat nilai aslinya.
+- Menyalin jawaban, dengan Ctrl+C atau tombol salin milik situs, mengembalikan nilai asli.
+- Nilai asli tidak pernah ditulis ke halaman situs, tempat skrip situs bisa membacanya, dan dilupakan saat browser ditutup. Tanpa server, tanpa request jaringan.
+
+Berjalan di ChatGPT, Claude, Gemini, Copilot, Perplexity, DeepSeek, Grok, dan Le Chat, di Chrome, Edge, dan browser Chromium lain. Belum ada di Chrome Web Store: unduh `lokal-extension-<versi>.zip` dari [rilis terbaru](https://github.com/lokal-id/lokal/releases/latest), ekstrak, lalu muat foldernya lewat **Load unpacked** (lihat [packages/extension](packages/extension/README.md), termasuk batasannya: file lampiran tidak disamarkan).
+
+### Lokal Scan: data pribadi tidak masuk repository
+
+Seeder, fixture, dan dump yang disalin dari production sering ikut ter-commit, lalu tersebar ke setiap clone, fork, dan log CI. `lokal-mcp scan` menemukan data pribadi Indonesia sebelum di-commit. Dengan `--staged` atau `--diff`, yang diperiksa hanya baris yang ditambahkan commit atau pull request, jadi repository yang sudah berisi data tes bisa langsung memakainya.
+
+**GitHub Actions.** Setiap nilai ditandai di baris yang berubah pada pull request, dan job gagal:
+
+```yaml
+# .github/workflows/pii.yml
+name: PII
+on: [pull_request, push]
+permissions:
+  contents: read
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: lokal-id/lokal@v0.5.0
+        # with:
+        #   scope: all              # semua file yang dilacak git, bukan hanya perubahan
+        #   min-confidence: medium  # termasuk nilai tanpa label atau nama kolom
+        #   types: NIK,KK,PHONE     # hanya jenis ini
+        #   fail: false             # beri anotasi tanpa menggagalkan job
+```
+
+**Pre-commit hook.** Dengan [pre-commit](https://pre-commit.com):
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: local
+    hooks:
+      - id: lokal-scan
+        name: Data pribadi Indonesia
+        entry: lokal-mcp scan --staged
+        language: node
+        additional_dependencies: ['@lokal-id/mcp@0.5.0']
+        pass_filenames: false
+```
+
+Dengan Husky, tulis `npx lokal-mcp scan --staged` di `.husky/pre-commit` setelah `npm i -D @lokal-id/mcp`. Tanpa keduanya, baris yang sama di `.git/hooks/pre-commit` juga bisa.
+
+**Command line:**
+
+```console
+$ npx @lokal-id/mcp scan --staged
+seed/pelanggan.csv:14: NIK 3201********0001
+seed/pelanggan.csv:14: PHONE 0812****7890
+
+Found 2 personal data value(s) in 1 file(s).
+```
+
+- `scan [path…]` memeriksa semua file yang dilacak git (atau semua file, di luar repository); `--diff origin/main` memeriksa satu branch; `--format json` dan `--format github` untuk tool lain. Exit code 1 berarti ada temuan.
+- Temuan hanya menampilkan nilai yang disamarkan sebagian, karena log CI sering publik. Tidak ada data yang keluar dari mesin.
+- File yang hanya berisi data karangan dicantumkan di `.samaranignore`. Satu baris dilewati kalau berisi `samaran-ignore`, misalnya `const nik = '3201011508950001'; // samaran-ignore`.
+- Spreadsheet, dokumen Word, dan PDF dalam perubahan diperiksa utuh. File yang tidak bisa dibaca (PDF terenkripsi, `.xls`, arsip) dilaporkan sebagai peringatan, atau menggagalkan pemeriksaan dengan `--strict`.
+
 ### MCP tools
 
 | Tool | Kegunaan |
@@ -467,13 +536,14 @@ Punya ide? [Buka issue](https://github.com/lokal-id/lokal/issues).
 ## Struktur project
 
 ```text
-packages/core     @lokal-id/core: logika dan data
-packages/mcp      @lokal-id/mcp: MCP server dan Samaran Guard
-python/           lokal-id: port Python, dengan tes paritas terhadap TypeScript
-skills/           SKILL.md untuk Claude, Codex, dan agent lain
-hooks/            hook Claude Code (hasil bundle, tanpa dependency)
-evals/            eval end-to-end ke sesi Claude Code sungguhan
-.claude-plugin/   manifest plugin dan marketplace
+packages/core       @lokal-id/core: logika dan data
+packages/mcp        @lokal-id/mcp: MCP server dan Samaran Guard
+packages/extension  ekstensi browser untuk ChatGPT, Claude, Gemini, dan chat AI lain
+python/             lokal-id: port Python, dengan tes paritas terhadap TypeScript
+skills/             SKILL.md untuk Claude, Codex, dan agent lain
+hooks/              hook Claude Code (hasil bundle, tanpa dependency)
+evals/              eval end-to-end ke sesi Claude Code sungguhan
+.claude-plugin/     manifest plugin dan marketplace
 ```
 
 ## Kontribusi

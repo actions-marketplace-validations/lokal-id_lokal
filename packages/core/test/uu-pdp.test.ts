@@ -112,3 +112,10 @@ test('mask dan partial untuk jenis baru', () => {
   assert.equal(partialMask('HEALTH', 'HIV'), '***');
   assert.equal(partialMask('KK', '3201010101200001'), '3201********0001');
 });
+
+test('key ip hanya untuk alamat IP, bukan versi paket di lockfile', () => {
+  assert.deepEqual(found('"ip-address": "^10.2.0"'), []);
+  assert.deepEqual(found('ip_address: 2.0.1'), []);
+  assert.deepEqual(found('client_ip: 182.253.10.15'), ['IP:182.253.10.15']);
+  assert.deepEqual(found('"remote_addr": "2001:db8::1"').map((x) => x.split(':')[0]), ['IP']);
+});

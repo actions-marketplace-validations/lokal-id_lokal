@@ -72,6 +72,10 @@ The file tools can only access `LOKAL_ROOT`, which defaults to `CLAUDE_PROJECT_D
 
 `lokal-mcp kembaran prod.sql export.csv -o staging/ [--secret <text>] [--keep FINANCIAL] [--keep-birth-date]` copies text files with every person replaced by a realistic stand-in, consistent across the files. See the [Lokal README](https://github.com/lokal-id/lokal#kembaran-production-data-for-staging-without-real-people).
 
+## Lokal Scan
+
+`lokal-mcp scan --staged` (pre-commit) or `lokal-mcp scan --diff origin/main` (CI) fails when a commit or pull request adds Indonesian personal data, and shows each value partially masked. `lokal-mcp scan [path…]` checks whole files. There is a GitHub Action too: `uses: lokal-id/lokal@v0.5.0`. See the [Lokal README](https://github.com/lokal-id/lokal#lokal-scan-keep-personal-data-out-of-the-repository).
+
 ## Remote (HTTP) mode
 
 `lokal-mcp serve --http --port 3000` serves the data tools over Streamable HTTP at `/mcp`, for ChatGPT and Claude.ai connectors. The file tools are not available in this mode.
