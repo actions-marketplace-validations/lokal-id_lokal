@@ -31,7 +31,7 @@ membangun aplikasi yang benar untuk Indonesia, sambil menjaga data pribadi pengg
 
 <br>
 
-<img src="docs/assets/demo.id.svg" alt="CSV yang sama, dibaca agent AI tanpa Lokal dan dengan Lokal." width="100%">
+<img src="docs/assets/demo.id.gif" alt="Agent AI membaca pelanggan.csv dua kali. Tanpa Lokal, nama, NIK, dan nomor HP asli terkirim ke penyedia model. Dengan Lokal, file dibaca lewat read_file_masked, penyedia hanya menerima [NAME_1], [NIK_1], dan [PHONE_1], lalu write_file_unmasked menulis perbaikannya dengan nilai asli di komputermu." width="100%">
 
 </div>
 
@@ -314,6 +314,8 @@ Nomor HP palsu tetap bisa kebetulan milik orang lain, jadi cegah staging mengiri
 ### Ekstensi browser: untuk ChatGPT, Claude, dan Gemini versi web
 
 Tidak semua orang menempel data pelanggan lewat agent. Tim CS, HR, dan finance menempelnya ke ChatGPT atau Claude di browser. Ekstensi Lokal menyamarkan data pribadi saat ditempel atau sebelum pesan dikirim, jadi situs hanya menerima `[NIK_1]` dan `[PHONE_1]`:
+
+<img src="docs/assets/extension-demo.id.gif" alt="Data pelanggan ditempel ke chat AI. Ekstensi menyamarkan nama, NIK, dan nomor HP sebelum pesan dikirim, AI menjawab dengan placeholder, mengarahkan kursor ke placeholder menampilkan nilai aslinya, dan menyalin jawaban mengembalikan nilai asli." width="100%">
 
 - Placeholder di jawaban disorot; arahkan kursor ke placeholder untuk melihat nilai aslinya.
 - Menyalin jawaban, dengan Ctrl+C atau tombol salin milik situs, mengembalikan nilai asli.

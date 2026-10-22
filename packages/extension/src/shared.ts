@@ -63,21 +63,21 @@ export function pickLang(locale: string | undefined): Lang {
   return locale?.toLowerCase().startsWith('id') || locale?.toLowerCase().startsWith('ms') ? 'id' : 'en';
 }
 
-const LABELS: Partial<Record<PiiType, { id: string; en: string }>> = {
-  NAME: { id: 'nama', en: 'name' },
-  PHONE: { id: 'nomor HP', en: 'phone number' },
-  EMAIL: { id: 'email', en: 'e-mail' },
-  ADDRESS: { id: 'alamat', en: 'address' },
-  BIRTH_DATE: { id: 'tanggal lahir', en: 'birth date' },
-  BANK_ACCOUNT: { id: 'rekening', en: 'bank account' },
-  CARD: { id: 'kartu', en: 'card' },
+const LABELS: Partial<Record<PiiType, { id: string; en: string; enMany?: string }>> = {
+  NAME: { id: 'nama', en: 'name', enMany: 'names' },
+  PHONE: { id: 'nomor HP', en: 'phone number', enMany: 'phone numbers' },
+  EMAIL: { id: 'email', en: 'e-mail', enMany: 'e-mails' },
+  ADDRESS: { id: 'alamat', en: 'address', enMany: 'addresses' },
+  BIRTH_DATE: { id: 'tanggal lahir', en: 'birth date', enMany: 'birth dates' },
+  BANK_ACCOUNT: { id: 'rekening', en: 'bank account', enMany: 'bank accounts' },
+  CARD: { id: 'kartu', en: 'card', enMany: 'cards' },
   HEALTH: { id: 'data kesehatan', en: 'health data' },
   FINANCIAL: { id: 'data keuangan', en: 'financial data' },
   RELIGION: { id: 'agama', en: 'religion' },
   MARITAL_STATUS: { id: 'status perkawinan', en: 'marital status' },
   GENDER: { id: 'jenis kelamin', en: 'gender' },
   NATIONALITY: { id: 'kewarganegaraan', en: 'nationality' },
-  CRIMINAL_RECORD: { id: 'catatan kriminal', en: 'criminal record' },
+  CRIMINAL_RECORD: { id: 'catatan kriminal', en: 'criminal record', enMany: 'criminal records' },
   BIOMETRIC: { id: 'data biometrik', en: 'biometric data' },
   PLATE: { id: 'pelat nomor', en: 'licence plate' },
   PASSPORT: { id: 'paspor', en: 'passport' },
@@ -91,7 +91,11 @@ export function describe(types: readonly PiiType[], lang: Lang): string {
   for (const t of types) counts.set(t, (counts.get(t) ?? 0) + 1);
   return [...counts]
     .sort((a, b) => b[1] - a[1])
-    .map(([t, n]) => `${n} ${LABELS[t]?.[lang] ?? t}`)
+    .map(([t, n]) => {
+      const label = LABELS[t];
+      // Indonesian nouns do not change; English ones do, except mass nouns like "health data".
+      return `${n} ${(lang === 'en' && n > 1 && label?.enMany) || label?.[lang] || t}`;
+    })
     .join(', ');
 }
 

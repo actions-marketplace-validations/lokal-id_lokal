@@ -13,3 +13,7 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+
+# Demo animations (docs/video)
+docs/video/node_modules/
+docs/video/out/

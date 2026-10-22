@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+### Fixed
+
+- The browser extension's English notices use plurals: "Lokal masked 2 phone numbers", not "2 phone number".
+
 ## [0.5.0] - 2026-10-22
 
 npm (`@lokal-id/core`, `@lokal-id/mcp`), PyPI (`lokal-id`), the GitHub Action, and the browser extension.

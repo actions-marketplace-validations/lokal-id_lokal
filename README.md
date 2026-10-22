@@ -31,7 +31,7 @@ build apps that are correct for Indonesia, while keeping your users' personal da
 
 <br>
 
-<img src="docs/assets/demo.svg" alt="The same CSV, read by an AI agent without Lokal and with it." width="100%">
+<img src="docs/assets/demo.gif" alt="An AI agent reads pelanggan.csv twice. Without Lokal, the real names, NIK numbers, and phone numbers are sent to the model provider. With Lokal, it reads the file through read_file_masked, the provider receives only [NAME_1], [NIK_1], and [PHONE_1], and write_file_unmasked writes the fix back with the real values on your machine." width="100%">
 
 </div>
 
@@ -314,6 +314,8 @@ A stand-in phone number can still belong to someone, so keep staging from sendin
 ### Browser extension: for ChatGPT, Claude, and Gemini on the web
 
 Not everyone pastes customer data through an agent. Customer service, HR, and finance teams paste it into ChatGPT or Claude in the browser. The Lokal extension masks personal data as it is pasted or before a message is sent, so the site receives `[NIK_1]` and `[PHONE_1]`:
+
+<img src="docs/assets/extension-demo.gif" alt="Customer data is pasted into an AI chat. The extension masks names, NIK numbers, and phone numbers before the message is sent, the AI answers with placeholders, pointing at one shows the real value, and copying the answer brings the real values back." width="100%">
 
 - Placeholders in the answer are highlighted; point at one to see the real value.
 - Copying the answer, with Ctrl+C or the site's copy button, puts the real values back.

@@ -4,6 +4,8 @@ A browser extension that keeps Indonesian personal data out of AI chats. It uses
 
 It works on ChatGPT, Claude, Gemini (and AI Studio), Microsoft Copilot, Perplexity, DeepSeek, Grok, and Le Chat, in Chrome, Edge, Brave, Opera, and other Chromium browsers.
 
+<img src="../../docs/assets/extension-demo.gif" alt="Customer data is pasted into an AI chat. The extension masks names, NIK numbers, and phone numbers before the message is sent, the AI answers with placeholders, pointing at one shows the real value, and copying the answer brings the real values back." width="100%">
+
 ## What it does
 
 - **Pasting.** When the pasted text contains personal data (NIK, KK, NPWP, phone numbers, bank accounts, names, addresses, health data, and the other UU PDP categories), the site receives it with placeholders instead: `Nama: [NAME_1], NIK [NIK_1]`. Text without personal data is pasted as it is.

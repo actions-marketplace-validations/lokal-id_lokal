@@ -1,0 +1,32 @@
+{
+  "name": "lokal-demo-videos",
+  "version": "1.0.0",
+  "description": "The demo animations in the Lokal README, made with Remotion",
+  "license": "MIT",
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24"
+  },
+  "private": true,
+  "dependencies": {
+    "@remotion/cli": "4.0.537",
+    "@remotion/google-fonts": "^4.0.537",
+    "@remotion/layout-utils": "^4.0.537",
+    "@remotion/transitions": "^4.0.537",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.537"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.7",
+    "@types/web": "0.0.166",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "studio": "remotion studio",
+    "typecheck": "tsc",
+    "render": "node render.mjs"
+  },
+  "allowScripts": {
+    "esbuild": false
+  }
+}

@@ -26,7 +26,9 @@ test('findPlaceholders reports positions of known placeholders only', () => {
 
 test('describe counts types without values, in the UI language', () => {
   assert.equal(describe(matches.map((m) => m.type), 'id'), '1 nama, 1 NIK, 1 nomor HP');
-  assert.equal(describe(['PHONE', 'NIK', 'PHONE'], 'en'), '2 phone number, 1 NIK');
+  assert.equal(describe(['PHONE', 'NIK', 'PHONE'], 'en'), '2 phone numbers, 1 NIK');
+  assert.equal(describe(['NAME', 'NAME', 'HEALTH', 'HEALTH'], 'en'), '2 names, 2 health data');
+  assert.equal(describe(['NAME', 'NAME'], 'id'), '2 nama');
   assert.equal(pickLang('id-ID'), 'id');
   assert.equal(pickLang('en-US'), 'en');
 });
