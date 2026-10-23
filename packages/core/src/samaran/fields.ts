@@ -1,10 +1,11 @@
 // Field names that announce personal data: CSV headers, JSON/YAML keys, and labels in text
 // ("Agama: Islam", "Tgl. Lahir: 15-08-1995", "customer_phone", "NAMA_IBU_KANDUNG").
+import { AMBIGUOUS_GIVEN_NAMES, FAMILY_NAMES, GIVEN_NAMES, SECOND_NAMES } from './names.ts';
 import type { PiiType } from './types.ts';
 
 const FIELDS: Array<[PiiType, string]> = [
   // A column called "pasien" or "pelanggan" holds that person's name.
-  ['NAME', 'nama|name|full_?name|nama_?lengkap|first_?name|last_?name|middle_?name|given_?name|family_?name|surname|nama_?depan|nama_?tengah|nama_?belakang|nama_?panggilan|nickname|nama_?ibu_?kandung|mother_?s?_?maiden_?name|penerima|pengirim|recipient|pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner|pemesan|pembeli|buyer|konsumen|atas_?nama|a_n'],
+  ['NAME', 'nama|name|full_?name|kepada|kpd|yth|attn|attention|pelapor|terlapor|korban|saksi|tersangka|terdakwa|pelaku|kepala_?keluarga|penanggung_?jawab|ahli_?waris|pemberi_?kuasa|penerima_?kuasa|requester|username|nama_?lengkap|first_?name|last_?name|middle_?name|given_?name|family_?name|surname|nama_?depan|nama_?tengah|nama_?belakang|nama_?panggilan|nickname|nama_?ibu_?kandung|mother_?s?_?maiden_?name|penerima|pengirim|recipient|pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner|pemesan|pembeli|buyer|konsumen|atas_?nama|a_n'],
   ['ADDRESS', 'alamat|address|full_?address|street|street_?address|domisili|alamat_?domisili|alamat_?ktp|alamat_?rumah|alamat_?pengiriman|shipping_?address|home_?address|billing_?address'],
   ['NIK', 'nik|no_?ktp|nomor_?ktp|ktp|nomor_?induk_?kependudukan|national_?id'],
   ['KK', 'kk|no_?kk|nomor_?kk|kartu_?keluarga|no_?kartu_?keluarga|nomor_?kartu_?keluarga|family_?card(_?number)?'],
@@ -12,6 +13,8 @@ const FIELDS: Array<[PiiType, string]> = [
   ['PASSPORT', 'paspor|passport|no_?paspor|nomor_?paspor|passport_?(no|number)'],
   ['SIM', 'sim|no_?sim|nomor_?sim|driver_?s?_?licen[cs]e|driving_?licen[cs]e'],
   ['NIP', 'nip|nip_?baru|nrp|nomor_?induk_?pegawai'],
+  ['NISN', 'nisn|no_?nisn|nomor_?nisn|nomor_?induk_?siswa_?nasional'],
+  ['AKTA', 'akta|no_?akta|nomor_?akta|(?:no_?|nomor_?)?akta_?(?:kelahiran|lahir|nikah|perkawinan|kawin|cerai|perceraian|kematian)|birth_?certificate(?:_?(?:no|number))?|marriage_?certificate(?:_?(?:no|number))?'],
   ['BPJS', 'bpjs|no_?bpjs|nomor_?bpjs|bpjs_?kesehatan|bpjs_?ketenagakerjaan|kis|no_?kis|jkn|kpj'],
   ['PHONE', 'hp|no_?hp|nomor_?hp|nohp|telp|tlp|telepon|telpon|no_?telp|no_?telepon|nomor_?telepon|phone|phone_?number|mobile|mobile_?phone|handphone|whatsapp|wa|no_?wa|nomor_?wa|msisdn'],
   ['EMAIL', 'email|e_?mail|surel|alamat_?email|email_?address'],
@@ -25,7 +28,7 @@ const FIELDS: Array<[PiiType, string]> = [
   ['MARITAL_STATUS', 'status_?perkawinan|status_?kawin|status_?pernikahan|status_?nikah|perkawinan|marital_?status|status_?marital'],
   ['NATIONALITY', 'kewarganegaraan|warga_?negara|wn|nationality|citizenship'],
   ['HEALTH', 'diagnosa|diagnosis|diagnose|penyakit|riwayat_?penyakit|riwayat_?medis|rekam_?medis|kondisi_?medis|kondisi_?kesehatan|keluhan|gejala|alergi|allergy|allergies|golongan_?darah|gol_?darah|blood_?type|hasil_?lab|lab_?result|obat|medication|medications|resep|prescription|icd|icd_?10|medical_?history|medical_?record|disabilitas|disability|kehamilan|pregnancy|status_?vaksin|vaccination_?status|tindakan_?medis'],
-  ['FINANCIAL', 'gaji|salary|penghasilan|pendapatan|income|saldo|balance|limit_?kredit|credit_?limit|utang|hutang|debt|pinjaman|loan|loan_?amount|cicilan|installment|tunggakan|arrears|skor_?kredit|credit_?score|slik|kolektibilitas|kekayaan|net_?worth|harta'],
+  ['FINANCIAL', 'gaji|salary|(?:net|gross|base|basic)_?salary|take_?home_?pay|thp|gaji_?(?:pokok|bersih|kotor)|penghasilan|pendapatan|income|saldo|balance|limit_?kredit|credit_?limit|utang|hutang|debt|pinjaman|loan|loan_?amount|cicilan|installment|tunggakan|arrears|skor_?kredit|credit_?score|slik|kolektibilitas|kekayaan|net_?worth|harta'],
   ['CRIMINAL_RECORD', 'catatan_?kriminal|catatan_?kepolisian|catatan_?pidana|skck|riwayat_?pidana|riwayat_?kriminal|criminal_?record|criminal_?history|status_?hukum'],
   // Not "signature" or "face": in code those are crypto signatures and UI faces.
   ['BIOMETRIC', 'sidik_?jari|fingerprint|foto_?ktp|foto_?wajah|foto_?selfie|selfie|selfie_?ktp|face_?image|face_?photo|face_?embedding|biometri|biometric|biometrik|iris|retina|dna|genetik|genetic|voiceprint|voice_?print|tanda_?tangan|ttd'],
@@ -34,7 +37,7 @@ const FIELDS: Array<[PiiType, string]> = [
 // "nama_pelanggan", "customer_phone", "alamat_pengiriman": the field, optionally qualified by whose it is.
 const ENTITY =
   'customer|pelanggan|nasabah|pasien|patient|user|pengguna|member|anggota|karyawan|employee|pegawai|siswa|student|mahasiswa|penerima|pengirim|recipient|sender|ibu|ayah|wali|orang_?tua|pemohon|applicant|debitur|peserta|pemilik|owner|contact|kontak|pemesan|pembeli|buyer|konsumen';
-const QUALIFIER = `${ENTITY}|lengkap|baru|lama|asli|utama|rumah|kantor|ktp|domisili|pengiriman|pribadi|aktif|1|2`;
+const QUALIFIER = `${ENTITY}|lengkap|baru|lama|asli|utama|rumah|kantor|ktp|domisili|pengiriman|pribadi|aktif|pokok|bersih|kotor|bulanan|tahunan|total|1|2`;
 
 const KEY_RES: Array<[PiiType, RegExp]> = FIELDS.map(([type, alts]) => [
   type,
@@ -90,20 +93,36 @@ const TYPE_WORDS = new Set([
 ]);
 
 const DIGIT_TYPES: ReadonlySet<PiiType> = new Set([
-  'NIK', 'KK', 'NPWP', 'NIP', 'SIM', 'BPJS', 'PHONE', 'BANK_ACCOUNT', 'CARD',
+  'NIK', 'KK', 'NPWP', 'NIP', 'SIM', 'BPJS', 'NISN', 'PHONE', 'BANK_ACCOUNT', 'CARD',
 ]);
+
+// `user=dimas.anggara` in a log is a person; `user=root` or `user: postgres` is an account.
+const USER_KEY = /^(?:user|username|login)$/;
+const isKnownNamePart = (word: string) => {
+  const bare = word.toLowerCase().replace(/\d+$/, '');
+  return GIVEN_NAMES.has(bare) || AMBIGUOUS_GIVEN_NAMES.has(bare) || FAMILY_NAMES.has(bare) || SECOND_NAMES.has(bare);
+};
 
 /** Values that are code, schema, or placeholders rather than someone's data. */
 export function isPlausibleValue(type: PiiType, value: string, key: string): boolean {
-  // "Siti Aminah (Ami)": a nickname in brackets is part of the name, not a function call.
-  const v = type === 'NAME' ? value.trim().replace(NICKNAME, '') : value.trim();
+  // "Siti Aminah (Ami)": a nickname in brackets is part of the name, not a function call. "Siti%20Rahayu" and
+  // "Siti+Rahayu" in a URL are the same name.
+  const v = type === 'NAME' ? value.trim().replace(NICKNAME, '').replace(/%20|\+/g, ' ') : value.trim();
   if (!v || EMPTY.test(v)) return false;
   if (TYPE_WORDS.has(v.toLowerCase())) return false;
   if (/^\[[A-Z_]+_\d+\]$/.test(v)) return false; // already masked
+  if (type === 'NAME' && USER_KEY.test(normalizeKey(key))) {
+    return /^[A-Za-z][\w. -]{2,40}$/.test(v) && v.split(/[._ -]+/).some(isKnownNamePart);
+  }
   // Code, not data: `req.body.nama`, `z.string()`, `${user.phone}`, `=> …`.
   if (/[{}<>`$[\]]|=>|^\w+\.\w+\(/.test(v)) return false;
+  // `street = new RegExp(`, `alamat = buildAddress(`: an expression.
+  if (/^(?:new|await|typeof|function|return|yield|async)\s|^[A-Za-z_$][\w$.]*\($/.test(v)) return false;
+  if (type === 'AKTA' && v.replace(/\D/g, '').length < 4) return false;
   if (type === 'ADDRESS' && !/\s/.test(v)) return false; // a real address has more than one word
-  if (type !== 'ADDRESS' && (/[()]/.test(v) || /^[a-z_$][\w$]*\.[a-z_$][\w$.]*$/i.test(v))) return false;
+  // `user.name` is code; initials ("A.S.", "M. R.") are a person.
+  const initials = type === 'NAME' && /^(?:[A-Z]\.[ \t]?){1,4}$/.test(v);
+  if (type !== 'ADDRESS' && (/[()]/.test(v) || (!initials && /^[a-z_$][\w$]*\.[a-z_$][\w$.]*$/i.test(v)))) return false;
   const digitCount = v.replace(/\D/g, '').length;
   if (DIGIT_TYPES.has(type) && digitCount < 6) return false;
   if ((type === 'GEO' || type === 'IP') && digitCount < 2) return false;
@@ -128,8 +147,8 @@ export function isPlausibleValue(type: PiiType, value: string, key: string): boo
     } else if (isGenericNameKey(key)) {
       // `name: Build and test` in a CI file is not a person.
       if (words.length < 2 || words.length > 5 || !words.every((w) => /^[A-Z]/.test(w))) return false;
-    } else if (ROLE_KEY.test(normalizeKey(key)) && words.length === 1 && !/^[A-Z]/.test(v)) {
-      // `"owner": "lokal-id"` is an account; "Siti" or "siti aminah" under `pasien` is a person.
+    } else if (ROLE_KEY.test(normalizeKey(key)) && words.length === 1 && !/^[A-Z]/.test(v) && /[-_.\d]|^(?:admin|root|system|bot|team|tim|null|user)$/.test(v)) {
+      // `"owner": "lokal-id"` is an account; "Siti", "siti aminah", or "sukirman" under `penerima` is a person.
       return false;
     }
   }

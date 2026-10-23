@@ -1,6 +1,14 @@
 import { parseNik } from '../nik.ts';
 import { parsePhone } from '../phone.ts';
 import { fieldType, isGenericNameKey, isPlausibleValue } from './fields.ts';
+import {
+  AMBIGUOUS_GIVEN_NAMES,
+  BALINESE_NAMES,
+  CHINESE_FAMILY_NAMES,
+  FAMILY_NAMES,
+  GIVEN_NAMES,
+  SECOND_NAMES,
+} from './names.ts';
 import { PII_TYPES, type Confidence, type PiiMatch, type PiiType } from './types.ts';
 
 export { PII_TYPES, UU_PDP_CATEGORY, type Confidence, type PiiMatch, type PiiType } from './types.ts';
@@ -10,6 +18,15 @@ function before(text: string, index: number, window = 40): string {
   const slice = text.slice(Math.max(0, index - window), index);
   const nl = slice.lastIndexOf('\n');
   return (nl >= 0 ? slice.slice(nl + 1) : slice).toLowerCase();
+}
+
+/** The line above a value that stands alone on its own line, lowercased; empty when the value shares its line. */
+function lineAbove(text: string, index: number, length: number): string {
+  const lineStart = text.lastIndexOf('\n', index - 1) + 1;
+  const lineEnd = text.indexOf('\n', index + length);
+  if (text.slice(lineStart, index).trim() || text.slice(index + length, lineEnd === -1 ? text.length : lineEnd).trim()) return '';
+  if (lineStart === 0) return '';
+  return text.slice(text.lastIndexOf('\n', lineStart - 2) + 1, lineStart - 1).toLowerCase();
 }
 
 function match(type: PiiType, start: number, value: string, confidence: Confidence): PiiMatch {
@@ -60,7 +77,8 @@ const KK_KEYWORD = /\b(kk|kartu keluarga)\b[^\d]*$/;
 const SIM_KEYWORD = /\b(sim|surat izin mengemudi|driving licen[cs]e)\b[^\d]*$/;
 const NIK_KEYWORD = /\b(nik|ktp|nomor induk kependudukan)\b/;
 const NPWP_KEYWORD = /\bnpwp\b/;
-const BPJS_KEYWORD = /\b(bpjs|jkn|kis|kartu indonesia sehat|kpj|jamsostek)\b/;
+const NISN_KEYWORD = /\b(nisn|nomor induk siswa nasional)\b[^\d]*$/;
+const BPJS_KEYWORD =/\b(bpjs|jkn|kis|kartu indonesia sehat|kpj|jamsostek)\b/;
 const BANK_KEYWORD =
   /\b(no\.?\s*rek(ening)?|norek|rekening|rek|account|acc|a\/c|virtual account|va|transfer|tf|bca|bri|bni|mandiri|bsi|cimb|niaga|permata|danamon|btn|jago|seabank|blu|ocbc|panin|maybank|mega|muamalat)\b/;
 
@@ -90,8 +108,13 @@ function detectDigitRuns(text: string): PiiMatch[] {
     }
     else if ((digits.length === 15 || digits.length === 16) && NPWP_KEYWORD.test(ctx)) push('NPWP', 'high');
     else if (digits.length === 16 && NIK_KEYWORD.test(ctx)) push('NIK', 'medium');
+    else if (digits.length === 10 && NISN_KEYWORD.test(label)) push('NISN', 'high');
     else if ((digits.length === 13 || digits.length === 11) && BPJS_KEYWORD.test(ctx)) push('BPJS', 'high');
     else if (digits.length >= 8 && digits.length <= 18 && BANK_KEYWORD.test(ctx)) push('BANK_ACCOUNT', 'high');
+    else if (digits.length >= 8 && digits.length <= 18 && BANK_KEYWORD.test(lineAbove(text, m.index, m[0].length))) {
+      // A transfer receipt stacks the bank and the account: "Bank BNI\n0123456789".
+      push('BANK_ACCOUNT', 'medium');
+    }
   }
   return out;
 }
@@ -99,6 +122,23 @@ function detectDigitRuns(text: string): PiiMatch[] {
 function detectNpwpFormatted(text: string): PiiMatch[] {
   const re = /(?<!\d)\d{2}\.\d{3}\.\d{3}\.\d-\d{3}\.\d{3}(?!\d)/g;
   return [...text.matchAll(re)].map((m) => match('NPWP', m.index, m[0], 'high'));
+}
+
+/**
+ * Civil registry deeds (akta kelahiran, perkawinan, kematian): Dukcapil numbers them "3201-LT-12052018-0042", region,
+ * kind, date, serial. Older deeds have a free-form number after the words "akta kelahiran".
+ */
+function detectAkta(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  const dukcapil = /(?<![\w-])\d{4}[-./ ]?(?:LT|LU|LD|KW|CR|KM)[-./ ]?\d{8}[-./ ]?\d{3,6}(?![\w-])/gi;
+  for (const m of text.matchAll(dukcapil)) out.push(match('AKTA', m.index, m[0], 'high'));
+  const worded =
+    /\bakta\s+(?:kelahiran|lahir|nikah|perkawinan|kematian|cerai|perceraian)(?:nya)?\s+(?:no(?:mor)?\.?\s*:?\s*)?([A-Za-z0-9][\w./-]{3,30}[A-Za-z0-9])/gi;
+  for (const m of text.matchAll(worded)) {
+    if (m[1]!.replace(/\D/g, '').length < 4) continue;
+    out.push(match('AKTA', m.index + m[0].length - m[1]!.length, m[1]!, 'high'));
+  }
+  return out;
 }
 
 function detectPassports(text: string): PiiMatch[] {
@@ -124,17 +164,43 @@ function gluedToCode(text: string, index: number): boolean {
   return /[a-z]/.test(token) && !PHONE_LABELS.has(token) && !token.endsWith('wa.me');
 }
 
+const PHONE_WORD = /\b(?:telp|telepon|telpon|tlp|tel|phone|fax|faks|hub|hubungi|call|kontak|contact|cp|rumah|kantor|no)\b[^\d]*$/;
+
 function detectPhones(text: string): PiiMatch[] {
   const out: PiiMatch[] = [];
   // Separators never include a line break, and every group after the operator prefix has at least three digits.
   // Otherwise a number at the end of a line swallows the digits that start the next one ("…6789\n14/10/26"),
   // fails validation, and is left unmasked.
-  const mobile = /(?<![\d+\w])(?:\+62|62|0)[ \t-]?8\d{1,2}(?:[ \t.-]?\d{3,4}){2,3}(?![\d\w])/g;
+  // "0062 812 …" dials out of another country the way "+62" does.
+  const mobile = /(?<![\d+\w])(?:\+62|0062|62|0)[ \t-]?8\d{1,2}(?:[ \t.-]?\d{3,4}){2,3}(?![\d\w])/g;
   for (const m of text.matchAll(mobile)) {
-    if (parsePhone(m[0]).valid && !gluedToCode(text, m.index)) out.push(match('PHONE', m.index, m[0], 'high'));
+    if (parsePhone(m[0].replace(/^00/, '+')).valid && !gluedToCode(text, m.index)) out.push(match('PHONE', m.index, m[0], 'high'));
   }
   const landline = /\((?:\+62[ \t]?|0)\d{2,3}\)[ \t]?\d{3,4}[ \t-]?\d{3,4}(?!\d)|(?<![\d\w])\+62[ \t]?[2-79]\d{1,2}[ \t-]?\d{3,4}[ \t-]?\d{3,4}(?!\d)/g;
   for (const m of text.matchAll(landline)) out.push(match('PHONE', m.index, m[0], 'medium'));
+  // "+62 (812) 3456-7890", "(0812) 3456 7890".
+  const bracketed = /(?<![\d\w])(?:\+?62[ \t]?\(8\d{1,2}\)|\(08\d{1,2}\))[ \t]?\d{3,4}[ \t.-]?\d{3,4}(?!\d)/g;
+  for (const m of text.matchAll(bracketed)) if (parsePhone(m[0]).valid) out.push(match('PHONE', m.index, m[0], 'high'));
+  // "08 12 34 56 78 90": any grouping, as long as all the digits make one valid mobile number.
+  const grouped = /(?<![\d\w+])(?:\+62[ \t.-]?|62[ \t.-]?|0[ \t.-]?)8(?:[ \t.-]?\d){8,12}(?![\d\w])/g;
+  for (const m of text.matchAll(grouped)) {
+    // Only what the pattern above cannot read: groups of one or two digits after the prefix. Otherwise
+    // "0812-3456-7890\n2 …" would take the next line's "2".
+    const groups = m[0].split(/[ \t.-]/);
+    // Next to a phone word any grouping goes: 'invalid phone "0812-77-1234-99"'.
+    const named = PHONE_WORD.test(before(text, m.index, 30));
+    if (!named && (groups.length < 4 || groups.slice(1).some((g) => g.length > 2))) continue;
+    // "0 8 1 2 3 …", one digit at a time, only next to a phone word: otherwise it is any list of digits.
+    if (/^0[ \t.-]/.test(m[0]) && !named) continue;
+    if (parsePhone(m[0]).valid && !gluedToCode(text, m.index)) out.push(match('PHONE', m.index, m[0], 'high'));
+  }
+  // "rumah 0251 8321234", "telp 021-7654321": an area code without brackets, only next to a phone word.
+  const areaCode = /(?<![\d\w+])0(?:2[1-9]|[3-79]\d)\d{0,2}[ \t.-]?\d{3,4}[ \t.-]?\d{3,4}(?![\d\w])/g;
+  for (const m of text.matchAll(areaCode)) {
+    if (!PHONE_WORD.test(before(text, m.index, 30))) continue;
+    const info = parsePhone(m[0]);
+    if (info.valid && info.type === 'landline') out.push(match('PHONE', m.index, m[0], 'medium'));
+  }
   return out;
 }
 
@@ -151,16 +217,24 @@ function detectEmails(text: string): PiiMatch[] {
   const DOT = String.raw`(?:\s*(?:\[\s*dot\s*\]|\(\s*dot\s*\)|\{\s*dot\s*\})\s*|\.)`;
   const spelled = new RegExp(String.raw`(?<![\w.+-])[A-Za-z0-9._%+-]+${AT}[A-Za-z0-9-]+(?:${DOT}[A-Za-z0-9-]+)*${DOT}[A-Za-z]{2,}(?![\w-])`, 'gi');
   for (const m of text.matchAll(spelled)) out.push(match('EMAIL', m.index, m[0], 'high'));
+  // URL-encoded: "email=siti%40gmail.com".
+  for (const m of text.matchAll(/(?<![\w.+-])[A-Za-z0-9._+-]+%40[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}(?![\w-])/g)) {
+    out.push(match('EMAIL', m.index, m[0], 'high'));
+  }
   return out;
 }
 
 function detectIps(text: string): PiiMatch[] {
   const out: PiiMatch[] = [];
-  const re = /(?<![\d.\w])(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)(?![\d.\w])/g;
+  const re = /(?<![\d.\w])(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)(?![\d\w]|\.[\d\w])/g;
   for (const m of text.matchAll(re)) {
     const ip = m[0];
     if (/^(0\.|127\.|255\.255\.255\.255)/.test(ip)) continue;
+    // "SK No. 100.3.3.1-6117": a document number. "192.168.2.1-192.168.2.10" is a range of addresses.
+    if (/^-\d+(?![\d.])/.test(text.slice(m.index + ip.length)) || /\b(?:no|nomor|sk|surat)\.?\s*$/.test(before(text, m.index, 12))) continue;
     if (/\b(versi|version|ver|v)\.?\s*$/.test(before(text, m.index, 12))) continue;
+    // "step 5.2.1.1." in a spec is a section; an address ending a sentence has larger parts ("dari IP 36.72.215.104.").
+    if (text[m.index + ip.length] === '.' && ip.split('.').every((part) => part.length === 1)) continue;
     const priv = /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(ip);
     out.push(match('IP', m.index, ip, priv ? 'medium' : 'high'));
   }
@@ -169,10 +243,12 @@ function detectIps(text: string): PiiMatch[] {
 
 function detectCoordinates(text: string): PiiMatch[] {
   const out: PiiMatch[] = [];
-  const re = /(?<![\d.])(-?\d{1,2}\.\d{4,})\s*,\s*(-?\d{1,3}\.\d{4,})(?![\d.])/g;
+  // "-6.914744, 107.609810", and with the axes named: "lat -7.250445, lng 112.768845".
+  const re =
+    /(?<![\d.])(-?\d{1,2}\.\d{4,})\s*,\s*(-?\d{1,3}\.\d{4,})(?![\d.])|\blat(?:itude)?\s*[:=]?\s*(-?\d{1,2}\.\d{4,})\s*[,;]?\s*(?:lng|lon|long|longitude)\s*[:=]?\s*(-?\d{1,3}\.\d{4,})(?![\d.])/gi;
   for (const m of text.matchAll(re)) {
-    const lat = Number(m[1]);
-    const lng = Number(m[2]);
+    const lat = Number(m[1] ?? m[3]);
+    const lng = Number(m[2] ?? m[4]);
     if (Math.abs(lat) > 90 || Math.abs(lng) > 180) continue;
     const indonesia = lat >= -11.5 && lat <= 6.5 && lng >= 94 && lng <= 141.5;
     out.push(match('GEO', m.index, m[0], indonesia ? 'high' : 'medium'));
@@ -185,12 +261,25 @@ const MONTHS =
 const DATE = `\\d{1,2}[-/. ]\\d{1,2}[-/. ]\\d{2,4}|\\d{1,2}\\s+(?:${MONTHS})\\.?\\s+\\d{4}|\\d{4}-\\d{2}-\\d{2}`;
 
 function detectBirthDates(text: string): PiiMatch[] {
-  const re = new RegExp(`\\b(?:lahir|kelahiran|born)\\b[^\\n\\d]{0,40}?(${DATE})`, 'gi');
+  const re = new RegExp(
+    `\\b(?:lahir|lhr|kelahiran|born|ttl|dob|d\\.o\\.b\\.?|date\\s+of\\s+birth|birth\\s*date|birthday)(?![a-z])[^\\n\\d]{0,40}?(${DATE})`,
+    'gi',
+  );
   return [...text.matchAll(re)].map((m) => match('BIRTH_DATE', m.index + m[0].length - m[1]!.length, m[1]!, 'high'));
 }
 
 const CONDITIONS =
-  'hiv|aids|odha|tbc|tb paru|tuberkulosis|hepatitis(?: [abc])?|kanker(?: \\w+)?|tumor(?: \\w+)?|diabetes(?: melitus)?|hipertensi|stroke|penyakit jantung|gagal ginjal|cuci darah|covid(?:-19)?|dbd|demam berdarah|malaria|kusta|lepra|skizofrenia|bipolar|depresi(?: berat)?|gangguan jiwa|gangguan mental|odgj|autis(?:me)?|epilepsi|ims|sifilis|gonore|herpes|hamil|keguguran';
+  'hiv|aids|odha|tbc|tb paru|tuberkulosis|hepatitis(?: [abc])?|kanker(?: \\w+)?|tumor(?: \\w+)?|diabetes(?: mel+itus)?(?: tipe [12])?|hipertensi|stroke|penyakit jantung|gagal ginjal|cuci darah|covid(?:-19)?|dbd|demam berdarah(?: dengue)?|malaria|kusta|lepra|skizofrenia|bipolar(?: tipe [12i]+)?|depresi(?: berat| sedang| ringan)?|gangguan jiwa|gangguan mental|odgj|autis(?:me)?|epilepsi|ims|sifilis|gonore|herpes|hamil(?: \\d{1,2} (?:bulan|minggu))?|keguguran|asma|lupus|leukemia|th?alas+emia(?: (?:alfa|beta|mayor|minor))?|hemofilia|alzheimer|demensia|' +
+  'gastroenteritis(?: akut)?|gastritis|maag|typhoid|pneumonia|bronkitis|sinusitis|apendisitis|usus buntu|batu ginjal|' +
+  'hipotiroid|hipertiroid|anemia|glaukoma|katarak|skoliosis|hernia|wasir|ambeien|tbc tulang|meningitis|' +
+  'parkinson|tifus|tipes|cacar|campak|polio|difteri|stunting|obesitas|kolesterol tinggi|asam urat|gangguan kecemasan|' +
+  'anxiety|ptsd|ocd|adhd|down syndrome|cerebral palsy|lumpuh|tunanetra|tunarungu|tunawicara|tunadaksa|kista|miom|' +
+  'endometriosis|pcos|osteoporosis|vertigo|psikosis|gerd|jantung koroner|sakit jantung|gagal jantung|serangan jantung|' +
+  'infertil|mandul|impoten|klamidia|kecanduan(?: \\w+)?|pecandu(?: \\w+)?|pengguna (?:narkoba|narkotika|sabu|ganja|heroin|putaw|ekstasi)|' +
+  'percobaan bunuh diri|self harm|patah tulang(?: \\w+)?|gegar otak|luka bakar|amputasi|serangan panik|gangguan makan|anoreksia|bulimia';
+
+const SYMPTOMS =
+  '(?:demam(?:\\s+tinggi)?|batuk(?:\\s+berdahak)?|pilek|flu|sesak(?:\\s+napas)?|mual|muntah|diare|mencret|pusing|sakit\\s+kepala|nyeri\\s+\\w+|lemas|meriang|gatal-gatal|ruam|pendarahan|kejang|sariawan|radang\\s+tenggorokan|sakit\\s+perut|sakit\\s+gigi)';
 
 // Medicines that name the condition they treat.
 const MEDICATIONS =
@@ -202,17 +291,37 @@ function detectHealth(text: string): PiiMatch[] {
   const out: PiiMatch[] = [];
   // Strong medical verbs: whatever follows is the condition.
   const strong =
-    /\b(?:didiagnosis|didiagnosa|terdiagnosis|terdiagnosa|mengidap|terinfeksi|riwayat penyakit|divonis)\s+(?:menderita\s+|mengidap\s+|penyakit\s+)?([^\n,.;:()]{2,60}?)(?=\s+(?:sejak|selama|dan sudah|dan sedang|tapi|namun|sehingga|jadi)\b|[\n,.;:()]|$)/gi;
-  for (const m of text.matchAll(strong)) {
+    /\b(?:didiagnosis|didiagnosa|terdiagnosis|terdiagnosa|mengidap|terinfeksi|riwayat penyakit|divonis)\s+(?:menderita\s+|mengidap\s+|penyakit\s+)?(?!(?:yang|dan|atau|di|ke|dari|untuk|ini|itu|tersebut|adalah|dapat|bisa|tidak|belum|anda|kamu|pasien|seseorang)\b)([^\n\r,.;:()]{2,60}?)(?=\s+(?:sejak|selama|dan sudah|dan sedang|tapi|namun|sehingga|jadi)\b|[\n\r,.;:()]|$)/gi;
+  // "Dx: TB paru" in a medical note; capitalized, so "dx" in code is not one.
+  const dx = /\b(?:Dx|DX|Diagnosis|Diagnosa|Diag)\s*:\s*([^\n\r,;()]{2,60}?)(?=\s*(?:[\n\r,;()]|\.(?:\s|$)|$))/g;
+  for (const m of [...text.matchAll(strong), ...text.matchAll(dx)]) {
     out.push(match('HEALTH', m.index + m[0].length - m[1]!.length, m[1]!, 'high'));
   }
-  // Everyday words ("positif", "karena", "saya") only count before a known condition: "saya diabetes".
+  // Everyday words ("positif", "karena", "saya") only count before a known condition: "saya diabetes",
+  // "riwayat hipertensi dan diabetes melitus".
   const gated = new RegExp(
-    `\\b(?:positif|menderita|terkena|kena|sakit|pasien|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|saya|aku|gue|gw|gua|dia|beliau)\\s+((?:penyakit\\s+)?(?:${CONDITIONS}))\\b`,
+    `\\b(?:(?:dokter|dok|dr)\\.?\\s+(?:bilang|bilangnya|menyatakan|mendiagnosis)(?:\\s+(?:ada|kena|positif))?|positif|menderita|terkena|kena|sakit|pasien|komplikasi|kambuh|kumat|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|riwayat|diagnosa|diagnosis|didiagnosa|pembawa\\s+sifat|carrier|saya|aku|gue|gw|gua|dia|beliau|ayah|bapak|ibu|mama|mamah|papa|papah|suami|istri|anak|anaknya|adik|adek|kakak|nenek|kakek|mertua|pacar|teman|temen)` +
+      `\\s+(?:(?:saya|aku|gue|dia|lagi|sedang|sdg|sudah|udah|sdh|sempat|pernah|baru|kena|terkena)\\s+){0,2}` +
+      `((?:penyakit\\s+)?(?:${CONDITIONS})(?:\\s*(?:,|dan|serta)\\s+(?:${CONDITIONS}))*)\\b`,
     'gi',
   );
   for (const m of text.matchAll(gated)) {
     out.push(match('HEALTH', m.index + m[0].length - m[1]!.length, m[1]!, 'medium'));
+  }
+  // A test result: "hasil tes HIV reaktif", "rapid test covid positif", "tes narkoba negatif".
+  const result =
+    /\b(?:tes|test|uji|pemeriksaan|skrining|screening|swab|rapid(?:\s+test)?)\s+((?:hiv|hepatitis(?:\s+[abc])?|hbsag|covid(?:-19)?|tbc|tb|sifilis|vdrl|narkoba|urine|kehamilan|dna|pcr|antigen)\s+(?:hasilnya\s+)?(?:reaktif|non-?reaktif|positif|negatif))\b/gi;
+  for (const m of text.matchAll(result)) out.push(match('HEALTH', m.index + m[0].length - m[1]!.length, m[1]!, 'medium'));
+  // A genetic test result: "BRCA1 positif", "mutasi BRCA2", "carrier thalassemia" (above).
+  for (const m of text.matchAll(/\b(?:mutasi\s+)?(?:BRCA[12]|HLA-B\*?\d{2}:\d{2})(?:\s+(?:positif|negatif|mutasi|carrier))?/g)) {
+    if (/positif|negatif|mutasi|carrier/i.test(m[0]) || /\b(?:hasil|tes|test|dinyatakan)\b[^\n]{0,20}$/i.test(before(text, m.index, 30))) {
+      out.push(match('HEALTH', m.index, m[0], 'medium'));
+    }
+  }
+  // A disability said of someone stands on its own: "Peserta Lina Marlina, tunarungu, …". Not "sekolah bagi tunarungu".
+  for (const m of text.matchAll(/\b(?:tuna[ -]?(?:rungu|netra|wicara|daksa|grahita|laras)|odha|odgj)\b/gi)) {
+    if (/\b(?:para|kaum|penyandang|bagi|untuk|buat|sekolah|slb|komunitas|organisasi|yayasan|layanan|hak|ramah)\s+$/i.test(before(text, m.index, 20))) continue;
+    out.push(match('HEALTH', m.index, m[0], 'medium'));
   }
   // A known condition on its own in brackets: "obat buat ibu saya (diabetes)".
   for (const m of text.matchAll(new RegExp(`\\((${CONDITIONS})\\)`, 'gi'))) {
@@ -227,6 +336,31 @@ function detectHealth(text: string): PiiMatch[] {
     const value = m[1] ?? m[2]!;
     out.push(match('HEALTH', m.index + m[0].length - value.length, value, 'medium'));
   }
+  // An allergy is health data whatever it is to: "alergi penisilin". Not "bebas alergi" or "obat alergi".
+  for (const m of text.matchAll(/\balergi\s+(?:terhadap\s+)?([a-z][\w-]*(?:\s+dan\s+[a-z][\w-]*)?)/gi)) {
+    if (/\b(?:anti|bebas|obat|tes|uji)\s+$/.test(before(text, m.index, 12))) continue;
+    out.push(match('HEALTH', m.index + m[0].length - m[1]!.length, m[1]!, 'medium'));
+  }
+  // Symptoms after the word for a complaint: "keluhan demam", "gejala sesak napas". Not "keluhan pelanggan".
+  const symptom =
+    /\b(?:keluhan|gejala|mengeluh(?:kan)?)\s+((?:demam|batuk|pilek|flu|sesak(?:\s+napas)?|mual|muntah|diare|pusing|sakit\s+kepala|nyeri\s+\w+|lemas|meriang|gatal|ruam|benjolan|pendarahan|kejang)(?:\s+(?:dan|,)\s+(?:demam|batuk|pilek|flu|mual|muntah|diare|pusing|lemas))*)/gi;
+  for (const m of text.matchAll(symptom)) out.push(match('HEALTH', m.index + m[0].length - m[1]!.length, m[1]!, 'medium'));
+  // Symptoms someone has had for a while: "sudah 3 hari demam dan batuk", "anak saya lagi diare".
+  const having = new RegExp(
+    `\\b(?:(?:sudah|udah|sdh|sejak|selama|umur|usia)\\s+\\d+\\s+(?:hari|minggu|bulan|tahun|th)|(?:saya|aku|gue|gw|dia|beliau|anak\\s+saya|anakku|anaknya|suami\\s+saya|istri\\s+saya)\\s+(?:lagi|sedang|sering|kena|terkena|mengalami))\\s+(${SYMPTOMS}(?:\\s*(?:dan|,|&)\\s*${SYMPTOMS})*)`,
+    'gi',
+  );
+  for (const m of text.matchAll(having)) out.push(match('HEALTH', m.index + m[0].length - m[1]!.length, m[1]!, 'medium'));
+  // Findings listed in a medical note: "Hasil MCU: …, tekanan darah 150/95, kolesterol tinggi". The list needs a
+  // medical word before it; "kolesterol tinggi" in an article about food has none.
+  const finding = new RegExp(`(?:[,;:]|\\bdan)\\s*((?:${CONDITIONS})|tekanan\\s+darah\\s+\\d{2,3}\\/\\d{2,3}|tensi\\s+\\d{2,3}\\/\\d{2,3})(?=\\s*(?:[,;.]|dan\\b|$))`, 'gi');
+  for (const m of text.matchAll(finding)) {
+    if (!/\b(?:mcu|medical|check-?up|hasil\s+(?:lab|pemeriksaan)|pasien|dokter|dok|tekanan\s+darah|tensi|keluhan|riwayat|diagnos[ai]s?|klinik|puskesmas|rs|rsud)\b/i.test(text.slice(Math.max(0, m.index - 80), m.index))) continue;
+    out.push(match('HEALTH', m.index + m[0].length - m[1]!.length, m[1]!, 'medium'));
+  }
+  // A condition right after someone's age: "Alif (8 th), autis", "Bu Narti, 54 tahun, stroke".
+  const afterAge = new RegExp(`(?:\\(\\d{1,2}[^)\\n]{0,8}\\)|\\b\\d{1,2}\\s*(?:th|thn|tahun))\\s*,\\s*((?:${CONDITIONS})(?:\\s*(?:,|dan)\\s*(?:${CONDITIONS}))*)\\b`, 'gi');
+  for (const m of text.matchAll(afterAge)) out.push(match('HEALTH', m.index + m[0].length - m[1]!.length, m[1]!, 'medium'));
   // Being in hospital is health data too: "dirawat di RSUD Cibinong", "opname di RS Hermina".
   const hospital =
     /\b(?:dirawat|opname|rawat inap|diopname|dioperasi|isolasi)\s+(?:di\s+)?(?:(?:RSUD|RSU|RSIA|RSJ|RSAB|RS|Rumah Sakit|Puskesmas|Klinik)\b[^\n,.;:()]{0,40}?)(?=\s+(?:karena|krn|sejak|selama|dan|tapi|jadi|sampai)\b|[\n,.;:()]|$)/gi;
@@ -234,14 +368,43 @@ function detectHealth(text: string): PiiMatch[] {
   return out;
 }
 
+const PERSON_NEAR =
+  /\b(?:saya|aku|gue|gw|gua|dia|beliau|kami|suami|istri|ayah|bapak|ibu|mama|papa|anak|adik|kakak|pernah|udah|sudah|lagi|sedang|jadi)\b/;
+
 function detectFinancial(text: string): PiiMatch[] {
   const re =
-    /\b(?:gaji|penghasilan|pendapatan|saldo|utang|hutang|pinjaman|cicilan|tunggakan|limit(?:\s+kartu)?(?:\s+kredit)?)(?:\s+(?:saya|aku|gue|gw|gua|dia|beliau|bulanan|tahunan|per\s+bulan|sebulan|setahun|bersih|kotor|rekening|terakhir|total|di\s+\w+))*\s*(?:sebesar|sekitar|kira-kira|cuma|hanya|adalah|ada|masih|tinggal|sisa|senilai|:|=)?\s*((?:Rp\.?\s?)?\d[\d.,]*(?:\s*(?:rb|ribu|k|jt|juta|m|miliar|milyar|t|triliun)\b)?)/gi;
+    /\b(?:gaji|penghasilan|pendapatan|saldo|utang|hutang|pinjaman|cicilan|tunggakan|limit(?:\s+kartu)?(?:\s+kredit)?|tagihan\s+(?:kartu\s+kredit|cc|paylater|pinjol|kpr|cicilan)|(deposito|tabungan|simpanan|habis|rugi|kerugian|kalah|sisa\s+(?:pokok|pinjaman|utang|hutang|cicilan)|pokok\s+(?:pinjaman|utang|hutang)|outstanding|plafond?))(?:\s+(?:saya|aku|gue|gw|gua|dia|beliau|suami|istri|ayah|bapak|ibu|ortu|orang\s+tua|keluarga|bulanan|tahunan|pokok|tetap|per\s+bulan|sebulan|setahun|bersih|kotor|rekening|tabungan|deposito|terakhir|total|anda|kamu|kalian|pinjol|paylater|kpr|kta|online|leasing|kartu\s+kredit|per\s+hari\s+ini|hari\s+ini|saat\s+ini|sekarang|udah|sudah|sdh|baru|itu|ini|tsb|motor|mobil|rumah|hp|laptop|apartemen|bulan\s+ini|ovo|gopay|dana|shopeepay|linkaja|jenius|bca|bri|bni|mandiri|bsi|jago|seabank|di\s+\w+|ke\s+\w+))*\s*(?:sebesar|sekitar|kira-kira|cuma|hanya|adalah|ada|masih|tinggal|sisa|senilai|:|=)?\s*((?:Rp\.?\s?)?\d[\d.,]*(?:\s*(?:rb|ribu|k|jt|juta|m|miliar|milyar|t|triliun)\b)?)/gi;
   const out: PiiMatch[] = [];
   for (const m of text.matchAll(re)) {
-    const amount = m[1]!.replace(/[.,]+$/, '');
+    const amount = m[2]!.replace(/[.,]+$/, '');
     if (!/rp|[a-z]$/i.test(amount) && amount.replace(/\D/g, '').length < 4) continue;
-    out.push(match('FINANCIAL', m.index + m[0].length - m[1]!.length, amount, 'medium'));
+    // "Deposito 100 juta, bunga 5%" in a bank's ad is a product; it is personal data when someone holds it.
+    if (m[1] && !/\b(?:punya|memiliki|milik|nasabah|pak|bu|bapak|ibu|saya|aku|gue|gw|dia|beliau|debitur|peminjam)\b/i.test(before(text, m.index, 40) + m[0])) continue;
+    out.push(match('FINANCIAL', m.index + m[0].length - m[2]!.length, amount, 'medium'));
+  }
+  // Statuses that say it without an amount: "udah galbay 3 bulan", "saya masuk BI checking".
+  const status =
+    /\b(?:galbay|gagal\s+bayar|kredit\s+macet|kol(?:ektibilitas)?\s*[2-5]|masuk\s+(?:bi\s*checking|slik)|di-?blacklist\s+(?:bank|bi|ojk)|(?:dikejar|ditagih|didatangi)\s+(?:dc|debt\s+collector)|terlilit\s+(?:utang|hutang|pinjol))\b/gi;
+  for (const m of text.matchAll(status)) {
+    // "risiko gagal bayar obligasi" is about markets; it is personal data when it is someone's status.
+    if (!/^galbay$/i.test(m[0]) && !PERSON_NEAR.test(before(text, m.index, 30))) continue;
+    out.push(match('FINANCIAL', m.index, m[0], 'medium'));
+  }
+  return out;
+}
+
+/** Marital status said of a person: "saya sudah cerai", "sekarang janda dengan 2 anak". */
+function detectMaritalStatus(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  // "Pemohon an. Wulandari, status cerai hidup" names the status in a sentence; a form label ("Status: …") is a field.
+  // "sudah 3 tahun menikah", "Bu Wati sudah bercerai": a status that needs no subject in front.
+  const re =
+    /\b(?:saya|aku|gue|gw|dia|beliau|ibu|bapak|ayah|mama|papa|kakak|adik)\s+(?:(?:sudah|udah|sdh|baru|belum|blm|masih|sekarang|kini|seorang|berstatus|statusnya)\s+)*(cerai(?:\s+(?:hidup|mati))?|bercerai|janda|duda|menikah|kawin|lajang|single|nikah\s+siri|nikah|pisah\s+ranjang)\b|\b(?:sekarang|kini|berstatus|seorang|itu|statusnya)\s+(janda|duda|lajang)\b|\b(janda|duda)(?=\s+(?:anak|beranak|dengan\s+\d|\d|cerai|ditinggal|tanpa\s+anak|muda|kembang)\b)|\bstatus(?:nya)?\s+(?:perkawinan\s+|pernikahan\s+)?(cerai\s+(?:hidup|mati)|janda|duda|kawin|menikah|sudah\s+menikah|belum\s+(?:kawin|menikah)|lajang|nikah\s+siri)\b|\b(pisah\s+ranjang)\b|\b(?:sudah|udah|sdh|telah)\s+(?:\d+\s+tahun\s+(menikah|nikah|berumah\s+tangga)|(bercerai|cerai(?:\s+(?:hidup|mati))?|menjanda|menduda))\b/gi;
+  for (const m of text.matchAll(re)) {
+    const value = m[1] ?? m[2] ?? m[3] ?? m[4] ?? m[5] ?? m[6] ?? m[7]!;
+    // "saya menikah tahun depan" is a plan; "saya sudah menikah" or "berstatus janda" is a status.
+    if (/^(?:menikah|kawin|nikah)$/i.test(value) && !/\b(?:sudah|udah|sdh|belum|blm|berstatus|status|statusnya|perkawinan|pernikahan|tahun)\s+$/i.test(m[0].slice(0, -value.length))) continue;
+    out.push(match('MARITAL_STATUS', m.index + m[0].length - value.length, value, 'medium'));
   }
   return out;
 }
@@ -249,7 +412,19 @@ function detectFinancial(text: string): PiiMatch[] {
 function detectReligion(text: string): PiiMatch[] {
   const re =
     /\b(?:beragama|agamanya|agama\s+(?:saya|aku|dia|beliau|kami|mereka))\s+(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Hindu|Buddha|Budha|Konghucu|Khonghucu|Kong Hu Cu)\b/gi;
-  return [...text.matchAll(re)].map((m) => match('RELIGION', m.index + m[0].length - m[1]!.length, m[1]!, 'high'));
+  const out = [...text.matchAll(re)].map((m) => match('RELIGION', m.index + m[0].length - m[1]!.length, m[1]!, 'high'));
+  // An adjective of a person: "saya muslim", "suami saya kristen protestan". Not "umat Muslim" or "Gereja Kristen".
+  const adjective =
+    /\b(?:saya|aku|gue|gw|dia|beliau|kami|keluarga\s+(?:saya|kami)|(?:suami|istri|ayah|bapak|ibu|mama|papa|ortu|orang\s+tua|anak|adik|kakak|pacar|calon)(?:\s+(?:saya|aku|gue|dia)|nya|ku)?)\s+(?:(?:seorang|itu|adalah|sudah|udah|baru|jadi)\s+)?(muslim(?:ah)?|islam|nasrani|kristiani?|kristen(?:\s+protestan)?|protestan|katolik|katholik|hindu|buddhis|buddha|budha|konghucu|khonghucu|mualaf|muallaf|ateis|atheis|agnostik|non[- ]?muslim)\b/gi;
+  for (const m of text.matchAll(adjective)) out.push(match('RELIGION', m.index + m[0].length - m[1]!.length, m[1]!, 'medium'));
+  // A conversion: "baru pindah agama, sekarang Kristen", "masuk Islam tahun lalu".
+  const conversion =
+    /\b(?:pindah\s+agama|murtad|convert|mualaf)\b[^\n.]{0,30}?\b(?:jadi|menjadi|ke|sekarang|kini)\s+(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Hindu|Buddha|Budha|Konghucu|Khonghucu)\b|\bmasuk\s+(Islam|Kristen|Katolik|Hindu|Buddha)\b/gi;
+  for (const m of text.matchAll(conversion)) {
+    const value = m[1] ?? m[2]!;
+    out.push(match('RELIGION', m.index + m[0].length - value.length, value, 'medium'));
+  }
+  return out;
 }
 
 // Indonesian plate region codes (kode wilayah TNKB).
@@ -265,6 +440,13 @@ function detectPlates(text: string): PiiMatch[] {
     if (!spaced && !keyword) continue;
     out.push(match('PLATE', m.index, m[0], keyword ? 'high' : 'medium'));
   }
+  // "motor b3456xyz": any case, but only right after a vehicle word.
+  const loose = new RegExp(`(?<![A-Za-z0-9])(?:${PLATE_REGIONS})\\s?\\d{1,4}\\s?[A-Z]{1,3}(?![A-Za-z0-9])`, 'gi');
+  for (const m of text.matchAll(loose)) {
+    if (/\b(plat|nopol|no\.?\s*pol|tnkb|kendaraan|motor|mobil)\b/.test(before(text, m.index, 20))) {
+      out.push(match('PLATE', m.index, m[0], 'medium'));
+    }
+  }
   return out;
 }
 
@@ -273,7 +455,9 @@ const TITLE_WORDS = new Set([
   'bapak', 'ibu', 'pak', 'bu', 'mas', 'mbak', 'kak', 'bang', 'presiden', 'wakil', 'menteri', 'direktur',
   'dokter', 'dr', 'drs', 'dra', 'prof', 'ir', 'h', 'hj', 'guru', 'lurah', 'camat', 'bupati', 'walikota', 'wali',
   'gubernur', 'kepala', 'dosen', 'ketua', 'manajer', 'admin', 'kurir', 'driver', 'ustadz', 'ustadzah', 'sdr',
-  'sdri', 'saudara', 'saudari', 'tn', 'ny', 'nn',
+  'sdri', 'saudara', 'saudari', 'tn', 'ny', 'nn', 'mr', 'mrs', 'ms', 'miss', 'mister', 'koh', 'ko', 'cik', 'ci', 'cici',
+  'om', 'tante', 'kang', 'teh', 'bli', 'cak', 'mbok', 'habib', 'gus', 'romo', 'pastor', 'pendeta', 'pdt', 'alm', 'almh',
+  'almarhum', 'almarhumah', 'kh', 'dear',
 ]);
 // Words that end (or rule out) a name in chat: "nama saya budi mau refund", "Ibu Kota", "atas nama perusahaan".
 const NOT_NAME = new Set(
@@ -297,7 +481,17 @@ const NOT_NAME = new Set(
     'table kolom column variabel fungsi function class akun aplikasi app server database program manfaat ' +
     // Institutions: "atas nama Pengendali Data", "atas nama Menteri Keuangan".
     'pengendali prosesor pemerintah kementerian keuangan negeri daerah republik indonesia rakyat dewan lembaga ' +
-    'badan dinas direktorat komisi mahkamah pengadilan kepolisian polri tni sekretariat umum nasional pusat'
+    'badan dinas direktorat komisi mahkamah pengadilan kepolisian polri tni sekretariat umum nasional pusat ' +
+    // What follows a role or a greeting when it is not a name: "Pelanggan Setia", "Karyawan Tetap", "Halo Semua".
+    'setia prioritas vip tetap kontrak berprestasi terbaik terhormat yth tercinta terkasih kesayangan aktif harian ' +
+    'magang honorer swasta asing lokal premium reguler perorangan individu lama kakak adik semuanya sir madam all ' +
+    'everyone there world guys team folks friends bro sis gan min bos boss say sayang beb dek service support ' +
+    'masukkan isi ketik pilih enter your sobat ' +
+    // Cities, which a greeting or a list can put where a name would be: "Halo Bandung".
+    'jakarta bandung surabaya medan semarang makassar palembang bogor depok tangerang bekasi yogyakarta jogja solo ' +
+    'malang denpasar bali batam pekanbaru padang manado balikpapan samarinda pontianak banjarmasin ambon jayapura ' +
+    'kupang mataram lampung aceh cirebon tasikmalaya sukabumi serang cilegon purwokerto kediri jember madiun ' +
+    'magelang salatiga'
   ).split(' '),
 );
 // Particles inside a name: "Nur Aisyah binti Ahmad", "Van der Berg".
@@ -311,6 +505,7 @@ const NAME_TOKEN = /[ \t]*([A-Za-z][A-Za-z'’-]*\.?)/y;
  */
 function nameAt(text: string, start: number, confidence: Confidence, capitalized = false): PiiMatch | undefined {
   const words: Array<{ start: number; end: number; bare: string }> = [];
+  let lowercaseAmbiguous = false; // "saya budi" alone is a name only if a second name follows
   let pos = start;
   while (words.length < 5) {
     NAME_TOKEN.lastIndex = pos;
@@ -323,12 +518,17 @@ function nameAt(text: string, start: number, confidence: Confidence, capitalized
     if (!words.length && (TITLE_WORDS.has(bare) || bare === 'adalah' || bare === 'ialah')) continue;
     if (NOT_NAME.has(bare) || bare.endsWith('nya') || (!words.length && NAME_PARTICLES.has(bare))) break;
     if (words.length && TITLE_WORDS.has(bare)) return undefined; // "barangnya buat mbak yuni": not one name
-    if (capitalized && !/^[A-Z]/.test(word) && !NAME_PARTICLES.has(bare)) break;
+    if (capitalized && !/^[A-Z]/.test(word) && !NAME_PARTICLES.has(bare)) {
+      // A cue plus a common name is enough without capitals: "aku andi yg td chat", "saya siti rahayu".
+      if (words.length ? !isKnownName(bare) : !GIVEN_NAMES.has(bare) && !AMBIGUOUS_GIVEN_NAMES.has(bare)) break;
+      if (!words.length && AMBIGUOUS_GIVEN_NAMES.has(bare)) lowercaseAmbiguous = true;
+    }
     words.push({ start: wordStart, end: wordStart + word.length, bare });
     if (word.endsWith('.') && bare.length > 1) break; // "… Budi." ends the sentence; "M. Rizky" goes on
   }
   while (words.length && NAME_PARTICLES.has(words[words.length - 1]!.bare)) words.pop();
   if (!words.length || ORGANIZATION.has(words[0]!.bare)) return undefined;
+  if (lowercaseAmbiguous && words.length === 1) return undefined;
   const value = text.slice(words[0]!.start, words[words.length - 1]!.end).replace(/[.,]+$/, '');
   if (value.replace(/[^A-Za-z]/g, '').length < 2) return undefined;
   return match('NAME', words[0]!.start, value, confidence);
@@ -336,11 +536,29 @@ function nameAt(text: string, start: number, confidence: Confidence, capitalized
 
 // Phrases that introduce a name, in any case: "atas nama budi santoso", "nama saya Rina", "bernama Rizky".
 const NAME_INTRO =
-  /\b(?:a\.\s?n\.?|a\/n|atas\s+nama|nama\s+(?:lengkap\s+)?(?:saya|aku|ku|gue|gw|sy)|namaku|namanya|nama\s+(?:lengkap\s+)?(?:anak|ibu|bapak|ayah|suami|istri|adik|kakak|teman|orang\s+tua)\s+(?:saya|aku|kami|gue)|bernama|dengan\s+nama|my\s+name\s+is)(?![A-Za-z])[ \t]*(?:[:=][ \t]*)?/gi;
+  /\b(?:a\.\s?n\.?|a\/n|an\.|atas\s+nama|nama\s+(?:lengkap\s+)?(?:saya|aku|ku|gue|gw|sy)|namaku|namanya|nama\s+(?:lengkap\s+)?(?:anak|ibu|bapak|ayah|suami|istri|adik|kakak|teman|orang\s+tua)\s+(?:saya|aku|kami|gue)|nama\s+(?:akun|pengguna|pemilik|penerima|pengirim|pelanggan|nasabah|pasien|siswa|karyawan|pemesan)|bernama|dengan\s+nama|my\s+name\s+is|nami\s+(?:abdi|kulo|kula|simkuring|sim\s+kuring)|jeneng(?:ku|\s+(?:kula|kulo|aku|kulo))|asma\s+kula)(?![A-Za-z])[ \t]*(?:[:=][ \t]*)?/gi;
 // Weaker cues, so the name itself must be capitalized: "saya Rina Wulandari", "halo, dengan Agus", "Penerima Budi".
 const NAME_CUE =
   /\b(?:saya|aku|gue|gw)[ \t]*,?[ \t]+|\b(?:halo|hai|hallo|selamat\s+(?:pagi|siang|sore|malam))[ \t]*,?[ \t]*(?:ini|dengan|dgn)[ \t]+|\b(?:penerima|pengirim|pemesan|pembeli)[ \t]+/gi;
-const HONORIFIC = /(?<![\w-])(?:Bapak|Ibu|Pak|Bu|Sdr\.?|Sdri\.?|Saudara|Saudari|Mas|Mbak|Kak|Bang|Tn\.|Ny\.|Nn\.)[ \t]+/gi;
+const HONORIFIC = /(?<![\w-])(?:Bapak|Bpk\.?|Bp\.|Ananda|Ibu|Pak|Bu|Sdr\.?|Sdri\.?|Saudara|Saudari|Mas|Mbak|Kak|Bang|Tn\.|Ny\.|Nn\.)[ \t]+/gi;
+// Titles and forms of address in their usual case only: "CI Pipeline" and "Uni Eropa" are not people.
+const TITLE_CUE =
+  /(?<![\w-])(?:Mr\.?|Mrs\.?|Ms\.?|Miss|Mister|Dr\.|Prof\.|Ir\.|Drs\.|Dra\.|H\.|Hj\.|KH\.|Pdt\.|Alm\.|Almh\.|[Aa]lmarhum(?:ah)?|[Kk]oh?|[Cc]ik|[Cc]ici|[Oo]m|[Tt]ante|[Kk]ang|[Bb]li|[Cc]ak|[Mm]bok|[Hh]abib|[Gg]us|[Uu]stadz(?:ah)?|[Rr]omo|[Pp]astor|[Pp]endeta)[ \t]+/g;
+// Roles that a name follows in support tickets, reports, and logs: "Pelanggan Budi Santoso", "Kurir Supardi".
+const ROLE_CUE =
+  /\b(?:pelanggan|customer|konsumen|pembeli|pemesan|nasabah|pasien|patient|kurir|driver|sopir|supir|karyawan|karyawati|pegawai|staf|staff|siswa|siswi|murid|santri|mahasiswa|mahasiswi|tamu|pemilik|penyewa|penghuni|peminjam|debitur|pelapor|terlapor|korban|pelaku|tersangka|terdakwa|saksi|kepala\s+keluarga|penggugat|tergugat|pemohon|termohon|pewaris|klien|konseli|tertanggung|penumpang|berinisial|inisial|istrinya|suaminya|anaknya|adiknya|kakaknya|ayahnya|ibunya|wakilnya|atasannya|temannya|tetangga|pacar|calon|bayi(?:[ \t]+(?:laki-laki|perempuan))?|balita|cucu(?:nya)?|keponakan(?:nya)?|anggota|member|warga|jamaah|jemaat|u\/|utk\.?|untuk|kepada|kpd\.?)[ \t]+/gi;
+const LOOSE_ROLE = /^(?:customer|patient|driver|staff|staf|tamu|calon|pacar|korban|saksi|pelaku|tetangga|utk|untuk|kepada|kpd|anggota|member|warga|jamaah|jemaat)\b/i;
+// Greetings that open a message to someone: "Halo Budi,", "Dear Mr. Hendra Gunawan,".
+// "Pagi, Budi!" opens a line; "Sinar Pagi, Bogor" in the middle of one is a village.
+const GREETING_CUE =
+  /(?:^|(?<=[\s,.!]))(?:halo|hallo|hai|hi|hello|hey|dear|selamat\s+(?:pagi|siang|sore|malam)|assalamu'?alaikum)[ \t]*,?[ \t]+|^[ \t]*(?:pagi|siang|sore|malam)[ \t]*,?[ \t]+/gim;
+
+function isKnownName(bare: string): boolean {
+  return GIVEN_NAMES.has(bare) || AMBIGUOUS_GIVEN_NAMES.has(bare) || FAMILY_NAMES.has(bare) || SECOND_NAMES.has(bare);
+}
+
+// Javanese names the list cannot hold one by one end the same way: Hartini, Sumiyati, Rosmawati, Suryanto, Hadiyono.
+const JAVANESE_NAME = /^[a-z]{2,}(?:wati|yati|iyati|ningsih|ningrum|astuti|tini|rini|yanto|yono|wanto|harjo)$/;
 
 /** Names introduced without a colon: "a.n. Budi Santoso", "nama saya budi", "Bapak Budi", "bu sari". */
 function detectNames(text: string): PiiMatch[] {
@@ -353,6 +571,22 @@ function detectNames(text: string): PiiMatch[] {
     // ("bapak ahmad"); the short ones ("kak", "pak", "bu") too often just address the reader.
     const lowercaseOk = /^(?:bapak|ibu|mbak)\b/.test(m[0]);
     add(nameAt(text, m.index + m[0].length, 'medium', !lowercaseOk));
+  }
+  for (const m of text.matchAll(TITLE_CUE)) add(nameAt(text, m.index + m[0].length, 'medium', true));
+  for (const m of text.matchAll(ROLE_CUE)) {
+    const found = nameAt(text, m.index + m[0].length, 'medium', true);
+    // "Kurir JNE" is a company; "berinisial RK" is the only place two capitals are a person.
+    if (!found || (/^[A-Z]{2,5}$/.test(found.value) && !/inisial/i.test(m[0]))) continue;
+    // "untuk Google Chrome", "Driver Printer Canon", "Tamu Undangan": after a preposition or a word that is also
+    // English or generic, at least one word must be a known name.
+    if (LOOSE_ROLE.test(m[0]) && !found.value.split(/\s+/).some((w) => isKnownName(w.toLowerCase()))) continue;
+    add(found);
+  }
+  for (const m of text.matchAll(GREETING_CUE)) {
+    const found = nameAt(text, m.index + m[0].length, 'medium', true);
+    // A greeting names someone only when the name closes it: "Halo Budi," but not "Halo Kak, Saya mau" or
+    // "Hello, Node.js User!".
+    if (found && /^[ \t]*(?:[,!:\r\n]|\.(?!\S)|$)/.test(text.slice(found.end))) add(found);
   }
   // "tadi budi bilang …": reported speech names whoever spoke, unless that is a role or a thing.
   for (const m of text.matchAll(REPORTED_SPEECH)) {
@@ -402,6 +636,503 @@ function detectChatSenders(text: string): PiiMatch[] {
     }
   }
   return out;
+}
+
+// A word right before a capitalized run that makes it a place or an organization: "Jl. Ahmad Yani", "RS Siti
+// Khadijah", "Universitas Ahmad Dahlan", "Toko Budi Jaya".
+const PLACE_WORDS = new Set(
+  (
+    'jl jln jalan gg gang lorong komp komplek kompleks perum perumahan cluster universitas univ institut sekolah ' +
+    'fakultas akademi politeknik kampus sd sdn smp smpn sma sman smk smkn mi mts ma pondok ponpes pesantren masjid ' +
+    'musholla mushola langgar gereja pura vihara klenteng rs rsu rsud rsia rsj sakit puskesmas klinik apotek toko ' +
+    'warung pt cv ud yayasan koperasi bank stasiun terminal bandara pelabuhan gedung wisma hotel mall plaza pasar ' +
+    'taman museum stadion lapangan gor gelora kampung desa kelurahan kecamatan kabupaten kota provinsi gunung ' +
+    'pantai pulau sungai danau monumen tugu bendungan rusun apartemen tower blok aula balai lembaga dinas kantor ' +
+    'perpustakaan piala liga festival bung way tanjung teluk ujung muara kuala bukit lubuk pematang sei ' +
+    // Batak and Karo villages are often a clan name after one of these: "Lumban Siregar", "Pintu Pohan".
+    'lumban lobu huta dolok bandar urung nagori talun pamah perkebunan sosor aek banjar pintu raja siraja debata ' +
+    'kel kec kab kp ds dsn ' +
+    // Products and events are named like people too: "Paket Hemat Ramadhan", "Promo Spesial Kartini".
+    'paket promo program diskon menu edisi spesial special event lomba produk varian'
+  ).split(' '),
+);
+// Words that end a run of names in a place name: "Indra Jaya", "Laras Selatan", "Sido Makmur".
+const PLACE_SUFFIX = new Set(
+  ('jaya makmur raya selatan utara barat timur tengah permai asri sejahtera sentosa abadi mulya baru lama damai ' +
+    'harapan mekar gemilang kencana rejo mukti karya bakti jitu pahlawan').split(' '),
+);
+const CAPITALIZED_RUN = /(?<![\w@.'’-])[A-Z][A-Za-z'’-]*\.?(?:[ \t]+(?:[A-Z][A-Za-z'’-]*\.?|bin|binti|van|der|de|al|el))+/g;
+
+/**
+ * Names with no cue around them, recognized by their parts: a common given name before another name ("Hendra
+ * Gunawan", "SITI RAHAYU" in a bank statement), a family or clan name ("Togar Simanjuntak"), a Balinese name ("I Made
+ * Wirawan"), or a Chinese-Indonesian one ("Lim Swie Hong").
+ */
+function detectKnownNames(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  for (const m of text.matchAll(CAPITALIZED_RUN)) {
+    const words = [...m[0].matchAll(/\S+/g)].map((w) => ({
+      start: m.index + w.index,
+      end: m.index + w.index + w[0].replace(/[.,]+$/, '').length,
+      word: w[0],
+      bare: w[0].replace(/\.$/, '').toLowerCase(),
+    }));
+    const prev = /([A-Za-z]+)\.?[ \t]*$/.exec(text.slice(Math.max(0, m.index - 30), m.index))?.[1]?.toLowerCase();
+    if (prev && PLACE_WORDS.has(prev)) continue;
+    const nameish = (k: number) => {
+      const w = words[k];
+      if (!w) return false;
+      if (NAME_PARTICLES.has(w.bare)) return k + 1 < words.length; // "bin Abdullah", never a trailing "bin"
+      return /^[A-Z]/.test(w.word) && !NOT_NAME.has(w.bare) && !TITLE_WORDS.has(w.bare) && !ORGANIZATION.has(w.bare) &&
+        !PLACE_WORDS.has(w.bare) && !PLACE_SUFFIX.has(w.bare) && !w.bare.endsWith('nya');
+    };
+    const extend = (from: number) => {
+      let k = from;
+      while (k < words.length && k - from < 5 && nameish(k)) {
+        k++;
+        // "… Togar Simanjuntak. Tamu: …" ends with the sentence; "M. Rizky" goes on.
+        if (words[k - 1]!.word.endsWith('.') && words[k - 1]!.bare.length > 1) break;
+      }
+      while (k > from && NAME_PARTICLES.has(words[k - 1]!.bare)) k--;
+      return k - from;
+    };
+    for (let i = 0; i < words.length - 1; i++) {
+      const w = words[i]!;
+      if (PLACE_WORDS.has(w.bare) || ORGANIZATION.has(w.bare)) break; // the rest names the place
+      const next = words[i + 1]!.bare;
+      let len = 0;
+      // "I" is also English, so it is checked before the other rules rule it out.
+      if ((w.word === 'I' || w.word === 'Ni') && BALINESE_NAMES.has(next)) len = 1 + extend(i + 1);
+      else if (!nameish(i)) continue;
+      else if (CHINESE_FAMILY_NAMES.has(w.bare) && [1, 2].every((d) => nameish(i + d) && /^[A-Za-z]{2,5}$/.test(words[i + d]!.word))) len = 3;
+      else if (GIVEN_NAMES.has(w.bare) && nameish(i + 1)) len = extend(i);
+      // "Dewi Lestari", "Wahyu Hidayat"; not two words that are both also common nouns ("Permata Intan").
+      else if (
+        AMBIGUOUS_GIVEN_NAMES.has(w.bare) && nameish(i + 1) &&
+        (GIVEN_NAMES.has(next) || FAMILY_NAMES.has(next) || SECOND_NAMES.has(next))
+      ) {
+        len = extend(i);
+      } else {
+        // A family name after one unknown word ("Togar Simanjuntak") or after known names only. "BI-FAST CR SITI
+        // RAHAYU" starts at SITI, not at BI-FAST. Two clan names in a row ("Simamora Hasibuan") name a village.
+        for (let j = i + 1; j <= i + 3 && nameish(j); j++) {
+          if (!FAMILY_NAMES.has(words[j]!.bare)) {
+            if (!isKnownName(words[j]!.bare)) break;
+            continue;
+          }
+          const lone = j === i + 1 && !FAMILY_NAMES.has(w.bare);
+          if (lone || GIVEN_NAMES.has(w.bare) || AMBIGUOUS_GIVEN_NAMES.has(w.bare)) len = Math.max(j - i + 1, extend(i));
+          break;
+        }
+      }
+      if (len < 2) continue;
+      const last = words[i + len - 1]!;
+      out.push(match('NAME', w.start, text.slice(w.start, last.end), 'medium'));
+      i += len - 1;
+    }
+  }
+  return out;
+}
+
+// Closings that put the sender's name on the same or the next line: "Salam,\nRina Kartika Sari".
+const SIGN_OFF =
+  /^[ \t]*(?:salam(?:\s+hangat)?|hormat\s+(?:saya|kami)|terima\s*kasih|makasih|regards|best\s+regards|kind\s+regards|warm\s+regards|best|thanks|thank\s+you|cheers|sincerely|yours\s+sincerely|wassalam(?:u'?alaikum)?)[ \t]*[,.!]?[ \t]*(?:\r?\n[ \t]*)+/gim;
+
+function detectSignatures(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  for (const m of text.matchAll(SIGN_OFF)) {
+    const start = m.index + m[0].length;
+    const lineEnd = text.indexOf('\n', start);
+    const line = text.slice(start, lineEnd === -1 ? text.length : lineEnd).replace(/\r$/, '').trim();
+    const found = nameAt(text, start, 'medium', true);
+    // The whole line is the name (titles and degrees aside): "Agus Salim Nasution", "Dr. Rina, M.Sc.".
+    if (found && found.value.length >= line.replace(/^(?:\w+\.\s*)+/, '').replace(/,.*$/, '').length - 1) out.push(found);
+  }
+  // A review or a quote signed with a dash: "… sudah ramah. - Rizal, Makassar". A dash also starts list items, so the
+  // name must be a known one and close the line or be followed by a comma.
+  for (const m of text.matchAll(/(?:^|(?<=[.!?)"”]))[ \t]*[-–—~][ \t]*(?=[A-Z])/gm)) {
+    const found = nameAt(text, m.index + m[0].length, 'medium', true);
+    if (!found || !found.value.split(/\s+/).some((w) => isKnownName(w.toLowerCase()))) continue;
+    if (/^[ \t]*(?:,|\r?\n|$)/.test(text.slice(found.end))) out.push(found);
+  }
+  return out;
+}
+
+/** The display name in front of an e-mail address: "From: Budi Santoso <budi.s@gmail.com>". */
+function detectDisplayNames(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  const re = /(?:^|(?<=[\s:,;(]))"?((?:[A-Z][A-Za-z'’.-]*[ \t]+){0,4}[A-Z][A-Za-z'’.-]*)"?[ \t]*<[^<>\s@]+@[^<>\s]+>/gm;
+  for (const m of text.matchAll(re)) {
+    const group = m.index + m[0].indexOf(m[1]!);
+    const groupEnd = group + m[1]!.length;
+    // The name is what reaches the "<": "MIT License. Einar Otto Stangvik <…>" is Einar Otto Stangvik.
+    for (const w of m[1]!.matchAll(/\S+/g)) {
+      const found = nameAt(text, group + w.index, 'high', true);
+      if (found && found.end >= groupEnd - 1) {
+        out.push(found);
+        break;
+      }
+    }
+  }
+  return out;
+}
+
+// Words after "@" that are code: JSDoc tags, CSS at-rules, decorators, and annotations.
+const CODE_AT = new Set(
+  (
+    'param params arg argument returns return type typedef template example deprecated see link throws throw ' +
+    'default since version author license preserve todo fixme internal private public protected override readonly ' +
+    'module namespace callback property prop event fires listens description summary inheritdoc abstract async ' +
+    'media import keyframes supports layer tailwind apply use forward include mixin extend charset container page ' +
+    'font-face component injectable input output test before after inject directive pipe ngmodule effect select ' +
+    'staticmethod classmethod dataclass pytest app router api client mock patch fixture ts-ignore ts-expect-error ' +
+    'jsx jsximportsource vite babel types entity column table get post put delete controller service observable ' +
+    'satisfies overload implements augments class constructor enum function member memberof method name this ' +
+    'constant const copyright exports external file fileoverview global ignore instance interface kind lends mixes ' +
+    'package requires static tutorial yields alias generator beta alpha experimental remarks typeparam defaultvalue ' +
+    'label linkcode linkplain virtual sealed decorator args options props context state value data'
+  ).split(' '),
+);
+const HANDLE_CUE = /\b(?:ig|instagram|insta|tiktok|twitter|threads|telegram|tele|dm|akun|account|follow|mention|tag|username|handle|fb|facebook|line|youtube|yt)\b/;
+
+/** Social media handles in chat and tickets: "cek DM dari @siti.rahayu88". Not "@param", "@media", or "@types/node". */
+function detectHandles(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  // After a space or punctuation, never inside a word or an address ("b***@gmail.com").
+  for (const m of text.matchAll(/(?<![^\s(,:;"'[])@([A-Za-z0-9_](?:[A-Za-z0-9_.]{0,28}[A-Za-z0-9_])?)(?![\w@/(-]|\.\w)/g)) {
+    const handle = m[1]!;
+    if (CODE_AT.has(handle.toLowerCase()) || CODE_AT.has(handle.split('.')[0]!.toLowerCase()) || /^\d+$/.test(handle)) continue;
+    if (/\.(?:com|net|org|id|io|co|dev|app|me)$/i.test(handle)) continue; // a domain
+    const lineStart = text.lastIndexOf('\n', m.index) + 1;
+    const lead = text.slice(lineStart, m.index);
+    // A decorator stands alone at the start of a line ("@pytest.fixture"); doc comments are code ("* @param").
+    if (/^\s*(?:\*|\/\/|#)/.test(lead)) continue;
+    if (!lead.trim() && !text.slice(m.index + m[0].length).split('\n', 1)[0]!.trim()) continue;
+    const shaped = /[\d._]/.test(handle) && handle.length >= 5 && /^[a-z0-9_.]+$/.test(handle);
+    if (!shaped && !HANDLE_CUE.test(before(text, m.index, 40))) continue;
+    out.push(match('NAME', m.index + 1, handle, 'medium'));
+  }
+  return out;
+}
+
+/**
+ * A label on its own line and the value on the next, as receipts, bank transfer screens, and KTP scans without colons
+ * lay them out: "Penerima\nDEWI LESTARI", "Agama\nISLAM".
+ */
+const STACKED_TYPES: ReadonlySet<PiiType> = new Set([
+  'NAME', 'NIK', 'KK', 'NPWP', 'NIP', 'SIM', 'BPJS', 'PHONE', 'BANK_ACCOUNT', 'EMAIL', 'BIRTH_DATE', 'RELIGION',
+  'GENDER', 'MARITAL_STATUS',
+]);
+const RELIGION_WORD = /^(?:islam|kristen(?:\s+protestan)?|protestan|katolik|katholik|hindu|buddha|budha|konghucu|khonghucu|kepercayaan.*)$/i;
+const MARITAL_WORD = /^(?:kawin|belum\s+kawin|cerai\s+hidup|cerai\s+mati|menikah|belum\s+menikah|lajang|janda|duda|single|married|divorced|widowed)$/i;
+
+function detectStackedLabels(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  // Lines split on "\n" only, so a CRLF file keeps the value on the very next line.
+  const lines: Array<{ start: number; text: string }> = [];
+  for (let pos = 0; pos <= text.length; ) {
+    let end = text.indexOf('\n', pos);
+    if (end === -1) end = text.length;
+    lines.push({ start: pos, text: text.slice(pos, end).replace(/\r$/, '') });
+    pos = end + 1;
+  }
+  for (let i = 0; i + 1 < lines.length; i++) {
+    const label = lines[i]!.text.trim();
+    if (!label || label.length > 30 || /[:=]/.test(label) || label.split(/\s+/).length > 3) continue;
+    const type = fieldType(label);
+    if (!type || !STACKED_TYPES.has(type)) continue;
+    const next = lines[i + 1]!;
+    const value = next.text.trim();
+    if (!value || value.length > 60 || fieldType(value) || !isPlausibleValue(type, value, label)) continue;
+    if (type === 'NAME' && !value.split(/\s+/).every((w) => /^[A-Z]/.test(w) && !NOT_NAME.has(w.toLowerCase()))) continue;
+    if (type === 'RELIGION' && !RELIGION_WORD.test(value)) continue;
+    if (type === 'MARITAL_STATUS' && !MARITAL_WORD.test(value)) continue;
+    out.push(match(type, next.start + next.text.indexOf(value), value, 'medium'));
+  }
+  return out;
+}
+
+/**
+ * KTP scans that lost their colons keep label and value on one line: "Jenis Kelamin LAKI-LAKI", "Agama KRISTEN".
+ * The values come from a closed list, so nothing else on such a line is taken.
+ */
+function detectColonlessLabels(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  const re =
+    /^[ \t]*(Jenis[ \t]+Kelamin|Kelamin|Agama|Status[ \t]+Perkawinan|Status[ \t]+Kawin|Perkawinan)[ \t]+(?![:=])([A-Za-z][A-Za-z -]{1,24}?)(?=[ \t]*(?:\r?$|[ \t]{2,}|[ \t]+(?:Gol|Golongan|RT|RW)\b))/gim;
+  for (const m of text.matchAll(re)) {
+    const type = fieldType(m[1]!);
+    const value = m[2]!;
+    if (type === 'GENDER' && !GENDER_WORD_RE.test(value)) continue;
+    if (type === 'RELIGION' && !RELIGION_WORD.test(value)) continue;
+    if (type === 'MARITAL_STATUS' && !MARITAL_WORD.test(value)) continue;
+    if (type) out.push(match(type, m.index + m[0].length - value.length, value, 'medium'));
+  }
+  return out;
+}
+const GENDER_WORD_RE = /^(?:laki-?\s?laki|lelaki|perempuan|pria|wanita)$/i;
+
+/** A name in brackets right after a phone number: "WA: 0812 3456 7890 (Andi)", "0813-1111-2222 (Bu Sari)". */
+function detectPhoneOwners(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  const re =
+    /(?:\+62|0062|62|0)[ \t-]?8[\d \t.-]{7,16}\d[ \t]*\([ \t]*((?:(?:Pak|Bu|Bapak|Ibu|Mas|Mbak|Kak|Bang)[ \t]+)?[A-Z][a-z]+(?:[ \t]+[A-Z][a-z]+){0,2})[ \t]*\)/g;
+  for (const m of text.matchAll(re)) {
+    const name = m[1]!;
+    const words = name.split(/[ \t]+/).map((w) => w.toLowerCase());
+    if (words.some((w) => NOT_NAME.has(w) && !TITLE_WORDS.has(w))) continue; // "(Kantor)", "(Rumah)", "(WA)"
+    out.push(match('NAME', m.index + m[0].lastIndexOf(name), name, 'medium'));
+  }
+  return out;
+}
+
+/** `user=dimas.anggara` in a logfmt line names a person; `user=root` or `user=postgres` is an account. */
+function detectLogUsers(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  for (const m of text.matchAll(/(?<![\w.-])(?:user|usr|login|uname)=(["']?)([A-Za-z][\w.-]{2,40})\1(?=[\s,;&]|$)/g)) {
+    const user = m[2]!;
+    if (!user.split(/[._-]+/).some((w) => isKnownName(w.toLowerCase().replace(/\d+$/, '')))) continue;
+    out.push(match('NAME', m.index + m[0].length - user.length - m[1]!.length, user, 'medium'));
+  }
+  return out;
+}
+
+/** Chat-app copies with only a time: Slack "[10:21] rizky_pratama: …", Discord, IRC logs. */
+function detectTimedSenders(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  for (const m of text.matchAll(/^\[\d{1,2}[:.]\d{2}(?:[:.]\d{2})?(?:[ \t]?[AP]M)?\][ \t]+([A-Za-z][\w. -]{1,38}?):[ \t]/dgm)) {
+    const sender = m[1]!;
+    if (NOT_A_PERSON.test(sender)) continue;
+    // A log level or a service ("[10:21] Server: ready") is not a person: a handle shape or a known name is.
+    const shaped = /^[a-z][a-z0-9]*[._][a-z0-9._]+$/.test(sender);
+    if (!shaped && !sender.split(/[ ._-]+/).some((w) => isKnownName(w.toLowerCase()))) continue;
+    out.push(match('NAME', m.indices![1]![0], sender, 'medium'));
+  }
+  return out;
+}
+
+const decodeEntities = (s: string) =>
+  s.replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"');
+
+/** Form fields and tables in HTML: `<input name="nama" value="…">`, `<th>Nama</th>` over `<td>Budi Santoso</td>`. */
+function detectHtml(text: string): PiiMatch[] {
+  if (!/<(?:input|td|th)\b/i.test(text)) return [];
+  const out: PiiMatch[] = [];
+  for (const m of text.matchAll(/<input\b[^>]*>/gi)) {
+    const name = /\b(?:name|id)\s*=\s*["']([^"']+)["']/i.exec(m[0])?.[1];
+    const value = /\bvalue\s*=\s*(["'])([^"']*)\1/i.exec(m[0]);
+    const type = name ? fieldType(name) : undefined;
+    if (!type || !value || !isPlausibleValue(type, value[2]!, name!)) continue;
+    out.push(match(type, m.index + value.index + value[0].indexOf(value[2]!, 1), value[2]!, 'high'));
+  }
+  let columns: Array<PiiType | undefined> | undefined;
+  let headers: string[] = [];
+  for (const row of text.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)) {
+    const cells = [...row[1]!.matchAll(/<(t[hd])\b[^>]*>([^<]*)<\/t[hd]>/gi)].map((c) => ({
+      header: c[1]!.toLowerCase() === 'th',
+      text: decodeEntities(c[2]!).trim(),
+      start: row.index + row[0].indexOf(row[1]!) + c.index + c[0].indexOf('>') + 1,
+      raw: c[2]!,
+    }));
+    if (!cells.length) continue;
+    const types = cells.map((c) => (c.text.length <= 40 ? fieldType(c.text) : undefined));
+    // "<th>Nama</th><td>Budi Santoso</td>": a label cell and its value.
+    if (cells.length === 2 && types[0] && !types[1]) {
+      const [label, cell] = cells as [(typeof cells)[0], (typeof cells)[0]];
+      if (cell.text && isPlausibleValue(types[0], cell.text, label.text)) {
+        out.push(match(types[0], cell.start + cell.raw.indexOf(cell.text.slice(0, 1)), cell.raw.trim(), 'high'));
+      }
+      continue;
+    }
+    if (cells.every((c) => c.header) || (!columns && types.some(Boolean) && cells.every((c) => !/\d{3}/.test(c.text)))) {
+      columns = types;
+      headers = cells.map((c) => c.text);
+      continue;
+    }
+    if (!columns) continue;
+    cells.forEach((c, i) => {
+      const type = columns![i];
+      if (!type || !c.text || !isPlausibleValue(type, c.text, headers[i]!)) return;
+      out.push(match(type, c.start + c.raw.indexOf(c.raw.trim()), c.raw.trim(), isGenericNameKey(headers[i]!) ? 'medium' : 'high'));
+    });
+  }
+  return out;
+}
+
+// HL7 v2 segments from hospital systems: field number → what it holds.
+const HL7_FIELDS: Record<string, Record<number, PiiType>> = {
+  PID: { 5: 'NAME', 6: 'NAME', 7: 'BIRTH_DATE', 8: 'GENDER', 11: 'ADDRESS', 13: 'PHONE', 14: 'PHONE', 19: 'NIK' },
+  NK1: { 2: 'NAME', 4: 'ADDRESS', 5: 'PHONE', 6: 'PHONE' },
+  DG1: { 3: 'HEALTH', 4: 'HEALTH' },
+  IN1: { 16: 'NAME' },
+};
+
+/** "PID|1||RM-00123||SUSANTO^BUDI||19800412|M": every field a segment defines as personal, whatever its content. */
+function detectHl7(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  for (const m of text.matchAll(/^(PID|NK1|DG1|IN1)\|[^\r\n]*/gm)) {
+    const fields = HL7_FIELDS[m[1]!]!;
+    let pos = m.index;
+    m[0].split('|').forEach((value, i) => {
+      const type = fields[i];
+      if (type && value.replace(/[\^~&\s]/g, '')) {
+        out.push(match(type, pos, value.replace(/[\^~]+$/, ''), 'high'));
+      }
+      pos += value.length + 1;
+    });
+  }
+  return out;
+}
+
+// UU PDP Article 4: criminal records. Phrases that say it of a person, not news about crime in general.
+const CRIME = '[a-z]+(?:\\s+(?:online|anak|uang|dana|berat|ringan|narkotika|pidana))?';
+const CRIMINAL =
+  new RegExp(
+    `\\b(?:mantan|eks|bekas)\\s+(?:napi|narapidana|tahanan|tapol|terpidana|residivis)(?:\\s+kasus\\s+${CRIME})?` +
+    `|\\bresidivis(?:\\s+kasus\\s+${CRIME})?` +
+    `|\\b(?:napi|narapidana|terpidana|tersangka|terdakwa|terjerat|tersandung|terlibat)\\s+kasus\\s+${CRIME}` +
+    `|\\bpernah\\s+(?:dipenjara|dibui|dipidana|ditahan|dihukum(?:\\s+penjara)?|masuk\\s+(?:penjara|bui|lapas|rutan)|ditangkap(?:\\s+polisi)?)(?:\\s+(?:selama\\s+)?\\d+\\s+(?:tahun|bulan))?(?:\\s+(?:karena\\s+|atas\\s+)?kasus\\s+${CRIME})?` +
+    `|\\bdivonis\\s+\\d+\\s+(?:tahun|bulan)(?:\\s+penjara)?` +
+    // "SKCK: ada catatan kasus penggelapan", "catatan kepolisian kasus KDRT".
+    `|\\bcatatan\\s+(?:(?:kriminal|kepolisian|pidana)\\s+)?kasus\\s+${CRIME}` +
+    // Penjelasan Pasal 4 ayat (2) huruf d: "pencantuman dalam daftar pencegahan atau penangkalan".
+    `|\\b(?:masuk|dimasukkan\\s+ke|tercantum\\s+di)\\s+(?:dalam\\s+)?daftar\\s+(?:cekal|pencegahan|penangkalan|hitam\\s+imigrasi|pencarian\\s+orang|dpo|buronan)` +
+    `|\\b(?:dicekal|berstatus\\s+(?:dpo|buron(?:an)?)|masuk\\s+dpo|jadi\\s+(?:dpo|buron(?:an)?))\\b` +
+    // "baru keluar lapas", "bebas dari penjara tahun lalu", "kasusnya penipuan".
+    `|\\b(?:keluar|bebas)\\s+(?:dari\\s+)?(?:lapas|lp|penjara|bui|rutan|tahanan)\\b|\\bkasusnya\\s+${CRIME}`,
+    'gi',
+  );
+
+function detectCriminal(text: string): PiiMatch[] {
+  return [...text.matchAll(CRIMINAL)].map((m) => match('CRIMINAL_RECORD', m.index, m[0], 'medium'));
+}
+
+/**
+ * Identifiers glued to letters, which the digit-run and phone detectors leave alone: "KTP_3201…0001.jpg",
+ * "NIK3201…", "wa081234567890". A NIK must validate; a phone must follow a phone label.
+ */
+function detectGluedIds(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  for (const m of text.matchAll(/(?<=[A-Za-z_])\d{16}(?![\dA-Za-z])/g)) {
+    const prefix = /[A-Za-z_]+$/.exec(text.slice(Math.max(0, m.index - 20), m.index))![0];
+    const head = text[m.index - prefix.length - 1];
+    // "a3f…" in a hash has digits before the letters; a lone letter is too little to go on.
+    if ((head !== undefined && /\d/.test(head)) || prefix.replace(/_/g, '').length < 2 && !prefix.includes('_')) continue;
+    if (parseNik(m[0]).valid) out.push(match('NIK', m.index, m[0], 'high'));
+  }
+  for (const m of text.matchAll(/(?<=[A-Za-z])(?:\+?62|0)8\d{8,11}(?!\d)/g)) {
+    const label = /[A-Za-z.]+$/.exec(text.slice(Math.max(0, m.index - 12), m.index))![0].toLowerCase();
+    if (PHONE_LABELS.has(label) && parsePhone(m[0]).valid) out.push(match('PHONE', m.index, m[0], 'high'));
+  }
+  return out;
+}
+
+const DIGIT_WORD = '(?:nol|kosong|satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan)';
+
+/** A phone number read out in a voice-bot or call transcript: "nol delapan satu dua tiga …". */
+function detectSpokenPhones(text: string): PiiMatch[] {
+  const re = new RegExp(`\\b(?:nol|kosong)[\\s,.-]+delapan(?:[\\s,.-]+${DIGIT_WORD}){8,11}\\b`, 'gi');
+  return [...text.matchAll(re)].map((m) => match('PHONE', m.index, m[0], 'medium'));
+}
+
+/**
+ * A single common given name in running text, not at the start of a sentence: "kepala keluarga Bambang", "tadi
+ * dikirim Joko". A sentence may start with any capitalized word, so there it needs a cue.
+ */
+function detectLoneGivenNames(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  for (const m of text.matchAll(/(?<![\w@.'’-])[A-Z][a-z]{2,14}(?![\w'’-]|\.\w|[ \t]+[A-Z])/g)) {
+    const bare = m[0].toLowerCase();
+    if (!GIVEN_NAMES.has(bare) && !JAVANESE_NAME.test(bare)) continue;
+    const lead = text.slice(Math.max(0, m.index - 30), m.index);
+    // Not at a sentence or line start, and not after a capitalized word ("Toko Batik Sekar").
+    if (!/(?:(?<![A-Za-z])[a-z]+|,)[ \t]+$/.test(lead)) continue;
+    const prev = /([A-Za-z]+)[ \t]+$/.exec(lead)?.[1]?.toLowerCase();
+    // "tinggal di Wina", "arah Malik": after a word of place, a lone name is a village.
+    if (prev && (PLACE_WORDS.has(prev) || ORGANIZATION.has(prev) || /^(?:di|daerah|arah|wilayah|kawasan|menuju|sekitar)$/.test(prev))) continue;
+    out.push(match('NAME', m.index, m[0], 'medium'));
+  }
+  return out;
+}
+
+// Headings and references that a bracketed number follows: "Pasal 5 (2)", "Tabel (3)".
+const NOT_AN_AGE = new Set(
+  ('pasal ayat bab bagian lampiran gambar tabel grafik nomor no langkah tahap poin butir huruf angka versi kelas ruang ' +
+    'lantai gate pintu loket jalur map set array object date number string buffer promise error symbol').split(' '),
+);
+
+const ROLE_AT_START = new RegExp(`^(?:${ROLE_CUE.source.replace(/^\\b/, '')})`, 'i');
+
+/** A name followed by an age in brackets, as news and case notes write it: "Kevin (19)", "Narti (54 th)". */
+function detectNamesWithAge(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  const re = /(?<![\w@.'’-])([A-Z][a-z'’-]+(?:[ \t]+(?:[A-Z][a-z'’-]+|bin|binti)){0,3})[ \t]+\([ \t]*\d{1,2}[ \t]*(?:th|thn|tahun|thn\.|th\.)?[ \t]*\)/g;
+  for (const m of text.matchAll(re)) {
+    // "Pelaku Kevin (19)": the role in front is not part of the name.
+    const role = ROLE_AT_START.exec(m[1]!)?.[0] ?? '';
+    const name = m[1]!.slice(role.length);
+    const words = name.split(/[ \t]+/).map((w) => w.toLowerCase());
+    if (!name || words.some((w) => NOT_NAME.has(w) || NOT_AN_AGE.has(w) || TITLE_WORDS.has(w) || PLACE_WORDS.has(w))) continue;
+    out.push(match('NAME', m.index + role.length, name, 'medium'));
+  }
+  return out;
+}
+
+/** Attendance lists: "Tidak hadir: Wahyu (sakit), Dinda (izin)". A word with an attendance status is a person. */
+function detectAttendance(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  // Also a relation in emergency contacts: "Wulan (istri) 0812…".
+  const re = /(?<![\w@.'’-])([A-Z][a-z'’-]+(?:[ \t]+[A-Z][a-z'’-]+){0,3})[ \t]+\((?:sakit|izin|ijin|alpa|alpha|absen|cuti|dinas(?:[ \t]+luar)?|terlambat|telat|hadir|wfh|wfo|istri|suami|ayah|ibu|bapak|anak|kakak|adik|ortu|orang[ \t]+tua|wali|saudara|keluarga|teman|wife|husband|mother|father)\)/g;
+  for (const m of text.matchAll(re)) {
+    if (m[1]!.split(/[ \t]+/).some((w) => NOT_NAME.has(w.toLowerCase()) || TITLE_WORDS.has(w.toLowerCase()))) continue;
+    out.push(match('NAME', m.index, m[1]!, 'medium'));
+  }
+  return out;
+}
+
+/** A common given name opening a sentence and doing something: "Dodi masih punya utang", "Agus bilang besok". */
+function detectSentenceSubjects(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  const re =
+    /(?:^|(?<=[.!?]\s)|(?<=\n))[ \t]*([A-Z][a-z]{2,14})(?=[ \t]+(?:masih|sudah|udah|belum|lagi|sedang|bilang|minta|punya|mau|tidak|nggak|gak|ga|pernah|sakit|kerja|tinggal|baru|katanya|pinjam|hutang|utang|janji|nanya|nelpon|telat|izin|cuti|dirawat|meninggal)\b)/gm;
+  for (const m of text.matchAll(re)) {
+    const bare = m[1]!.toLowerCase();
+    if (!GIVEN_NAMES.has(bare) && !JAVANESE_NAME.test(bare)) continue;
+    out.push(match('NAME', m.index + m[0].length - m[1]!.length, m[1]!, 'medium'));
+  }
+  return out;
+}
+
+/**
+ * Two names joined by "&" or "dan" where one is a known given name: "Dimas & Anggun", "Rina dan Kelvin". The other
+ * is a name too, even if the list does not know it.
+ */
+function detectNamePairs(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  for (const m of text.matchAll(/(?<![\w@.'’-])([A-Z][a-z]{2,14})[ \t]*(?:&|dan)[ \t]*([A-Z][a-z]{2,14})(?![\w'’-]|[ \t]+[A-Z])/g)) {
+    const [a, b] = [m[1]!, m[2]!];
+    const ok = (w: string) => !NOT_NAME.has(w.toLowerCase()) && !PLACE_WORDS.has(w.toLowerCase()) && !TITLE_WORDS.has(w.toLowerCase());
+    if (!ok(a) || !ok(b)) continue;
+    if (GIVEN_NAMES.has(a.toLowerCase())) out.push(match('NAME', m.index + m[0].lastIndexOf(b), b, 'medium'));
+    if (GIVEN_NAMES.has(b.toLowerCase())) out.push(match('NAME', m.index, a, 'medium'));
+  }
+  return out;
+}
+
+/** A handle in brackets after a name: "User Andreas Wijaya (andreas.w)". It must contain a known name. */
+function detectBracketHandles(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  for (const m of text.matchAll(/\(([a-z][a-z0-9]*(?:[._][a-z0-9]+)+)\)/g)) {
+    if (!m[1]!.split(/[._]/).some((w) => GIVEN_NAMES.has(w.replace(/\d+$/, '')) || FAMILY_NAMES.has(w.replace(/\d+$/, '')))) continue;
+    out.push(match('NAME', m.index + 1, m[1]!, 'medium'));
+  }
+  return out;
+}
+
+/** The security code on the back of a card: "cvv 123". */
+function detectCardCodes(text: string): PiiMatch[] {
+  const re = /\b(?:cvv2?|cvc2?|cid|kode\s+keamanan)\b[ \t]*[:=]?[ \t]*(\d{3,4})(?!\d)/gi;
+  return [...text.matchAll(re)].map((m) => match('CARD', m.index + m[0].length - m[1]!.length, m[1]!, 'high'));
 }
 
 const DIGITS_AT = /\d+/y;
@@ -544,14 +1275,30 @@ function detectSqlInserts(text: string): PiiMatch[] {
   return out;
 }
 
+const STREET =
+  'Jl|Jln|Jalan|Gg|Gang|Komp|Kompl|Komplek|Kompleks|Perum|Perumahan|Cluster|Klaster|Apartemen|Apartment|Apt|Rusun|' +
+  'Rusunawa|Tower|Ruko|Wisma|Asrama|Dusun|Dsn|Dukuh|Kampung|Kp|Lingkungan|Ling';
+// What pins a street to one house: No., Blok, Kav., or an apartment's floor and unit. Chat writes "blok b no 9".
+const PIN = '[Nn][Oo]|[Nn]omor|[Bb]lok|[Kk]av|[Uu]nit|[Ll]t|[Ll]antai|[Kk]amar|[Kk]mr|NO|BLOK';
+const RT_RW = 'RT\\.?\\s*0*\\d{1,3}\\s*[/,]?\\s*RW\\.?\\s*0*\\d{1,3}';
+
 function detectStreetAddresses(text: string): PiiMatch[] {
   const out: PiiMatch[] = [];
-  // A street only counts as personal data when it is pinned to a house: No., Blok, Kav., or RT/RW.
-  const street =
-    /\b(?:Jl|Jln|Jalan|Gg|Gang|Komp|Kompleks|Perum|Perumahan)\.?\s+[A-Za-z0-9][^\n;]{1,80}?(?:\b(?:No|Nomor|Blok|Kav)\.?\s*[A-Za-z]?\d+[A-Za-z]?(?:\/\d+)?(?:,?\s*RT\.?\s*\d{1,3}\s*\/\s*RW\.?\s*\d{1,3})?|\bRT\.?\s*\d{1,3}\s*\/\s*RW\.?\s*\d{1,3})/g;
+  // A street only counts as personal data when it is pinned to a house: No., Blok, Kav., a unit, or RT/RW.
+  const street = new RegExp(
+    `\\b(?:${STREET})\\.?\\s+[A-Za-z0-9][^\\n;]{1,80}?(?:\\b(?:${PIN})\\.?\\s*[A-Za-z]?\\d+[A-Za-z]?(?:\\/\\d+)?(?:,?\\s*(?:${PIN})\\.?\\s*[A-Za-z]?\\d+[A-Za-z]?(?:\\/\\d+)?)*(?:,?\\s*${RT_RW})?|\\b${RT_RW})`,
+    'g',
+  );
   for (const m of text.matchAll(street)) out.push(match('ADDRESS', m.index, m[0], 'high'));
-  const rtrw = /\bRT\.?\s*0*\d{1,3}\s*\/\s*RW\.?\s*0*\d{1,3}\b/gi;
-  for (const m of text.matchAll(rtrw)) out.push(match('ADDRESS', m.index, m[0], 'medium'));
+  // Chat writes the estate in lowercase: "perum griya asri blok c3 no 12". Not "jalan", which is also a verb.
+  const lower =
+    /\b(?:perum|perumahan|komplek|kompleks|komp|cluster|klaster|apartemen|apt|rusun|asrama|jl|jln|gg|gang)\.?\s+[a-z0-9][^\n;]{1,60}?\b(?:no|nomor|blok|kav|unit)\.?\s*[a-z]?\d+[a-z]?(?:\/\d+)?(?:,?\s*(?:no|nomor|blok|kav|unit)\.?\s*[a-z]?\d+[a-z]?)*/g;
+  for (const m of text.matchAll(lower)) out.push(match('ADDRESS', m.index, m[0], 'medium'));
+  for (const m of text.matchAll(new RegExp(`\\b${RT_RW}\\b`, 'gi'))) out.push(match('ADDRESS', m.index, m[0], 'medium'));
+  // "jl mawar 5 cibinong": chat skips "No.". Only after "jl" or "gg", and not "jl. raya macet 2 jam".
+  const bare =
+    /\b(?:[Jj]ln?|[Gg]g)\.?\s+[A-Za-z][A-Za-z'-]*(?:\s+[A-Za-z][A-Za-z'-]*){0,3}?\s+\d{1,4}[A-Za-z]?\b(?!\s*(?:jam|menit|detik|km|meter|m\b|kali|hari|minggu|bulan|tahun|orang|lantai|lajur|jalur|%|x\b))/g;
+  for (const m of text.matchAll(bare)) out.push(match('ADDRESS', m.index, m[0], 'medium'));
   return out;
 }
 
@@ -632,12 +1379,19 @@ function cutValue(type: PiiType, raw: string): string {
       const stop = v.search(re);
       if (stop >= 0) v = v.slice(0, stop);
     }
-    const digit = v.search(/\d/);
+    // A digit ends a name, but not the "20" in "Siti%20Rahayu" (same length, so the index still fits).
+    const digit = v.replace(/%[0-9A-Fa-f]{2}/g, '%xx').search(/\d/);
     if (digit >= 0) v = v.slice(0, digit);
     v = takeWords(v, 5);
   }
+  // "NPWP: 01.234.567.8-901.000 a.n. CV Maju Jaya": a number ends where its digits do.
+  if (NUMBER_TYPES.has(type)) {
+    const digits = /^[+(]?\d[\d \t.\-/()]*\d\)?/.exec(v.trim());
+    if (digits) return digits[0].trim();
+  }
   return v.replace(/[\s.,}\]]+$/, '').trim();
 }
+const NUMBER_TYPES: ReadonlySet<PiiType> = new Set(['NIK', 'KK', 'NPWP', 'NIP', 'SIM', 'BPJS', 'NISN', 'PHONE', 'BANK_ACCOUNT', 'CARD']);
 
 /**
  * "Label: value" in prose, forms, logs, JSON, YAML and .env:
@@ -699,7 +1453,10 @@ function detectLabeledFields(text: string): PiiMatch[] {
   let lineStart = 0;
   let lineEnd = text.indexOf('\n');
   if (lineEnd === -1) lineEnd = text.length;
-  for (const m of text.matchAll(/[ \t]*(?::(?![:\/])|=(?![=>]))[ \t]*/g)) {
+  for (const m of text.matchAll(/[ \t]*(?::(?![:\/])|=>|=(?![=>]))[ \t]*/g)) {
+    // PHP, Ruby and Perl hashes: "'name' => 'Ahmad Fauzan'". Only after a quoted key; "phone => format(phone)" is a
+    // JavaScript arrow function.
+    if (m[0].includes('=>') && !isQuote(text[m.index - 1])) continue;
     while (m.index > lineEnd) {
       lineStart = lineEnd + 1;
       lineEnd = text.indexOf('\n', lineStart);
@@ -726,6 +1483,8 @@ function detectLabeledFields(text: string): PiiMatch[] {
       while (close < rawEnd && text[close] !== quote) close++;
       if (close >= rawEnd) continue;
       value = text.slice(valueStart + 1, close);
+      // 'labels like "Nama:" and "a.n."': the quote closes a quoted label; it does not open a value.
+      if (/^\s/.test(value)) continue;
       start += 1;
     } else {
       const raw = text.slice(valueStart, valueExtent(text, valueStart, rawEnd));
@@ -887,9 +1646,32 @@ const DETECTORS: Array<(text: string) => PiiMatch[]> = [
   detectHealth,
   detectFinancial,
   detectReligion,
+  detectMaritalStatus,
   detectPlates,
   detectNames,
   detectChatSenders,
+  detectKnownNames,
+  detectSignatures,
+  detectDisplayNames,
+  detectHandles,
+  detectStackedLabels,
+  detectColonlessLabels,
+  detectPhoneOwners,
+  detectTimedSenders,
+  detectLogUsers,
+  detectHtml,
+  detectHl7,
+  detectAkta,
+  detectCriminal,
+  detectGluedIds,
+  detectCardCodes,
+  detectSpokenPhones,
+  detectLoneGivenNames,
+  detectNamesWithAge,
+  detectNamePairs,
+  detectAttendance,
+  detectSentenceSubjects,
+  detectBracketHandles,
   detectSqlInserts,
   detectStreetAddresses,
   detectLabeledFields,

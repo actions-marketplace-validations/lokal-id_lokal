@@ -9,12 +9,20 @@ from __future__ import annotations
 import datetime as _dt
 import re
 from collections.abc import Callable, Iterable
-from typing import Optional
+from typing import NamedTuple, Optional
 
 from .. import _js
 from .._js import rx
 from ..nik import parse_nik
 from ..phone import parse_phone
+from ._names import (
+    AMBIGUOUS_GIVEN_NAMES,
+    BALINESE_NAMES,
+    CHINESE_FAMILY_NAMES,
+    FAMILY_NAMES,
+    GIVEN_NAMES,
+    SECOND_NAMES,
+)
 from .fields import field_type, is_generic_name_key, is_plausible_value
 from .types import PII_TYPES, Confidence, PiiMatch, PiiType
 
@@ -50,6 +58,18 @@ def _before(text: str, index: int, window: int = 40) -> str:
 def _last_units(s: str, n: int) -> str:
     """``s.slice(-n)``."""
     return s[-n:] if n else ''
+
+
+def _line_above(text: str, index: int, length: int) -> str:
+    """The line above a value that stands alone on its own line, lowercased; empty when the value shares its line."""
+    line_start = text.rfind('\n', 0, max(0, index)) + 1 if index > 0 else 0
+    line_end = text.find('\n', index + length)
+    if _js.trim(text[line_start:index]) or _js.trim(text[index + length : len(text) if line_end == -1 else line_end]):
+        return ''
+    if line_start == 0:
+        return ''
+    above_start = text.rfind('\n', 0, max(0, line_start - 1)) + 1 if line_start >= 2 else 0
+    return text[above_start : line_start - 1].lower()
 
 
 def _match(pii_type: PiiType, start: int, value: str, confidence: Confidence) -> PiiMatch:
@@ -107,6 +127,7 @@ _KK_KEYWORD = rx(r'\b(kk|kartu keluarga)\b[^\d]*$')
 _SIM_KEYWORD = rx(r'\b(sim|surat izin mengemudi|driving licen[cs]e)\b[^\d]*$')
 _NIK_KEYWORD = rx(r'\b(nik|ktp|nomor induk kependudukan)\b')
 _NPWP_KEYWORD = rx(r'\bnpwp\b')
+_NISN_KEYWORD = rx(r'\b(nisn|nomor induk siswa nasional)\b[^\d]*$')
 _BPJS_KEYWORD = rx(r'\b(bpjs|jkn|kis|kartu indonesia sehat|kpj|jamsostek)\b')
 _BANK_KEYWORD = rx(
     r'\b(no\.?\s*rek(ening)?|norek|rekening|rek|account|acc|a\/c|virtual account|va|transfer|tf|bca|bri|bni|mandiri|bsi|cimb|niaga|permata|danamon|btn|jago|seabank|blu|ocbc|panin|maybank|mega|muamalat)\b'  # noqa: E501
@@ -149,10 +170,15 @@ def _detect_digit_runs(text: str) -> list[PiiMatch]:
             push('NPWP', 'high')
         elif n == 16 and _NIK_KEYWORD.search(ctx):
             push('NIK', 'medium')
+        elif n == 10 and _NISN_KEYWORD.search(label):
+            push('NISN', 'high')
         elif n in (13, 11) and _BPJS_KEYWORD.search(ctx):
             push('BPJS', 'high')
         elif 8 <= n <= 18 and _BANK_KEYWORD.search(ctx):
             push('BANK_ACCOUNT', 'high')
+        elif 8 <= n <= 18 and _BANK_KEYWORD.search(_line_above(text, m.start(), len(value))):
+            # A transfer receipt stacks the bank and the account: "Bank BNI\n0123456789".
+            push('BANK_ACCOUNT', 'medium')
     return out
 
 
@@ -161,6 +187,28 @@ _NPWP_FORMATTED = rx(r'(?<!\d)\d{2}\.\d{3}\.\d{3}\.\d-\d{3}\.\d{3}(?!\d)')
 
 def _detect_npwp_formatted(text: str) -> list[PiiMatch]:
     return [_match('NPWP', m.start(), m.group(0), 'high') for m in _NPWP_FORMATTED.finditer(text)]
+
+
+_AKTA_DUKCAPIL = rx(r'(?<![\w-])\d{4}[-./ ]?(?:LT|LU|LD|KW|CR|KM)[-./ ]?\d{8}[-./ ]?\d{3,6}(?![\w-])', 'gi')
+_AKTA_WORDED = rx(
+    r'\bakta\s+(?:kelahiran|lahir|nikah|perkawinan|kematian|cerai|perceraian)(?:nya)?\s+(?:no(?:mor)?\.?\s*:?\s*)?([A-Za-z0-9][\w./-]{3,30}[A-Za-z0-9])',  # noqa: E501
+    'gi',
+)
+
+
+def _detect_akta(text: str) -> list[PiiMatch]:
+    """Civil registry deeds (akta kelahiran, perkawinan, kematian).
+
+    Dukcapil numbers them "3201-LT-12052018-0042": region, kind, date, serial. Older deeds have a free-form number
+    after the words "akta kelahiran".
+    """
+    out = [_match('AKTA', m.start(), m.group(0), 'high') for m in _AKTA_DUKCAPIL.finditer(text)]
+    for m in _AKTA_WORDED.finditer(text):
+        if len(_digits(m.group(1))) < 4:
+            continue
+        start, value = _group_tail(m)
+        out.append(_match('AKTA', start, value, 'high'))
+    return out
 
 
 _PASSPORT = rx(r'(?<![A-Za-z0-9])[A-Z]{1,2}\s?\d{6,8}(?![A-Za-z0-9])')
@@ -178,7 +226,8 @@ def _detect_passports(text: str) -> list[PiiMatch]:
 # Separators never include a line break, and every group after the operator prefix has at least three digits.
 # Otherwise a number at the end of a line swallows the digits that start the next one ("…6789\n14/10/26"),
 # fails validation, and is left unmasked.
-_MOBILE = rx(r'(?<![\d+\w])(?:\+62|62|0)[ \t-]?8\d{1,2}(?:[ \t.-]?\d{3,4}){2,3}(?![\d\w])')
+# "0062 812 …" dials out of another country the way "+62" does.
+_MOBILE = rx(r'(?<![\d+\w])(?:\+62|0062|62|0)[ \t-]?8\d{1,2}(?:[ \t.-]?\d{3,4}){2,3}(?![\d\w])')
 _LANDLINE = rx(
     r'\((?:\+62[ \t]?|0)\d{2,3}\)[ \t]?\d{3,4}[ \t-]?\d{3,4}(?!\d)|(?<![\d\w])\+62[ \t]?[2-79]\d{1,2}[ \t-]?\d{3,4}[ \t-]?\d{3,4}(?!\d)'  # noqa: E501
 )
@@ -203,13 +252,50 @@ def _glued_to_code(text: str, index: int) -> bool:
     return any('a' <= c <= 'z' for c in token) and token not in _PHONE_LABELS and not token.endswith('wa.me')
 
 
+_PHONE_WORD = rx(
+    r'\b(?:telp|telepon|telpon|tlp|tel|phone|fax|faks|hub|hubungi|call|kontak|contact|cp|rumah|kantor|no)\b[^\d]*$'
+)
+# "+62 (812) 3456-7890", "(0812) 3456 7890".
+_BRACKETED_MOBILE = rx(r'(?<![\d\w])(?:\+?62[ \t]?\(8\d{1,2}\)|\(08\d{1,2}\))[ \t]?\d{3,4}[ \t.-]?\d{3,4}(?!\d)')
+# "08 12 34 56 78 90": any grouping, as long as all the digits make one valid mobile number.
+_GROUPED_MOBILE = rx(r'(?<![\d\w+])(?:\+62[ \t.-]?|62[ \t.-]?|0[ \t.-]?)8(?:[ \t.-]?\d){8,12}(?![\d\w])')
+_GROUP_SEP = re.compile(r'[ \t.-]')
+_SPACED_ZERO = rx(r'^0[ \t.-]')
+# "rumah 0251 8321234", "telp 021-7654321": an area code without brackets, only next to a phone word.
+_AREA_CODE = rx(r'(?<![\d\w+])0(?:2[1-9]|[3-79]\d)\d{0,2}[ \t.-]?\d{3,4}[ \t.-]?\d{3,4}(?![\d\w])')
+
+
 def _detect_phones(text: str) -> list[PiiMatch]:
     out = [
         _match('PHONE', m.start(), m.group(0), 'high')
         for m in _MOBILE.finditer(text)
-        if parse_phone(m.group(0)).valid and not _glued_to_code(text, m.start())
+        if parse_phone('+' + m.group(0)[2:] if m.group(0).startswith('00') else m.group(0)).valid
+        and not _glued_to_code(text, m.start())
     ]
     out += [_match('PHONE', m.start(), m.group(0), 'medium') for m in _LANDLINE.finditer(text)]
+    out += [
+        _match('PHONE', m.start(), m.group(0), 'high') for m in _BRACKETED_MOBILE.finditer(text)
+        if parse_phone(m.group(0)).valid
+    ]
+    for m in _GROUPED_MOBILE.finditer(text):
+        # Only what the pattern above cannot read: groups of one or two digits after the prefix. Otherwise
+        # "0812-3456-7890\n2 …" would take the next line's "2".
+        groups = _GROUP_SEP.split(m.group(0))
+        # Next to a phone word any grouping goes: 'invalid phone "0812-77-1234-99"'.
+        named = bool(_PHONE_WORD.search(_before(text, m.start(), 30)))
+        if not named and (len(groups) < 4 or any(len(g) > 2 for g in groups[1:])):
+            continue
+        # "0 8 1 2 3 …", one digit at a time, only next to a phone word: otherwise it is any list of digits.
+        if _SPACED_ZERO.search(m.group(0)) and not named:
+            continue
+        if parse_phone(m.group(0)).valid and not _glued_to_code(text, m.start()):
+            out.append(_match('PHONE', m.start(), m.group(0), 'high'))
+    for m in _AREA_CODE.finditer(text):
+        if not _PHONE_WORD.search(_before(text, m.start(), 30)):
+            continue
+        info = parse_phone(m.group(0))
+        if info.valid and info.type == 'landline':
+            out.append(_match('PHONE', m.start(), m.group(0), 'medium'))
     return out
 
 
@@ -221,6 +307,8 @@ _AT = r'\s*(?:\[\s*at\s*\]|\(\s*at\s*\)|\{\s*at\s*\})\s*'
 _DOT = r'(?:\s*(?:\[\s*dot\s*\]|\(\s*dot\s*\)|\{\s*dot\s*\})\s*|\.)'
 _SPELLED_EMAIL = rx(rf'(?<![\w.+-])[A-Za-z0-9._%+-]+{_AT}[A-Za-z0-9-]+(?:{_DOT}[A-Za-z0-9-]+)*{_DOT}[A-Za-z]{{2,}}(?![\w-])', 'gi')
 
+_URL_EMAIL = rx(r'(?<![\w.+-])[A-Za-z0-9._+-]+%40[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}(?![\w-])')
+
 
 def _detect_emails(text: str) -> list[PiiMatch]:
     out = [
@@ -229,13 +317,17 @@ def _detect_emails(text: str) -> list[PiiMatch]:
         if not _RESERVED_EMAIL_DOMAIN.search(m.group(0))
     ]
     out += [_match('EMAIL', m.start(), m.group(0), 'high') for m in _SPELLED_EMAIL.finditer(text)]
+    # URL-encoded: "email=siti%40gmail.com".
+    out += [_match('EMAIL', m.start(), m.group(0), 'high') for m in _URL_EMAIL.finditer(text)]
     return out
 
 
-_IP = rx(r'(?<![\d.\w])(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)(?![\d.\w])')
+_IP = rx(r'(?<![\d.\w])(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)(?![\d\w]|\.[\d\w])')
 _IP_SKIP = rx(r'^(0\.|127\.|255\.255\.255\.255)')
 _IP_VERSION = rx(r'\b(versi|version|ver|v)\.?\s*$')
 _IP_PRIVATE = rx(r'^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)')
+_IP_DOC_NUMBER_AFTER = rx(r'^-\d+(?![\d.])')
+_IP_DOC_NUMBER_BEFORE = rx(r'\b(?:no|nomor|sk|surat)\.?\s*$')
 
 
 def _detect_ips(text: str) -> list[PiiMatch]:
@@ -246,18 +338,28 @@ def _detect_ips(text: str) -> list[PiiMatch]:
             continue
         if _IP_VERSION.search(_before(text, m.start(), 12)):
             continue
+        # "SK No. 100.3.3.1-6117": a document number. "192.168.2.1-192.168.2.10" is a range of addresses.
+        if _IP_DOC_NUMBER_AFTER.search(text[m.start() + len(ip) :]) or _IP_DOC_NUMBER_BEFORE.search(_before(text, m.start(), 12)):
+            continue
+        # "step 5.2.1.1." in a spec is a section; an address ending a sentence has larger parts ("dari IP 36.72.215.104.").
+        if text[m.start() + len(ip) : m.start() + len(ip) + 1] == '.' and all(len(part) == 1 for part in ip.split('.')):
+            continue
         out.append(_match('IP', m.start(), ip, 'medium' if _IP_PRIVATE.search(ip) else 'high'))
     return out
 
 
-_COORDS = rx(r'(?<![\d.])(-?\d{1,2}\.\d{4,})\s*,\s*(-?\d{1,3}\.\d{4,})(?![\d.])')
+# "-6.914744, 107.609810", and with the axes named: "lat -7.250445, lng 112.768845".
+_COORDS = rx(
+    r'(?<![\d.])(-?\d{1,2}\.\d{4,})\s*,\s*(-?\d{1,3}\.\d{4,})(?![\d.])|\blat(?:itude)?\s*[:=]?\s*(-?\d{1,2}\.\d{4,})\s*[,;]?\s*(?:lng|lon|long|longitude)\s*[:=]?\s*(-?\d{1,3}\.\d{4,})(?![\d.])',  # noqa: E501
+    'gi',
+)
 
 
 def _detect_coordinates(text: str) -> list[PiiMatch]:
     out: list[PiiMatch] = []
     for m in _COORDS.finditer(text):
-        lat = float(m.group(1))
-        lng = float(m.group(2))
+        lat = float(m.group(1) if m.group(1) is not None else m.group(3))
+        lng = float(m.group(2) if m.group(2) is not None else m.group(4))
         if abs(lat) > 90 or abs(lng) > 180:
             continue
         indonesia = -11.5 <= lat <= 6.5 and 94 <= lng <= 141.5
@@ -271,7 +373,10 @@ _MONTHS = (
     'Okt|Oct|Nov|Des|Dec'
 )
 _DATE = rf'\d{{1,2}}[-/. ]\d{{1,2}}[-/. ]\d{{2,4}}|\d{{1,2}}\s+(?:{_MONTHS})\.?\s+\d{{4}}|\d{{4}}-\d{{2}}-\d{{2}}'
-_BIRTH = rx(rf'\b(?:lahir|kelahiran|born)\b[^\n\d]{{0,40}}?({_DATE})', 'gi')
+_BIRTH = rx(
+    rf'\b(?:lahir|lhr|kelahiran|born|ttl|dob|d\.o\.b\.?|date\s+of\s+birth|birth\s*date|birthday)(?![a-z])[^\n\d]{{0,40}}?({_DATE})',
+    'gi',
+)
 
 
 def _group_tail(m: re.Match[str], group: int = 1) -> tuple[int, str]:
@@ -285,10 +390,22 @@ def _detect_birth_dates(text: str) -> list[PiiMatch]:
 
 
 _CONDITIONS = (
-    r'hiv|aids|odha|tbc|tb paru|tuberkulosis|hepatitis(?: [abc])?|kanker(?: \w+)?|tumor(?: \w+)?|diabetes(?: melitus)?|'
-    r'hipertensi|stroke|penyakit jantung|gagal ginjal|cuci darah|covid(?:-19)?|dbd|demam berdarah|malaria|kusta|lepra|'
-    r'skizofrenia|bipolar|depresi(?: berat)?|gangguan jiwa|gangguan mental|odgj|autis(?:me)?|epilepsi|ims|sifilis|'
-    r'gonore|herpes|hamil|keguguran'
+    r'hiv|aids|odha|tbc|tb paru|tuberkulosis|hepatitis(?: [abc])?|kanker(?: \w+)?|tumor(?: \w+)?|diabetes(?: mel+itus)?(?: tipe [12])?|'
+    r'hipertensi|stroke|penyakit jantung|gagal ginjal|cuci darah|covid(?:-19)?|dbd|demam berdarah(?: dengue)?|malaria|kusta|lepra|'
+    r'skizofrenia|bipolar(?: tipe [12i]+)?|depresi(?: berat| sedang| ringan)?|gangguan jiwa|gangguan mental|odgj|autis(?:me)?|epilepsi|'
+    r'ims|sifilis|gonore|herpes|hamil(?: \d{1,2} (?:bulan|minggu))?|keguguran|asma|lupus|leukemia|'
+    r'th?alas+emia(?: (?:alfa|beta|mayor|minor))?|hemofilia|alzheimer|demensia|'
+    r'gastroenteritis(?: akut)?|gastritis|maag|typhoid|pneumonia|bronkitis|sinusitis|apendisitis|usus buntu|batu ginjal|'
+    r'hipotiroid|hipertiroid|anemia|glaukoma|katarak|skoliosis|hernia|wasir|ambeien|tbc tulang|meningitis|'
+    r'parkinson|tifus|tipes|cacar|campak|polio|difteri|stunting|obesitas|kolesterol tinggi|asam urat|gangguan kecemasan|'
+    r'anxiety|ptsd|ocd|adhd|down syndrome|cerebral palsy|lumpuh|tunanetra|tunarungu|tunawicara|tunadaksa|kista|miom|'
+    r'endometriosis|pcos|osteoporosis|vertigo|psikosis|gerd|jantung koroner|sakit jantung|gagal jantung|serangan jantung|'
+    r'infertil|mandul|impoten|klamidia|kecanduan(?: \w+)?|pecandu(?: \w+)?|pengguna (?:narkoba|narkotika|sabu|ganja|heroin|putaw|ekstasi)|'
+    r'percobaan bunuh diri|self harm|patah tulang(?: \w+)?|gegar otak|luka bakar|amputasi|serangan panik|gangguan makan|anoreksia|bulimia'
+)
+_SYMPTOMS = (
+    r'(?:demam(?:\s+tinggi)?|batuk(?:\s+berdahak)?|pilek|flu|sesak(?:\s+napas)?|mual|muntah|diare|mencret|pusing|sakit\s+kepala|'
+    r'nyeri\s+\w+|lemas|meriang|gatal-gatal|ruam|pendarahan|kejang|sariawan|radang\s+tenggorokan|sakit\s+perut|sakit\s+gigi)'
 )
 # Medicines that name the condition they treat.
 _MEDICATIONS = (
@@ -298,13 +415,32 @@ _MEDICATIONS = (
 )
 # Strong medical verbs: whatever follows is the condition.
 _HEALTH_STRONG = rx(
-    r'\b(?:didiagnosis|didiagnosa|terdiagnosis|terdiagnosa|mengidap|terinfeksi|riwayat penyakit|divonis)\s+(?:menderita\s+|mengidap\s+|penyakit\s+)?([^\n,.;:()]{2,60}?)(?=\s+(?:sejak|selama|dan sudah|dan sedang|tapi|namun|sehingga|jadi)\b|[\n,.;:()]|$)',  # noqa: E501
+    r'\b(?:didiagnosis|didiagnosa|terdiagnosis|terdiagnosa|mengidap|terinfeksi|riwayat penyakit|divonis)\s+(?:menderita\s+|mengidap\s+|penyakit\s+)?(?!(?:yang|dan|atau|di|ke|dari|untuk|ini|itu|tersebut|adalah|dapat|bisa|tidak|belum|anda|kamu|pasien|seseorang)\b)([^\n\r,.;:()]{2,60}?)(?=\s+(?:sejak|selama|dan sudah|dan sedang|tapi|namun|sehingga|jadi)\b|[\n\r,.;:()]|$)',  # noqa: E501
     'gi',
 )
-# Everyday words ("positif", "karena", "saya") only count before a known condition: "saya diabetes".
+# "Dx: TB paru" in a medical note; capitalized, so "dx" in code is not one.
+_HEALTH_DX = rx(r'\b(?:Dx|DX|Diagnosis|Diagnosa|Diag)\s*:\s*([^\n\r,;()]{2,60}?)(?=\s*(?:[\n\r,;()]|\.(?:\s|$)|$))', 'g')
+# Everyday words ("positif", "karena", "saya") only count before a known condition: "saya diabetes",
+# "riwayat hipertensi dan diabetes melitus".
 _HEALTH_GATED = rx(
-    rf'\b(?:positif|menderita|terkena|kena|sakit|pasien|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|saya|aku|gue|gw|gua|dia|beliau)\s+((?:penyakit\s+)?(?:{_CONDITIONS}))\b',  # noqa: E501
+    r'\b(?:(?:dokter|dok|dr)\.?\s+(?:bilang|bilangnya|menyatakan|mendiagnosis)(?:\s+(?:ada|kena|positif))?|positif|menderita|terkena|kena|sakit|pasien|komplikasi|kambuh|kumat|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|riwayat|diagnosa|diagnosis|didiagnosa|pembawa\s+sifat|carrier|saya|aku|gue|gw|gua|dia|beliau|ayah|bapak|ibu|mama|mamah|papa|papah|suami|istri|anak|anaknya|adik|adek|kakak|nenek|kakek|mertua|pacar|teman|temen)'  # noqa: E501
+    r'\s+(?:(?:saya|aku|gue|dia|lagi|sedang|sdg|sudah|udah|sdh|sempat|pernah|baru|kena|terkena)\s+){0,2}'
+    rf'((?:penyakit\s+)?(?:{_CONDITIONS})(?:\s*(?:,|dan|serta)\s+(?:{_CONDITIONS}))*)\b',
     'gi',
+)
+# A test result: "hasil tes HIV reaktif", "rapid test covid positif", "tes narkoba negatif".
+_HEALTH_RESULT = rx(
+    r'\b(?:tes|test|uji|pemeriksaan|skrining|screening|swab|rapid(?:\s+test)?)\s+((?:hiv|hepatitis(?:\s+[abc])?|hbsag|covid(?:-19)?|tbc|tb|sifilis|vdrl|narkoba|urine|kehamilan|dna|pcr|antigen)\s+(?:hasilnya\s+)?(?:reaktif|non-?reaktif|positif|negatif))\b',  # noqa: E501
+    'gi',
+)
+# A genetic test result: "BRCA1 positif", "mutasi BRCA2", "carrier thalassemia" (above).
+_GENETIC = rx(r'\b(?:mutasi\s+)?(?:BRCA[12]|HLA-B\*?\d{2}:\d{2})(?:\s+(?:positif|negatif|mutasi|carrier))?', 'g')
+_GENETIC_RESULT = rx(r'positif|negatif|mutasi|carrier', 'i')
+_GENETIC_TEST = rx(r'\b(?:hasil|tes|test|dinyatakan)\b[^\n]{0,20}$', 'i')
+# A disability said of someone stands on its own: "Peserta Lina Marlina, tunarungu, …". Not "sekolah bagi tunarungu".
+_DISABILITY = rx(r'\b(?:tuna[ -]?(?:rungu|netra|wicara|daksa|grahita|laras)|odha|odgj)\b', 'gi')
+_FOR_A_GROUP = rx(
+    r'\b(?:para|kaum|penyandang|bagi|untuk|buat|sekolah|slb|komunitas|organisasi|yayasan|layanan|hak|ramah)\s+$', 'i'
 )
 # A known condition on its own in brackets: "obat buat ibu saya (diabetes)".
 _HEALTH_BRACKETED = rx(rf'\(({_CONDITIONS})\)', 'gi')
@@ -319,34 +455,132 @@ _HEALTH_HOSPITAL = rx(
     'gi',
 )
 
+_ALLERGY = rx(r'\balergi\s+(?:terhadap\s+)?([a-z][\w-]*(?:\s+dan\s+[a-z][\w-]*)?)', 'gi')
+_NOT_AN_ALLERGY = rx(r'\b(?:anti|bebas|obat|tes|uji)\s+$')
+# Symptoms after the word for a complaint: "keluhan demam", "gejala sesak napas". Not "keluhan pelanggan".
+_SYMPTOM = rx(
+    r'\b(?:keluhan|gejala|mengeluh(?:kan)?)\s+((?:demam|batuk|pilek|flu|sesak(?:\s+napas)?|mual|muntah|diare|pusing|sakit\s+kepala|nyeri\s+\w+|lemas|meriang|gatal|ruam|benjolan|pendarahan|kejang)(?:\s+(?:dan|,)\s+(?:demam|batuk|pilek|flu|mual|muntah|diare|pusing|lemas))*)',  # noqa: E501
+    'gi',
+)
+# Symptoms someone has had for a while: "sudah 3 hari demam dan batuk", "anak saya lagi diare".
+_HAVING_SYMPTOMS = rx(
+    r'\b(?:(?:sudah|udah|sdh|sejak|selama|umur|usia)\s+\d+\s+(?:hari|minggu|bulan|tahun|th)|(?:saya|aku|gue|gw|dia|beliau|anak\s+saya|anakku|anaknya|suami\s+saya|istri\s+saya)\s+(?:lagi|sedang|sering|kena|terkena|mengalami))'  # noqa: E501
+    rf'\s+({_SYMPTOMS}(?:\s*(?:dan|,|&)\s*{_SYMPTOMS})*)',
+    'gi',
+)
+# Findings listed in a medical note: "Hasil MCU: …, tekanan darah 150/95, kolesterol tinggi". The list needs a
+# medical word before it; "kolesterol tinggi" in an article about food has none.
+_FINDING = rx(
+    rf'(?:[,;:]|\bdan)\s*((?:{_CONDITIONS})|tekanan\s+darah\s+\d{{2,3}}\/\d{{2,3}}|tensi\s+\d{{2,3}}\/\d{{2,3}})(?=\s*(?:[,;.]|dan\b|$))',
+    'gi',
+)
+_MEDICAL_CONTEXT = rx(
+    r'\b(?:mcu|medical|check-?up|hasil\s+(?:lab|pemeriksaan)|pasien|dokter|dok|tekanan\s+darah|tensi|keluhan|riwayat|diagnos[ai]s?|klinik|puskesmas|rs|rsud)\b',  # noqa: E501
+    'i',
+)
+# A condition right after someone's age: "Alif (8 th), autis", "Bu Narti, 54 tahun, stroke".
+_AFTER_AGE = rx(
+    rf'(?:\(\d{{1,2}}[^)\n]{{0,8}}\)|\b\d{{1,2}}\s*(?:th|thn|tahun))\s*,\s*((?:{_CONDITIONS})(?:\s*(?:,|dan)\s*(?:{_CONDITIONS}))*)\b',
+    'gi',
+)
+
 
 def _detect_health(text: str) -> list[PiiMatch]:
     out = [_match('HEALTH', *_group_tail(m), 'high') for m in _HEALTH_STRONG.finditer(text)]
+    out += [_match('HEALTH', *_group_tail(m), 'high') for m in _HEALTH_DX.finditer(text)]
     out += [_match('HEALTH', *_group_tail(m), 'medium') for m in _HEALTH_GATED.finditer(text)]
+    out += [_match('HEALTH', *_group_tail(m), 'medium') for m in _HEALTH_RESULT.finditer(text)]
+    for m in _GENETIC.finditer(text):
+        if _GENETIC_RESULT.search(m.group(0)) or _GENETIC_TEST.search(_before(text, m.start(), 30)):
+            out.append(_match('HEALTH', m.start(), m.group(0), 'medium'))
+    for m in _DISABILITY.finditer(text):
+        if _FOR_A_GROUP.search(_before(text, m.start(), 20)):
+            continue
+        out.append(_match('HEALTH', m.start(), m.group(0), 'medium'))
     out += [_match('HEALTH', m.start() + 1, m.group(1), 'medium') for m in _HEALTH_BRACKETED.finditer(text)]
     for m in _HEALTH_TREATMENT.finditer(text):
         value = m.group(1) if m.group(1) is not None else m.group(2)
         out.append(_match('HEALTH', m.start() + len(m.group(0)) - len(value), value, 'medium'))
+    # An allergy is health data whatever it is to: "alergi penisilin". Not "bebas alergi" or "obat alergi".
+    for m in _ALLERGY.finditer(text):
+        if _NOT_AN_ALLERGY.search(_before(text, m.start(), 12)):
+            continue
+        out.append(_match('HEALTH', *_group_tail(m), 'medium'))
+    out += [_match('HEALTH', *_group_tail(m), 'medium') for m in _SYMPTOM.finditer(text)]
+    out += [_match('HEALTH', *_group_tail(m), 'medium') for m in _HAVING_SYMPTOMS.finditer(text)]
+    for m in _FINDING.finditer(text):
+        if not _MEDICAL_CONTEXT.search(text[max(0, m.start() - 80) : m.start()]):
+            continue
+        out.append(_match('HEALTH', *_group_tail(m), 'medium'))
+    out += [_match('HEALTH', *_group_tail(m), 'medium') for m in _AFTER_AGE.finditer(text)]
     out += [_match('HEALTH', m.start(), m.group(0), 'medium') for m in _HEALTH_HOSPITAL.finditer(text)]
     return out
 
 
 _FINANCIAL = rx(
-    r'\b(?:gaji|penghasilan|pendapatan|saldo|utang|hutang|pinjaman|cicilan|tunggakan|limit(?:\s+kartu)?(?:\s+kredit)?)(?:\s+(?:saya|aku|gue|gw|gua|dia|beliau|bulanan|tahunan|per\s+bulan|sebulan|setahun|bersih|kotor|rekening|terakhir|total|di\s+\w+))*\s*(?:sebesar|sekitar|kira-kira|cuma|hanya|adalah|ada|masih|tinggal|sisa|senilai|:|=)?\s*((?:Rp\.?\s?)?\d[\d.,]*(?:\s*(?:rb|ribu|k|jt|juta|m|miliar|milyar|t|triliun)\b)?)',  # noqa: E501
+    r'\b(?:gaji|penghasilan|pendapatan|saldo|utang|hutang|pinjaman|cicilan|tunggakan|limit(?:\s+kartu)?(?:\s+kredit)?|tagihan\s+(?:kartu\s+kredit|cc|paylater|pinjol|kpr|cicilan)|(deposito|tabungan|simpanan|habis|rugi|kerugian|kalah|sisa\s+(?:pokok|pinjaman|utang|hutang|cicilan)|pokok\s+(?:pinjaman|utang|hutang)|outstanding|plafond?))'  # noqa: E501
+    r'(?:\s+(?:saya|aku|gue|gw|gua|dia|beliau|suami|istri|ayah|bapak|ibu|ortu|orang\s+tua|keluarga|bulanan|tahunan|pokok|tetap|per\s+bulan|sebulan|setahun|bersih|kotor|rekening|tabungan|deposito|terakhir|total|anda|kamu|kalian|pinjol|paylater|kpr|kta|online|leasing|kartu\s+kredit|per\s+hari\s+ini|hari\s+ini|saat\s+ini|sekarang|udah|sudah|sdh|baru|itu|ini|tsb|motor|mobil|rumah|hp|laptop|apartemen|bulan\s+ini|ovo|gopay|dana|shopeepay|linkaja|jenius|bca|bri|bni|mandiri|bsi|jago|seabank|di\s+\w+|ke\s+\w+))*'  # noqa: E501
+    r'\s*(?:sebesar|sekitar|kira-kira|cuma|hanya|adalah|ada|masih|tinggal|sisa|senilai|:|=)?\s*((?:Rp\.?\s?)?\d[\d.,]*(?:\s*(?:rb|ribu|k|jt|juta|m|miliar|milyar|t|triliun)\b)?)',  # noqa: E501
     'gi',
 )
 _TRAILING_PUNCT = rx(r'[.,]+$')
 _AMOUNT_HAS_UNIT = rx(r'rp|[a-z]$', 'i')
+# "Deposito 100 juta, bunga 5%" in a bank's ad is a product; it is personal data when someone holds it.
+_HOLDER = rx(r'\b(?:punya|memiliki|milik|nasabah|pak|bu|bapak|ibu|saya|aku|gue|gw|dia|beliau|debitur|peminjam)\b', 'i')
+
+_PERSON_NEAR = rx(
+    r'\b(?:saya|aku|gue|gw|gua|dia|beliau|kami|suami|istri|ayah|bapak|ibu|mama|papa|anak|adik|kakak|pernah|udah|sudah|lagi|sedang|jadi)\b'  # noqa: E501
+)
+_FINANCIAL_STATUS = rx(
+    r'\b(?:galbay|gagal\s+bayar|kredit\s+macet|kol(?:ektibilitas)?\s*[2-5]|masuk\s+(?:bi\s*checking|slik)|di-?blacklist\s+(?:bank|bi|ojk)|(?:dikejar|ditagih|didatangi)\s+(?:dc|debt\s+collector)|terlilit\s+(?:utang|hutang|pinjol))\b',  # noqa: E501
+    'gi',
+)
+_GALBAY = rx(r'^galbay$', 'i')
 
 
 def _detect_financial(text: str) -> list[PiiMatch]:
     out: list[PiiMatch] = []
     for m in _FINANCIAL.finditer(text):
-        raw = m.group(1)
+        raw = m.group(2)
         amount = _TRAILING_PUNCT.sub('', raw)
         if not _AMOUNT_HAS_UNIT.search(amount) and len(_digits(amount)) < 4:
             continue
+        if m.group(1) is not None and not _HOLDER.search(_before(text, m.start(), 40) + m.group(0)):
+            continue
         out.append(_match('FINANCIAL', m.start() + len(m.group(0)) - len(raw), amount, 'medium'))
+    # Statuses that say it without an amount: "udah galbay 3 bulan", "saya masuk BI checking".
+    for m in _FINANCIAL_STATUS.finditer(text):
+        # "risiko gagal bayar obligasi" is about markets; it is personal data when it is someone's status.
+        if not _GALBAY.search(m.group(0)) and not _PERSON_NEAR.search(_before(text, m.start(), 30)):
+            continue
+        out.append(_match('FINANCIAL', m.start(), m.group(0), 'medium'))
+    return out
+
+
+# Marital status said of a person: "saya sudah cerai", "sekarang janda dengan 2 anak".
+# "Pemohon an. Wulandari, status cerai hidup" names the status in a sentence; a form label ("Status: …") is a field.
+# "sudah 3 tahun menikah", "Bu Wati sudah bercerai": a status that needs no subject in front.
+_MARITAL = rx(
+    r'\b(?:saya|aku|gue|gw|dia|beliau|ibu|bapak|ayah|mama|papa|kakak|adik)\s+(?:(?:sudah|udah|sdh|baru|belum|blm|masih|sekarang|kini|seorang|berstatus|statusnya)\s+)*(cerai(?:\s+(?:hidup|mati))?|bercerai|janda|duda|menikah|kawin|lajang|single|nikah\s+siri|nikah|pisah\s+ranjang)\b'  # noqa: E501
+    r'|\b(?:sekarang|kini|berstatus|seorang|itu|statusnya)\s+(janda|duda|lajang)\b'
+    r'|\b(janda|duda)(?=\s+(?:anak|beranak|dengan\s+\d|\d|cerai|ditinggal|tanpa\s+anak|muda|kembang)\b)'
+    r'|\bstatus(?:nya)?\s+(?:perkawinan\s+|pernikahan\s+)?(cerai\s+(?:hidup|mati)|janda|duda|kawin|menikah|sudah\s+menikah|belum\s+(?:kawin|menikah)|lajang|nikah\s+siri)\b'  # noqa: E501
+    r'|\b(pisah\s+ranjang)\b'
+    r'|\b(?:sudah|udah|sdh|telah)\s+(?:\d+\s+tahun\s+(menikah|nikah|berumah\s+tangga)|(bercerai|cerai(?:\s+(?:hidup|mati))?|menjanda|menduda))\b',  # noqa: E501
+    'gi',
+)
+_WEDDING = rx(r'^(?:menikah|kawin|nikah)$', 'i')
+_ALREADY = rx(r'\b(?:sudah|udah|sdh|belum|blm|berstatus|status|statusnya|perkawinan|pernikahan|tahun)\s+$', 'i')
+
+
+def _detect_marital_status(text: str) -> list[PiiMatch]:
+    out: list[PiiMatch] = []
+    for m in _MARITAL.finditer(text):
+        value = next(g for g in m.groups() if g is not None)
+        # "saya menikah tahun depan" is a plan; "saya sudah menikah" or "berstatus janda" is a status.
+        if _WEDDING.search(value) and not _ALREADY.search(m.group(0)[: len(m.group(0)) - len(value)]):
+            continue
+        out.append(_match('MARITAL_STATUS', m.start() + len(m.group(0)) - len(value), value, 'medium'))
     return out
 
 
@@ -356,8 +590,25 @@ _RELIGION = rx(
 )
 
 
+# An adjective of a person: "saya muslim", "suami saya kristen protestan". Not "umat Muslim" or "Gereja Kristen".
+_RELIGION_ADJECTIVE = rx(
+    r'\b(?:saya|aku|gue|gw|dia|beliau|kami|keluarga\s+(?:saya|kami)|(?:suami|istri|ayah|bapak|ibu|mama|papa|ortu|orang\s+tua|anak|adik|kakak|pacar|calon)(?:\s+(?:saya|aku|gue|dia)|nya|ku)?)\s+(?:(?:seorang|itu|adalah|sudah|udah|baru|jadi)\s+)?(muslim(?:ah)?|islam|nasrani|kristiani?|kristen(?:\s+protestan)?|protestan|katolik|katholik|hindu|buddhis|buddha|budha|konghucu|khonghucu|mualaf|muallaf|ateis|atheis|agnostik|non[- ]?muslim)\b',  # noqa: E501
+    'gi',
+)
+# A conversion: "baru pindah agama, sekarang Kristen", "masuk Islam tahun lalu".
+_CONVERSION = rx(
+    r'\b(?:pindah\s+agama|murtad|convert|mualaf)\b[^\n.]{0,30}?\b(?:jadi|menjadi|ke|sekarang|kini)\s+(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Hindu|Buddha|Budha|Konghucu|Khonghucu)\b|\bmasuk\s+(Islam|Kristen|Katolik|Hindu|Buddha)\b',  # noqa: E501
+    'gi',
+)
+
+
 def _detect_religion(text: str) -> list[PiiMatch]:
-    return [_match('RELIGION', *_group_tail(m), 'high') for m in _RELIGION.finditer(text)]
+    out = [_match('RELIGION', *_group_tail(m), 'high') for m in _RELIGION.finditer(text)]
+    out += [_match('RELIGION', *_group_tail(m), 'medium') for m in _RELIGION_ADJECTIVE.finditer(text)]
+    for m in _CONVERSION.finditer(text):
+        value = m.group(1) if m.group(1) is not None else m.group(2)
+        out.append(_match('RELIGION', m.start() + len(m.group(0)) - len(value), value, 'medium'))
+    return out
 
 
 # Indonesian plate region codes (kode wilayah TNKB).
@@ -368,6 +619,8 @@ _PLATE_REGIONS = (
 _PLATE = rx(rf'(?<![A-Za-z0-9])(?:{_PLATE_REGIONS})\s?\d{{1,4}}\s?[A-Z]{{1,3}}(?![A-Za-z0-9])')
 _PLATE_SPACED = rx(r'\s\d+\s')
 _PLATE_KEYWORD = rx(r'\b(plat|nopol|no\.?\s*pol|tnkb|kendaraan|motor|mobil)\b')
+# "motor b3456xyz": any case, but only right after a vehicle word.
+_PLATE_LOOSE = rx(rf'(?<![A-Za-z0-9])(?:{_PLATE_REGIONS})\s?\d{{1,4}}\s?[A-Z]{{1,3}}(?![A-Za-z0-9])', 'gi')
 
 
 def _detect_plates(text: str) -> list[PiiMatch]:
@@ -378,6 +631,9 @@ def _detect_plates(text: str) -> list[PiiMatch]:
         if not spaced and not keyword:
             continue
         out.append(_match('PLATE', m.start(), m.group(0), 'high' if keyword else 'medium'))
+    for m in _PLATE_LOOSE.finditer(text):
+        if _PLATE_KEYWORD.search(_before(text, m.start(), 20)):
+            out.append(_match('PLATE', m.start(), m.group(0), 'medium'))
     return out
 
 
@@ -386,7 +642,9 @@ _TITLE_WORDS = {
     'bapak', 'ibu', 'pak', 'bu', 'mas', 'mbak', 'kak', 'bang', 'presiden', 'wakil', 'menteri', 'direktur',
     'dokter', 'dr', 'drs', 'dra', 'prof', 'ir', 'h', 'hj', 'guru', 'lurah', 'camat', 'bupati', 'walikota', 'wali',
     'gubernur', 'kepala', 'dosen', 'ketua', 'manajer', 'admin', 'kurir', 'driver', 'ustadz', 'ustadzah', 'sdr',
-    'sdri', 'saudara', 'saudari', 'tn', 'ny', 'nn',
+    'sdri', 'saudara', 'saudari', 'tn', 'ny', 'nn', 'mr', 'mrs', 'ms', 'miss', 'mister', 'koh', 'ko', 'cik', 'ci', 'cici',
+    'om', 'tante', 'kang', 'teh', 'bli', 'cak', 'mbok', 'habib', 'gus', 'romo', 'pastor', 'pendeta', 'pdt', 'alm', 'almh',
+    'almarhum', 'almarhumah', 'kh', 'dear',
 }
 # Words that end (or rule out) a name in chat: "nama saya budi mau refund", "Ibu Kota", "atas nama perusahaan".
 _NOT_NAME = set((
@@ -409,7 +667,17 @@ _NOT_NAME = set((
     'table kolom column variabel fungsi function class akun aplikasi app server database program manfaat '
     # Institutions: "atas nama Pengendali Data", "atas nama Menteri Keuangan".
     'pengendali prosesor pemerintah kementerian keuangan negeri daerah republik indonesia rakyat dewan lembaga '
-    'badan dinas direktorat komisi mahkamah pengadilan kepolisian polri tni sekretariat umum nasional pusat'
+    'badan dinas direktorat komisi mahkamah pengadilan kepolisian polri tni sekretariat umum nasional pusat '
+    # What follows a role or a greeting when it is not a name: "Pelanggan Setia", "Karyawan Tetap", "Halo Semua".
+    'setia prioritas vip tetap kontrak berprestasi terbaik terhormat yth tercinta terkasih kesayangan aktif harian '
+    'magang honorer swasta asing lokal premium reguler perorangan individu lama kakak adik semuanya sir madam all '
+    'everyone there world guys team folks friends bro sis gan min bos boss say sayang beb dek service support '
+    'masukkan isi ketik pilih enter your sobat '
+    # Cities, which a greeting or a list can put where a name would be: "Halo Bandung".
+    'jakarta bandung surabaya medan semarang makassar palembang bogor depok tangerang bekasi yogyakarta jogja solo '
+    'malang denpasar bali batam pekanbaru padang manado balikpapan samarinda pontianak banjarmasin ambon jayapura '
+    'kupang mataram lampung aceh cirebon tasikmalaya sukabumi serang cilegon purwokerto kediri jember madiun '
+    'magelang salatiga'
 ).split(' '))
 # Particles inside a name: "Nur Aisyah binti Ahmad", "Van der Berg".
 _NAME_PARTICLES = {'bin', 'binti', 'van', 'der', 'de', 'al', 'el', 'da', 'dos'}
@@ -426,6 +694,7 @@ def _name_at(text: str, start: int, confidence: Confidence, capitalized: bool = 
     Leading titles are skipped. `capitalized` requires each word to start with a capital (for weak triggers).
     """
     words: list[tuple[int, int, str]] = []
+    lowercase_ambiguous = False  # "saya budi" alone is a name only if a second name follows
     pos = start
     while len(words) < 5:
         m = _NAME_TOKEN.match(text, pos)
@@ -442,13 +711,19 @@ def _name_at(text: str, start: int, confidence: Confidence, capitalized: bool = 
         if words and bare in _TITLE_WORDS:
             return None  # "barangnya buat mbak yuni": not one name
         if capitalized and not _UPPER_START.match(word) and bare not in _NAME_PARTICLES:
-            break
+            # A cue plus a common name is enough without capitals: "aku andi yg td chat", "saya siti rahayu".
+            if (not _is_known_name(bare)) if words else (bare not in GIVEN_NAMES and bare not in AMBIGUOUS_GIVEN_NAMES):
+                break
+            if not words and bare in AMBIGUOUS_GIVEN_NAMES:
+                lowercase_ambiguous = True
         words.append((word_start, word_start + len(word), bare))
         if word.endswith('.') and len(bare) > 1:
             break  # "… Budi." ends the sentence; "M. Rizky" goes on
     while words and words[-1][2] in _NAME_PARTICLES:
         words.pop()
     if not words or words[0][2] in _ORGANIZATION:
+        return None
+    if lowercase_ambiguous and len(words) == 1:
         return None
     value = _TRAILING_DOT_COMMA.sub('', text[words[0][0] : words[-1][1]])
     if len(_ASCII_LETTER.findall(value)) < 2:
@@ -458,7 +733,7 @@ def _name_at(text: str, start: int, confidence: Confidence, capitalized: bool = 
 
 # Phrases that introduce a name, in any case: "atas nama budi santoso", "nama saya Rina", "bernama Rizky".
 _NAME_INTRO = rx(
-    r'\b(?:a\.\s?n\.?|a\/n|atas\s+nama|nama\s+(?:lengkap\s+)?(?:saya|aku|ku|gue|gw|sy)|namaku|namanya|nama\s+(?:lengkap\s+)?(?:anak|ibu|bapak|ayah|suami|istri|adik|kakak|teman|orang\s+tua)\s+(?:saya|aku|kami|gue)|bernama|dengan\s+nama|my\s+name\s+is)(?![A-Za-z])[ \t]*(?:[:=][ \t]*)?',  # noqa: E501
+    r'\b(?:a\.\s?n\.?|a\/n|an\.|atas\s+nama|nama\s+(?:lengkap\s+)?(?:saya|aku|ku|gue|gw|sy)|namaku|namanya|nama\s+(?:lengkap\s+)?(?:anak|ibu|bapak|ayah|suami|istri|adik|kakak|teman|orang\s+tua)\s+(?:saya|aku|kami|gue)|nama\s+(?:akun|pengguna|pemilik|penerima|pengirim|pelanggan|nasabah|pasien|siswa|karyawan|pemesan)|bernama|dengan\s+nama|my\s+name\s+is|nami\s+(?:abdi|kulo|kula|simkuring|sim\s+kuring)|jeneng(?:ku|\s+(?:kula|kulo|aku|kulo))|asma\s+kula)(?![A-Za-z])[ \t]*(?:[:=][ \t]*)?',  # noqa: E501
     'gi',
 )
 # Weaker cues, so the name itself must be capitalized: "saya Rina Wulandari", "halo, dengan Agus", "Penerima Budi".
@@ -466,8 +741,42 @@ _NAME_CUE = rx(
     r'\b(?:saya|aku|gue|gw)[ \t]*,?[ \t]+|\b(?:halo|hai|hallo|selamat\s+(?:pagi|siang|sore|malam))[ \t]*,?[ \t]*(?:ini|dengan|dgn)[ \t]+|\b(?:penerima|pengirim|pemesan|pembeli)[ \t]+',  # noqa: E501
     'gi',
 )
-_HONORIFIC = rx(r'(?<![\w-])(?:Bapak|Ibu|Pak|Bu|Sdr\.?|Sdri\.?|Saudara|Saudari|Mas|Mbak|Kak|Bang|Tn\.|Ny\.|Nn\.)[ \t]+', 'gi')
+_HONORIFIC = rx(
+    r'(?<![\w-])(?:Bapak|Bpk\.?|Bp\.|Ananda|Ibu|Pak|Bu|Sdr\.?|Sdri\.?|Saudara|Saudari|Mas|Mbak|Kak|Bang|Tn\.|Ny\.|Nn\.)[ \t]+',  # noqa: E501
+    'gi',
+)
 _LOWERCASE_OK = rx(r'^(?:bapak|ibu|mbak)\b')
+# Titles and forms of address in their usual case only: "CI Pipeline" and "Uni Eropa" are not people.
+_TITLE_CUE = rx(
+    r'(?<![\w-])(?:Mr\.?|Mrs\.?|Ms\.?|Miss|Mister|Dr\.|Prof\.|Ir\.|Drs\.|Dra\.|H\.|Hj\.|KH\.|Pdt\.|Alm\.|Almh\.|[Aa]lmarhum(?:ah)?|[Kk]oh?|[Cc]ik|[Cc]ici|[Oo]m|[Tt]ante|[Kk]ang|[Bb]li|[Cc]ak|[Mm]bok|[Hh]abib|[Gg]us|[Uu]stadz(?:ah)?|[Rr]omo|[Pp]astor|[Pp]endeta)[ \t]+',  # noqa: E501
+    'g',
+)
+# Roles that a name follows in support tickets, reports, and logs: "Pelanggan Budi Santoso", "Kurir Supardi".
+_ROLE_CUE_SOURCE = r'\b(?:pelanggan|customer|konsumen|pembeli|pemesan|nasabah|pasien|patient|kurir|driver|sopir|supir|karyawan|karyawati|pegawai|staf|staff|siswa|siswi|murid|santri|mahasiswa|mahasiswi|tamu|pemilik|penyewa|penghuni|peminjam|debitur|pelapor|terlapor|korban|pelaku|tersangka|terdakwa|saksi|kepala\s+keluarga|penggugat|tergugat|pemohon|termohon|pewaris|klien|konseli|tertanggung|penumpang|berinisial|inisial|istrinya|suaminya|anaknya|adiknya|kakaknya|ayahnya|ibunya|wakilnya|atasannya|temannya|tetangga|pacar|calon|bayi(?:[ \t]+(?:laki-laki|perempuan))?|balita|cucu(?:nya)?|keponakan(?:nya)?|anggota|member|warga|jamaah|jemaat|u\/|utk\.?|untuk|kepada|kpd\.?)[ \t]+'  # noqa: E501
+_ROLE_CUE = rx(_ROLE_CUE_SOURCE, 'gi')
+_ROLE_AT_START = rx('^(?:' + _ROLE_CUE_SOURCE[len(r'\b') :] + ')', 'i')
+_LOOSE_ROLE = rx(
+    r'^(?:customer|patient|driver|staff|staf|tamu|calon|pacar|korban|saksi|pelaku|tetangga|utk|untuk|kepada|kpd|anggota|member|warga|jamaah|jemaat)\b',  # noqa: E501
+    'i',
+)
+_ACRONYM = rx(r'^[A-Z]{2,5}$')
+_INITIALS_CUE = rx(r'inisial', 'i')
+# Greetings that open a message to someone: "Halo Budi,", "Dear Mr. Hendra Gunawan,".
+# "Pagi, Budi!" opens a line; "Sinar Pagi, Bogor" in the middle of one is a village.
+_GREETING_CUE = rx(
+    r"(?:^|(?<=[\s,.!]))(?:halo|hallo|hai|hi|hello|hey|dear|selamat\s+(?:pagi|siang|sore|malam)|assalamu'?alaikum)[ \t]*,?[ \t]+|^[ \t]*(?:pagi|siang|sore|malam)[ \t]*,?[ \t]+",  # noqa: E501
+    'gim',
+)
+_GREETING_END = rx(r'^[ \t]*(?:[,!:\r\n]|\.(?!\S)|$)')
+
+
+def _is_known_name(bare: str) -> bool:
+    return bare in GIVEN_NAMES or bare in AMBIGUOUS_GIVEN_NAMES or bare in FAMILY_NAMES or bare in SECOND_NAMES
+
+
+# Javanese names the list cannot hold one by one end the same way: Hartini, Sumiyati, Rosmawati, Suryanto, Hadiyono.
+_JAVANESE_NAME = rx(r'^[a-z]{2,}(?:wati|yati|iyati|ningsih|ningrum|astuti|tini|rini|yanto|yono|wanto|harjo)$')
+_PLACE_PREPOSITION = rx(r'^(?:di|daerah|arah|wilayah|kawasan|menuju|sekitar)$')
 _REPORTED_SPEECH = rx(
     r'\b(?:tadi|kemarin|kemaren|katanya|kata)[ \t]+([A-Za-z]{3,15})[ \t]+(bilang|ngomong|nanya|nanyain|minta|cerita|nelpon|telpon|ngechat|nge-?wa|kasih\s+tau|ngasih\s+tau)\b',  # noqa: E501
     'gi',
@@ -499,6 +808,24 @@ def _detect_names(text: str) -> list[PiiMatch]:
         # ("bapak ahmad"); the short ones ("kak", "pak", "bu") too often just address the reader.
         lowercase_ok = _LOWERCASE_OK.search(m.group(0)) is not None
         add(_name_at(text, m.end(), 'medium', not lowercase_ok))
+    for m in _TITLE_CUE.finditer(text):
+        add(_name_at(text, m.end(), 'medium', True))
+    for m in _ROLE_CUE.finditer(text):
+        found = _name_at(text, m.end(), 'medium', True)
+        # "Kurir JNE" is a company; "berinisial RK" is the only place two capitals are a person.
+        if not found or (_ACRONYM.search(found.value) and not _INITIALS_CUE.search(m.group(0))):
+            continue
+        # "untuk Google Chrome", "Driver Printer Canon", "Tamu Undangan": after a preposition or a word that is also
+        # English or generic, at least one word must be a known name.
+        if _LOOSE_ROLE.search(m.group(0)) and not any(_is_known_name(w.lower()) for w in _js.split_ws(found.value)):
+            continue
+        add(found)
+    for m in _GREETING_CUE.finditer(text):
+        found = _name_at(text, m.end(), 'medium', True)
+        # A greeting names someone only when the name closes it: "Halo Budi," but not "Halo Kak, Saya mau" or
+        # "Hello, Node.js User!".
+        if found and _GREETING_END.search(text[found.end :]):
+            add(found)
     # "tadi budi bilang …": reported speech names whoever spoke, unless that is a role or a thing.
     for m in _REPORTED_SPEECH.finditer(text):
         word = m.group(1)
@@ -545,6 +872,672 @@ def _detect_chat_senders(text: str) -> list[PiiMatch]:
                 continue
             out.append(_match('NAME', m.start(1) + group.find(sender), sender, 'high'))
     return out
+
+
+# A word right before a capitalized run that makes it a place or an organization: "Jl. Ahmad Yani", "RS Siti
+# Khadijah", "Universitas Ahmad Dahlan", "Toko Budi Jaya".
+_PLACE_WORDS = frozenset((
+    'jl jln jalan gg gang lorong komp komplek kompleks perum perumahan cluster universitas univ institut sekolah '
+    'fakultas akademi politeknik kampus sd sdn smp smpn sma sman smk smkn mi mts ma pondok ponpes pesantren masjid '
+    'musholla mushola langgar gereja pura vihara klenteng rs rsu rsud rsia rsj sakit puskesmas klinik apotek toko '
+    'warung pt cv ud yayasan koperasi bank stasiun terminal bandara pelabuhan gedung wisma hotel mall plaza pasar '
+    'taman museum stadion lapangan gor gelora kampung desa kelurahan kecamatan kabupaten kota provinsi gunung '
+    'pantai pulau sungai danau monumen tugu bendungan rusun apartemen tower blok aula balai lembaga dinas kantor '
+    'perpustakaan piala liga festival bung way tanjung teluk ujung muara kuala bukit lubuk pematang sei '
+    # Batak and Karo villages are often a clan name after one of these: "Lumban Siregar", "Pintu Pohan".
+    'lumban lobu huta dolok bandar urung nagori talun pamah perkebunan sosor aek banjar pintu raja siraja debata '
+    'kel kec kab kp ds dsn '
+    # Products and events are named like people too: "Paket Hemat Ramadhan", "Promo Spesial Kartini".
+    'paket promo program diskon menu edisi spesial special event lomba produk varian'
+).split(' '))
+# Words that end a run of names in a place name: "Indra Jaya", "Laras Selatan", "Sido Makmur".
+_PLACE_SUFFIX = frozenset((
+    'jaya makmur raya selatan utara barat timur tengah permai asri sejahtera sentosa abadi mulya baru lama damai '
+    'harapan mekar gemilang kencana rejo mukti karya bakti jitu pahlawan'
+).split(' '))
+_CAPITALIZED_RUN = rx(
+    "(?<![\\w@.'\u2019-])[A-Z][A-Za-z'\u2019-]*\\.?(?:[ \\t]+(?:[A-Z][A-Za-z'\u2019-]*\\.?|bin|binti|van|der|de|al|el))+", 'g'
+)
+_NON_WS = rx(r'\S+', 'g')
+_PREV_WORD = rx(r'([A-Za-z]+)\.?[ \t]*$')
+_SHORT_WORD = rx(r'^[A-Za-z]{2,5}$')
+
+
+# A word of a capitalized run: (start, end, word as written, bare lowercase word).
+_Word = tuple[int, int, str, str]
+
+
+def _nameish(words: list[_Word], k: int) -> bool:
+    if k >= len(words):
+        return False
+    word, bare = words[k][2], words[k][3]
+    if bare in _NAME_PARTICLES:
+        return k + 1 < len(words)  # "bin Abdullah", never a trailing "bin"
+    return (
+        _UPPER_START.match(word) is not None and bare not in _NOT_NAME and bare not in _TITLE_WORDS
+        and bare not in _ORGANIZATION and bare not in _PLACE_WORDS and bare not in _PLACE_SUFFIX
+        and not bare.endswith('nya')
+    )
+
+
+def _extend_name(words: list[_Word], start: int) -> int:
+    k = start
+    while k < len(words) and k - start < 5 and _nameish(words, k):
+        k += 1
+        # "… Togar Simanjuntak. Tamu: …" ends with the sentence; "M. Rizky" goes on.
+        if words[k - 1][2].endswith('.') and len(words[k - 1][3]) > 1:
+            break
+    while k > start and words[k - 1][3] in _NAME_PARTICLES:
+        k -= 1
+    return k - start
+
+
+def _detect_known_names(text: str) -> list[PiiMatch]:
+    """Names with no cue around them, recognized by their parts.
+
+    A common given name before another name ("Hendra Gunawan", "SITI RAHAYU" in a bank statement), a family or clan
+    name ("Togar Simanjuntak"), a Balinese name ("I Made Wirawan"), or a Chinese-Indonesian one ("Lim Swie Hong").
+    """
+    out: list[PiiMatch] = []
+    for m in _CAPITALIZED_RUN.finditer(text):
+        words: list[_Word] = [
+            (m.start() + w.start(), m.start() + w.start() + len(_TRAILING_DOT_COMMA.sub('', w.group(0))), w.group(0),
+             (w.group(0)[:-1] if w.group(0).endswith('.') else w.group(0)).lower())
+            for w in _NON_WS.finditer(m.group(0))
+        ]
+        prev = _PREV_WORD.search(text[max(0, m.start() - 30) : m.start()])
+        if prev and prev.group(1).lower() in _PLACE_WORDS:
+            continue
+
+        i = 0
+        while i < len(words) - 1:
+            w_start, _, word, bare = words[i]
+            if bare in _PLACE_WORDS or bare in _ORGANIZATION:
+                break  # the rest names the place
+            nxt = words[i + 1][3]
+            length = 0
+            # "I" is also English, so it is checked before the other rules rule it out.
+            if word in ('I', 'Ni') and nxt in BALINESE_NAMES:
+                length = 1 + _extend_name(words, i + 1)
+            elif not _nameish(words, i):
+                i += 1
+                continue
+            elif bare in CHINESE_FAMILY_NAMES and all(
+                _nameish(words, i + d) and _SHORT_WORD.search(words[i + d][2]) for d in (1, 2)
+            ):
+                length = 3
+            # "Hendra Gunawan"; "Dewi Lestari", "Wahyu Hidayat", but not two words that are both also common nouns
+            # ("Permata Intan").
+            elif (bare in GIVEN_NAMES and _nameish(words, i + 1)) or (
+                bare in AMBIGUOUS_GIVEN_NAMES and _nameish(words, i + 1)
+                and (nxt in GIVEN_NAMES or nxt in FAMILY_NAMES or nxt in SECOND_NAMES)
+            ):
+                length = _extend_name(words, i)
+            else:
+                # A family name after one unknown word ("Togar Simanjuntak") or after known names only. "BI-FAST CR
+                # SITI RAHAYU" starts at SITI, not at BI-FAST. Two clan names in a row ("Simamora Hasibuan") name a
+                # village.
+                j = i + 1
+                while j <= i + 3 and _nameish(words, j):
+                    if words[j][3] not in FAMILY_NAMES:
+                        if not _is_known_name(words[j][3]):
+                            break
+                        j += 1
+                        continue
+                    lone = j == i + 1 and bare not in FAMILY_NAMES
+                    if lone or bare in GIVEN_NAMES or bare in AMBIGUOUS_GIVEN_NAMES:
+                        length = max(j - i + 1, _extend_name(words, i))
+                    break
+            if length < 2:
+                i += 1
+                continue
+            last_end = words[i + length - 1][1]
+            out.append(_match('NAME', w_start, text[w_start:last_end], 'medium'))
+            i += length
+    return out
+
+
+# Closings that put the sender's name on the same or the next line: "Salam,\nRina Kartika Sari".
+_SIGN_OFF = rx(
+    r"^[ \t]*(?:salam(?:\s+hangat)?|hormat\s+(?:saya|kami)|terima\s*kasih|makasih|regards|best\s+regards|kind\s+regards|warm\s+regards|best|thanks|thank\s+you|cheers|sincerely|yours\s+sincerely|wassalam(?:u'?alaikum)?)[ \t]*[,.!]?[ \t]*(?:\r?\n[ \t]*)+",  # noqa: E501
+    'gim',
+)
+_LEADING_TITLES = rx(r'^(?:\w+\.\s*)+')
+_FROM_COMMA = rx(r',.*$')
+_TRAILING_CR = rx(r'\r$')
+_DASH_SIGN = rx("(?:^|(?<=[.!?)\"\u201d]))[ \\t]*[-\u2013\u2014~][ \\t]*(?=[A-Z])", 'gm')
+_DASH_SIGN_END = rx(r'^[ \t]*(?:,|\r?\n|$)')
+
+
+def _detect_signatures(text: str) -> list[PiiMatch]:
+    out: list[PiiMatch] = []
+    for m in _SIGN_OFF.finditer(text):
+        start = m.end()
+        line_end = text.find('\n', start)
+        line = _js.trim(_TRAILING_CR.sub('', text[start : len(text) if line_end == -1 else line_end]))
+        found = _name_at(text, start, 'medium', True)
+        # The whole line is the name (titles and degrees aside): "Agus Salim Nasution", "Dr. Rina, M.Sc.".
+        if found and len(found.value) >= len(_FROM_COMMA.sub('', _LEADING_TITLES.sub('', line, count=1), count=1)) - 1:
+            out.append(found)
+    # A review or a quote signed with a dash: "… sudah ramah. - Rizal, Makassar". A dash also starts list items, so the
+    # name must be a known one and close the line or be followed by a comma.
+    for m in _DASH_SIGN.finditer(text):
+        found = _name_at(text, m.end(), 'medium', True)
+        if not found or not any(_is_known_name(w.lower()) for w in _js.split_ws(found.value)):
+            continue
+        if _DASH_SIGN_END.search(text[found.end :]):
+            out.append(found)
+    return out
+
+
+_DISPLAY_NAME = rx(
+    "(?:^|(?<=[\\s:,;(]))\"?((?:[A-Z][A-Za-z'\u2019.-]*[ \\t]+){0,4}[A-Z][A-Za-z'\u2019.-]*)\"?[ \\t]*<[^<>\\s@]+@[^<>\\s]+>",
+    'gm',
+)
+
+
+def _detect_display_names(text: str) -> list[PiiMatch]:
+    """The display name in front of an e-mail address: "From: Budi Santoso <budi.s@gmail.com>"."""
+    out: list[PiiMatch] = []
+    for m in _DISPLAY_NAME.finditer(text):
+        group = m.start() + m.group(0).find(m.group(1))
+        group_end = group + len(m.group(1))
+        # The name is what reaches the "<": "MIT License. Einar Otto Stangvik <…>" is Einar Otto Stangvik.
+        for w in _NON_WS.finditer(m.group(1)):
+            found = _name_at(text, group + w.start(), 'high', True)
+            if found and found.end >= group_end - 1:
+                out.append(found)
+                break
+    return out
+
+
+# Words after "@" that are code: JSDoc tags, CSS at-rules, decorators, and annotations.
+_CODE_AT = frozenset((
+    'param params arg argument returns return type typedef template example deprecated see link throws throw '
+    'default since version author license preserve todo fixme internal private public protected override readonly '
+    'module namespace callback property prop event fires listens description summary inheritdoc abstract async '
+    'media import keyframes supports layer tailwind apply use forward include mixin extend charset container page '
+    'font-face component injectable input output test before after inject directive pipe ngmodule effect select '
+    'staticmethod classmethod dataclass pytest app router api client mock patch fixture ts-ignore ts-expect-error '
+    'jsx jsximportsource vite babel types entity column table get post put delete controller service observable '
+    'satisfies overload implements augments class constructor enum function member memberof method name this '
+    'constant const copyright exports external file fileoverview global ignore instance interface kind lends mixes '
+    'package requires static tutorial yields alias generator beta alpha experimental remarks typeparam defaultvalue '
+    'label linkcode linkplain virtual sealed decorator args options props context state value data'
+).split(' '))
+_HANDLE_CUE = rx(
+    r'\b(?:ig|instagram|insta|tiktok|twitter|threads|telegram|tele|dm|akun|account|follow|mention|tag|username|handle|fb|facebook|line|youtube|yt)\b'  # noqa: E501
+)
+# After a space or punctuation, never inside a word or an address ("b***@gmail.com").
+_HANDLE = rx("(?<![^\\s(,:;\"'[])@([A-Za-z0-9_](?:[A-Za-z0-9_.]{0,28}[A-Za-z0-9_])?)(?![\\w@/(-]|\\.\\w)", 'g')
+_ALL_DIGITS = rx(r'^\d+$')
+_DOMAIN = rx(r'\.(?:com|net|org|id|io|co|dev|app|me)$', 'i')
+_COMMENT_LEAD = rx(r'^\s*(?:\*|\/\/|#)')
+_HANDLE_SHAPE = rx(r'[\d._]')
+_HANDLE_CHARS = rx(r'^[a-z0-9_.]+$')
+
+
+def _detect_handles(text: str) -> list[PiiMatch]:
+    """Social media handles in chat and tickets: "cek DM dari @siti.rahayu88". Not "@param", "@media", "@types/node"."""
+    out: list[PiiMatch] = []
+    for m in _HANDLE.finditer(text):
+        handle = m.group(1)
+        if handle.lower() in _CODE_AT or handle.split('.')[0].lower() in _CODE_AT or _ALL_DIGITS.search(handle):
+            continue
+        if _DOMAIN.search(handle):
+            continue  # a domain
+        line_start = text.rfind('\n', 0, m.start()) + 1
+        lead = text[line_start : m.start()]
+        # A decorator stands alone at the start of a line ("@pytest.fixture"); doc comments are code ("* @param").
+        if _COMMENT_LEAD.search(lead):
+            continue
+        if not _js.trim(lead) and not _js.trim(text[m.end() :].split('\n', 1)[0]):
+            continue
+        shaped = _HANDLE_SHAPE.search(handle) is not None and len(handle) >= 5 and _HANDLE_CHARS.search(handle) is not None
+        if not shaped and not _HANDLE_CUE.search(_before(text, m.start(), 40)):
+            continue
+        out.append(_match('NAME', m.start() + 1, handle, 'medium'))
+    return out
+
+
+# A label on its own line and the value on the next, as receipts, bank transfer screens, and KTP scans without colons
+# lay them out: "Penerima\nDEWI LESTARI", "Agama\nISLAM".
+_STACKED_TYPES: frozenset[PiiType] = frozenset((
+    'NAME', 'NIK', 'KK', 'NPWP', 'NIP', 'SIM', 'BPJS', 'PHONE', 'BANK_ACCOUNT', 'EMAIL', 'BIRTH_DATE', 'RELIGION',
+    'GENDER', 'MARITAL_STATUS',
+))
+_RELIGION_WORD = rx(
+    r'^(?:islam|kristen(?:\s+protestan)?|protestan|katolik|katholik|hindu|buddha|budha|konghucu|khonghucu|kepercayaan.*)$', 'i'
+)
+_MARITAL_WORD = rx(
+    r'^(?:kawin|belum\s+kawin|cerai\s+hidup|cerai\s+mati|menikah|belum\s+menikah|lajang|janda|duda|single|married|divorced|widowed)$',  # noqa: E501
+    'i',
+)
+_LABEL_SEPARATOR_CHAR = re.compile(r'[:=]')
+
+
+def _detect_stacked_labels(text: str) -> list[PiiMatch]:
+    out: list[PiiMatch] = []
+    # Lines split on "\n" only, so a CRLF file keeps the value on the very next line.
+    lines: list[tuple[int, str]] = []
+    pos = 0
+    while pos <= len(text):
+        end = text.find('\n', pos)
+        if end == -1:
+            end = len(text)
+        lines.append((pos, _TRAILING_CR.sub('', text[pos:end])))
+        pos = end + 1
+    for i in range(len(lines) - 1):
+        label = _js.trim(lines[i][1])
+        if not label or len(label) > 30 or _LABEL_SEPARATOR_CHAR.search(label) or len(_js.split_ws(label)) > 3:
+            continue
+        pii_type = field_type(label)
+        if not pii_type or pii_type not in _STACKED_TYPES:
+            continue
+        next_start, next_text = lines[i + 1]
+        value = _js.trim(next_text)
+        if not value or len(value) > 60 or field_type(value) or not is_plausible_value(pii_type, value, label):
+            continue
+        if pii_type == 'NAME' and not all(
+            _UPPER_START.match(w) and w.lower() not in _NOT_NAME for w in _js.split_ws(value)
+        ):
+            continue
+        if pii_type == 'RELIGION' and not _RELIGION_WORD.search(value):
+            continue
+        if pii_type == 'MARITAL_STATUS' and not _MARITAL_WORD.search(value):
+            continue
+        out.append(_match(pii_type, next_start + next_text.find(value), value, 'medium'))
+    return out
+
+
+_COLONLESS_LABEL = rx(
+    r'^[ \t]*(Jenis[ \t]+Kelamin|Kelamin|Agama|Status[ \t]+Perkawinan|Status[ \t]+Kawin|Perkawinan)[ \t]+(?![:=])([A-Za-z][A-Za-z -]{1,24}?)(?=[ \t]*(?:\r?$|[ \t]{2,}|[ \t]+(?:Gol|Golongan|RT|RW)\b))',  # noqa: E501
+    'gim',
+)
+_GENDER_WORD = rx(r'^(?:laki-?\s?laki|lelaki|perempuan|pria|wanita)$', 'i')
+
+
+def _detect_colonless_labels(text: str) -> list[PiiMatch]:
+    """KTP scans that lost their colons keep label and value on one line: "Jenis Kelamin LAKI-LAKI", "Agama KRISTEN".
+
+    The values come from a closed list, so nothing else on such a line is taken.
+    """
+    out: list[PiiMatch] = []
+    for m in _COLONLESS_LABEL.finditer(text):
+        pii_type = field_type(m.group(1))
+        value = m.group(2)
+        if pii_type == 'GENDER' and not _GENDER_WORD.search(value):
+            continue
+        if pii_type == 'RELIGION' and not _RELIGION_WORD.search(value):
+            continue
+        if pii_type == 'MARITAL_STATUS' and not _MARITAL_WORD.search(value):
+            continue
+        if pii_type:
+            out.append(_match(pii_type, *_group_tail(m, 2), 'medium'))
+    return out
+
+
+_PHONE_OWNER = rx(
+    r'(?:\+62|0062|62|0)[ \t-]?8[\d \t.-]{7,16}\d[ \t]*\([ \t]*((?:(?:Pak|Bu|Bapak|Ibu|Mas|Mbak|Kak|Bang)[ \t]+)?[A-Z][a-z]+(?:[ \t]+[A-Z][a-z]+){0,2})[ \t]*\)',  # noqa: E501
+    'g',
+)
+_SPACES = rx(r'[ \t]+')
+
+
+def _detect_phone_owners(text: str) -> list[PiiMatch]:
+    """A name in brackets right after a phone number: "WA: 0812 3456 7890 (Andi)", "0813-1111-2222 (Bu Sari)"."""
+    out: list[PiiMatch] = []
+    for m in _PHONE_OWNER.finditer(text):
+        name = m.group(1)
+        words = [w.lower() for w in _SPACES.split(name)]
+        if any(w in _NOT_NAME and w not in _TITLE_WORDS for w in words):
+            continue  # "(Kantor)", "(Rumah)", "(WA)"
+        out.append(_match('NAME', m.start() + m.group(0).rfind(name), name, 'medium'))
+    return out
+
+
+_LOG_USER = rx(r'(?<![\w.-])(?:user|usr|login|uname)=(["\']?)([A-Za-z][\w.-]{2,40})\1(?=[\s,;&]|$)', 'g')
+_USER_PARTS = rx(r'[._-]+')
+_TRAILING_DIGITS = rx(r'\d+$')
+
+
+def _detect_log_users(text: str) -> list[PiiMatch]:
+    """`user=dimas.anggara` in a logfmt line names a person; `user=root` or `user=postgres` is an account."""
+    out: list[PiiMatch] = []
+    for m in _LOG_USER.finditer(text):
+        user = m.group(2)
+        if not any(_is_known_name(_TRAILING_DIGITS.sub('', w.lower())) for w in _USER_PARTS.split(user)):
+            continue
+        out.append(_match('NAME', m.start() + len(m.group(0)) - len(user) - len(m.group(1)), user, 'medium'))
+    return out
+
+
+_TIMED_SENDER = rx(r'^\[\d{1,2}[:.]\d{2}(?:[:.]\d{2})?(?:[ \t]?[AP]M)?\][ \t]+([A-Za-z][\w. -]{1,38}?):[ \t]', 'dgm')
+_HANDLE_SHAPED = rx(r'^[a-z][a-z0-9]*[._][a-z0-9._]+$')
+_SENDER_PARTS = rx(r'[ ._-]+')
+
+
+def _detect_timed_senders(text: str) -> list[PiiMatch]:
+    """Chat-app copies with only a time: Slack "[10:21] rizky_pratama: …", Discord, IRC logs."""
+    out: list[PiiMatch] = []
+    for m in _TIMED_SENDER.finditer(text):
+        sender = m.group(1)
+        if _NOT_A_PERSON.search(sender):
+            continue
+        # A log level or a service ("[10:21] Server: ready") is not a person: a handle shape or a known name is.
+        shaped = bool(_HANDLE_SHAPED.search(sender))
+        if not shaped and not any(_is_known_name(w.lower()) for w in _SENDER_PARTS.split(sender)):
+            continue
+        out.append(_match('NAME', m.start(1), sender, 'medium'))
+    return out
+
+
+def _decode_entities(s: str) -> str:
+    return s.replace('&amp;', '&').replace('&nbsp;', ' ').replace('&#39;', "'").replace('&apos;', "'").replace('&quot;', '"')
+
+
+_HTML_HINT = rx(r'<(?:input|td|th)\b', 'i')
+_INPUT_TAG = rx(r'<input\b[^>]*>', 'gi')
+_INPUT_NAME = rx("\\b(?:name|id)\\s*=\\s*[\"']([^\"']+)[\"']", 'i')
+_INPUT_VALUE = rx("\\bvalue\\s*=\\s*([\"'])([^\"']*)\\1", 'i')
+_TABLE_ROW = rx(r'<tr\b[^>]*>([\s\S]*?)<\/tr>', 'gi')
+_TABLE_CELL = rx(r'<(t[hd])\b[^>]*>([^<]*)<\/t[hd]>', 'gi')
+_THREE_DIGITS = re.compile(r'[0-9]{3}')
+
+
+class _Cell(NamedTuple):
+    header: bool
+    text: str
+    start: int
+    raw: str
+
+
+def _detect_html(text: str) -> list[PiiMatch]:
+    """Form fields and tables in HTML: `<input name="nama" value="…">`, `<th>Nama</th>` over `<td>Budi Santoso</td>`."""
+    if not _HTML_HINT.search(text):
+        return []
+    out: list[PiiMatch] = []
+    for m in _INPUT_TAG.finditer(text):
+        tag = m.group(0)
+        name_m = _INPUT_NAME.search(tag)
+        value = _INPUT_VALUE.search(tag)
+        name = name_m.group(1) if name_m else None
+        pii_type = field_type(name) if name else None
+        if not pii_type or not value or not is_plausible_value(pii_type, value.group(2), name or ''):
+            continue
+        out.append(_match(pii_type, m.start() + value.start() + value.group(0).find(value.group(2), 1), value.group(2), 'high'))
+    columns: Optional[list[Optional[PiiType]]] = None
+    headers: list[str] = []
+    for row in _TABLE_ROW.finditer(text):
+        inner_start = row.start() + row.group(0).find(row.group(1))
+        cells = [
+            _Cell(
+                c.group(1).lower() == 'th',
+                _js.trim(_decode_entities(c.group(2))),
+                inner_start + c.start() + c.group(0).find('>') + 1,
+                c.group(2),
+            )
+            for c in _TABLE_CELL.finditer(row.group(1))
+        ]
+        if not cells:
+            continue
+        types = [field_type(c.text) if len(c.text) <= 40 else None for c in cells]
+        # "<th>Nama</th><td>Budi Santoso</td>": a label cell and its value.
+        if len(cells) == 2 and types[0] and not types[1]:
+            label, cell = cells
+            if cell.text and is_plausible_value(types[0], cell.text, label.text):
+                out.append(_match(types[0], cell.start + cell.raw.find(cell.text[:1]), _js.trim(cell.raw), 'high'))
+            continue
+        if all(c.header for c in cells) or (
+            columns is None and any(types) and all(not _THREE_DIGITS.search(c.text) for c in cells)
+        ):
+            columns = types
+            headers = [c.text for c in cells]
+            continue
+        if columns is None:
+            continue
+        for i, c in enumerate(cells):
+            pii_type = columns[i] if i < len(columns) else None
+            if not pii_type or not c.text or not is_plausible_value(pii_type, c.text, headers[i]):
+                continue
+            raw = c.raw
+            out.append(_match(
+                pii_type, c.start + raw.find(_js.trim(raw)), _js.trim(raw),
+                'medium' if is_generic_name_key(headers[i]) else 'high',
+            ))
+    return out
+
+
+# UU PDP Article 4: criminal records. Phrases that say it of a person, not news about crime in general.
+# HL7 v2 segments from hospital systems: field number → what it holds.
+_HL7_FIELDS: dict[str, dict[int, PiiType]] = {
+    'PID': {5: 'NAME', 6: 'NAME', 7: 'BIRTH_DATE', 8: 'GENDER', 11: 'ADDRESS', 13: 'PHONE', 14: 'PHONE', 19: 'NIK'},
+    'NK1': {2: 'NAME', 4: 'ADDRESS', 5: 'PHONE', 6: 'PHONE'},
+    'DG1': {3: 'HEALTH', 4: 'HEALTH'},
+    'IN1': {16: 'NAME'},
+}
+_HL7_SEGMENT = rx(r'^(PID|NK1|DG1|IN1)\|[^\r\n]*', 'gm')
+_HL7_SEPARATORS = rx(r'[\^~&\s]', 'g')
+_HL7_TRAILING = rx(r'[\^~]+$')
+
+
+def _detect_hl7(text: str) -> list[PiiMatch]:
+    """"PID|1||RM-00123||SUSANTO^BUDI||19800412|M": every field a segment defines as personal, whatever its content."""
+    out: list[PiiMatch] = []
+    for m in _HL7_SEGMENT.finditer(text):
+        fields = _HL7_FIELDS[m.group(1)]
+        pos = m.start()
+        for i, value in enumerate(m.group(0).split('|')):
+            pii_type = fields.get(i)
+            if pii_type and _HL7_SEPARATORS.sub('', value):
+                out.append(_match(pii_type, pos, _HL7_TRAILING.sub('', value), 'high'))
+            pos += len(value) + 1
+    return out
+
+
+_CRIME = r'[a-z]+(?:\s+(?:online|anak|uang|dana|berat|ringan|narkotika|pidana))?'
+_CRIMINAL = rx(
+    rf'\b(?:mantan|eks|bekas)\s+(?:napi|narapidana|tahanan|tapol|terpidana|residivis)(?:\s+kasus\s+{_CRIME})?'
+    rf'|\bresidivis(?:\s+kasus\s+{_CRIME})?'
+    rf'|\b(?:napi|narapidana|terpidana|tersangka|terdakwa|terjerat|tersandung|terlibat)\s+kasus\s+{_CRIME}'
+    r'|\bpernah\s+(?:dipenjara|dibui|dipidana|ditahan|dihukum(?:\s+penjara)?|masuk\s+(?:penjara|bui|lapas|rutan)|ditangkap(?:\s+polisi)?)(?:\s+(?:selama\s+)?\d+\s+(?:tahun|bulan))?'  # noqa: E501
+    rf'(?:\s+(?:karena\s+|atas\s+)?kasus\s+{_CRIME})?'
+    r'|\bdivonis\s+\d+\s+(?:tahun|bulan)(?:\s+penjara)?'
+    # "SKCK: ada catatan kasus penggelapan", "catatan kepolisian kasus KDRT".
+    rf'|\bcatatan\s+(?:(?:kriminal|kepolisian|pidana)\s+)?kasus\s+{_CRIME}'
+    # Penjelasan Pasal 4 ayat (2) huruf d: "pencantuman dalam daftar pencegahan atau penangkalan".
+    r'|\b(?:masuk|dimasukkan\s+ke|tercantum\s+di)\s+(?:dalam\s+)?daftar\s+(?:cekal|pencegahan|penangkalan|hitam\s+imigrasi|pencarian\s+orang|dpo|buronan)'  # noqa: E501
+    r'|\b(?:dicekal|berstatus\s+(?:dpo|buron(?:an)?)|masuk\s+dpo|jadi\s+(?:dpo|buron(?:an)?))\b'
+    # "baru keluar lapas", "bebas dari penjara tahun lalu", "kasusnya penipuan".
+    rf'|\b(?:keluar|bebas)\s+(?:dari\s+)?(?:lapas|lp|penjara|bui|rutan|tahanan)\b|\bkasusnya\s+{_CRIME}',
+    'gi',
+)
+
+
+def _detect_criminal(text: str) -> list[PiiMatch]:
+    return [_match('CRIMINAL_RECORD', m.start(), m.group(0), 'medium') for m in _CRIMINAL.finditer(text)]
+
+
+_GLUED_NIK = rx(r'(?<=[A-Za-z_])\d{16}(?![\dA-Za-z])', 'g')
+_LETTER_PREFIX = rx(r'[A-Za-z_]+$')
+_GLUED_PHONE = rx(r'(?<=[A-Za-z])(?:\+?62|0)8\d{8,11}(?!\d)', 'g')
+_PHONE_LABEL_PREFIX = rx(r'[A-Za-z.]+$')
+
+
+def _detect_glued_ids(text: str) -> list[PiiMatch]:
+    """Identifiers glued to letters, which the digit-run and phone detectors leave alone.
+
+    "KTP_3201…0001.jpg", "NIK3201…", "wa081234567890". A NIK must validate; a phone must follow a phone label.
+    """
+    out: list[PiiMatch] = []
+    for m in _GLUED_NIK.finditer(text):
+        prefix_m = _LETTER_PREFIX.search(text[max(0, m.start() - 20) : m.start()])
+        assert prefix_m is not None
+        prefix = prefix_m.group(0)
+        head_at = m.start() - len(prefix) - 1
+        head = text[head_at] if head_at >= 0 else None
+        # "a3f…" in a hash has digits before the letters; a lone letter is too little to go on.
+        if (head is not None and '0' <= head <= '9') or (len(prefix.replace('_', '')) < 2 and '_' not in prefix):
+            continue
+        if parse_nik(m.group(0)).valid:
+            out.append(_match('NIK', m.start(), m.group(0), 'high'))
+    for m in _GLUED_PHONE.finditer(text):
+        label_m = _PHONE_LABEL_PREFIX.search(text[max(0, m.start() - 12) : m.start()])
+        assert label_m is not None
+        if label_m.group(0).lower() in _PHONE_LABELS and parse_phone(m.group(0)).valid:
+            out.append(_match('PHONE', m.start(), m.group(0), 'high'))
+    return out
+
+
+_DIGIT_WORD = '(?:nol|kosong|satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan)'
+_SPOKEN_PHONE = rx(rf'\b(?:nol|kosong)[\s,.-]+delapan(?:[\s,.-]+{_DIGIT_WORD}){{8,11}}\b', 'gi')
+
+
+def _detect_spoken_phones(text: str) -> list[PiiMatch]:
+    """A phone number read out in a voice-bot or call transcript: "nol delapan satu dua tiga …"."""
+    return [_match('PHONE', m.start(), m.group(0), 'medium') for m in _SPOKEN_PHONE.finditer(text)]
+
+
+_LONE_WORD = rx("(?<![\\w@.'\u2019-])[A-Z][a-z]{2,14}(?![\\w'\u2019-]|\\.\\w|[ \\t]+[A-Z])", 'g')
+_MID_SENTENCE = rx(r'(?:(?<![A-Za-z])[a-z]+|,)[ \t]+$')
+_PREV_LOWER_WORD = rx(r'([A-Za-z]+)[ \t]+$')
+
+
+def _detect_lone_given_names(text: str) -> list[PiiMatch]:
+    """A single common given name in running text, not at the start of a sentence.
+
+    "kepala keluarga Bambang", "tadi dikirim Joko". A sentence may start with any capitalized word, so there it needs
+    a cue.
+    """
+    out: list[PiiMatch] = []
+    for m in _LONE_WORD.finditer(text):
+        bare = m.group(0).lower()
+        if bare not in GIVEN_NAMES and not _JAVANESE_NAME.search(bare):
+            continue
+        lead = text[max(0, m.start() - 30) : m.start()]
+        # Not at a sentence or line start, and not after a capitalized word ("Toko Batik Sekar").
+        if not _MID_SENTENCE.search(lead):
+            continue
+        prev = _PREV_LOWER_WORD.search(lead)
+        # "tinggal di Wina", "arah Malik": after a word of place, a lone name is a village.
+        if prev and (
+            prev.group(1).lower() in _PLACE_WORDS
+            or prev.group(1).lower() in _ORGANIZATION
+            or _PLACE_PREPOSITION.search(prev.group(1).lower())
+        ):
+            continue
+        out.append(_match('NAME', m.start(), m.group(0), 'medium'))
+    return out
+
+
+# Headings and references that a bracketed number follows: "Pasal 5 (2)", "Tabel (3)".
+_NOT_AN_AGE = frozenset((
+    'pasal ayat bab bagian lampiran gambar tabel grafik nomor no langkah tahap poin butir huruf angka versi kelas ruang '
+    'lantai gate pintu loket jalur map set array object date number string buffer promise error symbol'
+).split(' '))
+_NAME_WITH_AGE = rx(
+    r"(?<![\w@.'’-])([A-Z][a-z'’-]+(?:[ \t]+(?:[A-Z][a-z'’-]+|bin|binti)){0,3})[ \t]+\([ \t]*\d{1,2}[ \t]*(?:th|thn|tahun|thn\.|th\.)?[ \t]*\)",  # noqa: E501
+    'g',
+)
+
+
+def _detect_names_with_age(text: str) -> list[PiiMatch]:
+    """A name followed by an age in brackets, as news and case notes write it: "Kevin (19)", "Narti (54 th)"."""
+    out: list[PiiMatch] = []
+    for m in _NAME_WITH_AGE.finditer(text):
+        # "Pelaku Kevin (19)": the role in front is not part of the name.
+        role_match = _ROLE_AT_START.match(m.group(1))
+        role = role_match.group(0) if role_match else ''
+        name = m.group(1)[len(role) :]
+        words = [w.lower() for w in _SPACES.split(name)]
+        if not name or any(
+            w in _NOT_NAME or w in _NOT_AN_AGE or w in _TITLE_WORDS or w in _PLACE_WORDS for w in words
+        ):
+            continue
+        out.append(_match('NAME', m.start() + len(role), name, 'medium'))
+    return out
+
+
+# Also a relation in emergency contacts: "Wulan (istri) 0812…".
+_ATTENDANCE = rx(
+    r"(?<![\w@.'’-])([A-Z][a-z'’-]+(?:[ \t]+[A-Z][a-z'’-]+){0,3})[ \t]+\((?:sakit|izin|ijin|alpa|alpha|absen|cuti|dinas(?:[ \t]+luar)?|terlambat|telat|hadir|wfh|wfo|istri|suami|ayah|ibu|bapak|anak|kakak|adik|ortu|orang[ \t]+tua|wali|saudara|keluarga|teman|wife|husband|mother|father)\)",  # noqa: E501
+    'g',
+)
+
+
+def _detect_attendance(text: str) -> list[PiiMatch]:
+    """Attendance lists: "Tidak hadir: Wahyu (sakit), Dinda (izin)". A word with an attendance status is a person."""
+    out: list[PiiMatch] = []
+    for m in _ATTENDANCE.finditer(text):
+        if any(w.lower() in _NOT_NAME or w.lower() in _TITLE_WORDS for w in _SPACES.split(m.group(1))):
+            continue
+        out.append(_match('NAME', m.start(), m.group(1), 'medium'))
+    return out
+
+
+_SENTENCE_SUBJECT = rx(
+    r'(?:^|(?<=[.!?]\s)|(?<=\n))[ \t]*([A-Z][a-z]{2,14})(?=[ \t]+(?:masih|sudah|udah|belum|lagi|sedang|bilang|minta|punya|mau|tidak|nggak|gak|ga|pernah|sakit|kerja|tinggal|baru|katanya|pinjam|hutang|utang|janji|nanya|nelpon|telat|izin|cuti|dirawat|meninggal)\b)',  # noqa: E501
+    'gm',
+)
+
+
+def _detect_sentence_subjects(text: str) -> list[PiiMatch]:
+    """A common given name opening a sentence and doing something: "Dodi masih punya utang", "Agus bilang besok"."""
+    out: list[PiiMatch] = []
+    for m in _SENTENCE_SUBJECT.finditer(text):
+        bare = m.group(1).lower()
+        if bare not in GIVEN_NAMES and not _JAVANESE_NAME.search(bare):
+            continue
+        out.append(_match('NAME', *_group_tail(m), 'medium'))
+    return out
+
+
+_NAME_PAIR = rx(r"(?<![\w@.'’-])([A-Z][a-z]{2,14})[ \t]*(?:&|dan)[ \t]*([A-Z][a-z]{2,14})(?![\w'’-]|[ \t]+[A-Z])", 'g')
+
+
+def _pair_word_ok(w: str) -> bool:
+    bare = w.lower()
+    return bare not in _NOT_NAME and bare not in _PLACE_WORDS and bare not in _TITLE_WORDS
+
+
+def _detect_name_pairs(text: str) -> list[PiiMatch]:
+    """Two names joined by "&" or "dan" where one is a known given name: "Dimas & Anggun", "Rina dan Kelvin".
+
+    The other is a name too, even if the list does not know it.
+    """
+    out: list[PiiMatch] = []
+    for m in _NAME_PAIR.finditer(text):
+        a, b = m.group(1), m.group(2)
+        if not _pair_word_ok(a) or not _pair_word_ok(b):
+            continue
+        if a.lower() in GIVEN_NAMES:
+            out.append(_match('NAME', m.start() + m.group(0).rfind(b), b, 'medium'))
+        if b.lower() in GIVEN_NAMES:
+            out.append(_match('NAME', m.start(), a, 'medium'))
+    return out
+
+
+_BRACKET_HANDLE = rx(r'\(([a-z][a-z0-9]*(?:[._][a-z0-9]+)+)\)', 'g')
+_HANDLE_PARTS = rx(r'[._]')
+
+
+def _detect_bracket_handles(text: str) -> list[PiiMatch]:
+    """A handle in brackets after a name: "User Andreas Wijaya (andreas.w)". It must contain a known name."""
+    out: list[PiiMatch] = []
+    for m in _BRACKET_HANDLE.finditer(text):
+        parts = [_TRAILING_DIGITS.sub('', w) for w in _HANDLE_PARTS.split(m.group(1))]
+        if not any(w in GIVEN_NAMES or w in FAMILY_NAMES for w in parts):
+            continue
+        out.append(_match('NAME', m.start() + 1, m.group(1), 'medium'))
+    return out
+
+
+_CARD_CODE = rx(r'\b(?:cvv2?|cvc2?|cid|kode\s+keamanan)\b[ \t]*[:=]?[ \t]*(\d{3,4})(?!\d)', 'gi')
+
+
+def _detect_card_codes(text: str) -> list[PiiMatch]:
+    """The security code on the back of a card: "cvv 123"."""
+    return [_match('CARD', *_group_tail(m), 'high') for m in _CARD_CODE.finditer(text)]
 
 
 _THING_TABLE = rx(
@@ -716,17 +1709,36 @@ def _sql_values(text: str, i: int, types: list[Optional[PiiType]], columns: list
     return out
 
 
-# A street only counts as personal data when it is pinned to a house: No., Blok, Kav., or RT/RW.
+_STREET_WORDS = (
+    'Jl|Jln|Jalan|Gg|Gang|Komp|Kompl|Komplek|Kompleks|Perum|Perumahan|Cluster|Klaster|Apartemen|Apartment|Apt|Rusun|'
+    'Rusunawa|Tower|Ruko|Wisma|Asrama|Dusun|Dsn|Dukuh|Kampung|Kp|Lingkungan|Ling'
+)
+# What pins a street to one house: No., Blok, Kav., or an apartment's floor and unit. Chat writes "blok b no 9".
+_PIN = '[Nn][Oo]|[Nn]omor|[Bb]lok|[Kk]av|[Uu]nit|[Ll]t|[Ll]antai|[Kk]amar|[Kk]mr|NO|BLOK'
+_RT_RW = r'RT\.?\s*0*\d{1,3}\s*[/,]?\s*RW\.?\s*0*\d{1,3}'
+# A street only counts as personal data when it is pinned to a house: No., Blok, Kav., a unit, or RT/RW.
 _STREET = rx(
-    r'\b(?:Jl|Jln|Jalan|Gg|Gang|Komp|Kompleks|Perum|Perumahan)\.?\s+[A-Za-z0-9][^\n;]{1,80}?(?:\b(?:No|Nomor|Blok|Kav)\.?\s*[A-Za-z]?\d+[A-Za-z]?(?:\/\d+)?(?:,?\s*RT\.?\s*\d{1,3}\s*\/\s*RW\.?\s*\d{1,3})?|\bRT\.?\s*\d{1,3}\s*\/\s*RW\.?\s*\d{1,3})',  # noqa: E501
+    rf'\b(?:{_STREET_WORDS})\.?\s+[A-Za-z0-9][^\n;]{{1,80}}?(?:\b(?:{_PIN})\.?\s*[A-Za-z]?\d+[A-Za-z]?(?:\/\d+)?(?:,?\s*(?:{_PIN})\.?\s*[A-Za-z]?\d+[A-Za-z]?(?:\/\d+)?)*(?:,?\s*{_RT_RW})?|\b{_RT_RW})',  # noqa: E501
     'g',
 )
-_RTRW = rx(r'\bRT\.?\s*0*\d{1,3}\s*\/\s*RW\.?\s*0*\d{1,3}\b', 'gi')
+_RTRW = rx(rf'\b{_RT_RW}\b', 'gi')
+# Chat writes the estate in lowercase: "perum griya asri blok c3 no 12". Not "jalan", which is also a verb.
+_LOWER_STREET = rx(
+    r'\b(?:perum|perumahan|komplek|kompleks|komp|cluster|klaster|apartemen|apt|rusun|asrama|jl|jln|gg|gang)\.?\s+[a-z0-9][^\n;]{1,60}?\b(?:no|nomor|blok|kav|unit)\.?\s*[a-z]?\d+[a-z]?(?:\/\d+)?(?:,?\s*(?:no|nomor|blok|kav|unit)\.?\s*[a-z]?\d+[a-z]?)*',  # noqa: E501
+    'g',
+)
+# "jl mawar 5 cibinong": chat skips "No.". Only after "jl" or "gg", and not "jl. raya macet 2 jam".
+_BARE_STREET = rx(
+    r"\b(?:[Jj]ln?|[Gg]g)\.?\s+[A-Za-z][A-Za-z'-]*(?:\s+[A-Za-z][A-Za-z'-]*){0,3}?\s+\d{1,4}[A-Za-z]?\b(?!\s*(?:jam|menit|detik|km|meter|m\b|kali|hari|minggu|bulan|tahun|orang|lantai|lajur|jalur|%|x\b))",  # noqa: E501
+    'g',
+)
 
 
 def _detect_street_addresses(text: str) -> list[PiiMatch]:
     out = [_match('ADDRESS', m.start(), m.group(0), 'high') for m in _STREET.finditer(text)]
+    out += [_match('ADDRESS', m.start(), m.group(0), 'medium') for m in _LOWER_STREET.finditer(text)]
     out += [_match('ADDRESS', m.start(), m.group(0), 'medium') for m in _RTRW.finditer(text)]
+    out += [_match('ADDRESS', m.start(), m.group(0), 'medium') for m in _BARE_STREET.finditer(text)]
     return out
 
 
@@ -751,6 +1763,7 @@ _NEXT_PAIR = rx(r'\s+[A-Za-z_][\w.-]*=(?!=)')
 _WS_ONE = rx(r'\s')
 _NEXT_COLON = rx(r':(?!\/\/)')
 _FIRST_DIGIT = re.compile(r'[0-9]')
+_URL_ESCAPE = re.compile(r'%[0-9A-Fa-f]{2}')
 _TRAILING_VALUE_NOISE = rx(r'[\s.,}\]]+$')
 
 
@@ -830,16 +1843,28 @@ def _cut_value(pii_type: PiiType, raw: str) -> str:
             stop = _js_search(pattern, v)
             if stop >= 0:
                 v = v[:stop]
-        digit = _js_search(_FIRST_DIGIT, v)
+        # A digit ends a name, but not the "20" in "Siti%20Rahayu" (same length, so the index still fits).
+        digit = _js_search(_FIRST_DIGIT, _URL_ESCAPE.sub('%xx', v))
         if digit >= 0:
             v = v[:digit]
         v = _take_words(v, 5)
+    # "NPWP: 01.234.567.8-901.000 a.n. CV Maju Jaya": a number ends where its digits do.
+    if pii_type in _NUMBER_TYPES:
+        digits = _NUMBER_RUN.search(_js.trim(v))
+        if digits:
+            return _js.trim(digits.group(0))
     return _js.trim(_TRAILING_VALUE_NOISE.sub('', v))
+
+
+_NUMBER_TYPES: frozenset[PiiType] = frozenset((
+    'NIK', 'KK', 'NPWP', 'NIP', 'SIM', 'BPJS', 'NISN', 'PHONE', 'BANK_ACCOUNT', 'CARD',
+))
+_NUMBER_RUN = rx(r'^[+(]?\d[\d \t.\-/()]*\d\)?')
 
 
 # What `_label_before` computes, as a regex over the line (kept for the equivalence tests).
 _LABEL = rx(r"""((?:["'`]?[A-Za-z][A-Za-z0-9_./-]*["'`]?[ \t]+){0,4}["'`]?[A-Za-z][A-Za-z0-9_./-]*["'`]?)$""")
-_SEPARATOR = rx(r'[ \t]*(?::(?![:\/])|=(?![=>]))[ \t]*', 'g')
+_SEPARATOR = rx(r'[ \t]*(?::(?![:\/])|=>|=(?![=>]))[ \t]*', 'g')
 _LABEL_WORDS = re.compile(r'[ \t]+')
 _QUOTES = frozenset('"\'`')
 _LABEL_CHARS = frozenset('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_./-')
@@ -915,6 +1940,10 @@ def _detect_labeled_fields(text: str) -> list[PiiMatch]:
     if line_end == -1:
         line_end = len(text)
     for m in _SEPARATOR.finditer(text):
+        # PHP, Ruby and Perl hashes: "'name' => 'Ahmad Fauzan'". Only after a quoted key; "phone => format(phone)" is a
+        # JavaScript arrow function.
+        if '=>' in m.group(0) and (m.start() == 0 or text[m.start() - 1] not in _QUOTES):
+            continue
         while m.start() > line_end:
             line_start = line_end + 1
             line_end = text.find('\n', line_start)
@@ -943,6 +1972,9 @@ def _detect_labeled_fields(text: str) -> list[PiiMatch]:
             if close == -1:
                 continue
             value = text[value_start + 1 : close]
+            # 'labels like "Nama:" and "a.n."': the quote closes a quoted label; it does not open a value.
+            if value[:1] in _js.WS_SET:
+                continue
             start += 1
         else:
             raw = text[value_start : _value_extent(text, value_start, raw_end)]
@@ -1131,9 +2163,32 @@ _DETECTORS: tuple[Callable[[str], list[PiiMatch]], ...] = (
     _detect_health,
     _detect_financial,
     _detect_religion,
+    _detect_marital_status,
     _detect_plates,
     _detect_names,
     _detect_chat_senders,
+    _detect_known_names,
+    _detect_signatures,
+    _detect_display_names,
+    _detect_handles,
+    _detect_stacked_labels,
+    _detect_colonless_labels,
+    _detect_phone_owners,
+    _detect_timed_senders,
+    _detect_log_users,
+    _detect_html,
+    _detect_hl7,
+    _detect_akta,
+    _detect_criminal,
+    _detect_glued_ids,
+    _detect_card_codes,
+    _detect_spoken_phones,
+    _detect_lone_given_names,
+    _detect_names_with_age,
+    _detect_name_pairs,
+    _detect_attendance,
+    _detect_sentence_subjects,
+    _detect_bracket_handles,
     _detect_sql_inserts,
     _detect_street_addresses,
     _detect_labeled_fields,

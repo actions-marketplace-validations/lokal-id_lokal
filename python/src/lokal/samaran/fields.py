@@ -9,11 +9,12 @@ from functools import lru_cache
 from typing import Optional
 
 from .. import _js
+from ._names import AMBIGUOUS_GIVEN_NAMES, FAMILY_NAMES, GIVEN_NAMES, SECOND_NAMES
 from .types import PiiType
 
 _FIELDS: list[tuple[PiiType, str]] = [
     # A column called "pasien" or "pelanggan" holds that person's name.
-    ('NAME', 'nama|name|full_?name|nama_?lengkap|first_?name|last_?name|middle_?name|given_?name|family_?name|surname|nama_?depan|nama_?tengah|nama_?belakang|nama_?panggilan|nickname|nama_?ibu_?kandung|mother_?s?_?maiden_?name|penerima|pengirim|recipient|pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner|pemesan|pembeli|buyer|konsumen|atas_?nama|a_n'),  # noqa: E501
+    ('NAME', 'nama|name|full_?name|kepada|kpd|yth|attn|attention|pelapor|terlapor|korban|saksi|tersangka|terdakwa|pelaku|kepala_?keluarga|penanggung_?jawab|ahli_?waris|pemberi_?kuasa|penerima_?kuasa|requester|username|nama_?lengkap|first_?name|last_?name|middle_?name|given_?name|family_?name|surname|nama_?depan|nama_?tengah|nama_?belakang|nama_?panggilan|nickname|nama_?ibu_?kandung|mother_?s?_?maiden_?name|penerima|pengirim|recipient|pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner|pemesan|pembeli|buyer|konsumen|atas_?nama|a_n'),  # noqa: E501
     ('ADDRESS', 'alamat|address|full_?address|street|street_?address|domisili|alamat_?domisili|alamat_?ktp|alamat_?rumah|alamat_?pengiriman|shipping_?address|home_?address|billing_?address'),  # noqa: E501
     ('NIK', 'nik|no_?ktp|nomor_?ktp|ktp|nomor_?induk_?kependudukan|national_?id'),
     ('KK', 'kk|no_?kk|nomor_?kk|kartu_?keluarga|no_?kartu_?keluarga|nomor_?kartu_?keluarga|family_?card(_?number)?'),
@@ -21,6 +22,8 @@ _FIELDS: list[tuple[PiiType, str]] = [
     ('PASSPORT', 'paspor|passport|no_?paspor|nomor_?paspor|passport_?(no|number)'),
     ('SIM', 'sim|no_?sim|nomor_?sim|driver_?s?_?licen[cs]e|driving_?licen[cs]e'),
     ('NIP', 'nip|nip_?baru|nrp|nomor_?induk_?pegawai'),
+    ('NISN', 'nisn|no_?nisn|nomor_?nisn|nomor_?induk_?siswa_?nasional'),
+    ('AKTA', 'akta|no_?akta|nomor_?akta|(?:no_?|nomor_?)?akta_?(?:kelahiran|lahir|nikah|perkawinan|kawin|cerai|perceraian|kematian)|birth_?certificate(?:_?(?:no|number))?|marriage_?certificate(?:_?(?:no|number))?'),  # noqa: E501
     ('BPJS', 'bpjs|no_?bpjs|nomor_?bpjs|bpjs_?kesehatan|bpjs_?ketenagakerjaan|kis|no_?kis|jkn|kpj'),
     ('PHONE', 'hp|no_?hp|nomor_?hp|nohp|telp|tlp|telepon|telpon|no_?telp|no_?telepon|nomor_?telepon|phone|phone_?number|mobile|mobile_?phone|handphone|whatsapp|wa|no_?wa|nomor_?wa|msisdn'),  # noqa: E501
     ('EMAIL', 'email|e_?mail|surel|alamat_?email|email_?address'),
@@ -34,7 +37,7 @@ _FIELDS: list[tuple[PiiType, str]] = [
     ('MARITAL_STATUS', 'status_?perkawinan|status_?kawin|status_?pernikahan|status_?nikah|perkawinan|marital_?status|status_?marital'),  # noqa: E501
     ('NATIONALITY', 'kewarganegaraan|warga_?negara|wn|nationality|citizenship'),
     ('HEALTH', 'diagnosa|diagnosis|diagnose|penyakit|riwayat_?penyakit|riwayat_?medis|rekam_?medis|kondisi_?medis|kondisi_?kesehatan|keluhan|gejala|alergi|allergy|allergies|golongan_?darah|gol_?darah|blood_?type|hasil_?lab|lab_?result|obat|medication|medications|resep|prescription|icd|icd_?10|medical_?history|medical_?record|disabilitas|disability|kehamilan|pregnancy|status_?vaksin|vaccination_?status|tindakan_?medis'),  # noqa: E501
-    ('FINANCIAL', 'gaji|salary|penghasilan|pendapatan|income|saldo|balance|limit_?kredit|credit_?limit|utang|hutang|debt|pinjaman|loan|loan_?amount|cicilan|installment|tunggakan|arrears|skor_?kredit|credit_?score|slik|kolektibilitas|kekayaan|net_?worth|harta'),  # noqa: E501
+    ('FINANCIAL', 'gaji|salary|(?:net|gross|base|basic)_?salary|take_?home_?pay|thp|gaji_?(?:pokok|bersih|kotor)|penghasilan|pendapatan|income|saldo|balance|limit_?kredit|credit_?limit|utang|hutang|debt|pinjaman|loan|loan_?amount|cicilan|installment|tunggakan|arrears|skor_?kredit|credit_?score|slik|kolektibilitas|kekayaan|net_?worth|harta'),  # noqa: E501
     ('CRIMINAL_RECORD', 'catatan_?kriminal|catatan_?kepolisian|catatan_?pidana|skck|riwayat_?pidana|riwayat_?kriminal|criminal_?record|criminal_?history|status_?hukum'),  # noqa: E501
     # Not "signature" or "face": in code those are crypto signatures and UI faces.
     ('BIOMETRIC', 'sidik_?jari|fingerprint|foto_?ktp|foto_?wajah|foto_?selfie|selfie|selfie_?ktp|face_?image|face_?photo|face_?embedding|biometri|biometric|biometrik|iris|retina|dna|genetik|genetic|voiceprint|voice_?print|tanda_?tangan|ttd'),  # noqa: E501
@@ -46,7 +49,7 @@ _ENTITY = (
     'mahasiswa|penerima|pengirim|recipient|sender|ibu|ayah|wali|orang_?tua|pemohon|applicant|debitur|peserta|pemilik|'
     'owner|contact|kontak|pemesan|pembeli|buyer|konsumen'
 )
-_QUALIFIER = f'{_ENTITY}|lengkap|baru|lama|asli|utama|rumah|kantor|ktp|domisili|pengiriman|pribadi|aktif|1|2'
+_QUALIFIER = f'{_ENTITY}|lengkap|baru|lama|asli|utama|rumah|kantor|ktp|domisili|pengiriman|pribadi|aktif|pokok|bersih|kotor|bulanan|tahunan|total|1|2'
 
 # One alternation, tried in list order like the TypeScript loop: the first field type that matches the whole key wins.
 _KEY_TYPES: list[PiiType] = [t for t, _ in _FIELDS]
@@ -116,13 +119,30 @@ _TYPE_WORDS = {
     'required', 'optional', 'nullable', 'unique', 'str', 'list', 'dict', 'enum', 'json', 'uuid', 'unknown', 'void',
 }
 
-_DIGIT_TYPES: frozenset[PiiType] = frozenset(('NIK', 'KK', 'NPWP', 'NIP', 'SIM', 'BPJS', 'PHONE', 'BANK_ACCOUNT', 'CARD'))
+_DIGIT_TYPES: frozenset[PiiType] = frozenset((
+    'NIK', 'KK', 'NPWP', 'NIP', 'SIM', 'BPJS', 'NISN', 'PHONE', 'BANK_ACCOUNT', 'CARD',
+))
+
+# `user=dimas.anggara` in a log is a person; `user=root` or `user: postgres` is an account.
+_USER_KEY = _js.rx(r'^(?:user|username|login)$')
+_USER_VALUE = _js.rx(r'^[A-Za-z][\w. -]{2,40}$')
+_USER_PARTS = _js.rx(r'[._ -]+')
+_TRAILING_DIGITS = _js.rx(r'\d+$')
+
+
+def _is_known_name_part(word: str) -> bool:
+    bare = _TRAILING_DIGITS.sub('', word.lower())
+    return bare in GIVEN_NAMES or bare in AMBIGUOUS_GIVEN_NAMES or bare in FAMILY_NAMES or bare in SECOND_NAMES
 
 _PLACEHOLDER = re.compile(r'\[[A-Z_]+_[0-9]+\]')
 _CODE_LIKE = _js.compile(r'[{}<>`$\[\]]|=>|^\w+\.\w+\(')
 _PARENS = re.compile(r'[()]')
 _NICKNAME = _js.rx(r"\s+\([A-Z]?[a-z][A-Za-z .'-]*\)$")  # "(Ami)", not an acronym like "(GSS)"
 _DOTTED_IDENT = _js.compile(r'[a-z_$][\w$]*\.[a-z_$][\w$.]*', re.I)
+_EXPRESSION = _js.rx(r'^(?:new|await|typeof|function|return|yield|async)\s|^[A-Za-z_$][\w$.]*\($')
+_INITIALS = _js.rx(r'^(?:[A-Z]\.[ 	]?){1,4}$')
+_URL_SPACE = re.compile(r'%20|\+')
+_ACCOUNT_LIKE = _js.rx(r'[-_.\d]|^(?:admin|root|system|bot|team|tim|null|user)$')
 _HAS_LETTER = re.compile(r'[A-Za-z]')
 _NAME_BAD_CHARS = re.compile(r'[0-9_(){}\[\]<>=]')
 _CODE_KEYWORD = _js.compile(r'^(?:new|this|await|null|undefined|true|false|typeof|function|return|self|None)\b')
@@ -136,20 +156,30 @@ _IPV4_START = re.compile(r'(?:[0-9]{1,3}\.){3}[0-9]{1,3}')
 
 def is_plausible_value(pii_type: PiiType, value: str, key: str) -> bool:
     """Values that are code, schema, or placeholders rather than someone's data."""
-    # "Siti Aminah (Ami)": a nickname in brackets is part of the name, not a function call.
-    v = _NICKNAME.sub('', _js.trim(value)) if pii_type == 'NAME' else _js.trim(value)
+    # "Siti Aminah (Ami)": a nickname in brackets is part of the name, not a function call. "Siti%20Rahayu" and
+    # "Siti+Rahayu" in a URL are the same name.
+    v = _URL_SPACE.sub(' ', _NICKNAME.sub('', _js.trim(value))) if pii_type == 'NAME' else _js.trim(value)
     if not v or _EMPTY.fullmatch(v):
         return False
     if v.lower() in _TYPE_WORDS:
         return False
     if _PLACEHOLDER.fullmatch(v):
         return False  # already masked
+    if pii_type == 'NAME' and _USER_KEY.search(normalize_key(key)):
+        return bool(_USER_VALUE.search(v)) and any(_is_known_name_part(w) for w in _USER_PARTS.split(v))
     # Code, not data: `req.body.nama`, `z.string()`, `${user.phone}`, `=> …`.
     if _CODE_LIKE.search(v):
         return False
+    # `street = new RegExp(`, `alamat = buildAddress(`: an expression.
+    if _EXPRESSION.search(v):
+        return False
+    if pii_type == 'AKTA' and sum(1 for ch in v if '0' <= ch <= '9') < 4:
+        return False
     if pii_type == 'ADDRESS' and not _js.has_ws(v):
         return False  # a real address has more than one word
-    if pii_type != 'ADDRESS' and (_PARENS.search(v) or _DOTTED_IDENT.fullmatch(v)):
+    # `user.name` is code; initials ("A.S.", "M. R.") are a person.
+    initials = pii_type == 'NAME' and _INITIALS.search(v) is not None
+    if pii_type != 'ADDRESS' and (_PARENS.search(v) or (not initials and _DOTTED_IDENT.fullmatch(v))):
         return False
     digit_count = sum(1 for ch in v if '0' <= ch <= '9')
     if pii_type in _DIGIT_TYPES and digit_count < 6:
@@ -188,7 +218,10 @@ def is_plausible_value(pii_type: PiiType, value: str, key: str) -> bool:
             # `name: Build and test` in a CI file is not a person.
             if len(words) < 2 or len(words) > 5 or not all(_STARTS_UPPER.search(w) for w in words):
                 return False
-        elif _ROLE_KEY.fullmatch(normalize_key(key)) and len(words) == 1 and not _STARTS_UPPER.search(v):
-            # `"owner": "lokal-id"` is an account; "Siti" or "siti aminah" under `pasien` is a person.
+        elif (
+            _ROLE_KEY.fullmatch(normalize_key(key)) and len(words) == 1 and not _STARTS_UPPER.search(v)
+            and _ACCOUNT_LIKE.search(v)
+        ):
+            # `"owner": "lokal-id"` is an account; "Siti", "siti aminah", or "sukirman" under `penerima` is a person.
             return False
     return True

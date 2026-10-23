@@ -84,7 +84,7 @@ def balas_pelanggan(pesan: str) -> str:
 - `Samaran(allow=['cs@toko.id', re.compile(r'@toko\.id$')])` never masks your own contacts.
 - `export_vault()` / `import_vault()` move the vault between processes, for example through Redis. Treat it as the raw data it contains.
 - `detect_pii(text)` returns the matches without masking; `min_confidence='high'` keeps only validated or keyword-anchored ones.
-- 25 types, covering every category in UU PDP Article 4: identifiers (NIK, KK, NPWP, passport, SIM, NIP, BPJS, phone, email, bank account, card, plate, IP, coordinates), name, address, birth date, gender, religion, marital status, nationality, health, finances, criminal records, and biometrics. Found through labels, CSV headers, JSON/YAML keys, SQL `INSERT` dumps, WhatsApp chat exports, and common phrases in free text.
+- 27 types, covering every category in UU PDP Article 4: identifiers (NIK, KK, NPWP, passport, SIM, NIP, BPJS, NISN, civil registry deed numbers, phone, email, bank account, card, plate, IP, coordinates), name, address, birth date, gender, religion, marital status, nationality, health, finances, criminal records, and biometrics. Found through labels, CSV headers, JSON/YAML keys, SQL `INSERT` dumps, WhatsApp chat exports, and common phrases in free text.
 
 To cover every LLM call of an app without calling `mask()` and `unmask()` at each one, run the Samaran Proxy (`npx @lokal-id/mcp proxy`) next to the backend and point the SDK at it: `OpenAI(base_url='http://127.0.0.1:8787/v1')` or `Anthropic(base_url='http://127.0.0.1:8787')`. It masks requests and restores responses, streaming and tool calls included. See the [Lokal README](https://github.com/lokal-id/lokal#samaran-proxy-protect-an-apps-llm-calls).
 
@@ -208,7 +208,7 @@ Pure Python, no regex compilation at call time: masking a chat message takes abo
 
 ## Limitations
 
-Samaran is pattern-based and favors precision. A name dropped into a sentence with no cue at all, unusually phrased health or financial data, and children's data that is not marked as such can still slip through. NIK and NPWP checks are structural, and holidays exist only for years whose SKB has been published (2026, 2027). See the [Lokal README](https://github.com/lokal-id/lokal#limitations) for the full list.
+Samaran is pattern-based and favors precision: on free text it has not seen it catches about 82 to 88% of personal values. A name with no cue that is also an everyday word or is not a common Indonesian name, health or financial data phrased in a new way, and children's data that is not marked as such can still slip through. NIK and NPWP checks are structural, and holidays exist only for years whose SKB has been published (2026, 2027). See the [Lokal README](https://github.com/lokal-id/lokal#limitations) for the full list.
 
 ## License
 

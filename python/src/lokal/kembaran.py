@@ -53,7 +53,8 @@ KEEP_BY_DEFAULT: tuple[PiiType, ...] = ('GENDER', 'RELIGION', 'MARITAL_STATUS', 
 
 # Values that must stay unique: two people must not end up with one stand-in.
 _UNIQUE = frozenset((
-    'NIK', 'KK', 'NPWP', 'PHONE', 'EMAIL', 'BANK_ACCOUNT', 'CARD', 'BPJS', 'SIM', 'NIP', 'PASSPORT', 'PLATE', 'IP',
+    'NIK', 'KK', 'NPWP', 'PHONE', 'EMAIL', 'BANK_ACCOUNT', 'CARD', 'BPJS', 'SIM', 'NIP', 'NISN', 'AKTA', 'PASSPORT',
+    'PLATE', 'IP',
 ))
 
 _MONTHS: tuple[tuple[str, ...], ...] = (
@@ -380,7 +381,7 @@ class Kembaran:
             return self._address(original, rng)
         if pii_type == 'BIRTH_DATE':
             return original if self._keep_birth_date else self._birth_date(original, rng, None)
-        if pii_type in ('BANK_ACCOUNT', 'BPJS', 'SIM'):
+        if pii_type in ('BANK_ACCOUNT', 'BPJS', 'SIM', 'NISN'):
             return rng.digits(len(_only_digits(original)))
         if pii_type == 'NIP':
             d = _only_digits(original)
@@ -403,7 +404,7 @@ class Kembaran:
             return f'{rng.pick(("192.0.2", "198.51.100", "203.0.113"))}.{1 + rng.below(254)}'
         if pii_type == 'GEO':
             return _GEO_DECIMALS.sub(lambda m: m.group(1) + rng.digits(len(m.group(2))), original)
-        if pii_type == 'FINANCIAL':
+        if pii_type in ('FINANCIAL', 'AKTA'):
             return _shape_digits(original, rng)
         if pii_type == 'HEALTH':
             return _case_like(rng.pick(HEALTH), original)
@@ -425,7 +426,7 @@ class Kembaran:
 
     def _render(self, pii_type: str, original: str, fake: str) -> str:
         """A stand-in in the original's format: its separators, its casing, its titles."""
-        if pii_type in ('NIK', 'KK', 'NPWP', 'BANK_ACCOUNT', 'BPJS', 'SIM', 'NIP', 'CARD'):
+        if pii_type in ('NIK', 'KK', 'NPWP', 'BANK_ACCOUNT', 'BPJS', 'SIM', 'NIP', 'NISN', 'CARD'):
             return _put_digits(original, fake)
         if pii_type == 'PHONE':
             if not fake.startswith('+62'):

@@ -280,7 +280,8 @@ def test_line_numbered_files_from_agent_read_tools() -> None:
     assert values('     1\tnama,nik\n     2\tBudi Santoso,3201011508950001', ['NAME']) == ['NAME:Budi Santoso']
     assert values('1\tNama\tNIK\n2\tRina Wati\t3276014503920002', ['NAME']) == ['NAME:Rina Wati']
     # Numbers that do not count up are data, not line numbers.
-    assert values('12\tnama,nik\n7\tBudi Santoso,3201011508950001', ['NAME']) == []
+    # (A name the gazetteer does not know, so only the header could make it a name.)
+    assert values('12\tnama,nik\n7\tWiro Sableng,3201011508950001', ['NAME']) == []
 
 
 @pytest.mark.parametrize('benign', [
@@ -342,3 +343,88 @@ def test_condition_after_a_pronoun() -> None:
     assert [m.value for m in detect_pii('saya diabetes, rutin obat insulin')] == ['diabetes', 'insulin']
     assert [m.value for m in detect_pii('ibu saya hipertensi')] == ['hipertensi']
     assert detect_pii('saya siap, dia datang besok') == []
+
+
+def test_names_without_a_label() -> None:
+    assert values('Pelanggan Budi Santoso minta refund, Kurir Supardi sudah antar', ['NAME']) == [
+        'NAME:Budi Santoso', 'NAME:Supardi',
+    ]
+    assert values('Dear Mr. Hendra Gunawan,\nThank you.', ['NAME']) == ['NAME:Hendra Gunawan']
+    assert values('Halo Budi,\nPesanan kamu sudah dikirim.', ['NAME']) == ['NAME:Budi']
+    assert values('Mohon dibantu.\n\nSalam,\nRina Kartika Sari\nFinance', ['NAME']) == ['NAME:Rina Kartika Sari']
+    assert values('From: Budi Santoso <budi.s@gmail.com>', ['NAME']) == ['NAME:Budi Santoso']
+    assert values('/*! ws. MIT License. Einar Otto Stangvik <einaros@gmail.com> */', ['NAME']) == ['NAME:Einar Otto Stangvik']
+    assert values('aku andi yg td chat', ['NAME']) == ['NAME:andi']
+    assert values('No. KK: 3201012345678901 (kepala keluarga Bambang)', ['NAME']) == ['NAME:Bambang']
+    # Not names: a role with an adjective, a greeting to a group or a city, a business signing off.
+    text = 'Pelanggan Setia dapat diskon. Kurir JNE datang. Halo Semua, Halo Bandung, Hai Kakak!\n\nSalam,\nTim Lokal'
+    assert values(text, ['NAME']) == []
+
+
+def test_names_recognized_by_their_parts() -> None:
+    text = 'Yang bertanggung jawab Togar Simanjuntak. Tamu: I Made Wirawan dan Ni Luh Putu Ayu. Pemilik koh Lim Swie Hong.'
+    assert values(text, ['NAME']) == [
+        'NAME:Togar Simanjuntak', 'NAME:I Made Wirawan', 'NAME:Ni Luh Putu Ayu', 'NAME:Lim Swie Hong',
+    ]
+    # A bank statement in capitals: the name starts at SITI, not at the transaction code.
+    assert values('22/10 BI-FAST CR TRANSFER DR 014 SITI RAHAYU 75000.00', ['NAME']) == ['NAME:SITI RAHAYU']
+    # Places and organizations named after people, and words that are also given names.
+    text = (
+        'Masjid Agung, Universitas Ahmad Dahlan, RS Siti Khadijah, Toko Budi Jaya, Jl. Ahmad Yani. Pendidikan Budi '
+        'Pekerti. Permata Intan, Mekar Sari, Lumban Siregar.'
+    )
+    assert values(text, ['NAME']) == []
+
+
+def test_identifiers_in_odd_places() -> None:
+    assert values('upload KTP_3201011508950001.jpg, NIK3201011508950001', ['NIK']) == [
+        'NIK:3201011508950001', 'NIK:3201011508950001',
+    ]
+    assert values('?name=Siti%20Rahayu&email=siti%40gmail.com') == ['NAME:Siti%20Rahayu', 'EMAIL:siti%40gmail.com']
+    assert values('<input name="nik" value="3201011508950001"><input name="nama" value="Budi Santoso">') == [
+        'NIK:3201011508950001', 'NAME:Budi Santoso',
+    ]
+    assert values('<tr><th>Nama</th><th>HP</th></tr><tr><td>Budi Santoso</td><td>081234567890</td></tr>') == [
+        'NAME:Budi Santoso', 'PHONE:081234567890',
+    ]
+    assert values('cek DM dari @siti.rahayu88', ['NAME']) == ['NAME:siti.rahayu88']
+    assert values('Transfer berhasil\r\nPenerima\r\nDEWI LESTARI\r\nNominal Rp 250.000', ['NAME']) == ['NAME:DEWI LESTARI']
+    # Code: JSDoc tags, decorators, npm scopes, CSS, and the domain of a masked address.
+    assert values('/** @param options.abortSignal */\n@pytest.fixture\nnpm i @types/node; @media print; b***@gmail.com') == []
+
+
+def test_phones_and_addresses_written_loosely() -> None:
+    text = 'Telp: +62 (812) 3456-7890, no wa 08 12 34 56 78 90, wa081234567890, rumah 0251 8321234'
+    assert values(text, ['PHONE']) == [
+        'PHONE:+62 (812) 3456-7890', 'PHONE:08 12 34 56 78 90', 'PHONE:081234567890', 'PHONE:0251 8321234',
+    ]
+    assert values('nomor gue nol delapan satu dua tiga empat lima enam tujuh delapan sembilan', ['PHONE']) == [
+        'PHONE:nol delapan satu dua tiga empat lima enam tujuh delapan sembilan',
+    ]
+    assert values('Komplek Taman Asri blok B no 9, deket masjid', ['ADDRESS']) == ['ADDRESS:Komplek Taman Asri blok B no 9']
+    assert values('Dusun Krajan RT 02 RW 01 Desa Sukamaju', ['ADDRESS']) == ['ADDRESS:Dusun Krajan RT 02 RW 01']
+    assert values('alamat jl mawar 5 cibinong ya', ['ADDRESS']) == ['ADDRESS:jl mawar 5']
+    # Not phones or addresses.
+    assert values('kode pos 16911, harga 0251 8321, jalan kaki 5 menit, jl. raya macet 2 jam, SK No. 100.3.3.1-6117') == []
+
+
+def test_uu_pdp_sensitive_data_in_everyday_language() -> None:
+    assert values('saya muslim, suami saya kristen protestan', ['RELIGION']) == [
+        'RELIGION:muslim', 'RELIGION:kristen protestan',
+    ]
+    assert values('saya sudah cerai sejak 2020, sekarang janda', ['MARITAL_STATUS']) == [
+        'MARITAL_STATUS:cerai', 'MARITAL_STATUS:janda',
+    ]
+    assert values('ayah stroke, riwayat hipertensi dan diabetes melitus, alergi penisilin, keluhan demam', ['HEALTH']) == [
+        'HEALTH:stroke', 'HEALTH:hipertensi dan diabetes melitus', 'HEALTH:penisilin', 'HEALTH:demam',
+    ]
+    assert values('utang pinjol 12 juta, udah galbay 3 bulan', ['FINANCIAL']) == ['FINANCIAL:12 juta', 'FINANCIAL:galbay']
+    assert values('dia mantan napi kasus narkoba, pernah dipenjara 3 tahun', ['CRIMINAL_RECORD']) == [
+        'CRIMINAL_RECORD:mantan napi kasus narkoba', 'CRIMINAL_RECORD:pernah dipenjara 3 tahun',
+    ]
+    # The same words about groups, institutions, or the news.
+    text = (
+        'Makanan halal untuk umat Muslim. Gereja Kristen Jawa. Hari Kanker Sedunia. Kasus narkoba meningkat menurut BNN. '
+        'Risiko gagal bayar obligasi. Saya menikah tahun depan.'
+    )
+    assert values(text) == []

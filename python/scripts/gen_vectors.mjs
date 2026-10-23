@@ -243,6 +243,18 @@ const fragments = [
   'Nama Pelanggan\tBudi Santoso', 'Nama\tNIK\tTelepon\nRina Wati\t3276014503920002\t0813-9999-0000', 'No\tNama\n1\tSiti Aminah',
   'Nama: Budi Santoso ya kak', 'Pemesan: Rina Wati sudah transfer', 'Nama: Siti Aminah (Ami)', 'Nama: Lee Dong Hae!',
   'Pasien:   Siti   Aminah, diagnosa: Hipertensi', 'Rp1.250.000', 'Versi 3.2.1', 'Ibu Kota Nusantara', 'call 1500888',
+  // Unlabeled names, odd places, and casual sensitive data.
+  'Pelanggan Budi Santoso minta refund', 'Halo Budi,', 'Dear Mr. Hendra Gunawan,', 'Salam,\nRina Kartika Sari',
+  'From: Budi Santoso <budi.s@gmail.com>', 'Tamu: I Made Wirawan', 'koh Lim Swie Hong', 'Togar Simanjuntak',
+  'BI-FAST CR SITI RAHAYU 75000.00', 'Penerima\nDEWI LESTARI', 'cek DM dari @siti.rahayu88', 'kepala keluarga Bambang',
+  'KTP_3201011508950001.jpg', 'NIK3201011508950001', 'wa081234567890', '08 12 34 56 78 90', '+62 (812) 3456-7890',
+  'rumah 0251 8321234', 'nol delapan satu dua tiga empat lima enam tujuh delapan sembilan', 'cvv 123', 'motor b3456xyz',
+  '<input name="nama" value="Budi Santoso">', '<tr><th>Nama</th></tr><tr><td>Siti Aminah</td></tr>',
+  'Komplek Taman Asri blok B no 9', 'Dusun Krajan RT 02 RW 01', 'jl mawar 5 cibinong', 'TTL Bogor, 17-08-1995',
+  'saya muslim', 'suami saya kristen protestan', 'saya sudah cerai', 'ayah stroke', 'riwayat hipertensi dan diabetes melitus',
+  'alergi penisilin', 'keluhan demam', 'utang pinjol 12 juta', 'udah galbay 3 bulan', 'mantan napi kasus narkoba',
+  'pernah dipenjara 3 tahun', 'Pelanggan Setia', 'Masjid Agung', 'Universitas Ahmad Dahlan', 'Budi Pekerti', 'Halo Bandung,',
+  'Sinar Pagi, Bogor', 'Lumban Siregar', '/** @param options.abortSignal */', 'b***@gmail.com', 'SK No. 100.3.3.1-6117', 'Range: IPv4 192.168.2.1-192.168.2.10',
 ];
 const noise = [' ', ', ', '. ', '\n', '\r\n', ' 😭 ', ' ', ' ', ' — ', '\t', ': ', ' | ', '; ', ' 🇮🇩 ', '﻿'];
 for (let i = 0; i < 1500; i++) {

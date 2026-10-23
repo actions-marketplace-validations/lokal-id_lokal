@@ -7,6 +7,8 @@ export type PiiType =
   | 'SIM'
   | 'NIP'
   | 'BPJS'
+  | 'NISN'
+  | 'AKTA'
   | 'PHONE'
   | 'EMAIL'
   | 'BANK_ACCOUNT'
@@ -28,7 +30,7 @@ export type PiiType =
   | 'BIOMETRIC';
 
 export const PII_TYPES: readonly PiiType[] = [
-  'NIK', 'KK', 'NPWP', 'PASSPORT', 'SIM', 'NIP', 'BPJS', 'PHONE', 'EMAIL', 'BANK_ACCOUNT', 'CARD', 'PLATE', 'IP',
+  'NIK', 'KK', 'NPWP', 'PASSPORT', 'SIM', 'NIP', 'BPJS', 'NISN', 'AKTA', 'PHONE', 'EMAIL', 'BANK_ACCOUNT', 'CARD', 'PLATE', 'IP',
   'GEO', 'NAME', 'ADDRESS', 'BIRTH_DATE', 'GENDER', 'RELIGION', 'MARITAL_STATUS', 'NATIONALITY', 'HEALTH',
   'FINANCIAL', 'CRIMINAL_RECORD', 'BIOMETRIC',
 ];
@@ -41,7 +43,7 @@ export const PII_TYPES: readonly PiiType[] = [
 export const UU_PDP_CATEGORY: Readonly<Record<PiiType, 'spesifik' | 'umum'>> = Object.fromEntries(
   PII_TYPES.map((t) => [
     t,
-    ['HEALTH', 'BIOMETRIC', 'CRIMINAL_RECORD', 'FINANCIAL', 'BANK_ACCOUNT', 'CARD'].includes(t) ? 'spesifik' : 'umum',
+    ['HEALTH', 'BIOMETRIC', 'CRIMINAL_RECORD', 'FINANCIAL', 'BANK_ACCOUNT', 'CARD', 'NISN'].includes(t) ? 'spesifik' : 'umum',
   ]),
 ) as Record<PiiType, 'spesifik' | 'umum'>;
 

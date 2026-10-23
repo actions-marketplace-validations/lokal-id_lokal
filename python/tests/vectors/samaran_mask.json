@@ -209,7 +209,7 @@
  },
  {
   "text": "No. Pesanan,Status Pesanan,No. Resi,Opsi Pengiriman,Waktu Pesanan Dibuat,Username (Pembeli),Nama Penerima,No. Telepon,Alamat Pengiriman,Kota/Kabupaten,Provinsi,Total Pembayaran,Catatan dari Pembeli\n2610014KQ7ZB2M,Perlu Dikirim,,SPX Standard,2026-10-01 08:12,sitirahayu88,Siti Rahayu,6281298765432,\"Jl. Margonda Raya No. 45, RT 03/RW 05, Kel. Depok, Kec. Pancoran Mas\",KOTA DEPOK,JAWA BARAT,Rp185.000,tolong a.n. Ibu Siti Rahayu ya kak\n2610015AB3XY9P,Dikirim,SPXID045123456789,SPX Standard,2026-10-01 09:40,budi_s,Budi Santoso,+62 857-1111-2222,\"Perum Griya Asri Blok C2 No. 7, Cibinong\",KAB. BOGOR,JAWA BARAT,Rp92.500,\n2610016CD4ZT1Q,Perlu Dikirim,,J&T Express,2026-10-02 10:05,mamah.yosef,Maria Yosefina Gebze,0878.1234.5678,\"Jl. Raya Mandala No. 12, Kel. Mandala, Distrik Merauke\",KAB. MERAUKE,PAPUA SELATAN,Rp310.000,kalau kurir nyasar hub suami saya Pak Yohanes 0813-1111-2233\n2610017EF5UV2R,Perlu Dikirim,,JNE REG,2026-10-02 13:22,andiwj,Andi Wijaya,081234560001,\"Jl. Basuki Rahmat No. 9, Kota Sorong\",KOTA SORONG,PAPUA BARAT DAYA,Rp1.250.000,NIK saya 9671 0125 1187 0004 untuk klaim garansi\n2610018GH6WX3S,Selesai,JX4417730215,J&T Express,2026-10-03 07:55,dewi.lestari,Dewi Lestari,0896-7777-8888,\"Jl. Gajah Mada No. 101, Denpasar\",KOTA DENPASAR,BALI,Rp75.000,\n2610019IJ7YZ4T,Perlu Dikirim,,SiCepat REG,2026-10-03 16:30,rina_kartika,Rina Kartika Sari,0881-2345-6789,\"Jl. Provinsi No. 3, Penajam\",KAB. PENAJAM PASER UTARA,KALIMANTAN TIMUR,Rp640.000,\"rumah cat hijau sebelah masjid, titip ke satpam\"\n2610020KL8AB5U,Perlu Dikirim,,SPX Hemat,2026-10-04 11:11,yuliana.n,Yuliana Nawipa,0821 9876 5432,\"Jl. Merdeka No. 5, Nabire\",KAB. NABIRE,PAPUA TENGAH,Rp230.000,\n2610021MN9CD6V,Perlu Dikirim,,JNE YES,2026-10-04 19:45,hendra88,Hendra Gunawan,(0751) 812345,\"Jl. Sudirman No. 20, Padang\",KOTA PADANG,SUMATERA BARAT,Rp415.000,bayar pake VA BCA 12345678901 sudah ya\n2610022OP1EF7W,Batal,,SPX Standard,2026-10-05 08:00,fitri_h,Fitri Handayani,0852-3456-7891,\"Jl. Ahmad Yani No. 8, Surabaya\",KOTA SURABAYA,JAWA TIMUR,Rp99.000,\n2610023QR2GH8X,Perlu Dikirim,,SiCepat BEST,2026-10-05 14:20,lukman.h,Lukman Hakim,6281377778888,\"Jl. Raya Tapos No. 1, Kel. Tapos\",KOTA DEPOK,JAWA BARAT,Rp150.000,\n2610024ST3IJ9Y,Perlu Dikirim,,J&T Express,2026-10-06 09:09,siti.aminah,Siti Aminah,0838-1234-5679,\"Jl. Raya Cinere No. 77, Kel. Cinere\",KOTA DEPOK,JAWA BARAT,Rp88.000,\"tolong jgn dibanting, isi obat insulin buat ibu saya (diabetes)\"\n2610025UV4KL1Z,Dikirim,CGK7700123456789,JNE REG,2026-10-06 10:10,agus_p,Agus Prasetyo,0819-1234-5678,\"Jl. Kaliurang Km 5, Sleman\",KAB. SLEMAN,DI YOGYAKARTA,Rp56.000,\n",
-  "placeholder": "No. Pesanan,Status Pesanan,No. Resi,Opsi Pengiriman,Waktu Pesanan Dibuat,Username (Pembeli),Nama Penerima,No. Telepon,Alamat Pengiriman,Kota/Kabupaten,Provinsi,Total Pembayaran,Catatan dari Pembeli\n2610014KQ7ZB2M,Perlu Dikirim,,SPX Standard,2026-10-01 08:12,sitirahayu88,[NAME_1],[PHONE_1],\"[ADDRESS_1]\",KOTA DEPOK,JAWA BARAT,Rp185.000,tolong a.n. Ibu [NAME_1] ya kak\n2610015AB3XY9P,Dikirim,SPXID045123456789,SPX Standard,2026-10-01 09:40,budi_s,[NAME_2],[PHONE_2],\"[ADDRESS_2]\",KAB. BOGOR,JAWA BARAT,Rp92.500,\n2610016CD4ZT1Q,Perlu Dikirim,,J&T Express,2026-10-02 10:05,mamah.yosef,[NAME_3],[PHONE_3],\"[ADDRESS_3]\",KAB. MERAUKE,PAPUA SELATAN,Rp310.000,kalau kurir nyasar hub suami saya Pak [NAME_4] [PHONE_4]\n2610017EF5UV2R,Perlu Dikirim,,JNE REG,2026-10-02 13:22,andiwj,[NAME_5],[PHONE_5],\"[ADDRESS_4]\",KOTA SORONG,PAPUA BARAT DAYA,Rp1.250.000,NIK saya [NIK_1] untuk klaim garansi\n2610018GH6WX3S,Selesai,JX4417730215,J&T Express,2026-10-03 07:55,dewi.lestari,[NAME_6],[PHONE_6],\"[ADDRESS_5]\",KOTA DENPASAR,BALI,Rp75.000,\n2610019IJ7YZ4T,Perlu Dikirim,,SiCepat REG,2026-10-03 16:30,rina_kartika,[NAME_7],[PHONE_7],\"[ADDRESS_6]\",KAB. PENAJAM PASER UTARA,KALIMANTAN TIMUR,Rp640.000,\"rumah cat hijau sebelah masjid, titip ke satpam\"\n2610020KL8AB5U,Perlu Dikirim,,SPX Hemat,2026-10-04 11:11,yuliana.n,[NAME_8],[PHONE_8],\"[ADDRESS_7]\",KAB. NABIRE,PAPUA TENGAH,Rp230.000,\n2610021MN9CD6V,Perlu Dikirim,,JNE YES,2026-10-04 19:45,hendra88,[NAME_9],[PHONE_9],\"[ADDRESS_8]\",KOTA PADANG,SUMATERA BARAT,Rp415.000,bayar pake VA BCA [BANK_ACCOUNT_1] sudah ya\n2610022OP1EF7W,Batal,,SPX Standard,2026-10-05 08:00,fitri_h,[NAME_10],[PHONE_10],\"[ADDRESS_9]\",KOTA SURABAYA,JAWA TIMUR,Rp99.000,\n2610023QR2GH8X,Perlu Dikirim,,SiCepat BEST,2026-10-05 14:20,lukman.h,[NAME_11],[PHONE_11],\"[ADDRESS_10]\",KOTA DEPOK,JAWA BARAT,Rp150.000,\n2610024ST3IJ9Y,Perlu Dikirim,,J&T Express,2026-10-06 09:09,siti.aminah,[NAME_12],[PHONE_12],\"[ADDRESS_11]\",KOTA DEPOK,JAWA BARAT,Rp88.000,\"tolong jgn dibanting, isi obat [HEALTH_1] buat ibu saya ([HEALTH_2])\"\n2610025UV4KL1Z,Dikirim,CGK7700123456789,JNE REG,2026-10-06 10:10,agus_p,[NAME_13],[PHONE_13],\"[ADDRESS_12]\",KAB. SLEMAN,DI YOGYAKARTA,Rp56.000,\n",
+  "placeholder": "No. Pesanan,Status Pesanan,No. Resi,Opsi Pengiriman,Waktu Pesanan Dibuat,Username (Pembeli),Nama Penerima,No. Telepon,Alamat Pengiriman,Kota/Kabupaten,Provinsi,Total Pembayaran,Catatan dari Pembeli\n2610014KQ7ZB2M,Perlu Dikirim,,SPX Standard,2026-10-01 08:12,sitirahayu88,[NAME_1],[PHONE_1],\"[ADDRESS_1]\",KOTA DEPOK,JAWA BARAT,Rp185.000,tolong a.n. Ibu [NAME_1] ya kak\n2610015AB3XY9P,Dikirim,SPXID045123456789,SPX Standard,2026-10-01 09:40,budi_s,[NAME_2],[PHONE_2],\"[ADDRESS_2]\",KAB. BOGOR,JAWA BARAT,Rp92.500,\n2610016CD4ZT1Q,Perlu Dikirim,,J&T Express,2026-10-02 10:05,mamah.yosef,[NAME_3],[PHONE_3],\"[ADDRESS_3]\",KAB. MERAUKE,PAPUA SELATAN,Rp310.000,kalau kurir nyasar hub suami saya Pak [NAME_4] [PHONE_4]\n2610017EF5UV2R,Perlu Dikirim,,JNE REG,2026-10-02 13:22,[NAME_5],[NAME_6],[PHONE_5],\"[ADDRESS_4]\",KOTA SORONG,PAPUA BARAT DAYA,Rp1.250.000,NIK saya [NIK_1] untuk klaim garansi\n2610018GH6WX3S,Selesai,JX4417730215,J&T Express,2026-10-03 07:55,dewi.lestari,[NAME_7],[PHONE_6],\"[ADDRESS_5]\",KOTA DENPASAR,BALI,Rp75.000,\n2610019IJ7YZ4T,Perlu Dikirim,,SiCepat REG,2026-10-03 16:30,rina_kartika,[NAME_8],[PHONE_7],\"[ADDRESS_6]\",KAB. PENAJAM PASER UTARA,KALIMANTAN TIMUR,Rp640.000,\"rumah cat hijau sebelah masjid, titip ke satpam\"\n2610020KL8AB5U,Perlu Dikirim,,SPX Hemat,2026-10-04 11:11,yuliana.n,[NAME_9],[PHONE_8],\"[ADDRESS_7]\",KAB. NABIRE,PAPUA TENGAH,Rp230.000,\n2610021MN9CD6V,Perlu Dikirim,,JNE YES,2026-10-04 19:45,hendra88,[NAME_10],[PHONE_9],\"[ADDRESS_8]\",KOTA PADANG,SUMATERA BARAT,Rp415.000,bayar pake VA BCA [BANK_ACCOUNT_1] sudah ya\n2610022OP1EF7W,Batal,,SPX Standard,2026-10-05 08:00,fitri_h,[NAME_11],[PHONE_10],\"[ADDRESS_9]\",KOTA SURABAYA,JAWA TIMUR,Rp99.000,\n2610023QR2GH8X,Perlu Dikirim,,SiCepat BEST,2026-10-05 14:20,lukman.h,[NAME_12],[PHONE_11],\"[ADDRESS_10]\",KOTA DEPOK,JAWA BARAT,Rp150.000,\n2610024ST3IJ9Y,Perlu Dikirim,,J&T Express,2026-10-06 09:09,siti.aminah,[NAME_13],[PHONE_12],\"[ADDRESS_11]\",KOTA DEPOK,JAWA BARAT,Rp88.000,\"tolong jgn dibanting, isi obat [HEALTH_1] buat ibu saya ([HEALTH_2])\"\n2610025UV4KL1Z,Dikirim,CGK7700123456789,JNE REG,2026-10-06 10:10,agus_p,[NAME_14],[PHONE_13],\"[ADDRESS_12]\",KAB. SLEMAN,DI YOGYAKARTA,Rp56.000,\n",
   "vault": [
    [
     "[NAME_1]",
@@ -257,6 +257,10 @@
    ],
    [
     "[NAME_5]",
+    "andiwj"
+   ],
+   [
+    "[NAME_6]",
     "Andi Wijaya"
    ],
    [
@@ -272,7 +276,7 @@
     "9671 0125 1187 0004"
    ],
    [
-    "[NAME_6]",
+    "[NAME_7]",
     "Dewi Lestari"
    ],
    [
@@ -284,7 +288,7 @@
     "Jl. Gajah Mada No. 101, Denpasar"
    ],
    [
-    "[NAME_7]",
+    "[NAME_8]",
     "Rina Kartika Sari"
    ],
    [
@@ -296,7 +300,7 @@
     "Jl. Provinsi No. 3, Penajam"
    ],
    [
-    "[NAME_8]",
+    "[NAME_9]",
     "Yuliana Nawipa"
    ],
    [
@@ -308,7 +312,7 @@
     "Jl. Merdeka No. 5, Nabire"
    ],
    [
-    "[NAME_9]",
+    "[NAME_10]",
     "Hendra Gunawan"
    ],
    [
@@ -324,7 +328,7 @@
     "12345678901"
    ],
    [
-    "[NAME_10]",
+    "[NAME_11]",
     "Fitri Handayani"
    ],
    [
@@ -336,7 +340,7 @@
     "Jl. Ahmad Yani No. 8, Surabaya"
    ],
    [
-    "[NAME_11]",
+    "[NAME_12]",
     "Lukman Hakim"
    ],
    [
@@ -348,7 +352,7 @@
     "Jl. Raya Tapos No. 1, Kel. Tapos"
    ],
    [
-    "[NAME_12]",
+    "[NAME_13]",
     "Siti Aminah"
    ],
    [
@@ -368,7 +372,7 @@
     "diabetes"
    ],
    [
-    "[NAME_13]",
+    "[NAME_14]",
     "Agus Prasetyo"
    ],
    [
@@ -380,7 +384,7 @@
     "Jl. Kaliurang Km 5, Sleman"
    ]
   ],
-  "partial": "No. Pesanan,Status Pesanan,No. Resi,Opsi Pengiriman,Waktu Pesanan Dibuat,Username (Pembeli),Nama Penerima,No. Telepon,Alamat Pengiriman,Kota/Kabupaten,Provinsi,Total Pembayaran,Catatan dari Pembeli\n2610014KQ7ZB2M,Perlu Dikirim,,SPX Standard,2026-10-01 08:12,sitirahayu88,S*** R***,0812****5432,\"Jl. ***\",KOTA DEPOK,JAWA BARAT,Rp185.000,tolong a.n. Ibu S*** R*** ya kak\n2610015AB3XY9P,Dikirim,SPXID045123456789,SPX Standard,2026-10-01 09:40,budi_s,B*** S***,0857****2222,\"Perum ***\",KAB. BOGOR,JAWA BARAT,Rp92.500,\n2610016CD4ZT1Q,Perlu Dikirim,,J&T Express,2026-10-02 10:05,mamah.yosef,M*** Y*** G***,0878****5678,\"Jl. ***\",KAB. MERAUKE,PAPUA SELATAN,Rp310.000,kalau kurir nyasar hub suami saya Pak Y*** 0813****2233\n2610017EF5UV2R,Perlu Dikirim,,JNE REG,2026-10-02 13:22,andiwj,A*** W***,0812****0001,\"Jl. ***\",KOTA SORONG,PAPUA BARAT DAYA,Rp1.250.000,NIK saya 9671********0004 untuk klaim garansi\n2610018GH6WX3S,Selesai,JX4417730215,J&T Express,2026-10-03 07:55,dewi.lestari,D*** L***,0896****8888,\"Jl. ***\",KOTA DENPASAR,BALI,Rp75.000,\n2610019IJ7YZ4T,Perlu Dikirim,,SiCepat REG,2026-10-03 16:30,rina_kartika,R*** K*** S***,0881****6789,\"Jl. ***\",KAB. PENAJAM PASER UTARA,KALIMANTAN TIMUR,Rp640.000,\"rumah cat hijau sebelah masjid, titip ke satpam\"\n2610020KL8AB5U,Perlu Dikirim,,SPX Hemat,2026-10-04 11:11,yuliana.n,Y*** N***,0821****5432,\"Jl. ***\",KAB. NABIRE,PAPUA TENGAH,Rp230.000,\n2610021MN9CD6V,Perlu Dikirim,,JNE YES,2026-10-04 19:45,hendra88,H*** G***,0751***2345,\"Jl. ***\",KOTA PADANG,SUMATERA BARAT,Rp415.000,bayar pake VA BCA *******8901 sudah ya\n2610022OP1EF7W,Batal,,SPX Standard,2026-10-05 08:00,fitri_h,F*** H***,0852****7891,\"Jl. ***\",KOTA SURABAYA,JAWA TIMUR,Rp99.000,\n2610023QR2GH8X,Perlu Dikirim,,SiCepat BEST,2026-10-05 14:20,lukman.h,L*** H***,0813****8888,\"Jl. ***\",KOTA DEPOK,JAWA BARAT,Rp150.000,\n2610024ST3IJ9Y,Perlu Dikirim,,J&T Express,2026-10-06 09:09,siti.aminah,S*** A***,0838****5679,\"Jl. ***\",KOTA DEPOK,JAWA BARAT,Rp88.000,\"tolong jgn dibanting, isi obat *** buat ibu saya (***)\"\n2610025UV4KL1Z,Dikirim,CGK7700123456789,JNE REG,2026-10-06 10:10,agus_p,A*** P***,0819****5678,\"Jl. ***\",KAB. SLEMAN,DI YOGYAKARTA,Rp56.000,\n",
+  "partial": "No. Pesanan,Status Pesanan,No. Resi,Opsi Pengiriman,Waktu Pesanan Dibuat,Username (Pembeli),Nama Penerima,No. Telepon,Alamat Pengiriman,Kota/Kabupaten,Provinsi,Total Pembayaran,Catatan dari Pembeli\n2610014KQ7ZB2M,Perlu Dikirim,,SPX Standard,2026-10-01 08:12,sitirahayu88,S*** R***,0812****5432,\"Jl. ***\",KOTA DEPOK,JAWA BARAT,Rp185.000,tolong a.n. Ibu S*** R*** ya kak\n2610015AB3XY9P,Dikirim,SPXID045123456789,SPX Standard,2026-10-01 09:40,budi_s,B*** S***,0857****2222,\"Perum ***\",KAB. BOGOR,JAWA BARAT,Rp92.500,\n2610016CD4ZT1Q,Perlu Dikirim,,J&T Express,2026-10-02 10:05,mamah.yosef,M*** Y*** G***,0878****5678,\"Jl. ***\",KAB. MERAUKE,PAPUA SELATAN,Rp310.000,kalau kurir nyasar hub suami saya Pak Y*** 0813****2233\n2610017EF5UV2R,Perlu Dikirim,,JNE REG,2026-10-02 13:22,a***,A*** W***,0812****0001,\"Jl. ***\",KOTA SORONG,PAPUA BARAT DAYA,Rp1.250.000,NIK saya 9671********0004 untuk klaim garansi\n2610018GH6WX3S,Selesai,JX4417730215,J&T Express,2026-10-03 07:55,dewi.lestari,D*** L***,0896****8888,\"Jl. ***\",KOTA DENPASAR,BALI,Rp75.000,\n2610019IJ7YZ4T,Perlu Dikirim,,SiCepat REG,2026-10-03 16:30,rina_kartika,R*** K*** S***,0881****6789,\"Jl. ***\",KAB. PENAJAM PASER UTARA,KALIMANTAN TIMUR,Rp640.000,\"rumah cat hijau sebelah masjid, titip ke satpam\"\n2610020KL8AB5U,Perlu Dikirim,,SPX Hemat,2026-10-04 11:11,yuliana.n,Y*** N***,0821****5432,\"Jl. ***\",KAB. NABIRE,PAPUA TENGAH,Rp230.000,\n2610021MN9CD6V,Perlu Dikirim,,JNE YES,2026-10-04 19:45,hendra88,H*** G***,0751***2345,\"Jl. ***\",KOTA PADANG,SUMATERA BARAT,Rp415.000,bayar pake VA BCA *******8901 sudah ya\n2610022OP1EF7W,Batal,,SPX Standard,2026-10-05 08:00,fitri_h,F*** H***,0852****7891,\"Jl. ***\",KOTA SURABAYA,JAWA TIMUR,Rp99.000,\n2610023QR2GH8X,Perlu Dikirim,,SiCepat BEST,2026-10-05 14:20,lukman.h,L*** H***,0813****8888,\"Jl. ***\",KOTA DEPOK,JAWA BARAT,Rp150.000,\n2610024ST3IJ9Y,Perlu Dikirim,,J&T Express,2026-10-06 09:09,siti.aminah,S*** A***,0838****5679,\"Jl. ***\",KOTA DEPOK,JAWA BARAT,Rp88.000,\"tolong jgn dibanting, isi obat *** buat ibu saya (***)\"\n2610025UV4KL1Z,Dikirim,CGK7700123456789,JNE REG,2026-10-06 10:10,agus_p,A*** P***,0819****5678,\"Jl. ***\",KAB. SLEMAN,DI YOGYAKARTA,Rp56.000,\n",
   "noFinanceNoName": "No. Pesanan,Status Pesanan,No. Resi,Opsi Pengiriman,Waktu Pesanan Dibuat,Username (Pembeli),Nama Penerima,No. Telepon,Alamat Pengiriman,Kota/Kabupaten,Provinsi,Total Pembayaran,Catatan dari Pembeli\n2610014KQ7ZB2M,Perlu Dikirim,,SPX Standard,2026-10-01 08:12,sitirahayu88,Siti Rahayu,[PHONE_1],\"[ADDRESS_1]\",KOTA DEPOK,JAWA BARAT,Rp185.000,tolong a.n. Ibu Siti Rahayu ya kak\n2610015AB3XY9P,Dikirim,SPXID045123456789,SPX Standard,2026-10-01 09:40,budi_s,Budi Santoso,[PHONE_2],\"[ADDRESS_2]\",KAB. BOGOR,JAWA BARAT,Rp92.500,\n2610016CD4ZT1Q,Perlu Dikirim,,J&T Express,2026-10-02 10:05,mamah.yosef,Maria Yosefina Gebze,[PHONE_3],\"[ADDRESS_3]\",KAB. MERAUKE,PAPUA SELATAN,Rp310.000,kalau kurir nyasar hub suami saya Pak Yohanes [PHONE_4]\n2610017EF5UV2R,Perlu Dikirim,,JNE REG,2026-10-02 13:22,andiwj,Andi Wijaya,[PHONE_5],\"[ADDRESS_4]\",KOTA SORONG,PAPUA BARAT DAYA,Rp1.250.000,NIK saya [NIK_1] untuk klaim garansi\n2610018GH6WX3S,Selesai,JX4417730215,J&T Express,2026-10-03 07:55,dewi.lestari,Dewi Lestari,[PHONE_6],\"[ADDRESS_5]\",KOTA DENPASAR,BALI,Rp75.000,\n2610019IJ7YZ4T,Perlu Dikirim,,SiCepat REG,2026-10-03 16:30,rina_kartika,Rina Kartika Sari,[PHONE_7],\"[ADDRESS_6]\",KAB. PENAJAM PASER UTARA,KALIMANTAN TIMUR,Rp640.000,\"rumah cat hijau sebelah masjid, titip ke satpam\"\n2610020KL8AB5U,Perlu Dikirim,,SPX Hemat,2026-10-04 11:11,yuliana.n,Yuliana Nawipa,[PHONE_8],\"[ADDRESS_7]\",KAB. NABIRE,PAPUA TENGAH,Rp230.000,\n2610021MN9CD6V,Perlu Dikirim,,JNE YES,2026-10-04 19:45,hendra88,Hendra Gunawan,[PHONE_9],\"[ADDRESS_8]\",KOTA PADANG,SUMATERA BARAT,Rp415.000,bayar pake VA BCA [BANK_ACCOUNT_1] sudah ya\n2610022OP1EF7W,Batal,,SPX Standard,2026-10-05 08:00,fitri_h,Fitri Handayani,[PHONE_10],\"[ADDRESS_9]\",KOTA SURABAYA,JAWA TIMUR,Rp99.000,\n2610023QR2GH8X,Perlu Dikirim,,SiCepat BEST,2026-10-05 14:20,lukman.h,Lukman Hakim,[PHONE_11],\"[ADDRESS_10]\",KOTA DEPOK,JAWA BARAT,Rp150.000,\n2610024ST3IJ9Y,Perlu Dikirim,,J&T Express,2026-10-06 09:09,siti.aminah,Siti Aminah,[PHONE_12],\"[ADDRESS_11]\",KOTA DEPOK,JAWA BARAT,Rp88.000,\"tolong jgn dibanting, isi obat [HEALTH_1] buat ibu saya ([HEALTH_2])\"\n2610025UV4KL1Z,Dikirim,CGK7700123456789,JNE REG,2026-10-06 10:10,agus_p,Agus Prasetyo,[PHONE_13],\"[ADDRESS_12]\",KAB. SLEMAN,DI YOGYAKARTA,Rp56.000,\n",
   "high": [
    "Siti Rahayu",
@@ -394,6 +398,7 @@
    "0878.1234.5678",
    "Jl. Raya Mandala No. 12, Kel. Mandala, Distrik Merauke",
    "0813-1111-2233",
+   "andiwj",
    "Andi Wijaya",
    "081234560001",
    "Jl. Basuki Rahmat No. 9, Kota Sorong",
@@ -760,6 +765,1012 @@
    "3276015508030002",
    "6285711112222"
   ]
+ },
+ {
+  "text": "node:test",
+  "placeholder": "node:test",
+  "vault": [],
+  "partial": "node:test",
+  "noFinanceNoName": "node:test",
+  "high": []
+ },
+ {
+  "text": "node:assert/strict",
+  "placeholder": "node:assert/strict",
+  "vault": [],
+  "partial": "node:assert/strict",
+  "noFinanceNoName": "node:assert/strict",
+  "high": []
+ },
+ {
+  "text": "ai",
+  "placeholder": "ai",
+  "vault": [],
+  "partial": "ai",
+  "noFinanceNoName": "ai",
+  "high": []
+ },
+ {
+  "text": "ai/test",
+  "placeholder": "ai/test",
+  "vault": [],
+  "partial": "ai/test",
+  "noFinanceNoName": "ai/test",
+  "high": []
+ },
+ {
+  "text": "ai-v6",
+  "placeholder": "ai-v6",
+  "vault": [],
+  "partial": "ai-v6",
+  "noFinanceNoName": "ai-v6",
+  "high": []
+ },
+ {
+  "text": "ai-v6/test",
+  "placeholder": "ai-v6/test",
+  "vault": [],
+  "partial": "ai-v6/test",
+  "noFinanceNoName": "ai-v6/test",
+  "high": []
+ },
+ {
+  "text": "@ai-sdk/provider",
+  "placeholder": "@ai-sdk/provider",
+  "vault": [],
+  "partial": "@ai-sdk/provider",
+  "noFinanceNoName": "@ai-sdk/provider",
+  "high": []
+ },
+ {
+  "text": "../src/ai-sdk.ts",
+  "placeholder": "../src/ai-sdk.ts",
+  "vault": [],
+  "partial": "../src/ai-sdk.ts",
+  "noFinanceNoName": "../src/ai-sdk.ts",
+  "high": []
+ },
+ {
+  "text": "Nama: Budi Santoso, NIK 3201011508950001, HP 0812-3456-7890. Minta refund.",
+  "placeholder": "Nama: [NAME_1], NIK [NIK_1], HP [PHONE_1]. Minta refund.",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ],
+   [
+    "[NIK_1]",
+    "3201011508950001"
+   ],
+   [
+    "[PHONE_1]",
+    "0812-3456-7890"
+   ]
+  ],
+  "partial": "Nama: B*** S***, NIK 3201********0001, HP 0812****7890. Minta refund.",
+  "noFinanceNoName": "Nama: Budi Santoso, NIK [NIK_1], HP [PHONE_1]. Minta refund.",
+  "high": [
+   "Budi Santoso",
+   "3201011508950001",
+   "0812-3456-7890"
+  ]
+ },
+ {
+  "text": "Budi Santoso",
+  "placeholder": "[NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ]
+  ],
+  "partial": "B*** S***",
+  "noFinanceNoName": "Budi Santoso",
+  "high": []
+ },
+ {
+  "text": "3201011508950001",
+  "placeholder": "[NIK_1]",
+  "vault": [
+   [
+    "[NIK_1]",
+    "3201011508950001"
+   ]
+  ],
+  "partial": "3201********0001",
+  "noFinanceNoName": "[NIK_1]",
+  "high": [
+   "3201011508950001"
+  ]
+ },
+ {
+  "text": "3456-7890",
+  "placeholder": "3456-7890",
+  "vault": [],
+  "partial": "3456-7890",
+  "noFinanceNoName": "3456-7890",
+  "high": []
+ },
+ {
+  "text": "stop",
+  "placeholder": "stop",
+  "vault": [],
+  "partial": "stop",
+  "noFinanceNoName": "stop",
+  "high": []
+ },
+ {
+  "text": "tool-calls",
+  "placeholder": "tool-calls",
+  "vault": [],
+  "partial": "tool-calls",
+  "noFinanceNoName": "tool-calls",
+  "high": []
+ },
+ {
+  "text": "stop",
+  "placeholder": "stop",
+  "vault": [],
+  "partial": "stop",
+  "noFinanceNoName": "stop",
+  "high": []
+ },
+ {
+  "text": "AI SDK: the model sees placeholders, the app gets real values back",
+  "placeholder": "AI SDK: the model sees placeholders, the app gets real values back",
+  "vault": [],
+  "partial": "AI SDK: the model sees placeholders, the app gets real values back",
+  "noFinanceNoName": "AI SDK: the model sees placeholders, the app gets real values back",
+  "high": []
+ },
+ {
+  "text": "text",
+  "placeholder": "text",
+  "vault": [],
+  "partial": "text",
+  "noFinanceNoName": "text",
+  "high": []
+ },
+ {
+  "text": "Refund untuk [NAME_1] ([PHONE_1]) diproses.",
+  "placeholder": "Refund untuk [NAME_1] ([PHONE_1]) diproses.",
+  "vault": [],
+  "partial": "Refund untuk [NAME_1] ([PHONE_1]) diproses.",
+  "noFinanceNoName": "Refund untuk [NAME_1] ([PHONE_1]) diproses.",
+  "high": []
+ },
+ {
+  "text": "Kamu agen CS.",
+  "placeholder": "Kamu agen CS.",
+  "vault": [],
+  "partial": "Kamu agen CS.",
+  "noFinanceNoName": "Kamu agen CS.",
+  "high": []
+ },
+ {
+  "text": "Refund untuk Budi Santoso (0812-3456-7890) diproses.",
+  "placeholder": "Refund untuk [NAME_1] ([PHONE_1]) diproses.",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ],
+   [
+    "[PHONE_1]",
+    "0812-3456-7890"
+   ]
+  ],
+  "partial": "Refund untuk B*** S*** (0812****7890) diproses.",
+  "noFinanceNoName": "Refund untuk Budi Santoso ([PHONE_1]) diproses.",
+  "high": [
+   "0812-3456-7890"
+  ]
+ },
+ {
+  "text": "counts only, never values",
+  "placeholder": "counts only, never values",
+  "vault": [],
+  "partial": "counts only, never values",
+  "noFinanceNoName": "counts only, never values",
+  "high": []
+ },
+ {
+  "text": "AI SDK: streamed placeholders split across chunks are restored whole",
+  "placeholder": "AI SDK: streamed placeholders split across chunks are restored whole",
+  "vault": [],
+  "partial": "AI SDK: streamed placeholders split across chunks are restored whole",
+  "noFinanceNoName": "AI SDK: streamed placeholders split across chunks are restored whole",
+  "high": []
+ },
+ {
+  "text": "stream-start",
+  "placeholder": "stream-start",
+  "vault": [],
+  "partial": "stream-start",
+  "noFinanceNoName": "stream-start",
+  "high": []
+ },
+ {
+  "text": "text-start",
+  "placeholder": "text-start",
+  "vault": [],
+  "partial": "text-start",
+  "noFinanceNoName": "text-start",
+  "high": []
+ },
+ {
+  "text": "0",
+  "placeholder": "0",
+  "vault": [],
+  "partial": "0",
+  "noFinanceNoName": "0",
+  "high": []
+ },
+ {
+  "text": "text-delta",
+  "placeholder": "text-delta",
+  "vault": [],
+  "partial": "text-delta",
+  "noFinanceNoName": "text-delta",
+  "high": []
+ },
+ {
+  "text": "0",
+  "placeholder": "0",
+  "vault": [],
+  "partial": "0",
+  "noFinanceNoName": "0",
+  "high": []
+ },
+ {
+  "text": "Halo [NA",
+  "placeholder": "Halo [NA",
+  "vault": [],
+  "partial": "Halo [NA",
+  "noFinanceNoName": "Halo [NA",
+  "high": []
+ },
+ {
+  "text": "text-delta",
+  "placeholder": "text-delta",
+  "vault": [],
+  "partial": "text-delta",
+  "noFinanceNoName": "text-delta",
+  "high": []
+ },
+ {
+  "text": "0",
+  "placeholder": "0",
+  "vault": [],
+  "partial": "0",
+  "noFinanceNoName": "0",
+  "high": []
+ },
+ {
+  "text": "ME_1], NIK [NIK_",
+  "placeholder": "ME_1], NIK [NIK_",
+  "vault": [],
+  "partial": "ME_1], NIK [NIK_",
+  "noFinanceNoName": "ME_1], NIK [NIK_",
+  "high": []
+ },
+ {
+  "text": "text-delta",
+  "placeholder": "text-delta",
+  "vault": [],
+  "partial": "text-delta",
+  "noFinanceNoName": "text-delta",
+  "high": []
+ },
+ {
+  "text": "0",
+  "placeholder": "0",
+  "vault": [],
+  "partial": "0",
+  "noFinanceNoName": "0",
+  "high": []
+ },
+ {
+  "text": "1] sudah dicek. [",
+  "placeholder": "1] sudah dicek. [",
+  "vault": [],
+  "partial": "1] sudah dicek. [",
+  "noFinanceNoName": "1] sudah dicek. [",
+  "high": []
+ },
+ {
+  "text": "text-delta",
+  "placeholder": "text-delta",
+  "vault": [],
+  "partial": "text-delta",
+  "noFinanceNoName": "text-delta",
+  "high": []
+ },
+ {
+  "text": "0",
+  "placeholder": "0",
+  "vault": [],
+  "partial": "0",
+  "noFinanceNoName": "0",
+  "high": []
+ },
+ {
+  "text": "PHONE_1",
+  "placeholder": "PHONE_1",
+  "vault": [],
+  "partial": "PHONE_1",
+  "noFinanceNoName": "PHONE_1",
+  "high": []
+ },
+ {
+  "text": "text-end",
+  "placeholder": "text-end",
+  "vault": [],
+  "partial": "text-end",
+  "noFinanceNoName": "text-end",
+  "high": []
+ },
+ {
+  "text": "0",
+  "placeholder": "0",
+  "vault": [],
+  "partial": "0",
+  "noFinanceNoName": "0",
+  "high": []
+ },
+ {
+  "text": "finish",
+  "placeholder": "finish",
+  "vault": [],
+  "partial": "finish",
+  "noFinanceNoName": "finish",
+  "high": []
+ },
+ {
+  "text": "",
+  "placeholder": "",
+  "vault": [],
+  "partial": "",
+  "noFinanceNoName": "",
+  "high": []
+ },
+ {
+  "text": "Halo Budi Santoso, NIK 3201011508950001 sudah dicek. [PHONE_1",
+  "placeholder": "Halo [NAME_1], NIK [NIK_1] sudah dicek. [PHONE_1",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ],
+   [
+    "[NIK_1]",
+    "3201011508950001"
+   ]
+  ],
+  "partial": "Halo B*** S***, NIK 3201********0001 sudah dicek. [PHONE_1",
+  "noFinanceNoName": "Halo Budi Santoso, NIK [NIK_1] sudah dicek. [PHONE_1",
+  "high": [
+   "3201011508950001"
+  ]
+ },
+ {
+  "text": "no chunk shows a piece of a placeholder",
+  "placeholder": "no chunk shows a piece of a placeholder",
+  "vault": [],
+  "partial": "no chunk shows a piece of a placeholder",
+  "noFinanceNoName": "no chunk shows a piece of a placeholder",
+  "high": []
+ },
+ {
+  "text": "AI SDK: tools run on real values, their results are masked on the next step",
+  "placeholder": "AI SDK: tools run on real values, their results are masked on the next step",
+  "vault": [],
+  "partial": "AI SDK: tools run on real values, their results are masked on the next step",
+  "noFinanceNoName": "AI SDK: tools run on real values, their results are masked on the next step",
+  "high": []
+ },
+ {
+  "text": "tool-call",
+  "placeholder": "tool-call",
+  "vault": [],
+  "partial": "tool-call",
+  "noFinanceNoName": "tool-call",
+  "high": []
+ },
+ {
+  "text": "c1",
+  "placeholder": "c1",
+  "vault": [],
+  "partial": "c1",
+  "noFinanceNoName": "c1",
+  "high": []
+ },
+ {
+  "text": "cariPelanggan",
+  "placeholder": "cariPelanggan",
+  "vault": [],
+  "partial": "cariPelanggan",
+  "noFinanceNoName": "cariPelanggan",
+  "high": []
+ },
+ {
+  "text": "{\"nik\":\"[NIK_1]\"}",
+  "placeholder": "{\"nik\":\"[NIK_1]\"}",
+  "vault": [],
+  "partial": "{\"nik\":\"[NIK_1]\"}",
+  "noFinanceNoName": "{\"nik\":\"[NIK_1]\"}",
+  "high": []
+ },
+ {
+  "text": "tool-calls",
+  "placeholder": "tool-calls",
+  "vault": [],
+  "partial": "tool-calls",
+  "noFinanceNoName": "tool-calls",
+  "high": []
+ },
+ {
+  "text": "text",
+  "placeholder": "text",
+  "vault": [],
+  "partial": "text",
+  "noFinanceNoName": "text",
+  "high": []
+ },
+ {
+  "text": "Alamat [NAME_1]: [ADDRESS_1]",
+  "placeholder": "Alamat [NAME_1]: [ADDRESS_1]",
+  "vault": [],
+  "partial": "Alamat [NAME_1]: [ADDRESS_1]",
+  "noFinanceNoName": "Alamat [NAME_1]: [ADDRESS_1]",
+  "high": []
+ },
+ {
+  "text": "object",
+  "placeholder": "object",
+  "vault": [],
+  "partial": "object",
+  "noFinanceNoName": "object",
+  "high": []
+ },
+ {
+  "text": "string",
+  "placeholder": "string",
+  "vault": [],
+  "partial": "string",
+  "noFinanceNoName": "string",
+  "high": []
+ },
+ {
+  "text": "nik",
+  "placeholder": "nik",
+  "vault": [],
+  "partial": "nik",
+  "noFinanceNoName": "nik",
+  "high": []
+ },
+ {
+  "text": "Budi Santoso",
+  "placeholder": "[NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ]
+  ],
+  "partial": "B*** S***",
+  "noFinanceNoName": "Budi Santoso",
+  "high": []
+ },
+ {
+  "text": "Jl. Mawar No. 5 RT 03/RW 07, Cibinong",
+  "placeholder": "[ADDRESS_1], Cibinong",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Mawar No. 5 RT 03/RW 07"
+   ]
+  ],
+  "partial": "Jl. ***, Cibinong",
+  "noFinanceNoName": "[ADDRESS_1], Cibinong",
+  "high": [
+   "Jl. Mawar No. 5 RT 03/RW 07"
+  ]
+ },
+ {
+  "text": "3201011508950001",
+  "placeholder": "[NIK_1]",
+  "vault": [
+   [
+    "[NIK_1]",
+    "3201011508950001"
+   ]
+  ],
+  "partial": "3201********0001",
+  "noFinanceNoName": "[NIK_1]",
+  "high": [
+   "3201011508950001"
+  ]
+ },
+ {
+  "text": "the tool got the real NIK",
+  "placeholder": "the tool got the real NIK",
+  "vault": [],
+  "partial": "the tool got the real NIK",
+  "noFinanceNoName": "the tool got the real NIK",
+  "high": []
+ },
+ {
+  "text": "Mawar",
+  "placeholder": "Mawar",
+  "vault": [],
+  "partial": "Mawar",
+  "noFinanceNoName": "Mawar",
+  "high": []
+ },
+ {
+  "text": "the same NIK keeps its placeholder across steps, even stored as a number",
+  "placeholder": "the same NIK keeps its placeholder across steps, even stored as a number",
+  "vault": [],
+  "partial": "the same NIK keeps its placeholder across steps, even stored as a number",
+  "noFinanceNoName": "the same NIK keeps its placeholder across steps, even stored as a number",
+  "high": []
+ },
+ {
+  "text": "Alamat Budi Santoso: Jl. Mawar No. 5 RT 03/RW 07, Cibinong",
+  "placeholder": "Alamat [NAME_1]: [ADDRESS_1], Cibinong",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ],
+   [
+    "[ADDRESS_1]",
+    "Jl. Mawar No. 5 RT 03/RW 07"
+   ]
+  ],
+  "partial": "Alamat B*** S***: Jl. ***, Cibinong",
+  "noFinanceNoName": "Alamat Budi Santoso: [ADDRESS_1], Cibinong",
+  "high": [
+   "Jl. Mawar No. 5 RT 03/RW 07"
+  ]
+ },
+ {
+  "text": "AI SDK: streamed tool input is restored as valid JSON",
+  "placeholder": "AI SDK: streamed tool input is restored as valid JSON",
+  "vault": [],
+  "partial": "AI SDK: streamed tool input is restored as valid JSON",
+  "noFinanceNoName": "AI SDK: streamed tool input is restored as valid JSON",
+  "high": []
+ },
+ {
+  "text": "Budi \"Bud\" Santoso",
+  "placeholder": "Budi \"Bud\" Santoso",
+  "vault": [],
+  "partial": "Budi \"Bud\" Santoso",
+  "noFinanceNoName": "Budi \"Bud\" Santoso",
+  "high": []
+ },
+ {
+  "text": "tool-input-start",
+  "placeholder": "tool-input-start",
+  "vault": [],
+  "partial": "tool-input-start",
+  "noFinanceNoName": "tool-input-start",
+  "high": []
+ },
+ {
+  "text": "t1",
+  "placeholder": "t1",
+  "vault": [],
+  "partial": "t1",
+  "noFinanceNoName": "t1",
+  "high": []
+ },
+ {
+  "text": "kirim",
+  "placeholder": "kirim",
+  "vault": [],
+  "partial": "kirim",
+  "noFinanceNoName": "kirim",
+  "high": []
+ },
+ {
+  "text": "tool-input-delta",
+  "placeholder": "tool-input-delta",
+  "vault": [],
+  "partial": "tool-input-delta",
+  "noFinanceNoName": "tool-input-delta",
+  "high": []
+ },
+ {
+  "text": "t1",
+  "placeholder": "t1",
+  "vault": [],
+  "partial": "t1",
+  "noFinanceNoName": "t1",
+  "high": []
+ },
+ {
+  "text": "{\"nama\":\"[NAM",
+  "placeholder": "{\"nama\":\"[NAM",
+  "vault": [],
+  "partial": "{\"nama\":\"[NAM",
+  "noFinanceNoName": "{\"nama\":\"[NAM",
+  "high": []
+ },
+ {
+  "text": "tool-input-delta",
+  "placeholder": "tool-input-delta",
+  "vault": [],
+  "partial": "tool-input-delta",
+  "noFinanceNoName": "tool-input-delta",
+  "high": []
+ },
+ {
+  "text": "t1",
+  "placeholder": "t1",
+  "vault": [],
+  "partial": "t1",
+  "noFinanceNoName": "t1",
+  "high": []
+ },
+ {
+  "text": "E_1]\"}",
+  "placeholder": "E_1]\"}",
+  "vault": [],
+  "partial": "E_1]\"}",
+  "noFinanceNoName": "E_1]\"}",
+  "high": []
+ },
+ {
+  "text": "tool-input-end",
+  "placeholder": "tool-input-end",
+  "vault": [],
+  "partial": "tool-input-end",
+  "noFinanceNoName": "tool-input-end",
+  "high": []
+ },
+ {
+  "text": "t1",
+  "placeholder": "t1",
+  "vault": [],
+  "partial": "t1",
+  "noFinanceNoName": "t1",
+  "high": []
+ },
+ {
+  "text": "tool-call",
+  "placeholder": "tool-call",
+  "vault": [],
+  "partial": "tool-call",
+  "noFinanceNoName": "tool-call",
+  "high": []
+ },
+ {
+  "text": "t1",
+  "placeholder": "t1",
+  "vault": [],
+  "partial": "t1",
+  "noFinanceNoName": "t1",
+  "high": []
+ },
+ {
+  "text": "kirim",
+  "placeholder": "kirim",
+  "vault": [],
+  "partial": "kirim",
+  "noFinanceNoName": "kirim",
+  "high": []
+ },
+ {
+  "text": "{\"nama\":\"[NAME_1]\"}",
+  "placeholder": "{\"nama\":\"[NAME_1]\"}",
+  "vault": [],
+  "partial": "{\"nama\":\"[NAME_1]\"}",
+  "noFinanceNoName": "{\"nama\":\"[NAME_1]\"}",
+  "high": []
+ },
+ {
+  "text": "finish",
+  "placeholder": "finish",
+  "vault": [],
+  "partial": "finish",
+  "noFinanceNoName": "finish",
+  "high": []
+ },
+ {
+  "text": "tool-calls",
+  "placeholder": "tool-calls",
+  "vault": [],
+  "partial": "tool-calls",
+  "noFinanceNoName": "tool-calls",
+  "high": []
+ },
+ {
+  "text": "object",
+  "placeholder": "object",
+  "vault": [],
+  "partial": "object",
+  "noFinanceNoName": "object",
+  "high": []
+ },
+ {
+  "text": "string",
+  "placeholder": "string",
+  "vault": [],
+  "partial": "string",
+  "noFinanceNoName": "string",
+  "high": []
+ },
+ {
+  "text": "tool-input-delta",
+  "placeholder": "tool-input-delta",
+  "vault": [],
+  "partial": "tool-input-delta",
+  "noFinanceNoName": "tool-input-delta",
+  "high": []
+ },
+ {
+  "text": "tool-call",
+  "placeholder": "tool-call",
+  "vault": [],
+  "partial": "tool-call",
+  "noFinanceNoName": "tool-call",
+  "high": []
+ },
+ {
+  "text": "Santoso",
+  "placeholder": "Santoso",
+  "vault": [],
+  "partial": "Santoso",
+  "noFinanceNoName": "Santoso",
+  "high": []
+ },
+ {
+  "text": "",
+  "placeholder": "",
+  "vault": [],
+  "partial": "",
+  "noFinanceNoName": "",
+  "high": []
+ },
+ {
+  "text": "AI SDK: exclude and allow pass through, reasoning stays as the model wrote it",
+  "placeholder": "AI SDK: exclude and allow pass through, reasoning stays as the model wrote it",
+  "vault": [],
+  "partial": "AI SDK: exclude and allow pass through, reasoning stays as the model wrote it",
+  "noFinanceNoName": "AI SDK: exclude and allow pass through, reasoning stays as the model wrote it",
+  "high": []
+ },
+ {
+  "text": "reasoning",
+  "placeholder": "reasoning",
+  "vault": [],
+  "partial": "reasoning",
+  "noFinanceNoName": "reasoning",
+  "high": []
+ },
+ {
+  "text": "User [NAME_1] earns a lot.",
+  "placeholder": "User [NAME_1] earns a lot.",
+  "vault": [],
+  "partial": "User [NAME_1] earns a lot.",
+  "noFinanceNoName": "User [NAME_1] earns a lot.",
+  "high": []
+ },
+ {
+  "text": "text",
+  "placeholder": "text",
+  "vault": [],
+  "partial": "text",
+  "noFinanceNoName": "text",
+  "high": []
+ },
+ {
+  "text": "Oke [NAME_1].",
+  "placeholder": "Oke [NAME_1].",
+  "vault": [],
+  "partial": "Oke [NAME_1].",
+  "noFinanceNoName": "Oke [NAME_1].",
+  "high": []
+ },
+ {
+  "text": "FINANCIAL",
+  "placeholder": "FINANCIAL",
+  "vault": [],
+  "partial": "FINANCIAL",
+  "noFinanceNoName": "FINANCIAL",
+  "high": []
+ },
+ {
+  "text": "0800-1-500-888",
+  "placeholder": "0800-1-500-888",
+  "vault": [],
+  "partial": "0800-1-500-888",
+  "noFinanceNoName": "0800-1-500-888",
+  "high": []
+ },
+ {
+  "text": "Nama: Budi Santoso, gaji: Rp15.000.000. Hubungi CS 0800-1-500-888.",
+  "placeholder": "Nama: [NAME_1], gaji: [FINANCIAL_1].",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ],
+   [
+    "[FINANCIAL_1]",
+    "Rp15.000.000. Hubungi CS 0800-1-500-888"
+   ]
+  ],
+  "partial": "Nama: B*** S***, gaji: ***.",
+  "noFinanceNoName": "Nama: Budi Santoso, gaji: Rp15.000.000. Hubungi CS [PHONE_1].",
+  "high": [
+   "Budi Santoso",
+   "Rp15.000.000. Hubungi CS 0800-1-500-888"
+  ]
+ },
+ {
+  "text": "Rp15.000.000",
+  "placeholder": "Rp15.000.000",
+  "vault": [],
+  "partial": "Rp15.000.000",
+  "noFinanceNoName": "Rp15.000.000",
+  "high": []
+ },
+ {
+  "text": "0800-1-500-888",
+  "placeholder": "0800-1-500-888",
+  "vault": [],
+  "partial": "0800-1-500-888",
+  "noFinanceNoName": "0800-1-500-888",
+  "high": []
+ },
+ {
+  "text": "Budi",
+  "placeholder": "Budi",
+  "vault": [],
+  "partial": "Budi",
+  "noFinanceNoName": "Budi",
+  "high": []
+ },
+ {
+  "text": "Oke Budi Santoso.",
+  "placeholder": "Oke [NAME_1].",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ]
+  ],
+  "partial": "Oke B*** S***.",
+  "noFinanceNoName": "Oke Budi Santoso.",
+  "high": []
+ },
+ {
+  "text": "User [NAME_1] earns a lot.",
+  "placeholder": "User [NAME_1] earns a lot.",
+  "vault": [],
+  "partial": "User [NAME_1] earns a lot.",
+  "noFinanceNoName": "User [NAME_1] earns a lot.",
+  "high": []
+ },
+ {
+  "text": "AI SDK: structured output gets JSON-escaped values",
+  "placeholder": "AI SDK: structured output gets JSON-escaped values",
+  "vault": [],
+  "partial": "AI SDK: structured output gets JSON-escaped values",
+  "noFinanceNoName": "AI SDK: structured output gets JSON-escaped values",
+  "high": []
+ },
+ {
+  "text": "text",
+  "placeholder": "text",
+  "vault": [],
+  "partial": "text",
+  "noFinanceNoName": "text",
+  "high": []
+ },
+ {
+  "text": "{\"nama\":\"[NAME_1]\"}",
+  "placeholder": "{\"nama\":\"[NAME_1]\"}",
+  "vault": [],
+  "partial": "{\"nama\":\"[NAME_1]\"}",
+  "noFinanceNoName": "{\"nama\":\"[NAME_1]\"}",
+  "high": []
+ },
+ {
+  "text": "Nama: Budi \"Bud\" Santoso",
+  "placeholder": "Nama: [NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi \"Bud\" Santoso"
+   ]
+  ],
+  "partial": "Nama: B*** \"*** S***",
+  "noFinanceNoName": "Nama: Budi \"Bud\" Santoso",
+  "high": [
+   "Budi \"Bud\" Santoso"
+  ]
+ },
+ {
+  "text": "object",
+  "placeholder": "object",
+  "vault": [],
+  "partial": "object",
+  "noFinanceNoName": "object",
+  "high": []
+ },
+ {
+  "text": "string",
+  "placeholder": "string",
+  "vault": [],
+  "partial": "string",
+  "noFinanceNoName": "string",
+  "high": []
+ },
+ {
+  "text": "json",
+  "placeholder": "json",
+  "vault": [],
+  "partial": "json",
+  "noFinanceNoName": "json",
+  "high": []
+ },
+ {
+  "text": "Budi \"Bud\" Santoso",
+  "placeholder": "Budi \"Bud\" Santoso",
+  "vault": [],
+  "partial": "Budi \"Bud\" Santoso",
+  "noFinanceNoName": "Budi \"Bud\" Santoso",
+  "high": []
+ },
+ {
+  "text": "AI SDK 6: the same middleware with specificationVersion v3",
+  "placeholder": "AI SDK 6: the same middleware with specificationVersion v3",
+  "vault": [],
+  "partial": "AI SDK 6: the same middleware with specificationVersion v3",
+  "noFinanceNoName": "AI SDK 6: the same middleware with specificationVersion v3",
+  "high": []
+ },
+ {
+  "text": "text",
+  "placeholder": "text",
+  "vault": [],
+  "partial": "text",
+  "noFinanceNoName": "text",
+  "high": []
+ },
+ {
+  "text": "Halo [NAME_1].",
+  "placeholder": "Halo [NAME_1].",
+  "vault": [],
+  "partial": "Halo [NAME_1].",
+  "noFinanceNoName": "Halo [NAME_1].",
+  "high": []
+ },
+ {
+  "text": "v3",
+  "placeholder": "v3",
+  "vault": [],
+  "partial": "v3",
+  "noFinanceNoName": "v3",
+  "high": []
+ },
+ {
+  "text": "Halo Budi Santoso.",
+  "placeholder": "Halo [NAME_1].",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ]
+  ],
+  "partial": "Halo B*** S***.",
+  "noFinanceNoName": "Halo Budi Santoso.",
+  "high": []
  },
  {
   "text": "node:test",
@@ -2565,17 +3576,27 @@
  },
  {
   "text": "Budi Santoso",
-  "placeholder": "Budi Santoso",
-  "vault": [],
-  "partial": "Budi Santoso",
+  "placeholder": "[NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ]
+  ],
+  "partial": "B*** S***",
   "noFinanceNoName": "Budi Santoso",
   "high": []
  },
  {
   "text": "SITI AMINAH",
-  "placeholder": "SITI AMINAH",
-  "vault": [],
-  "partial": "SITI AMINAH",
+  "placeholder": "[NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "SITI AMINAH"
+   ]
+  ],
+  "partial": "S*** A***",
   "noFinanceNoName": "SITI AMINAH",
   "high": []
  },
@@ -2803,9 +3824,14 @@
  },
  {
   "text": "Budi Santoso",
-  "placeholder": "Budi Santoso",
-  "vault": [],
-  "partial": "Budi Santoso",
+  "placeholder": "[NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ]
+  ],
+  "partial": "B*** S***",
   "noFinanceNoName": "Budi Santoso",
   "high": []
  },
@@ -2826,9 +3852,14 @@
  },
  {
   "text": "Siti Aminah",
-  "placeholder": "Siti Aminah",
-  "vault": [],
-  "partial": "Siti Aminah",
+  "placeholder": "[NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Siti Aminah"
+   ]
+  ],
+  "partial": "S*** A***",
   "noFinanceNoName": "Siti Aminah",
   "high": []
  },
@@ -2909,9 +3940,14 @@
  },
  {
   "text": "Budi Santoso",
-  "placeholder": "Budi Santoso",
-  "vault": [],
-  "partial": "Budi Santoso",
+  "placeholder": "[NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ]
+  ],
+  "partial": "B*** S***",
   "noFinanceNoName": "Budi Santoso",
   "high": []
  },
@@ -3097,9 +4133,14 @@
  },
  {
   "text": "Budi Santoso",
-  "placeholder": "Budi Santoso",
-  "vault": [],
-  "partial": "Budi Santoso",
+  "placeholder": "[NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ]
+  ],
+  "partial": "B*** S***",
   "noFinanceNoName": "Budi Santoso",
   "high": []
  },
@@ -3208,9 +4249,14 @@
  },
  {
   "text": "Siti Aminah",
-  "placeholder": "Siti Aminah",
-  "vault": [],
-  "partial": "Siti Aminah",
+  "placeholder": "[NAME_1]",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Siti Aminah"
+   ]
+  ],
+  "partial": "S*** A***",
   "noFinanceNoName": "Siti Aminah",
   "high": []
  },
@@ -4858,1359 +5904,6 @@
   "vault": [],
   "partial": "Rp950 rb",
   "noFinanceNoName": "Rp950 rb",
-  "high": []
- },
- {
-  "text": "Rp1.000.000.000.000.000.000.000",
-  "placeholder": "Rp1.000.000.000.000.000.000.000",
-  "vault": [],
-  "partial": "Rp1.000.000.000.000.000.000.000",
-  "noFinanceNoName": "Rp1.000.000.000.000.000.000.000",
-  "high": []
- },
- {
-  "text": "Rp0,13",
-  "placeholder": "Rp0,13",
-  "vault": [],
-  "partial": "Rp0,13",
-  "noFinanceNoName": "Rp0,13",
-  "high": []
- },
- {
-  "text": "Rp3",
-  "placeholder": "Rp3",
-  "vault": [],
-  "partial": "Rp3",
-  "noFinanceNoName": "Rp3",
-  "high": []
- },
- {
-  "text": "parseRupiah tidak tertipu nama properti bawaan objek",
-  "placeholder": "parseRupiah tidak tertipu nama properti bawaan objek",
-  "vault": [],
-  "partial": "parseRupiah tidak tertipu nama properti bawaan objek",
-  "noFinanceNoName": "parseRupiah tidak tertipu nama properti bawaan objek",
-  "high": []
- },
- {
-  "text": "constructor",
-  "placeholder": "constructor",
-  "vault": [],
-  "partial": "constructor",
-  "noFinanceNoName": "constructor",
-  "high": []
- },
- {
-  "text": "2 toString",
-  "placeholder": "2 toString",
-  "vault": [],
-  "partial": "2 toString",
-  "noFinanceNoName": "2 toString",
-  "high": []
- },
- {
-  "text": "terbilang angka desimal sangat kecil",
-  "placeholder": "terbilang angka desimal sangat kecil",
-  "vault": [],
-  "partial": "terbilang angka desimal sangat kecil",
-  "noFinanceNoName": "terbilang angka desimal sangat kecil",
-  "high": []
- },
- {
-  "text": "nol koma nol nol nol nol nol nol satu",
-  "placeholder": "nol koma nol nol nol nol nol nol satu",
-  "vault": [],
-  "partial": "nol koma nol nol nol nol nol nol satu",
-  "noFinanceNoName": "nol koma nol nol nol nol nol nol satu",
-  "high": []
- },
- {
-  "text": "node:test",
-  "placeholder": "node:test",
-  "vault": [],
-  "partial": "node:test",
-  "noFinanceNoName": "node:test",
-  "high": []
- },
- {
-  "text": "node:assert/strict",
-  "placeholder": "node:assert/strict",
-  "vault": [],
-  "partial": "node:assert/strict",
-  "noFinanceNoName": "node:assert/strict",
-  "high": []
- },
- {
-  "text": "../src/index.ts",
-  "placeholder": "../src/index.ts",
-  "vault": [],
-  "partial": "../src/index.ts",
-  "noFinanceNoName": "../src/index.ts",
-  "high": []
- },
- {
-  "text": "Halo kak, saya mau komplain. Nama: Budi Santoso",
-  "placeholder": "Halo kak, saya mau komplain. Nama: [NAME_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Budi Santoso"
-   ]
-  ],
-  "partial": "Halo kak, saya mau komplain. Nama: B*** S***",
-  "noFinanceNoName": "Halo kak, saya mau komplain. Nama: Budi Santoso",
-  "high": [
-   "Budi Santoso"
-  ]
- },
- {
-  "text": "NIK 3201011508950001, NPWP 01.234.567.8-901.000",
-  "placeholder": "NIK [NIK_1], NPWP [NPWP_1]",
-  "vault": [
-   [
-    "[NIK_1]",
-    "3201011508950001"
-   ],
-   [
-    "[NPWP_1]",
-    "01.234.567.8-901.000"
-   ]
-  ],
-  "partial": "NIK 3201********0001, NPWP ***********1000",
-  "noFinanceNoName": "NIK [NIK_1], NPWP [NPWP_1]",
-  "high": [
-   "3201011508950001",
-   "01.234.567.8-901.000"
-  ]
- },
- {
-  "text": "HP 0812-3456-7890 atau email budi.santoso@gmail.com",
-  "placeholder": "HP [PHONE_1] atau email [EMAIL_1]",
-  "vault": [
-   [
-    "[PHONE_1]",
-    "0812-3456-7890"
-   ],
-   [
-    "[EMAIL_1]",
-    "budi.santoso@gmail.com"
-   ]
-  ],
-  "partial": "HP 0812****7890 atau email b***@gmail.com",
-  "noFinanceNoName": "HP [PHONE_1] atau email [EMAIL_1]",
-  "high": [
-   "0812-3456-7890",
-   "budi.santoso@gmail.com"
-  ]
- },
- {
-  "text": "Refund ke rek BCA 1234567890 a.n. Budi Santoso ya",
-  "placeholder": "Refund ke rek BCA [BANK_ACCOUNT_1] a.n. [NAME_1] ya",
-  "vault": [
-   [
-    "[BANK_ACCOUNT_1]",
-    "1234567890"
-   ],
-   [
-    "[NAME_1]",
-    "Budi Santoso"
-   ]
-  ],
-  "partial": "Refund ke rek BCA ******7890 a.n. B*** S*** ya",
-  "noFinanceNoName": "Refund ke rek BCA [BANK_ACCOUNT_1] a.n. Budi Santoso ya",
-  "high": [
-   "1234567890",
-   "Budi Santoso"
-  ]
- },
- {
-  "text": "Alamat Jl. Mawar No. 5 RT 03/RW 07, motor B 1234 XYZ",
-  "placeholder": "Alamat [ADDRESS_1], motor [PLATE_1]",
-  "vault": [
-   [
-    "[ADDRESS_1]",
-    "Jl. Mawar No. 5 RT 03/RW 07"
-   ],
-   [
-    "[PLATE_1]",
-    "B 1234 XYZ"
-   ]
-  ],
-  "partial": "Alamat Jl. ***, motor B ****",
-  "noFinanceNoName": "Alamat [ADDRESS_1], motor [PLATE_1]",
-  "high": [
-   "Jl. Mawar No. 5 RT 03/RW 07",
-   "B 1234 XYZ"
-  ]
- },
- {
-  "text": "\n",
-  "placeholder": "\n",
-  "vault": [],
-  "partial": "\n",
-  "noFinanceNoName": "\n",
-  "high": []
- },
- {
-  "text": "mendeteksi semua jenis PII khas Indonesia dalam satu chat",
-  "placeholder": "mendeteksi semua jenis PII khas Indonesia dalam satu chat",
-  "vault": [],
-  "partial": "mendeteksi semua jenis PII khas Indonesia dalam satu chat",
-  "noFinanceNoName": "mendeteksi semua jenis PII khas Indonesia dalam satu chat",
-  "high": []
- },
- {
-  "text": "NAME:Budi Santoso",
-  "placeholder": "NAME:[NAME_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Budi Santoso"
-   ]
-  ],
-  "partial": "NAME:B*** S***",
-  "noFinanceNoName": "NAME:Budi Santoso",
-  "high": []
- },
- {
-  "text": "NIK:3201011508950001",
-  "placeholder": "NIK:[NIK_1]",
-  "vault": [
-   [
-    "[NIK_1]",
-    "3201011508950001"
-   ]
-  ],
-  "partial": "NIK:3201********0001",
-  "noFinanceNoName": "NIK:[NIK_1]",
-  "high": [
-   "3201011508950001"
-  ]
- },
- {
-  "text": "NPWP:01.234.567.8-901.000",
-  "placeholder": "NPWP:[NPWP_1]",
-  "vault": [
-   [
-    "[NPWP_1]",
-    "01.234.567.8-901.000"
-   ]
-  ],
-  "partial": "NPWP:***********1000",
-  "noFinanceNoName": "NPWP:[NPWP_1]",
-  "high": [
-   "01.234.567.8-901.000"
-  ]
- },
- {
-  "text": "PHONE:0812-3456-7890",
-  "placeholder": "PHONE:[PHONE_1]",
-  "vault": [
-   [
-    "[PHONE_1]",
-    "0812-3456-7890"
-   ]
-  ],
-  "partial": "PHONE:0812****7890",
-  "noFinanceNoName": "PHONE:[PHONE_1]",
-  "high": [
-   "0812-3456-7890"
-  ]
- },
- {
-  "text": "EMAIL:budi.santoso@gmail.com",
-  "placeholder": "EMAIL:[EMAIL_1]",
-  "vault": [
-   [
-    "[EMAIL_1]",
-    "budi.santoso@gmail.com"
-   ]
-  ],
-  "partial": "EMAIL:b***@gmail.com",
-  "noFinanceNoName": "EMAIL:[EMAIL_1]",
-  "high": [
-   "budi.santoso@gmail.com"
-  ]
- },
- {
-  "text": "BANK_ACCOUNT:1234567890",
-  "placeholder": "BANK_ACCOUNT:[BANK_ACCOUNT_1]",
-  "vault": [
-   [
-    "[BANK_ACCOUNT_1]",
-    "1234567890"
-   ]
-  ],
-  "partial": "BANK_ACCOUNT:******7890",
-  "noFinanceNoName": "BANK_ACCOUNT:[BANK_ACCOUNT_1]",
-  "high": [
-   "1234567890"
-  ]
- },
- {
-  "text": "NAME:Budi Santoso",
-  "placeholder": "NAME:[NAME_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Budi Santoso"
-   ]
-  ],
-  "partial": "NAME:B*** S***",
-  "noFinanceNoName": "NAME:Budi Santoso",
-  "high": []
- },
- {
-  "text": "ADDRESS:Jl. Mawar No. 5 RT 03/RW 07",
-  "placeholder": "ADDRESS:[ADDRESS_1]",
-  "vault": [
-   [
-    "[ADDRESS_1]",
-    "Jl. Mawar No. 5 RT 03/RW 07"
-   ]
-  ],
-  "partial": "ADDRESS:Jl. ***",
-  "noFinanceNoName": "ADDRESS:[ADDRESS_1]",
-  "high": [
-   "Jl. Mawar No. 5 RT 03/RW 07"
-  ]
- },
- {
-  "text": "PLATE:B 1234 XYZ",
-  "placeholder": "PLATE:[PLATE_1]",
-  "vault": [
-   [
-    "[PLATE_1]",
-    "B 1234 XYZ"
-   ]
-  ],
-  "partial": "PLATE:B ****",
-  "noFinanceNoName": "PLATE:[PLATE_1]",
-  "high": []
- },
- {
-  "text": "mask → LLM → unmask mengembalikan data asli",
-  "placeholder": "mask → LLM → unmask mengembalikan data asli",
-  "vault": [],
-  "partial": "mask → LLM → unmask mengembalikan data asli",
-  "noFinanceNoName": "mask → LLM → unmask mengembalikan data asli",
-  "high": []
- },
- {
-  "text": "3201011508950001",
-  "placeholder": "[NIK_1]",
-  "vault": [
-   [
-    "[NIK_1]",
-    "3201011508950001"
-   ]
-  ],
-  "partial": "3201********0001",
-  "noFinanceNoName": "[NIK_1]",
-  "high": [
-   "3201011508950001"
-  ]
- },
- {
-  "text": "Budi",
-  "placeholder": "Budi",
-  "vault": [],
-  "partial": "Budi",
-  "noFinanceNoName": "Budi",
-  "high": []
- },
- {
-  "text": "nama yang sama mendapat placeholder yang sama",
-  "placeholder": "nama yang sama mendapat placeholder yang sama",
-  "vault": [],
-  "partial": "nama yang sama mendapat placeholder yang sama",
-  "noFinanceNoName": "nama yang sama mendapat placeholder yang sama",
-  "high": []
- },
- {
-  "text": "Baik [NAME_1], refund ke [BANK_ACCOUNT_1] diproses. Kami hubungi [PHONE_1].",
-  "placeholder": "Baik [NAME_1], refund ke [BANK_ACCOUNT_1] diproses. Kami hubungi [PHONE_1].",
-  "vault": [],
-  "partial": "Baik [NAME_1], refund ke [BANK_ACCOUNT_1] diproses. Kami hubungi [PHONE_1].",
-  "noFinanceNoName": "Baik [NAME_1], refund ke [BANK_ACCOUNT_1] diproses. Kami hubungi [PHONE_1].",
-  "high": []
- },
- {
-  "text": "Baik Budi Santoso, refund ke 1234567890 diproses. Kami hubungi 0812-3456-7890.",
-  "placeholder": "Baik Budi Santoso, refund ke 1234567890 diproses. Kami hubungi [PHONE_1].",
-  "vault": [
-   [
-    "[PHONE_1]",
-    "0812-3456-7890"
-   ]
-  ],
-  "partial": "Baik Budi Santoso, refund ke 1234567890 diproses. Kami hubungi 0812****7890.",
-  "noFinanceNoName": "Baik Budi Santoso, refund ke 1234567890 diproses. Kami hubungi [PHONE_1].",
-  "high": [
-   "0812-3456-7890"
-  ]
- },
- {
-  "text": "nomor yang sama dengan format berbeda mendapat placeholder yang sama",
-  "placeholder": "nomor yang sama dengan format berbeda mendapat placeholder yang sama",
-  "vault": [],
-  "partial": "nomor yang sama dengan format berbeda mendapat placeholder yang sama",
-  "noFinanceNoName": "nomor yang sama dengan format berbeda mendapat placeholder yang sama",
-  "high": []
- },
- {
-  "text": "Hubungi 0812-3456-7890 atau +62 812 3456 7890",
-  "placeholder": "Hubungi [PHONE_1] atau [PHONE_1]",
-  "vault": [
-   [
-    "[PHONE_1]",
-    "0812-3456-7890"
-   ]
-  ],
-  "partial": "Hubungi 0812****7890 atau 0812****7890",
-  "noFinanceNoName": "Hubungi [PHONE_1] atau [PHONE_1]",
-  "high": [
-   "0812-3456-7890",
-   "+62 812 3456 7890"
-  ]
- },
- {
-  "text": "Hubungi [PHONE_1] atau [PHONE_1]",
-  "placeholder": "Hubungi [PHONE_1] atau [PHONE_1]",
-  "vault": [],
-  "partial": "Hubungi [PHONE_1] atau [PHONE_1]",
-  "noFinanceNoName": "Hubungi [PHONE_1] atau [PHONE_1]",
-  "high": []
- },
- {
-  "text": "mode partial untuk log dan layar admin",
-  "placeholder": "mode partial untuk log dan layar admin",
-  "vault": [],
-  "partial": "mode partial untuk log dan layar admin",
-  "noFinanceNoName": "mode partial untuk log dan layar admin",
-  "high": []
- },
- {
-  "text": "NIK 3201011508950001 HP 081234567890 email budi@gmail.com",
-  "placeholder": "NIK [NIK_1] HP [PHONE_1] email [EMAIL_1]",
-  "vault": [
-   [
-    "[NIK_1]",
-    "3201011508950001"
-   ],
-   [
-    "[PHONE_1]",
-    "081234567890"
-   ],
-   [
-    "[EMAIL_1]",
-    "budi@gmail.com"
-   ]
-  ],
-  "partial": "NIK 3201********0001 HP 0812****7890 email b***@gmail.com",
-  "noFinanceNoName": "NIK [NIK_1] HP [PHONE_1] email [EMAIL_1]",
-  "high": [
-   "3201011508950001",
-   "081234567890",
-   "budi@gmail.com"
-  ]
- },
- {
-  "text": "partial",
-  "placeholder": "partial",
-  "vault": [],
-  "partial": "partial",
-  "noFinanceNoName": "partial",
-  "high": []
- },
- {
-  "text": "NIK 3201********0001 HP 0812****7890 email b***@gmail.com",
-  "placeholder": "NIK 3201********0001 HP 0812****7890 email b***@gmail.com",
-  "vault": [],
-  "partial": "NIK 3201********0001 HP 0812****7890 email b***@gmail.com",
-  "noFinanceNoName": "NIK 3201********0001 HP 0812****7890 email b***@gmail.com",
-  "high": []
- },
- {
-  "text": "tidak salah tangkap angka biasa",
-  "placeholder": "tidak salah tangkap angka biasa",
-  "vault": [],
-  "partial": "tidak salah tangkap angka biasa",
-  "noFinanceNoName": "tidak salah tangkap angka biasa",
-  "high": []
- },
- {
-  "text": "Total belanja Rp1.500.000 dibayar tanggal 2026-10-15 jam 14.30",
-  "placeholder": "Total belanja Rp1.500.000 dibayar tanggal 2026-10-15 jam 14.30",
-  "vault": [],
-  "partial": "Total belanja Rp1.500.000 dibayar tanggal 2026-10-15 jam 14.30",
-  "noFinanceNoName": "Total belanja Rp1.500.000 dibayar tanggal 2026-10-15 jam 14.30",
-  "high": []
- },
- {
-  "text": "Order #1234567890123456 sudah dikirim",
-  "placeholder": "Order #1234567890123456 sudah dikirim",
-  "vault": [],
-  "partial": "Order #1234567890123456 sudah dikirim",
-  "noFinanceNoName": "Order #1234567890123456 sudah dikirim",
-  "high": []
- },
- {
-  "text": "Ibu Kota Nusantara ada di Kalimantan Timur",
-  "placeholder": "Ibu Kota Nusantara ada di Kalimantan Timur",
-  "vault": [],
-  "partial": "Ibu Kota Nusantara ada di Kalimantan Timur",
-  "noFinanceNoName": "Ibu Kota Nusantara ada di Kalimantan Timur",
-  "high": []
- },
- {
-  "text": "Jalan Sudirman macet parah pagi ini",
-  "placeholder": "Jalan Sudirman macet parah pagi ini",
-  "vault": [],
-  "partial": "Jalan Sudirman macet parah pagi ini",
-  "noFinanceNoName": "Jalan Sudirman macet parah pagi ini",
-  "high": []
- },
- {
-  "text": "Versi 3.2.1, build 20261015",
-  "placeholder": "Versi 3.2.1, build 20261015",
-  "vault": [],
-  "partial": "Versi 3.2.1, build 20261015",
-  "noFinanceNoName": "Versi 3.2.1, build 20261015",
-  "high": []
- },
- {
-  "text": "nomor HP setelah kata transfer tetap terdeteksi sebagai HP (e-wallet)",
-  "placeholder": "nomor HP setelah kata transfer tetap terdeteksi sebagai HP (e-wallet)",
-  "vault": [],
-  "partial": "nomor HP setelah kata transfer tetap terdeteksi sebagai HP (e-wallet)",
-  "noFinanceNoName": "nomor HP setelah kata transfer tetap terdeteksi sebagai HP (e-wallet)",
-  "high": []
- },
- {
-  "text": "transfer DANA ke 081234567890 ya",
-  "placeholder": "transfer DANA ke [PHONE_1] ya",
-  "vault": [
-   [
-    "[PHONE_1]",
-    "081234567890"
-   ]
-  ],
-  "partial": "transfer DANA ke 0812****7890 ya",
-  "noFinanceNoName": "transfer DANA ke [PHONE_1] ya",
-  "high": [
-   "081234567890"
-  ]
- },
- {
-  "text": "PHONE",
-  "placeholder": "PHONE",
-  "vault": [],
-  "partial": "PHONE",
-  "noFinanceNoName": "PHONE",
-  "high": []
- },
- {
-  "text": "nomor HP di akhir baris tidak menelan angka di baris berikutnya",
-  "placeholder": "nomor HP di akhir baris tidak menelan angka di baris berikutnya",
-  "vault": [],
-  "partial": "nomor HP di akhir baris tidak menelan angka di baris berikutnya",
-  "noFinanceNoName": "nomor HP di akhir baris tidak menelan angka di baris berikutnya",
-  "high": []
- },
- {
-  "text": "Chat WhatsApp dengan +62 881-2345-6789\n14/10/26 08.30 - +62 881-2345-6789: halo",
-  "placeholder": "Chat WhatsApp dengan [PHONE_1]\n14/10/26 08.30 - [PHONE_1]: halo",
-  "vault": [
-   [
-    "[PHONE_1]",
-    "+62 881-2345-6789"
-   ]
-  ],
-  "partial": "Chat WhatsApp dengan 0881****6789\n14/10/26 08.30 - 0881****6789: halo",
-  "noFinanceNoName": "Chat WhatsApp dengan [PHONE_1]\n14/10/26 08.30 - [PHONE_1]: halo",
-  "high": [
-   "+62 881-2345-6789",
-   "+62 881-2345-6789"
-  ]
- },
- {
-  "text": "Chat WhatsApp dengan [PHONE_1]\n14/10/26 08.30 - [PHONE_1]: halo",
-  "placeholder": "Chat WhatsApp dengan [NAME_1]\n14/10/26 08.30 - [NAME_1]: halo",
-  "vault": [
-   [
-    "[NAME_1]",
-    "[PHONE_1]"
-   ]
-  ],
-  "partial": "Chat WhatsApp dengan [***\n14/10/26 08.30 - [***: halo",
-  "noFinanceNoName": "Chat WhatsApp dengan [PHONE_1]\n14/10/26 08.30 - [PHONE_1]: halo",
-  "high": [
-   "[PHONE_1]",
-   "[PHONE_1]"
-  ]
- },
- {
-  "text": "hp 0812-3456-7890\n2026-10-01 error",
-  "placeholder": "hp [PHONE_1]\n2026-10-01 error",
-  "vault": [
-   [
-    "[PHONE_1]",
-    "0812-3456-7890"
-   ]
-  ],
-  "partial": "hp 0812****7890\n2026-10-01 error",
-  "noFinanceNoName": "hp [PHONE_1]\n2026-10-01 error",
-  "high": [
-   "0812-3456-7890"
-  ]
- },
- {
-  "text": "0812-3456-7890",
-  "placeholder": "[PHONE_1]",
-  "vault": [
-   [
-    "[PHONE_1]",
-    "0812-3456-7890"
-   ]
-  ],
-  "partial": "0812****7890",
-  "noFinanceNoName": "[PHONE_1]",
-  "high": [
-   "0812-3456-7890"
-  ]
- },
- {
-  "text": "kirim 0812-3456-7890 2 pcs",
-  "placeholder": "kirim [PHONE_1] 2 pcs",
-  "vault": [
-   [
-    "[PHONE_1]",
-    "0812-3456-7890"
-   ]
-  ],
-  "partial": "kirim 0812****7890 2 pcs",
-  "noFinanceNoName": "kirim [PHONE_1] 2 pcs",
-  "high": [
-   "0812-3456-7890"
-  ]
- },
- {
-  "text": "0812-3456-7890",
-  "placeholder": "[PHONE_1]",
-  "vault": [
-   [
-    "[PHONE_1]",
-    "0812-3456-7890"
-   ]
-  ],
-  "partial": "0812****7890",
-  "noFinanceNoName": "[PHONE_1]",
-  "high": [
-   "0812-3456-7890"
-  ]
- },
- {
-  "text": "kartu kredit lolos Luhn, BPJS butuh kata kunci",
-  "placeholder": "kartu kredit lolos Luhn, BPJS butuh kata kunci",
-  "vault": [],
-  "partial": "kartu kredit lolos Luhn, BPJS butuh kata kunci",
-  "noFinanceNoName": "kartu kredit lolos Luhn, BPJS butuh kata kunci",
-  "high": []
- },
- {
-  "text": "kartu 4539 1488 0343 6467",
-  "placeholder": "kartu [CARD_1]",
-  "vault": [
-   [
-    "[CARD_1]",
-    "4539 1488 0343 6467"
-   ]
-  ],
-  "partial": "kartu ************6467",
-  "noFinanceNoName": "kartu [CARD_1]",
-  "high": [
-   "4539 1488 0343 6467"
-  ]
- },
- {
-  "text": "CARD",
-  "placeholder": "CARD",
-  "vault": [],
-  "partial": "CARD",
-  "noFinanceNoName": "CARD",
-  "high": []
- },
- {
-  "text": "kartu uji 4111 1111 1111 1111",
-  "placeholder": "kartu uji 4111 1111 1111 1111",
-  "vault": [],
-  "partial": "kartu uji 4111 1111 1111 1111",
-  "noFinanceNoName": "kartu uji 4111 1111 1111 1111",
-  "high": []
- },
- {
-  "text": "No BPJS 0001234567890",
-  "placeholder": "No BPJS [BPJS_1]",
-  "vault": [
-   [
-    "[BPJS_1]",
-    "0001234567890"
-   ]
-  ],
-  "partial": "No BPJS *********7890",
-  "noFinanceNoName": "No BPJS [BPJS_1]",
-  "high": [
-   "0001234567890"
-  ]
- },
- {
-  "text": "BPJS",
-  "placeholder": "BPJS",
-  "vault": [],
-  "partial": "BPJS",
-  "noFinanceNoName": "BPJS",
-  "high": []
- },
- {
-  "text": "kode 0001234567890",
-  "placeholder": "kode 0001234567890",
-  "vault": [],
-  "partial": "kode 0001234567890",
-  "noFinanceNoName": "kode 0001234567890",
-  "high": []
- },
- {
-  "text": "gelar dilewati, nama tetap ditangkap",
-  "placeholder": "gelar dilewati, nama tetap ditangkap",
-  "vault": [],
-  "partial": "gelar dilewati, nama tetap ditangkap",
-  "noFinanceNoName": "gelar dilewati, nama tetap ditangkap",
-  "high": []
- },
- {
-  "text": "Surat untuk Bapak Dr. Ahmad Fauzi",
-  "placeholder": "Surat untuk Bapak Dr. [NAME_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Ahmad Fauzi"
-   ]
-  ],
-  "partial": "Surat untuk Bapak Dr. A*** F***",
-  "noFinanceNoName": "Surat untuk Bapak Dr. Ahmad Fauzi",
-  "high": []
- },
- {
-  "text": "Ahmad Fauzi",
-  "placeholder": "Ahmad Fauzi",
-  "vault": [],
-  "partial": "Ahmad Fauzi",
-  "noFinanceNoName": "Ahmad Fauzi",
-  "high": []
- },
- {
-  "text": "allow-list dan filter jenis",
-  "placeholder": "allow-list dan filter jenis",
-  "vault": [],
-  "partial": "allow-list dan filter jenis",
-  "noFinanceNoName": "allow-list dan filter jenis",
-  "high": []
- },
- {
-  "text": "cs@toko.id",
-  "placeholder": "[EMAIL_1]",
-  "vault": [
-   [
-    "[EMAIL_1]",
-    "cs@toko.id"
-   ]
-  ],
-  "partial": "c***@toko.id",
-  "noFinanceNoName": "[EMAIL_1]",
-  "high": [
-   "cs@toko.id"
-  ]
- },
- {
-  "text": "EMAIL",
-  "placeholder": "EMAIL",
-  "vault": [],
-  "partial": "EMAIL",
-  "noFinanceNoName": "EMAIL",
-  "high": []
- },
- {
-  "text": "Hubungi cs@toko.id, bukan budi@gmail.com, HP 081234567890",
-  "placeholder": "Hubungi [EMAIL_1], bukan [EMAIL_2], HP [PHONE_1]",
-  "vault": [
-   [
-    "[EMAIL_1]",
-    "cs@toko.id"
-   ],
-   [
-    "[EMAIL_2]",
-    "budi@gmail.com"
-   ],
-   [
-    "[PHONE_1]",
-    "081234567890"
-   ]
-  ],
-  "partial": "Hubungi c***@toko.id, bukan b***@gmail.com, HP 0812****7890",
-  "noFinanceNoName": "Hubungi [EMAIL_1], bukan [EMAIL_2], HP [PHONE_1]",
-  "high": [
-   "cs@toko.id",
-   "budi@gmail.com",
-   "081234567890"
-  ]
- },
- {
-  "text": "Hubungi cs@toko.id, bukan [EMAIL_1], HP 081234567890",
-  "placeholder": "Hubungi [EMAIL_1], bukan [EMAIL_1], HP [PHONE_1]",
-  "vault": [
-   [
-    "[EMAIL_1]",
-    "cs@toko.id"
-   ],
-   [
-    "[PHONE_1]",
-    "081234567890"
-   ]
-  ],
-  "partial": "Hubungi c***@toko.id, bukan [EMAIL_1], HP 0812****7890",
-  "noFinanceNoName": "Hubungi [EMAIL_1], bukan [EMAIL_1], HP [PHONE_1]",
-  "high": [
-   "cs@toko.id",
-   "081234567890"
-  ]
- },
- {
-  "text": "kolom nama dan alamat di CSV dikenali dari header-nya",
-  "placeholder": "kolom nama dan alamat di CSV dikenali dari header-nya",
-  "vault": [],
-  "partial": "kolom nama dan alamat di CSV dikenali dari header-nya",
-  "noFinanceNoName": "kolom nama dan alamat di CSV dikenali dari header-nya",
-  "high": []
- },
- {
-  "text": "id;nama_lengkap;alamat;kota\n1;Siti Aminah;Jl. Melati 3;Depok\n2;\"Rahmat, S.T.\";Gg. Kenari 9;Bogor\n",
-  "placeholder": "id;nama_lengkap;alamat;kota\n1;[NAME_1];[ADDRESS_1];Depok\n2;\"[NAME_2]\";[ADDRESS_2];Bogor\n",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Siti Aminah"
-   ],
-   [
-    "[ADDRESS_1]",
-    "Jl. Melati 3"
-   ],
-   [
-    "[NAME_2]",
-    "Rahmat, S.T."
-   ],
-   [
-    "[ADDRESS_2]",
-    "Gg. Kenari 9"
-   ]
-  ],
-  "partial": "id;nama_lengkap;alamat;kota\n1;S*** A***;Jl. ***;Depok\n2;\"R*** S***\";Gg. ***;Bogor\n",
-  "noFinanceNoName": "id;nama_lengkap;alamat;kota\n1;Siti Aminah;[ADDRESS_1];Depok\n2;\"Rahmat, S.T.\";[ADDRESS_2];Bogor\n",
-  "high": [
-   "Siti Aminah",
-   "Jl. Melati 3",
-   "Rahmat, S.T.",
-   "Gg. Kenari 9"
-  ]
- },
- {
-  "text": "NAME:Siti Aminah",
-  "placeholder": "NAME:[NAME_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Siti Aminah"
-   ]
-  ],
-  "partial": "NAME:S*** A***",
-  "noFinanceNoName": "NAME:Siti Aminah",
-  "high": []
- },
- {
-  "text": "ADDRESS:Jl. Melati 3",
-  "placeholder": "ADDRESS:[ADDRESS_1]",
-  "vault": [
-   [
-    "[ADDRESS_1]",
-    "Jl. Melati 3"
-   ]
-  ],
-  "partial": "ADDRESS:Jl. ***",
-  "noFinanceNoName": "ADDRESS:[ADDRESS_1]",
-  "high": [
-   "Jl. Melati 3"
-  ]
- },
- {
-  "text": "NAME:Rahmat, S.T.",
-  "placeholder": "NAME:Rahmat, S.T.",
-  "vault": [],
-  "partial": "NAME:Rahmat, S.T.",
-  "noFinanceNoName": "NAME:Rahmat, S.T.",
-  "high": []
- },
- {
-  "text": "ADDRESS:Gg. Kenari 9",
-  "placeholder": "ADDRESS:[ADDRESS_1]",
-  "vault": [
-   [
-    "[ADDRESS_1]",
-    "Gg. Kenari 9"
-   ]
-  ],
-  "partial": "ADDRESS:Gg. ***",
-  "noFinanceNoName": "ADDRESS:[ADDRESS_1]",
-  "high": [
-   "Gg. Kenari 9"
-  ]
- },
- {
-  "text": "label \"Nama:\" di awal baris tidak menelan field lain di baris yang sama",
-  "placeholder": "label \"Nama:\" di awal baris tidak menelan field lain di baris yang sama",
-  "vault": [],
-  "partial": "label \"Nama:\" di awal baris tidak menelan field lain di baris yang sama",
-  "noFinanceNoName": "label \"Nama:\" di awal baris tidak menelan field lain di baris yang sama",
-  "high": []
- },
- {
-  "text": "Nama: Budi Santoso, NIK 3201011508950001, refund ke rek BCA 1234567890, HP 0812-3456-7890",
-  "placeholder": "Nama: [NAME_1], NIK [NIK_1], refund ke rek BCA [BANK_ACCOUNT_1], HP [PHONE_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Budi Santoso"
-   ],
-   [
-    "[NIK_1]",
-    "3201011508950001"
-   ],
-   [
-    "[BANK_ACCOUNT_1]",
-    "1234567890"
-   ],
-   [
-    "[PHONE_1]",
-    "0812-3456-7890"
-   ]
-  ],
-  "partial": "Nama: B*** S***, NIK 3201********0001, refund ke rek BCA ******7890, HP 0812****7890",
-  "noFinanceNoName": "Nama: Budi Santoso, NIK [NIK_1], refund ke rek BCA [BANK_ACCOUNT_1], HP [PHONE_1]",
-  "high": [
-   "Budi Santoso",
-   "3201011508950001",
-   "1234567890",
-   "0812-3456-7890"
-  ]
- },
- {
-  "text": "Nama: [NAME_1], NIK [NIK_1], refund ke rek BCA [BANK_ACCOUNT_1], HP [PHONE_1]",
-  "placeholder": "Nama: [NAME_1], NIK [NIK_1], refund ke rek BCA [BANK_ACCOUNT_1], HP [PHONE_1]",
-  "vault": [],
-  "partial": "Nama: [NAME_1], NIK [NIK_1], refund ke rek BCA [BANK_ACCOUNT_1], HP [PHONE_1]",
-  "noFinanceNoName": "Nama: [NAME_1], NIK [NIK_1], refund ke rek BCA [BANK_ACCOUNT_1], HP [PHONE_1]",
-  "high": []
- },
- {
-  "text": "alamat: Jl. Mawar No. 5, Depok, HP 0812-3456-7890",
-  "placeholder": "alamat: [ADDRESS_1], HP [PHONE_1]",
-  "vault": [
-   [
-    "[ADDRESS_1]",
-    "Jl. Mawar No. 5, Depok"
-   ],
-   [
-    "[PHONE_1]",
-    "0812-3456-7890"
-   ]
-  ],
-  "partial": "alamat: Jl. ***, HP 0812****7890",
-  "noFinanceNoName": "alamat: [ADDRESS_1], HP [PHONE_1]",
-  "high": [
-   "Jl. Mawar No. 5, Depok",
-   "0812-3456-7890"
-  ]
- },
- {
-  "text": "ADDRESS:Jl. Mawar No. 5, Depok",
-  "placeholder": "ADDRESS:[ADDRESS_1]",
-  "vault": [
-   [
-    "[ADDRESS_1]",
-    "Jl. Mawar No. 5, Depok"
-   ]
-  ],
-  "partial": "ADDRESS:Jl. ***",
-  "noFinanceNoName": "ADDRESS:[ADDRESS_1]",
-  "high": [
-   "Jl. Mawar No. 5, Depok"
-  ]
- },
- {
-  "text": "PHONE:0812-3456-7890",
-  "placeholder": "PHONE:[PHONE_1]",
-  "vault": [
-   [
-    "[PHONE_1]",
-    "0812-3456-7890"
-   ]
-  ],
-  "partial": "PHONE:0812****7890",
-  "noFinanceNoName": "PHONE:[PHONE_1]",
-  "high": [
-   "0812-3456-7890"
-  ]
- },
- {
-  "text": "Alamat: Jl. Melati No. 12, Kel. Sukamaju, Kec. Cibeunying, Bandung. Rekening BCA 1234567890.",
-  "placeholder": "Alamat: [ADDRESS_1]. Rekening BCA [BANK_ACCOUNT_1].",
-  "vault": [
-   [
-    "[ADDRESS_1]",
-    "Jl. Melati No. 12, Kel. Sukamaju, Kec. Cibeunying, Bandung"
-   ],
-   [
-    "[BANK_ACCOUNT_1]",
-    "1234567890"
-   ]
-  ],
-  "partial": "Alamat: Jl. ***. Rekening BCA ******7890.",
-  "noFinanceNoName": "Alamat: [ADDRESS_1]. Rekening BCA [BANK_ACCOUNT_1].",
-  "high": [
-   "Jl. Melati No. 12, Kel. Sukamaju, Kec. Cibeunying, Bandung",
-   "1234567890"
-  ]
- },
- {
-  "text": "ADDRESS:Jl. Melati No. 12, Kel. Sukamaju, Kec. Cibeunying, Bandung",
-  "placeholder": "ADDRESS:[ADDRESS_1]",
-  "vault": [
-   [
-    "[ADDRESS_1]",
-    "Jl. Melati No. 12, Kel. Sukamaju, Kec. Cibeunying, Bandung"
-   ]
-  ],
-  "partial": "ADDRESS:Jl. ***",
-  "noFinanceNoName": "ADDRESS:[ADDRESS_1]",
-  "high": [
-   "Jl. Melati No. 12, Kel. Sukamaju, Kec. Cibeunying, Bandung"
-  ]
- },
- {
-  "text": "BANK_ACCOUNT:1234567890",
-  "placeholder": "BANK_ACCOUNT:[BANK_ACCOUNT_1]",
-  "vault": [
-   [
-    "[BANK_ACCOUNT_1]",
-    "1234567890"
-   ]
-  ],
-  "partial": "BANK_ACCOUNT:******7890",
-  "noFinanceNoName": "BANK_ACCOUNT:[BANK_ACCOUNT_1]",
-  "high": [
-   "1234567890"
-  ]
- },
- {
-  "text": "kalimat berkoma bukan header CSV",
-  "placeholder": "kalimat berkoma bukan header CSV",
-  "vault": [],
-  "partial": "kalimat berkoma bukan header CSV",
-  "noFinanceNoName": "kalimat berkoma bukan header CSV",
-  "high": []
- },
- {
-  "text": "Nama, alamat, dan NIK wajib diisi.\nTerima kasih, admin",
-  "placeholder": "Nama, alamat, dan NIK wajib diisi.\nTerima kasih, admin",
-  "vault": [],
-  "partial": "Nama, alamat, dan NIK wajib diisi.\nTerima kasih, admin",
-  "noFinanceNoName": "Nama, alamat, dan NIK wajib diisi.\nTerima kasih, admin",
-  "high": []
- },
- {
-  "text": "nilai JSON/YAML dengan key nama/alamat",
-  "placeholder": "nilai JSON/YAML dengan key nama/alamat",
-  "vault": [],
-  "partial": "nilai JSON/YAML dengan key nama/alamat",
-  "noFinanceNoName": "nilai JSON/YAML dengan key nama/alamat",
-  "high": []
- },
- {
-  "text": "{\"id\": 7, \"nama\": \"Dewi Lestari\", \"alamat\": \"Perum Griya Asri Blok C2\", \"name\": \"lokal\"}",
-  "placeholder": "{\"id\": 7, \"nama\": \"[NAME_1]\", \"alamat\": \"[ADDRESS_1]\", \"name\": \"lokal\"}",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Dewi Lestari"
-   ],
-   [
-    "[ADDRESS_1]",
-    "Perum Griya Asri Blok C2"
-   ]
-  ],
-  "partial": "{\"id\": 7, \"nama\": \"D*** L***\", \"alamat\": \"Perum ***\", \"name\": \"lokal\"}",
-  "noFinanceNoName": "{\"id\": 7, \"nama\": \"Dewi Lestari\", \"alamat\": \"[ADDRESS_1]\", \"name\": \"lokal\"}",
-  "high": [
-   "Dewi Lestari",
-   "Perum Griya Asri Blok C2"
-  ]
- },
- {
-  "text": "NAME:Dewi Lestari",
-  "placeholder": "NAME:[NAME_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Dewi Lestari"
-   ]
-  ],
-  "partial": "NAME:D*** L***",
-  "noFinanceNoName": "NAME:Dewi Lestari",
-  "high": []
- },
- {
-  "text": "ADDRESS:Perum Griya Asri Blok C2",
-  "placeholder": "ADDRESS:[ADDRESS_1]",
-  "vault": [
-   [
-    "[ADDRESS_1]",
-    "Perum Griya Asri Blok C2"
-   ]
-  ],
-  "partial": "ADDRESS:Perum ***",
-  "noFinanceNoName": "ADDRESS:[ADDRESS_1]",
-  "high": [
-   "Perum Griya Asri Blok C2"
-  ]
- },
- {
-  "text": "customer_name: Andi Wijaya\n",
-  "placeholder": "customer_name: [NAME_1]\n",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Andi Wijaya"
-   ]
-  ],
-  "partial": "customer_name: A*** W***\n",
-  "noFinanceNoName": "customer_name: Andi Wijaya\n",
-  "high": [
-   "Andi Wijaya"
-  ]
- },
- {
-  "text": "Andi Wijaya",
-  "placeholder": "Andi Wijaya",
-  "vault": [],
-  "partial": "Andi Wijaya",
-  "noFinanceNoName": "Andi Wijaya",
-  "high": []
- },
- {
-  "text": "this.name = \"ZodCompileError\"; const x = { name: \"Server\" };",
-  "placeholder": "this.name = \"ZodCompileError\"; const x = { name: \"Server\" };",
-  "vault": [],
-  "partial": "this.name = \"ZodCompileError\"; const x = { name: \"Server\" };",
-  "noFinanceNoName": "this.name = \"ZodCompileError\"; const x = { name: \"Server\" };",
-  "high": []
- },
- {
-  "text": "vault bisa diekspor dan diimpor ke proses lain",
-  "placeholder": "vault bisa diekspor dan diimpor ke proses lain",
-  "vault": [],
-  "partial": "vault bisa diekspor dan diimpor ke proses lain",
-  "noFinanceNoName": "vault bisa diekspor dan diimpor ke proses lain",
-  "high": []
- },
- {
-  "text": "NIK 3201011508950001",
-  "placeholder": "NIK [NIK_1]",
-  "vault": [
-   [
-    "[NIK_1]",
-    "3201011508950001"
-   ]
-  ],
-  "partial": "NIK 3201********0001",
-  "noFinanceNoName": "NIK [NIK_1]",
-  "high": [
-   "3201011508950001"
-  ]
- },
- {
-  "text": "NIK 3201011508950001",
-  "placeholder": "NIK [NIK_1]",
-  "vault": [
-   [
-    "[NIK_1]",
-    "3201011508950001"
-   ]
-  ],
-  "partial": "NIK 3201********0001",
-  "noFinanceNoName": "NIK [NIK_1]",
-  "high": [
-   "3201011508950001"
-  ]
- },
- {
-  "text": "lagi 3201011508950001",
-  "placeholder": "lagi [NIK_1]",
-  "vault": [
-   [
-    "[NIK_1]",
-    "3201011508950001"
-   ]
-  ],
-  "partial": "lagi 3201********0001",
-  "noFinanceNoName": "lagi [NIK_1]",
-  "high": [
-   "3201011508950001"
-  ]
- },
- {
-  "text": "lagi [NIK_1]",
-  "placeholder": "lagi [NIK_1]",
-  "vault": [],
-  "partial": "lagi [NIK_1]",
-  "noFinanceNoName": "lagi [NIK_1]",
-  "high": []
- },
- {
-  "text": "NIK 3276015508030002",
-  "placeholder": "NIK [NIK_1]",
-  "vault": [
-   [
-    "[NIK_1]",
-    "3276015508030002"
-   ]
-  ],
-  "partial": "NIK 3276********0002",
-  "noFinanceNoName": "NIK [NIK_1]",
-  "high": [
-   "3276015508030002"
-  ]
- },
- {
-  "text": "NIK [NIK_2]",
-  "placeholder": "NIK [NIK_2]",
-  "vault": [],
-  "partial": "NIK [NIK_2]",
-  "noFinanceNoName": "NIK [NIK_2]",
-  "high": []
- },
- {
-  "text": "nama tanpa label di chat, termasuk huruf kecil",
-  "placeholder": "nama tanpa label di chat, termasuk huruf kecil",
-  "vault": [],
-  "partial": "nama tanpa label di chat, termasuk huruf kecil",
-  "noFinanceNoName": "nama tanpa label di chat, termasuk huruf kecil",
-  "high": []
- },
- {
-  "text": "NAME",
-  "placeholder": "NAME",
-  "vault": [],
-  "partial": "NAME",
-  "noFinanceNoName": "NAME",
-  "high": []
- },
- {
-  "text": "nama saya budi santoso mau tanya pesanan",
-  "placeholder": "nama saya [NAME_1] mau tanya pesanan",
-  "vault": [
-   [
-    "[NAME_1]",
-    "budi santoso"
-   ]
-  ],
-  "partial": "nama saya b*** s*** mau tanya pesanan",
-  "noFinanceNoName": "nama saya budi santoso mau tanya pesanan",
-  "high": [
-   "budi santoso"
-  ]
- },
- {
-  "text": "budi santoso",
-  "placeholder": "budi santoso",
-  "vault": [],
-  "partial": "budi santoso",
-  "noFinanceNoName": "budi santoso",
-  "high": []
- },
- {
-  "text": "refund atas nama budi santoso ya",
-  "placeholder": "refund atas nama [NAME_1] ya",
-  "vault": [
-   [
-    "[NAME_1]",
-    "budi santoso"
-   ]
-  ],
-  "partial": "refund atas nama b*** s*** ya",
-  "noFinanceNoName": "refund atas nama budi santoso ya",
-  "high": [
-   "budi santoso"
-  ]
- },
- {
-  "text": "budi santoso",
-  "placeholder": "budi santoso",
-  "vault": [],
-  "partial": "budi santoso",
-  "noFinanceNoName": "budi santoso",
-  "high": []
- },
- {
-  "text": "transfer ke rek BCA a.n. dewi lestari",
-  "placeholder": "transfer ke rek BCA a.n. [NAME_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "dewi lestari"
-   ]
-  ],
-  "partial": "transfer ke rek BCA a.n. d*** l***",
-  "noFinanceNoName": "transfer ke rek BCA a.n. dewi lestari",
-  "high": [
-   "dewi lestari"
-  ]
- },
- {
-  "text": "dewi lestari",
-  "placeholder": "dewi lestari",
-  "vault": [],
-  "partial": "dewi lestari",
-  "noFinanceNoName": "dewi lestari",
-  "high": []
- },
- {
-  "text": "saya Rina Wulandari dari Bekasi",
-  "placeholder": "saya [NAME_1] dari Bekasi",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Rina Wulandari"
-   ]
-  ],
-  "partial": "saya R*** W*** dari Bekasi",
-  "noFinanceNoName": "saya Rina Wulandari dari Bekasi",
-  "high": []
- },
- {
-  "text": "Rina Wulandari",
-  "placeholder": "Rina Wulandari",
-  "vault": [],
-  "partial": "Rina Wulandari",
-  "noFinanceNoName": "Rina Wulandari",
   "high": []
  }
 ]

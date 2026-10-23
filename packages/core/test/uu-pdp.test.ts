@@ -119,3 +119,28 @@ test('key ip hanya untuk alamat IP, bukan versi paket di lockfile', () => {
   assert.deepEqual(found('client_ip: 182.253.10.15'), ['IP:182.253.10.15']);
   assert.deepEqual(found('"remote_addr": "2001:db8::1"').map((x) => x.split(':')[0]), ['IP']);
 });
+
+test('data anak dan catatan sipil: NISN dan nomor akta', () => {
+  assert.deepEqual(found('NISN 0123456789 atas nama Nayla Zahra'), ['NISN:0123456789', 'NAME:Nayla Zahra']);
+  assert.deepEqual(found('Nomor akta kelahiran: 3175-LU-01022010-0123'), ['AKTA:3175-LU-01022010-0123']);
+  assert.deepEqual(found('akta kelahiran no. 3201-LT-12052018-0042'), ['AKTA:3201-LT-12052018-0042']);
+  assert.equal(UU_PDP_CATEGORY.NISN, 'spesifik');
+  assert.equal(partialMask('NISN', '0123456789'), '*******789');
+  // A ten-digit number without the word NISN is not one.
+  assert.deepEqual(found('Order 0123456789 dikirim'), []);
+});
+
+test('Penjelasan Pasal 4 ayat (2): genetika, hasil tes, daftar cekal', () => {
+  assert.deepEqual(found('anaknya pembawa sifat thalassemia beta'), ['HEALTH:thalassemia beta']);
+  assert.deepEqual(found('Ibu Melati dinyatakan BRCA1 positif'), ['NAME:Melati', 'HEALTH:BRCA1 positif']);
+  assert.deepEqual(found('hasil tes HIV reaktif'), ['HEALTH:HIV reaktif']);
+  assert.deepEqual(found('Yang bersangkutan masuk daftar cekal sejak Maret'), ['CRIMINAL_RECORD:masuk daftar cekal']);
+  assert.deepEqual(found('pernah ditahan kasus narkoba tahun 2019'), ['CRIMINAL_RECORD:pernah ditahan kasus narkoba']);
+  // The law's own wording describes the categories; it names no one.
+  assert.deepEqual(
+    found(
+      'antara lain catatan kepolisian dan pencantuman dalam daftar pencegahan atau penangkalan. Perubahan data riwayat penyakit yang berpotensi membahayakan.',
+    ),
+    [],
+  );
+});

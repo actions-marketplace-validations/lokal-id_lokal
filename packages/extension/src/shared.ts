@@ -81,6 +81,8 @@ const LABELS: Partial<Record<PiiType, { id: string; en: string; enMany?: string 
   BIOMETRIC: { id: 'data biometrik', en: 'biometric data' },
   PLATE: { id: 'pelat nomor', en: 'licence plate' },
   PASSPORT: { id: 'paspor', en: 'passport' },
+  NISN: { id: 'NISN', en: 'student number', enMany: 'student numbers' },
+  AKTA: { id: 'nomor akta', en: 'civil registry deed number', enMany: 'civil registry deed numbers' },
   GEO: { id: 'lokasi', en: 'location' },
   IP: { id: 'alamat IP', en: 'IP address' },
 };

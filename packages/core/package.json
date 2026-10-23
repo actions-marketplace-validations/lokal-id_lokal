@@ -15,6 +15,10 @@
     "./kembaran": {
       "types": "./dist/kembaran.d.ts",
       "default": "./dist/kembaran.js"
+    },
+    "./ai-sdk": {
+      "types": "./dist/ai-sdk.d.ts",
+      "default": "./dist/ai-sdk.js"
     }
   },
   "files": [
@@ -34,7 +38,9 @@
     "wilayah",
     "pii",
     "uu-pdp",
-    "llm"
+    "llm",
+    "ai-sdk",
+    "vercel-ai"
   ],
   "homepage": "https://github.com/lokal-id/lokal/tree/main/packages/core#readme",
   "repository": {
@@ -51,5 +57,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@ai-sdk/provider": "^4.0.31"
   }
 }

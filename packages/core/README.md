@@ -44,6 +44,15 @@ samaran.unmask(await llm(text));        // placeholders are replaced with the or
 
 The same value always gets the same placeholder, so the model can still deduplicate and join. Use `mode: 'partial'` for logs and admin screens (`3201********0001`).
 
+With the [Vercel AI SDK](https://ai-sdk.dev), wrap the model and every call is masked and restored, streaming and tool calls included:
+
+```ts
+import { wrapLanguageModel } from 'ai';
+import { samaranMiddleware } from '@lokal-id/core/ai-sdk';
+
+const model = wrapLanguageModel({ model: openai('gpt-5'), middleware: samaranMiddleware() });
+```
+
 `@lokal-id/core/wilayah` loads about 4.4 MB of region data and runs on Node only. The main entry point does not load it and is safe for browsers.
 
 ## Data

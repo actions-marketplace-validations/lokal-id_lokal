@@ -58,10 +58,10 @@ Lokal menangani keduanya: mengajari agent konvensi Indonesia, memberinya data ac
 
 - **Konvensi Indonesia untuk agent.** Uang, nomor telepon, NIK/NPWP, alamat berjenjang, WIB/WITA/WIT, metode pembayaran lokal, teks UI, dan UU PDP, dikemas sebagai [Agent Skills](https://agentskills.io).
 - **Data acuan akurat, ikut terpasang.** 38 provinsi sampai 83.762 kelurahan/desa, sama persis dengan Kepmendagri 2025, lengkap dengan kode pos setiap desa. Libur nasional dan cuti bersama dari SKB resmi 2026 dan 2027.
-- **Penyamaran Samaran.** Mengganti 25 jenis data pribadi Indonesia, termasuk semua kategori di UU PDP Pasal 4, dengan placeholder yang stabil, lalu memulihkannya di jawaban model.
+- **Penyamaran Samaran.** Mengganti 27 jenis data pribadi Indonesia, termasuk semua kategori di UU PDP Pasal 4, dengan placeholder yang stabil, lalu memulihkannya di jawaban model.
 - **Samaran Guard.** Hook untuk Claude Code, Codex CLI, Cursor, dan Gemini CLI yang menahan prompt berisi nomor identitas dan mengalihkan pembacaan file data pelanggan (`Read`, `Grep`, `cat`, `Get-Content`, …) ke versi tersamar.
 - **Kembaran.** Menyalin dump dan ekspor produksi untuk staging dengan setiap orang diganti kembaran yang realistis: NIK valid di kecamatan yang sama, nomor HP di operator yang sama, konsisten antartabel.
-- **Samaran Proxy.** Endpoint yang kompatibel dengan OpenAI dan Anthropic. Proxy menyamarkan data pribadi di setiap panggilan LLM dari aplikasimu dan memulihkannya di jawaban, termasuk saat streaming. Cukup ganti base URL, kodenya tidak perlu diubah.
+- **Samaran Proxy.** Endpoint yang kompatibel dengan OpenAI dan Anthropic. Proxy menyamarkan data pribadi di setiap panggilan LLM dari aplikasimu dan memulihkannya di jawaban, termasuk saat streaming. Cukup ganti base URL, kodenya tidak perlu diubah. Untuk aplikasi serverless, penyamaran yang sama tersedia sebagai middleware [Vercel AI SDK](https://ai-sdk.dev).
 - **Lokal Scan.** GitHub Action dan pre-commit hook yang mencegah data pribadi ter-commit. Hanya baris yang ditambahkan pull request yang diperiksa, dan setiap nilai ditandai di baris yang berubah.
 - **Ekstensi browser.** Menyamarkan data pribadi yang ditempel atau diketik ke ChatGPT, Claude, Gemini, dan chat AI lain, lalu memulihkannya saat jawaban disalin.
 - **Jalan di agent mana pun.** Plugin Claude Code, MCP server stdio untuk Cursor, Claude Desktop, VS Code, Windsurf, dan Codex, server HTTP untuk konektor ChatGPT dan Claude.ai, plus library TypeScript dan Python yang hasilnya identik.
@@ -247,7 +247,7 @@ samaran.unmask(reply);           // placeholder diganti lagi dengan data asli
 
 | Kelompok | Jenis |
 |---|---|
-| Pengenal | `NIK` (struktur divalidasi), `KK`, `NPWP`, `PASSPORT`, `SIM`, `NIP`, `BPJS`, `PHONE`, `EMAIL`, `BANK_ACCOUNT`, `CARD` (Luhn), `PLATE`, `IP`, `GEO` |
+| Pengenal | `NIK` (struktur divalidasi), `KK`, `NPWP`, `PASSPORT`, `SIM`, `NIP`, `BPJS`, `NISN`, `AKTA` (nomor akta kelahiran, perkawinan, dan kematian), `PHONE`, `EMAIL`, `BANK_ACCOUNT`, `CARD` (Luhn), `PLATE`, `IP`, `GEO` |
 | Siapa dan di mana | `NAME`, `ADDRESS`, `BIRTH_DATE` (tempat/tanggal lahir) |
 | Data pribadi umum | `GENDER`, `RELIGION`, `MARITAL_STATUS`, `NATIONALITY` |
 | Data pribadi spesifik (UU PDP Pasal 4) | `HEALTH`, `FINANCIAL`, `CRIMINAL_RECORD`, `BIOMETRIC` |
@@ -277,6 +277,26 @@ claude = Anthropic(base_url='http://127.0.0.1:8787')   # Messages
 - Hanya mendengarkan di 127.0.0.1, meneruskan API key tanpa menyimpannya, dan mencatat satu baris per request berisi jumlah, bukan nilai. Setiap respons punya header `x-samaran-masked: NIK=1,NAME=2`. Unggahan file tidak bisa disamarkan sehingga ditolak, kecuali proxy dijalankan dengan `--allow-unmasked`.
 
 Sudah diuji end-to-end dengan Claude Code sendiri yang dijalankan lewat proxy: model hanya pernah melihat placeholder, dan file yang ditulisnya lewat tool berisi nilai asli.
+
+### Samaran untuk Vercel AI SDK: penyamaran di dalam aplikasi
+
+Untuk tempat yang tidak bisa menjalankan proxy, seperti fungsi serverless dan edge, atau untuk API yang tidak didukung proxy, seperti API native Gemini dan Bedrock, bungkus modelnya saja. Middleware ini melakukan pekerjaan yang sama di dalam proses, untuk semua provider yang didukung [AI SDK](https://ai-sdk.dev):
+
+```ts
+import { generateText, wrapLanguageModel } from 'ai';
+import { openai } from '@ai-sdk/openai';
+import { samaranMiddleware } from '@lokal-id/core/ai-sdk';
+
+const model = wrapLanguageModel({ model: openai('gpt-5'), middleware: samaranMiddleware() });
+
+const { text } = await generateText({ model, prompt: tiket });   // model melihat [NAME_1], kamu menerima nama asli
+```
+
+- Prompt disamarkan berurutan di setiap panggilan: system, pesan, tool call, dan hasil tool. Hasil tool disamarkan sebagai JSON, jadi `{ "nama": "Budi Santoso" }` tertangkap lewat key-nya.
+- Jawaban kembali dengan nilai asli, baik streaming maupun tidak. Placeholder yang terpotong di antara chunk ditahan sampai utuh, jadi `useChat` tidak pernah menampilkan potongannya. Input tool dipulihkan sebagai JSON yang valid, sehingga tool berjalan dengan data asli, dan `Output.object` menerima nilai yang di-escape dengan benar.
+- `samaranMiddleware({ exclude: ['FINANCIAL'], allow: ['0800-1-500-888'] })` menerima opsi yang sama dengan `Samaran`. `onMask` menerima jumlah per jenis, bukan nilainya, untuk log audit.
+- Bawaannya untuk AI SDK 7; untuk AI SDK 6 tambahkan `specificationVersion: 'v3'`. Tanpa dependency tambahan.
+- Reasoning dibiarkan seperti yang ditulis model, karena provider menandatanganinya. Gambar dan file dikirim apa adanya, jadi ambil dan samarkan teks dokumen sebelum melampirkannya.
 
 ### Kembaran: data produksi untuk staging, tanpa orang sungguhan
 
@@ -408,7 +428,7 @@ Found 2 personal data value(s) in 1 file(s).
 
 Otomatis aktif lewat plugin Claude Code.
 
-- **Prompt** berisi nomor identitas (NIK, KK, NPWP, paspor, SIM, NIP, rekening, BPJS, kartu) atau data kesehatan, catatan kriminal, dan biometrik yang berlabel ditahan sebelum terkirim. Tambahkan `#izinkan-pii` kalau memang disengaja.
+- **Prompt** berisi nomor identitas (NIK, KK, NPWP, paspor, SIM, NIP, NISN, akta, rekening, BPJS, kartu) atau data kesehatan, catatan kriminal, dan biometrik yang berlabel ditahan sebelum terkirim. Tambahkan `#izinkan-pii` kalau memang disengaja.
 - **Pembacaan file data** (CSV, Excel, JSON, log, SQL dump, YAML, …) yang berisi data pribadi diblokir, dan Claude diarahkan ke `read_file_masked`. Ini berlaku untuk tool `Read`, `Grep` mode isi, dan perintah shell seperti `cat`, `head`, `grep`, `sed -n`, `awk`, `cut`, `Get-Content`, dan `Import-Csv | Select-Object`.
 - **Foto dan PDF yang tidak bisa dibaca Samaran ditanyakan dulu.** `Read` mengirim gambar dan PDF ke model apa adanya. Untuk foto yang nama atau foldernya seperti dokumen orang (`ktp-budi.jpg`, `selfie_siti.png`, apa pun di `media/`, `uploads/`, atau `storage/` kecuali `assets/` dan `images/` milik aplikasi) dan untuk PDF hasil scan, terenkripsi, atau rusak, Claude Code menampilkan dialog izin beserta alasannya. PDF yang teksnya berisi data pribadi diblokir seperti file data.
 - **Yang dihitung hanya bagian yang benar-benar tercetak.** `head -1 data.csv` (header saja), `wc -l`, `grep -c`, dan `sort data.csv > hasil.csv` tetap jalan.
@@ -507,14 +527,14 @@ Tiga tugas yang lebih sulit memakai kunci jawaban yang dicocokkan dengan sumber 
 
 Run pertama tugas-tugas ini menemukan satu bug dan empat celah deteksi, semuanya sudah diperbaiki di 0.2.1: nomor HP di akhir baris bocor kalau baris berikutnya diawali angka, serta nama yang dipecah jadi `first_name` / `last_name`, pengirim chat WhatsApp, obat, dan rawat inap belum terdeteksi. Daftar kode pos Depok di id.wikipedia ternyata keliru untuk 32 kelurahan; data Lokal cocok dengan [en.wikipedia](https://en.wikipedia.org/wiki/Cinere) dan sumber lain.
 
-`npm run eval:pii` menjalankan benchmark formatnya saja: 43 dari 43 data pribadi tersamar di 15 format (KTP hasil OCR, export WhatsApp, JSON Midtrans, log Laravel, dump SQL, …), dan 27 dari 27 nilai yang mirip tetap utuh (nomor resi, ID invoice, timestamp, nomor call center, nama lembaga).
+`npm run eval:pii` menjalankan benchmark formatnya saja: 618 dari 618 data pribadi tersamar di 418 format, dan 338 dari 338 nilai yang mirip tetap utuh, dan setiap temuan dicek berada tepat di posisinya. Formatnya mulai dari KTP hasil OCR, export WhatsApp, JSON Midtrans, log Laravel, pesan HL7, dan dump SQL sampai teks tanpa label sama sekali: tiket CS, tanda tangan email, mutasi rekening, bukti transfer, form HTML, URL, nama file, chat berbahasa Sunda dan Jawa, dan chat santai soal kesehatan, genetika, utang, agama, pernikahan, dan catatan kriminal. Nilai yang mirip meliputi nomor resi, ID invoice, timestamp, nama lembaga, nama produk bank, tempat yang memakai nama orang, dan kata yang juga nama orang. **Angka 100% itu diukur pada kasus yang sudah dipakai untuk menyetel aturan.** Delapan kelompok kasus masing-masing ditulis setelah aturan saat itu jadi dan dijalankan sekali sebelum ada perbaikan: hasilnya 40 dari 49, 21 dari 24, 59 dari 90, 57 dari 65, 48 dari 57, 55 dari 67, 46 dari 55, dan 51 dari 61. Pada teks bebas yang belum pernah dilihat, perkirakan sekitar 82 sampai 88% data pribadi tertangkap. Dijalankan pada teks resmi UU 27/2022 (64.000 karakter), yang tersamar hanya nama Presiden di bagian tanda tangan.
 
 Ini sampel kecil yang disusun dari keseharian developer Indonesia. Jangan dibaca sebagai benchmark umum.
 
 ## Batasan
 
-- **Deteksi berbasis pola dan mengutamakan presisi.** Nama dikenali dari label, header kolom dan key JSON, pengirim di export chat, frasa pengantar ("nama saya budi", "atas nama", "a.n.", "halo kak ini rina,"), sapaan ("Pak Joko", "bapak ahmad"), dan ucapan yang dilaporkan ("tadi budi bilang"), termasuk huruf kecil. Nama yang terselip di kalimat tanpa penanda apa pun ("pesanan budi belum sampai"), data kesehatan atau keuangan dengan kalimat tidak biasa, dan data anak yang tidak ditandai sebagai data anak masih bisa lolos. Anggap Samaran sebagai jaring pengaman yang kuat, bukan jaminan.
-- **Diuji terhadap salah deteksi** di 12 MB kode open source dan teks lengkap UU 27/2022, tanpa satu pun deteksi nama berkeyakinan tinggi. Deteksi nama di chat menangkap 29 dari 29 kalimat uji berisi nama dan tidak salah tangkap di 26 kalimat chat biasa. Kalimatnya disusun untuk tes, jadi akurasi di chat asli bisa lebih rendah.
+- **Deteksi berbasis pola dan mengutamakan presisi.** Nama dikenali dari label, header kolom dan key JSON, pengirim di export chat, frasa pengantar ("nama saya budi", "a.n.", "nami abdi"), sapaan dan gelar ("Pak Joko", "Dr. Ir. H. Bambang"), peran ("Pelanggan Budi Santoso", "Tergugat Joko Susilo"), salam pembuka dan penutup, nama tampilan email, handle media sosial, umur dalam kurung ("Kevin (19)"), daftar hadir dan kontak, serta daftar sekitar 680 nama depan dan nama keluarga Indonesia yang umum, marga Batak, dan pola nama Bali, Tionghoa-Indonesia, dan Jawa. Pada teks bebas yang belum pernah dilihat, sekitar 82 sampai 88% data pribadi tertangkap: nama yang juga kata sehari-hari tanpa penanda ("pesanan budi belum sampai"), nama yang tidak ada di daftar tanpa penanda apa pun, data sensitif dengan kalimat yang baru, dan data anak yang tidak ditandai sebagai data anak masih bisa lolos. Anggap Samaran sebagai jaring pengaman yang kuat, bukan jaminan.
+- **Diuji terhadap salah deteksi** di 22,5 MB kode dan dokumentasi open source: aturan nama tidak menambah satu pun salah deteksi di sana, dan setiap temuan baru adalah nama asli penulis package. Pada teks lengkap UU 27/2022, yang tersamar hanya nama penanda tangan. Dari 91.599 nama kecamatan dan desa di data Kemendagri, sendiri maupun dalam kalimat alamat, 0,15% masih terbaca sebagai nama orang, kebanyakan desa yang memakai nama marga Batak ("Pintu Pohan") atau nama orang ("Jati Utomo"). Deteksi nama di chat menangkap 29 dari 29 kalimat uji berisi nama dan tidak salah tangkap di 26 kalimat chat biasa. Kalimatnya disusun untuk tes, jadi akurasi di data asli bisa lebih rendah.
 - **Tidak semua format terbaca.** PDF terbaca kalau punya lapisan teks, seperti invoice, surat, rekening koran, dan formulir dari browser, Word, atau library PDF. Halaman hasil scan, PDF terenkripsi, `.xls` dan `.doc` lama, gambar (foto KTP, selfie), dan arsip tidak dipindai. `scan_pii` melaporkannya sebagai *tidak terpindai*, bukan *bersih*, termasuk halaman scan di dalam PDF yang selebihnya terbaca. Guard bertanya dulu sebelum `Read` mengirim PDF seperti itu, atau foto yang tampak seperti dokumen orang, ke model; guard tidak bisa membedakan foto KTP dari gambar lain, jadi foto dinilai dari nama dan foldernya. File di atas 100 MB juga dilaporkan. Untuk file data di atas 5 MB, guard memeriksa 5 MB pertamanya, dan spreadsheet, dokumen Word, serta PDF di atas 20 MB dilaporkan alih-alih diurai, supaya tetap di bawah batas waktu hook 10 detik.
 - **Validasi NIK dan NPWP hanya struktur.** Tidak bisa memastikan nomornya terdaftar di Dukcapil atau DJP.
 - **Deteksi operator memakai prefix nomor**, yang cocok dengan daftar alokasi publik, termasuk merger XLSmart 2025. Indonesia belum punya *number portability* (gugatannya masih di MK, perkara 319/PUU-XXIV/2026), jadi prefix masih bisa diandalkan. Kode area telepon rumah baru mencakup 19 kota besar.

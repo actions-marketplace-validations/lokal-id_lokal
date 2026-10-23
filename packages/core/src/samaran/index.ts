@@ -34,6 +34,7 @@ export function canonical(type: PiiType, value: string): string {
       return value.toLowerCase();
     case 'PLATE':
     case 'PASSPORT':
+    case 'AKTA':
       return value.toUpperCase().replace(/\s+/g, '');
     case 'NIK':
     case 'KK':
@@ -41,6 +42,7 @@ export function canonical(type: PiiType, value: string): string {
     case 'SIM':
     case 'NIP':
     case 'BPJS':
+    case 'NISN':
     case 'BANK_ACCOUNT':
     case 'CARD':
       return value.replace(/\D/g, '');
@@ -59,6 +61,8 @@ export function partialMask(type: PiiType, value: string): string {
       return `${digits.slice(0, 4)}${stars(8)}${digits.slice(-4)}`;
     case 'NIP':
     case 'SIM':
+    case 'NISN':
+    case 'AKTA':
       return `${stars(digits.length - 3)}${digits.slice(-3)}`;
     case 'PASSPORT':
       return `${[...value][0] ?? ''}${stars(5)}${value.slice(-2)}`;

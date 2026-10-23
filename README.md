@@ -58,10 +58,10 @@ Lokal fixes both: it teaches agents Indonesian conventions, gives them accurate 
 
 - **Indonesian conventions for agents.** Money, phone numbers, NIK/NPWP, tiered addresses, WIB/WITA/WIT, local payment methods, UI copy, and UU PDP, packaged as [Agent Skills](https://agentskills.io).
 - **Accurate reference data, bundled.** All 38 provinces down to 83,762 villages, matching the Kemendagri 2025 decree exactly, with postal codes for every village. Public holidays and *cuti bersama* from the official SKB for 2026 and 2027.
-- **Samaran masking.** Replaces 25 kinds of Indonesian personal data, covering every category in UU PDP Article 4, with stable placeholders, then restores them in the model's output.
+- **Samaran masking.** Replaces 27 kinds of Indonesian personal data, covering every category in UU PDP Article 4, with stable placeholders, then restores them in the model's output.
 - **Samaran Guard.** A hook for Claude Code, Codex CLI, Cursor, and Gemini CLI that stops prompts containing ID numbers and redirects reads of customer data files (`Read`, `Grep`, `cat`, `Get-Content`, …) to a masked view.
 - **Kembaran.** Copies production dumps and exports for staging with every person replaced by a realistic stand-in: a valid NIK in the same district, a phone number on the same operator, consistent across tables.
-- **Samaran Proxy.** An OpenAI- and Anthropic-compatible endpoint that masks personal data in every LLM call your app makes and restores it in the answers, streaming included. Change the base URL, not the code.
+- **Samaran Proxy.** An OpenAI- and Anthropic-compatible endpoint that masks personal data in every LLM call your app makes and restores it in the answers, streaming included. Change the base URL, not the code. For serverless apps, the same masking as a [Vercel AI SDK](https://ai-sdk.dev) middleware.
 - **Lokal Scan.** A GitHub Action and pre-commit hook that stop personal data from being committed. It checks only the lines a pull request adds and marks each value on the changed line.
 - **Browser extension.** Masks personal data pasted or typed into ChatGPT, Claude, Gemini, and other AI chats, and restores it when you copy the answer.
 - **Works with any agent.** Claude Code plugin, stdio MCP server for Cursor, Claude Desktop, VS Code, Windsurf, and Codex, an HTTP server for ChatGPT and Claude.ai connectors, plus TypeScript and Python libraries with identical results.
@@ -247,7 +247,7 @@ samaran.unmask(reply);           // placeholders are replaced with the original 
 
 | Group | Types |
 |---|---|
-| Identifiers | `NIK` (structure validated), `KK`, `NPWP`, `PASSPORT`, `SIM`, `NIP`, `BPJS`, `PHONE`, `EMAIL`, `BANK_ACCOUNT`, `CARD` (Luhn), `PLATE`, `IP`, `GEO` |
+| Identifiers | `NIK` (structure validated), `KK`, `NPWP`, `PASSPORT`, `SIM`, `NIP`, `BPJS`, `NISN`, `AKTA` (birth, marriage, and death certificate numbers), `PHONE`, `EMAIL`, `BANK_ACCOUNT`, `CARD` (Luhn), `PLATE`, `IP`, `GEO` |
 | Who and where | `NAME`, `ADDRESS`, `BIRTH_DATE` (place and date of birth) |
 | General personal data | `GENDER`, `RELIGION`, `MARITAL_STATUS`, `NATIONALITY` |
 | Specific personal data (UU PDP Art. 4) | `HEALTH`, `FINANCIAL`, `CRIMINAL_RECORD`, `BIOMETRIC` |
@@ -277,6 +277,26 @@ claude = Anthropic(base_url='http://127.0.0.1:8787')   # Messages
 - It listens on 127.0.0.1 only, passes API keys through without storing them, and logs one line per request with counts, never values. Each response has an `x-samaran-masked: NIK=1,NAME=2` header. File uploads cannot be masked and are refused unless you start it with `--allow-unmasked`.
 
 Tested end to end with Claude Code itself running through it: the model only ever saw placeholders, and the files it wrote with its tools had the real values.
+
+### Samaran for the Vercel AI SDK: masking inside the app
+
+Where the proxy cannot run, such as serverless and edge functions, or with APIs it does not speak, such as Gemini's native API and Bedrock, wrap the model instead. The middleware does the same work in-process, for every provider the [AI SDK](https://ai-sdk.dev) supports:
+
+```ts
+import { generateText, wrapLanguageModel } from 'ai';
+import { openai } from '@ai-sdk/openai';
+import { samaranMiddleware } from '@lokal-id/core/ai-sdk';
+
+const model = wrapLanguageModel({ model: openai('gpt-5'), middleware: samaranMiddleware() });
+
+const { text } = await generateText({ model, prompt: tiket });   // the model sees [NAME_1], you get the real name
+```
+
+- The prompt is masked in order on every call: system, messages, tool calls, and tool results. Tool results are masked as JSON, so `{ "nama": "Budi Santoso" }` is caught by its key.
+- Answers come back with real values, streamed or not. A placeholder split across chunks is held back until it is complete, so `useChat` never shows half of one. Tool inputs are restored as valid JSON, so tools run on real data, and `Output.object` gets correctly escaped values.
+- `samaranMiddleware({ exclude: ['FINANCIAL'], allow: ['0800-1-500-888'] })` takes the same options as `Samaran`. `onMask` receives counts per type, never values, for audit logs.
+- AI SDK 7 by default; for AI SDK 6 pass `specificationVersion: 'v3'`. No extra dependency.
+- Reasoning is left as the model wrote it, because providers sign it. Images and files are sent as they are, so extract and mask the text of a document before attaching it.
 
 ### Kembaran: production data for staging, without real people
 
@@ -408,7 +428,7 @@ Found 2 personal data value(s) in 1 file(s).
 
 Enabled automatically by the Claude Code plugin.
 
-- **Prompts** containing ID numbers (NIK, KK, NPWP, passport, SIM, NIP, bank account, BPJS, card) or labeled health, criminal, or biometric data are held before they are sent. Add `#izinkan-pii` to send anyway.
+- **Prompts** containing ID numbers (NIK, KK, NPWP, passport, SIM, NIP, NISN, civil registry deed, bank account, BPJS, card) or labeled health, criminal, or biometric data are held before they are sent. Add `#izinkan-pii` to send anyway.
 - **Reads of data files** (CSV, Excel, JSON, logs, SQL dumps, YAML, …) that contain personal data are blocked, and Claude is pointed to `read_file_masked`. This covers the `Read` tool, `Grep` in content mode, and shell commands such as `cat`, `head`, `grep`, `sed -n`, `awk`, `cut`, `Get-Content`, and `Import-Csv | Select-Object`.
 - **Photos and PDFs Samaran cannot read are asked about first.** `Read` sends images and PDFs to the model as they are. For a photo named or filed like someone's document (`ktp-budi.jpg`, `selfie_siti.png`, anything under `media/`, `uploads/`, or `storage/` except the app's own `assets/` and `images/`) and for a scanned, encrypted, or damaged PDF, Claude Code shows a permission prompt with the reason. A PDF whose text contains personal data is blocked as a data file.
 - **Only what would be printed counts.** `head -1 data.csv` (the header), `wc -l`, `grep -c`, and `sort data.csv > out.csv` still run.
@@ -507,14 +527,14 @@ Three harder tasks use answers checked against official sources rather than Loka
 
 The first runs of these tasks found a bug and four detection gaps, all fixed in 0.2.1: a phone number at the end of a line leaked when the next line began with a digit, and names split into `first_name` / `last_name`, WhatsApp senders, medicines and hospital stays were missed. The id.wikipedia list of Depok postal codes turned out to be wrong for 32 kelurahan; Lokal matches [en.wikipedia](https://en.wikipedia.org/wiki/Cinere) and other sources.
 
-`npm run eval:pii` runs the format benchmark on its own: 43 of 43 personal values masked across 15 formats (KTP OCR, WhatsApp exports, Midtrans JSON, Laravel logs, SQL dumps, …), and 27 of 27 look-alikes left intact (resi numbers, invoice IDs, timestamps, call-center numbers, institutions).
+`npm run eval:pii` runs the format benchmark on its own: 618 of 618 personal values masked across 418 formats, and 338 of 338 look-alikes left intact, with every match checked to sit exactly at its offsets. The formats range from KTP OCR, WhatsApp exports, Midtrans JSON, Laravel logs, HL7 messages, and SQL dumps to text with no labels at all: support tickets, e-mail signatures, bank statements, receipts, HTML forms, URLs, file names, chat in Sundanese and Javanese, and casual chat about health, genetics, debt, religion, marriage, and criminal records. The look-alikes include resi numbers, invoice IDs, timestamps, institutions, bank product names, places named after people, and words that are also given names. **The 100% is measured on cases the rules were tuned on.** Eight batches of cases were each written after the rules of the day and run once before any fix: they caught 40 of 49, 21 of 24, 59 of 90, 57 of 65, 48 of 57, 55 of 67, 46 of 55, and 51 of 61 values. On free text it has not seen, expect it to catch about 82 to 88% of personal values. Run over the official text of UU 27/2022 (64,000 characters), it masks only the President's name in the signature block.
 
 This is a small sample built around everyday tasks for Indonesian developers. Do not read it as a general benchmark.
 
 ## Limitations
 
-- **Detection is pattern-based and favors precision.** Names are found through labels, column headers and JSON keys, chat export senders, introductions ("nama saya budi", "atas nama", "a.n.", "halo kak ini rina,"), honorifics ("Pak Joko", "bapak ahmad"), and reported speech ("tadi budi bilang"), including lowercase. A name dropped into a sentence with no cue at all ("pesanan budi belum sampai"), unusually phrased health or financial data, and children's data that is not marked as such can still slip through. Treat Samaran as a strong safety net, not a guarantee.
-- **Tested for false positives** on 12 MB of open-source code and the full text of UU 27/2022, with no high-confidence name detections. Chat name detection caught 29 of 29 test sentences with names and flagged 0 of 26 ordinary chat sentences. The sentences were written for the test suite, so accuracy on real chats may be lower.
+- **Detection is pattern-based and favors precision.** Names are found through labels, column headers and JSON keys, chat export senders, introductions ("nama saya budi", "a.n.", "nami abdi"), honorifics and titles ("Pak Joko", "Dr. Ir. H. Bambang"), roles ("Pelanggan Budi Santoso", "Tergugat Joko Susilo"), greetings and sign-offs, e-mail display names, social media handles, an age in brackets ("Kevin (19)"), attendance and contact lists, and a list of about 680 common Indonesian given and family names, Batak clan names, and Balinese, Chinese-Indonesian, and Javanese name patterns. On free text it has not seen it catches about 82 to 88% of personal values: a name that is also an everyday word and has no cue ("pesanan budi belum sampai"), a name the list does not know with nothing around it, sensitive data phrased in a new way, and children's data that is not marked as such can still slip through. Treat Samaran as a strong safety net, not a guarantee.
+- **Tested for false positives** on 22.5 MB of open-source code and documentation: the name rules added no false detections there, and every new hit was a package author's real name. On the full text of UU 27/2022 only the signatory's name is masked. Of 91,599 kecamatan and desa names in the Kemendagri data, alone and in an address sentence, 0.15% still read as a person's name, mostly villages named after a Batak clan ("Pintu Pohan") or a person ("Jati Utomo"). Chat name detection catches 29 of 29 test sentences with names and flags 0 of 26 ordinary ones. The test sentences were written for the suite, so accuracy on real data may be lower.
 - **Not every format is read.** PDFs are read when they have a text layer, as invoices, letters, statements, and forms from a browser, Word, or a PDF library do. Scanned pages, encrypted PDFs, legacy `.xls` and `.doc`, images (ID card photos, selfies), and archives are not scanned. `scan_pii` reports them as *not scanned*, never as clean, including scanned pages inside an otherwise readable PDF. The guard asks before `Read` sends such a PDF, or a photo that looks like someone's document, to the model; it cannot tell a KTP photo from any other picture, so it judges photos by name and folder. Files over 100 MB are reported too. For data files over 5 MB the guard checks the first 5 MB, and it reports spreadsheets, Word documents, and PDFs over 20 MB instead of parsing them, to stay within the hook's 10-second limit.
 - **NIK and NPWP checks are structural.** They cannot confirm that a number is registered with Dukcapil or the tax office.
 - **Carrier detection uses number prefixes,** which match the public allocation list, including the 2025 XLSmart merger. Indonesia has no mobile number portability yet (a case is pending at the Constitutional Court, 319/PUU-XXIV/2026), so prefixes are still reliable. Landline area codes cover 19 major cities.

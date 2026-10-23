@@ -349,7 +349,8 @@ test('file dengan nomor baris (tool Read agent, cat -n): header tetap dikenali',
   assert.deepEqual(values('     1\tnama,nik\n     2\tBudi Santoso,3201011508950001', ['NAME']), ['NAME:Budi Santoso']);
   assert.deepEqual(values('1\tNama\tNIK\n2\tRina Wati\t3276014503920002', ['NAME']), ['NAME:Rina Wati']);
   // Numbers that do not count up are data, not line numbers.
-  assert.deepEqual(values('12\tnama,nik\n7\tBudi Santoso,3201011508950001', ['NAME']), []);
+  // (A name the gazetteer does not know, so only the header could make it a name.)
+  assert.deepEqual(values('12\tnama,nik\n7\tWiro Sableng,3201011508950001', ['NAME']), []);
 });
 
 test('nilai yang ditemukan selalu sama persis dengan teks di posisinya', () => {
@@ -399,4 +400,140 @@ test('penyakit setelah kata ganti: "saya diabetes"', () => {
   assert.deepEqual(detectPii('saya diabetes, rutin obat insulin').map((m) => m.value), ['diabetes', 'insulin']);
   assert.deepEqual(detectPii('ibu saya hipertensi').map((m) => m.value), ['hipertensi']);
   assert.deepEqual(detectPii('saya siap, dia datang besok'), []);
+});
+
+test('nama tanpa label: peran, sapaan, gelar, tanda tangan, dan pengirim email', () => {
+  assert.deepEqual(values('Pelanggan Budi Santoso minta refund, Kurir Supardi sudah antar', ['NAME']), [
+    'NAME:Budi Santoso', 'NAME:Supardi',
+  ]);
+  assert.deepEqual(values('Dear Mr. Hendra Gunawan,\nThank you.', ['NAME']), ['NAME:Hendra Gunawan']);
+  assert.deepEqual(values('Halo Budi,\nPesanan kamu sudah dikirim.', ['NAME']), ['NAME:Budi']);
+  assert.deepEqual(values('Mohon dibantu.\n\nSalam,\nRina Kartika Sari\nFinance', ['NAME']), ['NAME:Rina Kartika Sari']);
+  assert.deepEqual(values('From: Budi Santoso <budi.s@gmail.com>', ['NAME']), ['NAME:Budi Santoso']);
+  assert.deepEqual(values('/*! ws. MIT License. Einar Otto Stangvik <einaros@gmail.com> */', ['NAME']), ['NAME:Einar Otto Stangvik']);
+  assert.deepEqual(values('aku andi yg td chat', ['NAME']), ['NAME:andi']);
+  assert.deepEqual(values('No. KK: 3201012345678901 (kepala keluarga Bambang)', ['NAME']), ['NAME:Bambang']);
+  // Not names: a role with an adjective, a greeting to a group or a city, a business signing off.
+  assert.deepEqual(
+    values('Pelanggan Setia dapat diskon. Kurir JNE datang. Halo Semua, Halo Bandung, Hai Kakak!\n\nSalam,\nTim Lokal', ['NAME']),
+    [],
+  );
+});
+
+test('nama dikenali dari bagiannya: nama depan umum, marga, nama Bali dan Tionghoa', () => {
+  assert.deepEqual(
+    values('Yang bertanggung jawab Togar Simanjuntak. Tamu: I Made Wirawan dan Ni Luh Putu Ayu. Pemilik koh Lim Swie Hong.', ['NAME']),
+    ['NAME:Togar Simanjuntak', 'NAME:I Made Wirawan', 'NAME:Ni Luh Putu Ayu', 'NAME:Lim Swie Hong'],
+  );
+  // A bank statement in capitals: the name starts at SITI, not at the transaction code.
+  assert.deepEqual(values('22/10 BI-FAST CR TRANSFER DR 014 SITI RAHAYU 75000.00', ['NAME']), ['NAME:SITI RAHAYU']);
+  // Places and organizations named after people, and words that are also given names.
+  assert.deepEqual(
+    values('Masjid Agung, Universitas Ahmad Dahlan, RS Siti Khadijah, Toko Budi Jaya, Jl. Ahmad Yani. Pendidikan Budi Pekerti. Permata Intan, Mekar Sari, Lumban Siregar.', ['NAME']),
+    [],
+  );
+});
+
+test('identitas di tempat aneh: nama file, URL, HTML, handle, label bertumpuk', () => {
+  assert.deepEqual(values('upload KTP_3201011508950001.jpg, NIK3201011508950001', ['NIK']), [
+    'NIK:3201011508950001', 'NIK:3201011508950001',
+  ]);
+  assert.deepEqual(values('?name=Siti%20Rahayu&email=siti%40gmail.com'), ['NAME:Siti%20Rahayu', 'EMAIL:siti%40gmail.com']);
+  assert.deepEqual(values('<input name="nik" value="3201011508950001"><input name="nama" value="Budi Santoso">'), [
+    'NIK:3201011508950001', 'NAME:Budi Santoso',
+  ]);
+  assert.deepEqual(values('<tr><th>Nama</th><th>HP</th></tr><tr><td>Budi Santoso</td><td>081234567890</td></tr>'), [
+    'NAME:Budi Santoso', 'PHONE:081234567890',
+  ]);
+  assert.deepEqual(values('cek DM dari @siti.rahayu88', ['NAME']), ['NAME:siti.rahayu88']);
+  assert.deepEqual(values('Transfer berhasil\r\nPenerima\r\nDEWI LESTARI\r\nNominal Rp 250.000', ['NAME']), ['NAME:DEWI LESTARI']);
+  // Code: JSDoc tags, decorators, npm scopes, CSS, and the domain of a masked address.
+  assert.deepEqual(
+    values('/** @param options.abortSignal */\n@pytest.fixture\nnpm i @types/node; @media print; b***@gmail.com'),
+    [],
+  );
+});
+
+test('nomor HP dan alamat dalam format yang tidak baku', () => {
+  assert.deepEqual(values('Telp: +62 (812) 3456-7890, no wa 08 12 34 56 78 90, wa081234567890, rumah 0251 8321234', ['PHONE']), [
+    'PHONE:+62 (812) 3456-7890', 'PHONE:08 12 34 56 78 90', 'PHONE:081234567890', 'PHONE:0251 8321234',
+  ]);
+  assert.deepEqual(values('nomor gue nol delapan satu dua tiga empat lima enam tujuh delapan sembilan', ['PHONE']), [
+    'PHONE:nol delapan satu dua tiga empat lima enam tujuh delapan sembilan',
+  ]);
+  assert.deepEqual(values('Komplek Taman Asri blok B no 9, deket masjid', ['ADDRESS']), ['ADDRESS:Komplek Taman Asri blok B no 9']);
+  assert.deepEqual(values('Dusun Krajan RT 02 RW 01 Desa Sukamaju', ['ADDRESS']), ['ADDRESS:Dusun Krajan RT 02 RW 01']);
+  assert.deepEqual(values('alamat jl mawar 5 cibinong ya', ['ADDRESS']), ['ADDRESS:jl mawar 5']);
+  // Not phones or addresses.
+  assert.deepEqual(values('kode pos 16911, harga 0251 8321, jalan kaki 5 menit, jl. raya macet 2 jam, SK No. 100.3.3.1-6117'), []);
+});
+
+test('data sensitif UU PDP dalam bahasa sehari-hari', () => {
+  assert.deepEqual(values('saya muslim, suami saya kristen protestan', ['RELIGION']), [
+    'RELIGION:muslim', 'RELIGION:kristen protestan',
+  ]);
+  assert.deepEqual(values('saya sudah cerai sejak 2020, sekarang janda', ['MARITAL_STATUS']), [
+    'MARITAL_STATUS:cerai', 'MARITAL_STATUS:janda',
+  ]);
+  assert.deepEqual(values('ayah stroke, riwayat hipertensi dan diabetes melitus, alergi penisilin, keluhan demam', ['HEALTH']), [
+    'HEALTH:stroke', 'HEALTH:hipertensi dan diabetes melitus', 'HEALTH:penisilin', 'HEALTH:demam',
+  ]);
+  assert.deepEqual(values('utang pinjol 12 juta, udah galbay 3 bulan', ['FINANCIAL']), ['FINANCIAL:12 juta', 'FINANCIAL:galbay']);
+  assert.deepEqual(values('dia mantan napi kasus narkoba, pernah dipenjara 3 tahun', ['CRIMINAL_RECORD']), [
+    'CRIMINAL_RECORD:mantan napi kasus narkoba', 'CRIMINAL_RECORD:pernah dipenjara 3 tahun',
+  ]);
+  // The same words about groups, institutions, or the news.
+  assert.deepEqual(
+    values('Makanan halal untuk umat Muslim. Gereja Kristen Jawa. Hari Kanker Sedunia. Kasus narkoba meningkat menurut BNN. Risiko gagal bayar obligasi. Saya menikah tahun depan.'),
+    [],
+  );
+});
+
+test('KTP tanpa titik dua, HL7, rekening di baris bawah bank', () => {
+  assert.deepEqual(values('Jenis Kelamin LAKI-LAKI\nAgama KRISTEN\nStatus Perkawinan KAWIN', ['GENDER', 'RELIGION', 'MARITAL_STATUS']), [
+    'GENDER:LAKI-LAKI', 'RELIGION:KRISTEN', 'MARITAL_STATUS:KAWIN',
+  ]);
+  assert.deepEqual(values('PID|1||RM-00123||SUSANTO^BUDI||19800412|M\nDG1|1||E11.9^Diabetes melitus tipe 2'), [
+    'NAME:SUSANTO^BUDI', 'BIRTH_DATE:19800412', 'GENDER:M', 'HEALTH:E11.9^Diabetes melitus tipe 2',
+  ]);
+  assert.deepEqual(values('Penerima\nANDI PRATAMA\nBank BNI\n0123456789'), ['NAME:ANDI PRATAMA', 'BANK_ACCOUNT:0123456789']);
+  assert.deepEqual(values("'name' => 'Ahmad Fauzan', 'phone' => '081277665544'"), ['NAME:Ahmad Fauzan', 'PHONE:081277665544']);
+  // A JavaScript arrow function is not a field.
+  assert.deepEqual(values('const f = phone => format(phone); names.map(name => name.trim())'), []);
+});
+
+test('nama dari konteks: umur, absensi, pasangan, log, bahasa daerah', () => {
+  assert.deepEqual(values('Pelaku Kevin (19) ditangkap. Tidak hadir: Wahyu (sakit), Dinda (izin).', ['NAME']), [
+    'NAME:Kevin', 'NAME:Wahyu', 'NAME:Dinda',
+  ]);
+  assert.deepEqual(values('Akad nikah Dimas & Anggun', ['NAME']), ['NAME:Dimas', 'NAME:Anggun']);
+  assert.deepEqual(values('login ok user=dimas.anggara ip=10.1.2.3', ['NAME']), ['NAME:dimas.anggara']);
+  assert.deepEqual(values('[10:21] rizky_pratama: deploy jam 3', ['NAME']), ['NAME:rizky_pratama']);
+  assert.deepEqual(values('Punten, nami abdi Asep Saepudin', ['NAME']), ['NAME:Asep Saepudin']);
+  assert.deepEqual(values('Dodi masih punya utang ke aku', ['NAME']), ['NAME:Dodi']);
+  // Accounts, code, headings, and products.
+  assert.deepEqual(
+    values('user=root user=postgres. new Array(16), Map (2). Pasal 5 (2). Paket Hemat Ramadhan. tinggal di Wina.', ['NAME']),
+    [],
+  );
+});
+
+test('kesehatan, keuangan, dan status dalam kalimat sehari-hari', () => {
+  assert.deepEqual(values('sudah 3 hari demam dan batuk. Hasil MCU: tekanan darah 150/95, kolesterol tinggi.', ['HEALTH']), [
+    'HEALTH:demam dan batuk', 'HEALTH:tekanan darah 150/95', 'HEALTH:kolesterol tinggi',
+  ]);
+  assert.deepEqual(values('Saldo tabungan saya per hari ini Rp 45.300.000, gaji pokok Rp 5.100.000', ['FINANCIAL']), [
+    'FINANCIAL:Rp 45.300.000', 'FINANCIAL:Rp 5.100.000',
+  ]);
+  assert.deepEqual(values('Bu Kartini itu janda anak dua. Pemohon status cerai hidup. Kami pisah ranjang.', ['MARITAL_STATUS']), [
+    'MARITAL_STATUS:janda', 'MARITAL_STATUS:cerai hidup', 'MARITAL_STATUS:pisah ranjang',
+  ]);
+  assert.deepEqual(values('aku katolik, pacarku muslim. Dia baru pindah agama, sekarang Kristen.', ['RELIGION']), [
+    'RELIGION:katolik', 'RELIGION:muslim', 'RELIGION:Kristen',
+  ]);
+  // Ads, articles, and policy text.
+  assert.deepEqual(
+    values('Deposito mulai Rp 10 juta, bunga 5%. Gejala diabetes antara lain sering haus. Kami tidak menyimpan riwayat penyakit yang Anda masukkan.'),
+    [],
+  );
 });

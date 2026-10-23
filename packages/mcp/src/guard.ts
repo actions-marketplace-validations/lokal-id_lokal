@@ -26,8 +26,8 @@ import { dataReadsInCommand, SHELL_DATA_FILE } from './shell-reads.ts';
 
 // One of these is enough to hold a prompt or a file back: identity numbers, and labeled sensitive data.
 const STRICT: PiiType[] = [
-  'NIK', 'KK', 'NPWP', 'PASSPORT', 'SIM', 'NIP', 'BANK_ACCOUNT', 'BPJS', 'CARD', 'HEALTH', 'CRIMINAL_RECORD',
-  'BIOMETRIC',
+  'NIK', 'KK', 'NPWP', 'PASSPORT', 'SIM', 'NIP', 'NISN', 'AKTA', 'BANK_ACCOUNT', 'BPJS', 'CARD', 'HEALTH',
+  'CRIMINAL_RECORD', 'BIOMETRIC',
 ];
 // Common on their own (a support email, a sample phone number); a file with several is a data export.
 const BULK_THRESHOLD = 3;

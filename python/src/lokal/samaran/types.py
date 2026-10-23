@@ -9,19 +9,19 @@ from .._result import Result
 
 PiiType = Literal[
     # Identifiers
-    'NIK', 'KK', 'NPWP', 'PASSPORT', 'SIM', 'NIP', 'BPJS', 'PHONE', 'EMAIL', 'BANK_ACCOUNT', 'CARD', 'PLATE', 'IP',
-    'GEO', 'NAME', 'ADDRESS', 'BIRTH_DATE',
+    'NIK', 'KK', 'NPWP', 'PASSPORT', 'SIM', 'NIP', 'BPJS', 'NISN', 'AKTA', 'PHONE', 'EMAIL', 'BANK_ACCOUNT', 'CARD',
+    'PLATE', 'IP', 'GEO', 'NAME', 'ADDRESS', 'BIRTH_DATE',
     # Attributes listed in UU PDP Pasal 4
     'GENDER', 'RELIGION', 'MARITAL_STATUS', 'NATIONALITY', 'HEALTH', 'FINANCIAL', 'CRIMINAL_RECORD', 'BIOMETRIC',
 ]
 
 PII_TYPES: tuple[PiiType, ...] = (
-    'NIK', 'KK', 'NPWP', 'PASSPORT', 'SIM', 'NIP', 'BPJS', 'PHONE', 'EMAIL', 'BANK_ACCOUNT', 'CARD', 'PLATE', 'IP',
-    'GEO', 'NAME', 'ADDRESS', 'BIRTH_DATE', 'GENDER', 'RELIGION', 'MARITAL_STATUS', 'NATIONALITY', 'HEALTH',
-    'FINANCIAL', 'CRIMINAL_RECORD', 'BIOMETRIC',
+    'NIK', 'KK', 'NPWP', 'PASSPORT', 'SIM', 'NIP', 'BPJS', 'NISN', 'AKTA', 'PHONE', 'EMAIL', 'BANK_ACCOUNT', 'CARD',
+    'PLATE', 'IP', 'GEO', 'NAME', 'ADDRESS', 'BIRTH_DATE', 'GENDER', 'RELIGION', 'MARITAL_STATUS', 'NATIONALITY',
+    'HEALTH', 'FINANCIAL', 'CRIMINAL_RECORD', 'BIOMETRIC',
 )
 
-_SPESIFIK = {'HEALTH', 'BIOMETRIC', 'CRIMINAL_RECORD', 'FINANCIAL', 'BANK_ACCOUNT', 'CARD'}
+_SPESIFIK = {'HEALTH', 'BIOMETRIC', 'CRIMINAL_RECORD', 'FINANCIAL', 'BANK_ACCOUNT', 'CARD', 'NISN'}
 
 #: UU PDP (UU 27/2022) Pasal 4: "spesifik" data needs stricter handling (health, biometrics, genetics, criminal
 #: records, children's data, personal finance). Everything else here is "umum": general personal data, including

@@ -4,8 +4,23 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+### Added
+
+- Samaran finds personal data that has no label in front of it. Names after a role ("Pelanggan Budi Santoso", "Kurir Supardi"), a greeting ("Halo Budi,", "Dear Mr. Hendra Gunawan,"), a title ("Dr. Ir. H. Bambang", "Hj.", "koh"), or as a sign-off, e-mail display name, or social media handle; and names recognized by their parts from common Indonesian given and family names, Batak clan names, and Balinese and Chinese-Indonesian patterns, in capitals too, as bank statements write them. Also identifiers in file names and glued to letters ("KTP_3201….jpg", "wa0812…"), URL-encoded values, HTML forms and tables, labels with the value on the next line, card security codes, phone numbers in brackets, in groups of two digits, read out as words, or as landlines next to a phone word, housing estates, apartments and villages, and lowercase "jl" addresses.
+- UU PDP sensitive data in everyday language: religion ("saya muslim"), marital status ("saya sudah cerai"), criminal records ("mantan napi", "pernah dipenjara"), debt status ("galbay", "masuk BI checking"), allergies, symptoms, medical history, and conditions said of a relative ("ayah stroke").
+- Two new types: `NISN` (student number; children's data, so "spesifik" under UU PDP) and `AKTA` (birth, marriage, divorce, and death certificate numbers, in the Dukcapil format "3201-LT-12052018-0042" or after the words "akta kelahiran"). The MCP guard holds a prompt with either, as it does other ID numbers.
+- More of UU PDP Pasal 4 and its Penjelasan: genetic results ("pembawa sifat thalassemia", "BRCA1 positif"), test results ("tes HIV reaktif"), immigration and wanted lists ("masuk daftar cekal", "DPO"), release from prison, symptoms someone has had ("sudah 3 hari demam"), findings in a medical note ("tekanan darah 150/95"), disabilities, KTP lines that lost their colons ("Agama KRISTEN"), HL7 patient and diagnosis segments, coordinates labeled "lat" and "lng", and savings, deposits, credit card bills, and loan balances that someone holds.
+- Names from their context: an age in brackets ("Kevin (19)"), attendance and emergency contact lists ("Wahyu (sakit)", "Wulan (istri)"), two names joined by "&", court and insurance roles ("Penggugat", "Tertanggung"), Sundanese and Javanese introductions ("nami abdi", "jenengku"), `user=` in logs and `(andreas.w)` after a name, Slack-style "[10:21] name:" lines, PHP and Ruby hashes (`'name' => …`), and about 190 more common given names, with Javanese name endings ("-wati", "-yanto").
+- The PII benchmark grew from 15 to 418 formats, every case also checked for TypeScript/Python parity, and it now fails when a match does not sit exactly at its offsets.
+- `@lokal-id/core/ai-sdk`: Samaran as a Vercel AI SDK middleware. `wrapLanguageModel({ model, middleware: samaranMiddleware() })` masks the prompt and restores the answer on every call, streamed or not, including tool inputs and results and structured output. It runs in-process, so it works in serverless and edge functions and with every AI SDK provider. AI SDK 7, and AI SDK 6 with `specificationVersion: 'v3'`.
+
 ### Fixed
 
+- An IP-like document number ("SK No. 100.3.3.1-6117") and a code expression under an address key (`street = new RegExp(`) are no longer masked.
+- A labeled ID number no longer takes the words after it: in `NPWP: 01.234.567.8-901.000 a.n. CV Maju Jaya` the company name was masked too.
+- An IP address that ends a sentence ("dari IP 36.72.215.104.") is masked; a section number such as "5.2.1.1." is not.
+- "riwayat penyakit yang …" in a privacy policy or in the text of UU PDP no longer masks the words after it.
+- A lone given name after "di" ("tinggal di Wina") and villages ending in "Rejo", "Mukti", "Karya", or "Bakti" are no longer read as a person's name.
 - The browser extension's English notices use plurals: "Lokal masked 2 phone numbers", not "2 phone number".
 
 ## [0.5.0] - 2026-10-22

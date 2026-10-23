@@ -36,9 +36,9 @@ def _canonical(pii_type: PiiType, value: str) -> str:
         return parse_phone(value).e164 or _NON_DIGIT.sub('', value)
     if pii_type == 'EMAIL':
         return value.lower()
-    if pii_type in ('PLATE', 'PASSPORT'):
+    if pii_type in ('PLATE', 'PASSPORT', 'AKTA'):
         return ''.join(_js.split_ws(value.upper()))
-    if pii_type in ('NIK', 'KK', 'NPWP', 'SIM', 'NIP', 'BPJS', 'BANK_ACCOUNT', 'CARD'):
+    if pii_type in ('NIK', 'KK', 'NPWP', 'SIM', 'NIP', 'BPJS', 'NISN', 'BANK_ACCOUNT', 'CARD'):
         return _NON_DIGIT.sub('', value)
     return _js.trim(' '.join(_js.split_ws(value.lower())))
 
@@ -56,7 +56,7 @@ def partial_mask(pii_type: PiiType, value: str) -> str:
     digits = _NON_DIGIT.sub('', value)
     if pii_type in ('NIK', 'KK'):
         return f'{digits[:4]}{stars(8)}{digits[-4:]}'
-    if pii_type in ('NIP', 'SIM'):
+    if pii_type in ('NIP', 'SIM', 'NISN', 'AKTA'):
         return f'{stars(len(digits) - 3)}{digits[-3:]}'
     if pii_type == 'PASSPORT':
         return f'{value[:1]}{stars(5)}{value[-2:]}'

@@ -23,9 +23,9 @@
     }
    },
    {
-    "text": "No. Pesanan,Status Pesanan,No. Resi,Opsi Pengiriman,Waktu Pesanan Dibuat,Username (Pembeli),Nama Penerima,No. Telepon,Alamat Pengiriman,Kota/Kabupaten,Provinsi,Total Pembayaran,Catatan dari Pembeli\n2610014KQ7ZB2M,Perlu Dikirim,,SPX Standard,2026-10-01 08:12,sitirahayu88,Nina Halim,6281207884126,\"Jl. Cempaka No. 57, RT 03/RW 05, Kel. Depok, Kec. Pancoran Mas\",KOTA DEPOK,JAWA BARAT,Rp185.000,tolong a.n. Ibu Nina Halim ya kak\n2610015AB3XY9P,Dikirim,SPXID045123456789,SPX Standard,2026-10-01 09:40,budi_s,Fajar Halim,+62 857-5526-4657,\"Perum Seroja Blok C3 No. 8, Cibinong\",KAB. BOGOR,JAWA BARAT,Rp92.500,\n2610016CD4ZT1Q,Perlu Dikirim,,J&T Express,2026-10-02 10:05,mamah.yosef,Ana Hapsari Damayanti,0878.2131.4361,\"Jl. Harapan No. 20, Kel. Mandala, Distrik Merauke\",KAB. MERAUKE,PAPUA SELATAN,Rp310.000,kalau kurir nyasar hub suami saya Pak Wawan 0813-7316-4050\n2610017EF5UV2R,Perlu Dikirim,,JNE REG,2026-10-02 13:22,andiwj,Dedi Hakim,081240106474,\"Jl. Dahlia No. 6, Kota Sorong\",KOTA SORONG,PAPUA BARAT DAYA,Rp1.250.000,NIK saya 9671 0105 0887 3290 untuk klaim garansi\n2610018GH6WX3S,Selesai,JX4417730215,J&T Express,2026-10-03 07:55,dewi.lestari,Fitri Andriani,0896-4935-5398,\"Jl. Merdeka No. 173, Denpasar\",KOTA DENPASAR,BALI,Rp75.000,\n2610019IJ7YZ4T,Perlu Dikirim,,SiCepat REG,2026-10-03 16:30,rina_kartika,Citra Novitasari Ningsih,0881-2723-2826,\"Jl. Harapan No. 7, Penajam\",KAB. PENAJAM PASER UTARA,KALIMANTAN TIMUR,Rp640.000,\"rumah cat hijau sebelah masjid, titip ke satpam\"\n2610020KL8AB5U,Perlu Dikirim,,SPX Hemat,2026-10-04 11:11,yuliana.n,Dani Siregar,0821 0418 5461,\"Jl. Kutilang No. 9, Nabire\",KAB. NABIRE,PAPUA TENGAH,Rp230.000,\n2610021MN9CD6V,Perlu Dikirim,,JNE YES,2026-10-04 19:45,hendra88,Sigit Halim,(0751) 260722,\"Jl. Kenanga No. 60, Padang\",KOTA PADANG,SUMATERA BARAT,Rp415.000,bayar pake VA BCA 50702417760 sudah ya\n2610022OP1EF7W,Batal,,SPX Standard,2026-10-05 08:00,fitri_h,Rini Kusumawati,0852-5789-5898,\"Jl. Melati No. 1, Surabaya\",KOTA SURABAYA,JAWA TIMUR,Rp99.000,\n2610023QR2GH8X,Perlu Dikirim,,SiCepat BEST,2026-10-05 14:20,lukman.h,Hari Effendi,6281315952932,\"Jl. Pahlawan No. 9, Kel. Tapos\",KOTA DEPOK,JAWA BARAT,Rp150.000,\n2610024ST3IJ9Y,Perlu Dikirim,,J&T Express,2026-10-06 09:09,siti.aminah,Dian Puspita,0838-1669-4130,\"Jl. Anggrek No. 41, Kel. Cinere\",KOTA DEPOK,JAWA BARAT,Rp88.000,\"tolong jgn dibanting, isi obat demam buat ibu saya (alergi ringan)\"\n2610025UV4KL1Z,Dikirim,CGK7700123456789,JNE REG,2026-10-06 10:10,agus_p,Gilang Hidayat,0819-2485-3061,\"Jl. Dahlia 9, Sleman\",KAB. SLEMAN,DI YOGYAKARTA,Rp56.000,\n",
+    "text": "No. Pesanan,Status Pesanan,No. Resi,Opsi Pengiriman,Waktu Pesanan Dibuat,Username (Pembeli),Nama Penerima,No. Telepon,Alamat Pengiriman,Kota/Kabupaten,Provinsi,Total Pembayaran,Catatan dari Pembeli\n2610014KQ7ZB2M,Perlu Dikirim,,SPX Standard,2026-10-01 08:12,sitirahayu88,Nina Halim,6281207884126,\"Jl. Cempaka No. 57, RT 03/RW 05, Kel. Depok, Kec. Pancoran Mas\",KOTA DEPOK,JAWA BARAT,Rp185.000,tolong a.n. Ibu Nina Halim ya kak\n2610015AB3XY9P,Dikirim,SPXID045123456789,SPX Standard,2026-10-01 09:40,budi_s,Fajar Halim,+62 857-5526-4657,\"Perum Seroja Blok C3 No. 8, Cibinong\",KAB. BOGOR,JAWA BARAT,Rp92.500,\n2610016CD4ZT1Q,Perlu Dikirim,,J&T Express,2026-10-02 10:05,mamah.yosef,Ana Hapsari Damayanti,0878.2131.4361,\"Jl. Harapan No. 20, Kel. Mandala, Distrik Merauke\",KAB. MERAUKE,PAPUA SELATAN,Rp310.000,kalau kurir nyasar hub suami saya Pak Wawan 0813-7316-4050\n2610017EF5UV2R,Perlu Dikirim,,JNE REG,2026-10-02 13:22,nadia,Dedi Hakim,081240106474,\"Jl. Dahlia No. 6, Kota Sorong\",KOTA SORONG,PAPUA BARAT DAYA,Rp1.250.000,NIK saya 9671 0105 0887 3290 untuk klaim garansi\n2610018GH6WX3S,Selesai,JX4417730215,J&T Express,2026-10-03 07:55,dewi.lestari,Fitri Andriani,0896-4935-5398,\"Jl. Merdeka No. 173, Denpasar\",KOTA DENPASAR,BALI,Rp75.000,\n2610019IJ7YZ4T,Perlu Dikirim,,SiCepat REG,2026-10-03 16:30,rina_kartika,Citra Novitasari Ningsih,0881-2723-2826,\"Jl. Harapan No. 7, Penajam\",KAB. PENAJAM PASER UTARA,KALIMANTAN TIMUR,Rp640.000,\"rumah cat hijau sebelah masjid, titip ke satpam\"\n2610020KL8AB5U,Perlu Dikirim,,SPX Hemat,2026-10-04 11:11,yuliana.n,Dani Siregar,0821 0418 5461,\"Jl. Kutilang No. 9, Nabire\",KAB. NABIRE,PAPUA TENGAH,Rp230.000,\n2610021MN9CD6V,Perlu Dikirim,,JNE YES,2026-10-04 19:45,hendra88,Sigit Halim,(0751) 260722,\"Jl. Kenanga No. 60, Padang\",KOTA PADANG,SUMATERA BARAT,Rp415.000,bayar pake VA BCA 50702417760 sudah ya\n2610022OP1EF7W,Batal,,SPX Standard,2026-10-05 08:00,fitri_h,Rini Kusumawati,0852-5789-5898,\"Jl. Melati No. 1, Surabaya\",KOTA SURABAYA,JAWA TIMUR,Rp99.000,\n2610023QR2GH8X,Perlu Dikirim,,SiCepat BEST,2026-10-05 14:20,lukman.h,Hari Effendi,6281315952932,\"Jl. Pahlawan No. 9, Kel. Tapos\",KOTA DEPOK,JAWA BARAT,Rp150.000,\n2610024ST3IJ9Y,Perlu Dikirim,,J&T Express,2026-10-06 09:09,siti.aminah,Dian Puspita,0838-1669-4130,\"Jl. Anggrek No. 41, Kel. Cinere\",KOTA DEPOK,JAWA BARAT,Rp88.000,\"tolong jgn dibanting, isi obat demam buat ibu saya (alergi ringan)\"\n2610025UV4KL1Z,Dikirim,CGK7700123456789,JNE REG,2026-10-06 10:10,agus_p,Gilang Hidayat,0819-2485-3061,\"Jl. Dahlia 9, Sleman\",KAB. SLEMAN,DI YOGYAKARTA,Rp56.000,\n",
     "replaced": {
-     "NAME": 14,
+     "NAME": 15,
      "PHONE": 13,
      "ADDRESS": 12,
      "NIK": 1,
@@ -49,6 +49,486 @@
      "NAME": 6,
      "NIK": 6,
      "PHONE": 6
+    }
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "ai",
+    "replaced": {}
+   },
+   {
+    "text": "ai/test",
+    "replaced": {}
+   },
+   {
+    "text": "ai-v6",
+    "replaced": {}
+   },
+   {
+    "text": "ai-v6/test",
+    "replaced": {}
+   },
+   {
+    "text": "@ai-sdk/provider",
+    "replaced": {}
+   },
+   {
+    "text": "../src/ai-sdk.ts",
+    "replaced": {}
+   },
+   {
+    "text": "Nama: Fajar Halim, NIK 3201011503953074, HP 0812-1827-5350. Minta refund.",
+    "replaced": {
+     "NAME": 1,
+     "NIK": 1,
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "Fajar Halim",
+    "replaced": {
+     "NAME": 1
+    }
+   },
+   {
+    "text": "3201011503953074",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "3456-7890",
+    "replaced": {}
+   },
+   {
+    "text": "stop",
+    "replaced": {}
+   },
+   {
+    "text": "tool-calls",
+    "replaced": {}
+   },
+   {
+    "text": "stop",
+    "replaced": {}
+   },
+   {
+    "text": "AI SDK: the model sees placeholders, the app gets real values back",
+    "replaced": {}
+   },
+   {
+    "text": "text",
+    "replaced": {}
+   },
+   {
+    "text": "Refund untuk [NAME_1] ([PHONE_1]) diproses.",
+    "replaced": {}
+   },
+   {
+    "text": "Kamu agen CS.",
+    "replaced": {}
+   },
+   {
+    "text": "Refund untuk Fajar Halim (0812-1827-5350) diproses.",
+    "replaced": {
+     "NAME": 1,
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "counts only, never values",
+    "replaced": {}
+   },
+   {
+    "text": "AI SDK: streamed placeholders split across chunks are restored whole",
+    "replaced": {}
+   },
+   {
+    "text": "stream-start",
+    "replaced": {}
+   },
+   {
+    "text": "text-start",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "text-delta",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "Halo [NA",
+    "replaced": {}
+   },
+   {
+    "text": "text-delta",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "ME_1], NIK [NIK_",
+    "replaced": {}
+   },
+   {
+    "text": "text-delta",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "1] sudah dicek. [",
+    "replaced": {}
+   },
+   {
+    "text": "text-delta",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "PHONE_1",
+    "replaced": {}
+   },
+   {
+    "text": "text-end",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "finish",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "Halo Fajar Halim, NIK 3201011503953074 sudah dicek. [PHONE_1",
+    "replaced": {
+     "NAME": 1,
+     "NIK": 1
+    }
+   },
+   {
+    "text": "no chunk shows a piece of a placeholder",
+    "replaced": {}
+   },
+   {
+    "text": "AI SDK: tools run on real values, their results are masked on the next step",
+    "replaced": {}
+   },
+   {
+    "text": "tool-call",
+    "replaced": {}
+   },
+   {
+    "text": "c1",
+    "replaced": {}
+   },
+   {
+    "text": "cariPelanggan",
+    "replaced": {}
+   },
+   {
+    "text": "{\"nik\":\"[NIK_1]\"}",
+    "replaced": {}
+   },
+   {
+    "text": "tool-calls",
+    "replaced": {}
+   },
+   {
+    "text": "text",
+    "replaced": {}
+   },
+   {
+    "text": "Alamat [NAME_1]: [ADDRESS_1]",
+    "replaced": {}
+   },
+   {
+    "text": "object",
+    "replaced": {}
+   },
+   {
+    "text": "string",
+    "replaced": {}
+   },
+   {
+    "text": "nik",
+    "replaced": {}
+   },
+   {
+    "text": "Fajar Halim",
+    "replaced": {
+     "NAME": 1
+    }
+   },
+   {
+    "text": "Jl. Harapan No. 6 RT 04/RW 06, Cibinong",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "3201011503953074",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "the tool got the real NIK",
+    "replaced": {}
+   },
+   {
+    "text": "Mawar",
+    "replaced": {}
+   },
+   {
+    "text": "the same NIK keeps its placeholder across steps, even stored as a number",
+    "replaced": {}
+   },
+   {
+    "text": "Alamat Fajar Halim: Jl. Harapan No. 6 RT 04/RW 06, Cibinong",
+    "replaced": {
+     "NAME": 1,
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "AI SDK: streamed tool input is restored as valid JSON",
+    "replaced": {}
+   },
+   {
+    "text": "Budi \"Bud\" Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "tool-input-start",
+    "replaced": {}
+   },
+   {
+    "text": "t1",
+    "replaced": {}
+   },
+   {
+    "text": "kirim",
+    "replaced": {}
+   },
+   {
+    "text": "tool-input-delta",
+    "replaced": {}
+   },
+   {
+    "text": "t1",
+    "replaced": {}
+   },
+   {
+    "text": "{\"nama\":\"[NAM",
+    "replaced": {}
+   },
+   {
+    "text": "tool-input-delta",
+    "replaced": {}
+   },
+   {
+    "text": "t1",
+    "replaced": {}
+   },
+   {
+    "text": "E_1]\"}",
+    "replaced": {}
+   },
+   {
+    "text": "tool-input-end",
+    "replaced": {}
+   },
+   {
+    "text": "t1",
+    "replaced": {}
+   },
+   {
+    "text": "tool-call",
+    "replaced": {}
+   },
+   {
+    "text": "t1",
+    "replaced": {}
+   },
+   {
+    "text": "kirim",
+    "replaced": {}
+   },
+   {
+    "text": "{\"nama\":\"[NAME_1]\"}",
+    "replaced": {}
+   },
+   {
+    "text": "finish",
+    "replaced": {}
+   },
+   {
+    "text": "tool-calls",
+    "replaced": {}
+   },
+   {
+    "text": "object",
+    "replaced": {}
+   },
+   {
+    "text": "string",
+    "replaced": {}
+   },
+   {
+    "text": "tool-input-delta",
+    "replaced": {}
+   },
+   {
+    "text": "tool-call",
+    "replaced": {}
+   },
+   {
+    "text": "Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "AI SDK: exclude and allow pass through, reasoning stays as the model wrote it",
+    "replaced": {}
+   },
+   {
+    "text": "reasoning",
+    "replaced": {}
+   },
+   {
+    "text": "User [NAME_1] earns a lot.",
+    "replaced": {}
+   },
+   {
+    "text": "text",
+    "replaced": {}
+   },
+   {
+    "text": "Oke [NAME_1].",
+    "replaced": {}
+   },
+   {
+    "text": "FINANCIAL",
+    "replaced": {}
+   },
+   {
+    "text": "0800-1-500-888",
+    "replaced": {}
+   },
+   {
+    "text": "Nama: Fajar Halim, gaji: Rp80.004.040. Hubungi CS 0117-6-167-854.",
+    "replaced": {
+     "NAME": 1,
+     "FINANCIAL": 1
+    }
+   },
+   {
+    "text": "Rp15.000.000",
+    "replaced": {}
+   },
+   {
+    "text": "0800-1-500-888",
+    "replaced": {}
+   },
+   {
+    "text": "Budi",
+    "replaced": {}
+   },
+   {
+    "text": "Oke Fajar Halim.",
+    "replaced": {
+     "NAME": 1
+    }
+   },
+   {
+    "text": "User [NAME_1] earns a lot.",
+    "replaced": {}
+   },
+   {
+    "text": "AI SDK: structured output gets JSON-escaped values",
+    "replaced": {}
+   },
+   {
+    "text": "text",
+    "replaced": {}
+   },
+   {
+    "text": "{\"nama\":\"[NAME_1]\"}",
+    "replaced": {}
+   },
+   {
+    "text": "Nama: Yoga Pratama Setiawan",
+    "replaced": {
+     "NAME": 1
+    }
+   },
+   {
+    "text": "object",
+    "replaced": {}
+   },
+   {
+    "text": "string",
+    "replaced": {}
+   },
+   {
+    "text": "json",
+    "replaced": {}
+   },
+   {
+    "text": "Budi \"Bud\" Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "AI SDK 6: the same middleware with specificationVersion v3",
+    "replaced": {}
+   },
+   {
+    "text": "text",
+    "replaced": {}
+   },
+   {
+    "text": "Halo [NAME_1].",
+    "replaced": {}
+   },
+   {
+    "text": "v3",
+    "replaced": {}
+   },
+   {
+    "text": "Halo Fajar Halim.",
+    "replaced": {
+     "NAME": 1
     }
    },
    {
@@ -928,12 +1408,16 @@
     "replaced": {}
    },
    {
-    "text": "Budi Santoso",
-    "replaced": {}
+    "text": "Fajar Halim",
+    "replaced": {
+     "NAME": 1
+    }
    },
    {
-    "text": "SITI AMINAH",
-    "replaced": {}
+    "text": "DIAN PUSPITA",
+    "replaced": {
+     "NAME": 1
+    }
    },
    {
     "text": "3201011503953074",
@@ -1044,8 +1528,10 @@
     "replaced": {}
    },
    {
-    "text": "Budi Santoso",
-    "replaced": {}
+    "text": "Fajar Halim",
+    "replaced": {
+     "NAME": 1
+    }
    },
    {
     "text": "3201011503953074",
@@ -1054,8 +1540,10 @@
     }
    },
    {
-    "text": "Siti Aminah",
-    "replaced": {}
+    "text": "Dian Puspita",
+    "replaced": {
+     "NAME": 1
+    }
    },
    {
     "text": "3201014810962447",
@@ -1091,8 +1579,10 @@
     "replaced": {}
    },
    {
-    "text": "Budi Santoso",
-    "replaced": {}
+    "text": "Fajar Halim",
+    "replaced": {
+     "NAME": 1
+    }
    },
    {
     "text": "3201011503953074",
@@ -1180,8 +1670,10 @@
     "replaced": {}
    },
    {
-    "text": "Budi Santoso",
-    "replaced": {}
+    "text": "Fajar Halim",
+    "replaced": {
+     "NAME": 1
+    }
    },
    {
     "text": "15-08-1995",
@@ -1224,8 +1716,10 @@
     }
    },
    {
-    "text": "Siti Aminah",
-    "replaced": {}
+    "text": "Dian Puspita",
+    "replaced": {
+     "NAME": 1
+    }
    },
    {
     "text": "Diabetes",
@@ -1646,456 +2140,6 @@
    {
     "text": "01",
     "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "11",
-    "replaced": {}
-   },
-   {
-    "text": "5303360",
-    "replaced": {}
-   },
-   {
-    "text": "5303840",
-    "replaced": {}
-   },
-   {
-    "text": "currency",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "59",
-    "replaced": {}
-   },
-   {
-    "text": "KOPI CONTOH",
-    "replaced": {}
-   },
-   {
-    "text": "59",
-    "replaced": {}
-   },
-   {
-    "text": "WARUNG KOPI CONTOH SEJAHTERA",
-    "replaced": {}
-   },
-   {
-    "text": "merchant_name",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "12",
-    "replaced": {}
-   },
-   {
-    "text": "not_qris",
-    "replaced": {}
-   },
-   {
-    "text": "dynamic_without_amount",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "55",
-    "replaced": {}
-   },
-   {
-    "text": "02",
-    "replaced": {}
-   },
-   {
-    "text": "tip",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "53",
-    "replaced": {}
-   },
-   {
-    "text": "360",
-    "replaced": {}
-   },
-   {
-    "text": "duplicate",
-    "replaced": {}
-   },
-   {
-    "text": "node:test",
-    "replaced": {}
-   },
-   {
-    "text": "node:assert/strict",
-    "replaced": {}
-   },
-   {
-    "text": "../src/index.ts",
-    "replaced": {}
-   },
-   {
-    "text": "formatRupiah mengikuti PUEBI",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1.500.000",
-    "replaced": {}
-   },
-   {
-    "text": "Rp0",
-    "replaced": {}
-   },
-   {
-    "text": "-Rp25.000",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1.500.000,50",
-    "replaced": {}
-   },
-   {
-    "text": "999",
-    "replaced": {}
-   },
-   {
-    "text": "formatRupiahShort",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1,5 jt",
-    "replaced": {}
-   },
-   {
-    "text": "Rp2,3 M",
-    "replaced": {}
-   },
-   {
-    "text": "Rp15 rb",
-    "replaced": {}
-   },
-   {
-    "text": "Rp750",
-    "replaced": {}
-   },
-   {
-    "text": "Rp 25.000",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1.500.000,00",
-    "replaced": {}
-   },
-   {
-    "text": "1,500,000",
-    "replaced": {}
-   },
-   {
-    "text": "1,5jt",
-    "replaced": {}
-   },
-   {
-    "text": "1.5 juta",
-    "replaced": {}
-   },
-   {
-    "text": "50k",
-    "replaced": {}
-   },
-   {
-    "text": "50rb",
-    "replaced": {}
-   },
-   {
-    "text": "15ribu",
-    "replaced": {}
-   },
-   {
-    "text": "1jt 500rb",
-    "replaced": {}
-   },
-   {
-    "text": "2jtan",
-    "replaced": {}
-   },
-   {
-    "text": "50rb-an",
-    "replaced": {}
-   },
-   {
-    "text": "sekitar 1 juta",
-    "replaced": {}
-   },
-   {
-    "text": "2 juta lebih",
-    "replaced": {}
-   },
-   {
-    "text": "goceng",
-    "replaced": {}
-   },
-   {
-    "text": "goceng aja kak",
-    "replaced": {}
-   },
-   {
-    "text": "2 ceban",
-    "replaced": {}
-   },
-   {
-    "text": "cepek ceng",
-    "replaced": {}
-   },
-   {
-    "text": "gopek",
-    "replaced": {}
-   },
-   {
-    "text": "sejuta setengah",
-    "replaced": {}
-   },
-   {
-    "text": "setengah juta",
-    "replaced": {}
-   },
-   {
-    "text": "dua setengah juta",
-    "replaced": {}
-   },
-   {
-    "text": "satu setengah juta",
-    "replaced": {}
-   },
-   {
-    "text": "dua ratus lima puluh ribu",
-    "replaced": {}
-   },
-   {
-    "text": "seratus dua belas",
-    "replaced": {}
-   },
-   {
-    "text": "seribu lima ratus",
-    "replaced": {}
-   },
-   {
-    "text": "dua puluh lima juta tiga ratus ribu",
-    "replaced": {}
-   },
-   {
-    "text": "1,2 M",
-    "replaced": {}
-   },
-   {
-    "text": "parseRupiah menolak teks yang bukan nominal",
-    "replaced": {}
-   },
-   {
-    "text": "pisang goreng",
-    "replaced": {}
-   },
-   {
-    "text": "",
-    "replaced": {}
-   },
-   {
-    "text": "jutaan",
-    "replaced": {}
-   },
-   {
-    "text": "terbilang",
-    "replaced": {}
-   },
-   {
-    "text": "nol",
-    "replaced": {}
-   },
-   {
-    "text": "sebelas",
-    "replaced": {}
-   },
-   {
-    "text": "lima belas",
-    "replaced": {}
-   },
-   {
-    "text": "dua puluh satu",
-    "replaced": {}
-   },
-   {
-    "text": "seratus",
-    "replaced": {}
-   },
-   {
-    "text": "seratus sepuluh",
-    "replaced": {}
-   },
-   {
-    "text": "seribu",
-    "replaced": {}
-   },
-   {
-    "text": "seribu satu",
-    "replaced": {}
-   },
-   {
-    "text": "sebelas ribu",
-    "replaced": {}
-   },
-   {
-    "text": "seratus ribu",
-    "replaced": {}
-   },
-   {
-    "text": "satu juta",
-    "replaced": {}
-   },
-   {
-    "text": "satu juta lima ratus ribu",
-    "replaced": {}
-   },
-   {
-    "text": "dua miliar",
-    "replaced": {}
-   },
-   {
-    "text": "minus lima",
-    "replaced": {}
-   },
-   {
-    "text": "dua koma lima",
-    "replaced": {}
-   },
-   {
-    "text": "satu kuintiliun",
-    "replaced": {}
-   },
-   {
-    "text": "terbilang untuk kuitansi",
-    "replaced": {}
-   },
-   {
-    "text": "satu juta lima ratus ribu rupiah",
-    "replaced": {}
-   },
-   {
-    "text": "title",
-    "replaced": {}
-   },
-   {
-    "text": "Satu Juta Lima Ratus Ribu Rupiah",
-    "replaced": {}
-   },
-   {
-    "text": "sentence",
-    "replaced": {}
-   },
-   {
-    "text": "Dua puluh lima ribu",
-    "replaced": {}
-   },
-   {
-    "text": "pembulatan yang melewati satuan dan angka sangat besar",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1 jt",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1 rb",
-    "replaced": {}
-   },
-   {
-    "text": "Rp950 rb",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1.000.000.000.000.000.000.000",
-    "replaced": {}
-   },
-   {
-    "text": "Rp0,13",
-    "replaced": {}
-   },
-   {
-    "text": "Rp3",
-    "replaced": {}
-   },
-   {
-    "text": "parseRupiah tidak tertipu nama properti bawaan objek",
-    "replaced": {}
-   },
-   {
-    "text": "constructor",
-    "replaced": {}
-   },
-   {
-    "text": "2 toString",
-    "replaced": {}
-   },
-   {
-    "text": "terbilang angka desimal sangat kecil",
-    "replaced": {}
-   },
-   {
-    "text": "nol koma nol nol nol nol nol nol satu",
-    "replaced": {}
-   },
-   {
-    "text": "node:test",
-    "replaced": {}
-   },
-   {
-    "text": "node:assert/strict",
-    "replaced": {}
-   },
-   {
-    "text": "../src/index.ts",
-    "replaced": {}
-   },
-   {
-    "text": "Halo kak, saya mau komplain. Nama: Fajar Halim",
-    "replaced": {
-     "NAME": 1
-    }
    }
   ]
  },
@@ -2124,9 +2168,9 @@
     }
    },
    {
-    "text": "No. Pesanan,Status Pesanan,No. Resi,Opsi Pengiriman,Waktu Pesanan Dibuat,Username (Pembeli),Nama Penerima,No. Telepon,Alamat Pengiriman,Kota/Kabupaten,Provinsi,Total Pembayaran,Catatan dari Pembeli\n2610014KQ7ZB2M,Perlu Dikirim,,SPX Standard,2026-10-01 08:12,sitirahayu88,Ratna Puspita,6281202990126,\"Jl. Damai No. 51, RT 03/RW 05, Kel. Depok, Kec. Pancoran Mas\",KOTA DEPOK,JAWA BARAT,Rp185.000,tolong a.n. Ibu Ratna Puspita ya kak\n2610015AB3XY9P,Dikirim,SPXID045123456789,SPX Standard,2026-10-01 09:40,budi_s,Arif Matondang,+62 857-2521-5070,\"Perum Cemara Blok C4 No. 1, Cibinong\",KAB. BOGOR,JAWA BARAT,Rp92.500,\n2610016CD4ZT1Q,Perlu Dikirim,,J&T Express,2026-10-02 10:05,mamah.yosef,Rahmat Simanjuntak Hakim,0878.6447.6621,\"Jl. Akasia No. 83, Kel. Mandala, Distrik Merauke\",KAB. MERAUKE,PAPUA SELATAN,Rp310.000,kalau kurir nyasar hub suami saya Pak Arif 0813-1403-7300\n2610017EF5UV2R,Perlu Dikirim,,JNE REG,2026-10-02 13:22,andiwj,Farhan Siregar,081257316544,\"Jl. Cendrawasih No. 1, Kota Sorong\",KOTA SORONG,PAPUA BARAT DAYA,Rp1.250.000,NIK saya 9671 0125 1187 5481 untuk klaim garansi\n2610018GH6WX3S,Selesai,JX4417730215,J&T Express,2026-10-03 07:55,dewi.lestari,Nina Hapsari,0896-0568-0842,\"Jl. Flamboyan No. 885, Denpasar\",KOTA DENPASAR,BALI,Rp75.000,\n2610019IJ7YZ4T,Perlu Dikirim,,SiCepat REG,2026-10-03 16:30,rina_kartika,Ani Nasution Hapsari,0881-9330-5427,\"Jl. Cendrawasih No. 2, Penajam\",KAB. PENAJAM PASER UTARA,KALIMANTAN TIMUR,Rp640.000,\"rumah cat hijau sebelah masjid, titip ke satpam\"\n2610020KL8AB5U,Perlu Dikirim,,SPX Hemat,2026-10-04 11:11,yuliana.n,Tari Pertiwi,0821 1954 1195,\"Jl. Cempaka No. 3, Nabire\",KAB. NABIRE,PAPUA TENGAH,Rp230.000,\n2610021MN9CD6V,Perlu Dikirim,,JNE YES,2026-10-04 19:45,hendra88,Benny Gunawan,(0751) 899182,\"Jl. Rambutan No. 15, Padang\",KOTA PADANG,SUMATERA BARAT,Rp415.000,bayar pake VA BCA 03587861887 sudah ya\n2610022OP1EF7W,Batal,,SPX Standard,2026-10-05 08:00,fitri_h,Nurul Damayanti,0852-7340-5528,\"Jl. Kenanga No. 1, Surabaya\",KOTA SURABAYA,JAWA TIMUR,Rp99.000,\n2610023QR2GH8X,Perlu Dikirim,,SiCepat BEST,2026-10-05 14:20,lukman.h,Bayu Harahap,6281391103418,\"Jl. Damai No. 4, Kel. Tapos\",KOTA DEPOK,JAWA BARAT,Rp150.000,\n2610024ST3IJ9Y,Perlu Dikirim,,J&T Express,2026-10-06 09:09,siti.aminah,Santi Lestari,0838-9501-7154,\"Jl. Akasia No. 22, Kel. Cinere\",KOTA DEPOK,JAWA BARAT,Rp88.000,\"tolong jgn dibanting, isi obat sehat buat ibu saya (demam)\"\n2610025UV4KL1Z,Dikirim,CGK7700123456789,JNE REG,2026-10-06 10:10,agus_p,Hadi Wibowo,0819-1073-9490,\"Jl. Durian 4, Sleman\",KAB. SLEMAN,DI YOGYAKARTA,Rp56.000,\n",
+    "text": "No. Pesanan,Status Pesanan,No. Resi,Opsi Pengiriman,Waktu Pesanan Dibuat,Username (Pembeli),Nama Penerima,No. Telepon,Alamat Pengiriman,Kota/Kabupaten,Provinsi,Total Pembayaran,Catatan dari Pembeli\n2610014KQ7ZB2M,Perlu Dikirim,,SPX Standard,2026-10-01 08:12,sitirahayu88,Ratna Puspita,6281202990126,\"Jl. Damai No. 51, RT 03/RW 05, Kel. Depok, Kec. Pancoran Mas\",KOTA DEPOK,JAWA BARAT,Rp185.000,tolong a.n. Ibu Ratna Puspita ya kak\n2610015AB3XY9P,Dikirim,SPXID045123456789,SPX Standard,2026-10-01 09:40,budi_s,Arif Matondang,+62 857-2521-5070,\"Perum Cemara Blok C4 No. 1, Cibinong\",KAB. BOGOR,JAWA BARAT,Rp92.500,\n2610016CD4ZT1Q,Perlu Dikirim,,J&T Express,2026-10-02 10:05,mamah.yosef,Rahmat Simanjuntak Hakim,0878.6447.6621,\"Jl. Akasia No. 83, Kel. Mandala, Distrik Merauke\",KAB. MERAUKE,PAPUA SELATAN,Rp310.000,kalau kurir nyasar hub suami saya Pak Arif 0813-1403-7300\n2610017EF5UV2R,Perlu Dikirim,,JNE REG,2026-10-02 13:22,rahma,Farhan Siregar,081257316544,\"Jl. Cendrawasih No. 1, Kota Sorong\",KOTA SORONG,PAPUA BARAT DAYA,Rp1.250.000,NIK saya 9671 0125 1187 5481 untuk klaim garansi\n2610018GH6WX3S,Selesai,JX4417730215,J&T Express,2026-10-03 07:55,dewi.lestari,Nina Hapsari,0896-0568-0842,\"Jl. Flamboyan No. 885, Denpasar\",KOTA DENPASAR,BALI,Rp75.000,\n2610019IJ7YZ4T,Perlu Dikirim,,SiCepat REG,2026-10-03 16:30,rina_kartika,Ani Nasution Hapsari,0881-9330-5427,\"Jl. Cendrawasih No. 2, Penajam\",KAB. PENAJAM PASER UTARA,KALIMANTAN TIMUR,Rp640.000,\"rumah cat hijau sebelah masjid, titip ke satpam\"\n2610020KL8AB5U,Perlu Dikirim,,SPX Hemat,2026-10-04 11:11,yuliana.n,Tari Pertiwi,0821 1954 1195,\"Jl. Cempaka No. 3, Nabire\",KAB. NABIRE,PAPUA TENGAH,Rp230.000,\n2610021MN9CD6V,Perlu Dikirim,,JNE YES,2026-10-04 19:45,hendra88,Benny Gunawan,(0751) 899182,\"Jl. Rambutan No. 15, Padang\",KOTA PADANG,SUMATERA BARAT,Rp415.000,bayar pake VA BCA 03587861887 sudah ya\n2610022OP1EF7W,Batal,,SPX Standard,2026-10-05 08:00,fitri_h,Nurul Damayanti,0852-7340-5528,\"Jl. Kenanga No. 1, Surabaya\",KOTA SURABAYA,JAWA TIMUR,Rp99.000,\n2610023QR2GH8X,Perlu Dikirim,,SiCepat BEST,2026-10-05 14:20,lukman.h,Bayu Harahap,6281391103418,\"Jl. Damai No. 4, Kel. Tapos\",KOTA DEPOK,JAWA BARAT,Rp150.000,\n2610024ST3IJ9Y,Perlu Dikirim,,J&T Express,2026-10-06 09:09,siti.aminah,Santi Lestari,0838-9501-7154,\"Jl. Akasia No. 22, Kel. Cinere\",KOTA DEPOK,JAWA BARAT,Rp88.000,\"tolong jgn dibanting, isi obat sehat buat ibu saya (demam)\"\n2610025UV4KL1Z,Dikirim,CGK7700123456789,JNE REG,2026-10-06 10:10,agus_p,Hadi Wibowo,0819-1073-9490,\"Jl. Durian 4, Sleman\",KAB. SLEMAN,DI YOGYAKARTA,Rp56.000,\n",
     "replaced": {
-     "NAME": 14,
+     "NAME": 15,
      "PHONE": 13,
      "ADDRESS": 12,
      "NIK": 1,
@@ -2150,6 +2194,486 @@
      "NAME": 6,
      "NIK": 6,
      "PHONE": 6
+    }
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "ai",
+    "replaced": {}
+   },
+   {
+    "text": "ai/test",
+    "replaced": {}
+   },
+   {
+    "text": "ai-v6",
+    "replaced": {}
+   },
+   {
+    "text": "ai-v6/test",
+    "replaced": {}
+   },
+   {
+    "text": "@ai-sdk/provider",
+    "replaced": {}
+   },
+   {
+    "text": "../src/ai-sdk.ts",
+    "replaced": {}
+   },
+   {
+    "text": "Nama: Arif Matondang, NIK 3201011508955680, HP 0812-7002-3934. Minta refund.",
+    "replaced": {
+     "NAME": 1,
+     "NIK": 1,
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "Arif Matondang",
+    "replaced": {
+     "NAME": 1
+    }
+   },
+   {
+    "text": "3201011508955680",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "3456-7890",
+    "replaced": {}
+   },
+   {
+    "text": "stop",
+    "replaced": {}
+   },
+   {
+    "text": "tool-calls",
+    "replaced": {}
+   },
+   {
+    "text": "stop",
+    "replaced": {}
+   },
+   {
+    "text": "AI SDK: the model sees placeholders, the app gets real values back",
+    "replaced": {}
+   },
+   {
+    "text": "text",
+    "replaced": {}
+   },
+   {
+    "text": "Refund untuk [NAME_1] ([PHONE_1]) diproses.",
+    "replaced": {}
+   },
+   {
+    "text": "Kamu agen CS.",
+    "replaced": {}
+   },
+   {
+    "text": "Refund untuk Arif Matondang (0812-7002-3934) diproses.",
+    "replaced": {
+     "NAME": 1,
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "counts only, never values",
+    "replaced": {}
+   },
+   {
+    "text": "AI SDK: streamed placeholders split across chunks are restored whole",
+    "replaced": {}
+   },
+   {
+    "text": "stream-start",
+    "replaced": {}
+   },
+   {
+    "text": "text-start",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "text-delta",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "Halo [NA",
+    "replaced": {}
+   },
+   {
+    "text": "text-delta",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "ME_1], NIK [NIK_",
+    "replaced": {}
+   },
+   {
+    "text": "text-delta",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "1] sudah dicek. [",
+    "replaced": {}
+   },
+   {
+    "text": "text-delta",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "PHONE_1",
+    "replaced": {}
+   },
+   {
+    "text": "text-end",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "finish",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "Halo Arif Matondang, NIK 3201011508955680 sudah dicek. [PHONE_1",
+    "replaced": {
+     "NAME": 1,
+     "NIK": 1
+    }
+   },
+   {
+    "text": "no chunk shows a piece of a placeholder",
+    "replaced": {}
+   },
+   {
+    "text": "AI SDK: tools run on real values, their results are masked on the next step",
+    "replaced": {}
+   },
+   {
+    "text": "tool-call",
+    "replaced": {}
+   },
+   {
+    "text": "c1",
+    "replaced": {}
+   },
+   {
+    "text": "cariPelanggan",
+    "replaced": {}
+   },
+   {
+    "text": "{\"nik\":\"[NIK_1]\"}",
+    "replaced": {}
+   },
+   {
+    "text": "tool-calls",
+    "replaced": {}
+   },
+   {
+    "text": "text",
+    "replaced": {}
+   },
+   {
+    "text": "Alamat [NAME_1]: [ADDRESS_1]",
+    "replaced": {}
+   },
+   {
+    "text": "object",
+    "replaced": {}
+   },
+   {
+    "text": "string",
+    "replaced": {}
+   },
+   {
+    "text": "nik",
+    "replaced": {}
+   },
+   {
+    "text": "Arif Matondang",
+    "replaced": {
+     "NAME": 1
+    }
+   },
+   {
+    "text": "Jl. Swadaya No. 6 RT 06/RW 04, Cibinong",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "3201011508955680",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "the tool got the real NIK",
+    "replaced": {}
+   },
+   {
+    "text": "Mawar",
+    "replaced": {}
+   },
+   {
+    "text": "the same NIK keeps its placeholder across steps, even stored as a number",
+    "replaced": {}
+   },
+   {
+    "text": "Alamat Arif Matondang: Jl. Swadaya No. 6 RT 06/RW 04, Cibinong",
+    "replaced": {
+     "NAME": 1,
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "AI SDK: streamed tool input is restored as valid JSON",
+    "replaced": {}
+   },
+   {
+    "text": "Budi \"Bud\" Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "tool-input-start",
+    "replaced": {}
+   },
+   {
+    "text": "t1",
+    "replaced": {}
+   },
+   {
+    "text": "kirim",
+    "replaced": {}
+   },
+   {
+    "text": "tool-input-delta",
+    "replaced": {}
+   },
+   {
+    "text": "t1",
+    "replaced": {}
+   },
+   {
+    "text": "{\"nama\":\"[NAM",
+    "replaced": {}
+   },
+   {
+    "text": "tool-input-delta",
+    "replaced": {}
+   },
+   {
+    "text": "t1",
+    "replaced": {}
+   },
+   {
+    "text": "E_1]\"}",
+    "replaced": {}
+   },
+   {
+    "text": "tool-input-end",
+    "replaced": {}
+   },
+   {
+    "text": "t1",
+    "replaced": {}
+   },
+   {
+    "text": "tool-call",
+    "replaced": {}
+   },
+   {
+    "text": "t1",
+    "replaced": {}
+   },
+   {
+    "text": "kirim",
+    "replaced": {}
+   },
+   {
+    "text": "{\"nama\":\"[NAME_1]\"}",
+    "replaced": {}
+   },
+   {
+    "text": "finish",
+    "replaced": {}
+   },
+   {
+    "text": "tool-calls",
+    "replaced": {}
+   },
+   {
+    "text": "object",
+    "replaced": {}
+   },
+   {
+    "text": "string",
+    "replaced": {}
+   },
+   {
+    "text": "tool-input-delta",
+    "replaced": {}
+   },
+   {
+    "text": "tool-call",
+    "replaced": {}
+   },
+   {
+    "text": "Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "AI SDK: exclude and allow pass through, reasoning stays as the model wrote it",
+    "replaced": {}
+   },
+   {
+    "text": "reasoning",
+    "replaced": {}
+   },
+   {
+    "text": "User [NAME_1] earns a lot.",
+    "replaced": {}
+   },
+   {
+    "text": "text",
+    "replaced": {}
+   },
+   {
+    "text": "Oke [NAME_1].",
+    "replaced": {}
+   },
+   {
+    "text": "FINANCIAL",
+    "replaced": {}
+   },
+   {
+    "text": "0800-1-500-888",
+    "replaced": {}
+   },
+   {
+    "text": "Nama: Arif Matondang, gaji: Rp68.086.054. Hubungi CS 0077-8-517-795.",
+    "replaced": {
+     "NAME": 1,
+     "FINANCIAL": 1
+    }
+   },
+   {
+    "text": "Rp15.000.000",
+    "replaced": {}
+   },
+   {
+    "text": "0800-1-500-888",
+    "replaced": {}
+   },
+   {
+    "text": "Budi",
+    "replaced": {}
+   },
+   {
+    "text": "Oke Arif Matondang.",
+    "replaced": {
+     "NAME": 1
+    }
+   },
+   {
+    "text": "User [NAME_1] earns a lot.",
+    "replaced": {}
+   },
+   {
+    "text": "AI SDK: structured output gets JSON-escaped values",
+    "replaced": {}
+   },
+   {
+    "text": "text",
+    "replaced": {}
+   },
+   {
+    "text": "{\"nama\":\"[NAME_1]\"}",
+    "replaced": {}
+   },
+   {
+    "text": "Nama: Made Maulana Susanto",
+    "replaced": {
+     "NAME": 1
+    }
+   },
+   {
+    "text": "object",
+    "replaced": {}
+   },
+   {
+    "text": "string",
+    "replaced": {}
+   },
+   {
+    "text": "json",
+    "replaced": {}
+   },
+   {
+    "text": "Budi \"Bud\" Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "AI SDK 6: the same middleware with specificationVersion v3",
+    "replaced": {}
+   },
+   {
+    "text": "text",
+    "replaced": {}
+   },
+   {
+    "text": "Halo [NAME_1].",
+    "replaced": {}
+   },
+   {
+    "text": "v3",
+    "replaced": {}
+   },
+   {
+    "text": "Halo Arif Matondang.",
+    "replaced": {
+     "NAME": 1
     }
    },
    {
@@ -3029,12 +3553,16 @@
     "replaced": {}
    },
    {
-    "text": "Budi Santoso",
-    "replaced": {}
+    "text": "Arif Matondang",
+    "replaced": {
+     "NAME": 1
+    }
    },
    {
-    "text": "SITI AMINAH",
-    "replaced": {}
+    "text": "SANTI LESTARI",
+    "replaced": {
+     "NAME": 1
+    }
    },
    {
     "text": "3201011508955680",
@@ -3145,8 +3673,10 @@
     "replaced": {}
    },
    {
-    "text": "Budi Santoso",
-    "replaced": {}
+    "text": "Arif Matondang",
+    "replaced": {
+     "NAME": 1
+    }
    },
    {
     "text": "3201011508955680",
@@ -3155,8 +3685,10 @@
     }
    },
    {
-    "text": "Siti Aminah",
-    "replaced": {}
+    "text": "Santi Lestari",
+    "replaced": {
+     "NAME": 1
+    }
    },
    {
     "text": "3201014408961792",
@@ -3192,8 +3724,10 @@
     "replaced": {}
    },
    {
-    "text": "Budi Santoso",
-    "replaced": {}
+    "text": "Arif Matondang",
+    "replaced": {
+     "NAME": 1
+    }
    },
    {
     "text": "3201011508955680",
@@ -3281,8 +3815,10 @@
     "replaced": {}
    },
    {
-    "text": "Budi Santoso",
-    "replaced": {}
+    "text": "Arif Matondang",
+    "replaced": {
+     "NAME": 1
+    }
    },
    {
     "text": "15-08-1995",
@@ -3325,8 +3861,10 @@
     }
    },
    {
-    "text": "Siti Aminah",
-    "replaced": {}
+    "text": "Santi Lestari",
+    "replaced": {
+     "NAME": 1
+    }
    },
    {
     "text": "Diabetes",
@@ -3747,456 +4285,6 @@
    {
     "text": "01",
     "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "11",
-    "replaced": {}
-   },
-   {
-    "text": "5303360",
-    "replaced": {}
-   },
-   {
-    "text": "5303840",
-    "replaced": {}
-   },
-   {
-    "text": "currency",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "59",
-    "replaced": {}
-   },
-   {
-    "text": "KOPI CONTOH",
-    "replaced": {}
-   },
-   {
-    "text": "59",
-    "replaced": {}
-   },
-   {
-    "text": "WARUNG KOPI CONTOH SEJAHTERA",
-    "replaced": {}
-   },
-   {
-    "text": "merchant_name",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "12",
-    "replaced": {}
-   },
-   {
-    "text": "not_qris",
-    "replaced": {}
-   },
-   {
-    "text": "dynamic_without_amount",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "55",
-    "replaced": {}
-   },
-   {
-    "text": "02",
-    "replaced": {}
-   },
-   {
-    "text": "tip",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "53",
-    "replaced": {}
-   },
-   {
-    "text": "360",
-    "replaced": {}
-   },
-   {
-    "text": "duplicate",
-    "replaced": {}
-   },
-   {
-    "text": "node:test",
-    "replaced": {}
-   },
-   {
-    "text": "node:assert/strict",
-    "replaced": {}
-   },
-   {
-    "text": "../src/index.ts",
-    "replaced": {}
-   },
-   {
-    "text": "formatRupiah mengikuti PUEBI",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1.500.000",
-    "replaced": {}
-   },
-   {
-    "text": "Rp0",
-    "replaced": {}
-   },
-   {
-    "text": "-Rp25.000",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1.500.000,50",
-    "replaced": {}
-   },
-   {
-    "text": "999",
-    "replaced": {}
-   },
-   {
-    "text": "formatRupiahShort",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1,5 jt",
-    "replaced": {}
-   },
-   {
-    "text": "Rp2,3 M",
-    "replaced": {}
-   },
-   {
-    "text": "Rp15 rb",
-    "replaced": {}
-   },
-   {
-    "text": "Rp750",
-    "replaced": {}
-   },
-   {
-    "text": "Rp 25.000",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1.500.000,00",
-    "replaced": {}
-   },
-   {
-    "text": "1,500,000",
-    "replaced": {}
-   },
-   {
-    "text": "1,5jt",
-    "replaced": {}
-   },
-   {
-    "text": "1.5 juta",
-    "replaced": {}
-   },
-   {
-    "text": "50k",
-    "replaced": {}
-   },
-   {
-    "text": "50rb",
-    "replaced": {}
-   },
-   {
-    "text": "15ribu",
-    "replaced": {}
-   },
-   {
-    "text": "1jt 500rb",
-    "replaced": {}
-   },
-   {
-    "text": "2jtan",
-    "replaced": {}
-   },
-   {
-    "text": "50rb-an",
-    "replaced": {}
-   },
-   {
-    "text": "sekitar 1 juta",
-    "replaced": {}
-   },
-   {
-    "text": "2 juta lebih",
-    "replaced": {}
-   },
-   {
-    "text": "goceng",
-    "replaced": {}
-   },
-   {
-    "text": "goceng aja kak",
-    "replaced": {}
-   },
-   {
-    "text": "2 ceban",
-    "replaced": {}
-   },
-   {
-    "text": "cepek ceng",
-    "replaced": {}
-   },
-   {
-    "text": "gopek",
-    "replaced": {}
-   },
-   {
-    "text": "sejuta setengah",
-    "replaced": {}
-   },
-   {
-    "text": "setengah juta",
-    "replaced": {}
-   },
-   {
-    "text": "dua setengah juta",
-    "replaced": {}
-   },
-   {
-    "text": "satu setengah juta",
-    "replaced": {}
-   },
-   {
-    "text": "dua ratus lima puluh ribu",
-    "replaced": {}
-   },
-   {
-    "text": "seratus dua belas",
-    "replaced": {}
-   },
-   {
-    "text": "seribu lima ratus",
-    "replaced": {}
-   },
-   {
-    "text": "dua puluh lima juta tiga ratus ribu",
-    "replaced": {}
-   },
-   {
-    "text": "1,2 M",
-    "replaced": {}
-   },
-   {
-    "text": "parseRupiah menolak teks yang bukan nominal",
-    "replaced": {}
-   },
-   {
-    "text": "pisang goreng",
-    "replaced": {}
-   },
-   {
-    "text": "",
-    "replaced": {}
-   },
-   {
-    "text": "jutaan",
-    "replaced": {}
-   },
-   {
-    "text": "terbilang",
-    "replaced": {}
-   },
-   {
-    "text": "nol",
-    "replaced": {}
-   },
-   {
-    "text": "sebelas",
-    "replaced": {}
-   },
-   {
-    "text": "lima belas",
-    "replaced": {}
-   },
-   {
-    "text": "dua puluh satu",
-    "replaced": {}
-   },
-   {
-    "text": "seratus",
-    "replaced": {}
-   },
-   {
-    "text": "seratus sepuluh",
-    "replaced": {}
-   },
-   {
-    "text": "seribu",
-    "replaced": {}
-   },
-   {
-    "text": "seribu satu",
-    "replaced": {}
-   },
-   {
-    "text": "sebelas ribu",
-    "replaced": {}
-   },
-   {
-    "text": "seratus ribu",
-    "replaced": {}
-   },
-   {
-    "text": "satu juta",
-    "replaced": {}
-   },
-   {
-    "text": "satu juta lima ratus ribu",
-    "replaced": {}
-   },
-   {
-    "text": "dua miliar",
-    "replaced": {}
-   },
-   {
-    "text": "minus lima",
-    "replaced": {}
-   },
-   {
-    "text": "dua koma lima",
-    "replaced": {}
-   },
-   {
-    "text": "satu kuintiliun",
-    "replaced": {}
-   },
-   {
-    "text": "terbilang untuk kuitansi",
-    "replaced": {}
-   },
-   {
-    "text": "satu juta lima ratus ribu rupiah",
-    "replaced": {}
-   },
-   {
-    "text": "title",
-    "replaced": {}
-   },
-   {
-    "text": "Satu Juta Lima Ratus Ribu Rupiah",
-    "replaced": {}
-   },
-   {
-    "text": "sentence",
-    "replaced": {}
-   },
-   {
-    "text": "Dua puluh lima ribu",
-    "replaced": {}
-   },
-   {
-    "text": "pembulatan yang melewati satuan dan angka sangat besar",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1 jt",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1 rb",
-    "replaced": {}
-   },
-   {
-    "text": "Rp950 rb",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1.000.000.000.000.000.000.000",
-    "replaced": {}
-   },
-   {
-    "text": "Rp0,13",
-    "replaced": {}
-   },
-   {
-    "text": "Rp3",
-    "replaced": {}
-   },
-   {
-    "text": "parseRupiah tidak tertipu nama properti bawaan objek",
-    "replaced": {}
-   },
-   {
-    "text": "constructor",
-    "replaced": {}
-   },
-   {
-    "text": "2 toString",
-    "replaced": {}
-   },
-   {
-    "text": "terbilang angka desimal sangat kecil",
-    "replaced": {}
-   },
-   {
-    "text": "nol koma nol nol nol nol nol nol satu",
-    "replaced": {}
-   },
-   {
-    "text": "node:test",
-    "replaced": {}
-   },
-   {
-    "text": "node:assert/strict",
-    "replaced": {}
-   },
-   {
-    "text": "../src/index.ts",
-    "replaced": {}
-   },
-   {
-    "text": "Halo kak, saya mau komplain. Nama: Arif Matondang",
-    "replaced": {
-     "NAME": 1
-    }
    }
   ]
  },
@@ -4250,6 +4338,471 @@
      "NIK": 6,
      "PHONE": 6
     }
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "ai",
+    "replaced": {}
+   },
+   {
+    "text": "ai/test",
+    "replaced": {}
+   },
+   {
+    "text": "ai-v6",
+    "replaced": {}
+   },
+   {
+    "text": "ai-v6/test",
+    "replaced": {}
+   },
+   {
+    "text": "@ai-sdk/provider",
+    "replaced": {}
+   },
+   {
+    "text": "../src/ai-sdk.ts",
+    "replaced": {}
+   },
+   {
+    "text": "Nama: Budi Santoso, NIK 3201010607955083, HP 0812-5024-6610. Minta refund.",
+    "replaced": {
+     "NIK": 1,
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "Budi Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "3201010607955083",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "3456-7890",
+    "replaced": {}
+   },
+   {
+    "text": "stop",
+    "replaced": {}
+   },
+   {
+    "text": "tool-calls",
+    "replaced": {}
+   },
+   {
+    "text": "stop",
+    "replaced": {}
+   },
+   {
+    "text": "AI SDK: the model sees placeholders, the app gets real values back",
+    "replaced": {}
+   },
+   {
+    "text": "text",
+    "replaced": {}
+   },
+   {
+    "text": "Refund untuk [NAME_1] ([PHONE_1]) diproses.",
+    "replaced": {}
+   },
+   {
+    "text": "Kamu agen CS.",
+    "replaced": {}
+   },
+   {
+    "text": "Refund untuk Budi Santoso (0812-5024-6610) diproses.",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "counts only, never values",
+    "replaced": {}
+   },
+   {
+    "text": "AI SDK: streamed placeholders split across chunks are restored whole",
+    "replaced": {}
+   },
+   {
+    "text": "stream-start",
+    "replaced": {}
+   },
+   {
+    "text": "text-start",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "text-delta",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "Halo [NA",
+    "replaced": {}
+   },
+   {
+    "text": "text-delta",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "ME_1], NIK [NIK_",
+    "replaced": {}
+   },
+   {
+    "text": "text-delta",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "1] sudah dicek. [",
+    "replaced": {}
+   },
+   {
+    "text": "text-delta",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "PHONE_1",
+    "replaced": {}
+   },
+   {
+    "text": "text-end",
+    "replaced": {}
+   },
+   {
+    "text": "0",
+    "replaced": {}
+   },
+   {
+    "text": "finish",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "Halo Budi Santoso, NIK 3201010607955083 sudah dicek. [PHONE_1",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "no chunk shows a piece of a placeholder",
+    "replaced": {}
+   },
+   {
+    "text": "AI SDK: tools run on real values, their results are masked on the next step",
+    "replaced": {}
+   },
+   {
+    "text": "tool-call",
+    "replaced": {}
+   },
+   {
+    "text": "c1",
+    "replaced": {}
+   },
+   {
+    "text": "cariPelanggan",
+    "replaced": {}
+   },
+   {
+    "text": "{\"nik\":\"[NIK_1]\"}",
+    "replaced": {}
+   },
+   {
+    "text": "tool-calls",
+    "replaced": {}
+   },
+   {
+    "text": "text",
+    "replaced": {}
+   },
+   {
+    "text": "Alamat [NAME_1]: [ADDRESS_1]",
+    "replaced": {}
+   },
+   {
+    "text": "object",
+    "replaced": {}
+   },
+   {
+    "text": "string",
+    "replaced": {}
+   },
+   {
+    "text": "nik",
+    "replaced": {}
+   },
+   {
+    "text": "Budi Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Swadaya No. 7 RT 07/RW 03, Cibinong",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "3201010607955083",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "the tool got the real NIK",
+    "replaced": {}
+   },
+   {
+    "text": "Mawar",
+    "replaced": {}
+   },
+   {
+    "text": "the same NIK keeps its placeholder across steps, even stored as a number",
+    "replaced": {}
+   },
+   {
+    "text": "Alamat Budi Santoso: Jl. Swadaya No. 7 RT 07/RW 03, Cibinong",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "AI SDK: streamed tool input is restored as valid JSON",
+    "replaced": {}
+   },
+   {
+    "text": "Budi \"Bud\" Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "tool-input-start",
+    "replaced": {}
+   },
+   {
+    "text": "t1",
+    "replaced": {}
+   },
+   {
+    "text": "kirim",
+    "replaced": {}
+   },
+   {
+    "text": "tool-input-delta",
+    "replaced": {}
+   },
+   {
+    "text": "t1",
+    "replaced": {}
+   },
+   {
+    "text": "{\"nama\":\"[NAM",
+    "replaced": {}
+   },
+   {
+    "text": "tool-input-delta",
+    "replaced": {}
+   },
+   {
+    "text": "t1",
+    "replaced": {}
+   },
+   {
+    "text": "E_1]\"}",
+    "replaced": {}
+   },
+   {
+    "text": "tool-input-end",
+    "replaced": {}
+   },
+   {
+    "text": "t1",
+    "replaced": {}
+   },
+   {
+    "text": "tool-call",
+    "replaced": {}
+   },
+   {
+    "text": "t1",
+    "replaced": {}
+   },
+   {
+    "text": "kirim",
+    "replaced": {}
+   },
+   {
+    "text": "{\"nama\":\"[NAME_1]\"}",
+    "replaced": {}
+   },
+   {
+    "text": "finish",
+    "replaced": {}
+   },
+   {
+    "text": "tool-calls",
+    "replaced": {}
+   },
+   {
+    "text": "object",
+    "replaced": {}
+   },
+   {
+    "text": "string",
+    "replaced": {}
+   },
+   {
+    "text": "tool-input-delta",
+    "replaced": {}
+   },
+   {
+    "text": "tool-call",
+    "replaced": {}
+   },
+   {
+    "text": "Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "AI SDK: exclude and allow pass through, reasoning stays as the model wrote it",
+    "replaced": {}
+   },
+   {
+    "text": "reasoning",
+    "replaced": {}
+   },
+   {
+    "text": "User [NAME_1] earns a lot.",
+    "replaced": {}
+   },
+   {
+    "text": "text",
+    "replaced": {}
+   },
+   {
+    "text": "Oke [NAME_1].",
+    "replaced": {}
+   },
+   {
+    "text": "FINANCIAL",
+    "replaced": {}
+   },
+   {
+    "text": "0800-1-500-888",
+    "replaced": {}
+   },
+   {
+    "text": "Nama: Budi Santoso, gaji: Rp24.063.007. Hubungi CS 0356-3-690-549.",
+    "replaced": {
+     "FINANCIAL": 1
+    }
+   },
+   {
+    "text": "Rp15.000.000",
+    "replaced": {}
+   },
+   {
+    "text": "0800-1-500-888",
+    "replaced": {}
+   },
+   {
+    "text": "Budi",
+    "replaced": {}
+   },
+   {
+    "text": "Oke Budi Santoso.",
+    "replaced": {}
+   },
+   {
+    "text": "User [NAME_1] earns a lot.",
+    "replaced": {}
+   },
+   {
+    "text": "AI SDK: structured output gets JSON-escaped values",
+    "replaced": {}
+   },
+   {
+    "text": "text",
+    "replaced": {}
+   },
+   {
+    "text": "{\"nama\":\"[NAME_1]\"}",
+    "replaced": {}
+   },
+   {
+    "text": "Nama: Budi \"Bud\" Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "object",
+    "replaced": {}
+   },
+   {
+    "text": "string",
+    "replaced": {}
+   },
+   {
+    "text": "json",
+    "replaced": {}
+   },
+   {
+    "text": "Budi \"Bud\" Santoso",
+    "replaced": {}
+   },
+   {
+    "text": "AI SDK 6: the same middleware with specificationVersion v3",
+    "replaced": {}
+   },
+   {
+    "text": "text",
+    "replaced": {}
+   },
+   {
+    "text": "Halo [NAME_1].",
+    "replaced": {}
+   },
+   {
+    "text": "v3",
+    "replaced": {}
+   },
+   {
+    "text": "Halo Budi Santoso.",
+    "replaced": {}
    },
    {
     "text": "node:test",
@@ -5840,454 +6393,6 @@
    },
    {
     "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "11",
-    "replaced": {}
-   },
-   {
-    "text": "5303360",
-    "replaced": {}
-   },
-   {
-    "text": "5303840",
-    "replaced": {}
-   },
-   {
-    "text": "currency",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "59",
-    "replaced": {}
-   },
-   {
-    "text": "KOPI CONTOH",
-    "replaced": {}
-   },
-   {
-    "text": "59",
-    "replaced": {}
-   },
-   {
-    "text": "WARUNG KOPI CONTOH SEJAHTERA",
-    "replaced": {}
-   },
-   {
-    "text": "merchant_name",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "12",
-    "replaced": {}
-   },
-   {
-    "text": "not_qris",
-    "replaced": {}
-   },
-   {
-    "text": "dynamic_without_amount",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "55",
-    "replaced": {}
-   },
-   {
-    "text": "02",
-    "replaced": {}
-   },
-   {
-    "text": "tip",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "53",
-    "replaced": {}
-   },
-   {
-    "text": "360",
-    "replaced": {}
-   },
-   {
-    "text": "duplicate",
-    "replaced": {}
-   },
-   {
-    "text": "node:test",
-    "replaced": {}
-   },
-   {
-    "text": "node:assert/strict",
-    "replaced": {}
-   },
-   {
-    "text": "../src/index.ts",
-    "replaced": {}
-   },
-   {
-    "text": "formatRupiah mengikuti PUEBI",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1.500.000",
-    "replaced": {}
-   },
-   {
-    "text": "Rp0",
-    "replaced": {}
-   },
-   {
-    "text": "-Rp25.000",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1.500.000,50",
-    "replaced": {}
-   },
-   {
-    "text": "999",
-    "replaced": {}
-   },
-   {
-    "text": "formatRupiahShort",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1,5 jt",
-    "replaced": {}
-   },
-   {
-    "text": "Rp2,3 M",
-    "replaced": {}
-   },
-   {
-    "text": "Rp15 rb",
-    "replaced": {}
-   },
-   {
-    "text": "Rp750",
-    "replaced": {}
-   },
-   {
-    "text": "Rp 25.000",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1.500.000,00",
-    "replaced": {}
-   },
-   {
-    "text": "1,500,000",
-    "replaced": {}
-   },
-   {
-    "text": "1,5jt",
-    "replaced": {}
-   },
-   {
-    "text": "1.5 juta",
-    "replaced": {}
-   },
-   {
-    "text": "50k",
-    "replaced": {}
-   },
-   {
-    "text": "50rb",
-    "replaced": {}
-   },
-   {
-    "text": "15ribu",
-    "replaced": {}
-   },
-   {
-    "text": "1jt 500rb",
-    "replaced": {}
-   },
-   {
-    "text": "2jtan",
-    "replaced": {}
-   },
-   {
-    "text": "50rb-an",
-    "replaced": {}
-   },
-   {
-    "text": "sekitar 1 juta",
-    "replaced": {}
-   },
-   {
-    "text": "2 juta lebih",
-    "replaced": {}
-   },
-   {
-    "text": "goceng",
-    "replaced": {}
-   },
-   {
-    "text": "goceng aja kak",
-    "replaced": {}
-   },
-   {
-    "text": "2 ceban",
-    "replaced": {}
-   },
-   {
-    "text": "cepek ceng",
-    "replaced": {}
-   },
-   {
-    "text": "gopek",
-    "replaced": {}
-   },
-   {
-    "text": "sejuta setengah",
-    "replaced": {}
-   },
-   {
-    "text": "setengah juta",
-    "replaced": {}
-   },
-   {
-    "text": "dua setengah juta",
-    "replaced": {}
-   },
-   {
-    "text": "satu setengah juta",
-    "replaced": {}
-   },
-   {
-    "text": "dua ratus lima puluh ribu",
-    "replaced": {}
-   },
-   {
-    "text": "seratus dua belas",
-    "replaced": {}
-   },
-   {
-    "text": "seribu lima ratus",
-    "replaced": {}
-   },
-   {
-    "text": "dua puluh lima juta tiga ratus ribu",
-    "replaced": {}
-   },
-   {
-    "text": "1,2 M",
-    "replaced": {}
-   },
-   {
-    "text": "parseRupiah menolak teks yang bukan nominal",
-    "replaced": {}
-   },
-   {
-    "text": "pisang goreng",
-    "replaced": {}
-   },
-   {
-    "text": "",
-    "replaced": {}
-   },
-   {
-    "text": "jutaan",
-    "replaced": {}
-   },
-   {
-    "text": "terbilang",
-    "replaced": {}
-   },
-   {
-    "text": "nol",
-    "replaced": {}
-   },
-   {
-    "text": "sebelas",
-    "replaced": {}
-   },
-   {
-    "text": "lima belas",
-    "replaced": {}
-   },
-   {
-    "text": "dua puluh satu",
-    "replaced": {}
-   },
-   {
-    "text": "seratus",
-    "replaced": {}
-   },
-   {
-    "text": "seratus sepuluh",
-    "replaced": {}
-   },
-   {
-    "text": "seribu",
-    "replaced": {}
-   },
-   {
-    "text": "seribu satu",
-    "replaced": {}
-   },
-   {
-    "text": "sebelas ribu",
-    "replaced": {}
-   },
-   {
-    "text": "seratus ribu",
-    "replaced": {}
-   },
-   {
-    "text": "satu juta",
-    "replaced": {}
-   },
-   {
-    "text": "satu juta lima ratus ribu",
-    "replaced": {}
-   },
-   {
-    "text": "dua miliar",
-    "replaced": {}
-   },
-   {
-    "text": "minus lima",
-    "replaced": {}
-   },
-   {
-    "text": "dua koma lima",
-    "replaced": {}
-   },
-   {
-    "text": "satu kuintiliun",
-    "replaced": {}
-   },
-   {
-    "text": "terbilang untuk kuitansi",
-    "replaced": {}
-   },
-   {
-    "text": "satu juta lima ratus ribu rupiah",
-    "replaced": {}
-   },
-   {
-    "text": "title",
-    "replaced": {}
-   },
-   {
-    "text": "Satu Juta Lima Ratus Ribu Rupiah",
-    "replaced": {}
-   },
-   {
-    "text": "sentence",
-    "replaced": {}
-   },
-   {
-    "text": "Dua puluh lima ribu",
-    "replaced": {}
-   },
-   {
-    "text": "pembulatan yang melewati satuan dan angka sangat besar",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1 jt",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1 rb",
-    "replaced": {}
-   },
-   {
-    "text": "Rp950 rb",
-    "replaced": {}
-   },
-   {
-    "text": "Rp1.000.000.000.000.000.000.000",
-    "replaced": {}
-   },
-   {
-    "text": "Rp0,13",
-    "replaced": {}
-   },
-   {
-    "text": "Rp3",
-    "replaced": {}
-   },
-   {
-    "text": "parseRupiah tidak tertipu nama properti bawaan objek",
-    "replaced": {}
-   },
-   {
-    "text": "constructor",
-    "replaced": {}
-   },
-   {
-    "text": "2 toString",
-    "replaced": {}
-   },
-   {
-    "text": "terbilang angka desimal sangat kecil",
-    "replaced": {}
-   },
-   {
-    "text": "nol koma nol nol nol nol nol nol satu",
-    "replaced": {}
-   },
-   {
-    "text": "node:test",
-    "replaced": {}
-   },
-   {
-    "text": "node:assert/strict",
-    "replaced": {}
-   },
-   {
-    "text": "../src/index.ts",
-    "replaced": {}
-   },
-   {
-    "text": "Halo kak, saya mau komplain. Nama: Budi Santoso",
     "replaced": {}
    }
   ]

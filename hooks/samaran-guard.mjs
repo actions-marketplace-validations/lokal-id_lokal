@@ -273,10 +273,21 @@ var DATA = {
 };
 var HOLIDAY_YEARS = Object.keys(DATA).map(Number);
 
+// packages/core/dist/samaran/names.js
+var GIVEN_NAMES = new Set(
+  // Male
+  "agus ahmad akhmad achmad abdul abdur firman adi aditya adit andi andika anton ari arief arif aris bambang benny budiman cahyo dedi deni denny dimas dodi doni edi edy eko erwin fajri fauzi fauzan ferry fikri gilang hadi hafiz haris hasan hendra hendro heru ibnu ilham indra iqbal irfan irwan iwan joko jefri kevin krisna lukman lutfi mahmud muhammad mohammad mochammad muhamad mohamad moh mukhlis nanang oki rahmat rachmat reza ridwan rizal rizky rizki rudi rudy ryan sandi setyo sigit slamet sugeng suryadi syahrul taufik teguh toni tono totok wawan yanto yogi yusuf zainal arya bayu rangga dendi galih hanif hilman habibi jamal kholil nurdin roni rony sahrul samsul sapto sofyan sukarno supardi suparman sutrisno syaiful saiful tatang ujang usman wahyudi yudi yuda zaki antonius yohanes johannes petrus paulus stefanus fransiskus agustinus yosef daniel samuel michael siti rina rini ratna ratih yuni yulia yuliana nurul nining ani anisa annisa aisyah aminah fitri fitria lina lia maya mira nia novi novita nanda nadia nabila rahma ria rika risa rosa sinta shinta susi susan tuti umi widya yanti yati eva evi erna endah diah dyah desi devi dina dini fatimah hana ika irma lilis linda lusi marlina mariam maryam nina nisa novia rosita salsabila tika titin winda yeni zahra farah dewanti ernawati kartini juwita yohana theresia veronika elisabeth kristina maria agnes ningsih sumarni suminah sulastri sundari suparmi tumini warsini asep dadang cecep encep iis euis yayan aep jajang ayi engkos entis odah otong ruslan nunung yeyen yuyun dedeh enok popon dede paijo parman paimin sumarno sukirman sukinah tukiman tukinem wagiman wagiyem painem ngatini ngadimin sutarno sutini sriyati suyatno suyanti subagyo sugiono supriyadi supriyanto susilowati sutopo sutejo jaka danang endang moch abdurrahman husein husin hasanudin hamzah ibrahim ismail yunus musa harun ikhsan ihsan faisal fahmi farhan farid husni ilyas jamil karim khoirul luqman malik mansur munir mustofa nasrul nurhayati nuraini nurlela khadijah zainab halimah hafsah salma syifa naila najwa aulia azizah khairunnisa laila latifah yoseph markus lukas matius benediktus kristian christina christine magdalena natalia natalie clarissa claudia cindy jessica jesica michelle stella vania angelina felicia patricia monica gabriella evelyn vivian steven stevan david jonathan nathan william felix ivan albert alvin andreas hendrik robert richard vincent edwin edward jeffry ricky rico hengky hendry rani riska rizka rifki rafi rafa puspita candra arie dani dicky dony erik fadil johan rendra rian riyan septian tomi wisnu yadi yudha anita bella della dita elsa ema fani fenny fira henny lisa reni resti rita siska sofi tiwi vera vina wina yani yuli tina ira cantika".split(" ")
+);
+var AMBIGUOUS_GIVEN_NAMES = new Set("budi sri sekar laras murni indah putri putra ayu fajar agung mega intan sari dewi wahyu citra cahya kartika permata bunga suci wulan melati puspa lestari surya eka dwi tri catur imam hari kurnia nur bintang rizqi rezeki mulia setia cinta kasih bagus santi sinar rahayu dian ratu asih mawar mutiara panca bima satria pandu panji puji tari gita okta octa vino yoga angel grace nana ana ida ina sudirman rejeki".split(" "));
+var FAMILY_NAMES = new Set("utomo widodo santoso susanto wijaya widjaja saputra saputri pratama pratiwi hidayat hidayah setiawan setiadi kurniawan kurniawati gunawan hartono sutanto suharto susilo wibowo prasetyo prasetya nugraha nugroho purnomo permana ramadhan ramadhani firmansyah hakim rahman rahmawati wahyudi wahyuni handayani kusumawati maharani safitri anggraini puspitasari novitasari wulandari sulistyowati sukmawati suryani haryanto budiman irawan sanjaya tanoto salim suryadi siswanto effendi effendy syahputra sutrisno mulyadi mulyani haryadi sudarsono suryanto purwanto sugiarto sugianto kristanto tjandra chandra hermawan hendrawan darmawan dharmawan ardiansyah pangestu yulianti fitriani oktaviani septiani ramadani hidayatullah abdullah rosadi sopian sofyan iskandar sitorus nasution harahap lubis siregar simanjuntak simatupang sitompul hutapea pardede panjaitan situmorang sinaga tambunan manurung sihombing simbolon hutagalung napitupulu silalahi pasaribu sembiring ginting tarigan purba saragih damanik hasibuan batubara daulay pohan rangkuti ritonga matondang gultom sianturi simamora marpaung aritonang hutabarat pakpahan sibarani sirait samosir sidabutar munthe sinambela nainggolan manullang siahaan simanungkalit rajagukguk lumbantobing butarbutar sinurat girsang perangin-angin peranginangin sumampouw pangemanan wenas lumentut rondonuwu mandagi tumbelaka tuhumury latuconsina pattinama wattimena pattiasina lewerissa".split(" "));
+var SECOND_NAMES = new Set("sari rahayu lestari wati yanti ningsih ningrum astuti utami kusuma halim aminah kartika".split(" "));
+var CHINESE_FAMILY_NAMES = new Set("lim liem tan tjan ong oei wong kwee gouw khoe tjoa thio tio liauw chen ng yap teo kho sie tjia lauw liong".split(" "));
+var BALINESE_NAMES = new Set("made wayan nyoman ketut gede putu kadek komang nengah luh gusti dewa".split(" "));
+
 // packages/core/dist/samaran/fields.js
 var FIELDS = [
   // A column called "pasien" or "pelanggan" holds that person's name.
-  ["NAME", "nama|name|full_?name|nama_?lengkap|first_?name|last_?name|middle_?name|given_?name|family_?name|surname|nama_?depan|nama_?tengah|nama_?belakang|nama_?panggilan|nickname|nama_?ibu_?kandung|mother_?s?_?maiden_?name|penerima|pengirim|recipient|pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner|pemesan|pembeli|buyer|konsumen|atas_?nama|a_n"],
+  ["NAME", "nama|name|full_?name|kepada|kpd|yth|attn|attention|pelapor|terlapor|korban|saksi|tersangka|terdakwa|pelaku|kepala_?keluarga|penanggung_?jawab|ahli_?waris|pemberi_?kuasa|penerima_?kuasa|requester|username|nama_?lengkap|first_?name|last_?name|middle_?name|given_?name|family_?name|surname|nama_?depan|nama_?tengah|nama_?belakang|nama_?panggilan|nickname|nama_?ibu_?kandung|mother_?s?_?maiden_?name|penerima|pengirim|recipient|pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner|pemesan|pembeli|buyer|konsumen|atas_?nama|a_n"],
   ["ADDRESS", "alamat|address|full_?address|street|street_?address|domisili|alamat_?domisili|alamat_?ktp|alamat_?rumah|alamat_?pengiriman|shipping_?address|home_?address|billing_?address"],
   ["NIK", "nik|no_?ktp|nomor_?ktp|ktp|nomor_?induk_?kependudukan|national_?id"],
   ["KK", "kk|no_?kk|nomor_?kk|kartu_?keluarga|no_?kartu_?keluarga|nomor_?kartu_?keluarga|family_?card(_?number)?"],
@@ -284,6 +295,8 @@ var FIELDS = [
   ["PASSPORT", "paspor|passport|no_?paspor|nomor_?paspor|passport_?(no|number)"],
   ["SIM", "sim|no_?sim|nomor_?sim|driver_?s?_?licen[cs]e|driving_?licen[cs]e"],
   ["NIP", "nip|nip_?baru|nrp|nomor_?induk_?pegawai"],
+  ["NISN", "nisn|no_?nisn|nomor_?nisn|nomor_?induk_?siswa_?nasional"],
+  ["AKTA", "akta|no_?akta|nomor_?akta|(?:no_?|nomor_?)?akta_?(?:kelahiran|lahir|nikah|perkawinan|kawin|cerai|perceraian|kematian)|birth_?certificate(?:_?(?:no|number))?|marriage_?certificate(?:_?(?:no|number))?"],
   ["BPJS", "bpjs|no_?bpjs|nomor_?bpjs|bpjs_?kesehatan|bpjs_?ketenagakerjaan|kis|no_?kis|jkn|kpj"],
   ["PHONE", "hp|no_?hp|nomor_?hp|nohp|telp|tlp|telepon|telpon|no_?telp|no_?telepon|nomor_?telepon|phone|phone_?number|mobile|mobile_?phone|handphone|whatsapp|wa|no_?wa|nomor_?wa|msisdn"],
   ["EMAIL", "email|e_?mail|surel|alamat_?email|email_?address"],
@@ -297,13 +310,13 @@ var FIELDS = [
   ["MARITAL_STATUS", "status_?perkawinan|status_?kawin|status_?pernikahan|status_?nikah|perkawinan|marital_?status|status_?marital"],
   ["NATIONALITY", "kewarganegaraan|warga_?negara|wn|nationality|citizenship"],
   ["HEALTH", "diagnosa|diagnosis|diagnose|penyakit|riwayat_?penyakit|riwayat_?medis|rekam_?medis|kondisi_?medis|kondisi_?kesehatan|keluhan|gejala|alergi|allergy|allergies|golongan_?darah|gol_?darah|blood_?type|hasil_?lab|lab_?result|obat|medication|medications|resep|prescription|icd|icd_?10|medical_?history|medical_?record|disabilitas|disability|kehamilan|pregnancy|status_?vaksin|vaccination_?status|tindakan_?medis"],
-  ["FINANCIAL", "gaji|salary|penghasilan|pendapatan|income|saldo|balance|limit_?kredit|credit_?limit|utang|hutang|debt|pinjaman|loan|loan_?amount|cicilan|installment|tunggakan|arrears|skor_?kredit|credit_?score|slik|kolektibilitas|kekayaan|net_?worth|harta"],
+  ["FINANCIAL", "gaji|salary|(?:net|gross|base|basic)_?salary|take_?home_?pay|thp|gaji_?(?:pokok|bersih|kotor)|penghasilan|pendapatan|income|saldo|balance|limit_?kredit|credit_?limit|utang|hutang|debt|pinjaman|loan|loan_?amount|cicilan|installment|tunggakan|arrears|skor_?kredit|credit_?score|slik|kolektibilitas|kekayaan|net_?worth|harta"],
   ["CRIMINAL_RECORD", "catatan_?kriminal|catatan_?kepolisian|catatan_?pidana|skck|riwayat_?pidana|riwayat_?kriminal|criminal_?record|criminal_?history|status_?hukum"],
   // Not "signature" or "face": in code those are crypto signatures and UI faces.
   ["BIOMETRIC", "sidik_?jari|fingerprint|foto_?ktp|foto_?wajah|foto_?selfie|selfie|selfie_?ktp|face_?image|face_?photo|face_?embedding|biometri|biometric|biometrik|iris|retina|dna|genetik|genetic|voiceprint|voice_?print|tanda_?tangan|ttd"]
 ];
 var ENTITY = "customer|pelanggan|nasabah|pasien|patient|user|pengguna|member|anggota|karyawan|employee|pegawai|siswa|student|mahasiswa|penerima|pengirim|recipient|sender|ibu|ayah|wali|orang_?tua|pemohon|applicant|debitur|peserta|pemilik|owner|contact|kontak|pemesan|pembeli|buyer|konsumen";
-var QUALIFIER = `${ENTITY}|lengkap|baru|lama|asli|utama|rumah|kantor|ktp|domisili|pengiriman|pribadi|aktif|1|2`;
+var QUALIFIER = `${ENTITY}|lengkap|baru|lama|asli|utama|rumah|kantor|ktp|domisili|pengiriman|pribadi|aktif|pokok|bersih|kotor|bulanan|tahunan|total|1|2`;
 var KEY_RES = FIELDS.map(([type, alts]) => [
   type,
   new RegExp(`^(?:(?:${ENTITY})_)?(?:${alts})(?:_(?:${QUALIFIER}))?$`)
@@ -378,23 +391,37 @@ var DIGIT_TYPES = /* @__PURE__ */ new Set([
   "NIP",
   "SIM",
   "BPJS",
+  "NISN",
   "PHONE",
   "BANK_ACCOUNT",
   "CARD"
 ]);
+var USER_KEY = /^(?:user|username|login)$/;
+var isKnownNamePart = (word) => {
+  const bare = word.toLowerCase().replace(/\d+$/, "");
+  return GIVEN_NAMES.has(bare) || AMBIGUOUS_GIVEN_NAMES.has(bare) || FAMILY_NAMES.has(bare) || SECOND_NAMES.has(bare);
+};
 function isPlausibleValue(type, value, key) {
-  const v = type === "NAME" ? value.trim().replace(NICKNAME, "") : value.trim();
+  const v = type === "NAME" ? value.trim().replace(NICKNAME, "").replace(/%20|\+/g, " ") : value.trim();
   if (!v || EMPTY.test(v))
     return false;
   if (TYPE_WORDS.has(v.toLowerCase()))
     return false;
   if (/^\[[A-Z_]+_\d+\]$/.test(v))
     return false;
+  if (type === "NAME" && USER_KEY.test(normalizeKey(key))) {
+    return /^[A-Za-z][\w. -]{2,40}$/.test(v) && v.split(/[._ -]+/).some(isKnownNamePart);
+  }
   if (/[{}<>`$[\]]|=>|^\w+\.\w+\(/.test(v))
+    return false;
+  if (/^(?:new|await|typeof|function|return|yield|async)\s|^[A-Za-z_$][\w$.]*\($/.test(v))
+    return false;
+  if (type === "AKTA" && v.replace(/\D/g, "").length < 4)
     return false;
   if (type === "ADDRESS" && !/\s/.test(v))
     return false;
-  if (type !== "ADDRESS" && (/[()]/.test(v) || /^[a-z_$][\w$]*\.[a-z_$][\w$.]*$/i.test(v)))
+  const initials = type === "NAME" && /^(?:[A-Z]\.[ \t]?){1,4}$/.test(v);
+  if (type !== "ADDRESS" && (/[()]/.test(v) || !initials && /^[a-z_$][\w$]*\.[a-z_$][\w$.]*$/i.test(v)))
     return false;
   const digitCount = v.replace(/\D/g, "").length;
   if (DIGIT_TYPES.has(type) && digitCount < 6)
@@ -426,7 +453,7 @@ function isPlausibleValue(type, value, key) {
     } else if (isGenericNameKey(key)) {
       if (words.length < 2 || words.length > 5 || !words.every((w) => /^[A-Z]/.test(w)))
         return false;
-    } else if (ROLE_KEY.test(normalizeKey(key)) && words.length === 1 && !/^[A-Z]/.test(v)) {
+    } else if (ROLE_KEY.test(normalizeKey(key)) && words.length === 1 && !/^[A-Z]/.test(v) && /[-_.\d]|^(?:admin|root|system|bot|team|tim|null|user)$/.test(v)) {
       return false;
     }
   }
@@ -442,6 +469,8 @@ var PII_TYPES = [
   "SIM",
   "NIP",
   "BPJS",
+  "NISN",
+  "AKTA",
   "PHONE",
   "EMAIL",
   "BANK_ACCOUNT",
@@ -463,7 +492,7 @@ var PII_TYPES = [
 ];
 var UU_PDP_CATEGORY = Object.fromEntries(PII_TYPES.map((t) => [
   t,
-  ["HEALTH", "BIOMETRIC", "CRIMINAL_RECORD", "FINANCIAL", "BANK_ACCOUNT", "CARD"].includes(t) ? "spesifik" : "umum"
+  ["HEALTH", "BIOMETRIC", "CRIMINAL_RECORD", "FINANCIAL", "BANK_ACCOUNT", "CARD", "NISN"].includes(t) ? "spesifik" : "umum"
 ]));
 
 // packages/core/dist/samaran/detectors.js
@@ -471,6 +500,15 @@ function before(text, index, window = 40) {
   const slice = text.slice(Math.max(0, index - window), index);
   const nl = slice.lastIndexOf("\n");
   return (nl >= 0 ? slice.slice(nl + 1) : slice).toLowerCase();
+}
+function lineAbove(text, index, length) {
+  const lineStart = text.lastIndexOf("\n", index - 1) + 1;
+  const lineEnd = text.indexOf("\n", index + length);
+  if (text.slice(lineStart, index).trim() || text.slice(index + length, lineEnd === -1 ? text.length : lineEnd).trim())
+    return "";
+  if (lineStart === 0)
+    return "";
+  return text.slice(text.lastIndexOf("\n", lineStart - 2) + 1, lineStart - 1).toLowerCase();
 }
 function match(type, start, value, confidence) {
   return { type, start, end: start + value.length, value, confidence };
@@ -528,6 +566,7 @@ var KK_KEYWORD = /\b(kk|kartu keluarga)\b[^\d]*$/;
 var SIM_KEYWORD = /\b(sim|surat izin mengemudi|driving licen[cs]e)\b[^\d]*$/;
 var NIK_KEYWORD = /\b(nik|ktp|nomor induk kependudukan)\b/;
 var NPWP_KEYWORD = /\bnpwp\b/;
+var NISN_KEYWORD = /\b(nisn|nomor induk siswa nasional)\b[^\d]*$/;
 var BPJS_KEYWORD = /\b(bpjs|jkn|kis|kartu indonesia sehat|kpj|jamsostek)\b/;
 var BANK_KEYWORD = /\b(no\.?\s*rek(ening)?|norek|rekening|rek|account|acc|a\/c|virtual account|va|transfer|tf|bca|bri|bni|mandiri|bsi|cimb|niaga|permata|danamon|btn|jago|seabank|blu|ocbc|panin|maybank|mega|muamalat)\b/;
 function detectDigitRuns(text) {
@@ -556,16 +595,34 @@ function detectDigitRuns(text) {
       push("NPWP", "high");
     else if (digits.length === 16 && NIK_KEYWORD.test(ctx))
       push("NIK", "medium");
+    else if (digits.length === 10 && NISN_KEYWORD.test(label))
+      push("NISN", "high");
     else if ((digits.length === 13 || digits.length === 11) && BPJS_KEYWORD.test(ctx))
       push("BPJS", "high");
     else if (digits.length >= 8 && digits.length <= 18 && BANK_KEYWORD.test(ctx))
       push("BANK_ACCOUNT", "high");
+    else if (digits.length >= 8 && digits.length <= 18 && BANK_KEYWORD.test(lineAbove(text, m.index, m[0].length))) {
+      push("BANK_ACCOUNT", "medium");
+    }
   }
   return out;
 }
 function detectNpwpFormatted(text) {
   const re = /(?<!\d)\d{2}\.\d{3}\.\d{3}\.\d-\d{3}\.\d{3}(?!\d)/g;
   return [...text.matchAll(re)].map((m) => match("NPWP", m.index, m[0], "high"));
+}
+function detectAkta(text) {
+  const out = [];
+  const dukcapil = /(?<![\w-])\d{4}[-./ ]?(?:LT|LU|LD|KW|CR|KM)[-./ ]?\d{8}[-./ ]?\d{3,6}(?![\w-])/gi;
+  for (const m of text.matchAll(dukcapil))
+    out.push(match("AKTA", m.index, m[0], "high"));
+  const worded = /\bakta\s+(?:kelahiran|lahir|nikah|perkawinan|kematian|cerai|perceraian)(?:nya)?\s+(?:no(?:mor)?\.?\s*:?\s*)?([A-Za-z0-9][\w./-]{3,30}[A-Za-z0-9])/gi;
+  for (const m of text.matchAll(worded)) {
+    if (m[1].replace(/\D/g, "").length < 4)
+      continue;
+    out.push(match("AKTA", m.index + m[0].length - m[1].length, m[1], "high"));
+  }
+  return out;
 }
 function detectPassports(text) {
   const re = /(?<![A-Za-z0-9])[A-Z]{1,2}\s?\d{6,8}(?![A-Za-z0-9])/g;
@@ -606,16 +663,40 @@ function gluedToCode(text, index) {
   const token = text.slice(i, index - 1).toLowerCase();
   return /[a-z]/.test(token) && !PHONE_LABELS.has(token) && !token.endsWith("wa.me");
 }
+var PHONE_WORD = /\b(?:telp|telepon|telpon|tlp|tel|phone|fax|faks|hub|hubungi|call|kontak|contact|cp|rumah|kantor|no)\b[^\d]*$/;
 function detectPhones(text) {
   const out = [];
-  const mobile = /(?<![\d+\w])(?:\+62|62|0)[ \t-]?8\d{1,2}(?:[ \t.-]?\d{3,4}){2,3}(?![\d\w])/g;
+  const mobile = /(?<![\d+\w])(?:\+62|0062|62|0)[ \t-]?8\d{1,2}(?:[ \t.-]?\d{3,4}){2,3}(?![\d\w])/g;
   for (const m of text.matchAll(mobile)) {
-    if (parsePhone(m[0]).valid && !gluedToCode(text, m.index))
+    if (parsePhone(m[0].replace(/^00/, "+")).valid && !gluedToCode(text, m.index))
       out.push(match("PHONE", m.index, m[0], "high"));
   }
   const landline = /\((?:\+62[ \t]?|0)\d{2,3}\)[ \t]?\d{3,4}[ \t-]?\d{3,4}(?!\d)|(?<![\d\w])\+62[ \t]?[2-79]\d{1,2}[ \t-]?\d{3,4}[ \t-]?\d{3,4}(?!\d)/g;
   for (const m of text.matchAll(landline))
     out.push(match("PHONE", m.index, m[0], "medium"));
+  const bracketed = /(?<![\d\w])(?:\+?62[ \t]?\(8\d{1,2}\)|\(08\d{1,2}\))[ \t]?\d{3,4}[ \t.-]?\d{3,4}(?!\d)/g;
+  for (const m of text.matchAll(bracketed))
+    if (parsePhone(m[0]).valid)
+      out.push(match("PHONE", m.index, m[0], "high"));
+  const grouped = /(?<![\d\w+])(?:\+62[ \t.-]?|62[ \t.-]?|0[ \t.-]?)8(?:[ \t.-]?\d){8,12}(?![\d\w])/g;
+  for (const m of text.matchAll(grouped)) {
+    const groups = m[0].split(/[ \t.-]/);
+    const named = PHONE_WORD.test(before(text, m.index, 30));
+    if (!named && (groups.length < 4 || groups.slice(1).some((g) => g.length > 2)))
+      continue;
+    if (/^0[ \t.-]/.test(m[0]) && !named)
+      continue;
+    if (parsePhone(m[0]).valid && !gluedToCode(text, m.index))
+      out.push(match("PHONE", m.index, m[0], "high"));
+  }
+  const areaCode = /(?<![\d\w+])0(?:2[1-9]|[3-79]\d)\d{0,2}[ \t.-]?\d{3,4}[ \t.-]?\d{3,4}(?![\d\w])/g;
+  for (const m of text.matchAll(areaCode)) {
+    if (!PHONE_WORD.test(before(text, m.index, 30)))
+      continue;
+    const info = parsePhone(m[0]);
+    if (info.valid && info.type === "landline")
+      out.push(match("PHONE", m.index, m[0], "medium"));
+  }
   return out;
 }
 var RESERVED_EMAIL_DOMAIN = /@(?:[\w-]+\.)*(?:example\.(?:com|net|org)|[\w-]+\.(?:example|test|invalid|localhost))$/i;
@@ -627,16 +708,23 @@ function detectEmails(text) {
   const spelled = new RegExp(String.raw`(?<![\w.+-])[A-Za-z0-9._%+-]+${AT}[A-Za-z0-9-]+(?:${DOT}[A-Za-z0-9-]+)*${DOT}[A-Za-z]{2,}(?![\w-])`, "gi");
   for (const m of text.matchAll(spelled))
     out.push(match("EMAIL", m.index, m[0], "high"));
+  for (const m of text.matchAll(/(?<![\w.+-])[A-Za-z0-9._+-]+%40[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}(?![\w-])/g)) {
+    out.push(match("EMAIL", m.index, m[0], "high"));
+  }
   return out;
 }
 function detectIps(text) {
   const out = [];
-  const re = /(?<![\d.\w])(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)(?![\d.\w])/g;
+  const re = /(?<![\d.\w])(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)(?![\d\w]|\.[\d\w])/g;
   for (const m of text.matchAll(re)) {
     const ip = m[0];
     if (/^(0\.|127\.|255\.255\.255\.255)/.test(ip))
       continue;
+    if (/^-\d+(?![\d.])/.test(text.slice(m.index + ip.length)) || /\b(?:no|nomor|sk|surat)\.?\s*$/.test(before(text, m.index, 12)))
+      continue;
     if (/\b(versi|version|ver|v)\.?\s*$/.test(before(text, m.index, 12)))
+      continue;
+    if (text[m.index + ip.length] === "." && ip.split(".").every((part) => part.length === 1))
       continue;
     const priv = /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(ip);
     out.push(match("IP", m.index, ip, priv ? "medium" : "high"));
@@ -645,10 +733,10 @@ function detectIps(text) {
 }
 function detectCoordinates(text) {
   const out = [];
-  const re = /(?<![\d.])(-?\d{1,2}\.\d{4,})\s*,\s*(-?\d{1,3}\.\d{4,})(?![\d.])/g;
+  const re = /(?<![\d.])(-?\d{1,2}\.\d{4,})\s*,\s*(-?\d{1,3}\.\d{4,})(?![\d.])|\blat(?:itude)?\s*[:=]?\s*(-?\d{1,2}\.\d{4,})\s*[,;]?\s*(?:lng|lon|long|longitude)\s*[:=]?\s*(-?\d{1,3}\.\d{4,})(?![\d.])/gi;
   for (const m of text.matchAll(re)) {
-    const lat = Number(m[1]);
-    const lng = Number(m[2]);
+    const lat = Number(m[1] ?? m[3]);
+    const lng = Number(m[2] ?? m[4]);
     if (Math.abs(lat) > 90 || Math.abs(lng) > 180)
       continue;
     const indonesia = lat >= -11.5 && lat <= 6.5 && lng >= 94 && lng <= 141.5;
@@ -659,20 +747,35 @@ function detectCoordinates(text) {
 var MONTHS = "Januari|Februari|Pebruari|Maret|April|Mei|Juni|Juli|Agustus|September|Oktober|November|Nopember|Desember|January|February|March|May|June|July|August|October|December|Jan|Feb|Mar|Apr|Jun|Jul|Agu|Agt|Ags|Aug|Sep|Sept|Okt|Oct|Nov|Des|Dec";
 var DATE = `\\d{1,2}[-/. ]\\d{1,2}[-/. ]\\d{2,4}|\\d{1,2}\\s+(?:${MONTHS})\\.?\\s+\\d{4}|\\d{4}-\\d{2}-\\d{2}`;
 function detectBirthDates(text) {
-  const re = new RegExp(`\\b(?:lahir|kelahiran|born)\\b[^\\n\\d]{0,40}?(${DATE})`, "gi");
+  const re = new RegExp(`\\b(?:lahir|lhr|kelahiran|born|ttl|dob|d\\.o\\.b\\.?|date\\s+of\\s+birth|birth\\s*date|birthday)(?![a-z])[^\\n\\d]{0,40}?(${DATE})`, "gi");
   return [...text.matchAll(re)].map((m) => match("BIRTH_DATE", m.index + m[0].length - m[1].length, m[1], "high"));
 }
-var CONDITIONS = "hiv|aids|odha|tbc|tb paru|tuberkulosis|hepatitis(?: [abc])?|kanker(?: \\w+)?|tumor(?: \\w+)?|diabetes(?: melitus)?|hipertensi|stroke|penyakit jantung|gagal ginjal|cuci darah|covid(?:-19)?|dbd|demam berdarah|malaria|kusta|lepra|skizofrenia|bipolar|depresi(?: berat)?|gangguan jiwa|gangguan mental|odgj|autis(?:me)?|epilepsi|ims|sifilis|gonore|herpes|hamil|keguguran";
+var CONDITIONS = "hiv|aids|odha|tbc|tb paru|tuberkulosis|hepatitis(?: [abc])?|kanker(?: \\w+)?|tumor(?: \\w+)?|diabetes(?: mel+itus)?(?: tipe [12])?|hipertensi|stroke|penyakit jantung|gagal ginjal|cuci darah|covid(?:-19)?|dbd|demam berdarah(?: dengue)?|malaria|kusta|lepra|skizofrenia|bipolar(?: tipe [12i]+)?|depresi(?: berat| sedang| ringan)?|gangguan jiwa|gangguan mental|odgj|autis(?:me)?|epilepsi|ims|sifilis|gonore|herpes|hamil(?: \\d{1,2} (?:bulan|minggu))?|keguguran|asma|lupus|leukemia|th?alas+emia(?: (?:alfa|beta|mayor|minor))?|hemofilia|alzheimer|demensia|gastroenteritis(?: akut)?|gastritis|maag|typhoid|pneumonia|bronkitis|sinusitis|apendisitis|usus buntu|batu ginjal|hipotiroid|hipertiroid|anemia|glaukoma|katarak|skoliosis|hernia|wasir|ambeien|tbc tulang|meningitis|parkinson|tifus|tipes|cacar|campak|polio|difteri|stunting|obesitas|kolesterol tinggi|asam urat|gangguan kecemasan|anxiety|ptsd|ocd|adhd|down syndrome|cerebral palsy|lumpuh|tunanetra|tunarungu|tunawicara|tunadaksa|kista|miom|endometriosis|pcos|osteoporosis|vertigo|psikosis|gerd|jantung koroner|sakit jantung|gagal jantung|serangan jantung|infertil|mandul|impoten|klamidia|kecanduan(?: \\w+)?|pecandu(?: \\w+)?|pengguna (?:narkoba|narkotika|sabu|ganja|heroin|putaw|ekstasi)|percobaan bunuh diri|self harm|patah tulang(?: \\w+)?|gegar otak|luka bakar|amputasi|serangan panik|gangguan makan|anoreksia|bulimia";
+var SYMPTOMS = "(?:demam(?:\\s+tinggi)?|batuk(?:\\s+berdahak)?|pilek|flu|sesak(?:\\s+napas)?|mual|muntah|diare|mencret|pusing|sakit\\s+kepala|nyeri\\s+\\w+|lemas|meriang|gatal-gatal|ruam|pendarahan|kejang|sariawan|radang\\s+tenggorokan|sakit\\s+perut|sakit\\s+gigi)";
 var MEDICATIONS = "insulin|metformin|glibenclamide|arv|antiretroviral|obat tbc|rifampisin|isoniazid|kemoterapi|kemo|antidepresan|antipsikotik|fluoxetine|sertraline|risperidone|haloperidol|lithium|metadon|methadone|warfarin|amlodipine|captopril|levothyroxine|tamoxifen|hormon|kb|pil kb";
 function detectHealth(text) {
   const out = [];
-  const strong = /\b(?:didiagnosis|didiagnosa|terdiagnosis|terdiagnosa|mengidap|terinfeksi|riwayat penyakit|divonis)\s+(?:menderita\s+|mengidap\s+|penyakit\s+)?([^\n,.;:()]{2,60}?)(?=\s+(?:sejak|selama|dan sudah|dan sedang|tapi|namun|sehingga|jadi)\b|[\n,.;:()]|$)/gi;
-  for (const m of text.matchAll(strong)) {
+  const strong = /\b(?:didiagnosis|didiagnosa|terdiagnosis|terdiagnosa|mengidap|terinfeksi|riwayat penyakit|divonis)\s+(?:menderita\s+|mengidap\s+|penyakit\s+)?(?!(?:yang|dan|atau|di|ke|dari|untuk|ini|itu|tersebut|adalah|dapat|bisa|tidak|belum|anda|kamu|pasien|seseorang)\b)([^\n\r,.;:()]{2,60}?)(?=\s+(?:sejak|selama|dan sudah|dan sedang|tapi|namun|sehingga|jadi)\b|[\n\r,.;:()]|$)/gi;
+  const dx = /\b(?:Dx|DX|Diagnosis|Diagnosa|Diag)\s*:\s*([^\n\r,;()]{2,60}?)(?=\s*(?:[\n\r,;()]|\.(?:\s|$)|$))/g;
+  for (const m of [...text.matchAll(strong), ...text.matchAll(dx)]) {
     out.push(match("HEALTH", m.index + m[0].length - m[1].length, m[1], "high"));
   }
-  const gated = new RegExp(`\\b(?:positif|menderita|terkena|kena|sakit|pasien|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|saya|aku|gue|gw|gua|dia|beliau)\\s+((?:penyakit\\s+)?(?:${CONDITIONS}))\\b`, "gi");
+  const gated = new RegExp(`\\b(?:(?:dokter|dok|dr)\\.?\\s+(?:bilang|bilangnya|menyatakan|mendiagnosis)(?:\\s+(?:ada|kena|positif))?|positif|menderita|terkena|kena|sakit|pasien|komplikasi|kambuh|kumat|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|riwayat|diagnosa|diagnosis|didiagnosa|pembawa\\s+sifat|carrier|saya|aku|gue|gw|gua|dia|beliau|ayah|bapak|ibu|mama|mamah|papa|papah|suami|istri|anak|anaknya|adik|adek|kakak|nenek|kakek|mertua|pacar|teman|temen)\\s+(?:(?:saya|aku|gue|dia|lagi|sedang|sdg|sudah|udah|sdh|sempat|pernah|baru|kena|terkena)\\s+){0,2}((?:penyakit\\s+)?(?:${CONDITIONS})(?:\\s*(?:,|dan|serta)\\s+(?:${CONDITIONS}))*)\\b`, "gi");
   for (const m of text.matchAll(gated)) {
     out.push(match("HEALTH", m.index + m[0].length - m[1].length, m[1], "medium"));
+  }
+  const result = /\b(?:tes|test|uji|pemeriksaan|skrining|screening|swab|rapid(?:\s+test)?)\s+((?:hiv|hepatitis(?:\s+[abc])?|hbsag|covid(?:-19)?|tbc|tb|sifilis|vdrl|narkoba|urine|kehamilan|dna|pcr|antigen)\s+(?:hasilnya\s+)?(?:reaktif|non-?reaktif|positif|negatif))\b/gi;
+  for (const m of text.matchAll(result))
+    out.push(match("HEALTH", m.index + m[0].length - m[1].length, m[1], "medium"));
+  for (const m of text.matchAll(/\b(?:mutasi\s+)?(?:BRCA[12]|HLA-B\*?\d{2}:\d{2})(?:\s+(?:positif|negatif|mutasi|carrier))?/g)) {
+    if (/positif|negatif|mutasi|carrier/i.test(m[0]) || /\b(?:hasil|tes|test|dinyatakan)\b[^\n]{0,20}$/i.test(before(text, m.index, 30))) {
+      out.push(match("HEALTH", m.index, m[0], "medium"));
+    }
+  }
+  for (const m of text.matchAll(/\b(?:tuna[ -]?(?:rungu|netra|wicara|daksa|grahita|laras)|odha|odgj)\b/gi)) {
+    if (/\b(?:para|kaum|penyandang|bagi|untuk|buat|sekolah|slb|komunitas|organisasi|yayasan|layanan|hak|ramah)\s+$/i.test(before(text, m.index, 20)))
+      continue;
+    out.push(match("HEALTH", m.index, m[0], "medium"));
   }
   for (const m of text.matchAll(new RegExp(`\\((${CONDITIONS})\\)`, "gi"))) {
     out.push(match("HEALTH", m.index + 1, m[1], "medium"));
@@ -682,25 +785,74 @@ function detectHealth(text) {
     const value = m[1] ?? m[2];
     out.push(match("HEALTH", m.index + m[0].length - value.length, value, "medium"));
   }
+  for (const m of text.matchAll(/\balergi\s+(?:terhadap\s+)?([a-z][\w-]*(?:\s+dan\s+[a-z][\w-]*)?)/gi)) {
+    if (/\b(?:anti|bebas|obat|tes|uji)\s+$/.test(before(text, m.index, 12)))
+      continue;
+    out.push(match("HEALTH", m.index + m[0].length - m[1].length, m[1], "medium"));
+  }
+  const symptom = /\b(?:keluhan|gejala|mengeluh(?:kan)?)\s+((?:demam|batuk|pilek|flu|sesak(?:\s+napas)?|mual|muntah|diare|pusing|sakit\s+kepala|nyeri\s+\w+|lemas|meriang|gatal|ruam|benjolan|pendarahan|kejang)(?:\s+(?:dan|,)\s+(?:demam|batuk|pilek|flu|mual|muntah|diare|pusing|lemas))*)/gi;
+  for (const m of text.matchAll(symptom))
+    out.push(match("HEALTH", m.index + m[0].length - m[1].length, m[1], "medium"));
+  const having = new RegExp(`\\b(?:(?:sudah|udah|sdh|sejak|selama|umur|usia)\\s+\\d+\\s+(?:hari|minggu|bulan|tahun|th)|(?:saya|aku|gue|gw|dia|beliau|anak\\s+saya|anakku|anaknya|suami\\s+saya|istri\\s+saya)\\s+(?:lagi|sedang|sering|kena|terkena|mengalami))\\s+(${SYMPTOMS}(?:\\s*(?:dan|,|&)\\s*${SYMPTOMS})*)`, "gi");
+  for (const m of text.matchAll(having))
+    out.push(match("HEALTH", m.index + m[0].length - m[1].length, m[1], "medium"));
+  const finding = new RegExp(`(?:[,;:]|\\bdan)\\s*((?:${CONDITIONS})|tekanan\\s+darah\\s+\\d{2,3}\\/\\d{2,3}|tensi\\s+\\d{2,3}\\/\\d{2,3})(?=\\s*(?:[,;.]|dan\\b|$))`, "gi");
+  for (const m of text.matchAll(finding)) {
+    if (!/\b(?:mcu|medical|check-?up|hasil\s+(?:lab|pemeriksaan)|pasien|dokter|dok|tekanan\s+darah|tensi|keluhan|riwayat|diagnos[ai]s?|klinik|puskesmas|rs|rsud)\b/i.test(text.slice(Math.max(0, m.index - 80), m.index)))
+      continue;
+    out.push(match("HEALTH", m.index + m[0].length - m[1].length, m[1], "medium"));
+  }
+  const afterAge = new RegExp(`(?:\\(\\d{1,2}[^)\\n]{0,8}\\)|\\b\\d{1,2}\\s*(?:th|thn|tahun))\\s*,\\s*((?:${CONDITIONS})(?:\\s*(?:,|dan)\\s*(?:${CONDITIONS}))*)\\b`, "gi");
+  for (const m of text.matchAll(afterAge))
+    out.push(match("HEALTH", m.index + m[0].length - m[1].length, m[1], "medium"));
   const hospital = /\b(?:dirawat|opname|rawat inap|diopname|dioperasi|isolasi)\s+(?:di\s+)?(?:(?:RSUD|RSU|RSIA|RSJ|RSAB|RS|Rumah Sakit|Puskesmas|Klinik)\b[^\n,.;:()]{0,40}?)(?=\s+(?:karena|krn|sejak|selama|dan|tapi|jadi|sampai)\b|[\n,.;:()]|$)/gi;
   for (const m of text.matchAll(hospital))
     out.push(match("HEALTH", m.index, m[0], "medium"));
   return out;
 }
+var PERSON_NEAR = /\b(?:saya|aku|gue|gw|gua|dia|beliau|kami|suami|istri|ayah|bapak|ibu|mama|papa|anak|adik|kakak|pernah|udah|sudah|lagi|sedang|jadi)\b/;
 function detectFinancial(text) {
-  const re = /\b(?:gaji|penghasilan|pendapatan|saldo|utang|hutang|pinjaman|cicilan|tunggakan|limit(?:\s+kartu)?(?:\s+kredit)?)(?:\s+(?:saya|aku|gue|gw|gua|dia|beliau|bulanan|tahunan|per\s+bulan|sebulan|setahun|bersih|kotor|rekening|terakhir|total|di\s+\w+))*\s*(?:sebesar|sekitar|kira-kira|cuma|hanya|adalah|ada|masih|tinggal|sisa|senilai|:|=)?\s*((?:Rp\.?\s?)?\d[\d.,]*(?:\s*(?:rb|ribu|k|jt|juta|m|miliar|milyar|t|triliun)\b)?)/gi;
+  const re = /\b(?:gaji|penghasilan|pendapatan|saldo|utang|hutang|pinjaman|cicilan|tunggakan|limit(?:\s+kartu)?(?:\s+kredit)?|tagihan\s+(?:kartu\s+kredit|cc|paylater|pinjol|kpr|cicilan)|(deposito|tabungan|simpanan|habis|rugi|kerugian|kalah|sisa\s+(?:pokok|pinjaman|utang|hutang|cicilan)|pokok\s+(?:pinjaman|utang|hutang)|outstanding|plafond?))(?:\s+(?:saya|aku|gue|gw|gua|dia|beliau|suami|istri|ayah|bapak|ibu|ortu|orang\s+tua|keluarga|bulanan|tahunan|pokok|tetap|per\s+bulan|sebulan|setahun|bersih|kotor|rekening|tabungan|deposito|terakhir|total|anda|kamu|kalian|pinjol|paylater|kpr|kta|online|leasing|kartu\s+kredit|per\s+hari\s+ini|hari\s+ini|saat\s+ini|sekarang|udah|sudah|sdh|baru|itu|ini|tsb|motor|mobil|rumah|hp|laptop|apartemen|bulan\s+ini|ovo|gopay|dana|shopeepay|linkaja|jenius|bca|bri|bni|mandiri|bsi|jago|seabank|di\s+\w+|ke\s+\w+))*\s*(?:sebesar|sekitar|kira-kira|cuma|hanya|adalah|ada|masih|tinggal|sisa|senilai|:|=)?\s*((?:Rp\.?\s?)?\d[\d.,]*(?:\s*(?:rb|ribu|k|jt|juta|m|miliar|milyar|t|triliun)\b)?)/gi;
   const out = [];
   for (const m of text.matchAll(re)) {
-    const amount = m[1].replace(/[.,]+$/, "");
+    const amount = m[2].replace(/[.,]+$/, "");
     if (!/rp|[a-z]$/i.test(amount) && amount.replace(/\D/g, "").length < 4)
       continue;
-    out.push(match("FINANCIAL", m.index + m[0].length - m[1].length, amount, "medium"));
+    if (m[1] && !/\b(?:punya|memiliki|milik|nasabah|pak|bu|bapak|ibu|saya|aku|gue|gw|dia|beliau|debitur|peminjam)\b/i.test(before(text, m.index, 40) + m[0]))
+      continue;
+    out.push(match("FINANCIAL", m.index + m[0].length - m[2].length, amount, "medium"));
+  }
+  const status = /\b(?:galbay|gagal\s+bayar|kredit\s+macet|kol(?:ektibilitas)?\s*[2-5]|masuk\s+(?:bi\s*checking|slik)|di-?blacklist\s+(?:bank|bi|ojk)|(?:dikejar|ditagih|didatangi)\s+(?:dc|debt\s+collector)|terlilit\s+(?:utang|hutang|pinjol))\b/gi;
+  for (const m of text.matchAll(status)) {
+    if (!/^galbay$/i.test(m[0]) && !PERSON_NEAR.test(before(text, m.index, 30)))
+      continue;
+    out.push(match("FINANCIAL", m.index, m[0], "medium"));
+  }
+  return out;
+}
+function detectMaritalStatus(text) {
+  const out = [];
+  const re = /\b(?:saya|aku|gue|gw|dia|beliau|ibu|bapak|ayah|mama|papa|kakak|adik)\s+(?:(?:sudah|udah|sdh|baru|belum|blm|masih|sekarang|kini|seorang|berstatus|statusnya)\s+)*(cerai(?:\s+(?:hidup|mati))?|bercerai|janda|duda|menikah|kawin|lajang|single|nikah\s+siri|nikah|pisah\s+ranjang)\b|\b(?:sekarang|kini|berstatus|seorang|itu|statusnya)\s+(janda|duda|lajang)\b|\b(janda|duda)(?=\s+(?:anak|beranak|dengan\s+\d|\d|cerai|ditinggal|tanpa\s+anak|muda|kembang)\b)|\bstatus(?:nya)?\s+(?:perkawinan\s+|pernikahan\s+)?(cerai\s+(?:hidup|mati)|janda|duda|kawin|menikah|sudah\s+menikah|belum\s+(?:kawin|menikah)|lajang|nikah\s+siri)\b|\b(pisah\s+ranjang)\b|\b(?:sudah|udah|sdh|telah)\s+(?:\d+\s+tahun\s+(menikah|nikah|berumah\s+tangga)|(bercerai|cerai(?:\s+(?:hidup|mati))?|menjanda|menduda))\b/gi;
+  for (const m of text.matchAll(re)) {
+    const value = m[1] ?? m[2] ?? m[3] ?? m[4] ?? m[5] ?? m[6] ?? m[7];
+    if (/^(?:menikah|kawin|nikah)$/i.test(value) && !/\b(?:sudah|udah|sdh|belum|blm|berstatus|status|statusnya|perkawinan|pernikahan|tahun)\s+$/i.test(m[0].slice(0, -value.length)))
+      continue;
+    out.push(match("MARITAL_STATUS", m.index + m[0].length - value.length, value, "medium"));
   }
   return out;
 }
 function detectReligion(text) {
   const re = /\b(?:beragama|agamanya|agama\s+(?:saya|aku|dia|beliau|kami|mereka))\s+(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Hindu|Buddha|Budha|Konghucu|Khonghucu|Kong Hu Cu)\b/gi;
-  return [...text.matchAll(re)].map((m) => match("RELIGION", m.index + m[0].length - m[1].length, m[1], "high"));
+  const out = [...text.matchAll(re)].map((m) => match("RELIGION", m.index + m[0].length - m[1].length, m[1], "high"));
+  const adjective = /\b(?:saya|aku|gue|gw|dia|beliau|kami|keluarga\s+(?:saya|kami)|(?:suami|istri|ayah|bapak|ibu|mama|papa|ortu|orang\s+tua|anak|adik|kakak|pacar|calon)(?:\s+(?:saya|aku|gue|dia)|nya|ku)?)\s+(?:(?:seorang|itu|adalah|sudah|udah|baru|jadi)\s+)?(muslim(?:ah)?|islam|nasrani|kristiani?|kristen(?:\s+protestan)?|protestan|katolik|katholik|hindu|buddhis|buddha|budha|konghucu|khonghucu|mualaf|muallaf|ateis|atheis|agnostik|non[- ]?muslim)\b/gi;
+  for (const m of text.matchAll(adjective))
+    out.push(match("RELIGION", m.index + m[0].length - m[1].length, m[1], "medium"));
+  const conversion = /\b(?:pindah\s+agama|murtad|convert|mualaf)\b[^\n.]{0,30}?\b(?:jadi|menjadi|ke|sekarang|kini)\s+(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Hindu|Buddha|Budha|Konghucu|Khonghucu)\b|\bmasuk\s+(Islam|Kristen|Katolik|Hindu|Buddha)\b/gi;
+  for (const m of text.matchAll(conversion)) {
+    const value = m[1] ?? m[2];
+    out.push(match("RELIGION", m.index + m[0].length - value.length, value, "medium"));
+  }
+  return out;
 }
 var PLATE_REGIONS = "AA|AB|AD|AE|AG|BA|BB|BD|BE|BG|BH|BK|BL|BM|BN|BP|DA|DB|DC|DD|DE|DG|DH|DK|DL|DM|DN|DP|DR|DT|EA|EB|ED|KB|KH|KT|KU|PA|PB|A|B|D|E|F|G|H|K|L|M|N|P|R|S|T|W|Z";
 function detectPlates(text) {
@@ -712,6 +864,12 @@ function detectPlates(text) {
     if (!spaced && !keyword)
       continue;
     out.push(match("PLATE", m.index, m[0], keyword ? "high" : "medium"));
+  }
+  const loose = new RegExp(`(?<![A-Za-z0-9])(?:${PLATE_REGIONS})\\s?\\d{1,4}\\s?[A-Z]{1,3}(?![A-Za-z0-9])`, "gi");
+  for (const m of text.matchAll(loose)) {
+    if (/\b(plat|nopol|no\.?\s*pol|tnkb|kendaraan|motor|mobil)\b/.test(before(text, m.index, 20))) {
+      out.push(match("PLATE", m.index, m[0], "medium"));
+    }
   }
   return out;
 }
@@ -758,14 +916,44 @@ var TITLE_WORDS = /* @__PURE__ */ new Set([
   "saudari",
   "tn",
   "ny",
-  "nn"
+  "nn",
+  "mr",
+  "mrs",
+  "ms",
+  "miss",
+  "mister",
+  "koh",
+  "ko",
+  "cik",
+  "ci",
+  "cici",
+  "om",
+  "tante",
+  "kang",
+  "teh",
+  "bli",
+  "cak",
+  "mbok",
+  "habib",
+  "gus",
+  "romo",
+  "pastor",
+  "pendeta",
+  "pdt",
+  "alm",
+  "almh",
+  "almarhum",
+  "almarhumah",
+  "kh",
+  "dear"
 ]);
-var NOT_NAME = new Set("yang dan atau dengan dgn di ke dari dr untuk utk pada dalam ini itu tsb tersebut saya sy aku aq kamu km anda dia beliau kami kita mereka gue gw gua lu nya ya iya yaa ok oke kak sih dong deh nih tuh kok lah kah pun juga aja saja sudah udah sdh belum blm mau ingin pengen pingin minta mohon tolong bisa bisakah boleh akan sedang lagi masih baru tadi kemarin besok nanti sekarang hari sekali sekalian semua para terima kasih makasih selamat pagi siang sore malam halo hai permisi maaf refund transfer tf pesanan pesan order barang paket produk nomor no nik hp wa alamat email rekening rek umur usia lahir tinggal asal sebagai adalah ialah tidak tak gak ga nggak bukan jadi kalau kalo karena krn tapi namun perusahaan kantor toko pt cv ud yayasan koperasi instansi bank kota negara pertiwi jari hamil menyusui rumah tiri mertua kandung terdaftar sendiri ada punya kirim dikirim cek dicek tanya nanya bertanya sama bersama tentang soal mengenai sini situ sana apa siapa gimana bagaimana kenapa mana kapan berapa harap segera langsung dulu lalu kemudian terus menyatakan bahwa yg sekalian islam kristen katolik hindu buddha konghucu jl jln jalan gg gang the and i am is a an of to for want my senin selasa rabu kamis jumat sabtu minggu januari februari maret april mei juni juli agustus september oktober november desember cuma hanya pernah sering selalu benar betul yakin setuju kecewa senang puas bingung orang customer pelanggan pembeli penjual member anggota warga mahasiswa siswa karyawan pegawai seller buyer user pengguna manajemen management direksi pimpinan tim team seluruh keluarga pribadi rt rw satpam ojol cs domain file folder tabel table kolom column variabel fungsi function class akun aplikasi app server database program manfaat pengendali prosesor pemerintah kementerian keuangan negeri daerah republik indonesia rakyat dewan lembaga badan dinas direktorat komisi mahkamah pengadilan kepolisian polri tni sekretariat umum nasional pusat".split(" "));
+var NOT_NAME = new Set("yang dan atau dengan dgn di ke dari dr untuk utk pada dalam ini itu tsb tersebut saya sy aku aq kamu km anda dia beliau kami kita mereka gue gw gua lu nya ya iya yaa ok oke kak sih dong deh nih tuh kok lah kah pun juga aja saja sudah udah sdh belum blm mau ingin pengen pingin minta mohon tolong bisa bisakah boleh akan sedang lagi masih baru tadi kemarin besok nanti sekarang hari sekali sekalian semua para terima kasih makasih selamat pagi siang sore malam halo hai permisi maaf refund transfer tf pesanan pesan order barang paket produk nomor no nik hp wa alamat email rekening rek umur usia lahir tinggal asal sebagai adalah ialah tidak tak gak ga nggak bukan jadi kalau kalo karena krn tapi namun perusahaan kantor toko pt cv ud yayasan koperasi instansi bank kota negara pertiwi jari hamil menyusui rumah tiri mertua kandung terdaftar sendiri ada punya kirim dikirim cek dicek tanya nanya bertanya sama bersama tentang soal mengenai sini situ sana apa siapa gimana bagaimana kenapa mana kapan berapa harap segera langsung dulu lalu kemudian terus menyatakan bahwa yg sekalian islam kristen katolik hindu buddha konghucu jl jln jalan gg gang the and i am is a an of to for want my senin selasa rabu kamis jumat sabtu minggu januari februari maret april mei juni juli agustus september oktober november desember cuma hanya pernah sering selalu benar betul yakin setuju kecewa senang puas bingung orang customer pelanggan pembeli penjual member anggota warga mahasiswa siswa karyawan pegawai seller buyer user pengguna manajemen management direksi pimpinan tim team seluruh keluarga pribadi rt rw satpam ojol cs domain file folder tabel table kolom column variabel fungsi function class akun aplikasi app server database program manfaat pengendali prosesor pemerintah kementerian keuangan negeri daerah republik indonesia rakyat dewan lembaga badan dinas direktorat komisi mahkamah pengadilan kepolisian polri tni sekretariat umum nasional pusat setia prioritas vip tetap kontrak berprestasi terbaik terhormat yth tercinta terkasih kesayangan aktif harian magang honorer swasta asing lokal premium reguler perorangan individu lama kakak adik semuanya sir madam all everyone there world guys team folks friends bro sis gan min bos boss say sayang beb dek service support masukkan isi ketik pilih enter your sobat jakarta bandung surabaya medan semarang makassar palembang bogor depok tangerang bekasi yogyakarta jogja solo malang denpasar bali batam pekanbaru padang manado balikpapan samarinda pontianak banjarmasin ambon jayapura kupang mataram lampung aceh cirebon tasikmalaya sukabumi serang cilegon purwokerto kediri jember madiun magelang salatiga".split(" "));
 var NAME_PARTICLES = /* @__PURE__ */ new Set(["bin", "binti", "van", "der", "de", "al", "el", "da", "dos"]);
 var ORGANIZATION = /* @__PURE__ */ new Set(["pt", "cv", "ud", "toko", "yayasan", "koperasi", "perusahaan", "bank"]);
 var NAME_TOKEN = /[ \t]*([A-Za-z][A-Za-z'’-]*\.?)/y;
 function nameAt(text, start, confidence, capitalized = false) {
   const words = [];
+  let lowercaseAmbiguous = false;
   let pos = start;
   while (words.length < 5) {
     NAME_TOKEN.lastIndex = pos;
@@ -782,8 +970,12 @@ function nameAt(text, start, confidence, capitalized = false) {
       break;
     if (words.length && TITLE_WORDS.has(bare))
       return void 0;
-    if (capitalized && !/^[A-Z]/.test(word) && !NAME_PARTICLES.has(bare))
-      break;
+    if (capitalized && !/^[A-Z]/.test(word) && !NAME_PARTICLES.has(bare)) {
+      if (words.length ? !isKnownName(bare) : !GIVEN_NAMES.has(bare) && !AMBIGUOUS_GIVEN_NAMES.has(bare))
+        break;
+      if (!words.length && AMBIGUOUS_GIVEN_NAMES.has(bare))
+        lowercaseAmbiguous = true;
+    }
     words.push({ start: wordStart, end: wordStart + word.length, bare });
     if (word.endsWith(".") && bare.length > 1)
       break;
@@ -792,14 +984,24 @@ function nameAt(text, start, confidence, capitalized = false) {
     words.pop();
   if (!words.length || ORGANIZATION.has(words[0].bare))
     return void 0;
+  if (lowercaseAmbiguous && words.length === 1)
+    return void 0;
   const value = text.slice(words[0].start, words[words.length - 1].end).replace(/[.,]+$/, "");
   if (value.replace(/[^A-Za-z]/g, "").length < 2)
     return void 0;
   return match("NAME", words[0].start, value, confidence);
 }
-var NAME_INTRO = /\b(?:a\.\s?n\.?|a\/n|atas\s+nama|nama\s+(?:lengkap\s+)?(?:saya|aku|ku|gue|gw|sy)|namaku|namanya|nama\s+(?:lengkap\s+)?(?:anak|ibu|bapak|ayah|suami|istri|adik|kakak|teman|orang\s+tua)\s+(?:saya|aku|kami|gue)|bernama|dengan\s+nama|my\s+name\s+is)(?![A-Za-z])[ \t]*(?:[:=][ \t]*)?/gi;
+var NAME_INTRO = /\b(?:a\.\s?n\.?|a\/n|an\.|atas\s+nama|nama\s+(?:lengkap\s+)?(?:saya|aku|ku|gue|gw|sy)|namaku|namanya|nama\s+(?:lengkap\s+)?(?:anak|ibu|bapak|ayah|suami|istri|adik|kakak|teman|orang\s+tua)\s+(?:saya|aku|kami|gue)|nama\s+(?:akun|pengguna|pemilik|penerima|pengirim|pelanggan|nasabah|pasien|siswa|karyawan|pemesan)|bernama|dengan\s+nama|my\s+name\s+is|nami\s+(?:abdi|kulo|kula|simkuring|sim\s+kuring)|jeneng(?:ku|\s+(?:kula|kulo|aku|kulo))|asma\s+kula)(?![A-Za-z])[ \t]*(?:[:=][ \t]*)?/gi;
 var NAME_CUE = /\b(?:saya|aku|gue|gw)[ \t]*,?[ \t]+|\b(?:halo|hai|hallo|selamat\s+(?:pagi|siang|sore|malam))[ \t]*,?[ \t]*(?:ini|dengan|dgn)[ \t]+|\b(?:penerima|pengirim|pemesan|pembeli)[ \t]+/gi;
-var HONORIFIC = /(?<![\w-])(?:Bapak|Ibu|Pak|Bu|Sdr\.?|Sdri\.?|Saudara|Saudari|Mas|Mbak|Kak|Bang|Tn\.|Ny\.|Nn\.)[ \t]+/gi;
+var HONORIFIC = /(?<![\w-])(?:Bapak|Bpk\.?|Bp\.|Ananda|Ibu|Pak|Bu|Sdr\.?|Sdri\.?|Saudara|Saudari|Mas|Mbak|Kak|Bang|Tn\.|Ny\.|Nn\.)[ \t]+/gi;
+var TITLE_CUE = /(?<![\w-])(?:Mr\.?|Mrs\.?|Ms\.?|Miss|Mister|Dr\.|Prof\.|Ir\.|Drs\.|Dra\.|H\.|Hj\.|KH\.|Pdt\.|Alm\.|Almh\.|[Aa]lmarhum(?:ah)?|[Kk]oh?|[Cc]ik|[Cc]ici|[Oo]m|[Tt]ante|[Kk]ang|[Bb]li|[Cc]ak|[Mm]bok|[Hh]abib|[Gg]us|[Uu]stadz(?:ah)?|[Rr]omo|[Pp]astor|[Pp]endeta)[ \t]+/g;
+var ROLE_CUE = /\b(?:pelanggan|customer|konsumen|pembeli|pemesan|nasabah|pasien|patient|kurir|driver|sopir|supir|karyawan|karyawati|pegawai|staf|staff|siswa|siswi|murid|santri|mahasiswa|mahasiswi|tamu|pemilik|penyewa|penghuni|peminjam|debitur|pelapor|terlapor|korban|pelaku|tersangka|terdakwa|saksi|kepala\s+keluarga|penggugat|tergugat|pemohon|termohon|pewaris|klien|konseli|tertanggung|penumpang|berinisial|inisial|istrinya|suaminya|anaknya|adiknya|kakaknya|ayahnya|ibunya|wakilnya|atasannya|temannya|tetangga|pacar|calon|bayi(?:[ \t]+(?:laki-laki|perempuan))?|balita|cucu(?:nya)?|keponakan(?:nya)?|anggota|member|warga|jamaah|jemaat|u\/|utk\.?|untuk|kepada|kpd\.?)[ \t]+/gi;
+var LOOSE_ROLE = /^(?:customer|patient|driver|staff|staf|tamu|calon|pacar|korban|saksi|pelaku|tetangga|utk|untuk|kepada|kpd|anggota|member|warga|jamaah|jemaat)\b/i;
+var GREETING_CUE = /(?:^|(?<=[\s,.!]))(?:halo|hallo|hai|hi|hello|hey|dear|selamat\s+(?:pagi|siang|sore|malam)|assalamu'?alaikum)[ \t]*,?[ \t]+|^[ \t]*(?:pagi|siang|sore|malam)[ \t]*,?[ \t]+/gim;
+function isKnownName(bare) {
+  return GIVEN_NAMES.has(bare) || AMBIGUOUS_GIVEN_NAMES.has(bare) || FAMILY_NAMES.has(bare) || SECOND_NAMES.has(bare);
+}
+var JAVANESE_NAME = /^[a-z]{2,}(?:wati|yati|iyati|ningsih|ningrum|astuti|tini|rini|yanto|yono|wanto|harjo)$/;
 function detectNames(text) {
   const out = [];
   const add = (found) => found && out.push(found);
@@ -810,6 +1012,21 @@ function detectNames(text) {
   for (const m of text.matchAll(HONORIFIC)) {
     const lowercaseOk = /^(?:bapak|ibu|mbak)\b/.test(m[0]);
     add(nameAt(text, m.index + m[0].length, "medium", !lowercaseOk));
+  }
+  for (const m of text.matchAll(TITLE_CUE))
+    add(nameAt(text, m.index + m[0].length, "medium", true));
+  for (const m of text.matchAll(ROLE_CUE)) {
+    const found = nameAt(text, m.index + m[0].length, "medium", true);
+    if (!found || /^[A-Z]{2,5}$/.test(found.value) && !/inisial/i.test(m[0]))
+      continue;
+    if (LOOSE_ROLE.test(m[0]) && !found.value.split(/\s+/).some((w) => isKnownName(w.toLowerCase())))
+      continue;
+    add(found);
+  }
+  for (const m of text.matchAll(GREETING_CUE)) {
+    const found = nameAt(text, m.index + m[0].length, "medium", true);
+    if (found && /^[ \t]*(?:[,!:\r\n]|\.(?!\S)|$)/.test(text.slice(found.end)))
+      add(found);
   }
   for (const m of text.matchAll(REPORTED_SPEECH)) {
     const word = m[1];
@@ -843,6 +1060,414 @@ function detectChatSenders(text) {
     }
   }
   return out;
+}
+var PLACE_WORDS = new Set("jl jln jalan gg gang lorong komp komplek kompleks perum perumahan cluster universitas univ institut sekolah fakultas akademi politeknik kampus sd sdn smp smpn sma sman smk smkn mi mts ma pondok ponpes pesantren masjid musholla mushola langgar gereja pura vihara klenteng rs rsu rsud rsia rsj sakit puskesmas klinik apotek toko warung pt cv ud yayasan koperasi bank stasiun terminal bandara pelabuhan gedung wisma hotel mall plaza pasar taman museum stadion lapangan gor gelora kampung desa kelurahan kecamatan kabupaten kota provinsi gunung pantai pulau sungai danau monumen tugu bendungan rusun apartemen tower blok aula balai lembaga dinas kantor perpustakaan piala liga festival bung way tanjung teluk ujung muara kuala bukit lubuk pematang sei lumban lobu huta dolok bandar urung nagori talun pamah perkebunan sosor aek banjar pintu raja siraja debata kel kec kab kp ds dsn paket promo program diskon menu edisi spesial special event lomba produk varian".split(" "));
+var PLACE_SUFFIX = new Set("jaya makmur raya selatan utara barat timur tengah permai asri sejahtera sentosa abadi mulya baru lama damai harapan mekar gemilang kencana rejo mukti karya bakti jitu pahlawan".split(" "));
+var CAPITALIZED_RUN = /(?<![\w@.'’-])[A-Z][A-Za-z'’-]*\.?(?:[ \t]+(?:[A-Z][A-Za-z'’-]*\.?|bin|binti|van|der|de|al|el))+/g;
+function detectKnownNames(text) {
+  const out = [];
+  for (const m of text.matchAll(CAPITALIZED_RUN)) {
+    const words = [...m[0].matchAll(/\S+/g)].map((w) => ({
+      start: m.index + w.index,
+      end: m.index + w.index + w[0].replace(/[.,]+$/, "").length,
+      word: w[0],
+      bare: w[0].replace(/\.$/, "").toLowerCase()
+    }));
+    const prev = /([A-Za-z]+)\.?[ \t]*$/.exec(text.slice(Math.max(0, m.index - 30), m.index))?.[1]?.toLowerCase();
+    if (prev && PLACE_WORDS.has(prev))
+      continue;
+    const nameish = (k) => {
+      const w = words[k];
+      if (!w)
+        return false;
+      if (NAME_PARTICLES.has(w.bare))
+        return k + 1 < words.length;
+      return /^[A-Z]/.test(w.word) && !NOT_NAME.has(w.bare) && !TITLE_WORDS.has(w.bare) && !ORGANIZATION.has(w.bare) && !PLACE_WORDS.has(w.bare) && !PLACE_SUFFIX.has(w.bare) && !w.bare.endsWith("nya");
+    };
+    const extend = (from) => {
+      let k = from;
+      while (k < words.length && k - from < 5 && nameish(k)) {
+        k++;
+        if (words[k - 1].word.endsWith(".") && words[k - 1].bare.length > 1)
+          break;
+      }
+      while (k > from && NAME_PARTICLES.has(words[k - 1].bare))
+        k--;
+      return k - from;
+    };
+    for (let i = 0; i < words.length - 1; i++) {
+      const w = words[i];
+      if (PLACE_WORDS.has(w.bare) || ORGANIZATION.has(w.bare))
+        break;
+      const next = words[i + 1].bare;
+      let len = 0;
+      if ((w.word === "I" || w.word === "Ni") && BALINESE_NAMES.has(next))
+        len = 1 + extend(i + 1);
+      else if (!nameish(i))
+        continue;
+      else if (CHINESE_FAMILY_NAMES.has(w.bare) && [1, 2].every((d) => nameish(i + d) && /^[A-Za-z]{2,5}$/.test(words[i + d].word)))
+        len = 3;
+      else if (GIVEN_NAMES.has(w.bare) && nameish(i + 1))
+        len = extend(i);
+      else if (AMBIGUOUS_GIVEN_NAMES.has(w.bare) && nameish(i + 1) && (GIVEN_NAMES.has(next) || FAMILY_NAMES.has(next) || SECOND_NAMES.has(next))) {
+        len = extend(i);
+      } else {
+        for (let j = i + 1; j <= i + 3 && nameish(j); j++) {
+          if (!FAMILY_NAMES.has(words[j].bare)) {
+            if (!isKnownName(words[j].bare))
+              break;
+            continue;
+          }
+          const lone = j === i + 1 && !FAMILY_NAMES.has(w.bare);
+          if (lone || GIVEN_NAMES.has(w.bare) || AMBIGUOUS_GIVEN_NAMES.has(w.bare))
+            len = Math.max(j - i + 1, extend(i));
+          break;
+        }
+      }
+      if (len < 2)
+        continue;
+      const last = words[i + len - 1];
+      out.push(match("NAME", w.start, text.slice(w.start, last.end), "medium"));
+      i += len - 1;
+    }
+  }
+  return out;
+}
+var SIGN_OFF = /^[ \t]*(?:salam(?:\s+hangat)?|hormat\s+(?:saya|kami)|terima\s*kasih|makasih|regards|best\s+regards|kind\s+regards|warm\s+regards|best|thanks|thank\s+you|cheers|sincerely|yours\s+sincerely|wassalam(?:u'?alaikum)?)[ \t]*[,.!]?[ \t]*(?:\r?\n[ \t]*)+/gim;
+function detectSignatures(text) {
+  const out = [];
+  for (const m of text.matchAll(SIGN_OFF)) {
+    const start = m.index + m[0].length;
+    const lineEnd = text.indexOf("\n", start);
+    const line = text.slice(start, lineEnd === -1 ? text.length : lineEnd).replace(/\r$/, "").trim();
+    const found = nameAt(text, start, "medium", true);
+    if (found && found.value.length >= line.replace(/^(?:\w+\.\s*)+/, "").replace(/,.*$/, "").length - 1)
+      out.push(found);
+  }
+  for (const m of text.matchAll(/(?:^|(?<=[.!?)"”]))[ \t]*[-–—~][ \t]*(?=[A-Z])/gm)) {
+    const found = nameAt(text, m.index + m[0].length, "medium", true);
+    if (!found || !found.value.split(/\s+/).some((w) => isKnownName(w.toLowerCase())))
+      continue;
+    if (/^[ \t]*(?:,|\r?\n|$)/.test(text.slice(found.end)))
+      out.push(found);
+  }
+  return out;
+}
+function detectDisplayNames(text) {
+  const out = [];
+  const re = /(?:^|(?<=[\s:,;(]))"?((?:[A-Z][A-Za-z'’.-]*[ \t]+){0,4}[A-Z][A-Za-z'’.-]*)"?[ \t]*<[^<>\s@]+@[^<>\s]+>/gm;
+  for (const m of text.matchAll(re)) {
+    const group = m.index + m[0].indexOf(m[1]);
+    const groupEnd = group + m[1].length;
+    for (const w of m[1].matchAll(/\S+/g)) {
+      const found = nameAt(text, group + w.index, "high", true);
+      if (found && found.end >= groupEnd - 1) {
+        out.push(found);
+        break;
+      }
+    }
+  }
+  return out;
+}
+var CODE_AT = new Set("param params arg argument returns return type typedef template example deprecated see link throws throw default since version author license preserve todo fixme internal private public protected override readonly module namespace callback property prop event fires listens description summary inheritdoc abstract async media import keyframes supports layer tailwind apply use forward include mixin extend charset container page font-face component injectable input output test before after inject directive pipe ngmodule effect select staticmethod classmethod dataclass pytest app router api client mock patch fixture ts-ignore ts-expect-error jsx jsximportsource vite babel types entity column table get post put delete controller service observable satisfies overload implements augments class constructor enum function member memberof method name this constant const copyright exports external file fileoverview global ignore instance interface kind lends mixes package requires static tutorial yields alias generator beta alpha experimental remarks typeparam defaultvalue label linkcode linkplain virtual sealed decorator args options props context state value data".split(" "));
+var HANDLE_CUE = /\b(?:ig|instagram|insta|tiktok|twitter|threads|telegram|tele|dm|akun|account|follow|mention|tag|username|handle|fb|facebook|line|youtube|yt)\b/;
+function detectHandles(text) {
+  const out = [];
+  for (const m of text.matchAll(/(?<![^\s(,:;"'[])@([A-Za-z0-9_](?:[A-Za-z0-9_.]{0,28}[A-Za-z0-9_])?)(?![\w@/(-]|\.\w)/g)) {
+    const handle = m[1];
+    if (CODE_AT.has(handle.toLowerCase()) || CODE_AT.has(handle.split(".")[0].toLowerCase()) || /^\d+$/.test(handle))
+      continue;
+    if (/\.(?:com|net|org|id|io|co|dev|app|me)$/i.test(handle))
+      continue;
+    const lineStart = text.lastIndexOf("\n", m.index) + 1;
+    const lead = text.slice(lineStart, m.index);
+    if (/^\s*(?:\*|\/\/|#)/.test(lead))
+      continue;
+    if (!lead.trim() && !text.slice(m.index + m[0].length).split("\n", 1)[0].trim())
+      continue;
+    const shaped = /[\d._]/.test(handle) && handle.length >= 5 && /^[a-z0-9_.]+$/.test(handle);
+    if (!shaped && !HANDLE_CUE.test(before(text, m.index, 40)))
+      continue;
+    out.push(match("NAME", m.index + 1, handle, "medium"));
+  }
+  return out;
+}
+var STACKED_TYPES = /* @__PURE__ */ new Set([
+  "NAME",
+  "NIK",
+  "KK",
+  "NPWP",
+  "NIP",
+  "SIM",
+  "BPJS",
+  "PHONE",
+  "BANK_ACCOUNT",
+  "EMAIL",
+  "BIRTH_DATE",
+  "RELIGION",
+  "GENDER",
+  "MARITAL_STATUS"
+]);
+var RELIGION_WORD = /^(?:islam|kristen(?:\s+protestan)?|protestan|katolik|katholik|hindu|buddha|budha|konghucu|khonghucu|kepercayaan.*)$/i;
+var MARITAL_WORD = /^(?:kawin|belum\s+kawin|cerai\s+hidup|cerai\s+mati|menikah|belum\s+menikah|lajang|janda|duda|single|married|divorced|widowed)$/i;
+function detectStackedLabels(text) {
+  const out = [];
+  const lines = [];
+  for (let pos = 0; pos <= text.length; ) {
+    let end = text.indexOf("\n", pos);
+    if (end === -1)
+      end = text.length;
+    lines.push({ start: pos, text: text.slice(pos, end).replace(/\r$/, "") });
+    pos = end + 1;
+  }
+  for (let i = 0; i + 1 < lines.length; i++) {
+    const label = lines[i].text.trim();
+    if (!label || label.length > 30 || /[:=]/.test(label) || label.split(/\s+/).length > 3)
+      continue;
+    const type = fieldType(label);
+    if (!type || !STACKED_TYPES.has(type))
+      continue;
+    const next = lines[i + 1];
+    const value = next.text.trim();
+    if (!value || value.length > 60 || fieldType(value) || !isPlausibleValue(type, value, label))
+      continue;
+    if (type === "NAME" && !value.split(/\s+/).every((w) => /^[A-Z]/.test(w) && !NOT_NAME.has(w.toLowerCase())))
+      continue;
+    if (type === "RELIGION" && !RELIGION_WORD.test(value))
+      continue;
+    if (type === "MARITAL_STATUS" && !MARITAL_WORD.test(value))
+      continue;
+    out.push(match(type, next.start + next.text.indexOf(value), value, "medium"));
+  }
+  return out;
+}
+function detectColonlessLabels(text) {
+  const out = [];
+  const re = /^[ \t]*(Jenis[ \t]+Kelamin|Kelamin|Agama|Status[ \t]+Perkawinan|Status[ \t]+Kawin|Perkawinan)[ \t]+(?![:=])([A-Za-z][A-Za-z -]{1,24}?)(?=[ \t]*(?:\r?$|[ \t]{2,}|[ \t]+(?:Gol|Golongan|RT|RW)\b))/gim;
+  for (const m of text.matchAll(re)) {
+    const type = fieldType(m[1]);
+    const value = m[2];
+    if (type === "GENDER" && !GENDER_WORD_RE.test(value))
+      continue;
+    if (type === "RELIGION" && !RELIGION_WORD.test(value))
+      continue;
+    if (type === "MARITAL_STATUS" && !MARITAL_WORD.test(value))
+      continue;
+    if (type)
+      out.push(match(type, m.index + m[0].length - value.length, value, "medium"));
+  }
+  return out;
+}
+var GENDER_WORD_RE = /^(?:laki-?\s?laki|lelaki|perempuan|pria|wanita)$/i;
+function detectPhoneOwners(text) {
+  const out = [];
+  const re = /(?:\+62|0062|62|0)[ \t-]?8[\d \t.-]{7,16}\d[ \t]*\([ \t]*((?:(?:Pak|Bu|Bapak|Ibu|Mas|Mbak|Kak|Bang)[ \t]+)?[A-Z][a-z]+(?:[ \t]+[A-Z][a-z]+){0,2})[ \t]*\)/g;
+  for (const m of text.matchAll(re)) {
+    const name = m[1];
+    const words = name.split(/[ \t]+/).map((w) => w.toLowerCase());
+    if (words.some((w) => NOT_NAME.has(w) && !TITLE_WORDS.has(w)))
+      continue;
+    out.push(match("NAME", m.index + m[0].lastIndexOf(name), name, "medium"));
+  }
+  return out;
+}
+function detectLogUsers(text) {
+  const out = [];
+  for (const m of text.matchAll(/(?<![\w.-])(?:user|usr|login|uname)=(["']?)([A-Za-z][\w.-]{2,40})\1(?=[\s,;&]|$)/g)) {
+    const user = m[2];
+    if (!user.split(/[._-]+/).some((w) => isKnownName(w.toLowerCase().replace(/\d+$/, ""))))
+      continue;
+    out.push(match("NAME", m.index + m[0].length - user.length - m[1].length, user, "medium"));
+  }
+  return out;
+}
+function detectTimedSenders(text) {
+  const out = [];
+  for (const m of text.matchAll(/^\[\d{1,2}[:.]\d{2}(?:[:.]\d{2})?(?:[ \t]?[AP]M)?\][ \t]+([A-Za-z][\w. -]{1,38}?):[ \t]/dgm)) {
+    const sender = m[1];
+    if (NOT_A_PERSON.test(sender))
+      continue;
+    const shaped = /^[a-z][a-z0-9]*[._][a-z0-9._]+$/.test(sender);
+    if (!shaped && !sender.split(/[ ._-]+/).some((w) => isKnownName(w.toLowerCase())))
+      continue;
+    out.push(match("NAME", m.indices[1][0], sender, "medium"));
+  }
+  return out;
+}
+var decodeEntities = (s) => s.replace(/&amp;/g, "&").replace(/&nbsp;/g, " ").replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"');
+function detectHtml(text) {
+  if (!/<(?:input|td|th)\b/i.test(text))
+    return [];
+  const out = [];
+  for (const m of text.matchAll(/<input\b[^>]*>/gi)) {
+    const name = /\b(?:name|id)\s*=\s*["']([^"']+)["']/i.exec(m[0])?.[1];
+    const value = /\bvalue\s*=\s*(["'])([^"']*)\1/i.exec(m[0]);
+    const type = name ? fieldType(name) : void 0;
+    if (!type || !value || !isPlausibleValue(type, value[2], name))
+      continue;
+    out.push(match(type, m.index + value.index + value[0].indexOf(value[2], 1), value[2], "high"));
+  }
+  let columns;
+  let headers = [];
+  for (const row of text.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)) {
+    const cells = [...row[1].matchAll(/<(t[hd])\b[^>]*>([^<]*)<\/t[hd]>/gi)].map((c) => ({
+      header: c[1].toLowerCase() === "th",
+      text: decodeEntities(c[2]).trim(),
+      start: row.index + row[0].indexOf(row[1]) + c.index + c[0].indexOf(">") + 1,
+      raw: c[2]
+    }));
+    if (!cells.length)
+      continue;
+    const types = cells.map((c) => c.text.length <= 40 ? fieldType(c.text) : void 0);
+    if (cells.length === 2 && types[0] && !types[1]) {
+      const [label, cell] = cells;
+      if (cell.text && isPlausibleValue(types[0], cell.text, label.text)) {
+        out.push(match(types[0], cell.start + cell.raw.indexOf(cell.text.slice(0, 1)), cell.raw.trim(), "high"));
+      }
+      continue;
+    }
+    if (cells.every((c) => c.header) || !columns && types.some(Boolean) && cells.every((c) => !/\d{3}/.test(c.text))) {
+      columns = types;
+      headers = cells.map((c) => c.text);
+      continue;
+    }
+    if (!columns)
+      continue;
+    cells.forEach((c, i) => {
+      const type = columns[i];
+      if (!type || !c.text || !isPlausibleValue(type, c.text, headers[i]))
+        return;
+      out.push(match(type, c.start + c.raw.indexOf(c.raw.trim()), c.raw.trim(), isGenericNameKey(headers[i]) ? "medium" : "high"));
+    });
+  }
+  return out;
+}
+var HL7_FIELDS = {
+  PID: { 5: "NAME", 6: "NAME", 7: "BIRTH_DATE", 8: "GENDER", 11: "ADDRESS", 13: "PHONE", 14: "PHONE", 19: "NIK" },
+  NK1: { 2: "NAME", 4: "ADDRESS", 5: "PHONE", 6: "PHONE" },
+  DG1: { 3: "HEALTH", 4: "HEALTH" },
+  IN1: { 16: "NAME" }
+};
+function detectHl7(text) {
+  const out = [];
+  for (const m of text.matchAll(/^(PID|NK1|DG1|IN1)\|[^\r\n]*/gm)) {
+    const fields2 = HL7_FIELDS[m[1]];
+    let pos = m.index;
+    m[0].split("|").forEach((value, i) => {
+      const type = fields2[i];
+      if (type && value.replace(/[\^~&\s]/g, "")) {
+        out.push(match(type, pos, value.replace(/[\^~]+$/, ""), "high"));
+      }
+      pos += value.length + 1;
+    });
+  }
+  return out;
+}
+var CRIME = "[a-z]+(?:\\s+(?:online|anak|uang|dana|berat|ringan|narkotika|pidana))?";
+var CRIMINAL = new RegExp(`\\b(?:mantan|eks|bekas)\\s+(?:napi|narapidana|tahanan|tapol|terpidana|residivis)(?:\\s+kasus\\s+${CRIME})?|\\bresidivis(?:\\s+kasus\\s+${CRIME})?|\\b(?:napi|narapidana|terpidana|tersangka|terdakwa|terjerat|tersandung|terlibat)\\s+kasus\\s+${CRIME}|\\bpernah\\s+(?:dipenjara|dibui|dipidana|ditahan|dihukum(?:\\s+penjara)?|masuk\\s+(?:penjara|bui|lapas|rutan)|ditangkap(?:\\s+polisi)?)(?:\\s+(?:selama\\s+)?\\d+\\s+(?:tahun|bulan))?(?:\\s+(?:karena\\s+|atas\\s+)?kasus\\s+${CRIME})?|\\bdivonis\\s+\\d+\\s+(?:tahun|bulan)(?:\\s+penjara)?|\\bcatatan\\s+(?:(?:kriminal|kepolisian|pidana)\\s+)?kasus\\s+${CRIME}|\\b(?:masuk|dimasukkan\\s+ke|tercantum\\s+di)\\s+(?:dalam\\s+)?daftar\\s+(?:cekal|pencegahan|penangkalan|hitam\\s+imigrasi|pencarian\\s+orang|dpo|buronan)|\\b(?:dicekal|berstatus\\s+(?:dpo|buron(?:an)?)|masuk\\s+dpo|jadi\\s+(?:dpo|buron(?:an)?))\\b|\\b(?:keluar|bebas)\\s+(?:dari\\s+)?(?:lapas|lp|penjara|bui|rutan|tahanan)\\b|\\bkasusnya\\s+${CRIME}`, "gi");
+function detectCriminal(text) {
+  return [...text.matchAll(CRIMINAL)].map((m) => match("CRIMINAL_RECORD", m.index, m[0], "medium"));
+}
+function detectGluedIds(text) {
+  const out = [];
+  for (const m of text.matchAll(/(?<=[A-Za-z_])\d{16}(?![\dA-Za-z])/g)) {
+    const prefix = /[A-Za-z_]+$/.exec(text.slice(Math.max(0, m.index - 20), m.index))[0];
+    const head = text[m.index - prefix.length - 1];
+    if (head !== void 0 && /\d/.test(head) || prefix.replace(/_/g, "").length < 2 && !prefix.includes("_"))
+      continue;
+    if (parseNik(m[0]).valid)
+      out.push(match("NIK", m.index, m[0], "high"));
+  }
+  for (const m of text.matchAll(/(?<=[A-Za-z])(?:\+?62|0)8\d{8,11}(?!\d)/g)) {
+    const label = /[A-Za-z.]+$/.exec(text.slice(Math.max(0, m.index - 12), m.index))[0].toLowerCase();
+    if (PHONE_LABELS.has(label) && parsePhone(m[0]).valid)
+      out.push(match("PHONE", m.index, m[0], "high"));
+  }
+  return out;
+}
+var DIGIT_WORD = "(?:nol|kosong|satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan)";
+function detectSpokenPhones(text) {
+  const re = new RegExp(`\\b(?:nol|kosong)[\\s,.-]+delapan(?:[\\s,.-]+${DIGIT_WORD}){8,11}\\b`, "gi");
+  return [...text.matchAll(re)].map((m) => match("PHONE", m.index, m[0], "medium"));
+}
+function detectLoneGivenNames(text) {
+  const out = [];
+  for (const m of text.matchAll(/(?<![\w@.'’-])[A-Z][a-z]{2,14}(?![\w'’-]|\.\w|[ \t]+[A-Z])/g)) {
+    const bare = m[0].toLowerCase();
+    if (!GIVEN_NAMES.has(bare) && !JAVANESE_NAME.test(bare))
+      continue;
+    const lead = text.slice(Math.max(0, m.index - 30), m.index);
+    if (!/(?:(?<![A-Za-z])[a-z]+|,)[ \t]+$/.test(lead))
+      continue;
+    const prev = /([A-Za-z]+)[ \t]+$/.exec(lead)?.[1]?.toLowerCase();
+    if (prev && (PLACE_WORDS.has(prev) || ORGANIZATION.has(prev) || /^(?:di|daerah|arah|wilayah|kawasan|menuju|sekitar)$/.test(prev)))
+      continue;
+    out.push(match("NAME", m.index, m[0], "medium"));
+  }
+  return out;
+}
+var NOT_AN_AGE = new Set("pasal ayat bab bagian lampiran gambar tabel grafik nomor no langkah tahap poin butir huruf angka versi kelas ruang lantai gate pintu loket jalur map set array object date number string buffer promise error symbol".split(" "));
+var ROLE_AT_START = new RegExp(`^(?:${ROLE_CUE.source.replace(/^\\b/, "")})`, "i");
+function detectNamesWithAge(text) {
+  const out = [];
+  const re = /(?<![\w@.'’-])([A-Z][a-z'’-]+(?:[ \t]+(?:[A-Z][a-z'’-]+|bin|binti)){0,3})[ \t]+\([ \t]*\d{1,2}[ \t]*(?:th|thn|tahun|thn\.|th\.)?[ \t]*\)/g;
+  for (const m of text.matchAll(re)) {
+    const role = ROLE_AT_START.exec(m[1])?.[0] ?? "";
+    const name = m[1].slice(role.length);
+    const words = name.split(/[ \t]+/).map((w) => w.toLowerCase());
+    if (!name || words.some((w) => NOT_NAME.has(w) || NOT_AN_AGE.has(w) || TITLE_WORDS.has(w) || PLACE_WORDS.has(w)))
+      continue;
+    out.push(match("NAME", m.index + role.length, name, "medium"));
+  }
+  return out;
+}
+function detectAttendance(text) {
+  const out = [];
+  const re = /(?<![\w@.'’-])([A-Z][a-z'’-]+(?:[ \t]+[A-Z][a-z'’-]+){0,3})[ \t]+\((?:sakit|izin|ijin|alpa|alpha|absen|cuti|dinas(?:[ \t]+luar)?|terlambat|telat|hadir|wfh|wfo|istri|suami|ayah|ibu|bapak|anak|kakak|adik|ortu|orang[ \t]+tua|wali|saudara|keluarga|teman|wife|husband|mother|father)\)/g;
+  for (const m of text.matchAll(re)) {
+    if (m[1].split(/[ \t]+/).some((w) => NOT_NAME.has(w.toLowerCase()) || TITLE_WORDS.has(w.toLowerCase())))
+      continue;
+    out.push(match("NAME", m.index, m[1], "medium"));
+  }
+  return out;
+}
+function detectSentenceSubjects(text) {
+  const out = [];
+  const re = /(?:^|(?<=[.!?]\s)|(?<=\n))[ \t]*([A-Z][a-z]{2,14})(?=[ \t]+(?:masih|sudah|udah|belum|lagi|sedang|bilang|minta|punya|mau|tidak|nggak|gak|ga|pernah|sakit|kerja|tinggal|baru|katanya|pinjam|hutang|utang|janji|nanya|nelpon|telat|izin|cuti|dirawat|meninggal)\b)/gm;
+  for (const m of text.matchAll(re)) {
+    const bare = m[1].toLowerCase();
+    if (!GIVEN_NAMES.has(bare) && !JAVANESE_NAME.test(bare))
+      continue;
+    out.push(match("NAME", m.index + m[0].length - m[1].length, m[1], "medium"));
+  }
+  return out;
+}
+function detectNamePairs(text) {
+  const out = [];
+  for (const m of text.matchAll(/(?<![\w@.'’-])([A-Z][a-z]{2,14})[ \t]*(?:&|dan)[ \t]*([A-Z][a-z]{2,14})(?![\w'’-]|[ \t]+[A-Z])/g)) {
+    const [a, b] = [m[1], m[2]];
+    const ok = (w) => !NOT_NAME.has(w.toLowerCase()) && !PLACE_WORDS.has(w.toLowerCase()) && !TITLE_WORDS.has(w.toLowerCase());
+    if (!ok(a) || !ok(b))
+      continue;
+    if (GIVEN_NAMES.has(a.toLowerCase()))
+      out.push(match("NAME", m.index + m[0].lastIndexOf(b), b, "medium"));
+    if (GIVEN_NAMES.has(b.toLowerCase()))
+      out.push(match("NAME", m.index, a, "medium"));
+  }
+  return out;
+}
+function detectBracketHandles(text) {
+  const out = [];
+  for (const m of text.matchAll(/\(([a-z][a-z0-9]*(?:[._][a-z0-9]+)+)\)/g)) {
+    if (!m[1].split(/[._]/).some((w) => GIVEN_NAMES.has(w.replace(/\d+$/, "")) || FAMILY_NAMES.has(w.replace(/\d+$/, ""))))
+      continue;
+    out.push(match("NAME", m.index + 1, m[1], "medium"));
+  }
+  return out;
+}
+function detectCardCodes(text) {
+  const re = /\b(?:cvv2?|cvc2?|cid|kode\s+keamanan)\b[ \t]*[:=]?[ \t]*(\d{3,4})(?!\d)/gi;
+  return [...text.matchAll(re)].map((m) => match("CARD", m.index + m[0].length - m[1].length, m[1], "high"));
 }
 var DIGITS_AT = /\d+/y;
 var THING_TABLE = /produk|product|barang|item|sku|kategori|categor|menu|toko|store|shop|merchant|brand|merek|layanan|service|paket|package|kota|city|provinsi|province|wilayah|region|kecamatan|kelurahan|desa|district|bank|kurir|courier|ekspedisi|tag|role|permission|setting|config|status|metode|method/i;
@@ -980,13 +1605,21 @@ function detectSqlInserts(text) {
   }
   return out;
 }
+var STREET = "Jl|Jln|Jalan|Gg|Gang|Komp|Kompl|Komplek|Kompleks|Perum|Perumahan|Cluster|Klaster|Apartemen|Apartment|Apt|Rusun|Rusunawa|Tower|Ruko|Wisma|Asrama|Dusun|Dsn|Dukuh|Kampung|Kp|Lingkungan|Ling";
+var PIN = "[Nn][Oo]|[Nn]omor|[Bb]lok|[Kk]av|[Uu]nit|[Ll]t|[Ll]antai|[Kk]amar|[Kk]mr|NO|BLOK";
+var RT_RW = "RT\\.?\\s*0*\\d{1,3}\\s*[/,]?\\s*RW\\.?\\s*0*\\d{1,3}";
 function detectStreetAddresses(text) {
   const out = [];
-  const street = /\b(?:Jl|Jln|Jalan|Gg|Gang|Komp|Kompleks|Perum|Perumahan)\.?\s+[A-Za-z0-9][^\n;]{1,80}?(?:\b(?:No|Nomor|Blok|Kav)\.?\s*[A-Za-z]?\d+[A-Za-z]?(?:\/\d+)?(?:,?\s*RT\.?\s*\d{1,3}\s*\/\s*RW\.?\s*\d{1,3})?|\bRT\.?\s*\d{1,3}\s*\/\s*RW\.?\s*\d{1,3})/g;
+  const street = new RegExp(`\\b(?:${STREET})\\.?\\s+[A-Za-z0-9][^\\n;]{1,80}?(?:\\b(?:${PIN})\\.?\\s*[A-Za-z]?\\d+[A-Za-z]?(?:\\/\\d+)?(?:,?\\s*(?:${PIN})\\.?\\s*[A-Za-z]?\\d+[A-Za-z]?(?:\\/\\d+)?)*(?:,?\\s*${RT_RW})?|\\b${RT_RW})`, "g");
   for (const m of text.matchAll(street))
     out.push(match("ADDRESS", m.index, m[0], "high"));
-  const rtrw = /\bRT\.?\s*0*\d{1,3}\s*\/\s*RW\.?\s*0*\d{1,3}\b/gi;
-  for (const m of text.matchAll(rtrw))
+  const lower = /\b(?:perum|perumahan|komplek|kompleks|komp|cluster|klaster|apartemen|apt|rusun|asrama|jl|jln|gg|gang)\.?\s+[a-z0-9][^\n;]{1,60}?\b(?:no|nomor|blok|kav|unit)\.?\s*[a-z]?\d+[a-z]?(?:\/\d+)?(?:,?\s*(?:no|nomor|blok|kav|unit)\.?\s*[a-z]?\d+[a-z]?)*/g;
+  for (const m of text.matchAll(lower))
+    out.push(match("ADDRESS", m.index, m[0], "medium"));
+  for (const m of text.matchAll(new RegExp(`\\b${RT_RW}\\b`, "gi")))
+    out.push(match("ADDRESS", m.index, m[0], "medium"));
+  const bare = /\b(?:[Jj]ln?|[Gg]g)\.?\s+[A-Za-z][A-Za-z'-]*(?:\s+[A-Za-z][A-Za-z'-]*){0,3}?\s+\d{1,4}[A-Za-z]?\b(?!\s*(?:jam|menit|detik|km|meter|m\b|kali|hari|minggu|bulan|tahun|orang|lantai|lajur|jalur|%|x\b))/g;
+  for (const m of text.matchAll(bare))
     out.push(match("ADDRESS", m.index, m[0], "medium"));
   return out;
 }
@@ -1057,13 +1690,19 @@ function cutValue(type, raw) {
       if (stop >= 0)
         v = v.slice(0, stop);
     }
-    const digit = v.search(/\d/);
+    const digit = v.replace(/%[0-9A-Fa-f]{2}/g, "%xx").search(/\d/);
     if (digit >= 0)
       v = v.slice(0, digit);
     v = takeWords(v, 5);
   }
+  if (NUMBER_TYPES.has(type)) {
+    const digits = /^[+(]?\d[\d \t.\-/()]*\d\)?/.exec(v.trim());
+    if (digits)
+      return digits[0].trim();
+  }
   return v.replace(/[\s.,}\]]+$/, "").trim();
 }
+var NUMBER_TYPES = /* @__PURE__ */ new Set(["NIK", "KK", "NPWP", "NIP", "SIM", "BPJS", "NISN", "PHONE", "BANK_ACCOUNT", "CARD"]);
 var isQuote = (c) => c === '"' || c === "'" || c === "`";
 var isLabelChar = (c) => c !== void 0 && /[A-Za-z0-9_./-]/.test(c);
 var isLetter = (c) => c !== void 0 && /[A-Za-z]/.test(c);
@@ -1115,7 +1754,9 @@ function detectLabeledFields(text) {
   let lineEnd = text.indexOf("\n");
   if (lineEnd === -1)
     lineEnd = text.length;
-  for (const m of text.matchAll(/[ \t]*(?::(?![:\/])|=(?![=>]))[ \t]*/g)) {
+  for (const m of text.matchAll(/[ \t]*(?::(?![:\/])|=>|=(?![=>]))[ \t]*/g)) {
+    if (m[0].includes("=>") && !isQuote(text[m.index - 1]))
+      continue;
     while (m.index > lineEnd) {
       lineStart = lineEnd + 1;
       lineEnd = text.indexOf("\n", lineStart);
@@ -1146,6 +1787,8 @@ function detectLabeledFields(text) {
       if (close >= rawEnd)
         continue;
       value = text.slice(valueStart + 1, close);
+      if (/^\s/.test(value))
+        continue;
       start += 1;
     } else {
       const raw = text.slice(valueStart, valueExtent(text, valueStart, rawEnd));
@@ -1288,9 +1931,32 @@ var DETECTORS = [
   detectHealth,
   detectFinancial,
   detectReligion,
+  detectMaritalStatus,
   detectPlates,
   detectNames,
   detectChatSenders,
+  detectKnownNames,
+  detectSignatures,
+  detectDisplayNames,
+  detectHandles,
+  detectStackedLabels,
+  detectColonlessLabels,
+  detectPhoneOwners,
+  detectTimedSenders,
+  detectLogUsers,
+  detectHtml,
+  detectHl7,
+  detectAkta,
+  detectCriminal,
+  detectGluedIds,
+  detectCardCodes,
+  detectSpokenPhones,
+  detectLoneGivenNames,
+  detectNamesWithAge,
+  detectNamePairs,
+  detectAttendance,
+  detectSentenceSubjects,
+  detectBracketHandles,
   detectSqlInserts,
   detectStreetAddresses,
   detectLabeledFields,
@@ -1333,6 +1999,8 @@ function partialMask(type, value) {
       return `${digits.slice(0, 4)}${stars(8)}${digits.slice(-4)}`;
     case "NIP":
     case "SIM":
+    case "NISN":
+    case "AKTA":
       return `${stars(digits.length - 3)}${digits.slice(-3)}`;
     case "PASSPORT":
       return `${[...value][0] ?? ""}${stars(5)}${value.slice(-2)}`;
@@ -3019,6 +3687,8 @@ var STRICT = [
   "PASSPORT",
   "SIM",
   "NIP",
+  "NISN",
+  "AKTA",
   "BANK_ACCOUNT",
   "BPJS",
   "CARD",

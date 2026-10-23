@@ -39,7 +39,7 @@ export const KEEP_BY_DEFAULT: readonly PiiType[] = ['GENDER', 'RELIGION', 'MARIT
 
 // Values that must stay unique: two people must not end up with one stand-in.
 const UNIQUE: ReadonlySet<PiiType> = new Set([
-  'NIK', 'KK', 'NPWP', 'PHONE', 'EMAIL', 'BANK_ACCOUNT', 'CARD', 'BPJS', 'SIM', 'NIP', 'PASSPORT', 'PLATE', 'IP',
+  'NIK', 'KK', 'NPWP', 'PHONE', 'EMAIL', 'BANK_ACCOUNT', 'CARD', 'BPJS', 'SIM', 'NIP', 'NISN', 'AKTA', 'PASSPORT', 'PLATE', 'IP',
 ]);
 
 const MONTHS: ReadonlyArray<readonly string[]> = [
@@ -315,6 +315,7 @@ export class Kembaran {
       case 'BANK_ACCOUNT':
       case 'BPJS':
       case 'SIM':
+      case 'NISN':
         return rng.digits(onlyDigits(original).length);
       case 'NIP': {
         const d = onlyDigits(original);
@@ -339,6 +340,7 @@ export class Kembaran {
       case 'GEO':
         return original.replace(/(\.\d{2})(\d+)/g, (_, keep: string, rest: string) => keep + rng.digits(rest.length));
       case 'FINANCIAL':
+      case 'AKTA':
         return shapeDigits(original, rng);
       case 'HEALTH':
         return caseLike(rng.pick(HEALTH), original);
@@ -372,6 +374,7 @@ export class Kembaran {
       case 'BPJS':
       case 'SIM':
       case 'NIP':
+      case 'NISN':
       case 'CARD':
         return putDigits(original, fake);
       case 'PHONE': {

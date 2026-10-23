@@ -455,6 +455,136 @@
   "out": "***"
  },
  {
+  "type": "NISN",
+  "value": "3201011508950001",
+  "out": "*************001"
+ },
+ {
+  "type": "NISN",
+  "value": "0812-3456-7890",
+  "out": "*********890"
+ },
+ {
+  "type": "NISN",
+  "value": "budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "NISN",
+  "value": "B 1234 XYZ",
+  "out": "***234"
+ },
+ {
+  "type": "NISN",
+  "value": "182.253.10.15",
+  "out": "*******015"
+ },
+ {
+  "type": "NISN",
+  "value": "-6.200000, 106.816666",
+  "out": "*************666"
+ },
+ {
+  "type": "NISN",
+  "value": "Budi Santoso",
+  "out": "***"
+ },
+ {
+  "type": "NISN",
+  "value": "Jl. Mawar No. 5",
+  "out": "***5"
+ },
+ {
+  "type": "NISN",
+  "value": "A1234567",
+  "out": "****567"
+ },
+ {
+  "type": "NISN",
+  "value": "19950815 202012 1 001",
+  "out": "***************001"
+ },
+ {
+  "type": "NISN",
+  "value": "1234567890",
+  "out": "*******890"
+ },
+ {
+  "type": "NISN",
+  "value": "🌸 Dewi Lestari",
+  "out": "***"
+ },
+ {
+  "type": "NISN",
+  "value": "😀budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "AKTA",
+  "value": "3201011508950001",
+  "out": "*************001"
+ },
+ {
+  "type": "AKTA",
+  "value": "0812-3456-7890",
+  "out": "*********890"
+ },
+ {
+  "type": "AKTA",
+  "value": "budi@gmail.com",
+  "out": "***"
+ },
+ {
+  "type": "AKTA",
+  "value": "B 1234 XYZ",
+  "out": "***234"
+ },
+ {
+  "type": "AKTA",
+  "value": "182.253.10.15",
+  "out": "*******015"
+ },
+ {
+  "type": "AKTA",
+  "value": "-6.200000, 106.816666",
+  "out": "*************666"
+ },
+ {
+  "type": "AKTA",
+  "value": "Budi Santoso",
+  "out": "***"
+ },
+ {
+  "type": "AKTA",
+  "value": "Jl. Mawar No. 5",
+  "out": "***5"
+ },
+ {
+  "type": "AKTA",
+  "value": "A1234567",
+  "out": "****567"
+ },
+ {
+  "type": "AKTA",
+  "value": "19950815 202012 1 001",
+  "out": "***************001"
+ },
+ {
+  "type": "AKTA",
+  "value": "1234567890",
+  "out": "*******890"
+ },
+ {
+  "type": "AKTA",
+  "value": "🌸 Dewi Lestari",
+  "out": "***"
+ },
+ {
+  "type": "AKTA",
+  "value": "😀budi@gmail.com",
+  "out": "***"
+ },
+ {
   "type": "PHONE",
   "value": "3201011508950001",
   "out": "3201********0001"
