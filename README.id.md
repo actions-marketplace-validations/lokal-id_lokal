@@ -363,7 +363,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: lokal-id/lokal@v0.5.0
+      - uses: lokal-id/lokal@v0.6.0
         # with:
         #   scope: all              # semua file yang dilacak git, bukan hanya perubahan
         #   min-confidence: medium  # termasuk nilai tanpa label atau nama kolom
@@ -382,7 +382,7 @@ repos:
         name: Data pribadi Indonesia
         entry: lokal-mcp scan --staged
         language: node
-        additional_dependencies: ['@lokal-id/mcp@0.5.0']
+        additional_dependencies: ['@lokal-id/mcp@0.6.0']
         pass_filenames: false
 ```
 

@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-23
+
+npm (`@lokal-id/core`, `@lokal-id/mcp`), PyPI (`lokal-id`), the GitHub Action, and the browser extension.
+
+### Changed
+
+- **Masked output can differ from 0.5.0 for the same text.** Samaran now finds more personal data, so a text masked by 0.5.0 can get more placeholders, and NISN and certificate numbers get their own `[NISN_1]` and `[AKTA_1]`. The MCP guard and the Claude Code hook hold prompts that contain either. If you compare masked output in snapshots, update them.
+- On free text it has not seen, Samaran catches about 82 to 88% of personal values. The README explains how this was measured.
+
 ### Added
 
 - Samaran finds personal data that has no label in front of it. Names after a role ("Pelanggan Budi Santoso", "Kurir Supardi"), a greeting ("Halo Budi,", "Dear Mr. Hendra Gunawan,"), a title ("Dr. Ir. H. Bambang", "Hj.", "koh"), or as a sign-off, e-mail display name, or social media handle; and names recognized by their parts from common Indonesian given and family names, Batak clan names, and Balinese and Chinese-Indonesian patterns, in capitals too, as bank statements write them. Also identifiers in file names and glued to letters ("KTP_3201….jpg", "wa0812…"), URL-encoded values, HTML forms and tables, labels with the value on the next line, card security codes, phone numbers in brackets, in groups of two digits, read out as words, or as landlines next to a phone word, housing estates, apartments and villages, and lowercase "jl" addresses.
@@ -153,7 +162,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/lokal-id/lokal/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/lokal-id/lokal/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/lokal-id/lokal/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/lokal-id/lokal/compare/v0.3.0...v0.4.0
