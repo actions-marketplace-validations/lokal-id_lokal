@@ -4,6 +4,14 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.7.2] - 2026-10-27
+
+The browser extension. npm, PyPI, and the GitHub Action are released with the same version and no other changes.
+
+### Fixed
+
+- In ChatGPT, a typed message with personal data was not replaced by its masked version when Enter was pressed: the masked text was added after it, the real value stayed in the box, and each Enter added another copy. Nothing was sent, since the extension holds Enter while personal data is in the box. ChatGPT's editor reads a new selection a moment later than other editors; the extension now waits for it, checks that the box holds the masked text, and holds the message with a notice if it cannot replace it.
+
 ## [0.7.1] - 2026-10-27
 
 npm (`@lokal-id/core`, `@lokal-id/mcp`), PyPI (`lokal-id`), the GitHub Action, and the browser extension.
@@ -184,7 +192,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.7.1...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.7.2...HEAD
+[0.7.2]: https://github.com/lokal-id/lokal/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/lokal-id/lokal/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/lokal-id/lokal/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/lokal-id/lokal/compare/v0.5.0...v0.6.0
