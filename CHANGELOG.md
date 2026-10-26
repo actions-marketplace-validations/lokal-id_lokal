@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-10-27
+
+npm (`@lokal-id/core`, `@lokal-id/mcp`), PyPI (`lokal-id`), the GitHub Action, and the browser extension.
+
 ### Added
 
 - `parse_alamat`, `parse_nik`, `parse_phone`, and `validate_npwp` in the MCP server take placeholders from `read_file_masked` (`[ADDRESS_3]`, `[NIK_1]`, `[PHONE_2]`). The server reads the real value from its own vault, on the user's machine, and returns the regions and codes, validity, and operator; the street, RT/RW, birth date, and gender come back as new placeholders that `write_file_unmasked` restores. Before, an agent that read a customer file through the mask could not clean its address column at all: `parse_alamat("[ADDRESS_5]")` found no region.
@@ -180,7 +184,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.7.1...HEAD
+[0.7.1]: https://github.com/lokal-id/lokal/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/lokal-id/lokal/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/lokal-id/lokal/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/lokal-id/lokal/compare/v0.4.1...v0.5.0
