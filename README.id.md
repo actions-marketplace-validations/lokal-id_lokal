@@ -194,7 +194,7 @@ Paket Python adalah port dari `@lokal-id/core` dengan aturan dan data yang sama,
 import {
   parseNik, parsePhone, formatRupiah, parseRupiah, terbilang, addWorkingDays, isWorkingDay, parseQris, setQrisAmount,
 } from '@lokal-id/core';
-import { listWilayah, searchWilayah, wilayahName, findByPostalCode } from '@lokal-id/core/wilayah';
+import { listWilayah, searchWilayah, wilayahName, findByPostalCode, parseAlamat } from '@lokal-id/core/wilayah';
 
 parseNik('3201011508950001', { lookupWilayah: wilayahName });
 // { valid: true, province: 'Jawa Barat', regency: 'Kabupaten Bogor', district: 'Cibinong',
@@ -211,6 +211,10 @@ parseRupiah('sejuta setengah');          // { amount: 1500000, approximate: fals
 listWilayah('32.76');                    // kecamatan di Kota Depok
 searchWilayah('kab. bogor')[0].code;     // '32.01'
 findByPostalCode('16431');               // kelurahan yang memakai kode pos ini
+parseAlamat('jl margonda raya no 100 rt 3/5 kemiri muka beji depok 16423');
+// { street: 'jl margonda raya no 100', rt: '003', rw: '005', postalCode: '16423',
+//   kelurahanDesa: { code: '32.76.06.1004', name: 'Kemiri Muka', … }, kecamatan: { name: 'Beji', … },
+//   kabupatenKota: { name: 'Kota Depok', … }, provinsi: { name: 'Jawa Barat', … }, confidence: 'high', issues: [] }
 
 addWorkingDays('2026-03-17', 1);         // '2026-03-25', melewati Nyepi dan Lebaran
 isWorkingDay('2026-12-24', { cutiBersama: false }); // true untuk kantor yang tidak ikut cuti bersama
@@ -341,7 +345,7 @@ Tidak semua orang menempel data pelanggan lewat agent. Tim CS, HR, dan finance m
 - Menyalin jawaban, dengan Ctrl+C atau tombol salin milik situs, mengembalikan nilai asli.
 - Nilai asli tidak pernah ditulis ke halaman situs, tempat skrip situs bisa membacanya, dan dilupakan saat browser ditutup. Tanpa server, tanpa request jaringan.
 
-Berjalan di ChatGPT, Claude, Gemini, Copilot, Perplexity, DeepSeek, Grok, dan Le Chat, di Chrome, Edge, dan browser Chromium lain. Belum ada di Chrome Web Store: unduh `lokal-extension-<versi>.zip` dari [rilis terbaru](https://github.com/lokal-id/lokal/releases/latest), ekstrak, lalu muat foldernya lewat **Load unpacked** (lihat [packages/extension](packages/extension/README.md), termasuk batasannya: file lampiran tidak disamarkan).
+Berjalan di ChatGPT, Claude, Gemini, Copilot, Perplexity, DeepSeek, Grok, dan Le Chat, di Chrome, Edge, dan browser Chromium lain. Belum ada di Chrome Web Store: unduh `lokal-extension-<versi>.zip` dari [rilis terbaru](https://github.com/lokal-id/lokal/releases/latest), ekstrak, lalu muat foldernya lewat **Load unpacked** (lihat [packages/extension](packages/extension/README.md), termasuk batasannya). Lampiran CSV, Excel, Word, dan PDF berteks ikut disamarkan; foto dan PDF hasil scan tidak.
 
 ### Lokal Scan: data pribadi tidak masuk repository
 
@@ -415,6 +419,7 @@ Found 2 personal data value(s) in 1 file(s).
 | `search_wilayah` | Cari provinsi, kab/kota, kecamatan, dan desa beserta kodenya |
 | `list_wilayah` | Anak wilayah untuk dropdown alamat berjenjang, beserta kode pos |
 | `lookup_kode_pos` | Kode pos → kelurahan/desa, atau semua kode pos di suatu wilayah |
+| `parse_alamat` | Alamat bebas → jalan, RT/RW, kode pos, serta kelurahan, kecamatan, kota, dan provinsi beserta kodenya; menandai kode pos yang tidak cocok |
 | `list_holidays` | Libur nasional dan cuti bersama (SKB 2026, 2027) |
 | `working_days` | Hari kerja, tenggat SLA, estimasi pengiriman |
 | `parse_qris` | Baca dan periksa payload QRIS: merchant, NMID, kriteria, nominal, CRC |
@@ -551,7 +556,7 @@ Ini sampel kecil yang disusun dari keseharian developer Indonesia. Jangan dibaca
 - [x] Dukungan `.docx` di Samaran (teks dan tabel)
 - [x] Dukungan PDF berbasis teks di Samaran (teks halaman, tabel, isian formulir)
 - [ ] OCR untuk PDF hasil scan dan foto KTP
-- [ ] Parser alamat bebas → kode wilayah
+- [x] Parser alamat bebas → kode wilayah
 - [x] Transport HTTP untuk ChatGPT dan agent berbasis web
 - [x] Library Python (`lokal-id`) dengan hasil yang sama dengan TypeScript
 - [ ] *Locale pack* untuk negara lain (Malaysia, Filipina, Vietnam)

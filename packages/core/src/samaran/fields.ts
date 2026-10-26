@@ -92,6 +92,8 @@ const TYPE_WORDS = new Set([
   'optional', 'nullable', 'unique', 'str', 'list', 'dict', 'enum', 'json', 'uuid', 'unknown', 'void',
 ]);
 
+const CODE_FILE = /[\w-]\.(?:m?[jt]sx?|cjs|cts|py|json|ya?ml|sh|toml)\b/i;
+
 const DIGIT_TYPES: ReadonlySet<PiiType> = new Set([
   'NIK', 'KK', 'NPWP', 'NIP', 'SIM', 'BPJS', 'NISN', 'PHONE', 'BANK_ACCOUNT', 'CARD',
 ]);
@@ -120,6 +122,8 @@ export function isPlausibleValue(type: PiiType, value: string, key: string): boo
   if (/^(?:new|await|typeof|function|return|yield|async)\s|^[A-Za-z_$][\w$.]*\($/.test(v)) return false;
   if (type === 'AKTA' && v.replace(/\D/g, '').length < 4) return false;
   if (type === 'ADDRESS' && !/\s/.test(v)) return false; // a real address has more than one word
+  // `"eval:alamat": "node evals/alamat-bench.mjs"` in a package.json is a command.
+  if (type === 'ADDRESS' && CODE_FILE.test(v)) return false;
   // `user.name` is code; initials ("A.S.", "M. R.") are a person.
   const initials = type === 'NAME' && /^(?:[A-Z]\.[ \t]?){1,4}$/.test(v);
   if (type !== 'ADDRESS' && (/[()]/.test(v) || (!initials && /^[a-z_$][\w$]*\.[a-z_$][\w$.]*$/i.test(v)))) return false;

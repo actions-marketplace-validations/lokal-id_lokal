@@ -1,12 +1,12 @@
 # Privacy policy: Lokal browser extension
 
-Last updated: 22 October 2026
+Last updated: 26 October 2026
 
 Lokal is an open-source extension that masks Indonesian personal data before you send it to AI chat sites. This policy covers the extension only.
 
 ## What the extension handles
 
-On the AI chat sites it runs on, the extension reads text you paste or type into the message box and the text of the conversation, to find personal data such as ID numbers (NIK, KK, NPWP), phone numbers, bank accounts, names, addresses, and health data.
+On the AI chat sites it runs on, the extension reads text you paste or type into the message box, files you attach, drop, or paste into the page, and the text of the conversation, to find personal data such as ID numbers (NIK, KK, NPWP), phone numbers, bank accounts, names, addresses, and health data.
 
 ## What it keeps, and where
 
@@ -18,6 +18,7 @@ On the AI chat sites it runs on, the extension reads text you paste or type into
 - It sends nothing to Lokal or to anyone else. It has no server, no account, no analytics, and makes no network requests.
 - It does not sell, share, or transfer any data, and does not use it for any purpose other than masking and restoring it for you.
 - It does not write real values into the pages of the AI sites.
+- It does not keep attached files. A file is read in the page to check it; a masked copy replaces it only when it holds personal data.
 
 What you send to an AI site, masked or not, is governed by that site's own privacy policy.
 

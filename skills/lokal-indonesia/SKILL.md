@@ -20,13 +20,14 @@ Region names, kode pos, and holiday dates are exactly the facts models get subtl
 | Read amounts like "2jtan", "goceng", "sejuta setengah" | `parse_rupiah` |
 | Region names and codes, cascading address data | `search_wilayah`, `list_wilayah` |
 | Kode pos of a kelurahan, or villages of a kode pos | `lookup_kode_pos` |
+| A typed address → kelurahan, kecamatan, kota, provinsi, and their codes; checking a kode pos | `parse_alamat` |
 | Libur nasional and cuti bersama | `list_holidays` |
 | SLA / delivery dates in working days | `working_days` |
 
 In application code, use the library instead of copying values into the code:
 
 - `@lokal-id/core` (browser-safe): `parseNik`, `parseNpwp`, `parsePhone`, `formatRupiah`, `parseRupiah`, `terbilang`, `getHolidays`, `isWorkingDay`, `addWorkingDays`, `Samaran`.
-- `@lokal-id/core/wilayah` (Node): `listWilayah`, `searchWilayah`, `getWilayah`, `findByPostalCode`, `postalCodesIn`. Ships Kemendagri data: 38 provinces, 514 kabupaten/kota, 7,285 kecamatan, 83,762 kelurahan/desa, each with its kode pos.
+- `@lokal-id/core/wilayah` (Node): `listWilayah`, `searchWilayah`, `getWilayah`, `findByPostalCode`, `postalCodesIn`, `parseAlamat`. Ships Kemendagri data: 38 provinces, 514 kabupaten/kota, 7,285 kecamatan, 83,762 kelurahan/desa, each with its kode pos.
 
 Never hardcode a list of provinces, cities, kode pos, or holidays from memory.
 

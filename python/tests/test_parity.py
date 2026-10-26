@@ -201,3 +201,13 @@ def test_field_type_and_partial_mask() -> None:
         assert lokal.field_type(case['key']) == case['out'], case['key']
     for case in load('samaran_partial.json'):
         assert lokal.partial_mask(case['type'], case['value']) == case['out'], case
+
+
+_CAMEL_LEVEL = {'kabupaten_kota': 'kabupatenKota', 'kelurahan_desa': 'kelurahanDesa'}
+
+
+def test_parse_alamat_matches() -> None:
+    for case in load('alamat.json'):
+        got = wilayah.parse_alamat(case['input']).to_dict(camel=True)
+        got['inferred'] = [_CAMEL_LEVEL.get(level, level) for level in got['inferred']]
+        assert got == case['out'], case['input']

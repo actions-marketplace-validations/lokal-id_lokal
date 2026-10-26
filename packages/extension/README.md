@@ -12,6 +12,7 @@ It works on ChatGPT, Claude, Gemini (and AI Studio), Microsoft Copilot, Perplexi
 - **Typing.** When a message you typed contains personal data, Enter or the send button masks it first and waits. Check the message, then send it again.
 - **Reading the answer.** Placeholders in the conversation are highlighted. Point at one to see the real value.
 - **Copying.** Ctrl+C, and the site's own copy buttons, put the answer on the clipboard with the real values back.
+- **Attachments.** A file chosen with the site's attach button, dropped on the page, or pasted is checked before the site gets it. Text files (CSV, JSON, logs, SQL, code) are masked and keep their name. An Excel file becomes one masked CSV per sheet, and a Word document or a PDF with a text layer becomes one masked text file, since the extension cannot write `.xlsx`, `.docx`, or PDF. A file without personal data is uploaded unchanged.
 - **Consistent placeholders.** The same NIK is `[NIK_1]` in every tab, so the model can still compare and join records.
 
 The real values are **never written into the site's page**, where the site's own scripts could read them. They stay in the extension: highlighted placeholders in the page, the value in a tooltip the page cannot read, and the clipboard when you copy.
@@ -42,7 +43,8 @@ Then load `packages/extension/dist` the same way.
 
 ## Limitations
 
-- **Attached files and images are not masked.** A CSV, Excel file, PDF, or photo of a KTP uploaded to the chat is sent as it is. Paste the text instead, or use [Lokal for agents](https://github.com/lokal-id/lokal#quick-start) to read files masked.
+- **Images, scanned PDFs, and some files are not masked.** A photo of a KTP, a scanned PDF, a password-protected PDF, an old `.xls` or `.doc`, an archive, or a file over 20 MB is uploaded as it is, with a notice for the documents it could not read. Formatting and formulas of an Excel file with personal data are lost in the masked CSV.
+- A site that opens its own file picker without a file input on the page, or reads files inside a shadow root, is not covered. It works with the file inputs, drop zones, and paste handlers these sites use today, tested on a page that behaves like them.
 - Text dropped by drag and drop is not masked.
 - Detection is pattern-based (see [Limitations](https://github.com/lokal-id/lokal#limitations)). A name with no label or cue around it can slip through.
 - After the browser restarts, old conversations show placeholders that can no longer be restored.

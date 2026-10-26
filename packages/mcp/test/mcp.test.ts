@@ -65,7 +65,7 @@ async function call(name: string, args: Record<string, unknown> = {}) {
 test('server mengiklankan semua tool beserta instruksinya', async () => {
   const { tools } = await client.listTools();
   assert.deepEqual(tools.map((t) => t.name).sort(), [
-    'anonymize_file', 'format_rupiah', 'list_holidays', 'list_wilayah', 'lookup_kode_pos', 'parse_nik', 'parse_phone', 'parse_qris',
+    'anonymize_file', 'format_rupiah', 'list_holidays', 'list_wilayah', 'lookup_kode_pos', 'parse_alamat', 'parse_nik', 'parse_phone', 'parse_qris',
     'parse_rupiah', 'read_file_masked', 'scan_pii', 'search_wilayah', 'set_qris_amount', 'validate_npwp',
     'working_days', 'write_file_unmasked',
   ]);
@@ -124,6 +124,10 @@ test('kode pos, hari libur, dan hari kerja', async () => {
   assert.ok(depok.data.some((w: any) => w.path.includes('Kota Depok')));
   assert.ok((await call('lookup_kode_pos', { wilayah_code: '32.76.01' })).data.postalCodes.includes('16436'));
   assert.equal((await call('lookup_kode_pos', {})).isError, true);
+  const alamat = (await call('parse_alamat', { address: 'jl margonda raya no 100 rt 3/5 kemiri muka beji depok 16423' })).data;
+  assert.equal(alamat.kelurahanDesa.code, '32.76.06.1004');
+  assert.equal(alamat.confidence, 'high');
+  assert.equal(alamat.rt, '003');
   const villages = (await call('list_wilayah', { parent_code: '32.76.01' })).data;
   assert.ok(villages.every((v: any) => /^\d{5}$/.test(v.postalCode)));
 

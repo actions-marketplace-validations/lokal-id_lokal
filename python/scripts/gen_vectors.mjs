@@ -196,6 +196,40 @@ emit('wilayah.json', {
   ].map(([q, o]) => ({ q, o: o ?? {}, out: plain(wil.searchWilayah(q, o)) })),
 });
 
+// ---------------------------------------------------------------- parseAlamat
+// Every string literal in the address tests, then addresses built from random villages in the ways people write
+// them: with level words or none, capitals, lowercase without commas, levels left out, a wrong kode pos.
+const addresses = [];
+for (const m of readFileSync(path.join(ROOT, 'packages/core/test/alamat.test.ts'), 'utf8').matchAll(/'((?:[^'\\\n]|\\.)*)'/g)) {
+  addresses.push(m[1].replace(/\\'/g, "'"));
+}
+// Its own seed, so adding cases here leaves the other vectors as they are.
+const savedSeed = seed;
+seed = 0xa1a3a7;
+const villageCodes = Object.keys(JSON.parse(readFileSync(path.join(ROOT, 'packages/core/data/desa.json'), 'utf8')));
+const STREETS = ['Jl. Melati', 'Jl. Kenanga No. 12', 'Gg. Mawar 3', 'Jalan Flamboyan 7', 'Perum Griya Asri Blok C2 No. 7', 'Kp. Rawa Badak'];
+for (let i = 0; i < 400; i++) {
+  const v = wil.getWilayah(pick(villageCodes));
+  const [kel, kec, kab, prov] = [v, ...[3, 2, 1].map((n) => wil.getWilayah(v.code.split('.').slice(0, n).join('.')))];
+  const kabName = kab.name.replace(/^(?:Kabupaten|Kota)(?: Administrasi)? /, '');
+  const parts = [
+    rand() < 0.7 ? pick(STREETS) : '',
+    rand() < 0.4 ? `RT ${pad(int(1, 12), int(1, 3))}/RW ${pad(int(1, 9), int(1, 3))}` : '',
+    rand() < 0.85 ? `${rand() < 0.4 ? pick(['Kel. ', 'Ds. ', 'Desa ', 'Kelurahan ']) : ''}${kel.name}` : '',
+    rand() < 0.7 ? `${rand() < 0.4 ? pick(['Kec. ', 'Kecamatan ']) : ''}${kec.name}` : '',
+    rand() < 0.8 ? `${rand() < 0.5 ? (kab.type === 'kota' ? 'Kota ' : pick(['Kab. ', 'Kabupaten '])) : ''}${kabName}` : '',
+    rand() < 0.4 ? prov.name : '',
+  ].filter(Boolean);
+  let text = parts.join(rand() < 0.6 ? ', ' : ' ');
+  const postal = rand();
+  if (postal < 0.4 && kel.postalCode) text += ` ${kel.postalCode}`;
+  else if (postal < 0.5) text += ` ${int(10000, 99999)}`;
+  const cased = rand();
+  addresses.push(cased < 0.2 ? text.toUpperCase() : cased < 0.4 ? text.toLowerCase() : text);
+}
+emit('alamat.json', addresses.map((input) => ({ input, out: plain(wil.parseAlamat(input)) })));
+seed = savedSeed;
+
 // ---------------------------------------------------------------- Samaran
 const docs = [];
 const add = (text) => docs.push(text);

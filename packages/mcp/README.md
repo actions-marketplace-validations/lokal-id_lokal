@@ -58,6 +58,7 @@ The file tools can only access `LOKAL_ROOT`, which defaults to `CLAUDE_PROJECT_D
 | `format_rupiah` / `parse_rupiah` | `Rp1.500.000`, *terbilang*; "2jtan", "goceng" → numbers |
 | `search_wilayah` / `list_wilayah` | Provinces down to villages, with codes and postal codes |
 | `lookup_kode_pos` | Postal code → villages, or all postal codes in a region |
+| `parse_alamat` | Free-text address → street, RT/RW, kode pos, and Kemendagri regions with their codes |
 | `list_holidays` / `working_days` | National holidays and *cuti bersama* (SKB 2026, 2027), SLA due dates |
 | `scan_pii` | Scan files and folders for personal data by UU PDP category; reports files it could not scan |
 | `read_file_masked` | Read a file (text, CSV, JSON, logs, `.xlsx`, `.docx`, text-based PDF) with personal data replaced by placeholders |

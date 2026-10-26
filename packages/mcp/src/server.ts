@@ -32,6 +32,7 @@ import {
   findByPostalCode,
   getWilayah,
   listWilayah,
+  parseAlamat,
   postalCodesIn,
   searchWilayah,
   wilayahName,
@@ -44,7 +45,7 @@ const FILE_LIMIT = 5000;
 
 const INSTRUCTIONS = `Lokal makes you Indonesia-ready.
 
-Data tools (use them instead of guessing): parse_nik, validate_npwp, parse_phone, format_rupiah, parse_rupiah, search_wilayah, list_wilayah, lookup_kode_pos, list_holidays, working_days, parse_qris, set_qris_amount. Region lists, kode pos, holidays, NIK structure, Rupiah formatting, and QRIS checksums are easy to get subtly wrong from memory.
+Data tools (use them instead of guessing): parse_nik, validate_npwp, parse_phone, format_rupiah, parse_rupiah, search_wilayah, list_wilayah, lookup_kode_pos, parse_alamat, list_holidays, working_days, parse_qris, set_qris_amount. Region lists, kode pos, holidays, NIK structure, Rupiah formatting, and QRIS checksums are easy to get subtly wrong from memory.
 
 Privacy tools (Samaran): when a task touches real user data — logs, CSV/Excel exports, database dumps, support tickets, seed files from production — run scan_pii first, then read it with read_file_masked instead of reading the raw file (also never cat/head/type it in a shell). Identifiers (NIK, KK, NPWP, phone, bank account, BPJS, passport …), names, addresses, birth dates, and the UU PDP categories (religion, marital status, health, finances, criminal records, biometrics) come back as stable placeholders like [NIK_1]. Work with the placeholders; never ask the user for the real values. When output must contain the real data (a cleaned CSV, a report), write it with write_file_unmasked, which restores the placeholders on the user's machine. To copy production data to staging, build seeders, or share it with a vendor, use anonymize_file: it writes a copy where every person is a realistic stand-in. If scan_pii reports files it could not scan, tell the user; do not treat them as clean.`;
 
@@ -265,6 +266,18 @@ export function createServer(
       }
       return fail('Give kode_pos or wilayah_code.');
     },
+  );
+
+  server.registerTool(
+    'parse_alamat',
+    {
+      title: 'Parse an Indonesian address',
+      description:
+        'Read a free-text Indonesian address ("Jl. Margonda Raya No. 100 RT 3/5 Kemiri Muka, Beji, Depok 16423") into street, RT/RW, kode pos, and the Kemendagri kelurahan/desa, kecamatan, kabupaten/kota, and provinsi with their codes. Handles missing commas, capitals, abbreviations (Kel., Kec., Kab., Jaksel, Jabar), and left-out levels. Check confidence and issues: a kode pos that belongs to another kelurahan, a village that is not in the data, or an address that fits more than one region (see alternatives). Use it to clean address columns, fill region dropdowns from typed addresses, or check a shipping address.',
+      inputSchema: { address: z.string().max(2000) },
+      annotations: readOnly,
+    },
+    async ({ address }) => json(parseAlamat(address)),
   );
 
   server.registerTool(

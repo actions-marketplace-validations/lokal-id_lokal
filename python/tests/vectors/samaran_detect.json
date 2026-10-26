@@ -1978,6 +1978,690 @@
   "matches": []
  },
  {
+  "text": "../src/wilayah.ts",
+  "matches": []
+ },
+ {
+  "text": "a full address with commas and level words",
+  "matches": []
+ },
+ {
+  "text": "Jl. Melati No. 12 RT 003/RW 005, Kel. Cempaka Putih Timur, Kec. Cempaka Putih, Jakarta Pusat 10510",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    31,
+    "Jl. Melati No. 12 RT 003/RW 005",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "31.71.05.1001",
+  "matches": []
+ },
+ {
+  "text": "high",
+  "matches": []
+ },
+ {
+  "text": "Jl. Melati No. 12",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    17,
+    "Jl. Melati No. 12",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "003",
+  "matches": []
+ },
+ {
+  "text": "005",
+  "matches": []
+ },
+ {
+  "text": "10510",
+  "matches": []
+ },
+ {
+  "text": "Cempaka Putih Timur",
+  "matches": []
+ },
+ {
+  "text": "Cempaka Putih",
+  "matches": []
+ },
+ {
+  "text": "Kota Administrasi Jakarta Pusat",
+  "matches": []
+ },
+ {
+  "text": "31",
+  "matches": []
+ },
+ {
+  "text": "provinsi",
+  "matches": []
+ },
+ {
+  "text": "Jl. Melati No. 12, RT 003/RW 005, Kelurahan Cempaka Putih Timur, Kecamatan Cempaka Putih, Kota Administrasi Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10510",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    32,
+    "Jl. Melati No. 12, RT 003/RW 005",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "lowercase, no commas, RT/RW written short",
+  "matches": []
+ },
+ {
+  "text": "jl margonda raya no 100 rt 3/5 kemiri muka beji depok 16423",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    23,
+    "jl margonda raya no 100",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "32.76.06.1004",
+  "matches": []
+ },
+ {
+  "text": "high",
+  "matches": []
+ },
+ {
+  "text": "jl margonda raya no 100",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    23,
+    "jl margonda raya no 100",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "003",
+  "matches": []
+ },
+ {
+  "text": "005",
+  "matches": []
+ },
+ {
+  "text": "16423",
+  "matches": []
+ },
+ {
+  "text": "jl. melati wuwur gabus pati 59173",
+  "matches": []
+ },
+ {
+  "text": "33.18.11.2001",
+  "matches": []
+ },
+ {
+  "text": "capitals and abbreviations as on a KTP",
+  "matches": []
+ },
+ {
+  "text": "alamat: ds. ciherang kec. pacet kab. cianjur",
+  "matches": [
+   [
+    "ADDRESS",
+    8,
+    44,
+    "ds. ciherang kec. pacet kab. cianjur",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "32.03.10.2001",
+  "matches": []
+ },
+ {
+  "text": "Gg. Mawar 3, Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor, Jabar",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    11,
+    "Gg. Mawar 3",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "32.01.16.2013",
+  "matches": []
+ },
+ {
+  "text": "Dsn. Krajan RT 2 RW 1 Ds. Sumberejo Kec. Batu Kota Batu",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    21,
+    "Dsn. Krajan RT 2 RW 1",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "35.79.01.2005",
+  "matches": []
+ },
+ {
+  "text": "Dsn. Krajan",
+  "matches": []
+ },
+ {
+  "text": "short names for Jakarta, Tangerang Selatan, and provinces",
+  "matches": []
+ },
+ {
+  "text": "Kebayoran Baru, Jaksel",
+  "matches": []
+ },
+ {
+  "text": "31.74.07",
+  "matches": []
+ },
+ {
+  "text": "Pondok Aren, Tangsel",
+  "matches": []
+ },
+ {
+  "text": "36.74.03",
+  "matches": []
+ },
+ {
+  "text": "Medan Baru, Medan, Sumut",
+  "matches": []
+ },
+ {
+  "text": "12.71.17",
+  "matches": []
+ },
+ {
+  "text": "Depok, Sleman, DIY",
+  "matches": []
+ },
+ {
+  "text": "34.04.07",
+  "matches": []
+ },
+ {
+  "text": "Depok the kecamatan in Sleman, not Kota Depok",
+  "matches": []
+ },
+ {
+  "text": "\"Kota\" and \"Kab.\" tell the kota from the kabupaten; without them it is a guess",
+  "matches": []
+ },
+ {
+  "text": "Kota Bogor",
+  "matches": []
+ },
+ {
+  "text": "32.71",
+  "matches": []
+ },
+ {
+  "text": "Kab. Bogor",
+  "matches": []
+ },
+ {
+  "text": "32.01",
+  "matches": []
+ },
+ {
+  "text": "Bogor",
+  "matches": []
+ },
+ {
+  "text": "low",
+  "matches": []
+ },
+ {
+  "text": "32.71",
+  "matches": []
+ },
+ {
+  "text": "a kode pos that belongs elsewhere is reported, one that is not registered too",
+  "matches": []
+ },
+ {
+  "text": "Kemiri Muka, Beji, Depok 16424",
+  "matches": []
+ },
+ {
+  "text": "32.76.06.1004",
+  "matches": []
+ },
+ {
+  "text": "high",
+  "matches": []
+ },
+ {
+  "text": "Kode pos 16424 bukan milik Kelurahan Kemiri Muka (kode posnya 16423).",
+  "matches": []
+ },
+ {
+  "text": "Kemiri Muka, Beji, Depok 16999",
+  "matches": []
+ },
+ {
+  "text": "Kode pos 16999 tidak terdaftar.",
+  "matches": []
+ },
+ {
+  "text": "the kode pos fills in the kelurahan the address leaves out",
+  "matches": []
+ },
+ {
+  "text": "Jalan Diponegoro 22 Bandung 40115",
+  "matches": []
+ },
+ {
+  "text": "32.73.09.1003",
+  "matches": []
+ },
+ {
+  "text": "provinsi",
+  "matches": []
+ },
+ {
+  "text": "kecamatan",
+  "matches": []
+ },
+ {
+  "text": "kelurahanDesa",
+  "matches": []
+ },
+ {
+  "text": "Jalan Diponegoro 22",
+  "matches": []
+ },
+ {
+  "text": "16424",
+  "matches": []
+ },
+ {
+  "text": "32.76.06.1005",
+  "matches": []
+ },
+ {
+  "text": "low",
+  "matches": []
+ },
+ {
+  "text": "a named village that is not in the data is reported, and the rest still found",
+  "matches": []
+ },
+ {
+  "text": "KP. RAWA BADAK RT 01 RW 02 DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+  "matches": [
+   [
+    "ADDRESS",
+    15,
+    26,
+    "RT 01 RW 02",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "32.15.30",
+  "matches": []
+ },
+ {
+  "text": "Kelurahan/desa Sukamaju tidak ditemukan di Kecamatan Cilebar menurut data Kemendagri.",
+  "matches": []
+ },
+ {
+  "text": "a city inside a street name does not win over the kecamatan after it",
+  "matches": []
+ },
+ {
+  "text": "Jl. Raya Bogor KM 30, Cimanggis, Depok",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    20,
+    "Jl. Raya Bogor KM 30",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "32.76.02",
+  "matches": []
+ },
+ {
+  "text": "Jl. Raya Bogor KM 30",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    20,
+    "Jl. Raya Bogor KM 30",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "Jl. Bogor Raya No 5, Cibubur, Ciracas, Jakarta Timur",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    19,
+    "Jl. Bogor Raya No 5",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "31.75.09.1002",
+  "matches": []
+ },
+ {
+  "text": "a kecamatan and kelurahan with the same name: the kecamatan, unless something points at the kelurahan",
+  "matches": []
+ },
+ {
+  "text": "Kuta, Badung, Bali",
+  "matches": []
+ },
+ {
+  "text": "51.03.01",
+  "matches": []
+ },
+ {
+  "text": "Kel. Kuta, Kuta, Badung",
+  "matches": []
+ },
+ {
+  "text": "51.03.01.1002",
+  "matches": []
+ },
+ {
+  "text": "Sumbersari, Jember 68121",
+  "matches": []
+ },
+ {
+  "text": "35.09.21.1002",
+  "matches": []
+ },
+ {
+  "text": "the kode pos is the kelurahan’s",
+  "matches": []
+ },
+ {
+  "text": "names written with or without spaces and apostrophes",
+  "matches": []
+ },
+ {
+  "text": "Ds. Suka Maju, Kec. Cibungbulang, Kab. Bogor",
+  "matches": []
+ },
+ {
+  "text": "Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor",
+  "matches": []
+ },
+ {
+  "text": "Murung Ta’al, Labuan Amas Selatan, Hulu Sungai Tengah",
+  "matches": []
+ },
+ {
+  "text": "63.07.03.2015",
+  "matches": []
+ },
+ {
+  "text": "text with no region in it",
+  "matches": []
+ },
+ {
+  "text": "tolong kirim besok pagi ya",
+  "matches": []
+ },
+ {
+  "text": "none",
+  "matches": []
+ },
+ {
+  "text": "",
+  "matches": []
+ },
+ {
+  "text": "none",
+  "matches": []
+ },
+ {
+  "text": "Google Maps style: shortened words, a Plus Code, the province written out",
+  "matches": []
+ },
+ {
+  "text": "Jl. Kenanga No.8, Gandaria Utara, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12140",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    16,
+    "Jl. Kenanga No.8",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "31.74.07.1009",
+  "matches": []
+ },
+ {
+  "text": "high",
+  "matches": []
+ },
+ {
+  "text": "Jl. Mawar No.3, Kec. Metro Bar., Kota Metro, Lampung",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    14,
+    "Jl. Mawar No.3",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "18.72.03",
+  "matches": []
+ },
+ {
+  "text": "Jl. Anggrek 4, Tj. Priok, Kota Jkt Utara",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    13,
+    "Jl. Anggrek 4",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "31.72.02",
+  "matches": []
+ },
+ {
+  "text": "92JW+6X7, Jl. Kenanga No. 2, Beji, Depok",
+  "matches": [
+   [
+    "ADDRESS",
+    10,
+    27,
+    "Jl. Kenanga No. 2",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Jl. Kenanga No. 2",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    17,
+    "Jl. Kenanga No. 2",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "a kelurahan named with its kecamatan wins over the kelurahan that owns a wrong kode pos",
+  "matches": []
+ },
+ {
+  "text": "Jl. Tulip 5, Lengkong Gudang, Serpong, Tangerang Selatan 15311",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    11,
+    "Jl. Tulip 5",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "36.74.01.1004",
+  "matches": []
+ },
+ {
+  "text": "Kode pos 15311 bukan milik Kelurahan Lengkong Gudang (kode posnya 15321).",
+  "matches": []
+ },
+ {
+  "text": "\"Kel.\" prefers a kelurahan and \"Desa\" a desa; a dusun is part of the street",
+  "matches": []
+ },
+ {
+  "text": "Gg. Mawar, Kel. Kamal",
+  "matches": []
+ },
+ {
+  "text": "31.73.06.1004",
+  "matches": []
+ },
+ {
+  "text": "Dusun Donomulyo, Desa Adipuro",
+  "matches": []
+ },
+ {
+  "text": "Dusun Donomulyo",
+  "matches": []
+ },
+ {
+  "text": "Adipuro",
+  "matches": []
+ },
+ {
+  "text": "level words and province names inside other names",
+  "matches": []
+ },
+ {
+  "text": "Jalan Kota Baru No. 3",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    21,
+    "Jalan Kota Baru No. 3",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "none",
+  "matches": []
+ },
+ {
+  "text": "Jalan Kota Baru No. 3",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    21,
+    "Jalan Kota Baru No. 3",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Jl. Merpati, Sidodadi, Lampung Timur",
+  "matches": []
+ },
+ {
+  "text": "18.07",
+  "matches": []
+ },
+ {
+  "text": "RT/RW and kode pos written with a colon, numbers in names written as Roman numerals",
+  "matches": []
+ },
+ {
+  "text": "Jl. Rambutan Rt:30 Rw:10 Kode Pos:30144 Kecamatan: Ilir Barat II",
+  "matches": []
+ },
+ {
+  "text": "Jl. Rambutan",
+  "matches": []
+ },
+ {
+  "text": "030",
+  "matches": []
+ },
+ {
+  "text": "010",
+  "matches": []
+ },
+ {
+  "text": "30144",
+  "matches": []
+ },
+ {
+  "text": "Ilir Barat Dua",
+  "matches": []
+ },
+ {
+  "text": "node:test",
+  "matches": []
+ },
+ {
+  "text": "node:assert/strict",
+  "matches": []
+ },
+ {
   "text": "../src/index.ts",
   "matches": []
  },
@@ -10409,6 +11093,34 @@
   "matches": []
  },
  {
+  "text": "script di package.json yang bernama alamat bukan alamat",
+  "matches": []
+ },
+ {
+  "text": "\"eval:alamat\": \"node evals/alamat-bench.mjs\",",
+  "matches": []
+ },
+ {
+  "text": "\"alamat\": \"Jl. Melati No. 5, Beji, Depok\"",
+  "matches": [
+   [
+    "ADDRESS",
+    11,
+    40,
+    "Jl. Melati No. 5, Beji, Depok",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": ":",
+  "matches": []
+ },
+ {
+  "text": "ADDRESS",
+  "matches": []
+ },
+ {
   "text": "data anak dan catatan sipil: NISN dan nomor akta",
   "matches": []
  },
@@ -11051,6 +11763,10 @@
   "matches": []
  },
  {
+  "text": "parse_alamat",
+  "matches": []
+ },
+ {
   "text": "parse_nik",
   "matches": []
  },
@@ -11420,6 +12136,34 @@
  },
  {
   "text": "lookup_kode_pos",
+  "matches": []
+ },
+ {
+  "text": "parse_alamat",
+  "matches": []
+ },
+ {
+  "text": "jl margonda raya no 100 rt 3/5 kemiri muka beji depok 16423",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    23,
+    "jl margonda raya no 100",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "32.76.06.1004",
+  "matches": []
+ },
+ {
+  "text": "high",
+  "matches": []
+ },
+ {
+  "text": "003",
   "matches": []
  },
  {

@@ -3,6 +3,7 @@
 // (analytics, session replay) could read them there. Placeholders stay in the page, highlighted; the value shows in a
 // tooltip inside a closed shadow root, and copying puts the real values on the clipboard.
 import { detectPii } from '../../core/src/samaran/detectors.ts';
+import { attachmentKind, maskedFiles, readAttachment } from './attachments.ts';
 import {
   findPlaceholders,
   describe,
@@ -136,6 +137,8 @@ window.addEventListener(
     if (!enabled || ours.has(event)) return;
     const root = editableRoot(event.target);
     const text = event.clipboardData?.getData('text/plain');
+    // A file copied in the file manager arrives as a file without text.
+    if (!text && event.clipboardData && holdFiles(event, event.clipboardData.files)) return;
     if (!root || !text || !containsPii(text)) return;
     // Hold the paste now; masking happens in the service worker.
     event.preventDefault();
@@ -148,6 +151,132 @@ window.addEventListener(
         if (result.types.length) toast(t.masked(describe(result.types, lang)));
       })
       .catch(() => toast(t.failed));
+  },
+  true,
+);
+
+// --- attachments -----------------------------------------------------------------------------------------------
+
+// Files chosen with the site's file picker, dropped on the page, or pasted are held until they are checked. A file
+// with personal data is replaced by a masked copy; one without is let through unchanged, formatting and all. Images
+// and other files Lokal cannot read pass at once.
+
+const fileList = (files: Iterable<File>) => {
+  const data = new DataTransfer();
+  for (const file of files) data.items.add(file);
+  return data;
+};
+
+async function maskFiles(files: File[]): Promise<File[]> {
+  const out: File[] = [];
+  const types: MaskResponse['types'] = [];
+  const changed: string[] = [];
+  const notes: string[] = [];
+  let converted = false;
+  if (files.some((f) => f.size > 1024 * 1024)) toast(t.checkingFiles);
+  for (const file of files) {
+    const read = readAttachment(file.name, new Uint8Array(await file.arrayBuffer()), file.type);
+    if (!read) {
+      out.push(file);
+      continue;
+    }
+    if ('reason' in read) {
+      notes.push(t.unreadableFile(file.name, t.why[read.reason]));
+      out.push(file);
+      continue;
+    }
+    const masked: string[] = [];
+    let found = 0;
+    for (const part of read.parts) {
+      const result = await send<MaskResponse>({ type: 'mask', text: part.csv });
+      vault = new Map(result.vault);
+      masked.push(result.text);
+      types.push(...result.types);
+      found += result.types.length;
+    }
+    if (!found) {
+      out.push(file);
+      continue;
+    }
+    changed.push(file.name);
+    for (const m of maskedFiles(file.name, file.type, read, masked)) {
+      out.push(new File([m.text], m.name, { type: m.type, lastModified: file.lastModified }));
+      if (m.name !== file.name) converted = true;
+    }
+    if (read.scannedPages) notes.push(t.scannedPages(read.scannedPages.join(', ')));
+  }
+  const messages = [];
+  if (types.length) messages.push(t.maskedFiles(describe(types, lang), changed.join(', ')));
+  if (converted) messages.push(t.convertedFiles);
+  messages.push(...notes);
+  if (messages.length) toast(messages.join(' '));
+  return out;
+}
+
+/**
+ * Holds an event that carries files Lokal can read, and dispatches it again once they are checked. `redispatch` gets
+ * the files to use instead. Returns whether the event was held.
+ */
+function holdFiles(event: Event, files: FileList | null | undefined, redispatch?: (files: File[]) => void): boolean {
+  const list = [...(files ?? [])];
+  if (!list.some((f) => attachmentKind(f.name, f.type))) return false;
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  const target = event.target as EventTarget;
+  maskFiles(list).then(
+    (checked) => {
+      if (redispatch) return redispatch(checked);
+      const again = new ClipboardEvent('paste', { clipboardData: fileList(checked), bubbles: true, cancelable: true, composed: true });
+      ours.add(again);
+      target.dispatchEvent(again);
+    },
+    () => toast(t.fileFailed),
+  );
+  return true;
+}
+
+// The site's file picker. Its input event comes first and is held with the change event; both are sent again.
+for (const type of ['input', 'change'] as const) {
+  window.addEventListener(
+    type,
+    (event) => {
+      if (!enabled || ours.has(event)) return;
+      const input = event.target;
+      if (!(input instanceof HTMLInputElement) || input.type !== 'file' || !input.files?.length) return;
+      if (type === 'input') {
+        if ([...input.files].some((f) => attachmentKind(f.name, f.type))) event.stopImmediatePropagation();
+        return;
+      }
+      holdFiles(event, input.files, (checked) => {
+        input.files = fileList(checked).files;
+        for (const name of ['input', 'change']) {
+          const again = new Event(name, { bubbles: true });
+          ours.add(again);
+          input.dispatchEvent(again);
+        }
+      });
+    },
+    true,
+  );
+}
+
+window.addEventListener(
+  'drop',
+  (event) => {
+    if (!enabled || ours.has(event)) return;
+    const { clientX, clientY, screenX, screenY, ctrlKey, shiftKey, altKey, metaKey } = event;
+    const target = event.target as EventTarget;
+    holdFiles(event, event.dataTransfer?.files, (checked) => {
+      const again = new DragEvent('drop', {
+        dataTransfer: fileList(checked),
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+        ...{ clientX, clientY, screenX, screenY, ctrlKey, shiftKey, altKey, metaKey },
+      });
+      ours.add(again);
+      target.dispatchEvent(again);
+    });
   },
   true,
 );

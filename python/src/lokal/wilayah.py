@@ -10,6 +10,7 @@ import gzip
 import json
 import re
 import threading
+from collections.abc import Iterator
 from dataclasses import dataclass
 from importlib import resources
 from typing import Literal, Optional
@@ -163,6 +164,26 @@ def find_by_postal_code(postal_code: str) -> list[Wilayah]:
     return [_to_wilayah(code, desa[code]) for code, p in _kodepos().items() if p == pos]
 
 
+_by_postal_code: Optional[dict[str, list[str]]] = None
+
+
+def villages_with_postal_code(postal_code: str) -> list[str]:
+    """Codes of the kelurahan/desa that use a kode pos; ``find_by_postal_code`` without building each region."""
+    global _by_postal_code
+    if _by_postal_code is None:
+        index: dict[str, list[str]] = {}
+        for code, pos in _kodepos().items():
+            index.setdefault(pos, []).append(code)
+        _by_postal_code = index
+    return list(_by_postal_code.get(trim(str(postal_code)), []))
+
+
+def _region_names() -> Iterator[tuple[str, str]]:
+    """Every region as (code, name), provinces to villages. For ``parse_alamat``."""
+    yield from _base().items()
+    yield from _desa().items()
+
+
 _PREFIX = re.compile(
     r'^(provinsi|prov|kabupaten|kab|kota administrasi|kota adm|kota|kecamatan|kec|distrik|kelurahan|kel|desa)\.?\s+',
     re.ASCII,
@@ -223,3 +244,8 @@ def search_wilayah(
 
     scored.sort(key=lambda s: (-s[0], s[1]))
     return [_to_wilayah(code, name) for _, code, name in scored[:limit]]
+
+
+from .alamat import AlamatLevel as AlamatLevel  # noqa: E402  (alamat uses the functions above)
+from .alamat import ParsedAlamat as ParsedAlamat  # noqa: E402
+from .alamat import parse_alamat as parse_alamat  # noqa: E402

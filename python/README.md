@@ -31,7 +31,7 @@ from lokal import (
     parse_nik, parse_npwp, parse_phone, format_rupiah, format_rupiah_short, parse_rupiah, terbilang,
     add_working_days, is_working_day,
 )
-from lokal.wilayah import list_wilayah, search_wilayah, wilayah_name, find_by_postal_code
+from lokal.wilayah import list_wilayah, search_wilayah, wilayah_name, find_by_postal_code, parse_alamat
 
 nik = parse_nik('3201011508950001', lookup_wilayah=wilayah_name)
 nik.valid, nik.regency, nik.district, nik.gender, nik.birth_date
@@ -55,6 +55,9 @@ is_working_day('2026-12-24', cuti_bersama=False)  # True for offices that ignore
 len(list_wilayah('32.76'))                  # 11 kecamatan in Kota Depok
 search_wilayah('kab. bogor')[0].code        # '32.01'
 find_by_postal_code('16431')[0].path        # 'Depok, Pancoran Mas, Kota Depok, Jawa Barat'
+
+alamat = parse_alamat('jl margonda raya no 100 rt 3/5 kemiri muka beji depok 16423')
+alamat.kelurahan_desa.code, alamat.rt, alamat.confidence   # ('32.76.06.1004', '003', 'high')
 ```
 
 Every result is a dataclass. `to_dict()` gives a JSON-ready dict without empty fields, and `to_dict(camel=True)` uses the same keys as the TypeScript package (`birthDate`, `postalCode`) for frontends that share types with it.

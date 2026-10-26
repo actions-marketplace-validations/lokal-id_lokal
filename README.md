@@ -194,7 +194,7 @@ The Python package is a port of `@lokal-id/core` with the same rules and data, v
 import {
   parseNik, parsePhone, formatRupiah, parseRupiah, terbilang, addWorkingDays, isWorkingDay, parseQris, setQrisAmount,
 } from '@lokal-id/core';
-import { listWilayah, searchWilayah, wilayahName, findByPostalCode } from '@lokal-id/core/wilayah';
+import { listWilayah, searchWilayah, wilayahName, findByPostalCode, parseAlamat } from '@lokal-id/core/wilayah';
 
 parseNik('3201011508950001', { lookupWilayah: wilayahName });
 // { valid: true, province: 'Jawa Barat', regency: 'Kabupaten Bogor', district: 'Cibinong',
@@ -211,6 +211,10 @@ parseRupiah('sejuta setengah');          // { amount: 1500000, approximate: fals
 listWilayah('32.76');                    // districts (kecamatan) of Kota Depok
 searchWilayah('kab. bogor')[0].code;     // '32.01'
 findByPostalCode('16431');               // villages that use this postal code
+parseAlamat('jl margonda raya no 100 rt 3/5 kemiri muka beji depok 16423');
+// { street: 'jl margonda raya no 100', rt: '003', rw: '005', postalCode: '16423',
+//   kelurahanDesa: { code: '32.76.06.1004', name: 'Kemiri Muka', … }, kecamatan: { name: 'Beji', … },
+//   kabupatenKota: { name: 'Kota Depok', … }, provinsi: { name: 'Jawa Barat', … }, confidence: 'high', issues: [] }
 
 addWorkingDays('2026-03-17', 1);         // '2026-03-25', skipping Nyepi and Lebaran
 isWorkingDay('2026-12-24', { cutiBersama: false }); // true for offices that ignore cuti bersama
@@ -341,7 +345,7 @@ Not everyone pastes customer data through an agent. Customer service, HR, and fi
 - Copying the answer, with Ctrl+C or the site's copy button, puts the real values back.
 - Real values are never written into the site's page, where its scripts could read them, and are forgotten when the browser closes. No server, no network requests.
 
-It runs on ChatGPT, Claude, Gemini, Copilot, Perplexity, DeepSeek, Grok, and Le Chat, in Chrome, Edge, and other Chromium browsers. It is not in the Chrome Web Store yet: download `lokal-extension-<version>.zip` from the [latest release](https://github.com/lokal-id/lokal/releases/latest), unzip it, and load the folder with **Load unpacked** (see [packages/extension](packages/extension/README.md), which also lists its limitations: attached files are not masked).
+It runs on ChatGPT, Claude, Gemini, Copilot, Perplexity, DeepSeek, Grok, and Le Chat, in Chrome, Edge, and other Chromium browsers. It is not in the Chrome Web Store yet: download `lokal-extension-<version>.zip` from the [latest release](https://github.com/lokal-id/lokal/releases/latest), unzip it, and load the folder with **Load unpacked** (see [packages/extension](packages/extension/README.md), which also lists its limitations). Attached CSV, Excel, Word, and text-based PDF files are masked too; photos and scanned PDFs are not.
 
 ### Lokal Scan: keep personal data out of the repository
 
@@ -415,6 +419,7 @@ Found 2 personal data value(s) in 1 file(s).
 | `search_wilayah` | Find provinces, regencies, districts, and villages with their codes |
 | `list_wilayah` | Child regions for cascading address dropdowns, with postal codes |
 | `lookup_kode_pos` | Postal code → villages, or all postal codes in a region |
+| `parse_alamat` | Free-text address → street, RT/RW, kode pos, and the kelurahan, kecamatan, kota, and provinsi with their codes; flags a kode pos that does not match |
 | `list_holidays` | National holidays and *cuti bersama* (SKB 2026, 2027) |
 | `working_days` | Business days, SLA due dates, delivery estimates |
 | `parse_qris` | Read and check a QRIS payload: merchant, NMID, criteria, amount, CRC |
@@ -551,7 +556,7 @@ This is a small sample built around everyday tasks for Indonesian developers. Do
 - [x] `.docx` support in Samaran (text and tables)
 - [x] Text-based PDF support in Samaran (page text, tables, form fields)
 - [ ] OCR for scanned PDFs and ID card photos
-- [ ] Free-text address parser → region codes
+- [x] Free-text address parser → region codes
 - [x] HTTP transport for ChatGPT and web-based agents
 - [x] Python library (`lokal-id`) with the same results as TypeScript
 - [ ] Locale packs for other countries (Malaysia, the Philippines, Vietnam)
