@@ -51,20 +51,30 @@ drop.addEventListener('dragover', (e) => e.preventDefault());
 drop.addEventListener('drop', (e) => { e.preventDefault(); take(e.dataTransfer.files, 'drop'); });
 window.sent = [];
 window.pastes = [];
-// Like ProseMirror: the editor handles paste itself, from the event's clipboardData.
+// Like ProseMirror (ChatGPT): the editor keeps its own selection, read from the page when selectionchange fires, so
+// later rather than at once, and handles paste itself at that selection with the event's clipboardData.
+let model = { start: 0, end: 0 };
+const offsetOf = (node, offset) => {
+  const r = document.createRange();
+  r.selectNodeContents(editor);
+  r.setEnd(node, offset);
+  return r.toString().length;
+};
+document.addEventListener('selectionchange', () => {
+  const sel = getSelection();
+  if (!sel.rangeCount || !editor.contains(sel.anchorNode)) return;
+  const r = sel.getRangeAt(0);
+  model = { start: offsetOf(r.startContainer, r.startOffset), end: offsetOf(r.endContainer, r.endOffset) };
+});
 editor.addEventListener('paste', (e) => {
   const text = e.clipboardData.getData('text/plain');
   window.pastes.push(text);
   e.preventDefault();
-  const sel = getSelection();
-  const range = sel.rangeCount ? sel.getRangeAt(0) : null;
-  if (range && editor.contains(range.startContainer)) {
-    range.deleteContents();
-    range.insertNode(document.createTextNode(text));
-    sel.collapseToEnd();
-  } else {
-    editor.textContent += text;
-  }
+  const before = editor.textContent;
+  editor.textContent = before.slice(0, model.start) + text + before.slice(model.end);
+  const at = model.start + text.length;
+  model = { start: at, end: at };
+  if (editor.firstChild) getSelection().collapse(editor.firstChild, at);
 });
 const submit = (box) => { window.sent.push(box.value ?? box.innerText); };
 plain.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submit(plain); } });
@@ -210,6 +220,15 @@ try {
     assert.equal(await evaluate('plain.value'), 'cek NIK [NIK_1] ya', 'the same NIK keeps its placeholder');
     await key('Enter');
     assert.deepEqual(await evaluate('window.sent'), ['cek NIK [NIK_1] ya']);
+  });
+
+  await check('typed data in an editor that reads its selection later (ChatGPT) is replaced, not added to', async () => {
+    await evaluate('editor.textContent = ""; editor.focus(); window.pastes = []');
+    await page('Input.insertText', { text: `${NIK} kalo ini?` });
+    await key('Enter');
+    await until(() => evaluate('editor.innerText.includes("[NIK_")'), 'masked editor');
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    assert.match(await evaluate('editor.innerText'), /^\[NIK_\d+\] kalo ini\?$/, 'the real NIK is gone and the text is there once');
   });
 
   await check('a send button is held the same way', async () => {

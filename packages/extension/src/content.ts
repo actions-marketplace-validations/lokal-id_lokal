@@ -127,6 +127,43 @@ function selectAll(root: HTMLElement): void {
   else getSelection()?.selectAllChildren(root);
 }
 
+/**
+ * Editors such as ProseMirror (ChatGPT) read a new selection when selectionchange fires, after the current task. A
+ * paste sent right after selecting everything lands at the old cursor and adds the text instead of replacing it.
+ */
+function selectionRead(): Promise<void> {
+  return new Promise((resolve) => {
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      document.removeEventListener('selectionchange', finish);
+      setTimeout(resolve, 20);
+    };
+    document.addEventListener('selectionchange', finish);
+    setTimeout(finish, 100);
+  });
+}
+
+const sameText = (a: string, b: string) => a.replace(/\s+/g, ' ').trim() === b.replace(/\s+/g, ' ').trim();
+
+/** Replaces everything in the box with `text`, and says whether the box now holds it. */
+async function replaceAll(root: HTMLElement, text: string): Promise<boolean> {
+  selectAll(root);
+  if (!(root instanceof HTMLTextAreaElement || root instanceof HTMLInputElement)) await selectionRead();
+  insert(root, root, text);
+  await new Promise((resolve) => setTimeout(resolve, 50));
+  if (sameText(textOf(root), text)) return true;
+  // The editor kept something: empty it the way a user would, then insert again.
+  selectAll(root);
+  await selectionRead();
+  document.execCommand('delete');
+  await selectionRead();
+  insert(root, root, text);
+  await new Promise((resolve) => setTimeout(resolve, 50));
+  return sameText(textOf(root), text);
+}
+
 const containsPii = (text: string) => detectPii(text).length > 0;
 
 // Pasting: mask before the site sees the text. Clipboard contents without personal data are left alone, rich text
@@ -288,11 +325,11 @@ function guardSend(root: HTMLElement, event: Event): boolean {
   event.preventDefault();
   event.stopImmediatePropagation();
   send<MaskResponse>({ type: 'mask', text })
-    .then((result) => {
+    .then(async (result) => {
       vault = new Map(result.vault);
-      selectAll(root);
-      insert(root, root, result.text);
-      toast(t.maskedOnSend(describe(result.types, lang)));
+      // Still held either way: a message with personal data in it is never sent by this Enter.
+      if (await replaceAll(root, result.text)) toast(t.maskedOnSend(describe(result.types, lang)));
+      else toast(t.replaceFailed);
     })
     .catch(() => toast(t.failed));
   return true;
