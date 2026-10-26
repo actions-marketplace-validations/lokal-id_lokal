@@ -13,7 +13,7 @@ Anything you read is sent to the model provider. When a file may contain real pe
 
 1. Run `scan_pii` on the file or folder first. It reports what kinds of data are where, with values partially masked, and lists files and pages it **could not scan** (scanned or encrypted PDFs, old `.xls`, images, archives). Tell the user about those; never treat them as clean.
 2. Read with `read_file_masked` — never with a plain file read, and never with `cat`, `head`, `tail`, `type`, `Get-Content`, `less`, `grep` or a script that prints the rows. Personal data comes back as stable placeholders: `[NIK_1]`, `[PHONE_3]`, `[RELIGION_1]`, `[HEALTH_2]`. The same value always gets the same placeholder in a session, so you can still deduplicate, join, group, count, and debug. `.xlsx` files come back as CSV, one block per sheet; PDFs as text, one block per page.
-3. Do the work on placeholders. Do not try to guess the real values, and do not ask the user to paste them.
+3. Do the work on placeholders. Do not try to guess the real values, and do not ask the user to paste them. `parse_alamat`, `parse_nik`, `parse_phone`, and `validate_npwp` take the placeholders themselves: `parse_alamat("[ADDRESS_3]")` returns the kelurahan, kecamatan, kota, and their codes, with the street and RT/RW as new placeholders, so an address column can be cleaned without seeing it.
 4. When output must contain the real values (a cleaned CSV, a fixed migration, a report), write it with `write_file_unmasked`: it restores the placeholders on the user's machine.
 5. If the user pastes real personal data into the chat, finish the task without repeating it back, and suggest masking or test data next time.
 

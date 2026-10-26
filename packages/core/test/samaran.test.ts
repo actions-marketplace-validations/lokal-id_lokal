@@ -148,6 +148,17 @@ test('vault bisa diekspor dan diimpor ke proses lain', () => {
   assert.equal(b.mask('NIK 3276015508030002').text, 'NIK [NIK_2]');
 });
 
+test('placeholder() memberi placeholder untuk nilai yang sudah diketahui pribadi', () => {
+  const s = new Samaran();
+  const { text } = s.mask('HP 0812-3456-7890');
+  assert.equal(s.placeholder('PHONE', '+62 812 3456 7890'), '[PHONE_1]', 'the same number as mask found');
+  const street = s.placeholder('ADDRESS', 'Jl. Melati No. 5');
+  assert.equal(street, '[ADDRESS_1]');
+  assert.equal(s.placeholder('ADDRESS', 'Jl. Melati No. 5'), street);
+  assert.equal(s.unmask(`${text}, ${street}`), 'HP 0812-3456-7890, Jl. Melati No. 5');
+  assert.throws(() => s.placeholder('ALAMAT' as never, 'x'), /Unknown PII type/);
+});
+
 test('nama tanpa label di chat, termasuk huruf kecil', () => {
   const names = (s: string) => detectPii(s, { types: ['NAME'] }).map((m) => m.value);
   const cases: Array<[string, string[]]> = [

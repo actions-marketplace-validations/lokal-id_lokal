@@ -429,6 +429,8 @@ Found 2 personal data value(s) in 1 file(s).
 | `write_file_unmasked` | Tulis hasil kerja dengan placeholder dipulihkan, di komputer kamu |
 | `anonymize_file` | Salin dump dan ekspor dengan kembaran realistis untuk setiap orang (Kembaran), hanya mengembalikan jumlah |
 
+Tool data juga bekerja pada data tersamar. `parse_alamat`, `parse_nik`, `parse_phone`, dan `validate_npwp` menerima placeholder dari `read_file_masked`, seperti `[ADDRESS_3]` atau `[NIK_1]`, lalu membaca nilai aslinya di komputer kamu. Model menerima kelurahan, kecamatan, kota, dan kodenya, atau apakah NIK atau nomornya valid; nama jalan, RT/RW, dan tanggal lahir kembali sebagai placeholder baru yang dipulihkan oleh `write_file_unmasked`. Agent bisa merapikan kolom alamat pelanggan tanpa melihat satu alamat pun.
+
 ### Samaran Guard
 
 Otomatis aktif lewat plugin Claude Code.

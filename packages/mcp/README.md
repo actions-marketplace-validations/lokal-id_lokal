@@ -65,6 +65,8 @@ The file tools can only access `LOKAL_ROOT`, which defaults to `CLAUDE_PROJECT_D
 | `write_file_unmasked` | Write results with placeholders restored, on your machine |
 | `anonymize_file` | Copy dumps and exports with realistic stand-ins for every person (Kembaran), returning only counts |
 
+`parse_alamat`, `parse_nik`, `parse_phone`, and `validate_npwp` also take placeholders from `read_file_masked` (`[ADDRESS_3]`, `[NIK_1]`): the real value is read on your machine, and the street, RT/RW, and birth date come back as placeholders.
+
 ## Samaran Guard
 
 `lokal-mcp guard` is a hook for Claude Code (`UserPromptSubmit`, and `PreToolUse` for `Read|Grep|Bash|PowerShell`), Codex CLI, Cursor, and Gemini CLI. It holds prompts that contain NIK, bank account, or health data, blocks commands that would print a personal data file into the conversation, pointing the agent to `read_file_masked` instead, and asks before photos of documents and scanned PDFs are read. The Lokal plugin sets it up for Claude Code; see the [Lokal README](https://github.com/lokal-id/lokal#in-codex-cli-cursor-and-gemini-cli) for the other agents.

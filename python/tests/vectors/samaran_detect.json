@@ -6012,6 +6012,109 @@
   "matches": []
  },
  {
+  "text": "placeholder() memberi placeholder untuk nilai yang sudah diketahui pribadi",
+  "matches": []
+ },
+ {
+  "text": "HP 0812-3456-7890",
+  "matches": [
+   [
+    "PHONE",
+    3,
+    17,
+    "0812-3456-7890",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "PHONE",
+  "matches": []
+ },
+ {
+  "text": "+62 812 3456 7890",
+  "matches": [
+   [
+    "PHONE",
+    0,
+    17,
+    "+62 812 3456 7890",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "[PHONE_1]",
+  "matches": []
+ },
+ {
+  "text": "the same number as mask found",
+  "matches": []
+ },
+ {
+  "text": "ADDRESS",
+  "matches": []
+ },
+ {
+  "text": "Jl. Melati No. 5",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    16,
+    "Jl. Melati No. 5",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "[ADDRESS_1]",
+  "matches": []
+ },
+ {
+  "text": "ADDRESS",
+  "matches": []
+ },
+ {
+  "text": "Jl. Melati No. 5",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    16,
+    "Jl. Melati No. 5",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "HP 0812-3456-7890, Jl. Melati No. 5",
+  "matches": [
+   [
+    "PHONE",
+    3,
+    17,
+    "0812-3456-7890",
+    "high"
+   ],
+   [
+    "ADDRESS",
+    19,
+    35,
+    "Jl. Melati No. 5",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "ALAMAT",
+  "matches": []
+ },
+ {
+  "text": "x",
+  "matches": []
+ },
+ {
   "text": "nama tanpa label di chat, termasuk huruf kecil",
   "matches": []
  },
@@ -12512,6 +12615,130 @@
  },
  {
   "text": "refuses to overwrite without overwrite: true",
+  "matches": []
+ },
+ {
+  "text": "tool data membaca placeholder dari read_file_masked tanpa membuka nilainya",
+  "matches": []
+ },
+ {
+  "text": "alamat.csv",
+  "matches": []
+ },
+ {
+  "text": "id,alamat\n1,\"Jl. Melati No. 5 RT 3/5, Kemiri Muka, Beji, Depok 16423\"\n",
+  "matches": [
+   [
+    "ADDRESS",
+    13,
+    68,
+    "Jl. Melati No. 5 RT 3/5, Kemiri Muka, Beji, Depok 16423",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "read_file_masked",
+  "matches": []
+ },
+ {
+  "text": "alamat.csv",
+  "matches": []
+ },
+ {
+  "text": "parse_alamat",
+  "matches": []
+ },
+ {
+  "text": "32.76.06.1004",
+  "matches": []
+ },
+ {
+  "text": "Melati",
+  "matches": []
+ },
+ {
+  "text": "No. 5",
+  "matches": []
+ },
+ {
+  "text": "RT 003",
+  "matches": []
+ },
+ {
+  "text": "RW 005",
+  "matches": []
+ },
+ {
+  "text": "write_file_unmasked",
+  "matches": []
+ },
+ {
+  "text": "out/alamat-rapi.csv",
+  "matches": []
+ },
+ {
+  "text": "out",
+  "matches": []
+ },
+ {
+  "text": "alamat-rapi.csv",
+  "matches": []
+ },
+ {
+  "text": "utf8",
+  "matches": []
+ },
+ {
+  "text": "Jl. Melati No. 5,RT 003,Kemiri Muka,32.76.06.1004",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    16,
+    "Jl. Melati No. 5",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "read_file_masked",
+  "matches": []
+ },
+ {
+  "text": "pelanggan.csv",
+  "matches": []
+ },
+ {
+  "text": "parse_nik",
+  "matches": []
+ },
+ {
+  "text": "Kabupaten Bogor",
+  "matches": []
+ },
+ {
+  "text": "parse_phone",
+  "matches": []
+ },
+ {
+  "text": "Telkomsel",
+  "matches": []
+ },
+ {
+  "text": "validate_npwp",
+  "matches": []
+ },
+ {
+  "text": "parse_alamat",
+  "matches": []
+ },
+ {
+  "text": "[ADDRESS_99]",
+  "matches": []
+ },
+ {
+  "text": "none",
   "matches": []
  },
  {

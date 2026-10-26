@@ -47,6 +47,18 @@ def test_same_number_different_format_same_placeholder() -> None:
     assert Samaran().mask('Hubungi 0812-3456-7890 atau +62 812 3456 7890').text == 'Hubungi [PHONE_1] atau [PHONE_1]'
 
 
+def test_placeholder_for_a_value_known_to_be_personal() -> None:
+    s = Samaran()
+    text = s.mask('HP 0812-3456-7890').text
+    assert s.placeholder('PHONE', '+62 812 3456 7890') == '[PHONE_1]'
+    street = s.placeholder('ADDRESS', 'Jl. Melati No. 5')
+    assert street == '[ADDRESS_1]'
+    assert s.placeholder('ADDRESS', 'Jl. Melati No. 5') == street
+    assert s.unmask(f'{text}, {street}') == 'HP 0812-3456-7890, Jl. Melati No. 5'
+    with pytest.raises(ValueError, match='Unknown PII type'):
+        s.placeholder('ALAMAT', 'x')  # type: ignore[arg-type]
+
+
 def test_partial_mode() -> None:
     text = mask_pii('NIK 3201011508950001 HP 081234567890 email budi@gmail.com', mode='partial').text
     assert text == 'NIK 3201********0001 HP 0812****7890 email b***@gmail.com'

@@ -429,6 +429,8 @@ Found 2 personal data value(s) in 1 file(s).
 | `write_file_unmasked` | Write results with placeholders restored, on your machine |
 | `anonymize_file` | Copy dumps and exports with realistic stand-ins for every person (Kembaran), returning only counts |
 
+The data tools also work on masked data. `parse_alamat`, `parse_nik`, `parse_phone`, and `validate_npwp` take a placeholder from `read_file_masked`, such as `[ADDRESS_3]` or `[NIK_1]`, and read the real value on your machine. The model gets the kelurahan, kecamatan, kota, and their codes, or whether a NIK or number is valid; the street, RT/RW, and birth date come back as new placeholders, which `write_file_unmasked` restores. An agent can clean a customer address column without seeing any address.
+
 ### Samaran Guard
 
 Enabled automatically by the Claude Code plugin.

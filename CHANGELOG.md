@@ -4,6 +4,11 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+### Added
+
+- `parse_alamat`, `parse_nik`, `parse_phone`, and `validate_npwp` in the MCP server take placeholders from `read_file_masked` (`[ADDRESS_3]`, `[NIK_1]`, `[PHONE_2]`). The server reads the real value from its own vault, on the user's machine, and returns the regions and codes, validity, and operator; the street, RT/RW, birth date, and gender come back as new placeholders that `write_file_unmasked` restores. Before, an agent that read a customer file through the mask could not clean its address column at all: `parse_alamat("[ADDRESS_5]")` found no region.
+- `Samaran.placeholder(type, value)` (Python: `placeholder(pii_type, value)`) gives the placeholder for a value you already know is personal data, the same one `mask` would give it.
+
 ## [0.7.0] - 2026-10-26
 
 npm (`@lokal-id/core`, `@lokal-id/mcp`), PyPI (`lokal-id`), the GitHub Action, and the browser extension.

@@ -188,17 +188,23 @@ class Samaran:
             self._by_canonical[f'{pii_type}:{_canonical(pii_type, value)}'] = placeholder  # type: ignore[arg-type]
             self._counters[pii_type] = max(self._counters.get(pii_type, 0), int(m.group(2)))
 
-    def _placeholder_for(self, m: PiiMatch) -> str:
-        key = f'{m.type}:{_canonical(m.type, m.value)}'
+    def placeholder(self, pii_type: PiiType, value: str) -> str:
+        """The placeholder for a value you already know is personal data, such as the street a parser split out of a
+        masked address. A value gets the same placeholder here as from ``mask``, and ``unmask`` restores it."""
+        check_types([pii_type])
+        key = f'{pii_type}:{_canonical(pii_type, value)}'
         existing = self._by_canonical.get(key)
         if existing:
             return existing
-        n = self._counters.get(m.type, 0) + 1
-        self._counters[m.type] = n
-        placeholder = f'[{m.type}_{n}]'
+        n = self._counters.get(pii_type, 0) + 1
+        self._counters[pii_type] = n
+        placeholder = f'[{pii_type}_{n}]'
         self._by_canonical[key] = placeholder
-        self._by_placeholder[placeholder] = m.value
+        self._by_placeholder[placeholder] = value
         return placeholder
+
+    def _placeholder_for(self, m: PiiMatch) -> str:
+        return self.placeholder(m.type, m.value)
 
 
 def mask_pii(

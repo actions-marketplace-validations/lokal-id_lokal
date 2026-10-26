@@ -85,6 +85,7 @@ def balas_pelanggan(pesan: str) -> str:
 - `Samaran(mode='partial')` is for logs and admin screens: `3201********0001`, `0812****7890`, `b***@gmail.com`.
 - `Samaran(exclude=['FINANCIAL', 'NAME'])` keeps types your app has to read, such as income and installments in a dealer's credit simulation, while NIK, phone numbers, and accounts are still masked. `types=` does the opposite (only those). An unknown type name raises `ValueError`.
 - `Samaran(allow=['cs@toko.id', re.compile(r'@toko\.id$')])` never masks your own contacts.
+- `placeholder('ADDRESS', street)` gives the placeholder for a value you already know is personal, such as the street a parser split out of a masked address; `unmask` restores it.
 - `export_vault()` / `import_vault()` move the vault between processes, for example through Redis. Treat it as the raw data it contains.
 - `detect_pii(text)` returns the matches without masking; `min_confidence='high'` keeps only validated or keyword-anchored ones.
 - 27 types, covering every category in UU PDP Article 4: identifiers (NIK, KK, NPWP, passport, SIM, NIP, BPJS, NISN, civil registry deed numbers, phone, email, bank account, card, plate, IP, coordinates), name, address, birth date, gender, religion, marital status, nationality, health, finances, criminal records, and biometrics. Found through labels, CSV headers, JSON/YAML keys, SQL `INSERT` dumps, WhatsApp chat exports, and common phrases in free text.
