@@ -147,3 +147,21 @@ test('RT/RW and kode pos written with a colon, numbers in names written as Roman
   assert.equal(r.postalCode, '30144');
   assert.equal(r.kecamatan?.name, 'Ilir Barat Dua');
 });
+
+test('names with a typo, inside the kota or kabupaten the address names', () => {
+  const kab = parseAlamat('Kp. Nagrog RT 13 RW 03, Kab. Tasikmalayah');
+  assert.equal(kab.kabupatenKota?.code, '32.06');
+  assert.ok(kab.issues.includes('"Tasikmalayah" dibaca sebagai Kabupaten Tasikmalaya.'));
+  assert.equal(kab.confidence, 'medium');
+  const kec = parseAlamat('Jl. Melati 5, Cibinog, Kab. Bogor');
+  assert.equal(kec.code, '32.01.01');
+  assert.deepEqual(kec.issues, ['"Cibinog" dibaca sebagai Kecamatan Cibinong.']);
+  assert.equal(parseAlamat('Jl. Anggrek 2, Kec. Tanah Sereal, Kota Bogor').code, '32.71.06');
+});
+
+test('a real name is not read as a typo of another', () => {
+  const r = parseAlamat('Jl. Raya Metro Wates Km 05, Desa Purwodadi');
+  assert.equal(r.kelurahanDesa?.name, 'Purwodadi');
+  assert.equal(r.confidence, 'low');
+  assert.equal(parseAlamat('Gg. Bukit 2, Jaga Baya I, Way Halim, Kota Bandar Lampung').code, '18.71.15');
+});

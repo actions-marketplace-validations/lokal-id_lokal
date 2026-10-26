@@ -1096,6 +1096,80 @@
     "replaced": {}
    },
    {
+    "text": "names with a typo, inside the kota or kabupaten the address names",
+    "replaced": {}
+   },
+   {
+    "text": "Kp. Nagrog RT 94 RW 00, Kab. Tasikmalayah",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.06",
+    "replaced": {}
+   },
+   {
+    "text": "\"Tasikmalayah\" dibaca sebagai Kabupaten Tasikmalaya.",
+    "replaced": {}
+   },
+   {
+    "text": "medium",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Beringin 4, Cibinog, Kab. Bogor",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.01.01",
+    "replaced": {}
+   },
+   {
+    "text": "\"Cibinog\" dibaca sebagai Kecamatan Cibinong.",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Merdeka 7, Kec. Tanah Sereal, Kota Bogor",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.71.06",
+    "replaced": {}
+   },
+   {
+    "text": "a real name is not read as a typo of another",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Cendrawasih 08, Desa Purwodadi",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "Purwodadi",
+    "replaced": {}
+   },
+   {
+    "text": "low",
+    "replaced": {}
+   },
+   {
+    "text": "Gg. Mahoni 7, Jaga Baya I, Way Halim, Kota Bandar Lampung",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "18.71.15",
+    "replaced": {}
+   },
+   {
     "text": "node:test",
     "replaced": {}
    },
@@ -2082,88 +2156,6 @@
    {
     "text": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
     "replaced": {}
-   },
-   {
-    "text": "uji",
-    "replaced": {}
-   },
-   {
-    "text": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
-    "replaced": {}
-   },
-   {
-    "text": "Fajar Halim",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "3201011503953074",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "Dian Puspita",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "3201014810962447",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tFajar Halim\t3201011503953074\n\\.\n",
-    "replaced": {
-     "NAME": 1,
-     "NIK": 1
-    }
-   },
-   {
-    "text": "([^",
-    "replaced": {}
-   },
-   {
-    "text": "\n",
-    "replaced": {}
-   },
-   {
-    "text": "\t",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK",
-    "replaced": {}
-   },
-   {
-    "text": "uji",
-    "replaced": {}
-   },
-   {
-    "text": "Fajar Halim",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "3201011503953074",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "1234567890",
-    "replaced": {}
-   },
-   {
-    "text": "pelanggan_nik,npwp,gaji\n3201011503953074,3201011503953074,5516458",
-    "replaced": {
-     "NIK": 2,
-     "FINANCIAL": 1
-    }
    }
   ]
  },
@@ -3265,6 +3257,80 @@
     "replaced": {}
    },
    {
+    "text": "names with a typo, inside the kota or kabupaten the address names",
+    "replaced": {}
+   },
+   {
+    "text": "Kp. Nagrog RT 14 RW 06, Kab. Tasikmalayah",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.06",
+    "replaced": {}
+   },
+   {
+    "text": "\"Tasikmalayah\" dibaca sebagai Kabupaten Tasikmalaya.",
+    "replaced": {}
+   },
+   {
+    "text": "medium",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Akasia 7, Cibinog, Kab. Bogor",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.01.01",
+    "replaced": {}
+   },
+   {
+    "text": "\"Cibinog\" dibaca sebagai Kecamatan Cibinong.",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Dahlia 4, Kec. Tanah Sereal, Kota Bogor",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.71.06",
+    "replaced": {}
+   },
+   {
+    "text": "a real name is not read as a typo of another",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Flamboyan 07, Desa Purwodadi",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "Purwodadi",
+    "replaced": {}
+   },
+   {
+    "text": "low",
+    "replaced": {}
+   },
+   {
+    "text": "Gg. Swadaya 2, Jaga Baya I, Way Halim, Kota Bandar Lampung",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "18.71.15",
+    "replaced": {}
+   },
+   {
     "text": "node:test",
     "replaced": {}
    },
@@ -4251,88 +4317,6 @@
    {
     "text": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
     "replaced": {}
-   },
-   {
-    "text": "uji",
-    "replaced": {}
-   },
-   {
-    "text": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
-    "replaced": {}
-   },
-   {
-    "text": "Arif Matondang",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "3201011508955680",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "Santi Lestari",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "3201014408961792",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tArif Matondang\t3201011508955680\n\\.\n",
-    "replaced": {
-     "NAME": 1,
-     "NIK": 1
-    }
-   },
-   {
-    "text": "([^",
-    "replaced": {}
-   },
-   {
-    "text": "\n",
-    "replaced": {}
-   },
-   {
-    "text": "\t",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK",
-    "replaced": {}
-   },
-   {
-    "text": "uji",
-    "replaced": {}
-   },
-   {
-    "text": "Arif Matondang",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "3201011508955680",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "1234567890",
-    "replaced": {}
-   },
-   {
-    "text": "pelanggan_nik,npwp,gaji\n3201011508955680,3201011508955680,6971640",
-    "replaced": {
-     "NIK": 2,
-     "FINANCIAL": 1
-    }
    }
   ]
  },
@@ -5401,6 +5385,72 @@
     "replaced": {}
    },
    {
+    "text": "names with a typo, inside the kota or kabupaten the address names",
+    "replaced": {}
+   },
+   {
+    "text": "Kp. Nagrog RT 30 RW 03, Kab. Tasikmalayah",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.06",
+    "replaced": {}
+   },
+   {
+    "text": "\"Tasikmalayah\" dibaca sebagai Kabupaten Tasikmalaya.",
+    "replaced": {}
+   },
+   {
+    "text": "medium",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Melati 5, Cibinog, Kab. Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "32.01.01",
+    "replaced": {}
+   },
+   {
+    "text": "\"Cibinog\" dibaca sebagai Kecamatan Cibinong.",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Anggrek 2, Kec. Tanah Sereal, Kota Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "32.71.06",
+    "replaced": {}
+   },
+   {
+    "text": "a real name is not read as a typo of another",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Raya Metro Wates Km 05, Desa Purwodadi",
+    "replaced": {}
+   },
+   {
+    "text": "Purwodadi",
+    "replaced": {}
+   },
+   {
+    "text": "low",
+    "replaced": {}
+   },
+   {
+    "text": "Gg. Bukit 2, Jaga Baya I, Way Halim, Kota Bandar Lampung",
+    "replaced": {}
+   },
+   {
+    "text": "18.71.15",
+    "replaced": {}
+   },
+   {
     "text": "node:test",
     "replaced": {}
    },
@@ -6379,81 +6429,6 @@
    {
     "text": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
     "replaced": {}
-   },
-   {
-    "text": "uji",
-    "replaced": {}
-   },
-   {
-    "text": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
-    "replaced": {}
-   },
-   {
-    "text": "Budi Santoso",
-    "replaced": {}
-   },
-   {
-    "text": "3201010607955083",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "Siti Aminah",
-    "replaced": {}
-   },
-   {
-    "text": "3201016306965498",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tBudi Santoso\t3201010607955083\n\\.\n",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "([^",
-    "replaced": {}
-   },
-   {
-    "text": "\n",
-    "replaced": {}
-   },
-   {
-    "text": "\t",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK",
-    "replaced": {}
-   },
-   {
-    "text": "uji",
-    "replaced": {}
-   },
-   {
-    "text": "Budi Santoso",
-    "replaced": {}
-   },
-   {
-    "text": "3201010607955083",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "1234567890",
-    "replaced": {}
-   },
-   {
-    "text": "pelanggan_nik,npwp,gaji\n3201010607955083,3201010607955083,1452285",
-    "replaced": {
-     "NIK": 2,
-     "FINANCIAL": 1
-    }
    }
   ]
  }

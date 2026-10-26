@@ -28,6 +28,12 @@ const STREETS = ['Jl. Melati', 'Jl. Kenanga No. 12', 'Gg. Mawar 3', 'Jl. Merdeka
 const strip = (name) => name.replace(/^(?:Kabupaten|Kota)(?: Administrasi)? /, '');
 
 function build(code) {
+  const kab = getWilayah(code.slice(0, 5));
+  const names = { desa: getWilayah(code).name, kec: getWilayah(code.slice(0, 8)).name, kab: strip(kab.name) };
+  return { ...write(code), names };
+}
+
+function write(code) {
   const v = getWilayah(code);
   const kec = getWilayah(code.split('.').slice(0, 3).join('.'));
   const kab = getWilayah(code.split('.').slice(0, 2).join('.'));
@@ -67,8 +73,31 @@ let confidentWrong = 0;
 const byConfidence = { high: [0, 0], medium: [0, 0], low: [0, 0], none: [0, 0] };
 const failures = [];
 const started = performance.now();
+// --typos: one letter dropped, doubled, swapped, or mistyped in one region name ("Cibinog", "Tasikmalayah"). The first
+// letter stays, as it mostly does when people mistype.
+const LETTERS = 'abcdefghijklmnopqrstuvwxyz';
+function typo(c) {
+  const names = [c.names.desa, c.names.kec, c.names.kab].filter((n) => n.length >= 5 && /^[A-Za-z ]+$/.test(n));
+  const name = names.length ? pick(names) : undefined;
+  const at = name ? c.text.toLowerCase().indexOf(name.toLowerCase()) : -1;
+  if (at < 0) return c;
+  const word = c.text.slice(at, at + name.length);
+  const i = 1 + Math.floor(random() * (word.length - 2));
+  const kind = Math.floor(random() * 4);
+  const letter = LETTERS[Math.floor(random() * 26)];
+  const typed =
+    kind === 0 ? word.slice(0, i) + word.slice(i + 1)
+    : kind === 1 ? word.slice(0, i) + word[i] + word.slice(i)
+    : kind === 2 ? word.slice(0, i) + word[i + 1] + word[i] + word.slice(i + 2)
+    : word.slice(0, i) + (word[i] === word[i].toUpperCase() ? letter.toUpperCase() : letter) + word.slice(i + 1);
+  if (/ /.test(typed.slice(i - 1, i + 2)) || typed.toLowerCase() === word.toLowerCase()) return c;
+  return { ...c, text: c.text.slice(0, at) + typed + c.text.slice(at + name.length) };
+}
+const typos = process.argv.includes('--typos');
+
 for (let i = 0; i < N; i++) {
-  const c = build(pick(desa));
+  const built = build(pick(desa));
+  const c = typos ? typo(built) : built;
   const r = parseAlamat(c.text);
   const ok = r.code === c.code || (c.orChild && r.code?.startsWith(`${c.code}.`));
   byConfidence[r.confidence][0]++;

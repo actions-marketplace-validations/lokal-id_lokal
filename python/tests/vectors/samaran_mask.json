@@ -2945,6 +2945,161 @@
   "high": []
  },
  {
+  "text": "names with a typo, inside the kota or kabupaten the address names",
+  "placeholder": "names with a typo, inside the kota or kabupaten the address names",
+  "vault": [],
+  "partial": "names with a typo, inside the kota or kabupaten the address names",
+  "noFinanceNoName": "names with a typo, inside the kota or kabupaten the address names",
+  "high": []
+ },
+ {
+  "text": "Kp. Nagrog RT 13 RW 03, Kab. Tasikmalayah",
+  "placeholder": "[ADDRESS_1], Kab. Tasikmalayah",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Kp. Nagrog RT 13 RW 03"
+   ]
+  ],
+  "partial": "Kp. ***, Kab. Tasikmalayah",
+  "noFinanceNoName": "[ADDRESS_1], Kab. Tasikmalayah",
+  "high": [
+   "Kp. Nagrog RT 13 RW 03"
+  ]
+ },
+ {
+  "text": "32.06",
+  "placeholder": "32.06",
+  "vault": [],
+  "partial": "32.06",
+  "noFinanceNoName": "32.06",
+  "high": []
+ },
+ {
+  "text": "\"Tasikmalayah\" dibaca sebagai Kabupaten Tasikmalaya.",
+  "placeholder": "\"Tasikmalayah\" dibaca sebagai Kabupaten Tasikmalaya.",
+  "vault": [],
+  "partial": "\"Tasikmalayah\" dibaca sebagai Kabupaten Tasikmalaya.",
+  "noFinanceNoName": "\"Tasikmalayah\" dibaca sebagai Kabupaten Tasikmalaya.",
+  "high": []
+ },
+ {
+  "text": "medium",
+  "placeholder": "medium",
+  "vault": [],
+  "partial": "medium",
+  "noFinanceNoName": "medium",
+  "high": []
+ },
+ {
+  "text": "Jl. Melati 5, Cibinog, Kab. Bogor",
+  "placeholder": "[ADDRESS_1], Cibinog, Kab. Bogor",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Melati 5"
+   ]
+  ],
+  "partial": "Jl. ***, Cibinog, Kab. Bogor",
+  "noFinanceNoName": "[ADDRESS_1], Cibinog, Kab. Bogor",
+  "high": []
+ },
+ {
+  "text": "32.01.01",
+  "placeholder": "32.01.01",
+  "vault": [],
+  "partial": "32.01.01",
+  "noFinanceNoName": "32.01.01",
+  "high": []
+ },
+ {
+  "text": "\"Cibinog\" dibaca sebagai Kecamatan Cibinong.",
+  "placeholder": "\"Cibinog\" dibaca sebagai Kecamatan Cibinong.",
+  "vault": [],
+  "partial": "\"Cibinog\" dibaca sebagai Kecamatan Cibinong.",
+  "noFinanceNoName": "\"Cibinog\" dibaca sebagai Kecamatan Cibinong.",
+  "high": []
+ },
+ {
+  "text": "Jl. Anggrek 2, Kec. Tanah Sereal, Kota Bogor",
+  "placeholder": "[ADDRESS_1], Kec. Tanah Sereal, Kota Bogor",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Anggrek 2"
+   ]
+  ],
+  "partial": "Jl. ***, Kec. Tanah Sereal, Kota Bogor",
+  "noFinanceNoName": "[ADDRESS_1], Kec. Tanah Sereal, Kota Bogor",
+  "high": []
+ },
+ {
+  "text": "32.71.06",
+  "placeholder": "32.71.06",
+  "vault": [],
+  "partial": "32.71.06",
+  "noFinanceNoName": "32.71.06",
+  "high": []
+ },
+ {
+  "text": "a real name is not read as a typo of another",
+  "placeholder": "a real name is not read as a typo of another",
+  "vault": [],
+  "partial": "a real name is not read as a typo of another",
+  "noFinanceNoName": "a real name is not read as a typo of another",
+  "high": []
+ },
+ {
+  "text": "Jl. Raya Metro Wates Km 05, Desa Purwodadi",
+  "placeholder": "[ADDRESS_1], Desa Purwodadi",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Raya Metro Wates Km 05"
+   ]
+  ],
+  "partial": "Jl. ***, Desa Purwodadi",
+  "noFinanceNoName": "[ADDRESS_1], Desa Purwodadi",
+  "high": []
+ },
+ {
+  "text": "Purwodadi",
+  "placeholder": "Purwodadi",
+  "vault": [],
+  "partial": "Purwodadi",
+  "noFinanceNoName": "Purwodadi",
+  "high": []
+ },
+ {
+  "text": "low",
+  "placeholder": "low",
+  "vault": [],
+  "partial": "low",
+  "noFinanceNoName": "low",
+  "high": []
+ },
+ {
+  "text": "Gg. Bukit 2, Jaga Baya I, Way Halim, Kota Bandar Lampung",
+  "placeholder": "[ADDRESS_1], Jaga Baya I, Way Halim, Kota Bandar Lampung",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Gg. Bukit 2"
+   ]
+  ],
+  "partial": "Gg. ***, Jaga Baya I, Way Halim, Kota Bandar Lampung",
+  "noFinanceNoName": "[ADDRESS_1], Jaga Baya I, Way Halim, Kota Bandar Lampung",
+  "high": []
+ },
+ {
+  "text": "18.71.15",
+  "placeholder": "18.71.15",
+  "vault": [],
+  "partial": "18.71.15",
+  "noFinanceNoName": "18.71.15",
+  "high": []
+ },
+ {
   "text": "node:test",
   "placeholder": "node:test",
   "vault": [],
@@ -5900,134 +6055,6 @@
   "vault": [],
   "partial": "static",
   "noFinanceNoName": "static",
-  "high": []
- },
- {
-  "text": "KOPI CONTOH",
-  "placeholder": "KOPI CONTOH",
-  "vault": [],
-  "partial": "KOPI CONTOH",
-  "noFinanceNoName": "KOPI CONTOH",
-  "high": []
- },
- {
-  "text": "BOGOR",
-  "placeholder": "BOGOR",
-  "vault": [],
-  "partial": "BOGOR",
-  "noFinanceNoName": "BOGOR",
-  "high": []
- },
- {
-  "text": "16914",
-  "placeholder": "16914",
-  "vault": [],
-  "partial": "16914",
-  "noFinanceNoName": "16914",
-  "high": []
- },
- {
-  "text": "ID1026000000001",
-  "placeholder": "ID1026000000001",
-  "vault": [],
-  "partial": "ID1026000000001",
-  "noFinanceNoName": "ID1026000000001",
-  "high": []
- },
- {
-  "text": "UMI",
-  "placeholder": "UMI",
-  "vault": [],
-  "partial": "UMI",
-  "noFinanceNoName": "UMI",
-  "high": []
- },
- {
-  "text": "Usaha Mikro",
-  "placeholder": "Usaha Mikro",
-  "vault": [],
-  "partial": "Usaha Mikro",
-  "noFinanceNoName": "Usaha Mikro",
-  "high": []
- },
- {
-  "text": "5812",
-  "placeholder": "5812",
-  "vault": [],
-  "partial": "5812",
-  "noFinanceNoName": "5812",
-  "high": []
- },
- {
-  "text": "26",
-  "placeholder": "26",
-  "vault": [],
-  "partial": "26",
-  "noFinanceNoName": "26",
-  "high": []
- },
- {
-  "text": "COM.CONTOH.WWW",
-  "placeholder": "COM.CONTOH.WWW",
-  "vault": [],
-  "partial": "COM.CONTOH.WWW",
-  "noFinanceNoName": "COM.CONTOH.WWW",
-  "high": []
- },
- {
-  "text": "936000000000000001",
-  "placeholder": "936000000000000001",
-  "vault": [],
-  "partial": "936000000000000001",
-  "noFinanceNoName": "936000000000000001",
-  "high": []
- },
- {
-  "text": "000000000000001",
-  "placeholder": "000000000000001",
-  "vault": [],
-  "partial": "000000000000001",
-  "noFinanceNoName": "000000000000001",
-  "high": []
- },
- {
-  "text": "UMI",
-  "placeholder": "UMI",
-  "vault": [],
-  "partial": "UMI",
-  "noFinanceNoName": "UMI",
-  "high": []
- },
- {
-  "text": "51",
-  "placeholder": "51",
-  "vault": [],
-  "partial": "51",
-  "noFinanceNoName": "51",
-  "high": []
- },
- {
-  "text": "ID.CO.QRIS.WWW",
-  "placeholder": "ID.CO.QRIS.WWW",
-  "vault": [],
-  "partial": "ID.CO.QRIS.WWW",
-  "noFinanceNoName": "ID.CO.QRIS.WWW",
-  "high": []
- },
- {
-  "text": "ID1026000000001",
-  "placeholder": "ID1026000000001",
-  "vault": [],
-  "partial": "ID1026000000001",
-  "noFinanceNoName": "ID1026000000001",
-  "high": []
- },
- {
-  "text": "UMI",
-  "placeholder": "UMI",
-  "vault": [],
-  "partial": "UMI",
-  "noFinanceNoName": "UMI",
   "high": []
  }
 ]

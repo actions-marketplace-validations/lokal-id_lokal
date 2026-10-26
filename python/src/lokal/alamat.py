@@ -9,8 +9,9 @@ pos), since many villages share a name.
 from __future__ import annotations
 
 import re
+from collections.abc import Iterable
 from dataclasses import dataclass, field
-from typing import Literal, Optional
+from typing import Literal, Optional, Union
 
 from ._js import rx, trim
 from ._result import Result
@@ -330,6 +331,8 @@ class _Hit:
     unique: bool
     #: Unique, and more than one word ("Denpasar Selatan").
     distinctive: bool
+    #: Matched with a typo ("Cibinog" for Cibinong).
+    fuzzy: bool = False
 
 
 @dataclass(slots=True)
@@ -348,22 +351,59 @@ def _is_kota(code: str) -> bool:
     return _level_of(code) == 2 and int(code[3:5]) >= 71
 
 
+def _village_kind(code: str) -> str:
+    return 'kelurahan' if code[-4:-3] == '1' else 'desa'
+
+
+def _fits(code: str, hint: Optional[_Hint]) -> bool:
+    return hint is None or (
+        hint.level == _level_of(code) and (not hint.kind or (hint.kind == 'kota') == _is_kota(code))
+    )
+
+
+def _hint_at(words: list[_Token], i: int) -> Optional[_Hint]:
+    """The level word right before word ``i``, skipping "adm." and the like."""
+    j = i - 1
+    while j >= 0 and not words[j + 1].break_before:
+        w = words[j].word
+        if w in _HINTS:
+            return _HINTS[w]
+        if w not in _FILLER:
+            return None
+        j -= 1
+    return None
+
+
+def _to_hits(
+    codes: list[str], hint: Optional[_Hint], start: int, to: int, text: str, fuzzy: bool = False
+) -> list[_Hit]:
+    """Hits for the regions a span of words names, already narrowed to the level its level word gives."""
+    # "Kel. Kamal" prefers the kelurahan in Jakarta Barat to the desa of that name.
+    village = hint.village if hint else None
+    preferred = village is not None and any(_village_kind(code) == village for code in codes)
+    unique = not fuzzy and len(codes) == 1
+    return [
+        _Hit(
+            code,
+            _level_of(code),
+            start,
+            to,
+            text,
+            hint is not None and (not preferred or _village_kind(code) == village),
+            unique,
+            to - start > 1 and unique,
+            fuzzy,
+        )
+        for code in codes
+    ]
+
+
 def _find_hits(words: list[_Token]) -> tuple[list[_Hit], list[_Marked]]:
     names = _name_index()
     hits: list[_Hit] = []
     marked: list[_Marked] = []
     for i in range(len(words)):
-        # A level word right before the name, skipping "adm." and the like.
-        hint: Optional[_Hint] = None
-        j = i - 1
-        while j >= 0 and not words[j + 1].break_before:
-            w = words[j].word
-            if w in _HINTS:
-                hint = _HINTS[w]
-                break
-            if w not in _FILLER:
-                break
-            j -= 1
+        hint = _hint_at(words, i)
         # The name after a level word may itself start with one: "Kec. Kota Baru".
         if hint and words[i].word not in _FILLER:
             name: list[str] = []
@@ -390,18 +430,8 @@ def _find_hits(words: list[_Token]) -> tuple[list[_Hit], list[_Marked]]:
             if label and length == 1:
                 continue
             written = _lookup(names, raw, length) if raw != key else []
-            codes = [
-                code
-                for code in dict.fromkeys([*_lookup(names, key, length), *written])
-                if not hint
-                or (hint.level == _level_of(code) and (not hint.kind or (hint.kind == 'kota') == _is_kota(code)))
-            ]
-            # "Kel. Kamal" prefers the kelurahan in Jakarta Barat to the desa of that name.
-            preferred = bool(hint and hint.village) and any(_village_kind(code) == hint.village for code in codes)  # type: ignore[union-attr]
-            for code in codes:
-                hinted = hint is not None and (not preferred or _village_kind(code) == hint.village)
-                unique = len(codes) == 1
-                hits.append(_Hit(code, _level_of(code), i, i + length, key, hinted, unique, length > 1 and unique))
+            codes = [code for code in dict.fromkeys([*_lookup(names, key, length), *written]) if _fits(code, hint)]
+            hits.extend(_to_hits(codes, hint, i, i + length, key))
     # A name inside a longer kota, kabupaten, or provinsi, or a longer name the address marks, is not a name of its
     # own: "Lampung" in "Lampung Timur", "Depok" in "Kel. Depok Jaya". Other longer names may run into the next one
     # ("wates wates kulon progo" holds a desa Wates Kulon elsewhere).
@@ -421,8 +451,158 @@ def _lookup(names: dict[str, list[str]], key: str, length: int) -> list[str]:
     return [*names.get(key, []), *(names.get(key.replace(' ', ''), []) if length > 1 else [])]
 
 
-def _village_kind(code: str) -> str:
-    return 'kelurahan' if code[-4:-3] == '1' else 'desa'
+# --- names with a typo -----------------------------------------------------------------------------------------
+
+_region_pool: Optional[list[tuple[str, list[str], str]]] = None
+_child_pool: Optional[dict[str, list[tuple[str, str, str]]]] = None
+
+
+def _pools() -> tuple[list[tuple[str, list[str], str]], dict[str, list[tuple[str, str, str]]]]:
+    """Names without spaces: kabupaten, kota, and provinsi; and the kecamatan and kelurahan of each kabupaten or
+    kota."""
+    global _region_pool, _child_pool
+    if _region_pool is None or _child_pool is None:
+        regions: list[tuple[str, list[str], str]] = []
+        children: dict[str, list[tuple[str, str, str]]] = {}
+        for key, codes in _name_index().items():
+            flat = key.replace(' ', '')
+            top = [code for code in codes if _level_of(code) <= 2]
+            if top:
+                regions.append((flat, top, key))
+            for code in codes:
+                if _level_of(code) >= 3:
+                    children.setdefault(code[:5], []).append((flat, code, key))
+        _region_pool = regions
+        _child_pool = children
+    return _region_pool, _child_pool
+
+
+def _distance(a: str, b: str, most: int) -> int:
+    """Edits between two words (a swap of two letters is one), or ``most + 1`` once it is more than ``most``."""
+    if abs(len(a) - len(b)) > most:
+        return most + 1
+    before: list[int] = []
+    prev = list(range(len(b) + 1))
+    for i in range(1, len(a) + 1):
+        row = [i]
+        low = i
+        for j in range(1, len(b) + 1):
+            d = min(prev[j] + 1, row[j - 1] + 1, prev[j - 1] + (0 if a[i - 1] == b[j - 1] else 1))
+            if i > 1 and j > 1 and a[i - 1] == b[j - 2] and a[i - 2] == b[j - 1]:
+                d = min(d, before[j - 2] + 1)
+            row.append(d)
+            low = min(low, d)
+        if low > most:
+            return most + 1
+        before = prev
+        prev = row
+    return prev[len(b)]
+
+
+_END_NUMBER = rx(r'(?:^| )([ivx]+|\d+)$')
+_LETTERS_ONLY = rx(r'^[a-z]+$')
+
+
+def _end_number(name: str) -> Optional[str]:
+    m = _END_NUMBER.search(name)
+    return m[1] if m else None
+
+
+def _allowed(letters: int) -> int:
+    """Typos allowed in a name of this many letters: none in short names, where one letter makes another name."""
+    return 2 if letters >= 10 else 1 if letters >= 5 else 0
+
+
+@dataclass(slots=True)
+class _Span:
+    start: int
+    to: int
+    flat: str
+    text: str
+    hint: Optional[_Hint]
+
+
+def _typo_hits(words: list[_Token], hits: list[_Hit], postal_villages: Optional[list[str]]) -> list[_Hit]:
+    """Names written with a typo, for the words no region was found for: "Kab. Tasikmalayah", "Cibinog, Bogor".
+
+    Kabupaten, kota, and provinsi are looked for everywhere; kecamatan and kelurahan only inside the kabupaten or kota
+    the address names or its kode pos points to, since thousands of villages are one letter apart. The first letter
+    has to match.
+    """
+    # A kabupaten, kota, or provinsi written right, or a name of more than one word no other region has ("Pasar
+    # Minggu"), is not a typo of another name.
+    covered: set[int] = set()
+    for h in hits:
+        if h.level <= 2 or h.distinctive:
+            covered.update(range(h.start, h.to))
+    spans: list[_Span] = []
+    for i in range(len(words)):
+        flat = ''
+        for length in range(1, 4):
+            if i + length > len(words):
+                break
+            w = words[i + length - 1]
+            if (
+                (length > 1 and w.break_before)
+                or (i + length - 1) in covered
+                or w.word in _HINTS
+                or w.word in _FILLER
+                or not _LETTERS_ONLY.search(w.word)
+            ):
+                break
+            flat += w.word
+            if _allowed(len(flat)):
+                text = ' '.join(t.word for t in words[i : i + length])
+                spans.append(_Span(i, i + length, flat, text, _hint_at(words, i)))
+    if not spans:
+        return []
+    regions, children = _pools()
+    out: list[_Hit] = []
+
+    def add(span: _Span, candidates: Iterable[tuple[str, Union[list[str], str], str]]) -> None:
+        """The closest names, if there are only a few of them."""
+        most = _allowed(len(span.flat))
+        # "Jaga Baya I" is not Jagabaya II, and "Rengas" not Rengas IX: a number at the end has to be the same.
+        number = _end_number(span.text)
+        best_distance = most + 1
+        codes: list[str] = []
+        for name, found, key in candidates:
+            if name[0] != span.flat[0] or _end_number(key) != number:
+                continue
+            d = _distance(span.flat, name, min(most, best_distance))
+            if d > most or d > best_distance or d == 0:
+                continue
+            fitting = [code for code in ([found] if isinstance(found, str) else found) if _fits(code, span.hint)]
+            if not fitting:
+                continue
+            if d < best_distance:
+                codes = []
+            best_distance = d
+            codes.extend(fitting)
+        codes = list(dict.fromkeys(codes))
+        if codes and len(codes) <= 3:
+            out.extend(_to_hits(codes, span.hint, span.start, span.to, span.text, True))
+
+    for span in spans:
+        add(span, regions)
+    # Where to look: the kabupaten and kota named, the kode pos, or a kecamatan the address marks or no other region
+    # shares.
+    scope: dict[str, None] = {}
+    for h in [*hits, *out]:
+        if h.level == 2:
+            scope[h.code] = None
+    for v in postal_villages or []:
+        scope[v[:5]] = None
+    if not scope:
+        for h in hits:
+            if h.level == 3 and (h.hinted or h.unique):
+                scope[h.code[:5]] = None
+    if len(scope) > 6:
+        return out
+    for span in spans:
+        for kab in scope:
+            add(span, children.get(kab, []))
+    return out
 
 
 @dataclass(slots=True)
@@ -459,7 +639,7 @@ def _chains(hits: list[_Hit], postal_villages: Optional[list[str]]) -> list[_Cha
         )
         score = 0.0
         for level, h in used.items():
-            score += _WEIGHT[level] + (2 if h.hinted else 0) + 0.5 * (h.to - h.start - 1)
+            score += _WEIGHT[level] - (1 if h.fuzzy else 0) + (2 if h.hinted else 0) + 0.5 * (h.to - h.start - 1)
         # Addresses run from small to large; a kota named before its own kelurahan is likely part of a street name
         # ("Jl. Raya Bogor KM 30, Cimanggis").
         for level, h in used.items():
@@ -481,20 +661,34 @@ def _chains(hits: list[_Hit], postal_villages: Optional[list[str]]) -> list[_Cha
 
         region = f'{node.code[:5]}.'
         if any(
-            h.level >= 3 and h.code.startswith(region) and not node.code.startswith(h.code) and free(h) for h in hits
+            not h.fuzzy
+            and h.level >= 3
+            and h.code.startswith(region)
+            and not node.code.startswith(h.code)
+            and free(h)
+            for h in hits
         ):
             score -= 3
-        ignores_marked = any(h.hinted and not node.code.startswith(h.code) and free(h) for h in hits)
+        ignores_marked = any(not h.fuzzy and h.hinted and not node.code.startswith(h.code) and free(h) for h in hits)
         if ignores_marked:
             score -= 2
         # A lone name only counts when it is a kabupaten, kota, or provinsi, or the address marks or confirms it, or
-        # no other region has that name.
-        supported = len(used) > 1 or node.hinted or postal_agrees or node.level <= 2 or node.unique
+        # no other region has that name. With a typo, a parent has to come after it, or the kode pos agree: "Jl. Raya
+        # Metro Wates, Desa Purwodadi" is not a typo of Purwosari in Kota Metro.
+        if node.fuzzy:
+            parent_after = any(level < node.level and h.start >= node.to for level, h in used.items())
+            supported = parent_after or postal_agrees or (node.level <= 2 and node.hinted)
+        else:
+            supported = len(used) > 1 or node.hinted or postal_agrees or node.level <= 2 or node.unique
         if supported:
             out.append(_Chain(node, used, score, postal_agrees, ignores_marked))
     # A tie goes to the larger region: "Pondok Aren, Tangsel" is the kecamatan, not the kelurahan of the same name.
     out.sort(key=lambda c: (-c.score, c.node.level, c.node.code))
     return out
+
+
+def _with_typo(c: _Chain) -> bool:
+    return any(h.fuzzy for h in c.used.values())
 
 
 # --- putting it together -------------------------------------------------------------------------------------
@@ -604,7 +798,8 @@ def parse_alamat(address: str) -> ParsedAlamat:
 
     words = _tokens(text, skip)
     hits, marked = _find_hits(words)
-    found = _chains(hits, postal_villages or None)
+    postal_list = postal_villages or None
+    found = _chains([*hits, *_typo_hits(words, hits, postal_list)], postal_list)
     best = found[0] if found else None
     from_postal = False
     if best is None and postal_villages:
@@ -651,9 +846,13 @@ def parse_alamat(address: str) -> ParsedAlamat:
             result.inferred.append(key)
     result.code = code
 
-    # Other readings: different regions that scored nearly as well.
+    # Other readings: different regions that scored nearly as well. A reading with a typo only competes with another
+    # one.
+    rivals = found if _with_typo(best) else [c for c in found if not _with_typo(c)]
     seen = {code}
-    for c in found[1:]:
+    for c in rivals:
+        if c is best:
+            continue
         if c.score < best.score - 2 or len(result.alternatives) >= 3:
             break
         if c.node.code in seen or _related(code, c.node.code):
@@ -662,7 +861,8 @@ def parse_alamat(address: str) -> ParsedAlamat:
         alternative = get_wilayah(c.node.code)
         if alternative:
             result.alternatives.append(alternative)
-    ambiguous = len(found) > 1 and found[1].score == best.score and not _related(code, found[1].node.code)
+    following = next((c for c in rivals if c is not best), None)
+    ambiguous = following is not None and following.score == best.score and not _related(code, following.node.code)
 
     village = result.kelurahan_desa
     if result.postal_code and postal_villages and not best.postal_agrees:
@@ -684,13 +884,27 @@ def parse_alamat(address: str) -> ParsedAlamat:
             f'{_LEVEL_WORD[mk.level]} {_title(mk.text)} tidak ditemukan di {_label(deepest)} menurut data Kemendagri.'
         )
 
+    # Names read with a typo: say what they were taken for.
+    typos = [h for h in best.used.values() if h.fuzzy]
+    for h in typos:
+        written = text[words[h.start].start : words[h.to - 1].end]
+        typo_region = get_wilayah(h.code)
+        if typo_region:
+            result.issues.append(f'"{written}" dibaca sebagai {_label(typo_region)}.')
+
     chain = best
 
     def named(level: int) -> bool:
         return level in chain.used
 
-    # Another region nearly as likely ("Kemiri, Purworejo": the kecamatan, or the desa of that name elsewhere in it).
-    contested = any(c is not best and not _related(code, c.node.code) and c.score >= best.score - 3 for c in found)
+    # Another region nearly as likely ("Kemiri, Purworejo": the kecamatan, or the desa of that name elsewhere in it),
+    # or a kelurahan nearly as likely if a name has a typo ("Kedunsari, Klirong": Kedungsari, not the desa Klirong).
+    contested = any(
+        c is not best
+        and not _related(code, c.node.code)
+        and (c.node.level == 4 and c.score >= best.score - 1 if _with_typo(c) else c.score >= best.score - 3)
+        for c in found
+    )
     if from_postal or ambiguous:
         result.confidence = 'low'
     elif (
@@ -700,6 +914,7 @@ def parse_alamat(address: str) -> ParsedAlamat:
         and (best.postal_agrees or not result.postal_code)
         and not contested
         and not best.ignores_marked
+        and not typos
     ):
         result.confidence = 'high'
     elif (

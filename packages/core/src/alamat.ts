@@ -283,6 +283,8 @@ interface Hit {
   unique: boolean;
   /** Unique, and more than one word ("Denpasar Selatan"). */
   distinctive: boolean;
+  /** Matched with a typo ("Cibinog" for Cibinong). */
+  fuzzy?: boolean;
 }
 
 /** A name the address marks with a level word ("Desa Sukamaju"), to report when no such region is found. */
@@ -293,22 +295,44 @@ interface Marked {
 
 const levelOf = (code: string) => code.split('.').length as WilayahLevel;
 const isKota = (code: string) => levelOf(code) === 2 && Number(code.slice(3, 5)) >= 71;
+const villageKind = (code: string) => (code.slice(-4, -3) === '1' ? 'kelurahan' : 'desa');
+const fits = (code: string, hint: Hint | undefined) =>
+  !hint || (hint.level === levelOf(code) && (!hint.kind || (hint.kind === 'kota') === isKota(code)));
+
+/** The level word right before word `i`, skipping "adm." and the like. */
+function hintAt(words: Token[], i: number): Hint | undefined {
+  for (let j = i - 1; j >= 0 && !words[j + 1]!.breakBefore; j--) {
+    const w = words[j]!.word;
+    if (HINTS[w]) return HINTS[w];
+    if (!FILLER.has(w)) return undefined;
+  }
+  return undefined;
+}
+
+/** Hits for the regions a span of words names, already narrowed to the level its level word gives. */
+function toHits(codes: string[], hint: Hint | undefined, from: number, to: number, text: string, fuzzy = false): Hit[] {
+  // "Kel. Kamal" prefers the kelurahan in Jakarta Barat to the desa of that name.
+  const preferred = hint?.village && codes.some((code) => villageKind(code) === hint.village);
+  const unique = !fuzzy && codes.length === 1;
+  return codes.map((code) => ({
+    code,
+    level: levelOf(code),
+    from,
+    to,
+    text,
+    hinted: !!hint && (!preferred || villageKind(code) === hint.village),
+    unique,
+    distinctive: to - from > 1 && unique,
+    ...(fuzzy && { fuzzy }),
+  }));
+}
 
 function findHits(words: Token[]): { hits: Hit[]; marked: Marked[] } {
   const names = nameIndex();
   const hits: Hit[] = [];
   const marked: Marked[] = [];
   for (let i = 0; i < words.length; i++) {
-    // A level word right before the name, skipping "adm." and the like.
-    let hint: Hint | undefined;
-    for (let j = i - 1; j >= 0 && !words[j + 1]!.breakBefore; j--) {
-      const w = words[j]!.word;
-      if (HINTS[w]) {
-        hint = HINTS[w];
-        break;
-      }
-      if (!FILLER.has(w)) break;
-    }
+    const hint = hintAt(words, i);
     // The name after a level word may itself start with one: "Kec. Kota Baru".
     if (hint && !FILLER.has(words[i]!.word)) {
       const name: string[] = [];
@@ -331,17 +355,8 @@ function findHits(words: Token[]): { hits: Hit[]; marked: Marked[] } {
       if (label && len === 1) continue;
       // "Suka Maju" for "Sukamaju": the words run together find a name written as one.
       const lookup = (k: string) => [...(names.get(k) ?? []), ...(len > 1 ? (names.get(k.replace(/ /g, '')) ?? []) : [])];
-      const codes = [...new Set([...lookup(key), ...(raw !== key ? lookup(raw) : [])])].filter(
-        (code) => !hint || (hint.level === levelOf(code) && (!hint.kind || (hint.kind === 'kota') === isKota(code))),
-      );
-      // "Kel. Kamal" prefers the kelurahan in Jakarta Barat to the desa of that name.
-      const kind = (code: string) => (code.slice(-4, -3) === '1' ? 'kelurahan' : 'desa');
-      const preferred = hint?.village && codes.some((code) => kind(code) === hint.village);
-      for (const code of codes) {
-        const hinted = !!hint && (!preferred || kind(code) === hint.village);
-        const unique = codes.length === 1;
-        hits.push({ code, level: levelOf(code), from: i, to: i + len, text: key, hinted, unique, distinctive: len > 1 && unique });
-      }
+      const codes = [...new Set([...lookup(key), ...(raw !== key ? lookup(raw) : [])])].filter((code) => fits(code, hint));
+      hits.push(...toHits(codes, hint, i, i + len, key));
     }
   }
   // A name inside a longer kota, kabupaten, or provinsi, or a longer name the address marks, is not a name of its own:
@@ -350,6 +365,116 @@ function findHits(words: Token[]): { hits: Hit[]; marked: Marked[] } {
   const inside = (h: Hit) =>
     hits.some((g) => (g.level <= 2 || g.hinted) && g.from <= h.from && g.to >= h.to && g.to - g.from > h.to - h.from);
   return { hits: hits.filter((h) => !inside(h)), marked };
+}
+
+// --- names with a typo -----------------------------------------------------------------------------------------
+
+let regionPool: Array<[string, string[], string]> | undefined;
+let childPool: Map<string, Array<[string, string, string]>> | undefined;
+
+/** Names without spaces: kabupaten, kota, and provinsi; and the kecamatan and kelurahan of each kabupaten or kota. */
+function pools(): { regions: Array<[string, string[], string]>; children: Map<string, Array<[string, string, string]>> } {
+  if (!regionPool || !childPool) {
+    const regions: Array<[string, string[], string]> = [];
+    const children = new Map<string, Array<[string, string, string]>>();
+    for (const [key, codes] of nameIndex()) {
+      const flat = key.replace(/ /g, '');
+      const top = codes.filter((code) => levelOf(code) <= 2);
+      if (top.length) regions.push([flat, top, key]);
+      for (const code of codes) {
+        if (levelOf(code) < 3) continue;
+        let list = children.get(code.slice(0, 5));
+        if (!list) children.set(code.slice(0, 5), (list = []));
+        list.push([flat, code, key]);
+      }
+    }
+    regionPool = regions;
+    childPool = children;
+  }
+  return { regions: regionPool, children: childPool };
+}
+
+/** Edits between two words (a swap of two letters is one), or `max + 1` once it is more than `max`. */
+function distance(a: string, b: string, max: number): number {
+  if (Math.abs(a.length - b.length) > max) return max + 1;
+  let before: number[] = [];
+  let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) {
+    const row = [i];
+    let low = i;
+    for (let j = 1; j <= b.length; j++) {
+      let d = Math.min(prev[j]! + 1, row[j - 1]! + 1, prev[j - 1]! + (a[i - 1] === b[j - 1] ? 0 : 1));
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d = Math.min(d, before[j - 2]! + 1);
+      row.push(d);
+      low = Math.min(low, d);
+    }
+    if (low > max) return max + 1;
+    before = prev;
+    prev = row;
+  }
+  return prev[b.length]!;
+}
+
+const endNumber = (name: string) => /(?:^| )([ivx]+|\d+)$/.exec(name)?.[1];
+
+/** Typos allowed in a name of this many letters: none in short names, where one letter makes another name. */
+const allowed = (letters: number) => (letters >= 10 ? 2 : letters >= 5 ? 1 : 0);
+
+/**
+ * Names written with a typo, for the words no region was found for: "Kab. Tasikmalayah", "Cibinog, Bogor". Kabupaten,
+ * kota, and provinsi are looked for everywhere; kecamatan and kelurahan only inside the kabupaten or kota the address
+ * names or its kode pos points to, since thousands of villages are one letter apart. The first letter has to match.
+ */
+function typoHits(words: Token[], hits: Hit[], postalVillages: string[] | undefined): Hit[] {
+  // A kabupaten, kota, or provinsi written right, or a name of more than one word no other region has ("Pasar
+  // Minggu"), is not a typo of another name.
+  const covered = new Set<number>();
+  for (const h of hits) if (h.level <= 2 || h.distinctive) for (let k = h.from; k < h.to; k++) covered.add(k);
+  const spans: Array<{ from: number; to: number; flat: string; text: string; hint: Hint | undefined }> = [];
+  for (let i = 0; i < words.length; i++) {
+    let flat = '';
+    for (let len = 1; len <= 3 && i + len <= words.length; len++) {
+      const w = words[i + len - 1]!;
+      if ((len > 1 && w.breakBefore) || covered.has(i + len - 1) || HINTS[w.word] || FILLER.has(w.word) || !/^[a-z]+$/.test(w.word)) break;
+      flat += w.word;
+      if (allowed(flat.length)) {
+        const text = words.slice(i, i + len).map((t) => t.word).join(' ');
+        spans.push({ from: i, to: i + len, flat, text, hint: hintAt(words, i) });
+      }
+    }
+  }
+  if (!spans.length) return [];
+  const { regions, children } = pools();
+  const out: Hit[] = [];
+  // The closest names, if there are only a few of them.
+  const add = (span: (typeof spans)[number], candidates: Iterable<[string, string[] | string, string]>) => {
+    const max = allowed(span.flat.length);
+    // "Jaga Baya I" is not Jagabaya II, and "Rengas" not Rengas IX: a number at the end has to be the same.
+    const number = endNumber(span.text);
+    let bestDistance = max + 1;
+    let codes: string[] = [];
+    for (const [name, found, key] of candidates) {
+      if (name[0] !== span.flat[0] || endNumber(key) !== number) continue;
+      const d = distance(span.flat, name, Math.min(max, bestDistance));
+      if (d > max || d > bestDistance || d === 0) continue;
+      const fitting = (typeof found === 'string' ? [found] : found).filter((code) => fits(code, span.hint));
+      if (!fitting.length) continue;
+      if (d < bestDistance) codes = [];
+      bestDistance = d;
+      codes.push(...fitting);
+    }
+    codes = [...new Set(codes)];
+    if (codes.length && codes.length <= 3) out.push(...toHits(codes, span.hint, span.from, span.to, span.text, true));
+  };
+  for (const span of spans) add(span, regions);
+  // Where to look: the kabupaten and kota named, the kode pos, or a kecamatan the address marks or no other region shares.
+  const scope = new Set<string>();
+  for (const h of [...hits, ...out]) if (h.level === 2) scope.add(h.code);
+  for (const v of postalVillages ?? []) scope.add(v.slice(0, 5));
+  if (!scope.size) for (const h of hits) if (h.level === 3 && (h.hinted || h.unique)) scope.add(h.code.slice(0, 5));
+  if (scope.size > 6) return out;
+  for (const span of spans) for (const kab of scope) add(span, children.get(kab) ?? []);
+  return out;
 }
 
 interface Chain {
@@ -382,7 +507,7 @@ function chains(hits: Hit[], postalVillages: string[] | undefined): Chain[] {
     const postalAgrees =
       !!postalVillages && postalVillages.some((v) => v === node.code || v.startsWith(`${node.code}.`));
     let score = 0;
-    for (const [level, h] of used) score += WEIGHT[level] + (h.hinted ? 2 : 0) + 0.5 * (h.to - h.from - 1);
+    for (const [level, h] of used) score += WEIGHT[level] - (h.fuzzy ? 1 : 0) + (h.hinted ? 2 : 0) + 0.5 * (h.to - h.from - 1);
     // Addresses run from small to large; a kota named before its own kelurahan is likely part of a street name
     // ("Jl. Raya Bogor KM 30, Cimanggis").
     for (const [level, h] of used) for (const [other, g] of used) if (other < level && g.from < h.from) score -= 1.5;
@@ -395,17 +520,23 @@ function chains(hits: Hit[], postalVillages: string[] | undefined): Chain[] {
     const free = (h: Hit) => !all.some((u) => (h.from < u.to && h.to > u.from) || h.text === u.text);
     const left = hits.some(
       (h) =>
+        !h.fuzzy &&
         h.level >= 3 &&
         h.code.startsWith(`${node.code.slice(0, 5)}.`) &&
         !node.code.startsWith(h.code) &&
         free(h),
     );
     if (left) score -= 3;
-    const ignoresMarked = hits.some((h) => h.hinted && !node.code.startsWith(h.code) && free(h));
+    const ignoresMarked = hits.some((h) => !h.fuzzy && h.hinted && !node.code.startsWith(h.code) && free(h));
     if (ignoresMarked) score -= 2;
     // A lone name only counts when it is a kabupaten, kota, or provinsi, or the address marks or confirms it, or no
-    // other region has that name.
-    const supported = used.size > 1 || node.hinted || postalAgrees || node.level <= 2 || node.unique;
+    // other region has that name. A name with a typo needs a level word or another name with it.
+    // With a typo, a parent has to come after it, or the kode pos agree: "Jl. Raya Metro Wates, Desa Purwodadi" is not
+    // a typo of Purwosari in Kota Metro.
+    const parentAfter = [...used].some(([level, h]) => level < node.level && h.from >= node.to);
+    const supported = node.fuzzy
+      ? parentAfter || postalAgrees || (node.level <= 2 && node.hinted)
+      : used.size > 1 || node.hinted || postalAgrees || node.level <= 2 || node.unique;
     if (supported) out.push({ node, used, score, postalAgrees, ignoresMarked });
   }
   // A tie goes to the larger region: "Pondok Aren, Tangsel" is the kecamatan, not the kelurahan of the same name.
@@ -494,7 +625,8 @@ export function parseAlamat(address: string): ParsedAlamat {
 
   const words = tokens(text, skip);
   const { hits, marked } = findHits(words);
-  const found = chains(hits, postalVillages?.length ? postalVillages : undefined);
+  const postalList = postalVillages?.length ? postalVillages : undefined;
+  const found = chains([...hits, ...typoHits(words, hits, postalList)], postalList);
   let best = found[0];
   let fromPostal = false;
   if (!best && postalVillages?.length) {
@@ -537,15 +669,19 @@ export function parseAlamat(address: string): ParsedAlamat {
   }
   result.code = code;
 
-  // Other readings: different regions that scored nearly as well.
+  // Other readings: different regions that scored nearly as well. A reading with a typo only competes with another one.
+  const withTypo = (c: Chain) => [...c.used.values()].some((h) => h.fuzzy);
+  const rivals = withTypo(best) ? found : found.filter((c) => !withTypo(c));
   const seen = new Set([code]);
-  for (const c of found.slice(1)) {
+  for (const c of rivals) {
+    if (c === best) continue;
     if (c.score < best.score - 2 || result.alternatives.length >= 3) break;
     if (seen.has(c.node.code) || related(code, c.node.code)) continue;
     seen.add(c.node.code);
     result.alternatives.push(getWilayah(c.node.code)!);
   }
-  const ambiguous = found.length > 1 && found[1]!.score === best.score && !related(code, found[1]!.node.code);
+  const next = rivals.find((c) => c !== best);
+  const ambiguous = !!next && next.score === best.score && !related(code, next.node.code);
 
   const village = result.kelurahanDesa;
   if (result.postalCode && postalVillages?.length && !best.postalAgrees) {
@@ -564,11 +700,24 @@ export function parseAlamat(address: string): ParsedAlamat {
     result.issues.push(`${LEVEL_WORD[m.level]} ${title(m.text)} tidak ditemukan di ${label(deepest!)} menurut data Kemendagri.`);
   }
 
+  // Names read with a typo: say what they were taken for.
+  const typos = [...best.used.values()].filter((h) => h.fuzzy);
+  for (const h of typos) {
+    const written = text.slice(words[h.from]!.start, words[h.to - 1]!.end);
+    result.issues.push(`"${written}" dibaca sebagai ${label(getWilayah(h.code)!)}.`);
+  }
+
   const named = (level: WilayahLevel) => best.used.has(level);
-  // Another region nearly as likely ("Kemiri, Purworejo": the kecamatan, or the desa of that name elsewhere in it).
-  const contested = found.some((c) => c !== best && !related(code, c.node.code) && c.score >= best.score - 3);
+  // Another region nearly as likely ("Kemiri, Purworejo": the kecamatan, or the desa of that name elsewhere in it), or
+  // a kelurahan nearly as likely if a name has a typo ("Kedunsari, Klirong": Kedungsari, not the desa Klirong).
+  const contested = found.some(
+    (c) =>
+      c !== best &&
+      !related(code, c.node.code) &&
+      (withTypo(c) ? c.node.level === 4 && c.score >= best.score - 1 : c.score >= best.score - 3),
+  );
   if (fromPostal || ambiguous) result.confidence = 'low';
-  else if (village && named(4) && (named(3) || named(2)) && (best.postalAgrees || !result.postalCode) && !contested && !best.ignoresMarked) {
+  else if (village && named(4) && (named(3) || named(2)) && (best.postalAgrees || !result.postalCode) && !contested && !best.ignoresMarked && !typos.length) {
     result.confidence = 'high';
   }
   else if (best.used.size > 1 || best.postalAgrees || (best.node.hinted && best.node.unique) || best.node.level <= 2 || best.node.distinctive) result.confidence = 'medium';

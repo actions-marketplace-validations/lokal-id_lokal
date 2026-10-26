@@ -2654,6 +2654,110 @@
   "matches": []
  },
  {
+  "text": "names with a typo, inside the kota or kabupaten the address names",
+  "matches": []
+ },
+ {
+  "text": "Kp. Nagrog RT 13 RW 03, Kab. Tasikmalayah",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    22,
+    "Kp. Nagrog RT 13 RW 03",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "32.06",
+  "matches": []
+ },
+ {
+  "text": "\"Tasikmalayah\" dibaca sebagai Kabupaten Tasikmalaya.",
+  "matches": []
+ },
+ {
+  "text": "medium",
+  "matches": []
+ },
+ {
+  "text": "Jl. Melati 5, Cibinog, Kab. Bogor",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    12,
+    "Jl. Melati 5",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "32.01.01",
+  "matches": []
+ },
+ {
+  "text": "\"Cibinog\" dibaca sebagai Kecamatan Cibinong.",
+  "matches": []
+ },
+ {
+  "text": "Jl. Anggrek 2, Kec. Tanah Sereal, Kota Bogor",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    13,
+    "Jl. Anggrek 2",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "32.71.06",
+  "matches": []
+ },
+ {
+  "text": "a real name is not read as a typo of another",
+  "matches": []
+ },
+ {
+  "text": "Jl. Raya Metro Wates Km 05, Desa Purwodadi",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    26,
+    "Jl. Raya Metro Wates Km 05",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "Purwodadi",
+  "matches": []
+ },
+ {
+  "text": "low",
+  "matches": []
+ },
+ {
+  "text": "Gg. Bukit 2, Jaga Baya I, Way Halim, Kota Bandar Lampung",
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    11,
+    "Gg. Bukit 2",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "18.71.15",
+  "matches": []
+ },
+ {
   "text": "node:test",
   "matches": []
  },

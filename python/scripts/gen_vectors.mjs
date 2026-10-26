@@ -224,6 +224,16 @@ for (let i = 0; i < 400; i++) {
   const postal = rand();
   if (postal < 0.4 && kel.postalCode) text += ` ${kel.postalCode}`;
   else if (postal < 0.5) text += ` ${int(10000, 99999)}`;
+  // A typo in one name now and then: a letter dropped, doubled, or changed.
+  if (rand() < 0.3) {
+    const long = [...text.matchAll(/[A-Za-z]{5,}/g)];
+    if (long.length) {
+      const m = pick(long);
+      const at = m.index + int(1, m[0].length - 2);
+      const kind = int(0, 2);
+      text = text.slice(0, at) + (kind === 0 ? '' : kind === 1 ? text[at] + text[at] : 'a') + text.slice(at + 1);
+    }
+  }
   const cased = rand();
   addresses.push(cased < 0.2 ? text.toUpperCase() : cased < 0.4 ? text.toLowerCase() : text);
 }
