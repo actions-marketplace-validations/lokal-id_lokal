@@ -384,6 +384,7 @@ var TYPE_WORDS = /* @__PURE__ */ new Set([
   "unknown",
   "void"
 ]);
+var CODE_FILE = /[\w-]\.(?:m?[jt]sx?|cjs|cts|py|json|ya?ml|sh|toml)\b/i;
 var DIGIT_TYPES = /* @__PURE__ */ new Set([
   "NIK",
   "KK",
@@ -419,6 +420,8 @@ function isPlausibleValue(type, value, key) {
   if (type === "AKTA" && v.replace(/\D/g, "").length < 4)
     return false;
   if (type === "ADDRESS" && !/\s/.test(v))
+    return false;
+  if (type === "ADDRESS" && CODE_FILE.test(v))
     return false;
   const initials = type === "NAME" && /^(?:[A-Z]\.[ \t]?){1,4}$/.test(v);
   if (type !== "ADDRESS" && (/[()]/.test(v) || !initials && /^[a-z_$][\w$]*\.[a-z_$][\w$.]*$/i.test(v)))

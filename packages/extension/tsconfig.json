@@ -1,9 +1,24 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2023",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "types": [],
-    "noEmit": true
+    "noEmit": true,
+    "paths": {
+      "node:zlib": [
+        "./src/shims/zlib.ts"
+      ]
+    }
   },
-  "include": ["src", "../core/src/samaran", "../core/src/nik.ts", "../core/src/phone.ts", "../core/src/provinces.ts"]
+  "include": [
+    "src",
+    "../core/src/samaran",
+    "../core/src/nik.ts",
+    "../core/src/phone.ts",
+    "../core/src/provinces.ts"
+  ]
 }

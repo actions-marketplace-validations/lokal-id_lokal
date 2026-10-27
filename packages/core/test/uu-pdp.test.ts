@@ -120,6 +120,11 @@ test('key ip hanya untuk alamat IP, bukan versi paket di lockfile', () => {
   assert.deepEqual(found('"remote_addr": "2001:db8::1"').map((x) => x.split(':')[0]), ['IP']);
 });
 
+test('script di package.json yang bernama alamat bukan alamat', () => {
+  assert.deepEqual(found('"eval:alamat": "node evals/alamat-bench.mjs",'), []);
+  assert.deepEqual(found('"alamat": "Jl. Melati No. 5, Beji, Depok"').map((x) => x.split(':')[0]), ['ADDRESS']);
+});
+
 test('data anak dan catatan sipil: NISN dan nomor akta', () => {
   assert.deepEqual(found('NISN 0123456789 atas nama Nayla Zahra'), ['NISN:0123456789', 'NAME:Nayla Zahra']);
   assert.deepEqual(found('Nomor akta kelahiran: 3175-LU-01022010-0123'), ['AKTA:3175-LU-01022010-0123']);

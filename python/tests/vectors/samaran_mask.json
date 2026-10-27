@@ -1789,6 +1789,1333 @@
   "high": []
  },
  {
+  "text": "../src/wilayah.ts",
+  "placeholder": "../src/wilayah.ts",
+  "vault": [],
+  "partial": "../src/wilayah.ts",
+  "noFinanceNoName": "../src/wilayah.ts",
+  "high": []
+ },
+ {
+  "text": "a full address with commas and level words",
+  "placeholder": "a full address with commas and level words",
+  "vault": [],
+  "partial": "a full address with commas and level words",
+  "noFinanceNoName": "a full address with commas and level words",
+  "high": []
+ },
+ {
+  "text": "Jl. Melati No. 12 RT 003/RW 005, Kel. Cempaka Putih Timur, Kec. Cempaka Putih, Jakarta Pusat 10510",
+  "placeholder": "[ADDRESS_1], Kel. Cempaka Putih Timur, Kec. Cempaka Putih, Jakarta Pusat 10510",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Melati No. 12 RT 003/RW 005"
+   ]
+  ],
+  "partial": "Jl. ***, Kel. Cempaka Putih Timur, Kec. Cempaka Putih, Jakarta Pusat 10510",
+  "noFinanceNoName": "[ADDRESS_1], Kel. Cempaka Putih Timur, Kec. Cempaka Putih, Jakarta Pusat 10510",
+  "high": [
+   "Jl. Melati No. 12 RT 003/RW 005"
+  ]
+ },
+ {
+  "text": "31.71.05.1001",
+  "placeholder": "31.71.05.1001",
+  "vault": [],
+  "partial": "31.71.05.1001",
+  "noFinanceNoName": "31.71.05.1001",
+  "high": []
+ },
+ {
+  "text": "high",
+  "placeholder": "high",
+  "vault": [],
+  "partial": "high",
+  "noFinanceNoName": "high",
+  "high": []
+ },
+ {
+  "text": "Jl. Melati No. 12",
+  "placeholder": "[ADDRESS_1]",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Melati No. 12"
+   ]
+  ],
+  "partial": "Jl. ***",
+  "noFinanceNoName": "[ADDRESS_1]",
+  "high": [
+   "Jl. Melati No. 12"
+  ]
+ },
+ {
+  "text": "003",
+  "placeholder": "003",
+  "vault": [],
+  "partial": "003",
+  "noFinanceNoName": "003",
+  "high": []
+ },
+ {
+  "text": "005",
+  "placeholder": "005",
+  "vault": [],
+  "partial": "005",
+  "noFinanceNoName": "005",
+  "high": []
+ },
+ {
+  "text": "10510",
+  "placeholder": "10510",
+  "vault": [],
+  "partial": "10510",
+  "noFinanceNoName": "10510",
+  "high": []
+ },
+ {
+  "text": "Cempaka Putih Timur",
+  "placeholder": "Cempaka Putih Timur",
+  "vault": [],
+  "partial": "Cempaka Putih Timur",
+  "noFinanceNoName": "Cempaka Putih Timur",
+  "high": []
+ },
+ {
+  "text": "Cempaka Putih",
+  "placeholder": "Cempaka Putih",
+  "vault": [],
+  "partial": "Cempaka Putih",
+  "noFinanceNoName": "Cempaka Putih",
+  "high": []
+ },
+ {
+  "text": "Kota Administrasi Jakarta Pusat",
+  "placeholder": "Kota Administrasi Jakarta Pusat",
+  "vault": [],
+  "partial": "Kota Administrasi Jakarta Pusat",
+  "noFinanceNoName": "Kota Administrasi Jakarta Pusat",
+  "high": []
+ },
+ {
+  "text": "31",
+  "placeholder": "31",
+  "vault": [],
+  "partial": "31",
+  "noFinanceNoName": "31",
+  "high": []
+ },
+ {
+  "text": "provinsi",
+  "placeholder": "provinsi",
+  "vault": [],
+  "partial": "provinsi",
+  "noFinanceNoName": "provinsi",
+  "high": []
+ },
+ {
+  "text": "Jl. Melati No. 12, RT 003/RW 005, Kelurahan Cempaka Putih Timur, Kecamatan Cempaka Putih, Kota Administrasi Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10510",
+  "placeholder": "[ADDRESS_1], Kelurahan Cempaka Putih Timur, Kecamatan Cempaka Putih, Kota Administrasi Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10510",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Melati No. 12, RT 003/RW 005"
+   ]
+  ],
+  "partial": "Jl. ***, Kelurahan Cempaka Putih Timur, Kecamatan Cempaka Putih, Kota Administrasi Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10510",
+  "noFinanceNoName": "[ADDRESS_1], Kelurahan Cempaka Putih Timur, Kecamatan Cempaka Putih, Kota Administrasi Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10510",
+  "high": [
+   "Jl. Melati No. 12, RT 003/RW 005"
+  ]
+ },
+ {
+  "text": "lowercase, no commas, RT/RW written short",
+  "placeholder": "lowercase, no commas, RT/RW written short",
+  "vault": [],
+  "partial": "lowercase, no commas, RT/RW written short",
+  "noFinanceNoName": "lowercase, no commas, RT/RW written short",
+  "high": []
+ },
+ {
+  "text": "jl margonda raya no 100 rt 3/5 kemiri muka beji depok 16423",
+  "placeholder": "[ADDRESS_1] rt 3/5 kemiri muka beji depok 16423",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "jl margonda raya no 100"
+   ]
+  ],
+  "partial": "jl *** rt 3/5 kemiri muka beji depok 16423",
+  "noFinanceNoName": "[ADDRESS_1] rt 3/5 kemiri muka beji depok 16423",
+  "high": []
+ },
+ {
+  "text": "32.76.06.1004",
+  "placeholder": "32.76.06.1004",
+  "vault": [],
+  "partial": "32.76.06.1004",
+  "noFinanceNoName": "32.76.06.1004",
+  "high": []
+ },
+ {
+  "text": "high",
+  "placeholder": "high",
+  "vault": [],
+  "partial": "high",
+  "noFinanceNoName": "high",
+  "high": []
+ },
+ {
+  "text": "jl margonda raya no 100",
+  "placeholder": "[ADDRESS_1]",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "jl margonda raya no 100"
+   ]
+  ],
+  "partial": "jl ***",
+  "noFinanceNoName": "[ADDRESS_1]",
+  "high": []
+ },
+ {
+  "text": "003",
+  "placeholder": "003",
+  "vault": [],
+  "partial": "003",
+  "noFinanceNoName": "003",
+  "high": []
+ },
+ {
+  "text": "005",
+  "placeholder": "005",
+  "vault": [],
+  "partial": "005",
+  "noFinanceNoName": "005",
+  "high": []
+ },
+ {
+  "text": "16423",
+  "placeholder": "16423",
+  "vault": [],
+  "partial": "16423",
+  "noFinanceNoName": "16423",
+  "high": []
+ },
+ {
+  "text": "jl. melati wuwur gabus pati 59173",
+  "placeholder": "jl. melati wuwur gabus pati 59173",
+  "vault": [],
+  "partial": "jl. melati wuwur gabus pati 59173",
+  "noFinanceNoName": "jl. melati wuwur gabus pati 59173",
+  "high": []
+ },
+ {
+  "text": "33.18.11.2001",
+  "placeholder": "33.18.11.2001",
+  "vault": [],
+  "partial": "33.18.11.2001",
+  "noFinanceNoName": "33.18.11.2001",
+  "high": []
+ },
+ {
+  "text": "capitals and abbreviations as on a KTP",
+  "placeholder": "capitals and abbreviations as on a KTP",
+  "vault": [],
+  "partial": "capitals and abbreviations as on a KTP",
+  "noFinanceNoName": "capitals and abbreviations as on a KTP",
+  "high": []
+ },
+ {
+  "text": "alamat: ds. ciherang kec. pacet kab. cianjur",
+  "placeholder": "alamat: [ADDRESS_1]",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "ds. ciherang kec. pacet kab. cianjur"
+   ]
+  ],
+  "partial": "alamat: ds. ***",
+  "noFinanceNoName": "alamat: [ADDRESS_1]",
+  "high": [
+   "ds. ciherang kec. pacet kab. cianjur"
+  ]
+ },
+ {
+  "text": "32.03.10.2001",
+  "placeholder": "32.03.10.2001",
+  "vault": [],
+  "partial": "32.03.10.2001",
+  "noFinanceNoName": "32.03.10.2001",
+  "high": []
+ },
+ {
+  "text": "Gg. Mawar 3, Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor, Jabar",
+  "placeholder": "[ADDRESS_1], Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor, Jabar",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Gg. Mawar 3"
+   ]
+  ],
+  "partial": "Gg. ***, Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor, Jabar",
+  "noFinanceNoName": "[ADDRESS_1], Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor, Jabar",
+  "high": []
+ },
+ {
+  "text": "32.01.16.2013",
+  "placeholder": "32.01.16.2013",
+  "vault": [],
+  "partial": "32.01.16.2013",
+  "noFinanceNoName": "32.01.16.2013",
+  "high": []
+ },
+ {
+  "text": "Dsn. Krajan RT 2 RW 1 Ds. Sumberejo Kec. Batu Kota Batu",
+  "placeholder": "[ADDRESS_1] Ds. Sumberejo Kec. Batu Kota Batu",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Dsn. Krajan RT 2 RW 1"
+   ]
+  ],
+  "partial": "Dsn. *** Ds. Sumberejo Kec. Batu Kota Batu",
+  "noFinanceNoName": "[ADDRESS_1] Ds. Sumberejo Kec. Batu Kota Batu",
+  "high": [
+   "Dsn. Krajan RT 2 RW 1"
+  ]
+ },
+ {
+  "text": "35.79.01.2005",
+  "placeholder": "35.79.01.2005",
+  "vault": [],
+  "partial": "35.79.01.2005",
+  "noFinanceNoName": "35.79.01.2005",
+  "high": []
+ },
+ {
+  "text": "Dsn. Krajan",
+  "placeholder": "Dsn. Krajan",
+  "vault": [],
+  "partial": "Dsn. Krajan",
+  "noFinanceNoName": "Dsn. Krajan",
+  "high": []
+ },
+ {
+  "text": "short names for Jakarta, Tangerang Selatan, and provinces",
+  "placeholder": "short names for Jakarta, Tangerang Selatan, and provinces",
+  "vault": [],
+  "partial": "short names for Jakarta, Tangerang Selatan, and provinces",
+  "noFinanceNoName": "short names for Jakarta, Tangerang Selatan, and provinces",
+  "high": []
+ },
+ {
+  "text": "Kebayoran Baru, Jaksel",
+  "placeholder": "Kebayoran Baru, Jaksel",
+  "vault": [],
+  "partial": "Kebayoran Baru, Jaksel",
+  "noFinanceNoName": "Kebayoran Baru, Jaksel",
+  "high": []
+ },
+ {
+  "text": "31.74.07",
+  "placeholder": "31.74.07",
+  "vault": [],
+  "partial": "31.74.07",
+  "noFinanceNoName": "31.74.07",
+  "high": []
+ },
+ {
+  "text": "Pondok Aren, Tangsel",
+  "placeholder": "Pondok Aren, Tangsel",
+  "vault": [],
+  "partial": "Pondok Aren, Tangsel",
+  "noFinanceNoName": "Pondok Aren, Tangsel",
+  "high": []
+ },
+ {
+  "text": "36.74.03",
+  "placeholder": "36.74.03",
+  "vault": [],
+  "partial": "36.74.03",
+  "noFinanceNoName": "36.74.03",
+  "high": []
+ },
+ {
+  "text": "Medan Baru, Medan, Sumut",
+  "placeholder": "Medan Baru, Medan, Sumut",
+  "vault": [],
+  "partial": "Medan Baru, Medan, Sumut",
+  "noFinanceNoName": "Medan Baru, Medan, Sumut",
+  "high": []
+ },
+ {
+  "text": "12.71.17",
+  "placeholder": "12.71.17",
+  "vault": [],
+  "partial": "12.71.17",
+  "noFinanceNoName": "12.71.17",
+  "high": []
+ },
+ {
+  "text": "Depok, Sleman, DIY",
+  "placeholder": "Depok, Sleman, DIY",
+  "vault": [],
+  "partial": "Depok, Sleman, DIY",
+  "noFinanceNoName": "Depok, Sleman, DIY",
+  "high": []
+ },
+ {
+  "text": "34.04.07",
+  "placeholder": "34.04.07",
+  "vault": [],
+  "partial": "34.04.07",
+  "noFinanceNoName": "34.04.07",
+  "high": []
+ },
+ {
+  "text": "Depok the kecamatan in Sleman, not Kota Depok",
+  "placeholder": "Depok the kecamatan in Sleman, not Kota Depok",
+  "vault": [],
+  "partial": "Depok the kecamatan in Sleman, not Kota Depok",
+  "noFinanceNoName": "Depok the kecamatan in Sleman, not Kota Depok",
+  "high": []
+ },
+ {
+  "text": "\"Kota\" and \"Kab.\" tell the kota from the kabupaten; without them it is a guess",
+  "placeholder": "\"Kota\" and \"Kab.\" tell the kota from the kabupaten; without them it is a guess",
+  "vault": [],
+  "partial": "\"Kota\" and \"Kab.\" tell the kota from the kabupaten; without them it is a guess",
+  "noFinanceNoName": "\"Kota\" and \"Kab.\" tell the kota from the kabupaten; without them it is a guess",
+  "high": []
+ },
+ {
+  "text": "Kota Bogor",
+  "placeholder": "Kota Bogor",
+  "vault": [],
+  "partial": "Kota Bogor",
+  "noFinanceNoName": "Kota Bogor",
+  "high": []
+ },
+ {
+  "text": "32.71",
+  "placeholder": "32.71",
+  "vault": [],
+  "partial": "32.71",
+  "noFinanceNoName": "32.71",
+  "high": []
+ },
+ {
+  "text": "Kab. Bogor",
+  "placeholder": "Kab. Bogor",
+  "vault": [],
+  "partial": "Kab. Bogor",
+  "noFinanceNoName": "Kab. Bogor",
+  "high": []
+ },
+ {
+  "text": "32.01",
+  "placeholder": "32.01",
+  "vault": [],
+  "partial": "32.01",
+  "noFinanceNoName": "32.01",
+  "high": []
+ },
+ {
+  "text": "Bogor",
+  "placeholder": "Bogor",
+  "vault": [],
+  "partial": "Bogor",
+  "noFinanceNoName": "Bogor",
+  "high": []
+ },
+ {
+  "text": "low",
+  "placeholder": "low",
+  "vault": [],
+  "partial": "low",
+  "noFinanceNoName": "low",
+  "high": []
+ },
+ {
+  "text": "32.71",
+  "placeholder": "32.71",
+  "vault": [],
+  "partial": "32.71",
+  "noFinanceNoName": "32.71",
+  "high": []
+ },
+ {
+  "text": "a kode pos that belongs elsewhere is reported, one that is not registered too",
+  "placeholder": "a kode pos that belongs elsewhere is reported, one that is not registered too",
+  "vault": [],
+  "partial": "a kode pos that belongs elsewhere is reported, one that is not registered too",
+  "noFinanceNoName": "a kode pos that belongs elsewhere is reported, one that is not registered too",
+  "high": []
+ },
+ {
+  "text": "Kemiri Muka, Beji, Depok 16424",
+  "placeholder": "Kemiri Muka, Beji, Depok 16424",
+  "vault": [],
+  "partial": "Kemiri Muka, Beji, Depok 16424",
+  "noFinanceNoName": "Kemiri Muka, Beji, Depok 16424",
+  "high": []
+ },
+ {
+  "text": "32.76.06.1004",
+  "placeholder": "32.76.06.1004",
+  "vault": [],
+  "partial": "32.76.06.1004",
+  "noFinanceNoName": "32.76.06.1004",
+  "high": []
+ },
+ {
+  "text": "high",
+  "placeholder": "high",
+  "vault": [],
+  "partial": "high",
+  "noFinanceNoName": "high",
+  "high": []
+ },
+ {
+  "text": "Kode pos 16424 bukan milik Kelurahan Kemiri Muka (kode posnya 16423).",
+  "placeholder": "Kode pos 16424 bukan milik Kelurahan Kemiri Muka (kode posnya 16423).",
+  "vault": [],
+  "partial": "Kode pos 16424 bukan milik Kelurahan Kemiri Muka (kode posnya 16423).",
+  "noFinanceNoName": "Kode pos 16424 bukan milik Kelurahan Kemiri Muka (kode posnya 16423).",
+  "high": []
+ },
+ {
+  "text": "Kemiri Muka, Beji, Depok 16999",
+  "placeholder": "Kemiri Muka, Beji, Depok 16999",
+  "vault": [],
+  "partial": "Kemiri Muka, Beji, Depok 16999",
+  "noFinanceNoName": "Kemiri Muka, Beji, Depok 16999",
+  "high": []
+ },
+ {
+  "text": "Kode pos 16999 tidak terdaftar.",
+  "placeholder": "Kode pos 16999 tidak terdaftar.",
+  "vault": [],
+  "partial": "Kode pos 16999 tidak terdaftar.",
+  "noFinanceNoName": "Kode pos 16999 tidak terdaftar.",
+  "high": []
+ },
+ {
+  "text": "the kode pos fills in the kelurahan the address leaves out",
+  "placeholder": "the kode pos fills in the kelurahan the address leaves out",
+  "vault": [],
+  "partial": "the kode pos fills in the kelurahan the address leaves out",
+  "noFinanceNoName": "the kode pos fills in the kelurahan the address leaves out",
+  "high": []
+ },
+ {
+  "text": "Jalan Diponegoro 22 Bandung 40115",
+  "placeholder": "Jalan Diponegoro 22 Bandung 40115",
+  "vault": [],
+  "partial": "Jalan Diponegoro 22 Bandung 40115",
+  "noFinanceNoName": "Jalan Diponegoro 22 Bandung 40115",
+  "high": []
+ },
+ {
+  "text": "32.73.09.1003",
+  "placeholder": "32.73.09.1003",
+  "vault": [],
+  "partial": "32.73.09.1003",
+  "noFinanceNoName": "32.73.09.1003",
+  "high": []
+ },
+ {
+  "text": "provinsi",
+  "placeholder": "provinsi",
+  "vault": [],
+  "partial": "provinsi",
+  "noFinanceNoName": "provinsi",
+  "high": []
+ },
+ {
+  "text": "kecamatan",
+  "placeholder": "kecamatan",
+  "vault": [],
+  "partial": "kecamatan",
+  "noFinanceNoName": "kecamatan",
+  "high": []
+ },
+ {
+  "text": "kelurahanDesa",
+  "placeholder": "kelurahanDesa",
+  "vault": [],
+  "partial": "kelurahanDesa",
+  "noFinanceNoName": "kelurahanDesa",
+  "high": []
+ },
+ {
+  "text": "Jalan Diponegoro 22",
+  "placeholder": "Jalan Diponegoro 22",
+  "vault": [],
+  "partial": "Jalan Diponegoro 22",
+  "noFinanceNoName": "Jalan Diponegoro 22",
+  "high": []
+ },
+ {
+  "text": "16424",
+  "placeholder": "16424",
+  "vault": [],
+  "partial": "16424",
+  "noFinanceNoName": "16424",
+  "high": []
+ },
+ {
+  "text": "32.76.06.1005",
+  "placeholder": "32.76.06.1005",
+  "vault": [],
+  "partial": "32.76.06.1005",
+  "noFinanceNoName": "32.76.06.1005",
+  "high": []
+ },
+ {
+  "text": "low",
+  "placeholder": "low",
+  "vault": [],
+  "partial": "low",
+  "noFinanceNoName": "low",
+  "high": []
+ },
+ {
+  "text": "a named village that is not in the data is reported, and the rest still found",
+  "placeholder": "a named village that is not in the data is reported, and the rest still found",
+  "vault": [],
+  "partial": "a named village that is not in the data is reported, and the rest still found",
+  "noFinanceNoName": "a named village that is not in the data is reported, and the rest still found",
+  "high": []
+ },
+ {
+  "text": "KP. RAWA BADAK RT 01 RW 02 DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+  "placeholder": "KP. RAWA BADAK [ADDRESS_1] DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "RT 01 RW 02"
+   ]
+  ],
+  "partial": "KP. RAWA BADAK RT *** DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+  "noFinanceNoName": "KP. RAWA BADAK [ADDRESS_1] DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+  "high": []
+ },
+ {
+  "text": "32.15.30",
+  "placeholder": "32.15.30",
+  "vault": [],
+  "partial": "32.15.30",
+  "noFinanceNoName": "32.15.30",
+  "high": []
+ },
+ {
+  "text": "Kelurahan/desa Sukamaju tidak ditemukan di Kecamatan Cilebar menurut data Kemendagri.",
+  "placeholder": "Kelurahan/desa Sukamaju tidak ditemukan di Kecamatan Cilebar menurut data Kemendagri.",
+  "vault": [],
+  "partial": "Kelurahan/desa Sukamaju tidak ditemukan di Kecamatan Cilebar menurut data Kemendagri.",
+  "noFinanceNoName": "Kelurahan/desa Sukamaju tidak ditemukan di Kecamatan Cilebar menurut data Kemendagri.",
+  "high": []
+ },
+ {
+  "text": "a city inside a street name does not win over the kecamatan after it",
+  "placeholder": "a city inside a street name does not win over the kecamatan after it",
+  "vault": [],
+  "partial": "a city inside a street name does not win over the kecamatan after it",
+  "noFinanceNoName": "a city inside a street name does not win over the kecamatan after it",
+  "high": []
+ },
+ {
+  "text": "Jl. Raya Bogor KM 30, Cimanggis, Depok",
+  "placeholder": "[ADDRESS_1], Cimanggis, Depok",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Raya Bogor KM 30"
+   ]
+  ],
+  "partial": "Jl. ***, Cimanggis, Depok",
+  "noFinanceNoName": "[ADDRESS_1], Cimanggis, Depok",
+  "high": []
+ },
+ {
+  "text": "32.76.02",
+  "placeholder": "32.76.02",
+  "vault": [],
+  "partial": "32.76.02",
+  "noFinanceNoName": "32.76.02",
+  "high": []
+ },
+ {
+  "text": "Jl. Raya Bogor KM 30",
+  "placeholder": "[ADDRESS_1]",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Raya Bogor KM 30"
+   ]
+  ],
+  "partial": "Jl. ***",
+  "noFinanceNoName": "[ADDRESS_1]",
+  "high": []
+ },
+ {
+  "text": "Jl. Bogor Raya No 5, Cibubur, Ciracas, Jakarta Timur",
+  "placeholder": "[ADDRESS_1], Cibubur, Ciracas, Jakarta Timur",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Bogor Raya No 5"
+   ]
+  ],
+  "partial": "Jl. ***, Cibubur, Ciracas, Jakarta Timur",
+  "noFinanceNoName": "[ADDRESS_1], Cibubur, Ciracas, Jakarta Timur",
+  "high": [
+   "Jl. Bogor Raya No 5"
+  ]
+ },
+ {
+  "text": "31.75.09.1002",
+  "placeholder": "31.75.09.1002",
+  "vault": [],
+  "partial": "31.75.09.1002",
+  "noFinanceNoName": "31.75.09.1002",
+  "high": []
+ },
+ {
+  "text": "a kecamatan and kelurahan with the same name: the kecamatan, unless something points at the kelurahan",
+  "placeholder": "a kecamatan and kelurahan with the same name: the kecamatan, unless something points at the kelurahan",
+  "vault": [],
+  "partial": "a kecamatan and kelurahan with the same name: the kecamatan, unless something points at the kelurahan",
+  "noFinanceNoName": "a kecamatan and kelurahan with the same name: the kecamatan, unless something points at the kelurahan",
+  "high": []
+ },
+ {
+  "text": "Kuta, Badung, Bali",
+  "placeholder": "Kuta, Badung, Bali",
+  "vault": [],
+  "partial": "Kuta, Badung, Bali",
+  "noFinanceNoName": "Kuta, Badung, Bali",
+  "high": []
+ },
+ {
+  "text": "51.03.01",
+  "placeholder": "51.03.01",
+  "vault": [],
+  "partial": "51.03.01",
+  "noFinanceNoName": "51.03.01",
+  "high": []
+ },
+ {
+  "text": "Kel. Kuta, Kuta, Badung",
+  "placeholder": "Kel. Kuta, Kuta, Badung",
+  "vault": [],
+  "partial": "Kel. Kuta, Kuta, Badung",
+  "noFinanceNoName": "Kel. Kuta, Kuta, Badung",
+  "high": []
+ },
+ {
+  "text": "51.03.01.1002",
+  "placeholder": "51.03.01.1002",
+  "vault": [],
+  "partial": "51.03.01.1002",
+  "noFinanceNoName": "51.03.01.1002",
+  "high": []
+ },
+ {
+  "text": "Sumbersari, Jember 68121",
+  "placeholder": "Sumbersari, Jember 68121",
+  "vault": [],
+  "partial": "Sumbersari, Jember 68121",
+  "noFinanceNoName": "Sumbersari, Jember 68121",
+  "high": []
+ },
+ {
+  "text": "35.09.21.1002",
+  "placeholder": "35.09.21.1002",
+  "vault": [],
+  "partial": "35.09.21.1002",
+  "noFinanceNoName": "35.09.21.1002",
+  "high": []
+ },
+ {
+  "text": "the kode pos is the kelurahan’s",
+  "placeholder": "the kode pos is the kelurahan’s",
+  "vault": [],
+  "partial": "the kode pos is the kelurahan’s",
+  "noFinanceNoName": "the kode pos is the kelurahan’s",
+  "high": []
+ },
+ {
+  "text": "names written with or without spaces and apostrophes",
+  "placeholder": "names written with or without spaces and apostrophes",
+  "vault": [],
+  "partial": "names written with or without spaces and apostrophes",
+  "noFinanceNoName": "names written with or without spaces and apostrophes",
+  "high": []
+ },
+ {
+  "text": "Ds. Suka Maju, Kec. Cibungbulang, Kab. Bogor",
+  "placeholder": "Ds. Suka Maju, Kec. Cibungbulang, Kab. Bogor",
+  "vault": [],
+  "partial": "Ds. Suka Maju, Kec. Cibungbulang, Kab. Bogor",
+  "noFinanceNoName": "Ds. Suka Maju, Kec. Cibungbulang, Kab. Bogor",
+  "high": []
+ },
+ {
+  "text": "Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor",
+  "placeholder": "Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor",
+  "vault": [],
+  "partial": "Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor",
+  "noFinanceNoName": "Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor",
+  "high": []
+ },
+ {
+  "text": "Murung Ta’al, Labuan Amas Selatan, Hulu Sungai Tengah",
+  "placeholder": "Murung Ta’al, Labuan Amas Selatan, Hulu Sungai Tengah",
+  "vault": [],
+  "partial": "Murung Ta’al, Labuan Amas Selatan, Hulu Sungai Tengah",
+  "noFinanceNoName": "Murung Ta’al, Labuan Amas Selatan, Hulu Sungai Tengah",
+  "high": []
+ },
+ {
+  "text": "63.07.03.2015",
+  "placeholder": "63.07.03.2015",
+  "vault": [],
+  "partial": "63.07.03.2015",
+  "noFinanceNoName": "63.07.03.2015",
+  "high": []
+ },
+ {
+  "text": "text with no region in it",
+  "placeholder": "text with no region in it",
+  "vault": [],
+  "partial": "text with no region in it",
+  "noFinanceNoName": "text with no region in it",
+  "high": []
+ },
+ {
+  "text": "tolong kirim besok pagi ya",
+  "placeholder": "tolong kirim besok pagi ya",
+  "vault": [],
+  "partial": "tolong kirim besok pagi ya",
+  "noFinanceNoName": "tolong kirim besok pagi ya",
+  "high": []
+ },
+ {
+  "text": "none",
+  "placeholder": "none",
+  "vault": [],
+  "partial": "none",
+  "noFinanceNoName": "none",
+  "high": []
+ },
+ {
+  "text": "",
+  "placeholder": "",
+  "vault": [],
+  "partial": "",
+  "noFinanceNoName": "",
+  "high": []
+ },
+ {
+  "text": "none",
+  "placeholder": "none",
+  "vault": [],
+  "partial": "none",
+  "noFinanceNoName": "none",
+  "high": []
+ },
+ {
+  "text": "Google Maps style: shortened words, a Plus Code, the province written out",
+  "placeholder": "Google Maps style: shortened words, a Plus Code, the province written out",
+  "vault": [],
+  "partial": "Google Maps style: shortened words, a Plus Code, the province written out",
+  "noFinanceNoName": "Google Maps style: shortened words, a Plus Code, the province written out",
+  "high": []
+ },
+ {
+  "text": "Jl. Kenanga No.8, Gandaria Utara, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12140",
+  "placeholder": "[ADDRESS_1], Gandaria Utara, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12140",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Kenanga No.8"
+   ]
+  ],
+  "partial": "Jl. ***, Gandaria Utara, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12140",
+  "noFinanceNoName": "[ADDRESS_1], Gandaria Utara, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12140",
+  "high": [
+   "Jl. Kenanga No.8"
+  ]
+ },
+ {
+  "text": "31.74.07.1009",
+  "placeholder": "31.74.07.1009",
+  "vault": [],
+  "partial": "31.74.07.1009",
+  "noFinanceNoName": "31.74.07.1009",
+  "high": []
+ },
+ {
+  "text": "high",
+  "placeholder": "high",
+  "vault": [],
+  "partial": "high",
+  "noFinanceNoName": "high",
+  "high": []
+ },
+ {
+  "text": "Jl. Mawar No.3, Kec. Metro Bar., Kota Metro, Lampung",
+  "placeholder": "[ADDRESS_1], Kec. Metro Bar., Kota Metro, Lampung",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Mawar No.3"
+   ]
+  ],
+  "partial": "Jl. ***, Kec. Metro Bar., Kota Metro, Lampung",
+  "noFinanceNoName": "[ADDRESS_1], Kec. Metro Bar., Kota Metro, Lampung",
+  "high": [
+   "Jl. Mawar No.3"
+  ]
+ },
+ {
+  "text": "18.72.03",
+  "placeholder": "18.72.03",
+  "vault": [],
+  "partial": "18.72.03",
+  "noFinanceNoName": "18.72.03",
+  "high": []
+ },
+ {
+  "text": "Jl. Anggrek 4, Tj. Priok, Kota Jkt Utara",
+  "placeholder": "[ADDRESS_1], Tj. Priok, Kota Jkt Utara",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Anggrek 4"
+   ]
+  ],
+  "partial": "Jl. ***, Tj. Priok, Kota Jkt Utara",
+  "noFinanceNoName": "[ADDRESS_1], Tj. Priok, Kota Jkt Utara",
+  "high": []
+ },
+ {
+  "text": "31.72.02",
+  "placeholder": "31.72.02",
+  "vault": [],
+  "partial": "31.72.02",
+  "noFinanceNoName": "31.72.02",
+  "high": []
+ },
+ {
+  "text": "92JW+6X7, Jl. Kenanga No. 2, Beji, Depok",
+  "placeholder": "92JW+6X7, [ADDRESS_1], Beji, Depok",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Kenanga No. 2"
+   ]
+  ],
+  "partial": "92JW+6X7, Jl. ***, Beji, Depok",
+  "noFinanceNoName": "92JW+6X7, [ADDRESS_1], Beji, Depok",
+  "high": [
+   "Jl. Kenanga No. 2"
+  ]
+ },
+ {
+  "text": "Jl. Kenanga No. 2",
+  "placeholder": "[ADDRESS_1]",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Kenanga No. 2"
+   ]
+  ],
+  "partial": "Jl. ***",
+  "noFinanceNoName": "[ADDRESS_1]",
+  "high": [
+   "Jl. Kenanga No. 2"
+  ]
+ },
+ {
+  "text": "a kelurahan named with its kecamatan wins over the kelurahan that owns a wrong kode pos",
+  "placeholder": "a kelurahan named with its kecamatan wins over the kelurahan that owns a wrong kode pos",
+  "vault": [],
+  "partial": "a kelurahan named with its kecamatan wins over the kelurahan that owns a wrong kode pos",
+  "noFinanceNoName": "a kelurahan named with its kecamatan wins over the kelurahan that owns a wrong kode pos",
+  "high": []
+ },
+ {
+  "text": "Jl. Tulip 5, Lengkong Gudang, Serpong, Tangerang Selatan 15311",
+  "placeholder": "[ADDRESS_1], Lengkong Gudang, Serpong, Tangerang Selatan 15311",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Tulip 5"
+   ]
+  ],
+  "partial": "Jl. ***, Lengkong Gudang, Serpong, Tangerang Selatan 15311",
+  "noFinanceNoName": "[ADDRESS_1], Lengkong Gudang, Serpong, Tangerang Selatan 15311",
+  "high": []
+ },
+ {
+  "text": "36.74.01.1004",
+  "placeholder": "36.74.01.1004",
+  "vault": [],
+  "partial": "36.74.01.1004",
+  "noFinanceNoName": "36.74.01.1004",
+  "high": []
+ },
+ {
+  "text": "Kode pos 15311 bukan milik Kelurahan Lengkong Gudang (kode posnya 15321).",
+  "placeholder": "Kode pos 15311 bukan milik Kelurahan Lengkong Gudang (kode posnya 15321).",
+  "vault": [],
+  "partial": "Kode pos 15311 bukan milik Kelurahan Lengkong Gudang (kode posnya 15321).",
+  "noFinanceNoName": "Kode pos 15311 bukan milik Kelurahan Lengkong Gudang (kode posnya 15321).",
+  "high": []
+ },
+ {
+  "text": "\"Kel.\" prefers a kelurahan and \"Desa\" a desa; a dusun is part of the street",
+  "placeholder": "\"Kel.\" prefers a kelurahan and \"Desa\" a desa; a dusun is part of the street",
+  "vault": [],
+  "partial": "\"Kel.\" prefers a kelurahan and \"Desa\" a desa; a dusun is part of the street",
+  "noFinanceNoName": "\"Kel.\" prefers a kelurahan and \"Desa\" a desa; a dusun is part of the street",
+  "high": []
+ },
+ {
+  "text": "Gg. Mawar, Kel. Kamal",
+  "placeholder": "Gg. Mawar, Kel. Kamal",
+  "vault": [],
+  "partial": "Gg. Mawar, Kel. Kamal",
+  "noFinanceNoName": "Gg. Mawar, Kel. Kamal",
+  "high": []
+ },
+ {
+  "text": "31.73.06.1004",
+  "placeholder": "31.73.06.1004",
+  "vault": [],
+  "partial": "31.73.06.1004",
+  "noFinanceNoName": "31.73.06.1004",
+  "high": []
+ },
+ {
+  "text": "Dusun Donomulyo, Desa Adipuro",
+  "placeholder": "Dusun Donomulyo, Desa Adipuro",
+  "vault": [],
+  "partial": "Dusun Donomulyo, Desa Adipuro",
+  "noFinanceNoName": "Dusun Donomulyo, Desa Adipuro",
+  "high": []
+ },
+ {
+  "text": "Dusun Donomulyo",
+  "placeholder": "Dusun Donomulyo",
+  "vault": [],
+  "partial": "Dusun Donomulyo",
+  "noFinanceNoName": "Dusun Donomulyo",
+  "high": []
+ },
+ {
+  "text": "Adipuro",
+  "placeholder": "Adipuro",
+  "vault": [],
+  "partial": "Adipuro",
+  "noFinanceNoName": "Adipuro",
+  "high": []
+ },
+ {
+  "text": "level words and province names inside other names",
+  "placeholder": "level words and province names inside other names",
+  "vault": [],
+  "partial": "level words and province names inside other names",
+  "noFinanceNoName": "level words and province names inside other names",
+  "high": []
+ },
+ {
+  "text": "Jalan Kota Baru No. 3",
+  "placeholder": "[ADDRESS_1]",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jalan Kota Baru No. 3"
+   ]
+  ],
+  "partial": "Jalan ***",
+  "noFinanceNoName": "[ADDRESS_1]",
+  "high": [
+   "Jalan Kota Baru No. 3"
+  ]
+ },
+ {
+  "text": "none",
+  "placeholder": "none",
+  "vault": [],
+  "partial": "none",
+  "noFinanceNoName": "none",
+  "high": []
+ },
+ {
+  "text": "Jalan Kota Baru No. 3",
+  "placeholder": "[ADDRESS_1]",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jalan Kota Baru No. 3"
+   ]
+  ],
+  "partial": "Jalan ***",
+  "noFinanceNoName": "[ADDRESS_1]",
+  "high": [
+   "Jalan Kota Baru No. 3"
+  ]
+ },
+ {
+  "text": "Jl. Merpati, Sidodadi, Lampung Timur",
+  "placeholder": "Jl. Merpati, Sidodadi, Lampung Timur",
+  "vault": [],
+  "partial": "Jl. Merpati, Sidodadi, Lampung Timur",
+  "noFinanceNoName": "Jl. Merpati, Sidodadi, Lampung Timur",
+  "high": []
+ },
+ {
+  "text": "18.07",
+  "placeholder": "18.07",
+  "vault": [],
+  "partial": "18.07",
+  "noFinanceNoName": "18.07",
+  "high": []
+ },
+ {
+  "text": "RT/RW and kode pos written with a colon, numbers in names written as Roman numerals",
+  "placeholder": "RT/RW and kode pos written with a colon, numbers in names written as Roman numerals",
+  "vault": [],
+  "partial": "RT/RW and kode pos written with a colon, numbers in names written as Roman numerals",
+  "noFinanceNoName": "RT/RW and kode pos written with a colon, numbers in names written as Roman numerals",
+  "high": []
+ },
+ {
+  "text": "Jl. Rambutan Rt:30 Rw:10 Kode Pos:30144 Kecamatan: Ilir Barat II",
+  "placeholder": "Jl. Rambutan Rt:30 Rw:10 Kode Pos:30144 Kecamatan: Ilir Barat II",
+  "vault": [],
+  "partial": "Jl. Rambutan Rt:30 Rw:10 Kode Pos:30144 Kecamatan: Ilir Barat II",
+  "noFinanceNoName": "Jl. Rambutan Rt:30 Rw:10 Kode Pos:30144 Kecamatan: Ilir Barat II",
+  "high": []
+ },
+ {
+  "text": "Jl. Rambutan",
+  "placeholder": "Jl. Rambutan",
+  "vault": [],
+  "partial": "Jl. Rambutan",
+  "noFinanceNoName": "Jl. Rambutan",
+  "high": []
+ },
+ {
+  "text": "030",
+  "placeholder": "030",
+  "vault": [],
+  "partial": "030",
+  "noFinanceNoName": "030",
+  "high": []
+ },
+ {
+  "text": "010",
+  "placeholder": "010",
+  "vault": [],
+  "partial": "010",
+  "noFinanceNoName": "010",
+  "high": []
+ },
+ {
+  "text": "30144",
+  "placeholder": "30144",
+  "vault": [],
+  "partial": "30144",
+  "noFinanceNoName": "30144",
+  "high": []
+ },
+ {
+  "text": "Ilir Barat Dua",
+  "placeholder": "Ilir Barat Dua",
+  "vault": [],
+  "partial": "Ilir Barat Dua",
+  "noFinanceNoName": "Ilir Barat Dua",
+  "high": []
+ },
+ {
+  "text": "names with a typo, inside the kota or kabupaten the address names",
+  "placeholder": "names with a typo, inside the kota or kabupaten the address names",
+  "vault": [],
+  "partial": "names with a typo, inside the kota or kabupaten the address names",
+  "noFinanceNoName": "names with a typo, inside the kota or kabupaten the address names",
+  "high": []
+ },
+ {
+  "text": "Kp. Nagrog RT 13 RW 03, Kab. Tasikmalayah",
+  "placeholder": "[ADDRESS_1], Kab. Tasikmalayah",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Kp. Nagrog RT 13 RW 03"
+   ]
+  ],
+  "partial": "Kp. ***, Kab. Tasikmalayah",
+  "noFinanceNoName": "[ADDRESS_1], Kab. Tasikmalayah",
+  "high": [
+   "Kp. Nagrog RT 13 RW 03"
+  ]
+ },
+ {
+  "text": "32.06",
+  "placeholder": "32.06",
+  "vault": [],
+  "partial": "32.06",
+  "noFinanceNoName": "32.06",
+  "high": []
+ },
+ {
+  "text": "\"Tasikmalayah\" dibaca sebagai Kabupaten Tasikmalaya.",
+  "placeholder": "\"Tasikmalayah\" dibaca sebagai Kabupaten Tasikmalaya.",
+  "vault": [],
+  "partial": "\"Tasikmalayah\" dibaca sebagai Kabupaten Tasikmalaya.",
+  "noFinanceNoName": "\"Tasikmalayah\" dibaca sebagai Kabupaten Tasikmalaya.",
+  "high": []
+ },
+ {
+  "text": "medium",
+  "placeholder": "medium",
+  "vault": [],
+  "partial": "medium",
+  "noFinanceNoName": "medium",
+  "high": []
+ },
+ {
+  "text": "Jl. Melati 5, Cibinog, Kab. Bogor",
+  "placeholder": "[ADDRESS_1], Cibinog, Kab. Bogor",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Melati 5"
+   ]
+  ],
+  "partial": "Jl. ***, Cibinog, Kab. Bogor",
+  "noFinanceNoName": "[ADDRESS_1], Cibinog, Kab. Bogor",
+  "high": []
+ },
+ {
+  "text": "32.01.01",
+  "placeholder": "32.01.01",
+  "vault": [],
+  "partial": "32.01.01",
+  "noFinanceNoName": "32.01.01",
+  "high": []
+ },
+ {
+  "text": "\"Cibinog\" dibaca sebagai Kecamatan Cibinong.",
+  "placeholder": "\"Cibinog\" dibaca sebagai Kecamatan Cibinong.",
+  "vault": [],
+  "partial": "\"Cibinog\" dibaca sebagai Kecamatan Cibinong.",
+  "noFinanceNoName": "\"Cibinog\" dibaca sebagai Kecamatan Cibinong.",
+  "high": []
+ },
+ {
+  "text": "Jl. Anggrek 2, Kec. Tanah Sereal, Kota Bogor",
+  "placeholder": "[ADDRESS_1], Kec. Tanah Sereal, Kota Bogor",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Anggrek 2"
+   ]
+  ],
+  "partial": "Jl. ***, Kec. Tanah Sereal, Kota Bogor",
+  "noFinanceNoName": "[ADDRESS_1], Kec. Tanah Sereal, Kota Bogor",
+  "high": []
+ },
+ {
+  "text": "32.71.06",
+  "placeholder": "32.71.06",
+  "vault": [],
+  "partial": "32.71.06",
+  "noFinanceNoName": "32.71.06",
+  "high": []
+ },
+ {
+  "text": "a real name is not read as a typo of another",
+  "placeholder": "a real name is not read as a typo of another",
+  "vault": [],
+  "partial": "a real name is not read as a typo of another",
+  "noFinanceNoName": "a real name is not read as a typo of another",
+  "high": []
+ },
+ {
+  "text": "Jl. Raya Metro Wates Km 05, Desa Purwodadi",
+  "placeholder": "[ADDRESS_1], Desa Purwodadi",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Jl. Raya Metro Wates Km 05"
+   ]
+  ],
+  "partial": "Jl. ***, Desa Purwodadi",
+  "noFinanceNoName": "[ADDRESS_1], Desa Purwodadi",
+  "high": []
+ },
+ {
+  "text": "Purwodadi",
+  "placeholder": "Purwodadi",
+  "vault": [],
+  "partial": "Purwodadi",
+  "noFinanceNoName": "Purwodadi",
+  "high": []
+ },
+ {
+  "text": "low",
+  "placeholder": "low",
+  "vault": [],
+  "partial": "low",
+  "noFinanceNoName": "low",
+  "high": []
+ },
+ {
+  "text": "Gg. Bukit 2, Jaga Baya I, Way Halim, Kota Bandar Lampung",
+  "placeholder": "[ADDRESS_1], Jaga Baya I, Way Halim, Kota Bandar Lampung",
+  "vault": [
+   [
+    "[ADDRESS_1]",
+    "Gg. Bukit 2"
+   ]
+  ],
+  "partial": "Gg. ***, Jaga Baya I, Way Halim, Kota Bandar Lampung",
+  "noFinanceNoName": "[ADDRESS_1], Jaga Baya I, Way Halim, Kota Bandar Lampung",
+  "high": []
+ },
+ {
+  "text": "18.71.15",
+  "placeholder": "18.71.15",
+  "vault": [],
+  "partial": "18.71.15",
+  "noFinanceNoName": "18.71.15",
+  "high": []
+ },
+ {
+  "text": "node:test",
+  "placeholder": "node:test",
+  "vault": [],
+  "partial": "node:test",
+  "noFinanceNoName": "node:test",
+  "high": []
+ },
+ {
+  "text": "node:assert/strict",
+  "placeholder": "node:assert/strict",
+  "vault": [],
+  "partial": "node:assert/strict",
+  "noFinanceNoName": "node:assert/strict",
+  "high": []
+ },
+ {
   "text": "../src/index.ts",
   "placeholder": "../src/index.ts",
   "vault": [],
@@ -4728,1182 +6055,6 @@
   "vault": [],
   "partial": "static",
   "noFinanceNoName": "static",
-  "high": []
- },
- {
-  "text": "KOPI CONTOH",
-  "placeholder": "KOPI CONTOH",
-  "vault": [],
-  "partial": "KOPI CONTOH",
-  "noFinanceNoName": "KOPI CONTOH",
-  "high": []
- },
- {
-  "text": "BOGOR",
-  "placeholder": "BOGOR",
-  "vault": [],
-  "partial": "BOGOR",
-  "noFinanceNoName": "BOGOR",
-  "high": []
- },
- {
-  "text": "16914",
-  "placeholder": "16914",
-  "vault": [],
-  "partial": "16914",
-  "noFinanceNoName": "16914",
-  "high": []
- },
- {
-  "text": "ID1026000000001",
-  "placeholder": "ID1026000000001",
-  "vault": [],
-  "partial": "ID1026000000001",
-  "noFinanceNoName": "ID1026000000001",
-  "high": []
- },
- {
-  "text": "UMI",
-  "placeholder": "UMI",
-  "vault": [],
-  "partial": "UMI",
-  "noFinanceNoName": "UMI",
-  "high": []
- },
- {
-  "text": "Usaha Mikro",
-  "placeholder": "Usaha Mikro",
-  "vault": [],
-  "partial": "Usaha Mikro",
-  "noFinanceNoName": "Usaha Mikro",
-  "high": []
- },
- {
-  "text": "5812",
-  "placeholder": "5812",
-  "vault": [],
-  "partial": "5812",
-  "noFinanceNoName": "5812",
-  "high": []
- },
- {
-  "text": "26",
-  "placeholder": "26",
-  "vault": [],
-  "partial": "26",
-  "noFinanceNoName": "26",
-  "high": []
- },
- {
-  "text": "COM.CONTOH.WWW",
-  "placeholder": "COM.CONTOH.WWW",
-  "vault": [],
-  "partial": "COM.CONTOH.WWW",
-  "noFinanceNoName": "COM.CONTOH.WWW",
-  "high": []
- },
- {
-  "text": "936000000000000001",
-  "placeholder": "936000000000000001",
-  "vault": [],
-  "partial": "936000000000000001",
-  "noFinanceNoName": "936000000000000001",
-  "high": []
- },
- {
-  "text": "000000000000001",
-  "placeholder": "000000000000001",
-  "vault": [],
-  "partial": "000000000000001",
-  "noFinanceNoName": "000000000000001",
-  "high": []
- },
- {
-  "text": "UMI",
-  "placeholder": "UMI",
-  "vault": [],
-  "partial": "UMI",
-  "noFinanceNoName": "UMI",
-  "high": []
- },
- {
-  "text": "51",
-  "placeholder": "51",
-  "vault": [],
-  "partial": "51",
-  "noFinanceNoName": "51",
-  "high": []
- },
- {
-  "text": "ID.CO.QRIS.WWW",
-  "placeholder": "ID.CO.QRIS.WWW",
-  "vault": [],
-  "partial": "ID.CO.QRIS.WWW",
-  "noFinanceNoName": "ID.CO.QRIS.WWW",
-  "high": []
- },
- {
-  "text": "ID1026000000001",
-  "placeholder": "ID1026000000001",
-  "vault": [],
-  "partial": "ID1026000000001",
-  "noFinanceNoName": "ID1026000000001",
-  "high": []
- },
- {
-  "text": "UMI",
-  "placeholder": "UMI",
-  "vault": [],
-  "partial": "UMI",
-  "noFinanceNoName": "UMI",
-  "high": []
- },
- {
-  "text": "INV-77",
-  "placeholder": "INV-77",
-  "vault": [],
-  "partial": "INV-77",
-  "noFinanceNoName": "INV-77",
-  "high": []
- },
- {
-  "text": "A01",
-  "placeholder": "A01",
-  "vault": [],
-  "partial": "A01",
-  "noFinanceNoName": "A01",
-  "high": []
- },
- {
-  "text": "QRIS statis menjadi dinamis dengan nominal, field lain tetap",
-  "placeholder": "QRIS statis menjadi dinamis dengan nominal, field lain tetap",
-  "vault": [],
-  "partial": "QRIS statis menjadi dinamis dengan nominal, field lain tetap",
-  "noFinanceNoName": "QRIS statis menjadi dinamis dengan nominal, field lain tetap",
-  "high": []
- },
- {
-  "text": "dynamic",
-  "placeholder": "dynamic",
-  "vault": [],
-  "partial": "dynamic",
-  "noFinanceNoName": "dynamic",
-  "high": []
- },
- {
-  "text": "25000",
-  "placeholder": "25000",
-  "vault": [],
-  "partial": "25000",
-  "noFinanceNoName": "25000",
-  "high": []
- },
- {
-  "text": "ID1026000000001",
-  "placeholder": "ID1026000000001",
-  "vault": [],
-  "partial": "ID1026000000001",
-  "noFinanceNoName": "ID1026000000001",
-  "high": []
- },
- {
-  "text": "5303360540525000",
-  "placeholder": "5303360540525000",
-  "vault": [],
-  "partial": "5303360540525000",
-  "noFinanceNoName": "5303360540525000",
-  "high": []
- },
- {
-  "text": "5802ID",
-  "placeholder": "5802ID",
-  "vault": [],
-  "partial": "5802ID",
-  "noFinanceNoName": "5802ID",
-  "high": []
- },
- {
-  "text": "the amount sits between currency and country",
-  "placeholder": "the amount sits between currency and country",
-  "vault": [],
-  "partial": "the amount sits between currency and country",
-  "noFinanceNoName": "the amount sits between currency and country",
-  "high": []
- },
- {
-  "text": "01",
-  "placeholder": "01",
-  "vault": [],
-  "partial": "01",
-  "noFinanceNoName": "01",
-  "high": []
- },
- {
-  "text": "54",
-  "placeholder": "54",
-  "vault": [],
-  "partial": "54",
-  "noFinanceNoName": "54",
-  "high": []
- },
- {
-  "text": "63",
-  "placeholder": "63",
-  "vault": [],
-  "partial": "63",
-  "noFinanceNoName": "63",
-  "high": []
- },
- {
-  "text": "1500.50",
-  "placeholder": "1500.50",
-  "vault": [],
-  "partial": "1500.50",
-  "noFinanceNoName": "1500.50",
-  "high": []
- },
- {
-  "text": "1500.50",
-  "placeholder": "1500.50",
-  "vault": [],
-  "partial": "1500.50",
-  "noFinanceNoName": "1500.50",
-  "high": []
- },
- {
-  "text": "100000",
-  "placeholder": "100000",
-  "vault": [],
-  "partial": "100000",
-  "noFinanceNoName": "100000",
-  "high": []
- },
- {
-  "text": "fixed",
-  "placeholder": "fixed",
-  "vault": [],
-  "partial": "fixed",
-  "noFinanceNoName": "fixed",
-  "high": []
- },
- {
-  "text": "2500",
-  "placeholder": "2500",
-  "vault": [],
-  "partial": "2500",
-  "noFinanceNoName": "2500",
-  "high": []
- },
- {
-  "text": "percent",
-  "placeholder": "percent",
-  "vault": [],
-  "partial": "percent",
-  "noFinanceNoName": "percent",
-  "high": []
- },
- {
-  "text": "0.70",
-  "placeholder": "0.70",
-  "vault": [],
-  "partial": "0.70",
-  "noFinanceNoName": "0.70",
-  "high": []
- },
- {
-  "text": "12,000",
-  "placeholder": "12,000",
-  "vault": [],
-  "partial": "12,000",
-  "noFinanceNoName": "12,000",
-  "high": []
- },
- {
-  "text": "1e5",
-  "placeholder": "1e5",
-  "vault": [],
-  "partial": "1e5",
-  "noFinanceNoName": "1e5",
-  "high": []
- },
- {
-  "text": "12345678901234",
-  "placeholder": "12345678901234",
-  "vault": [],
-  "partial": "12345678901234",
-  "noFinanceNoName": "12345678901234",
-  "high": []
- },
- {
-  "text": "0",
-  "placeholder": "0",
-  "vault": [],
-  "partial": "0",
-  "noFinanceNoName": "0",
-  "high": []
- },
- {
-  "text": "QRIS rusak dan yang bukan QRIS dikenali",
-  "placeholder": "QRIS rusak dan yang bukan QRIS dikenali",
-  "vault": [],
-  "partial": "QRIS rusak dan yang bukan QRIS dikenali",
-  "noFinanceNoName": "QRIS rusak dan yang bukan QRIS dikenali",
-  "high": []
- },
- {
-  "text": "0000",
-  "placeholder": "0000",
-  "vault": [],
-  "partial": "0000",
-  "noFinanceNoName": "0000",
-  "high": []
- },
- {
-  "text": "",
-  "placeholder": "",
-  "vault": [],
-  "partial": "",
-  "noFinanceNoName": "",
-  "high": []
- },
- {
-  "text": "payload_format",
-  "placeholder": "payload_format",
-  "vault": [],
-  "partial": "payload_format",
-  "noFinanceNoName": "payload_format",
-  "high": []
- },
- {
-  "text": "https://example.com",
-  "placeholder": "https://example.com",
-  "vault": [],
-  "partial": "https://example.com",
-  "noFinanceNoName": "https://example.com",
-  "high": []
- },
- {
-  "text": "format",
-  "placeholder": "format",
-  "vault": [],
-  "partial": "format",
-  "noFinanceNoName": "format",
-  "high": []
- },
- {
-  "text": "00",
-  "placeholder": "00",
-  "vault": [],
-  "partial": "00",
-  "noFinanceNoName": "00",
-  "high": []
- },
- {
-  "text": "01",
-  "placeholder": "01",
-  "vault": [],
-  "partial": "01",
-  "noFinanceNoName": "01",
-  "high": []
- },
- {
-  "text": "01",
-  "placeholder": "01",
-  "vault": [],
-  "partial": "01",
-  "noFinanceNoName": "01",
-  "high": []
- },
- {
-  "text": "11",
-  "placeholder": "11",
-  "vault": [],
-  "partial": "11",
-  "noFinanceNoName": "11",
-  "high": []
- },
- {
-  "text": "5303360",
-  "placeholder": "5303360",
-  "vault": [],
-  "partial": "5303360",
-  "noFinanceNoName": "5303360",
-  "high": []
- },
- {
-  "text": "5303840",
-  "placeholder": "5303840",
-  "vault": [],
-  "partial": "5303840",
-  "noFinanceNoName": "5303840",
-  "high": []
- },
- {
-  "text": "currency",
-  "placeholder": "currency",
-  "vault": [],
-  "partial": "currency",
-  "noFinanceNoName": "currency",
-  "high": []
- },
- {
-  "text": "00",
-  "placeholder": "00",
-  "vault": [],
-  "partial": "00",
-  "noFinanceNoName": "00",
-  "high": []
- },
- {
-  "text": "01",
-  "placeholder": "01",
-  "vault": [],
-  "partial": "01",
-  "noFinanceNoName": "01",
-  "high": []
- },
- {
-  "text": "59",
-  "placeholder": "59",
-  "vault": [],
-  "partial": "59",
-  "noFinanceNoName": "59",
-  "high": []
- },
- {
-  "text": "KOPI CONTOH",
-  "placeholder": "KOPI CONTOH",
-  "vault": [],
-  "partial": "KOPI CONTOH",
-  "noFinanceNoName": "KOPI CONTOH",
-  "high": []
- },
- {
-  "text": "59",
-  "placeholder": "59",
-  "vault": [],
-  "partial": "59",
-  "noFinanceNoName": "59",
-  "high": []
- },
- {
-  "text": "WARUNG KOPI CONTOH SEJAHTERA",
-  "placeholder": "WARUNG KOPI CONTOH SEJAHTERA",
-  "vault": [],
-  "partial": "WARUNG KOPI CONTOH SEJAHTERA",
-  "noFinanceNoName": "WARUNG KOPI CONTOH SEJAHTERA",
-  "high": []
- },
- {
-  "text": "merchant_name",
-  "placeholder": "merchant_name",
-  "vault": [],
-  "partial": "merchant_name",
-  "noFinanceNoName": "merchant_name",
-  "high": []
- },
- {
-  "text": "00",
-  "placeholder": "00",
-  "vault": [],
-  "partial": "00",
-  "noFinanceNoName": "00",
-  "high": []
- },
- {
-  "text": "01",
-  "placeholder": "01",
-  "vault": [],
-  "partial": "01",
-  "noFinanceNoName": "01",
-  "high": []
- },
- {
-  "text": "01",
-  "placeholder": "01",
-  "vault": [],
-  "partial": "01",
-  "noFinanceNoName": "01",
-  "high": []
- },
- {
-  "text": "12",
-  "placeholder": "12",
-  "vault": [],
-  "partial": "12",
-  "noFinanceNoName": "12",
-  "high": []
- },
- {
-  "text": "not_qris",
-  "placeholder": "not_qris",
-  "vault": [],
-  "partial": "not_qris",
-  "noFinanceNoName": "not_qris",
-  "high": []
- },
- {
-  "text": "dynamic_without_amount",
-  "placeholder": "dynamic_without_amount",
-  "vault": [],
-  "partial": "dynamic_without_amount",
-  "noFinanceNoName": "dynamic_without_amount",
-  "high": []
- },
- {
-  "text": "00",
-  "placeholder": "00",
-  "vault": [],
-  "partial": "00",
-  "noFinanceNoName": "00",
-  "high": []
- },
- {
-  "text": "01",
-  "placeholder": "01",
-  "vault": [],
-  "partial": "01",
-  "noFinanceNoName": "01",
-  "high": []
- },
- {
-  "text": "55",
-  "placeholder": "55",
-  "vault": [],
-  "partial": "55",
-  "noFinanceNoName": "55",
-  "high": []
- },
- {
-  "text": "02",
-  "placeholder": "02",
-  "vault": [],
-  "partial": "02",
-  "noFinanceNoName": "02",
-  "high": []
- },
- {
-  "text": "tip",
-  "placeholder": "tip",
-  "vault": [],
-  "partial": "tip",
-  "noFinanceNoName": "tip",
-  "high": []
- },
- {
-  "text": "00",
-  "placeholder": "00",
-  "vault": [],
-  "partial": "00",
-  "noFinanceNoName": "00",
-  "high": []
- },
- {
-  "text": "01",
-  "placeholder": "01",
-  "vault": [],
-  "partial": "01",
-  "noFinanceNoName": "01",
-  "high": []
- },
- {
-  "text": "53",
-  "placeholder": "53",
-  "vault": [],
-  "partial": "53",
-  "noFinanceNoName": "53",
-  "high": []
- },
- {
-  "text": "360",
-  "placeholder": "360",
-  "vault": [],
-  "partial": "360",
-  "noFinanceNoName": "360",
-  "high": []
- },
- {
-  "text": "duplicate",
-  "placeholder": "duplicate",
-  "vault": [],
-  "partial": "duplicate",
-  "noFinanceNoName": "duplicate",
-  "high": []
- },
- {
-  "text": "node:test",
-  "placeholder": "node:test",
-  "vault": [],
-  "partial": "node:test",
-  "noFinanceNoName": "node:test",
-  "high": []
- },
- {
-  "text": "node:assert/strict",
-  "placeholder": "node:assert/strict",
-  "vault": [],
-  "partial": "node:assert/strict",
-  "noFinanceNoName": "node:assert/strict",
-  "high": []
- },
- {
-  "text": "../src/index.ts",
-  "placeholder": "../src/index.ts",
-  "vault": [],
-  "partial": "../src/index.ts",
-  "noFinanceNoName": "../src/index.ts",
-  "high": []
- },
- {
-  "text": "formatRupiah mengikuti PUEBI",
-  "placeholder": "formatRupiah mengikuti PUEBI",
-  "vault": [],
-  "partial": "formatRupiah mengikuti PUEBI",
-  "noFinanceNoName": "formatRupiah mengikuti PUEBI",
-  "high": []
- },
- {
-  "text": "Rp1.500.000",
-  "placeholder": "Rp1.500.000",
-  "vault": [],
-  "partial": "Rp1.500.000",
-  "noFinanceNoName": "Rp1.500.000",
-  "high": []
- },
- {
-  "text": "Rp0",
-  "placeholder": "Rp0",
-  "vault": [],
-  "partial": "Rp0",
-  "noFinanceNoName": "Rp0",
-  "high": []
- },
- {
-  "text": "-Rp25.000",
-  "placeholder": "-Rp25.000",
-  "vault": [],
-  "partial": "-Rp25.000",
-  "noFinanceNoName": "-Rp25.000",
-  "high": []
- },
- {
-  "text": "Rp1.500.000,50",
-  "placeholder": "Rp1.500.000,50",
-  "vault": [],
-  "partial": "Rp1.500.000,50",
-  "noFinanceNoName": "Rp1.500.000,50",
-  "high": []
- },
- {
-  "text": "999",
-  "placeholder": "999",
-  "vault": [],
-  "partial": "999",
-  "noFinanceNoName": "999",
-  "high": []
- },
- {
-  "text": "formatRupiahShort",
-  "placeholder": "formatRupiahShort",
-  "vault": [],
-  "partial": "formatRupiahShort",
-  "noFinanceNoName": "formatRupiahShort",
-  "high": []
- },
- {
-  "text": "Rp1,5 jt",
-  "placeholder": "Rp1,5 jt",
-  "vault": [],
-  "partial": "Rp1,5 jt",
-  "noFinanceNoName": "Rp1,5 jt",
-  "high": []
- },
- {
-  "text": "Rp2,3 M",
-  "placeholder": "Rp2,3 M",
-  "vault": [],
-  "partial": "Rp2,3 M",
-  "noFinanceNoName": "Rp2,3 M",
-  "high": []
- },
- {
-  "text": "Rp15 rb",
-  "placeholder": "Rp15 rb",
-  "vault": [],
-  "partial": "Rp15 rb",
-  "noFinanceNoName": "Rp15 rb",
-  "high": []
- },
- {
-  "text": "Rp750",
-  "placeholder": "Rp750",
-  "vault": [],
-  "partial": "Rp750",
-  "noFinanceNoName": "Rp750",
-  "high": []
- },
- {
-  "text": "Rp 25.000",
-  "placeholder": "Rp 25.000",
-  "vault": [],
-  "partial": "Rp 25.000",
-  "noFinanceNoName": "Rp 25.000",
-  "high": []
- },
- {
-  "text": "Rp1.500.000,00",
-  "placeholder": "Rp1.500.000,00",
-  "vault": [],
-  "partial": "Rp1.500.000,00",
-  "noFinanceNoName": "Rp1.500.000,00",
-  "high": []
- },
- {
-  "text": "1,500,000",
-  "placeholder": "1,500,000",
-  "vault": [],
-  "partial": "1,500,000",
-  "noFinanceNoName": "1,500,000",
-  "high": []
- },
- {
-  "text": "1,5jt",
-  "placeholder": "1,5jt",
-  "vault": [],
-  "partial": "1,5jt",
-  "noFinanceNoName": "1,5jt",
-  "high": []
- },
- {
-  "text": "1.5 juta",
-  "placeholder": "1.5 juta",
-  "vault": [],
-  "partial": "1.5 juta",
-  "noFinanceNoName": "1.5 juta",
-  "high": []
- },
- {
-  "text": "50k",
-  "placeholder": "50k",
-  "vault": [],
-  "partial": "50k",
-  "noFinanceNoName": "50k",
-  "high": []
- },
- {
-  "text": "50rb",
-  "placeholder": "50rb",
-  "vault": [],
-  "partial": "50rb",
-  "noFinanceNoName": "50rb",
-  "high": []
- },
- {
-  "text": "15ribu",
-  "placeholder": "15ribu",
-  "vault": [],
-  "partial": "15ribu",
-  "noFinanceNoName": "15ribu",
-  "high": []
- },
- {
-  "text": "1jt 500rb",
-  "placeholder": "1jt 500rb",
-  "vault": [],
-  "partial": "1jt 500rb",
-  "noFinanceNoName": "1jt 500rb",
-  "high": []
- },
- {
-  "text": "2jtan",
-  "placeholder": "2jtan",
-  "vault": [],
-  "partial": "2jtan",
-  "noFinanceNoName": "2jtan",
-  "high": []
- },
- {
-  "text": "50rb-an",
-  "placeholder": "50rb-an",
-  "vault": [],
-  "partial": "50rb-an",
-  "noFinanceNoName": "50rb-an",
-  "high": []
- },
- {
-  "text": "sekitar 1 juta",
-  "placeholder": "sekitar 1 juta",
-  "vault": [],
-  "partial": "sekitar 1 juta",
-  "noFinanceNoName": "sekitar 1 juta",
-  "high": []
- },
- {
-  "text": "2 juta lebih",
-  "placeholder": "2 juta lebih",
-  "vault": [],
-  "partial": "2 juta lebih",
-  "noFinanceNoName": "2 juta lebih",
-  "high": []
- },
- {
-  "text": "goceng",
-  "placeholder": "goceng",
-  "vault": [],
-  "partial": "goceng",
-  "noFinanceNoName": "goceng",
-  "high": []
- },
- {
-  "text": "goceng aja kak",
-  "placeholder": "goceng aja kak",
-  "vault": [],
-  "partial": "goceng aja kak",
-  "noFinanceNoName": "goceng aja kak",
-  "high": []
- },
- {
-  "text": "2 ceban",
-  "placeholder": "2 ceban",
-  "vault": [],
-  "partial": "2 ceban",
-  "noFinanceNoName": "2 ceban",
-  "high": []
- },
- {
-  "text": "cepek ceng",
-  "placeholder": "cepek ceng",
-  "vault": [],
-  "partial": "cepek ceng",
-  "noFinanceNoName": "cepek ceng",
-  "high": []
- },
- {
-  "text": "gopek",
-  "placeholder": "gopek",
-  "vault": [],
-  "partial": "gopek",
-  "noFinanceNoName": "gopek",
-  "high": []
- },
- {
-  "text": "sejuta setengah",
-  "placeholder": "sejuta setengah",
-  "vault": [],
-  "partial": "sejuta setengah",
-  "noFinanceNoName": "sejuta setengah",
-  "high": []
- },
- {
-  "text": "setengah juta",
-  "placeholder": "setengah juta",
-  "vault": [],
-  "partial": "setengah juta",
-  "noFinanceNoName": "setengah juta",
-  "high": []
- },
- {
-  "text": "dua setengah juta",
-  "placeholder": "dua setengah juta",
-  "vault": [],
-  "partial": "dua setengah juta",
-  "noFinanceNoName": "dua setengah juta",
-  "high": []
- },
- {
-  "text": "satu setengah juta",
-  "placeholder": "satu setengah juta",
-  "vault": [],
-  "partial": "satu setengah juta",
-  "noFinanceNoName": "satu setengah juta",
-  "high": []
- },
- {
-  "text": "dua ratus lima puluh ribu",
-  "placeholder": "dua ratus lima puluh ribu",
-  "vault": [],
-  "partial": "dua ratus lima puluh ribu",
-  "noFinanceNoName": "dua ratus lima puluh ribu",
-  "high": []
- },
- {
-  "text": "seratus dua belas",
-  "placeholder": "seratus dua belas",
-  "vault": [],
-  "partial": "seratus dua belas",
-  "noFinanceNoName": "seratus dua belas",
-  "high": []
- },
- {
-  "text": "seribu lima ratus",
-  "placeholder": "seribu lima ratus",
-  "vault": [],
-  "partial": "seribu lima ratus",
-  "noFinanceNoName": "seribu lima ratus",
-  "high": []
- },
- {
-  "text": "dua puluh lima juta tiga ratus ribu",
-  "placeholder": "dua puluh lima juta tiga ratus ribu",
-  "vault": [],
-  "partial": "dua puluh lima juta tiga ratus ribu",
-  "noFinanceNoName": "dua puluh lima juta tiga ratus ribu",
-  "high": []
- },
- {
-  "text": "1,2 M",
-  "placeholder": "1,2 M",
-  "vault": [],
-  "partial": "1,2 M",
-  "noFinanceNoName": "1,2 M",
-  "high": []
- },
- {
-  "text": "parseRupiah menolak teks yang bukan nominal",
-  "placeholder": "parseRupiah menolak teks yang bukan nominal",
-  "vault": [],
-  "partial": "parseRupiah menolak teks yang bukan nominal",
-  "noFinanceNoName": "parseRupiah menolak teks yang bukan nominal",
-  "high": []
- },
- {
-  "text": "pisang goreng",
-  "placeholder": "pisang goreng",
-  "vault": [],
-  "partial": "pisang goreng",
-  "noFinanceNoName": "pisang goreng",
-  "high": []
- },
- {
-  "text": "",
-  "placeholder": "",
-  "vault": [],
-  "partial": "",
-  "noFinanceNoName": "",
-  "high": []
- },
- {
-  "text": "jutaan",
-  "placeholder": "jutaan",
-  "vault": [],
-  "partial": "jutaan",
-  "noFinanceNoName": "jutaan",
-  "high": []
- },
- {
-  "text": "terbilang",
-  "placeholder": "terbilang",
-  "vault": [],
-  "partial": "terbilang",
-  "noFinanceNoName": "terbilang",
-  "high": []
- },
- {
-  "text": "nol",
-  "placeholder": "nol",
-  "vault": [],
-  "partial": "nol",
-  "noFinanceNoName": "nol",
-  "high": []
- },
- {
-  "text": "sebelas",
-  "placeholder": "sebelas",
-  "vault": [],
-  "partial": "sebelas",
-  "noFinanceNoName": "sebelas",
-  "high": []
- },
- {
-  "text": "lima belas",
-  "placeholder": "lima belas",
-  "vault": [],
-  "partial": "lima belas",
-  "noFinanceNoName": "lima belas",
-  "high": []
- },
- {
-  "text": "dua puluh satu",
-  "placeholder": "dua puluh satu",
-  "vault": [],
-  "partial": "dua puluh satu",
-  "noFinanceNoName": "dua puluh satu",
-  "high": []
- },
- {
-  "text": "seratus",
-  "placeholder": "seratus",
-  "vault": [],
-  "partial": "seratus",
-  "noFinanceNoName": "seratus",
-  "high": []
- },
- {
-  "text": "seratus sepuluh",
-  "placeholder": "seratus sepuluh",
-  "vault": [],
-  "partial": "seratus sepuluh",
-  "noFinanceNoName": "seratus sepuluh",
-  "high": []
- },
- {
-  "text": "seribu",
-  "placeholder": "seribu",
-  "vault": [],
-  "partial": "seribu",
-  "noFinanceNoName": "seribu",
-  "high": []
- },
- {
-  "text": "seribu satu",
-  "placeholder": "seribu satu",
-  "vault": [],
-  "partial": "seribu satu",
-  "noFinanceNoName": "seribu satu",
-  "high": []
- },
- {
-  "text": "sebelas ribu",
-  "placeholder": "sebelas ribu",
-  "vault": [],
-  "partial": "sebelas ribu",
-  "noFinanceNoName": "sebelas ribu",
-  "high": []
- },
- {
-  "text": "seratus ribu",
-  "placeholder": "seratus ribu",
-  "vault": [],
-  "partial": "seratus ribu",
-  "noFinanceNoName": "seratus ribu",
-  "high": []
- },
- {
-  "text": "satu juta",
-  "placeholder": "satu juta",
-  "vault": [],
-  "partial": "satu juta",
-  "noFinanceNoName": "satu juta",
-  "high": []
- },
- {
-  "text": "satu juta lima ratus ribu",
-  "placeholder": "satu juta lima ratus ribu",
-  "vault": [],
-  "partial": "satu juta lima ratus ribu",
-  "noFinanceNoName": "satu juta lima ratus ribu",
-  "high": []
- },
- {
-  "text": "dua miliar",
-  "placeholder": "dua miliar",
-  "vault": [],
-  "partial": "dua miliar",
-  "noFinanceNoName": "dua miliar",
-  "high": []
- },
- {
-  "text": "minus lima",
-  "placeholder": "minus lima",
-  "vault": [],
-  "partial": "minus lima",
-  "noFinanceNoName": "minus lima",
-  "high": []
- },
- {
-  "text": "dua koma lima",
-  "placeholder": "dua koma lima",
-  "vault": [],
-  "partial": "dua koma lima",
-  "noFinanceNoName": "dua koma lima",
-  "high": []
- },
- {
-  "text": "satu kuintiliun",
-  "placeholder": "satu kuintiliun",
-  "vault": [],
-  "partial": "satu kuintiliun",
-  "noFinanceNoName": "satu kuintiliun",
-  "high": []
- },
- {
-  "text": "terbilang untuk kuitansi",
-  "placeholder": "terbilang untuk kuitansi",
-  "vault": [],
-  "partial": "terbilang untuk kuitansi",
-  "noFinanceNoName": "terbilang untuk kuitansi",
-  "high": []
- },
- {
-  "text": "satu juta lima ratus ribu rupiah",
-  "placeholder": "satu juta lima ratus ribu rupiah",
-  "vault": [],
-  "partial": "satu juta lima ratus ribu rupiah",
-  "noFinanceNoName": "satu juta lima ratus ribu rupiah",
-  "high": []
- },
- {
-  "text": "title",
-  "placeholder": "title",
-  "vault": [],
-  "partial": "title",
-  "noFinanceNoName": "title",
-  "high": []
- },
- {
-  "text": "Satu Juta Lima Ratus Ribu Rupiah",
-  "placeholder": "Satu Juta Lima Ratus Ribu Rupiah",
-  "vault": [],
-  "partial": "Satu Juta Lima Ratus Ribu Rupiah",
-  "noFinanceNoName": "Satu Juta Lima Ratus Ribu Rupiah",
-  "high": []
- },
- {
-  "text": "sentence",
-  "placeholder": "sentence",
-  "vault": [],
-  "partial": "sentence",
-  "noFinanceNoName": "sentence",
-  "high": []
- },
- {
-  "text": "Dua puluh lima ribu",
-  "placeholder": "Dua puluh lima ribu",
-  "vault": [],
-  "partial": "Dua puluh lima ribu",
-  "noFinanceNoName": "Dua puluh lima ribu",
-  "high": []
- },
- {
-  "text": "pembulatan yang melewati satuan dan angka sangat besar",
-  "placeholder": "pembulatan yang melewati satuan dan angka sangat besar",
-  "vault": [],
-  "partial": "pembulatan yang melewati satuan dan angka sangat besar",
-  "noFinanceNoName": "pembulatan yang melewati satuan dan angka sangat besar",
-  "high": []
- },
- {
-  "text": "Rp1 jt",
-  "placeholder": "Rp1 jt",
-  "vault": [],
-  "partial": "Rp1 jt",
-  "noFinanceNoName": "Rp1 jt",
-  "high": []
- },
- {
-  "text": "Rp1 rb",
-  "placeholder": "Rp1 rb",
-  "vault": [],
-  "partial": "Rp1 rb",
-  "noFinanceNoName": "Rp1 rb",
-  "high": []
- },
- {
-  "text": "Rp950 rb",
-  "placeholder": "Rp950 rb",
-  "vault": [],
-  "partial": "Rp950 rb",
-  "noFinanceNoName": "Rp950 rb",
   "high": []
  }
 ]

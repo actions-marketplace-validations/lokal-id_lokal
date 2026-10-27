@@ -58,11 +58,14 @@ The file tools can only access `LOKAL_ROOT`, which defaults to `CLAUDE_PROJECT_D
 | `format_rupiah` / `parse_rupiah` | `Rp1.500.000`, *terbilang*; "2jtan", "goceng" → numbers |
 | `search_wilayah` / `list_wilayah` | Provinces down to villages, with codes and postal codes |
 | `lookup_kode_pos` | Postal code → villages, or all postal codes in a region |
+| `parse_alamat` | Free-text address → street, RT/RW, kode pos, and Kemendagri regions with their codes |
 | `list_holidays` / `working_days` | National holidays and *cuti bersama* (SKB 2026, 2027), SLA due dates |
 | `scan_pii` | Scan files and folders for personal data by UU PDP category; reports files it could not scan |
 | `read_file_masked` | Read a file (text, CSV, JSON, logs, `.xlsx`, `.docx`, text-based PDF) with personal data replaced by placeholders |
 | `write_file_unmasked` | Write results with placeholders restored, on your machine |
 | `anonymize_file` | Copy dumps and exports with realistic stand-ins for every person (Kembaran), returning only counts |
+
+`parse_alamat`, `parse_nik`, `parse_phone`, and `validate_npwp` also take placeholders from `read_file_masked` (`[ADDRESS_3]`, `[NIK_1]`): the real value is read on your machine, and the street, RT/RW, and birth date come back as placeholders.
 
 ## Samaran Guard
 
@@ -74,7 +77,7 @@ The file tools can only access `LOKAL_ROOT`, which defaults to `CLAUDE_PROJECT_D
 
 ## Lokal Scan
 
-`lokal-mcp scan --staged` (pre-commit) or `lokal-mcp scan --diff origin/main` (CI) fails when a commit or pull request adds Indonesian personal data, and shows each value partially masked. `lokal-mcp scan [path…]` checks whole files. There is a GitHub Action too: `uses: lokal-id/lokal@v0.6.0`. See the [Lokal README](https://github.com/lokal-id/lokal#lokal-scan-keep-personal-data-out-of-the-repository).
+`lokal-mcp scan --staged` (pre-commit) or `lokal-mcp scan --diff origin/main` (CI) fails when a commit or pull request adds Indonesian personal data, and shows each value partially masked. `lokal-mcp scan [path…]` checks whole files. There is a GitHub Action too: `uses: lokal-id/lokal@v0.7.2`. See the [Lokal README](https://github.com/lokal-id/lokal#lokal-scan-keep-personal-data-out-of-the-repository).
 
 ## Remote (HTTP) mode
 

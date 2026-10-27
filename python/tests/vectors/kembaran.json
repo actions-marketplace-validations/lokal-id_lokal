@@ -540,6 +540,644 @@
     "replaced": {}
    },
    {
+    "text": "../src/wilayah.ts",
+    "replaced": {}
+   },
+   {
+    "text": "a full address with commas and level words",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Beringin No. 82 RT 006/RW 014, Kel. Cempaka Putih Timur, Kec. Cempaka Putih, Jakarta Pusat 10510",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "31.71.05.1001",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Nusa Indah No. 53",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "003",
+    "replaced": {}
+   },
+   {
+    "text": "005",
+    "replaced": {}
+   },
+   {
+    "text": "10510",
+    "replaced": {}
+   },
+   {
+    "text": "Cempaka Putih Timur",
+    "replaced": {}
+   },
+   {
+    "text": "Cempaka Putih",
+    "replaced": {}
+   },
+   {
+    "text": "Kota Administrasi Jakarta Pusat",
+    "replaced": {}
+   },
+   {
+    "text": "31",
+    "replaced": {}
+   },
+   {
+    "text": "provinsi",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Bahagia No. 53, RT 003/RW 005, Kelurahan Cempaka Putih Timur, Kecamatan Cempaka Putih, Kota Administrasi Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10510",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "lowercase, no commas, RT/RW written short",
+    "replaced": {}
+   },
+   {
+    "text": "jl seroja no 742 rt 3/5 kemiri muka beji depok 16423",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.76.06.1004",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "jl seroja no 742",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "003",
+    "replaced": {}
+   },
+   {
+    "text": "005",
+    "replaced": {}
+   },
+   {
+    "text": "16423",
+    "replaced": {}
+   },
+   {
+    "text": "jl. melati wuwur gabus pati 59173",
+    "replaced": {}
+   },
+   {
+    "text": "33.18.11.2001",
+    "replaced": {}
+   },
+   {
+    "text": "capitals and abbreviations as on a KTP",
+    "replaced": {}
+   },
+   {
+    "text": "alamat: ds. ciherang kec. pacet kab. cianjur",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.03.10.2001",
+    "replaced": {}
+   },
+   {
+    "text": "Gg. Pelita 9, Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor, Jabar",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.01.16.2013",
+    "replaced": {}
+   },
+   {
+    "text": "Dsn. Krajan RT 6 RW 1 Ds. Sumberejo Kec. Batu Kota Batu",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "35.79.01.2005",
+    "replaced": {}
+   },
+   {
+    "text": "Dsn. Krajan",
+    "replaced": {}
+   },
+   {
+    "text": "short names for Jakarta, Tangerang Selatan, and provinces",
+    "replaced": {}
+   },
+   {
+    "text": "Kebayoran Baru, Jaksel",
+    "replaced": {}
+   },
+   {
+    "text": "31.74.07",
+    "replaced": {}
+   },
+   {
+    "text": "Pondok Aren, Tangsel",
+    "replaced": {}
+   },
+   {
+    "text": "36.74.03",
+    "replaced": {}
+   },
+   {
+    "text": "Medan Baru, Medan, Sumut",
+    "replaced": {}
+   },
+   {
+    "text": "12.71.17",
+    "replaced": {}
+   },
+   {
+    "text": "Depok, Sleman, DIY",
+    "replaced": {}
+   },
+   {
+    "text": "34.04.07",
+    "replaced": {}
+   },
+   {
+    "text": "Depok the kecamatan in Sleman, not Kota Depok",
+    "replaced": {}
+   },
+   {
+    "text": "\"Kota\" and \"Kab.\" tell the kota from the kabupaten; without them it is a guess",
+    "replaced": {}
+   },
+   {
+    "text": "Kota Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "32.71",
+    "replaced": {}
+   },
+   {
+    "text": "Kab. Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "32.01",
+    "replaced": {}
+   },
+   {
+    "text": "Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "low",
+    "replaced": {}
+   },
+   {
+    "text": "32.71",
+    "replaced": {}
+   },
+   {
+    "text": "a kode pos that belongs elsewhere is reported, one that is not registered too",
+    "replaced": {}
+   },
+   {
+    "text": "Kemiri Muka, Beji, Depok 16424",
+    "replaced": {}
+   },
+   {
+    "text": "32.76.06.1004",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "Kode pos 16424 bukan milik Kelurahan Kemiri Muka (kode posnya 16423).",
+    "replaced": {}
+   },
+   {
+    "text": "Kemiri Muka, Beji, Depok 16999",
+    "replaced": {}
+   },
+   {
+    "text": "Kode pos 16999 tidak terdaftar.",
+    "replaced": {}
+   },
+   {
+    "text": "the kode pos fills in the kelurahan the address leaves out",
+    "replaced": {}
+   },
+   {
+    "text": "Jalan Diponegoro 22 Bandung 40115",
+    "replaced": {}
+   },
+   {
+    "text": "32.73.09.1003",
+    "replaced": {}
+   },
+   {
+    "text": "provinsi",
+    "replaced": {}
+   },
+   {
+    "text": "kecamatan",
+    "replaced": {}
+   },
+   {
+    "text": "kelurahanDesa",
+    "replaced": {}
+   },
+   {
+    "text": "Jalan Diponegoro 22",
+    "replaced": {}
+   },
+   {
+    "text": "16424",
+    "replaced": {}
+   },
+   {
+    "text": "32.76.06.1005",
+    "replaced": {}
+   },
+   {
+    "text": "low",
+    "replaced": {}
+   },
+   {
+    "text": "a named village that is not in the data is reported, and the rest still found",
+    "replaced": {}
+   },
+   {
+    "text": "KP. RAWA BADAK RT 02 RW 06 DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.15.30",
+    "replaced": {}
+   },
+   {
+    "text": "Kelurahan/desa Sukamaju tidak ditemukan di Kecamatan Cilebar menurut data Kemendagri.",
+    "replaced": {}
+   },
+   {
+    "text": "a city inside a street name does not win over the kecamatan after it",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Dahlia 67, Cimanggis, Depok",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.76.02",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Dahlia 67",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "Jl. Kenanga No 8, Cibubur, Ciracas, Jakarta Timur",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "31.75.09.1002",
+    "replaced": {}
+   },
+   {
+    "text": "a kecamatan and kelurahan with the same name: the kecamatan, unless something points at the kelurahan",
+    "replaced": {}
+   },
+   {
+    "text": "Kuta, Badung, Bali",
+    "replaced": {}
+   },
+   {
+    "text": "51.03.01",
+    "replaced": {}
+   },
+   {
+    "text": "Kel. Kuta, Kuta, Badung",
+    "replaced": {}
+   },
+   {
+    "text": "51.03.01.1002",
+    "replaced": {}
+   },
+   {
+    "text": "Sumbersari, Jember 68121",
+    "replaced": {}
+   },
+   {
+    "text": "35.09.21.1002",
+    "replaced": {}
+   },
+   {
+    "text": "the kode pos is the kelurahan’s",
+    "replaced": {}
+   },
+   {
+    "text": "names written with or without spaces and apostrophes",
+    "replaced": {}
+   },
+   {
+    "text": "Ds. Suka Maju, Kec. Cibungbulang, Kab. Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "Murung Ta’al, Labuan Amas Selatan, Hulu Sungai Tengah",
+    "replaced": {}
+   },
+   {
+    "text": "63.07.03.2015",
+    "replaced": {}
+   },
+   {
+    "text": "text with no region in it",
+    "replaced": {}
+   },
+   {
+    "text": "tolong kirim besok pagi ya",
+    "replaced": {}
+   },
+   {
+    "text": "none",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "none",
+    "replaced": {}
+   },
+   {
+    "text": "Google Maps style: shortened words, a Plus Code, the province written out",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Rajawali No.6, Gandaria Utara, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12140",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "31.74.07.1009",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Melati No.2, Kec. Metro Bar., Kota Metro, Lampung",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "18.72.03",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Merdeka 3, Tj. Priok, Kota Jkt Utara",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "31.72.02",
+    "replaced": {}
+   },
+   {
+    "text": "92JW+6X7, Jl. Anggrek No. 3, Beji, Depok",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "Jl. Anggrek No. 3",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "a kelurahan named with its kecamatan wins over the kelurahan that owns a wrong kode pos",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Swadaya 4, Lengkong Gudang, Serpong, Tangerang Selatan 15311",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "36.74.01.1004",
+    "replaced": {}
+   },
+   {
+    "text": "Kode pos 15311 bukan milik Kelurahan Lengkong Gudang (kode posnya 15321).",
+    "replaced": {}
+   },
+   {
+    "text": "\"Kel.\" prefers a kelurahan and \"Desa\" a desa; a dusun is part of the street",
+    "replaced": {}
+   },
+   {
+    "text": "Gg. Mawar, Kel. Kamal",
+    "replaced": {}
+   },
+   {
+    "text": "31.73.06.1004",
+    "replaced": {}
+   },
+   {
+    "text": "Dusun Donomulyo, Desa Adipuro",
+    "replaced": {}
+   },
+   {
+    "text": "Dusun Donomulyo",
+    "replaced": {}
+   },
+   {
+    "text": "Adipuro",
+    "replaced": {}
+   },
+   {
+    "text": "level words and province names inside other names",
+    "replaced": {}
+   },
+   {
+    "text": "Jalan Harapan No. 1",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "none",
+    "replaced": {}
+   },
+   {
+    "text": "Jalan Harapan No. 1",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "Jl. Merpati, Sidodadi, Lampung Timur",
+    "replaced": {}
+   },
+   {
+    "text": "18.07",
+    "replaced": {}
+   },
+   {
+    "text": "RT/RW and kode pos written with a colon, numbers in names written as Roman numerals",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Rambutan Rt:30 Rw:10 Kode Pos:30144 Kecamatan: Ilir Barat II",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Rambutan",
+    "replaced": {}
+   },
+   {
+    "text": "030",
+    "replaced": {}
+   },
+   {
+    "text": "010",
+    "replaced": {}
+   },
+   {
+    "text": "30144",
+    "replaced": {}
+   },
+   {
+    "text": "Ilir Barat Dua",
+    "replaced": {}
+   },
+   {
+    "text": "names with a typo, inside the kota or kabupaten the address names",
+    "replaced": {}
+   },
+   {
+    "text": "Kp. Nagrog RT 94 RW 00, Kab. Tasikmalayah",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.06",
+    "replaced": {}
+   },
+   {
+    "text": "\"Tasikmalayah\" dibaca sebagai Kabupaten Tasikmalaya.",
+    "replaced": {}
+   },
+   {
+    "text": "medium",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Beringin 4, Cibinog, Kab. Bogor",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.01.01",
+    "replaced": {}
+   },
+   {
+    "text": "\"Cibinog\" dibaca sebagai Kecamatan Cibinong.",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Merdeka 7, Kec. Tanah Sereal, Kota Bogor",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.71.06",
+    "replaced": {}
+   },
+   {
+    "text": "a real name is not read as a typo of another",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Cendrawasih 08, Desa Purwodadi",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "Purwodadi",
+    "replaced": {}
+   },
+   {
+    "text": "low",
+    "replaced": {}
+   },
+   {
+    "text": "Gg. Mahoni 7, Jaga Baya I, Way Halim, Kota Bandar Lampung",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "18.71.15",
+    "replaced": {}
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
     "text": "../src/index.ts",
     "replaced": {}
    },
@@ -1518,628 +2156,6 @@
    {
     "text": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
     "replaced": {}
-   },
-   {
-    "text": "uji",
-    "replaced": {}
-   },
-   {
-    "text": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
-    "replaced": {}
-   },
-   {
-    "text": "Fajar Halim",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "3201011503953074",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "Dian Puspita",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "3201014810962447",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tFajar Halim\t3201011503953074\n\\.\n",
-    "replaced": {
-     "NAME": 1,
-     "NIK": 1
-    }
-   },
-   {
-    "text": "([^",
-    "replaced": {}
-   },
-   {
-    "text": "\n",
-    "replaced": {}
-   },
-   {
-    "text": "\t",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK",
-    "replaced": {}
-   },
-   {
-    "text": "uji",
-    "replaced": {}
-   },
-   {
-    "text": "Fajar Halim",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "3201011503953074",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "1234567890",
-    "replaced": {}
-   },
-   {
-    "text": "pelanggan_nik,npwp,gaji\n3201011503953074,3201011503953074,5516458",
-    "replaced": {
-     "NIK": 2,
-     "FINANCIAL": 1
-    }
-   },
-   {
-    "text": "(\\d{16})",
-    "replaced": {}
-   },
-   {
-    "text": "\n",
-    "replaced": {}
-   },
-   {
-    "text": ",",
-    "replaced": {}
-   },
-   {
-    "text": "the same NIK in another file",
-    "replaced": {}
-   },
-   {
-    "text": "an individual NPWP is their NIK",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: kunci yang sama memberi hasil yang sama, kunci lain berbeda, tanpa kunci acak",
-    "replaced": {}
-   },
-   {
-    "text": "staging",
-    "replaced": {}
-   },
-   {
-    "text": "staging",
-    "replaced": {}
-   },
-   {
-    "text": "lain",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: 5.000 NIK dari kecamatan, tahun, dan jenis kelamin yang sama tidak pernah bertabrakan",
-    "replaced": {}
-   },
-   {
-    "text": "tabrakan",
-    "replaced": {}
-   },
-   {
-    "text": "0",
-    "replaced": {}
-   },
-   {
-    "text": "NIK",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: opsi keep, tanggal lahir utuh, dan teks bebas",
-    "replaced": {}
-   },
-   {
-    "text": "k",
-    "replaced": {}
-   },
-   {
-    "text": "NAME",
-    "replaced": {}
-   },
-   {
-    "text": "GENDER",
-    "replaced": {}
-   },
-   {
-    "text": "Fajar Halim",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "15-08-1995",
-    "replaced": {}
-   },
-   {
-    "text": "15 Agustus 2003",
-    "replaced": {}
-   },
-   {
-    "text": "3201011503953074",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "150895",
-    "replaced": {}
-   },
-   {
-    "text": "the NIK keeps the whole birth date too",
-    "replaced": {}
-   },
-   {
-    "text": "NAMA",
-    "replaced": {}
-   },
-   {
-    "text": "p",
-    "replaced": {}
-   },
-   {
-    "text": "Pasien: Dian Puspita, diagnosa: Batuk. Plat B 2052 GOD, login dari 198.51.100.146, kartu 4539 1463 8007 7001. Agama: Islam",
-    "replaced": {
-     "NAME": 1,
-     "HEALTH": 1,
-     "PLATE": 1,
-     "IP": 1,
-     "CARD": 1
-    }
-   },
-   {
-    "text": "Dian Puspita",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "Diabetes",
-    "replaced": {}
-   },
-   {
-    "text": "1234 XYZ",
-    "replaced": {}
-   },
-   {
-    "text": "198.51.100.146",
-    "replaced": {
-     "IP": 1
-    }
-   },
-   {
-    "text": "4539 1463 8007 7001",
-    "replaced": {
-     "CARD": 1
-    }
-   },
-   {
-    "text": "",
-    "replaced": {}
-   },
-   {
-    "text": "453914",
-    "replaced": {}
-   },
-   {
-    "text": "the card keeps its issuer prefix",
-    "replaced": {}
-   },
-   {
-    "text": "and passes Luhn",
-    "replaced": {}
-   },
-   {
-    "text": "religion is kept by default",
-    "replaced": {}
-   },
-   {
-    "text": "node:test",
-    "replaced": {}
-   },
-   {
-    "text": "node:assert/strict",
-    "replaced": {}
-   },
-   {
-    "text": "../src/index.ts",
-    "replaced": {}
-   },
-   {
-    "text": "0",
-    "replaced": {}
-   },
-   {
-    "text": "26",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "COM.CONTOH.WWW",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "936000000000000001",
-    "replaced": {}
-   },
-   {
-    "text": "02",
-    "replaced": {}
-   },
-   {
-    "text": "000000000000001",
-    "replaced": {}
-   },
-   {
-    "text": "03",
-    "replaced": {}
-   },
-   {
-    "text": "UMI",
-    "replaced": {}
-   },
-   {
-    "text": "51",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "ID.CO.QRIS.WWW",
-    "replaced": {}
-   },
-   {
-    "text": "02",
-    "replaced": {}
-   },
-   {
-    "text": "ID1026000000001",
-    "replaced": {}
-   },
-   {
-    "text": "03",
-    "replaced": {}
-   },
-   {
-    "text": "UMI",
-    "replaced": {}
-   },
-   {
-    "text": "52",
-    "replaced": {}
-   },
-   {
-    "text": "5812",
-    "replaced": {}
-   },
-   {
-    "text": "53",
-    "replaced": {}
-   },
-   {
-    "text": "360",
-    "replaced": {}
-   },
-   {
-    "text": "58",
-    "replaced": {}
-   },
-   {
-    "text": "ID",
-    "replaced": {}
-   },
-   {
-    "text": "59",
-    "replaced": {}
-   },
-   {
-    "text": "KOPI CONTOH",
-    "replaced": {}
-   },
-   {
-    "text": "60",
-    "replaced": {}
-   },
-   {
-    "text": "BOGOR",
-    "replaced": {}
-   },
-   {
-    "text": "61",
-    "replaced": {}
-   },
-   {
-    "text": "16914",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "11",
-    "replaced": {}
-   },
-   {
-    "text": "62",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "INV-77",
-    "replaced": {}
-   },
-   {
-    "text": "07",
-    "replaced": {}
-   },
-   {
-    "text": "A01",
-    "replaced": {}
-   },
-   {
-    "text": "CRC-16/CCITT-FALSE",
-    "replaced": {}
-   },
-   {
-    "text": "123456789",
-    "replaced": {}
-   },
-   {
-    "text": "29B1",
-    "replaced": {}
-   },
-   {
-    "text": "",
-    "replaced": {}
-   },
-   {
-    "text": "FFFF",
-    "replaced": {}
-   },
-   {
-    "text": "QRIS statis dibaca lengkap",
-    "replaced": {}
-   },
-   {
-    "text": "static",
-    "replaced": {}
-   },
-   {
-    "text": "KOPI CONTOH",
-    "replaced": {}
-   },
-   {
-    "text": "BOGOR",
-    "replaced": {}
-   },
-   {
-    "text": "16914",
-    "replaced": {}
-   },
-   {
-    "text": "ID1026000000001",
-    "replaced": {}
-   },
-   {
-    "text": "UMI",
-    "replaced": {}
-   },
-   {
-    "text": "Usaha Mikro",
-    "replaced": {}
-   },
-   {
-    "text": "5812",
-    "replaced": {}
-   },
-   {
-    "text": "26",
-    "replaced": {}
-   },
-   {
-    "text": "COM.CONTOH.WWW",
-    "replaced": {}
-   },
-   {
-    "text": "936000000000000001",
-    "replaced": {}
-   },
-   {
-    "text": "000000000000001",
-    "replaced": {}
-   },
-   {
-    "text": "UMI",
-    "replaced": {}
-   },
-   {
-    "text": "51",
-    "replaced": {}
-   },
-   {
-    "text": "ID.CO.QRIS.WWW",
-    "replaced": {}
-   },
-   {
-    "text": "ID1026000000001",
-    "replaced": {}
-   },
-   {
-    "text": "UMI",
-    "replaced": {}
-   },
-   {
-    "text": "INV-77",
-    "replaced": {}
-   },
-   {
-    "text": "A01",
-    "replaced": {}
-   },
-   {
-    "text": "QRIS statis menjadi dinamis dengan nominal, field lain tetap",
-    "replaced": {}
-   },
-   {
-    "text": "dynamic",
-    "replaced": {}
-   },
-   {
-    "text": "25000",
-    "replaced": {}
-   },
-   {
-    "text": "ID1026000000001",
-    "replaced": {}
-   },
-   {
-    "text": "5303360540525000",
-    "replaced": {}
-   },
-   {
-    "text": "5802ID",
-    "replaced": {}
-   },
-   {
-    "text": "the amount sits between currency and country",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "54",
-    "replaced": {}
-   },
-   {
-    "text": "63",
-    "replaced": {}
-   },
-   {
-    "text": "1500.50",
-    "replaced": {}
-   },
-   {
-    "text": "1500.50",
-    "replaced": {}
-   },
-   {
-    "text": "100000",
-    "replaced": {}
-   },
-   {
-    "text": "fixed",
-    "replaced": {}
-   },
-   {
-    "text": "2500",
-    "replaced": {}
-   },
-   {
-    "text": "percent",
-    "replaced": {}
-   },
-   {
-    "text": "0.70",
-    "replaced": {}
-   },
-   {
-    "text": "12,000",
-    "replaced": {}
-   },
-   {
-    "text": "1e5",
-    "replaced": {}
-   },
-   {
-    "text": "12345678901234",
-    "replaced": {}
-   },
-   {
-    "text": "0",
-    "replaced": {}
-   },
-   {
-    "text": "QRIS rusak dan yang bukan QRIS dikenali",
-    "replaced": {}
-   },
-   {
-    "text": "0000",
-    "replaced": {}
-   },
-   {
-    "text": "",
-    "replaced": {}
-   },
-   {
-    "text": "payload_format",
-    "replaced": {}
-   },
-   {
-    "text": "https://example.com",
-    "replaced": {}
-   },
-   {
-    "text": "format",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
    }
   ]
  },
@@ -2675,6 +2691,644 @@
     "replaced": {
      "NAME": 1
     }
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/wilayah.ts",
+    "replaced": {}
+   },
+   {
+    "text": "a full address with commas and level words",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Beringin No. 68 RT 074/RW 065, Kel. Cempaka Putih Timur, Kec. Cempaka Putih, Jakarta Pusat 10510",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "31.71.05.1001",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Melati No. 19",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "003",
+    "replaced": {}
+   },
+   {
+    "text": "005",
+    "replaced": {}
+   },
+   {
+    "text": "10510",
+    "replaced": {}
+   },
+   {
+    "text": "Cempaka Putih Timur",
+    "replaced": {}
+   },
+   {
+    "text": "Cempaka Putih",
+    "replaced": {}
+   },
+   {
+    "text": "Kota Administrasi Jakarta Pusat",
+    "replaced": {}
+   },
+   {
+    "text": "31",
+    "replaced": {}
+   },
+   {
+    "text": "provinsi",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Kenanga No. 99, RT 003/RW 005, Kelurahan Cempaka Putih Timur, Kecamatan Cempaka Putih, Kota Administrasi Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10510",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "lowercase, no commas, RT/RW written short",
+    "replaced": {}
+   },
+   {
+    "text": "jl mangga no 453 rt 3/5 kemiri muka beji depok 16423",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.76.06.1004",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "jl mangga no 453",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "003",
+    "replaced": {}
+   },
+   {
+    "text": "005",
+    "replaced": {}
+   },
+   {
+    "text": "16423",
+    "replaced": {}
+   },
+   {
+    "text": "jl. melati wuwur gabus pati 59173",
+    "replaced": {}
+   },
+   {
+    "text": "33.18.11.2001",
+    "replaced": {}
+   },
+   {
+    "text": "capitals and abbreviations as on a KTP",
+    "replaced": {}
+   },
+   {
+    "text": "alamat: ds. ciherang kec. pacet kab. cianjur",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.03.10.2001",
+    "replaced": {}
+   },
+   {
+    "text": "Gg. Damai 3, Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor, Jabar",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.01.16.2013",
+    "replaced": {}
+   },
+   {
+    "text": "Dsn. Krajan RT 8 RW 9 Ds. Sumberejo Kec. Batu Kota Batu",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "35.79.01.2005",
+    "replaced": {}
+   },
+   {
+    "text": "Dsn. Krajan",
+    "replaced": {}
+   },
+   {
+    "text": "short names for Jakarta, Tangerang Selatan, and provinces",
+    "replaced": {}
+   },
+   {
+    "text": "Kebayoran Baru, Jaksel",
+    "replaced": {}
+   },
+   {
+    "text": "31.74.07",
+    "replaced": {}
+   },
+   {
+    "text": "Pondok Aren, Tangsel",
+    "replaced": {}
+   },
+   {
+    "text": "36.74.03",
+    "replaced": {}
+   },
+   {
+    "text": "Medan Baru, Medan, Sumut",
+    "replaced": {}
+   },
+   {
+    "text": "12.71.17",
+    "replaced": {}
+   },
+   {
+    "text": "Depok, Sleman, DIY",
+    "replaced": {}
+   },
+   {
+    "text": "34.04.07",
+    "replaced": {}
+   },
+   {
+    "text": "Depok the kecamatan in Sleman, not Kota Depok",
+    "replaced": {}
+   },
+   {
+    "text": "\"Kota\" and \"Kab.\" tell the kota from the kabupaten; without them it is a guess",
+    "replaced": {}
+   },
+   {
+    "text": "Kota Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "32.71",
+    "replaced": {}
+   },
+   {
+    "text": "Kab. Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "32.01",
+    "replaced": {}
+   },
+   {
+    "text": "Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "low",
+    "replaced": {}
+   },
+   {
+    "text": "32.71",
+    "replaced": {}
+   },
+   {
+    "text": "a kode pos that belongs elsewhere is reported, one that is not registered too",
+    "replaced": {}
+   },
+   {
+    "text": "Kemiri Muka, Beji, Depok 16424",
+    "replaced": {}
+   },
+   {
+    "text": "32.76.06.1004",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "Kode pos 16424 bukan milik Kelurahan Kemiri Muka (kode posnya 16423).",
+    "replaced": {}
+   },
+   {
+    "text": "Kemiri Muka, Beji, Depok 16999",
+    "replaced": {}
+   },
+   {
+    "text": "Kode pos 16999 tidak terdaftar.",
+    "replaced": {}
+   },
+   {
+    "text": "the kode pos fills in the kelurahan the address leaves out",
+    "replaced": {}
+   },
+   {
+    "text": "Jalan Diponegoro 22 Bandung 40115",
+    "replaced": {}
+   },
+   {
+    "text": "32.73.09.1003",
+    "replaced": {}
+   },
+   {
+    "text": "provinsi",
+    "replaced": {}
+   },
+   {
+    "text": "kecamatan",
+    "replaced": {}
+   },
+   {
+    "text": "kelurahanDesa",
+    "replaced": {}
+   },
+   {
+    "text": "Jalan Diponegoro 22",
+    "replaced": {}
+   },
+   {
+    "text": "16424",
+    "replaced": {}
+   },
+   {
+    "text": "32.76.06.1005",
+    "replaced": {}
+   },
+   {
+    "text": "low",
+    "replaced": {}
+   },
+   {
+    "text": "a named village that is not in the data is reported, and the rest still found",
+    "replaced": {}
+   },
+   {
+    "text": "KP. RAWA BADAK RT 02 RW 01 DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.15.30",
+    "replaced": {}
+   },
+   {
+    "text": "Kelurahan/desa Sukamaju tidak ditemukan di Kecamatan Cilebar menurut data Kemendagri.",
+    "replaced": {}
+   },
+   {
+    "text": "a city inside a street name does not win over the kecamatan after it",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Kutilang 85, Cimanggis, Depok",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.76.02",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Kutilang 85",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "Jl. Pemuda No 4, Cibubur, Ciracas, Jakarta Timur",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "31.75.09.1002",
+    "replaced": {}
+   },
+   {
+    "text": "a kecamatan and kelurahan with the same name: the kecamatan, unless something points at the kelurahan",
+    "replaced": {}
+   },
+   {
+    "text": "Kuta, Badung, Bali",
+    "replaced": {}
+   },
+   {
+    "text": "51.03.01",
+    "replaced": {}
+   },
+   {
+    "text": "Kel. Kuta, Kuta, Badung",
+    "replaced": {}
+   },
+   {
+    "text": "51.03.01.1002",
+    "replaced": {}
+   },
+   {
+    "text": "Sumbersari, Jember 68121",
+    "replaced": {}
+   },
+   {
+    "text": "35.09.21.1002",
+    "replaced": {}
+   },
+   {
+    "text": "the kode pos is the kelurahan’s",
+    "replaced": {}
+   },
+   {
+    "text": "names written with or without spaces and apostrophes",
+    "replaced": {}
+   },
+   {
+    "text": "Ds. Suka Maju, Kec. Cibungbulang, Kab. Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "Murung Ta’al, Labuan Amas Selatan, Hulu Sungai Tengah",
+    "replaced": {}
+   },
+   {
+    "text": "63.07.03.2015",
+    "replaced": {}
+   },
+   {
+    "text": "text with no region in it",
+    "replaced": {}
+   },
+   {
+    "text": "tolong kirim besok pagi ya",
+    "replaced": {}
+   },
+   {
+    "text": "none",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "none",
+    "replaced": {}
+   },
+   {
+    "text": "Google Maps style: shortened words, a Plus Code, the province written out",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Cemara No.5, Gandaria Utara, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12140",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "31.74.07.1009",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Pemuda No.5, Kec. Metro Bar., Kota Metro, Lampung",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "18.72.03",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Mangga 9, Tj. Priok, Kota Jkt Utara",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "31.72.02",
+    "replaced": {}
+   },
+   {
+    "text": "92JW+6X7, Jl. Flamboyan No. 6, Beji, Depok",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "Jl. Flamboyan No. 6",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "a kelurahan named with its kecamatan wins over the kelurahan that owns a wrong kode pos",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Seroja 7, Lengkong Gudang, Serpong, Tangerang Selatan 15311",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "36.74.01.1004",
+    "replaced": {}
+   },
+   {
+    "text": "Kode pos 15311 bukan milik Kelurahan Lengkong Gudang (kode posnya 15321).",
+    "replaced": {}
+   },
+   {
+    "text": "\"Kel.\" prefers a kelurahan and \"Desa\" a desa; a dusun is part of the street",
+    "replaced": {}
+   },
+   {
+    "text": "Gg. Mawar, Kel. Kamal",
+    "replaced": {}
+   },
+   {
+    "text": "31.73.06.1004",
+    "replaced": {}
+   },
+   {
+    "text": "Dusun Donomulyo, Desa Adipuro",
+    "replaced": {}
+   },
+   {
+    "text": "Dusun Donomulyo",
+    "replaced": {}
+   },
+   {
+    "text": "Adipuro",
+    "replaced": {}
+   },
+   {
+    "text": "level words and province names inside other names",
+    "replaced": {}
+   },
+   {
+    "text": "Jalan Damai No. 4",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "none",
+    "replaced": {}
+   },
+   {
+    "text": "Jalan Damai No. 4",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "Jl. Merpati, Sidodadi, Lampung Timur",
+    "replaced": {}
+   },
+   {
+    "text": "18.07",
+    "replaced": {}
+   },
+   {
+    "text": "RT/RW and kode pos written with a colon, numbers in names written as Roman numerals",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Rambutan Rt:30 Rw:10 Kode Pos:30144 Kecamatan: Ilir Barat II",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Rambutan",
+    "replaced": {}
+   },
+   {
+    "text": "030",
+    "replaced": {}
+   },
+   {
+    "text": "010",
+    "replaced": {}
+   },
+   {
+    "text": "30144",
+    "replaced": {}
+   },
+   {
+    "text": "Ilir Barat Dua",
+    "replaced": {}
+   },
+   {
+    "text": "names with a typo, inside the kota or kabupaten the address names",
+    "replaced": {}
+   },
+   {
+    "text": "Kp. Nagrog RT 14 RW 06, Kab. Tasikmalayah",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.06",
+    "replaced": {}
+   },
+   {
+    "text": "\"Tasikmalayah\" dibaca sebagai Kabupaten Tasikmalaya.",
+    "replaced": {}
+   },
+   {
+    "text": "medium",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Akasia 7, Cibinog, Kab. Bogor",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.01.01",
+    "replaced": {}
+   },
+   {
+    "text": "\"Cibinog\" dibaca sebagai Kecamatan Cibinong.",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Dahlia 4, Kec. Tanah Sereal, Kota Bogor",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.71.06",
+    "replaced": {}
+   },
+   {
+    "text": "a real name is not read as a typo of another",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Flamboyan 07, Desa Purwodadi",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "Purwodadi",
+    "replaced": {}
+   },
+   {
+    "text": "low",
+    "replaced": {}
+   },
+   {
+    "text": "Gg. Swadaya 2, Jaga Baya I, Way Halim, Kota Bandar Lampung",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "18.71.15",
+    "replaced": {}
    },
    {
     "text": "node:test",
@@ -3663,628 +4317,6 @@
    {
     "text": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
     "replaced": {}
-   },
-   {
-    "text": "uji",
-    "replaced": {}
-   },
-   {
-    "text": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
-    "replaced": {}
-   },
-   {
-    "text": "Arif Matondang",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "3201011508955680",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "Santi Lestari",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "3201014408961792",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tArif Matondang\t3201011508955680\n\\.\n",
-    "replaced": {
-     "NAME": 1,
-     "NIK": 1
-    }
-   },
-   {
-    "text": "([^",
-    "replaced": {}
-   },
-   {
-    "text": "\n",
-    "replaced": {}
-   },
-   {
-    "text": "\t",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK",
-    "replaced": {}
-   },
-   {
-    "text": "uji",
-    "replaced": {}
-   },
-   {
-    "text": "Arif Matondang",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "3201011508955680",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "1234567890",
-    "replaced": {}
-   },
-   {
-    "text": "pelanggan_nik,npwp,gaji\n3201011508955680,3201011508955680,6971640",
-    "replaced": {
-     "NIK": 2,
-     "FINANCIAL": 1
-    }
-   },
-   {
-    "text": "(\\d{16})",
-    "replaced": {}
-   },
-   {
-    "text": "\n",
-    "replaced": {}
-   },
-   {
-    "text": ",",
-    "replaced": {}
-   },
-   {
-    "text": "the same NIK in another file",
-    "replaced": {}
-   },
-   {
-    "text": "an individual NPWP is their NIK",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: kunci yang sama memberi hasil yang sama, kunci lain berbeda, tanpa kunci acak",
-    "replaced": {}
-   },
-   {
-    "text": "staging",
-    "replaced": {}
-   },
-   {
-    "text": "staging",
-    "replaced": {}
-   },
-   {
-    "text": "lain",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: 5.000 NIK dari kecamatan, tahun, dan jenis kelamin yang sama tidak pernah bertabrakan",
-    "replaced": {}
-   },
-   {
-    "text": "tabrakan",
-    "replaced": {}
-   },
-   {
-    "text": "0",
-    "replaced": {}
-   },
-   {
-    "text": "NIK",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: opsi keep, tanggal lahir utuh, dan teks bebas",
-    "replaced": {}
-   },
-   {
-    "text": "k",
-    "replaced": {}
-   },
-   {
-    "text": "NAME",
-    "replaced": {}
-   },
-   {
-    "text": "GENDER",
-    "replaced": {}
-   },
-   {
-    "text": "Arif Matondang",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "15-08-1995",
-    "replaced": {}
-   },
-   {
-    "text": "15 Agustus 2003",
-    "replaced": {}
-   },
-   {
-    "text": "3201011508955680",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "150895",
-    "replaced": {}
-   },
-   {
-    "text": "the NIK keeps the whole birth date too",
-    "replaced": {}
-   },
-   {
-    "text": "NAMA",
-    "replaced": {}
-   },
-   {
-    "text": "p",
-    "replaced": {}
-   },
-   {
-    "text": "Pasien: Santi Lestari, diagnosa: Pegal linu. Plat B 5418 NBV, login dari 203.0.113.241, kartu 4539 1496 6863 2422. Agama: Islam",
-    "replaced": {
-     "NAME": 1,
-     "HEALTH": 1,
-     "PLATE": 1,
-     "IP": 1,
-     "CARD": 1
-    }
-   },
-   {
-    "text": "Santi Lestari",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "Diabetes",
-    "replaced": {}
-   },
-   {
-    "text": "1234 XYZ",
-    "replaced": {}
-   },
-   {
-    "text": "203.0.113.241",
-    "replaced": {
-     "IP": 1
-    }
-   },
-   {
-    "text": "4539 1496 6863 2422",
-    "replaced": {
-     "CARD": 1
-    }
-   },
-   {
-    "text": "",
-    "replaced": {}
-   },
-   {
-    "text": "453914",
-    "replaced": {}
-   },
-   {
-    "text": "the card keeps its issuer prefix",
-    "replaced": {}
-   },
-   {
-    "text": "and passes Luhn",
-    "replaced": {}
-   },
-   {
-    "text": "religion is kept by default",
-    "replaced": {}
-   },
-   {
-    "text": "node:test",
-    "replaced": {}
-   },
-   {
-    "text": "node:assert/strict",
-    "replaced": {}
-   },
-   {
-    "text": "../src/index.ts",
-    "replaced": {}
-   },
-   {
-    "text": "0",
-    "replaced": {}
-   },
-   {
-    "text": "26",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "COM.CONTOH.WWW",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "936000000000000001",
-    "replaced": {}
-   },
-   {
-    "text": "02",
-    "replaced": {}
-   },
-   {
-    "text": "000000000000001",
-    "replaced": {}
-   },
-   {
-    "text": "03",
-    "replaced": {}
-   },
-   {
-    "text": "UMI",
-    "replaced": {}
-   },
-   {
-    "text": "51",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "ID.CO.QRIS.WWW",
-    "replaced": {}
-   },
-   {
-    "text": "02",
-    "replaced": {}
-   },
-   {
-    "text": "ID1026000000001",
-    "replaced": {}
-   },
-   {
-    "text": "03",
-    "replaced": {}
-   },
-   {
-    "text": "UMI",
-    "replaced": {}
-   },
-   {
-    "text": "52",
-    "replaced": {}
-   },
-   {
-    "text": "5812",
-    "replaced": {}
-   },
-   {
-    "text": "53",
-    "replaced": {}
-   },
-   {
-    "text": "360",
-    "replaced": {}
-   },
-   {
-    "text": "58",
-    "replaced": {}
-   },
-   {
-    "text": "ID",
-    "replaced": {}
-   },
-   {
-    "text": "59",
-    "replaced": {}
-   },
-   {
-    "text": "KOPI CONTOH",
-    "replaced": {}
-   },
-   {
-    "text": "60",
-    "replaced": {}
-   },
-   {
-    "text": "BOGOR",
-    "replaced": {}
-   },
-   {
-    "text": "61",
-    "replaced": {}
-   },
-   {
-    "text": "16914",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "11",
-    "replaced": {}
-   },
-   {
-    "text": "62",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "INV-77",
-    "replaced": {}
-   },
-   {
-    "text": "07",
-    "replaced": {}
-   },
-   {
-    "text": "A01",
-    "replaced": {}
-   },
-   {
-    "text": "CRC-16/CCITT-FALSE",
-    "replaced": {}
-   },
-   {
-    "text": "123456789",
-    "replaced": {}
-   },
-   {
-    "text": "29B1",
-    "replaced": {}
-   },
-   {
-    "text": "",
-    "replaced": {}
-   },
-   {
-    "text": "FFFF",
-    "replaced": {}
-   },
-   {
-    "text": "QRIS statis dibaca lengkap",
-    "replaced": {}
-   },
-   {
-    "text": "static",
-    "replaced": {}
-   },
-   {
-    "text": "KOPI CONTOH",
-    "replaced": {}
-   },
-   {
-    "text": "BOGOR",
-    "replaced": {}
-   },
-   {
-    "text": "16914",
-    "replaced": {}
-   },
-   {
-    "text": "ID1026000000001",
-    "replaced": {}
-   },
-   {
-    "text": "UMI",
-    "replaced": {}
-   },
-   {
-    "text": "Usaha Mikro",
-    "replaced": {}
-   },
-   {
-    "text": "5812",
-    "replaced": {}
-   },
-   {
-    "text": "26",
-    "replaced": {}
-   },
-   {
-    "text": "COM.CONTOH.WWW",
-    "replaced": {}
-   },
-   {
-    "text": "936000000000000001",
-    "replaced": {}
-   },
-   {
-    "text": "000000000000001",
-    "replaced": {}
-   },
-   {
-    "text": "UMI",
-    "replaced": {}
-   },
-   {
-    "text": "51",
-    "replaced": {}
-   },
-   {
-    "text": "ID.CO.QRIS.WWW",
-    "replaced": {}
-   },
-   {
-    "text": "ID1026000000001",
-    "replaced": {}
-   },
-   {
-    "text": "UMI",
-    "replaced": {}
-   },
-   {
-    "text": "INV-77",
-    "replaced": {}
-   },
-   {
-    "text": "A01",
-    "replaced": {}
-   },
-   {
-    "text": "QRIS statis menjadi dinamis dengan nominal, field lain tetap",
-    "replaced": {}
-   },
-   {
-    "text": "dynamic",
-    "replaced": {}
-   },
-   {
-    "text": "25000",
-    "replaced": {}
-   },
-   {
-    "text": "ID1026000000001",
-    "replaced": {}
-   },
-   {
-    "text": "5303360540525000",
-    "replaced": {}
-   },
-   {
-    "text": "5802ID",
-    "replaced": {}
-   },
-   {
-    "text": "the amount sits between currency and country",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "54",
-    "replaced": {}
-   },
-   {
-    "text": "63",
-    "replaced": {}
-   },
-   {
-    "text": "1500.50",
-    "replaced": {}
-   },
-   {
-    "text": "1500.50",
-    "replaced": {}
-   },
-   {
-    "text": "100000",
-    "replaced": {}
-   },
-   {
-    "text": "fixed",
-    "replaced": {}
-   },
-   {
-    "text": "2500",
-    "replaced": {}
-   },
-   {
-    "text": "percent",
-    "replaced": {}
-   },
-   {
-    "text": "0.70",
-    "replaced": {}
-   },
-   {
-    "text": "12,000",
-    "replaced": {}
-   },
-   {
-    "text": "1e5",
-    "replaced": {}
-   },
-   {
-    "text": "12345678901234",
-    "replaced": {}
-   },
-   {
-    "text": "0",
-    "replaced": {}
-   },
-   {
-    "text": "QRIS rusak dan yang bukan QRIS dikenali",
-    "replaced": {}
-   },
-   {
-    "text": "0000",
-    "replaced": {}
-   },
-   {
-    "text": "",
-    "replaced": {}
-   },
-   {
-    "text": "payload_format",
-    "replaced": {}
-   },
-   {
-    "text": "https://example.com",
-    "replaced": {}
-   },
-   {
-    "text": "format",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
    }
   ]
  },
@@ -4802,6 +4834,620 @@
    },
    {
     "text": "Halo Budi Santoso.",
+    "replaced": {}
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/wilayah.ts",
+    "replaced": {}
+   },
+   {
+    "text": "a full address with commas and level words",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Damai No. 84 RT 012/RW 019, Kel. Cempaka Putih Timur, Kec. Cempaka Putih, Jakarta Pusat 10510",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "31.71.05.1001",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Flamboyan No. 93",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "003",
+    "replaced": {}
+   },
+   {
+    "text": "005",
+    "replaced": {}
+   },
+   {
+    "text": "10510",
+    "replaced": {}
+   },
+   {
+    "text": "Cempaka Putih Timur",
+    "replaced": {}
+   },
+   {
+    "text": "Cempaka Putih",
+    "replaced": {}
+   },
+   {
+    "text": "Kota Administrasi Jakarta Pusat",
+    "replaced": {}
+   },
+   {
+    "text": "31",
+    "replaced": {}
+   },
+   {
+    "text": "provinsi",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Durian No. 76, RT 003/RW 005, Kelurahan Cempaka Putih Timur, Kecamatan Cempaka Putih, Kota Administrasi Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10510",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "lowercase, no commas, RT/RW written short",
+    "replaced": {}
+   },
+   {
+    "text": "jl margonda raya no 100 rt 3/5 kemiri muka beji depok 16423",
+    "replaced": {}
+   },
+   {
+    "text": "32.76.06.1004",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "jl margonda raya no 100",
+    "replaced": {}
+   },
+   {
+    "text": "003",
+    "replaced": {}
+   },
+   {
+    "text": "005",
+    "replaced": {}
+   },
+   {
+    "text": "16423",
+    "replaced": {}
+   },
+   {
+    "text": "jl. melati wuwur gabus pati 59173",
+    "replaced": {}
+   },
+   {
+    "text": "33.18.11.2001",
+    "replaced": {}
+   },
+   {
+    "text": "capitals and abbreviations as on a KTP",
+    "replaced": {}
+   },
+   {
+    "text": "alamat: ds. ciherang kec. pacet kab. cianjur",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.03.10.2001",
+    "replaced": {}
+   },
+   {
+    "text": "Gg. Mawar 3, Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor, Jabar",
+    "replaced": {}
+   },
+   {
+    "text": "32.01.16.2013",
+    "replaced": {}
+   },
+   {
+    "text": "Dsn. Krajan RT 9 RW 1 Ds. Sumberejo Kec. Batu Kota Batu",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "35.79.01.2005",
+    "replaced": {}
+   },
+   {
+    "text": "Dsn. Krajan",
+    "replaced": {}
+   },
+   {
+    "text": "short names for Jakarta, Tangerang Selatan, and provinces",
+    "replaced": {}
+   },
+   {
+    "text": "Kebayoran Baru, Jaksel",
+    "replaced": {}
+   },
+   {
+    "text": "31.74.07",
+    "replaced": {}
+   },
+   {
+    "text": "Pondok Aren, Tangsel",
+    "replaced": {}
+   },
+   {
+    "text": "36.74.03",
+    "replaced": {}
+   },
+   {
+    "text": "Medan Baru, Medan, Sumut",
+    "replaced": {}
+   },
+   {
+    "text": "12.71.17",
+    "replaced": {}
+   },
+   {
+    "text": "Depok, Sleman, DIY",
+    "replaced": {}
+   },
+   {
+    "text": "34.04.07",
+    "replaced": {}
+   },
+   {
+    "text": "Depok the kecamatan in Sleman, not Kota Depok",
+    "replaced": {}
+   },
+   {
+    "text": "\"Kota\" and \"Kab.\" tell the kota from the kabupaten; without them it is a guess",
+    "replaced": {}
+   },
+   {
+    "text": "Kota Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "32.71",
+    "replaced": {}
+   },
+   {
+    "text": "Kab. Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "32.01",
+    "replaced": {}
+   },
+   {
+    "text": "Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "low",
+    "replaced": {}
+   },
+   {
+    "text": "32.71",
+    "replaced": {}
+   },
+   {
+    "text": "a kode pos that belongs elsewhere is reported, one that is not registered too",
+    "replaced": {}
+   },
+   {
+    "text": "Kemiri Muka, Beji, Depok 16424",
+    "replaced": {}
+   },
+   {
+    "text": "32.76.06.1004",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "Kode pos 16424 bukan milik Kelurahan Kemiri Muka (kode posnya 16423).",
+    "replaced": {}
+   },
+   {
+    "text": "Kemiri Muka, Beji, Depok 16999",
+    "replaced": {}
+   },
+   {
+    "text": "Kode pos 16999 tidak terdaftar.",
+    "replaced": {}
+   },
+   {
+    "text": "the kode pos fills in the kelurahan the address leaves out",
+    "replaced": {}
+   },
+   {
+    "text": "Jalan Diponegoro 22 Bandung 40115",
+    "replaced": {}
+   },
+   {
+    "text": "32.73.09.1003",
+    "replaced": {}
+   },
+   {
+    "text": "provinsi",
+    "replaced": {}
+   },
+   {
+    "text": "kecamatan",
+    "replaced": {}
+   },
+   {
+    "text": "kelurahanDesa",
+    "replaced": {}
+   },
+   {
+    "text": "Jalan Diponegoro 22",
+    "replaced": {}
+   },
+   {
+    "text": "16424",
+    "replaced": {}
+   },
+   {
+    "text": "32.76.06.1005",
+    "replaced": {}
+   },
+   {
+    "text": "low",
+    "replaced": {}
+   },
+   {
+    "text": "a named village that is not in the data is reported, and the rest still found",
+    "replaced": {}
+   },
+   {
+    "text": "KP. RAWA BADAK RT 01 RW 02 DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+    "replaced": {}
+   },
+   {
+    "text": "32.15.30",
+    "replaced": {}
+   },
+   {
+    "text": "Kelurahan/desa Sukamaju tidak ditemukan di Kecamatan Cilebar menurut data Kemendagri.",
+    "replaced": {}
+   },
+   {
+    "text": "a city inside a street name does not win over the kecamatan after it",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Raya Bogor KM 30, Cimanggis, Depok",
+    "replaced": {}
+   },
+   {
+    "text": "32.76.02",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Raya Bogor KM 30",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Flamboyan No 6, Cibubur, Ciracas, Jakarta Timur",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "31.75.09.1002",
+    "replaced": {}
+   },
+   {
+    "text": "a kecamatan and kelurahan with the same name: the kecamatan, unless something points at the kelurahan",
+    "replaced": {}
+   },
+   {
+    "text": "Kuta, Badung, Bali",
+    "replaced": {}
+   },
+   {
+    "text": "51.03.01",
+    "replaced": {}
+   },
+   {
+    "text": "Kel. Kuta, Kuta, Badung",
+    "replaced": {}
+   },
+   {
+    "text": "51.03.01.1002",
+    "replaced": {}
+   },
+   {
+    "text": "Sumbersari, Jember 68121",
+    "replaced": {}
+   },
+   {
+    "text": "35.09.21.1002",
+    "replaced": {}
+   },
+   {
+    "text": "the kode pos is the kelurahan’s",
+    "replaced": {}
+   },
+   {
+    "text": "names written with or without spaces and apostrophes",
+    "replaced": {}
+   },
+   {
+    "text": "Ds. Suka Maju, Kec. Cibungbulang, Kab. Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "Murung Ta’al, Labuan Amas Selatan, Hulu Sungai Tengah",
+    "replaced": {}
+   },
+   {
+    "text": "63.07.03.2015",
+    "replaced": {}
+   },
+   {
+    "text": "text with no region in it",
+    "replaced": {}
+   },
+   {
+    "text": "tolong kirim besok pagi ya",
+    "replaced": {}
+   },
+   {
+    "text": "none",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "none",
+    "replaced": {}
+   },
+   {
+    "text": "Google Maps style: shortened words, a Plus Code, the province written out",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Anggrek No.9, Gandaria Utara, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12140",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "31.74.07.1009",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Cemara No.5, Kec. Metro Bar., Kota Metro, Lampung",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "18.72.03",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Anggrek 4, Tj. Priok, Kota Jkt Utara",
+    "replaced": {}
+   },
+   {
+    "text": "31.72.02",
+    "replaced": {}
+   },
+   {
+    "text": "92JW+6X7, Jl. Mangga No. 4, Beji, Depok",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "Jl. Mangga No. 4",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "a kelurahan named with its kecamatan wins over the kelurahan that owns a wrong kode pos",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Tulip 5, Lengkong Gudang, Serpong, Tangerang Selatan 15311",
+    "replaced": {}
+   },
+   {
+    "text": "36.74.01.1004",
+    "replaced": {}
+   },
+   {
+    "text": "Kode pos 15311 bukan milik Kelurahan Lengkong Gudang (kode posnya 15321).",
+    "replaced": {}
+   },
+   {
+    "text": "\"Kel.\" prefers a kelurahan and \"Desa\" a desa; a dusun is part of the street",
+    "replaced": {}
+   },
+   {
+    "text": "Gg. Mawar, Kel. Kamal",
+    "replaced": {}
+   },
+   {
+    "text": "31.73.06.1004",
+    "replaced": {}
+   },
+   {
+    "text": "Dusun Donomulyo, Desa Adipuro",
+    "replaced": {}
+   },
+   {
+    "text": "Dusun Donomulyo",
+    "replaced": {}
+   },
+   {
+    "text": "Adipuro",
+    "replaced": {}
+   },
+   {
+    "text": "level words and province names inside other names",
+    "replaced": {}
+   },
+   {
+    "text": "Jalan Bahagia No. 9",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "none",
+    "replaced": {}
+   },
+   {
+    "text": "Jalan Bahagia No. 9",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "Jl. Merpati, Sidodadi, Lampung Timur",
+    "replaced": {}
+   },
+   {
+    "text": "18.07",
+    "replaced": {}
+   },
+   {
+    "text": "RT/RW and kode pos written with a colon, numbers in names written as Roman numerals",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Rambutan Rt:30 Rw:10 Kode Pos:30144 Kecamatan: Ilir Barat II",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Rambutan",
+    "replaced": {}
+   },
+   {
+    "text": "030",
+    "replaced": {}
+   },
+   {
+    "text": "010",
+    "replaced": {}
+   },
+   {
+    "text": "30144",
+    "replaced": {}
+   },
+   {
+    "text": "Ilir Barat Dua",
+    "replaced": {}
+   },
+   {
+    "text": "names with a typo, inside the kota or kabupaten the address names",
+    "replaced": {}
+   },
+   {
+    "text": "Kp. Nagrog RT 30 RW 03, Kab. Tasikmalayah",
+    "replaced": {
+     "ADDRESS": 1
+    }
+   },
+   {
+    "text": "32.06",
+    "replaced": {}
+   },
+   {
+    "text": "\"Tasikmalayah\" dibaca sebagai Kabupaten Tasikmalaya.",
+    "replaced": {}
+   },
+   {
+    "text": "medium",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Melati 5, Cibinog, Kab. Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "32.01.01",
+    "replaced": {}
+   },
+   {
+    "text": "\"Cibinog\" dibaca sebagai Kecamatan Cibinong.",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Anggrek 2, Kec. Tanah Sereal, Kota Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "32.71.06",
+    "replaced": {}
+   },
+   {
+    "text": "a real name is not read as a typo of another",
+    "replaced": {}
+   },
+   {
+    "text": "Jl. Raya Metro Wates Km 05, Desa Purwodadi",
+    "replaced": {}
+   },
+   {
+    "text": "Purwodadi",
+    "replaced": {}
+   },
+   {
+    "text": "low",
+    "replaced": {}
+   },
+   {
+    "text": "Gg. Bukit 2, Jaga Baya I, Way Halim, Kota Bandar Lampung",
+    "replaced": {}
+   },
+   {
+    "text": "18.71.15",
     "replaced": {}
    },
    {
@@ -5782,617 +6428,6 @@
    },
    {
     "text": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
-    "replaced": {}
-   },
-   {
-    "text": "uji",
-    "replaced": {}
-   },
-   {
-    "text": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
-    "replaced": {}
-   },
-   {
-    "text": "Budi Santoso",
-    "replaced": {}
-   },
-   {
-    "text": "3201010607955083",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "Siti Aminah",
-    "replaced": {}
-   },
-   {
-    "text": "3201016306965498",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tBudi Santoso\t3201010607955083\n\\.\n",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "([^",
-    "replaced": {}
-   },
-   {
-    "text": "\n",
-    "replaced": {}
-   },
-   {
-    "text": "\t",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK",
-    "replaced": {}
-   },
-   {
-    "text": "uji",
-    "replaced": {}
-   },
-   {
-    "text": "Budi Santoso",
-    "replaced": {}
-   },
-   {
-    "text": "3201010607955083",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "1234567890",
-    "replaced": {}
-   },
-   {
-    "text": "pelanggan_nik,npwp,gaji\n3201010607955083,3201010607955083,1452285",
-    "replaced": {
-     "NIK": 2,
-     "FINANCIAL": 1
-    }
-   },
-   {
-    "text": "(\\d{16})",
-    "replaced": {}
-   },
-   {
-    "text": "\n",
-    "replaced": {}
-   },
-   {
-    "text": ",",
-    "replaced": {}
-   },
-   {
-    "text": "the same NIK in another file",
-    "replaced": {}
-   },
-   {
-    "text": "an individual NPWP is their NIK",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: kunci yang sama memberi hasil yang sama, kunci lain berbeda, tanpa kunci acak",
-    "replaced": {}
-   },
-   {
-    "text": "staging",
-    "replaced": {}
-   },
-   {
-    "text": "staging",
-    "replaced": {}
-   },
-   {
-    "text": "lain",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: 5.000 NIK dari kecamatan, tahun, dan jenis kelamin yang sama tidak pernah bertabrakan",
-    "replaced": {}
-   },
-   {
-    "text": "tabrakan",
-    "replaced": {}
-   },
-   {
-    "text": "0",
-    "replaced": {}
-   },
-   {
-    "text": "NIK",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: opsi keep, tanggal lahir utuh, dan teks bebas",
-    "replaced": {}
-   },
-   {
-    "text": "k",
-    "replaced": {}
-   },
-   {
-    "text": "NAME",
-    "replaced": {}
-   },
-   {
-    "text": "GENDER",
-    "replaced": {}
-   },
-   {
-    "text": "Budi Santoso",
-    "replaced": {}
-   },
-   {
-    "text": "15-08-1995",
-    "replaced": {}
-   },
-   {
-    "text": "15 Agustus 2003",
-    "replaced": {}
-   },
-   {
-    "text": "3201010607955083",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "150895",
-    "replaced": {}
-   },
-   {
-    "text": "the NIK keeps the whole birth date too",
-    "replaced": {}
-   },
-   {
-    "text": "NAMA",
-    "replaced": {}
-   },
-   {
-    "text": "p",
-    "replaced": {}
-   },
-   {
-    "text": "Pasien: Siti Aminah, diagnosa: Demam. Plat B 6367 ZST, login dari 192.0.2.229, kartu 4539 1482 1935 0849. Agama: Buddha",
-    "replaced": {
-     "HEALTH": 1,
-     "PLATE": 1,
-     "IP": 1,
-     "CARD": 1,
-     "RELIGION": 1
-    }
-   },
-   {
-    "text": "Siti Aminah",
-    "replaced": {}
-   },
-   {
-    "text": "Diabetes",
-    "replaced": {}
-   },
-   {
-    "text": "1234 XYZ",
-    "replaced": {}
-   },
-   {
-    "text": "192.0.2.229",
-    "replaced": {
-     "IP": 1
-    }
-   },
-   {
-    "text": "4539 1482 1935 0849",
-    "replaced": {
-     "CARD": 1
-    }
-   },
-   {
-    "text": "",
-    "replaced": {}
-   },
-   {
-    "text": "453914",
-    "replaced": {}
-   },
-   {
-    "text": "the card keeps its issuer prefix",
-    "replaced": {}
-   },
-   {
-    "text": "and passes Luhn",
-    "replaced": {}
-   },
-   {
-    "text": "religion is kept by default",
-    "replaced": {}
-   },
-   {
-    "text": "node:test",
-    "replaced": {}
-   },
-   {
-    "text": "node:assert/strict",
-    "replaced": {}
-   },
-   {
-    "text": "../src/index.ts",
-    "replaced": {}
-   },
-   {
-    "text": "0",
-    "replaced": {}
-   },
-   {
-    "text": "26",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "COM.CONTOH.WWW",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "936000000000000001",
-    "replaced": {}
-   },
-   {
-    "text": "02",
-    "replaced": {}
-   },
-   {
-    "text": "000000000000001",
-    "replaced": {}
-   },
-   {
-    "text": "03",
-    "replaced": {}
-   },
-   {
-    "text": "UMI",
-    "replaced": {}
-   },
-   {
-    "text": "51",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "ID.CO.QRIS.WWW",
-    "replaced": {}
-   },
-   {
-    "text": "02",
-    "replaced": {}
-   },
-   {
-    "text": "ID1026000000001",
-    "replaced": {}
-   },
-   {
-    "text": "03",
-    "replaced": {}
-   },
-   {
-    "text": "UMI",
-    "replaced": {}
-   },
-   {
-    "text": "52",
-    "replaced": {}
-   },
-   {
-    "text": "5812",
-    "replaced": {}
-   },
-   {
-    "text": "53",
-    "replaced": {}
-   },
-   {
-    "text": "360",
-    "replaced": {}
-   },
-   {
-    "text": "58",
-    "replaced": {}
-   },
-   {
-    "text": "ID",
-    "replaced": {}
-   },
-   {
-    "text": "59",
-    "replaced": {}
-   },
-   {
-    "text": "KOPI CONTOH",
-    "replaced": {}
-   },
-   {
-    "text": "60",
-    "replaced": {}
-   },
-   {
-    "text": "BOGOR",
-    "replaced": {}
-   },
-   {
-    "text": "61",
-    "replaced": {}
-   },
-   {
-    "text": "16914",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "11",
-    "replaced": {}
-   },
-   {
-    "text": "62",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "INV-77",
-    "replaced": {}
-   },
-   {
-    "text": "07",
-    "replaced": {}
-   },
-   {
-    "text": "A01",
-    "replaced": {}
-   },
-   {
-    "text": "CRC-16/CCITT-FALSE",
-    "replaced": {}
-   },
-   {
-    "text": "123456789",
-    "replaced": {}
-   },
-   {
-    "text": "29B1",
-    "replaced": {}
-   },
-   {
-    "text": "",
-    "replaced": {}
-   },
-   {
-    "text": "FFFF",
-    "replaced": {}
-   },
-   {
-    "text": "QRIS statis dibaca lengkap",
-    "replaced": {}
-   },
-   {
-    "text": "static",
-    "replaced": {}
-   },
-   {
-    "text": "KOPI CONTOH",
-    "replaced": {}
-   },
-   {
-    "text": "BOGOR",
-    "replaced": {}
-   },
-   {
-    "text": "16914",
-    "replaced": {}
-   },
-   {
-    "text": "ID1026000000001",
-    "replaced": {}
-   },
-   {
-    "text": "UMI",
-    "replaced": {}
-   },
-   {
-    "text": "Usaha Mikro",
-    "replaced": {}
-   },
-   {
-    "text": "5812",
-    "replaced": {}
-   },
-   {
-    "text": "26",
-    "replaced": {}
-   },
-   {
-    "text": "COM.CONTOH.WWW",
-    "replaced": {}
-   },
-   {
-    "text": "936000000000000001",
-    "replaced": {}
-   },
-   {
-    "text": "000000000000001",
-    "replaced": {}
-   },
-   {
-    "text": "UMI",
-    "replaced": {}
-   },
-   {
-    "text": "51",
-    "replaced": {}
-   },
-   {
-    "text": "ID.CO.QRIS.WWW",
-    "replaced": {}
-   },
-   {
-    "text": "ID1026000000001",
-    "replaced": {}
-   },
-   {
-    "text": "UMI",
-    "replaced": {}
-   },
-   {
-    "text": "INV-77",
-    "replaced": {}
-   },
-   {
-    "text": "A01",
-    "replaced": {}
-   },
-   {
-    "text": "QRIS statis menjadi dinamis dengan nominal, field lain tetap",
-    "replaced": {}
-   },
-   {
-    "text": "dynamic",
-    "replaced": {}
-   },
-   {
-    "text": "25000",
-    "replaced": {}
-   },
-   {
-    "text": "ID1026000000001",
-    "replaced": {}
-   },
-   {
-    "text": "5303360540525000",
-    "replaced": {}
-   },
-   {
-    "text": "5802ID",
-    "replaced": {}
-   },
-   {
-    "text": "the amount sits between currency and country",
-    "replaced": {}
-   },
-   {
-    "text": "01",
-    "replaced": {}
-   },
-   {
-    "text": "54",
-    "replaced": {}
-   },
-   {
-    "text": "63",
-    "replaced": {}
-   },
-   {
-    "text": "1500.50",
-    "replaced": {}
-   },
-   {
-    "text": "1500.50",
-    "replaced": {}
-   },
-   {
-    "text": "100000",
-    "replaced": {}
-   },
-   {
-    "text": "fixed",
-    "replaced": {}
-   },
-   {
-    "text": "2500",
-    "replaced": {}
-   },
-   {
-    "text": "percent",
-    "replaced": {}
-   },
-   {
-    "text": "0.70",
-    "replaced": {}
-   },
-   {
-    "text": "12,000",
-    "replaced": {}
-   },
-   {
-    "text": "1e5",
-    "replaced": {}
-   },
-   {
-    "text": "12345678901234",
-    "replaced": {}
-   },
-   {
-    "text": "0",
-    "replaced": {}
-   },
-   {
-    "text": "QRIS rusak dan yang bukan QRIS dikenali",
-    "replaced": {}
-   },
-   {
-    "text": "0000",
-    "replaced": {}
-   },
-   {
-    "text": "",
-    "replaced": {}
-   },
-   {
-    "text": "payload_format",
-    "replaced": {}
-   },
-   {
-    "text": "https://example.com",
-    "replaced": {}
-   },
-   {
-    "text": "format",
-    "replaced": {}
-   },
-   {
-    "text": "00",
-    "replaced": {}
-   },
-   {
-    "text": "01",
     "replaced": {}
    }
   ]

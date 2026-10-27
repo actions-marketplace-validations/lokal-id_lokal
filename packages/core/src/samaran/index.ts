@@ -180,16 +180,25 @@ export class Samaran {
     }
   }
 
-  private placeholderFor(m: PiiMatch): string {
-    const key = `${m.type}:${canonical(m.type, m.value)}`;
+  /**
+   * The placeholder for a value you already know is personal data, such as the street a parser split out of a
+   * masked address. A value gets the same placeholder here as from `mask`, and `unmask` restores it.
+   */
+  placeholder(type: PiiType, value: string): string {
+    if (!PII_TYPES.includes(type)) throw new RangeError(`Unknown PII type "${type}". Valid types: ${PII_TYPES.join(', ')}`);
+    const key = `${type}:${canonical(type, value)}`;
     const existing = this.byCanonical.get(key);
     if (existing) return existing;
-    const n = (this.counters.get(m.type) ?? 0) + 1;
-    this.counters.set(m.type, n);
-    const placeholder = `[${m.type}_${n}]`;
+    const n = (this.counters.get(type) ?? 0) + 1;
+    this.counters.set(type, n);
+    const placeholder = `[${type}_${n}]`;
     this.byCanonical.set(key, placeholder);
-    this.byPlaceholder.set(placeholder, m.value);
+    this.byPlaceholder.set(placeholder, value);
     return placeholder;
+  }
+
+  private placeholderFor(m: PiiMatch): string {
+    return this.placeholder(m.type, m.value);
   }
 }
 

@@ -21,6 +21,9 @@
     "@types/web": "0.0.166",
     "typescript": "5.9.3"
   },
+  "overrides": {
+    "zod": "4.6.7"
+  },
   "scripts": {
     "studio": "remotion studio",
     "typecheck": "tsc",

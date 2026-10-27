@@ -29,6 +29,7 @@ let base: Record<string, string> | undefined;
 let desa: Record<string, string> | undefined;
 let kodepos: Record<string, string> | undefined;
 let childIndex: Map<string, string[]> | undefined;
+let byPostalCode: Map<string, string[]> | undefined;
 
 function load(file: string): Record<string, string> {
   return JSON.parse(readFileSync(new URL(`../data/${file}`, import.meta.url), 'utf8'));
@@ -126,6 +127,27 @@ export function findByPostalCode(postalCode: string): Wilayah[] {
     .filter(([, p]) => p === pos)
     .map(([code]) => toWilayah(code, getDesa()[code]!));
 }
+
+/** Codes of the kelurahan/desa that use a kode pos; findByPostalCode without building each region. */
+export function villagesWithPostalCode(postalCode: string): string[] {
+  if (!byPostalCode) {
+    byPostalCode = new Map();
+    for (const [code, pos] of Object.entries(getKodepos())) {
+      const list = byPostalCode.get(pos);
+      if (list) list.push(code);
+      else byPostalCode.set(pos, [code]);
+    }
+  }
+  return [...(byPostalCode.get(String(postalCode).trim()) ?? [])];
+}
+
+/** Every region as [code, name], provinces to villages. For parseAlamat. */
+export function* regionNames(): Generator<[string, string]> {
+  yield* Object.entries(getBase());
+  yield* Object.entries(getDesa());
+}
+
+export { parseAlamat, type ParsedAlamat, type AlamatLevel } from './alamat.ts';
 
 const PREFIX = /^(provinsi|prov|kabupaten|kab|kota administrasi|kota adm|kota|kecamatan|kec|distrik|kelurahan|kel|desa)\.?\s+/;
 

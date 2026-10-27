@@ -4,6 +4,36 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.7.2] - 2026-10-27
+
+The browser extension. npm, PyPI, and the GitHub Action are released with the same version and no other changes.
+
+### Fixed
+
+- In ChatGPT, a typed message with personal data was not replaced by its masked version when Enter was pressed: the masked text was added after it, the real value stayed in the box, and each Enter added another copy. Nothing was sent, since the extension holds Enter while personal data is in the box. ChatGPT's editor reads a new selection a moment later than other editors; the extension now waits for it, checks that the box holds the masked text, and holds the message with a notice if it cannot replace it.
+
+## [0.7.1] - 2026-10-27
+
+npm (`@lokal-id/core`, `@lokal-id/mcp`), PyPI (`lokal-id`), the GitHub Action, and the browser extension.
+
+### Added
+
+- `parse_alamat`, `parse_nik`, `parse_phone`, and `validate_npwp` in the MCP server take placeholders from `read_file_masked` (`[ADDRESS_3]`, `[NIK_1]`, `[PHONE_2]`). The server reads the real value from its own vault, on the user's machine, and returns the regions and codes, validity, and operator; the street, RT/RW, birth date, and gender come back as new placeholders that `write_file_unmasked` restores. Before, an agent that read a customer file through the mask could not clean its address column at all: `parse_alamat("[ADDRESS_5]")` found no region.
+- `Samaran.placeholder(type, value)` (Python: `placeholder(pii_type, value)`) gives the placeholder for a value you already know is personal data, the same one `mask` would give it.
+
+## [0.7.0] - 2026-10-26
+
+npm (`@lokal-id/core`, `@lokal-id/mcp`), PyPI (`lokal-id`), the GitHub Action, and the browser extension.
+
+### Added
+
+- `parseAlamat` (`@lokal-id/core/wilayah`), `parse_alamat` (Python), and the `parse_alamat` MCP tool read a free-text address into street, RT/RW, kode pos, and the Kemendagri kelurahan/desa, kecamatan, kabupaten/kota, and provinsi with their codes. Commas, capitals, abbreviations ("Kel.", "Kec.", "Kab.", "Jaksel", "Jabar", "Tangsel"), and left-out levels are fine: the missing levels come from the region's code or the kode pos and are listed in `inferred`. Each result has a `confidence`, `alternatives` when the address fits more than one region ("Bogor"), and `issues` such as a kode pos that belongs to another kelurahan or a village that is not in the data. Google Maps style addresses work too ("Kec. Kby. Baru", "Kota Jakarta Sel.", a Plus Code in front). `npm run eval:alamat` measures it on addresses built from random villages (99.5% right, none wrong with confidence "high"), and `npm run eval:alamat:osm` on real addresses of places in OpenStreetMap, against the boundaries their coordinates fall in: on 1,528 addresses not looked at while tuning, 94.6% right at the kabupaten/kota, 91.6% at the kecamatan, and 88.4% at the kelurahan/desa, and 98.6% of the answers with confidence "high" match. Checked by hand, most of the rest are addresses that name a neighbouring kelurahan or are mapped next to a boundary, or name only a village that many kabupaten share (those get confidence "low"). Names with a typo are read too ("Kab. Tasikmalayah", "Cibinog, Bogor", "Kec. Tanah Sereal"): kabupaten, kota, and provinsi anywhere, kecamatan and kelurahan only inside the kabupaten or kota the address names or its kode pos points to, and an issue says what the name was taken for. With one typo in one name, `npm run eval:alamat -- --typos` gets 97.4% right (67% without this); a reading with a typo is never more than "medium".
+- The browser extension masks attachments. A file chosen with the site's attach button, dropped on the page, or pasted is checked before the site gets it: text files (CSV, JSON, logs, SQL, code) are masked in place, an Excel file becomes one masked CSV per sheet, and a Word document or a PDF with a text layer becomes one masked text file. Files without personal data are uploaded unchanged. Images, scanned or password-protected PDFs, and files over 20 MB are uploaded as they are, with a notice for the documents it could not read.
+
+### Fixed
+
+- Samaran no longer reads a command after a key named like an address field as an address: `"eval:alamat": "node evals/alamat-bench.mjs"` in a package.json, which the MCP guard and the Claude Code hook held.
+
 ## [0.6.0] - 2026-10-23
 
 npm (`@lokal-id/core`, `@lokal-id/mcp`), PyPI (`lokal-id`), the GitHub Action, and the browser extension.
@@ -162,7 +192,10 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.7.2...HEAD
+[0.7.2]: https://github.com/lokal-id/lokal/compare/v0.7.1...v0.7.2
+[0.7.1]: https://github.com/lokal-id/lokal/compare/v0.7.0...v0.7.1
+[0.7.0]: https://github.com/lokal-id/lokal/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/lokal-id/lokal/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/lokal-id/lokal/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/lokal-id/lokal/compare/v0.4.0...v0.4.1

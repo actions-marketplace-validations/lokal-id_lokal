@@ -6,7 +6,7 @@
 //   node scripts/build-extension.mjs --test && node scripts/test-extension.mjs [--browser <path>] [--headed]
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
-import { existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -38,23 +38,43 @@ const PAGE = `<!doctype html><html><head><meta charset="utf-8"><title>chat</titl
 <textarea id="plain"></textarea>
 <button id="send" aria-label="Send message">Kirim</button>
 <button id="copy" aria-label="Copy">Copy</button>
+<input type="file" id="file" multiple>
+<div id="drop" style="height:60px;border:1px dashed #999">drop</div>
 <script>
+window.uploads = [];
+// Like a chat's attach button and drop zone: they read whatever files reach them.
+const take = async (files, via) => {
+  for (const f of files) window.uploads.push({ via, name: f.name, type: f.type, text: f.type.startsWith('image/') ? '(image)' : await f.text() });
+};
+file.addEventListener('change', () => take(file.files, 'picker'));
+drop.addEventListener('dragover', (e) => e.preventDefault());
+drop.addEventListener('drop', (e) => { e.preventDefault(); take(e.dataTransfer.files, 'drop'); });
 window.sent = [];
 window.pastes = [];
-// Like ProseMirror: the editor handles paste itself, from the event's clipboardData.
+// Like ProseMirror (ChatGPT): the editor keeps its own selection, read from the page when selectionchange fires, so
+// later rather than at once, and handles paste itself at that selection with the event's clipboardData.
+let model = { start: 0, end: 0 };
+const offsetOf = (node, offset) => {
+  const r = document.createRange();
+  r.selectNodeContents(editor);
+  r.setEnd(node, offset);
+  return r.toString().length;
+};
+document.addEventListener('selectionchange', () => {
+  const sel = getSelection();
+  if (!sel.rangeCount || !editor.contains(sel.anchorNode)) return;
+  const r = sel.getRangeAt(0);
+  model = { start: offsetOf(r.startContainer, r.startOffset), end: offsetOf(r.endContainer, r.endOffset) };
+});
 editor.addEventListener('paste', (e) => {
   const text = e.clipboardData.getData('text/plain');
   window.pastes.push(text);
   e.preventDefault();
-  const sel = getSelection();
-  const range = sel.rangeCount ? sel.getRangeAt(0) : null;
-  if (range && editor.contains(range.startContainer)) {
-    range.deleteContents();
-    range.insertNode(document.createTextNode(text));
-    sel.collapseToEnd();
-  } else {
-    editor.textContent += text;
-  }
+  const before = editor.textContent;
+  editor.textContent = before.slice(0, model.start) + text + before.slice(model.end);
+  const at = model.start + text.length;
+  model = { start: at, end: at };
+  if (editor.firstChild) getSelection().collapse(editor.firstChild, at);
 });
 const submit = (box) => { window.sent.push(box.value ?? box.innerText); };
 plain.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submit(plain); } });
@@ -127,6 +147,7 @@ const browser = spawn(
 );
 
 let client;
+let files;
 let failed = false;
 try {
   const version = await until(
@@ -201,6 +222,15 @@ try {
     assert.deepEqual(await evaluate('window.sent'), ['cek NIK [NIK_1] ya']);
   });
 
+  await check('typed data in an editor that reads its selection later (ChatGPT) is replaced, not added to', async () => {
+    await evaluate('editor.textContent = ""; editor.focus(); window.pastes = []');
+    await page('Input.insertText', { text: `${NIK} kalo ini?` });
+    await key('Enter');
+    await until(() => evaluate('editor.innerText.includes("[NIK_")'), 'masked editor');
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    assert.match(await evaluate('editor.innerText'), /^\[NIK_\d+\] kalo ini\?$/, 'the real NIK is gone and the text is there once');
+  });
+
   await check('a send button is held the same way', async () => {
     await evaluate('window.sent = []; plain.focus(); plain.value = ""');
     await page('Input.insertText', { text: 'rekening 1234567890 a.n. Siti Aminah' });
@@ -248,6 +278,50 @@ try {
     assert.ok(text.includes('Budi Santoso'));
   });
 
+  // Attachments, from files on disk the way a user picks them.
+  files = mkdtempSync(path.join(tmpdir(), 'lokal-ext-files-'));
+  const onDisk = (name, content) => {
+    const p = path.join(files, name);
+    writeFileSync(p, content);
+    return p;
+  };
+  const csv = onDisk('ekspor.csv', `nama,nik,hp\nBudi Santoso,${NIK},${PHONE}\n`);
+  const clean = onDisk('catatan.txt', 'rapat jam 10, bahas roadmap\n');
+  const png = onDisk('foto.png', Buffer.from('89504e470d0a1a0a0000000d49484452', 'hex'));
+  const xlsx = path.join(files, 'pelanggan.xlsx');
+  copyFileSync(path.join(ROOT, 'packages/mcp/test/fixtures/pelanggan.xlsx'), xlsx);
+  const pdf = path.join(files, 'surat-keterangan.pdf');
+  copyFileSync(path.join(ROOT, 'packages/mcp/test/fixtures/surat-keterangan.pdf'), pdf);
+  const fileInput = async () => (await page('Runtime.evaluate', { expression: 'document.querySelector("#file")' })).result.objectId;
+  const uploads = (n) => until(async () => {
+    const u = await evaluate('window.uploads');
+    return u.length >= n && u;
+  }, `${n} uploads`);
+
+  await check('files picked with the file input reach the site masked; other files unchanged', async () => {
+    await evaluate('window.uploads = []');
+    await page('DOM.setFileInputFiles', { objectId: await fileInput(), files: [csv, xlsx, png, clean] });
+    const got = await uploads(5);
+    assert.deepEqual(got.map((u) => u.name), ['ekspor.csv', 'pelanggan - Pelanggan.csv', 'pelanggan - Medis.csv', 'foto.png', 'catatan.txt']);
+    assert.equal(got[0].text, 'nama,nik,hp\n[NAME_1],[NIK_1],[PHONE_1]\n', 'the same NIK keeps its placeholder');
+    const all = JSON.stringify(got);
+    for (const secret of [NIK, 'Budi Santoso', 'Siti Aminah', '3276015508030002']) assert.ok(!all.includes(secret), `${secret} was not uploaded`);
+    assert.equal(got[3].type, 'image/png');
+    assert.equal(got[4].text, 'rapat jam 10, bahas roadmap\n', 'a file without personal data is left alone');
+  });
+
+  await check('a dropped PDF reaches the drop zone as masked text', async () => {
+    await evaluate('window.uploads = []');
+    const at = await evaluate('(() => { const b = drop.getBoundingClientRect(); return { x: b.left + 20, y: b.top + 20 }; })()');
+    const data = { items: [], files: [pdf], dragOperationsMask: 1 };
+    for (const type of ['dragEnter', 'dragOver', 'drop']) await page('Input.dispatchDragEvent', { type, ...at, data });
+    const [got] = await uploads(1);
+    assert.equal(got.via, 'drop');
+    assert.equal(got.name, 'surat-keterangan.txt');
+    assert.match(got.text, /^--- Halaman 1 ---\n/);
+    assert.match(got.text, /\[(?:NAME|NIK)_\d+\]/);
+  });
+
   await check('the same value gets the same placeholder in another tab', async () => {
     const second = await send('Target.createTarget', { url: pageUrl });
     const s2 = (await send('Target.attachToTarget', { targetId: second.targetId, flatten: true })).sessionId;
@@ -260,11 +334,14 @@ try {
       const { result } = await send('Runtime.evaluate', { expression: 'editor.innerText', returnByValue: true }, s2);
       return result.value.includes('[NIK_') && result.value;
     }, 'masked text in the second tab');
-    assert.equal(text, 'NIK [NIK_1] dan HP [PHONE_2]');
+    // The attachments above added more phone numbers to the vault; the NIK is the same one.
+    assert.match(text, /^NIK \[NIK_1\] dan HP \[PHONE_\d+\]$/);
+    assert.notEqual(text, 'NIK [NIK_1] dan HP [PHONE_1]', 'a new number gets a new placeholder');
   });
 } finally {
   client?.close();
   browser.kill();
+  if (files) rmSync(files, { recursive: true, force: true });
   server.close();
   await sleep(500);
   try {

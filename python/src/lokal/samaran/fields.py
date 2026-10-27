@@ -119,6 +119,8 @@ _TYPE_WORDS = {
     'required', 'optional', 'nullable', 'unique', 'str', 'list', 'dict', 'enum', 'json', 'uuid', 'unknown', 'void',
 }
 
+_CODE_FILE = _js.compile(r'[\w-]\.(?:m?[jt]sx?|cjs|cts|py|json|ya?ml|sh|toml)\b', re.I)
+
 _DIGIT_TYPES: frozenset[PiiType] = frozenset((
     'NIK', 'KK', 'NPWP', 'NIP', 'SIM', 'BPJS', 'NISN', 'PHONE', 'BANK_ACCOUNT', 'CARD',
 ))
@@ -177,6 +179,9 @@ def is_plausible_value(pii_type: PiiType, value: str, key: str) -> bool:
         return False
     if pii_type == 'ADDRESS' and not _js.has_ws(v):
         return False  # a real address has more than one word
+    # `"eval:alamat": "node evals/alamat-bench.mjs"` in a package.json is a command.
+    if pii_type == 'ADDRESS' and _CODE_FILE.search(v):
+        return False
     # `user.name` is code; initials ("A.S.", "M. R.") are a person.
     initials = pii_type == 'NAME' and _INITIALS.search(v) is not None
     if pii_type != 'ADDRESS' and (_PARENS.search(v) or (not initials and _DOTTED_IDENT.fullmatch(v))):

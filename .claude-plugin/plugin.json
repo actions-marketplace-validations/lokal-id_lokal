@@ -1,7 +1,7 @@
 {
   "name": "lokal",
   "description": "Make AI agents Indonesia-ready: conventions and real data for Indonesian apps (Rupiah, NIK/NPWP, phone numbers, wilayah Kemendagri, UI copy) plus Samaran, which keeps Indonesian personal data out of the model.",
-  "version": "0.6.0",
+  "version": "0.7.2",
   "author": {
     "name": "Lokal contributors"
   },

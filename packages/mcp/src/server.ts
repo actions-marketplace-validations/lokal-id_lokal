@@ -32,6 +32,7 @@ import {
   findByPostalCode,
   getWilayah,
   listWilayah,
+  parseAlamat,
   postalCodesIn,
   searchWilayah,
   wilayahName,
@@ -39,14 +40,14 @@ import {
 import { loadDocument, loadIgnore, resolveInRoot, toPosix, walkFiles, type Document } from './files.ts';
 import { anonymizeFiles, KEMBARAN_NOTE } from './kembaran-files.ts';
 
-const VERSION = '0.6.0';
+const VERSION = '0.7.2';
 const FILE_LIMIT = 5000;
 
 const INSTRUCTIONS = `Lokal makes you Indonesia-ready.
 
-Data tools (use them instead of guessing): parse_nik, validate_npwp, parse_phone, format_rupiah, parse_rupiah, search_wilayah, list_wilayah, lookup_kode_pos, list_holidays, working_days, parse_qris, set_qris_amount. Region lists, kode pos, holidays, NIK structure, Rupiah formatting, and QRIS checksums are easy to get subtly wrong from memory.
+Data tools (use them instead of guessing): parse_nik, validate_npwp, parse_phone, format_rupiah, parse_rupiah, search_wilayah, list_wilayah, lookup_kode_pos, parse_alamat, list_holidays, working_days, parse_qris, set_qris_amount. Region lists, kode pos, holidays, NIK structure, Rupiah formatting, and QRIS checksums are easy to get subtly wrong from memory.
 
-Privacy tools (Samaran): when a task touches real user data — logs, CSV/Excel exports, database dumps, support tickets, seed files from production — run scan_pii first, then read it with read_file_masked instead of reading the raw file (also never cat/head/type it in a shell). Identifiers (NIK, KK, NPWP, phone, bank account, BPJS, passport …), names, addresses, birth dates, and the UU PDP categories (religion, marital status, health, finances, criminal records, biometrics) come back as stable placeholders like [NIK_1]. Work with the placeholders; never ask the user for the real values. When output must contain the real data (a cleaned CSV, a report), write it with write_file_unmasked, which restores the placeholders on the user's machine. To copy production data to staging, build seeders, or share it with a vendor, use anonymize_file: it writes a copy where every person is a realistic stand-in. If scan_pii reports files it could not scan, tell the user; do not treat them as clean.`;
+Privacy tools (Samaran): when a task touches real user data — logs, CSV/Excel exports, database dumps, support tickets, seed files from production — run scan_pii first, then read it with read_file_masked instead of reading the raw file (also never cat/head/type it in a shell). Identifiers (NIK, KK, NPWP, phone, bank account, BPJS, passport …), names, addresses, birth dates, and the UU PDP categories (religion, marital status, health, finances, criminal records, biometrics) come back as stable placeholders like [NIK_1]. Work with the placeholders; never ask the user for the real values. parse_alamat, parse_nik, parse_phone, and validate_npwp also take those placeholders ([ADDRESS_3], [NIK_1]): they read the real value on the user's machine and return the regions, validity, and operator, with anything about the person (street, RT/RW, birth date) as placeholders. When output must contain the real data (a cleaned CSV, a report), write it with write_file_unmasked, which restores the placeholders on the user's machine. To copy production data to staging, build seeders, or share it with a vendor, use anonymize_file: it writes a copy where every person is a realistic stand-in. If scan_pii reports files it could not scan, tell the user; do not treat them as clean.`;
 
 function json(value: unknown) {
   return { content: [{ type: 'text' as const, text: JSON.stringify(value, null, 2) }] };
@@ -96,17 +97,44 @@ export function createServer(
   const isIgnored = loadIgnore(root);
   const readOnly = { readOnlyHint: true, openWorldHint: false } as const;
   const inRoot = (p: string) => resolveInRoot(root, p);
+  // A placeholder from read_file_masked stands for a value only this server knows. The data tools below work on the
+  // real value, and what they say about the person comes back as placeholders too, so the model still sees none of it.
+  const fromVault = (input: string) => {
+    const value = samaran.unmask(input);
+    return value === input ? undefined : value;
+  };
+  const MASKED_NOTE =
+    'The input was a placeholder: read on this machine from the real value. Values about the person are placeholders; write_file_unmasked restores them.';
 
   server.registerTool(
     'parse_nik',
     {
       title: 'Parse NIK',
       description:
-        'Validate an Indonesian NIK (16-digit national ID) by structure and decode it: province, regency, district (Kemendagri), birth date, gender. Cannot prove the NIK is registered at Dukcapil.',
+        'Validate an Indonesian NIK (16-digit national ID) by structure and decode it: province, regency, district (Kemendagri), birth date, gender. Cannot prove the NIK is registered at Dukcapil. Also takes a [NIK_n] placeholder from read_file_masked; then the birth date and gender come back as placeholders.',
       inputSchema: { nik: z.string().describe('16-digit NIK; spaces and dots are ignored') },
       annotations: readOnly,
     },
-    async ({ nik }) => json(parseNik(nik, { lookupWilayah: wilayahName })),
+    async ({ nik }) => {
+      const real = fromVault(nik);
+      if (real === undefined) return json(parseNik(nik, { lookupWilayah: wilayahName }));
+      const r = parseNik(real, { lookupWilayah: wilayahName });
+      return json({
+        input: nik,
+        valid: r.valid,
+        errors: r.errors,
+        warnings: r.warnings,
+        provinceCode: r.provinceCode,
+        regencyCode: r.regencyCode,
+        districtCode: r.districtCode,
+        province: r.province,
+        regency: r.regency,
+        district: r.district,
+        gender: r.gender && samaran.placeholder('GENDER', r.gender),
+        birthDate: r.birthDate && samaran.placeholder('BIRTH_DATE', r.birthDate),
+        note: MASKED_NOTE,
+      });
+    },
   );
 
   server.registerTool(
@@ -114,11 +142,16 @@ export function createServer(
     {
       title: 'Validate NPWP',
       description:
-        'Validate the format of an Indonesian tax ID (NPWP): legacy 15-digit (XX.XXX.XXX.X-XXX.XXX), 16-digit, or NIK used as NPWP for individuals. Returns the 16-digit form DJP uses today. Format only: it does not check the DJP check digit or registration.',
+        'Validate the format of an Indonesian tax ID (NPWP): legacy 15-digit (XX.XXX.XXX.X-XXX.XXX), 16-digit, or NIK used as NPWP for individuals. Returns the 16-digit form DJP uses today. Format only: it does not check the DJP check digit or registration. Also takes an [NPWP_n] or [NIK_n] placeholder from read_file_masked; then only validity and kind come back.',
       inputSchema: { npwp: z.string() },
       annotations: readOnly,
     },
-    async ({ npwp }) => json(parseNpwp(npwp)),
+    async ({ npwp }) => {
+      const real = fromVault(npwp);
+      if (real === undefined) return json(parseNpwp(npwp));
+      const r = parseNpwp(real);
+      return json({ input: npwp, valid: r.valid, errors: r.errors, kind: r.kind, note: MASKED_NOTE });
+    },
   );
 
   server.registerTool(
@@ -165,11 +198,26 @@ export function createServer(
     {
       title: 'Parse Indonesian phone number',
       description:
-        'Normalize an Indonesian phone number (08xx, +62, 62, landline with area code) to E.164, display format, WhatsApp form, and original operator (Telkomsel, Indosat, Tri, XL, Axis, Smartfren).',
+        'Normalize an Indonesian phone number (08xx, +62, 62, landline with area code) to E.164, display format, WhatsApp form, and original operator (Telkomsel, Indosat, Tri, XL, Axis, Smartfren). Also takes a [PHONE_n] placeholder from read_file_masked; then only validity, type, and operator come back.',
       inputSchema: { phone: z.string() },
       annotations: readOnly,
     },
-    async ({ phone }) => json(parsePhone(phone)),
+    async ({ phone }) => {
+      const real = fromVault(phone);
+      if (real === undefined) return json(parsePhone(phone));
+      const r = parsePhone(real);
+      return json({
+        input: phone,
+        valid: r.valid,
+        errors: r.errors,
+        warnings: r.warnings,
+        type: r.type,
+        operator: r.operator,
+        group: r.group,
+        area: r.area,
+        note: MASKED_NOTE,
+      });
+    },
   );
 
   server.registerTool(
@@ -264,6 +312,33 @@ export function createServer(
         return json({ wilayah: wilayah.path, postalCodes: postalCodesIn(wilayah.code) });
       }
       return fail('Give kode_pos or wilayah_code.');
+    },
+  );
+
+  server.registerTool(
+    'parse_alamat',
+    {
+      title: 'Parse an Indonesian address',
+      description:
+        'Read a free-text Indonesian address ("Jl. Margonda Raya No. 100 RT 3/5 Kemiri Muka, Beji, Depok 16423") into street, RT/RW, kode pos, and the Kemendagri kelurahan/desa, kecamatan, kabupaten/kota, and provinsi with their codes. Handles missing commas, capitals, abbreviations (Kel., Kec., Kab., Jaksel, Jabar), and left-out levels. Check confidence and issues: a kode pos that belongs to another kelurahan, a village that is not in the data, or an address that fits more than one region (see alternatives). Use it to clean address columns, fill region dropdowns from typed addresses, or check a shipping address. Also takes an [ADDRESS_n] placeholder from read_file_masked: the regions come back as they are, the street and RT/RW as placeholders.',
+      inputSchema: { address: z.string().max(2000) },
+      annotations: readOnly,
+    },
+    async ({ address }) => {
+      const real = fromVault(address);
+      if (real === undefined) return json(parseAlamat(address));
+      // The regions are public; the street, house number, and RT/RW narrow it down to a household.
+      const r = parseAlamat(real);
+      const street = r.street && samaran.placeholder('ADDRESS', r.street);
+      const rt = r.rt && samaran.placeholder('ADDRESS', `RT ${r.rt}`);
+      const rw = r.rw && samaran.placeholder('ADDRESS', `RW ${r.rw}`);
+      let formatted = r.formatted;
+      if (formatted && r.street && street) formatted = formatted.replace(r.street, street);
+      if (formatted && (r.rt || r.rw)) {
+        const written = [r.rt && `RT ${r.rt}`, r.rw && `RW ${r.rw}`].filter(Boolean).join('/');
+        formatted = formatted.replace(written, [rt, rw].filter(Boolean).join('/'));
+      }
+      return json({ ...r, input: address, street, rt, rw, formatted, note: MASKED_NOTE });
     },
   );
 

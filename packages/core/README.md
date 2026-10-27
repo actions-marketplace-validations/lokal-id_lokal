@@ -19,7 +19,7 @@ For Python backends there is a port with identical results: `pip install lokal-i
 
 ```ts
 import { parseNik, parsePhone, formatRupiah, parseRupiah, terbilang, addWorkingDays, Samaran } from '@lokal-id/core';
-import { listWilayah, searchWilayah, wilayahName, findByPostalCode } from '@lokal-id/core/wilayah';
+import { listWilayah, searchWilayah, wilayahName, findByPostalCode, parseAlamat } from '@lokal-id/core/wilayah';
 
 parseNik('3201011508950001', { lookupWilayah: wilayahName });
 // { valid: true, province: 'Jawa Barat', regency: 'Kabupaten Bogor', gender: 'L', birthDate: '1995-08-15', … }
@@ -30,6 +30,7 @@ terbilang(1500000, { currency: true }); // 'satu juta lima ratus ribu rupiah'
 addWorkingDays('2026-03-17', 1);        // '2026-03-25', skipping Nyepi and Lebaran
 listWilayah('32.76');                   // districts of Kota Depok
 findByPostalCode('16431');              // villages that use this postal code
+parseAlamat('Kebayoran Baru, Jaksel').kecamatan?.code; // '31.74.07'
 ```
 
 ### Samaran

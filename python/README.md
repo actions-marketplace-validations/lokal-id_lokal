@@ -31,7 +31,7 @@ from lokal import (
     parse_nik, parse_npwp, parse_phone, format_rupiah, format_rupiah_short, parse_rupiah, terbilang,
     add_working_days, is_working_day,
 )
-from lokal.wilayah import list_wilayah, search_wilayah, wilayah_name, find_by_postal_code
+from lokal.wilayah import list_wilayah, search_wilayah, wilayah_name, find_by_postal_code, parse_alamat
 
 nik = parse_nik('3201011508950001', lookup_wilayah=wilayah_name)
 nik.valid, nik.regency, nik.district, nik.gender, nik.birth_date
@@ -55,6 +55,9 @@ is_working_day('2026-12-24', cuti_bersama=False)  # True for offices that ignore
 len(list_wilayah('32.76'))                  # 11 kecamatan in Kota Depok
 search_wilayah('kab. bogor')[0].code        # '32.01'
 find_by_postal_code('16431')[0].path        # 'Depok, Pancoran Mas, Kota Depok, Jawa Barat'
+
+alamat = parse_alamat('jl margonda raya no 100 rt 3/5 kemiri muka beji depok 16423')
+alamat.kelurahan_desa.code, alamat.rt, alamat.confidence   # ('32.76.06.1004', '003', 'high')
 ```
 
 Every result is a dataclass. `to_dict()` gives a JSON-ready dict without empty fields, and `to_dict(camel=True)` uses the same keys as the TypeScript package (`birthDate`, `postalCode`) for frontends that share types with it.
@@ -82,6 +85,7 @@ def balas_pelanggan(pesan: str) -> str:
 - `Samaran(mode='partial')` is for logs and admin screens: `3201********0001`, `0812****7890`, `b***@gmail.com`.
 - `Samaran(exclude=['FINANCIAL', 'NAME'])` keeps types your app has to read, such as income and installments in a dealer's credit simulation, while NIK, phone numbers, and accounts are still masked. `types=` does the opposite (only those). An unknown type name raises `ValueError`.
 - `Samaran(allow=['cs@toko.id', re.compile(r'@toko\.id$')])` never masks your own contacts.
+- `placeholder('ADDRESS', street)` gives the placeholder for a value you already know is personal, such as the street a parser split out of a masked address; `unmask` restores it.
 - `export_vault()` / `import_vault()` move the vault between processes, for example through Redis. Treat it as the raw data it contains.
 - `detect_pii(text)` returns the matches without masking; `min_confidence='high'` keeps only validated or keyword-anchored ones.
 - 27 types, covering every category in UU PDP Article 4: identifiers (NIK, KK, NPWP, passport, SIM, NIP, BPJS, NISN, civil registry deed numbers, phone, email, bank account, card, plate, IP, coordinates), name, address, birth date, gender, religion, marital status, nationality, health, finances, criminal records, and biometrics. Found through labels, CSV headers, JSON/YAML keys, SQL `INSERT` dumps, WhatsApp chat exports, and common phrases in free text.

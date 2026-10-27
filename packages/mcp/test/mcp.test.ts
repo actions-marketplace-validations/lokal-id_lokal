@@ -65,7 +65,7 @@ async function call(name: string, args: Record<string, unknown> = {}) {
 test('server mengiklankan semua tool beserta instruksinya', async () => {
   const { tools } = await client.listTools();
   assert.deepEqual(tools.map((t) => t.name).sort(), [
-    'anonymize_file', 'format_rupiah', 'list_holidays', 'list_wilayah', 'lookup_kode_pos', 'parse_nik', 'parse_phone', 'parse_qris',
+    'anonymize_file', 'format_rupiah', 'list_holidays', 'list_wilayah', 'lookup_kode_pos', 'parse_alamat', 'parse_nik', 'parse_phone', 'parse_qris',
     'parse_rupiah', 'read_file_masked', 'scan_pii', 'search_wilayah', 'set_qris_amount', 'validate_npwp',
     'working_days', 'write_file_unmasked',
   ]);
@@ -124,6 +124,10 @@ test('kode pos, hari libur, dan hari kerja', async () => {
   assert.ok(depok.data.some((w: any) => w.path.includes('Kota Depok')));
   assert.ok((await call('lookup_kode_pos', { wilayah_code: '32.76.01' })).data.postalCodes.includes('16436'));
   assert.equal((await call('lookup_kode_pos', {})).isError, true);
+  const alamat = (await call('parse_alamat', { address: 'jl margonda raya no 100 rt 3/5 kemiri muka beji depok 16423' })).data;
+  assert.equal(alamat.kelurahanDesa.code, '32.76.06.1004');
+  assert.equal(alamat.confidence, 'high');
+  assert.equal(alamat.rt, '003');
   const villages = (await call('list_wilayah', { parent_code: '32.76.01' })).data;
   assert.ok(villages.every((v: any) => /^\d{5}$/.test(v.postalCode)));
 
@@ -189,6 +193,41 @@ test('read_file_masked → olah → write_file_unmasked (round trip)', async () 
 
   const again = await call('write_file_unmasked', { path: 'out/unik.csv', content: 'x' });
   assert.equal(again.isError, true, 'refuses to overwrite without overwrite: true');
+});
+
+test('tool data membaca placeholder dari read_file_masked tanpa membuka nilainya', async () => {
+  writeFileSync(path.join(dir, 'alamat.csv'), 'id,alamat\n1,"Jl. Melati No. 5 RT 3/5, Kemiri Muka, Beji, Depok 16423"\n');
+  const read = await call('read_file_masked', { path: 'alamat.csv' });
+  const placeholder = /\[ADDRESS_\d+\]/.exec(read.text)?.[0];
+  assert.ok(placeholder, read.text);
+
+  const alamat = await call('parse_alamat', { address: placeholder });
+  assert.equal(alamat.data.kelurahanDesa.code, '32.76.06.1004');
+  assert.equal(alamat.data.input, placeholder);
+  for (const secret of ['Melati', 'No. 5', 'RT 003', 'RW 005']) assert.ok(!alamat.text.includes(secret), `${secret} reached the model`);
+  assert.match(alamat.data.street, /^\[ADDRESS_\d+\]$/);
+  // RT and RW are placeholders for "RT 003" and "RW 005", so the address reads the same once restored.
+  assert.match(alamat.data.formatted, /^\[ADDRESS_\d+\], \[ADDRESS_\d+\]\/\[ADDRESS_\d+\], Kelurahan Kemiri Muka/);
+
+  // The agent writes the cleaned row with placeholders; the file on disk has the real street.
+  const row = `${alamat.data.street},${alamat.data.rt},${alamat.data.kelurahanDesa.name},${alamat.data.kelurahanDesa.code}`;
+  await call('write_file_unmasked', { path: 'out/alamat-rapi.csv', content: row });
+  assert.equal(readFileSync(path.join(dir, 'out', 'alamat-rapi.csv'), 'utf8'), 'Jl. Melati No. 5,RT 003,Kemiri Muka,32.76.06.1004');
+
+  const pelanggan = await call('read_file_masked', { path: 'pelanggan.csv' });
+  const nik = /\[NIK_\d+\]/.exec(pelanggan.text)![0];
+  const phone = /\[PHONE_\d+\]/.exec(pelanggan.text)![0];
+  const parsedNik = await call('parse_nik', { nik });
+  assert.equal(parsedNik.data.valid, true);
+  assert.equal(parsedNik.data.regency, 'Kabupaten Bogor');
+  assert.match(parsedNik.data.birthDate, /^\[BIRTH_DATE_\d+\]$/);
+  assert.ok(!/1995|3201011508950001/.test(parsedNik.text), parsedNik.text);
+  const parsedPhone = await call('parse_phone', { phone });
+  assert.equal(parsedPhone.data.operator, 'Telkomsel');
+  assert.ok(!/3456|7890/.test(parsedPhone.text), parsedPhone.text);
+  assert.equal((await call('validate_npwp', { npwp: nik })).data.valid, true);
+  // A placeholder this session never made is just text.
+  assert.equal((await call('parse_alamat', { address: '[ADDRESS_99]' })).data.confidence, 'none');
 });
 
 test('path di luar root ditolak', async () => {

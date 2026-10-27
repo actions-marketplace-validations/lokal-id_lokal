@@ -27,6 +27,9 @@ await build({
     popup: path.join(EXT, 'src/popup.ts'),
   },
   outdir: DIST,
+  // The .xlsx, .docx, and PDF readers from packages/mcp use Buffer and node:zlib; the browser gets small shims.
+  alias: { 'node:zlib': path.join(EXT, 'src/shims/zlib.ts') },
+  inject: [path.join(EXT, 'src/shims/buffer.ts')],
   bundle: true,
   format: 'iife',
   target: 'chrome111',
