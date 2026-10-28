@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-10-29
+
+npm (`@lokal-id/core`, `@lokal-id/mcp`), PyPI (`lokal-id`), the GitHub Action, and the browser extension.
+
 ### Added
 
 - `.samaran.json` at the project root adds a team's own data types: rules with a `label` and a regular expression `pattern` (an employee ID like `EMP-004211`) or `fields` (JSON keys, `key: value` labels, and CSV columns such as `no_member`). Matches are masked as `[EMPLOYEE_ID_1]` and restored like any placeholder; `allow` lists values that are never masked. The MCP server, the guard, `lokal-mcp scan` and the GitHub Action, the proxy, `lokal-mcp kembaran`, and `lokal.files.scan_path` read it. A broken file makes the file tools and `lokal-mcp scan` fail with the reason, instead of masking less than the team expects. In the libraries, pass the rules as `custom`: `new Samaran({ custom })`, `detectPii(text, { custom })`, `new Kembaran({ custom })`, and the same keyword in Python. Matches have type `CUSTOM` and the rule's `label`; a rule whose label is a built-in type, or whose pattern does not compile, is refused. Both ports match the same text, checked by 309 shared vectors.
@@ -204,7 +208,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.7.2...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/lokal-id/lokal/compare/v0.7.2...v0.8.0
 [0.7.2]: https://github.com/lokal-id/lokal/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/lokal-id/lokal/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/lokal-id/lokal/compare/v0.6.0...v0.7.0
