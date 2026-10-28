@@ -1753,5 +1753,70 @@
   "type": "BIOMETRIC",
   "value": "😀budi@gmail.com",
   "out": "***"
+ },
+ {
+  "type": "CUSTOM",
+  "value": "3201011508950001",
+  "out": "**************01"
+ },
+ {
+  "type": "CUSTOM",
+  "value": "0812-3456-7890",
+  "out": "************90"
+ },
+ {
+  "type": "CUSTOM",
+  "value": "budi@gmail.com",
+  "out": "************om"
+ },
+ {
+  "type": "CUSTOM",
+  "value": "B 1234 XYZ",
+  "out": "********YZ"
+ },
+ {
+  "type": "CUSTOM",
+  "value": "182.253.10.15",
+  "out": "***********15"
+ },
+ {
+  "type": "CUSTOM",
+  "value": "-6.200000, 106.816666",
+  "out": "*******************66"
+ },
+ {
+  "type": "CUSTOM",
+  "value": "Budi Santoso",
+  "out": "**********so"
+ },
+ {
+  "type": "CUSTOM",
+  "value": "Jl. Mawar No. 5",
+  "out": "************* 5"
+ },
+ {
+  "type": "CUSTOM",
+  "value": "A1234567",
+  "out": "******67"
+ },
+ {
+  "type": "CUSTOM",
+  "value": "19950815 202012 1 001",
+  "out": "*******************01"
+ },
+ {
+  "type": "CUSTOM",
+  "value": "1234567890",
+  "out": "********90"
+ },
+ {
+  "type": "CUSTOM",
+  "value": "🌸 Dewi Lestari",
+  "out": "*************ri"
+ },
+ {
+  "type": "CUSTOM",
+  "value": "😀budi@gmail.com",
+  "out": "**************om"
  }
 ]

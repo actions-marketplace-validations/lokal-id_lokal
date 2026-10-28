@@ -5,7 +5,7 @@ import { readDocx } from '../../mcp/src/docx.ts';
 import { readPdf } from '../../mcp/src/pdf.ts';
 import { readXlsx, type Sheet } from '../../mcp/src/xlsx.ts';
 
-/** Files above this are sent as they are, with a notice: masking them would hang the tab. */
+/** Files above this are not read, since masking them would hang the tab; the user decides whether to send them. */
 export const MAX_ATTACHMENT_BYTES = 20 * 1024 * 1024;
 
 const TEXT_EXTENSIONS = new Set(
@@ -32,6 +32,17 @@ export function attachmentKind(name: string, type = ''): AttachmentKind | undefi
   return undefined;
 }
 
+const IMAGE_FILE = /\.(?:jpe?g|png|heic|heif|webp|gif|bmp|tiff?)$/i;
+// Words in a file name that point at a photo or scan of someone's document. The guard uses a longer list that also
+// names whose files they are; in a chat, "pelanggan.png" is as likely a chart as a KTP.
+const ID_DOCUMENT =
+  /(?:^|[^a-z])(?:e?ktp|kk|kartu[ _-]?keluarga|npwp|sim|paspor|passport|selfie|swafoto|identitas|id[ _-]?card|akta|ijazah|slip[ _-]?gaji|rekening|tabungan|bpjs|kyc)(?:[^a-z]|$)/i;
+
+/** An image whose name says it is a photo of an ID document, a selfie for verification, or a bank book. */
+export function looksLikeIdPhoto(name: string, type = ''): boolean {
+  return (IMAGE_FILE.test(name) || type.startsWith('image/')) && ID_DOCUMENT.test(name.replace(/\.[^.]+$/, ''));
+}
+
 /** A readable file, split into the parts that are masked one by one. */
 export interface Readable {
   kind: AttachmentKind;
@@ -40,7 +51,7 @@ export interface Readable {
   scannedPages?: number[];
 }
 
-/** Why a file could not be read; it is then sent as it is. */
+/** Why a file could not be read; it is sent as it is only if the user says so. */
 export interface Unreadable {
   kind: AttachmentKind;
   reason: 'too-large' | 'scanned' | 'encrypted' | 'damaged';

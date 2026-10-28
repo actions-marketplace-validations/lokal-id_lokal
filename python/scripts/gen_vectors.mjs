@@ -380,6 +380,42 @@ emit('samaran_partial.json', core.PII_TYPES.flatMap((type) =>
     type, value, out: core.partialMask(type, value),
   }))));
 
+// A team's own rules (.samaran.json): patterns and fields in both ports, over the same texts and some of their own.
+{
+  const rules = [
+    { label: 'EMPLOYEE_ID', pattern: String.raw`\bEMP-\d{6}\b` },
+    { label: 'ORDER_REF', pattern: String.raw`INV/\d{4}/[A-Z]+/\d+` },
+    { label: 'MEMBER', fields: ['no_member', 'Kode Member', 'member_id'] },
+    // Overlaps built-in fields on purpose: the longer match, then the team's rule, wins.
+    { label: 'NOTE', fields: ['catatan', 'nik'] },
+    { label: 'TICKET', pattern: String.raw`\b(?:TKT|tkt)-\d+\s?[A-Z]?` },
+  ];
+  const own = [
+    'Tiket dari EMP-004211 soal EMP-000317, lalu EMP-004211 lagi. emp-004211 huruf kecil tidak cocok.',
+    'member no_member=M-0042 minta reset. member_id: Siti Aminah Putri dan lain-lain',
+    '{"no_member": "M-0099", "nik": "3201011508950001", "catatan": "telepon 0812-3456-7890"}',
+    "kode member: M-1234\nKODE MEMBER = 'M 77'\nno_member:\nno_member: \"\"",
+    'nama,Kode Member,kota\r\nSiti Aminah,"M, 77",Bogor\r\nBudi Santoso,M-0042,Depok\r\n\r\nkota,catatan\r\nDepok,bukan kolom member',
+    'id\tmember_id\tnama\n1\tA-1\tDewi Lestari\n2\t\tJoko Widodo\n3\tA-3',
+    'no;no_member;hp\n1;"M ""kutip"" 5";0812-1111-2222',
+    'Invoice INV/2026/BDG/00042 untuk TKT-889 B, 🌸 TKT-12 dan tkt-7.',
+    'HP 0812-3456-7890, nik: 3201011508950001, no_member: 3201011508950002',
+  ];
+  emit('samaran_custom.json', {
+    rules,
+    cases: [...own, ...docs.slice(0, 300)].map((text) => {
+      const s = new core.Samaran({ custom: rules });
+      return {
+        text,
+        matches: core.detectPii(text, { custom: rules }).map((m) => [m.type, m.label ?? null, toCodePoint(text, m.start), toCodePoint(text, m.end), m.value]),
+        placeholder: s.mask(text).text,
+        vault: s.exportVault(),
+        partial: core.maskPii(text, { custom: rules, mode: 'partial' }).text,
+      };
+    }),
+  });
+}
+
 // ---------------------------------------------------------------- Kembaran
 {
   const { Kembaran } = await import(path.join(ROOT, 'packages/core/dist/kembaran.js').replace(/^/, 'file:///').replace(/\\/g, '/'));

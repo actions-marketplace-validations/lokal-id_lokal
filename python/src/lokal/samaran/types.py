@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import dataclass
 from types import MappingProxyType
-from typing import Literal
+from typing import Literal, Optional
 
 from .._result import Result
 
@@ -13,12 +13,14 @@ PiiType = Literal[
     'PLATE', 'IP', 'GEO', 'NAME', 'ADDRESS', 'BIRTH_DATE',
     # Attributes listed in UU PDP Pasal 4
     'GENDER', 'RELIGION', 'MARITAL_STATUS', 'NATIONALITY', 'HEALTH', 'FINANCIAL', 'CRIMINAL_RECORD', 'BIOMETRIC',
+    # A team's own rules (CustomRule), masked under their own label: [EMPLOYEE_ID_1]
+    'CUSTOM',
 ]
 
 PII_TYPES: tuple[PiiType, ...] = (
     'NIK', 'KK', 'NPWP', 'PASSPORT', 'SIM', 'NIP', 'BPJS', 'NISN', 'AKTA', 'PHONE', 'EMAIL', 'BANK_ACCOUNT', 'CARD',
     'PLATE', 'IP', 'GEO', 'NAME', 'ADDRESS', 'BIRTH_DATE', 'GENDER', 'RELIGION', 'MARITAL_STATUS', 'NATIONALITY',
-    'HEALTH', 'FINANCIAL', 'CRIMINAL_RECORD', 'BIOMETRIC',
+    'HEALTH', 'FINANCIAL', 'CRIMINAL_RECORD', 'BIOMETRIC', 'CUSTOM',
 )
 
 _SPESIFIK = {'HEALTH', 'BIOMETRIC', 'CRIMINAL_RECORD', 'FINANCIAL', 'BANK_ACCOUNT', 'CARD', 'NISN'}
@@ -41,3 +43,5 @@ class PiiMatch(Result):
     end: int
     value: str
     confidence: Confidence
+    #: For CUSTOM matches: the rule's label, which names the placeholder.
+    label: Optional[str] = None

@@ -88,8 +88,10 @@ function cdp(url) {
   const ws = new WebSocket(url);
   let id = 0;
   const pending = new Map();
+  const listeners = new Map();
   ws.addEventListener('message', (e) => {
     const msg = JSON.parse(e.data);
+    if (msg.method) for (const fn of listeners.get(msg.method) ?? []) fn(msg.params, msg.sessionId);
     const p = pending.get(msg.id);
     if (!p) return;
     pending.delete(msg.id);
@@ -104,7 +106,8 @@ function cdp(url) {
       pending.set(++id, { resolve, reject });
       ws.send(JSON.stringify({ id, method, params, sessionId }));
     });
-  return { ready, send, close: () => ws.close() };
+  const on = (method, fn) => listeners.set(method, [...(listeners.get(method) ?? []), fn]);
+  return { ready, send, on, close: () => ws.close() };
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -320,6 +323,50 @@ try {
     assert.equal(got.name, 'surat-keterangan.txt');
     assert.match(got.text, /^--- Halaman 1 ---\n/);
     assert.match(got.text, /\[(?:NAME|NIK)_\d+\]/);
+  });
+
+  // Files Lokal cannot check are asked about with the browser's own dialog; the answer is set per check.
+  const dialogs = [];
+  let answer = false;
+  client.on('Page.javascriptDialogOpening', (params, sid) => {
+    dialogs.push(params.message);
+    send('Page.handleJavaScriptDialog', { accept: answer }, sid);
+  });
+  const idPhoto = onDisk('ktp-budi.png', Buffer.from('89504e470d0a1a0a0000000d49484452', 'hex'));
+  const broken = onDisk('rusak.pdf', '%PDF-1.7\n');
+
+  await check('files Lokal cannot check are left out unless the user says yes', async () => {
+    await evaluate('window.uploads = []');
+    dialogs.length = 0;
+    answer = false;
+    await page('DOM.setFileInputFiles', { objectId: await fileInput(), files: [idPhoto, broken, clean] });
+    const got = await uploads(1);
+    await sleep(500);
+    assert.deepEqual((await evaluate('window.uploads')).map((u) => u.name), ['catatan.txt'], 'only the checked file went out');
+    assert.equal(got[0].via, 'picker');
+    assert.equal(dialogs.length, 1, 'one question for both files');
+    assert.match(dialogs[0], /ktp-budi\.png/);
+    assert.match(dialogs[0], /rusak\.pdf/);
+  });
+
+  await check('a photo of a document goes out when the user says yes', async () => {
+    await evaluate('window.uploads = []');
+    dialogs.length = 0;
+    answer = true;
+    const at = await evaluate('(() => { const b = drop.getBoundingClientRect(); return { x: b.left + 20, y: b.top + 20 }; })()');
+    const data = { items: [], files: [idPhoto], dragOperationsMask: 1 };
+    for (const type of ['dragEnter', 'dragOver', 'drop']) await page('Input.dispatchDragEvent', { type, ...at, data });
+    const [got] = await uploads(1);
+    assert.equal(got.name, 'ktp-budi.png');
+    assert.equal(dialogs.length, 1);
+  });
+
+  await check('a photo with an ordinary name is not asked about', async () => {
+    await evaluate('window.uploads = []');
+    dialogs.length = 0;
+    await page('DOM.setFileInputFiles', { objectId: await fileInput(), files: [png] });
+    await uploads(1);
+    assert.equal(dialogs.length, 0);
   });
 
   await check('the same value gets the same placeholder in another tab', async () => {

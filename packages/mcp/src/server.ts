@@ -37,7 +37,9 @@ import {
   searchWilayah,
   wilayahName,
 } from '@lokal-id/core/wilayah';
-import { loadDocument, loadIgnore, resolveInRoot, toPosix, walkFiles, type Document } from './files.ts';
+import {
+  detectConfigured, loadConfig, loadDocument, loadIgnore, resolveInRoot, toPosix, walkFiles, type Document, type SamaranConfig,
+} from './files.ts';
 import { anonymizeFiles, KEMBARAN_NOTE } from './kembaran-files.ts';
 
 const VERSION = '0.7.2';
@@ -57,7 +59,8 @@ function fail(message: string) {
   return { content: [{ type: 'text' as const, text: message }], isError: true };
 }
 
-function countByType(types: PiiType[]): Record<string, number> {
+/** Counts per type, with custom matches under their rule's label. */
+function countByType(types: string[]): Record<string, number> {
   const counts: Record<string, number> = {};
   for (const t of types) counts[t] = (counts[t] ?? 0) + 1;
   return counts;
@@ -93,7 +96,15 @@ export function createServer(
     { instructions: files ? INSTRUCTIONS : INSTRUCTIONS.slice(0, INSTRUCTIONS.indexOf('\n\nPrivacy tools')) },
   );
   // One vault per server process, so placeholders stay stable across calls in a session.
-  const samaran = new Samaran();
+  // The project's own rules in .samaran.json. A broken file stops the file tools rather than mask less than expected.
+  let config: SamaranConfig = { custom: [], allow: [] };
+  let configError: string | undefined;
+  try {
+    config = loadConfig(root);
+  } catch (e) {
+    configError = `${(e as Error).message} Fix .samaran.json, then restart the MCP server.`;
+  }
+  const samaran = new Samaran({ custom: config.custom, allow: config.allow });
   const isIgnored = loadIgnore(root);
   const readOnly = { readOnlyHint: true, openWorldHint: false } as const;
   const inRoot = (p: string) => resolveInRoot(root, p);
@@ -409,11 +420,12 @@ export function createServer(
       } catch (e) {
         return fail((e as Error).message);
       }
+      if (configError) return fail(configError);
       if (!existsSync(abs)) return fail(`Not found: ${target}`);
 
       const files = statSync(abs).isDirectory() ? [...walkFiles(abs, FILE_LIMIT)] : [abs];
       const findings: Array<Record<string, unknown>> = [];
-      const totals: PiiType[] = [];
+      const totals: string[] = [];
       const skipped: Array<{ file: string; reason: string; dataBearing: boolean }> = [];
       let scanned = 0;
       let withPii = 0;
@@ -439,16 +451,17 @@ export function createServer(
         if (doc.kind === 'sheets' && doc.unscanned) skipped.push({ file: rel, reason: `partly scanned: ${doc.unscanned}`, dataBearing: true });
         let fileHasPii = false;
         for (const part of parts(doc)) {
-          const matches = detectPii(part.text, { types, minConfidence: min_confidence });
+          const matches = detectConfigured(part.text, { types, minConfidence: min_confidence }, config);
           if (matches.length) fileHasPii = true;
           for (const m of matches) {
-            totals.push(m.type);
+            totals.push(m.label ?? m.type);
             if (findings.length < 200) {
               findings.push({
                 file: rel,
                 sheet: part.sheet,
                 line: lineOf(part.text, m.start),
                 type: m.type,
+                label: m.label,
                 uuPdp: UU_PDP_CATEGORY[m.type],
                 confidence: m.confidence,
                 preview: partialMask(m.type, m.value),
@@ -462,7 +475,7 @@ export function createServer(
       const notScanned = skipped.filter((s) => s.dataBearing);
       const byReason: Record<string, number> = {};
       for (const s of notScanned) byReason[s.reason] = (byReason[s.reason] ?? 0) + 1;
-      const spesifik = totals.filter((t) => UU_PDP_CATEGORY[t] === 'spesifik').length;
+      const spesifik = totals.filter((t) => UU_PDP_CATEGORY[t as PiiType] === 'spesifik').length;
 
       return json({
         filesScanned: scanned,
@@ -513,6 +526,7 @@ export function createServer(
       } catch (e) {
         return fail((e as Error).message);
       }
+      if (configError) return fail(configError);
       if (!existsSync(abs)) return fail(`Not found: ${target}`);
       const doc = loadDocument(abs);
       if (doc.kind === 'skipped') return fail(`Cannot read ${target}: ${doc.reason}.`);
@@ -552,7 +566,7 @@ export function createServer(
       const header = [
         `File: ${rel} (${what})`,
         ...(doc.kind === 'sheets' && doc.unscanned ? [`Not read: ${doc.unscanned}. They may hold personal data, such as an ID card photo.`] : []),
-        `Masked: ${all.length ? JSON.stringify(countByType(all.map((m) => m.type))) : 'nothing found'}`,
+        `Masked: ${all.length ? JSON.stringify(countByType(all.map((m) => m.label ?? m.type))) : 'nothing found'}`,
         '---',
       ];
       return { content: [{ type: 'text' as const, text: `${header.join('\n')}\n${blocks.join('\n\n')}` }] };
@@ -614,10 +628,11 @@ export function createServer(
     async ({ paths, output, keep, keep_birth_date, secret, overwrite }) => {
       let inputs: string[];
       let out: string;
+      if (configError) return fail(configError);
       try {
         inputs = paths.map(inRoot);
         out = inRoot(output);
-        const files = anonymizeFiles(inputs, out, { keep, keepBirthDate: keep_birth_date, secret, overwrite });
+        const files = anonymizeFiles(inputs, out, { keep, keepBirthDate: keep_birth_date, secret, overwrite, custom: config.custom });
         return json({
           files: files.map((f) => ({ from: toPosix(path.relative(root, f.from)), to: toPosix(path.relative(root, f.to)), replaced: f.replaced })),
           note: KEMBARAN_NOTE,

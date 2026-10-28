@@ -370,3 +370,50 @@ export function dataReadsInCommand(command: string, cwd: string, powershell = fa
   }
   return out;
 }
+
+// ------------------------------------------------------------------------------------------------ strict mode
+//
+// Code passed on the command line can print a file as easily as `cat`: `python -c "print(open('x.csv').read())"`. The
+// default guard allows it, because one-liners that count or check data are common. In strict mode a data file named in
+// such code is treated as printed. Scripts saved in files are still not read: what they do is the author's choice.
+
+/** Interpreters, and the options after which their code follows on the command line. */
+const INLINE_CODE: Record<string, string[]> = {
+  python: ['-c'], python3: ['-c'], py: ['-c'], node: ['-e', '--eval', '-p', '--print'], bun: ['-e', '--eval', '-p', '--print'],
+  deno: ['eval'], ruby: ['-e'], perl: ['-e', '-E'], php: ['-r'], rscript: ['-e'], pwsh: ['-c', '-command'],
+  powershell: ['-c', '-command'],
+};
+const NAMED_FILE = /[\w.~:\\/-]+\.(?:csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out)(?:\.\d+)?(?![\w.])/gi;
+// .NET file reads in PowerShell: [IO.File]::ReadAllText('x.csv'), [System.IO.File]::ReadAllLines(...)
+const DOTNET_READ = /\[(?:system\.)?io\.file\]::\s*read/i;
+// A heredoc fed to a program: `python3 - <<'EOF'` … `EOF`.
+const HEREDOC = /(?:^|\n)[ \t]*(\S+)[^\n]*?<<-?[ \t]*(['"]?)(\w+)\2[^\n]*\n([\s\S]*?)\n[ \t]*\3[ \t]*(?=\r?\n|$)/g;
+// A PowerShell here-string piped to a program: @' … '@ | python -
+const HERE_STRING = /@(['"])\r?\n([\s\S]*?)\r?\n\1@[ \t]*\|[ \t]*(\S+)/g;
+
+function namedFiles(code: string, cwd: string, powershell: boolean): string[] {
+  return [...code.matchAll(NAMED_FILE)].flatMap((m) => expand(m[0].replace(/^[(]+/, ''), cwd, powershell));
+}
+
+/** Strict mode: data files named in code that runs from the command line, which may print them whole. */
+export function inlineCodeReads(command: string, cwd: string, powershell = false): ShellRead[] {
+  const files = new Set<string>();
+  for (const m of command.matchAll(HEREDOC)) {
+    if (programName(m[1]!) in INLINE_CODE) for (const f of namedFiles(m[4]!, cwd, powershell)) files.add(f);
+  }
+  for (const m of command.matchAll(HERE_STRING)) {
+    if (programName(m[3]!) in INLINE_CODE) for (const f of namedFiles(m[2]!, cwd, powershell)) files.add(f);
+  }
+  for (const pipeline of parse(stripHeredocs(command), powershell)) {
+    for (const words of pipeline) {
+      const seg = toSegment(words);
+      if (!seg || seg.writesToFile) continue;
+      const flags = INLINE_CODE[seg.program];
+      const at = flags ? seg.args.findIndex((a) => flags.includes(a.toLowerCase())) : -1;
+      const joined = words.map((w) => w.text).join(' ');
+      const code = at >= 0 ? seg.args.slice(at + 1).join(' ') : powershell && DOTNET_READ.test(joined) ? joined : undefined;
+      if (code !== undefined) for (const f of namedFiles(code, cwd, powershell)) files.add(f);
+    }
+  }
+  return [...files].map((file) => ({ file, select: all }));
+}

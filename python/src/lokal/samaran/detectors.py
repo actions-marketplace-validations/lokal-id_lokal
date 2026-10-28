@@ -23,6 +23,7 @@ from ._names import (
     GIVEN_NAMES,
     SECOND_NAMES,
 )
+from .custom import RuleLike, detect_custom, to_rules
 from .fields import field_type, is_generic_name_key, is_plausible_value
 from .types import PII_TYPES, Confidence, PiiMatch, PiiType
 
@@ -2214,14 +2215,18 @@ def detect_pii(
     types: Optional[Iterable[PiiType]] = None,
     exclude: Optional[Iterable[PiiType]] = None,
     min_confidence: Optional[Confidence] = None,
+    custom: Iterable[RuleLike] = (),
 ) -> list[PiiMatch]:
     """All personal data in the text, non-overlapping, in reading order.
 
     ``types`` limits the result to some kinds. ``exclude`` drops kinds an app needs to read, e.g.
     ``exclude=['FINANCIAL']`` when income and installments are a dealer's credit-simulation data, or
     ``exclude=['NAME']`` when names are not sensitive in that flow. ``min_confidence="high"`` keeps only validated or
-    keyword-anchored matches (default "medium"). An unknown type name raises ``ValueError``.
+    keyword-anchored matches (default "medium"). An unknown type name raises ``ValueError``. ``custom`` takes a team's
+    own rules (``CustomRule`` or dicts): ID formats and field names Samaran does not know, found as CUSTOM with the
+    rule's label.
     """
+    rules = to_rules(custom)
     wanted = set(check_types(types) if types is not None else PII_TYPES)
     wanted -= set(check_types(exclude or ()))
     min_rank = 2 if min_confidence == 'high' else 1
@@ -2232,12 +2237,12 @@ def detect_pii(
     astral = _ASTRAL.search(text) is not None
     view = _to_utf16_view(text) if astral else text
 
-    candidates = [
-        m for detector in _DETECTORS for m in detector(view)
-        if m.end > m.start and m.type in wanted and rank(m) >= min_rank
-    ]
-    # Prefer confident, then longer matches; drop anything overlapping an accepted match.
-    candidates.sort(key=lambda m: (-rank(m), -(m.end - m.start), m.start))
+    found = [m for detector in _DETECTORS for m in detector(view)]
+    if rules:
+        found.extend(detect_custom(view, rules))
+    candidates = [m for m in found if m.end > m.start and m.type in wanted and rank(m) >= min_rank]
+    # Prefer confident, then longer matches, then a team's own rule; drop anything overlapping an accepted match.
+    candidates.sort(key=lambda m: (-rank(m), -(m.end - m.start), -(m.type == 'CUSTOM'), m.start))
     taken = bytearray(len(view) + 1)
     accepted: list[PiiMatch] = []
     for c in candidates:
@@ -2268,7 +2273,7 @@ def detect_pii(
     out: list[PiiMatch] = []
     for m in accepted:
         start, end = unit_to_char[m.start], char_end(m.end)
-        out.append(PiiMatch(m.type, start, end, text[start:end], m.confidence))
+        out.append(PiiMatch(m.type, start, end, text[start:end], m.confidence, m.label))
     return out
 
 

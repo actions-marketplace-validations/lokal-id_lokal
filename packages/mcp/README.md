@@ -71,6 +71,22 @@ The file tools can only access `LOKAL_ROOT`, which defaults to `CLAUDE_PROJECT_D
 
 `lokal-mcp guard` is a hook for Claude Code (`UserPromptSubmit`, and `PreToolUse` for `Read|Grep|Bash|PowerShell`), Codex CLI, Cursor, and Gemini CLI. It holds prompts that contain NIK, bank account, or health data, blocks commands that would print a personal data file into the conversation, pointing the agent to `read_file_masked` instead, and asks before photos of documents and scanned PDFs are read. The Lokal plugin sets it up for Claude Code; see the [Lokal README](https://github.com/lokal-id/lokal#in-codex-cli-cursor-and-gemini-cli) for the other agents.
 
+`SAMARAN_GUARD=strict` makes it fail closed: a guard error blocks, and one-liners such as `python -c` and `node -e` that name a data file with personal data are blocked like `cat`. It is still not a sandbox; see [Defense in depth](https://github.com/lokal-id/lokal#defense-in-depth).
+
+## Your own data types
+
+`.samaran.json` at the project root adds rules for formats Samaran cannot know, and values it must never mask. The file tools, the guard, `lokal-mcp scan`, and the proxy read it; restart the server after changing it. A broken file makes the file tools fail rather than mask less.
+
+```json
+{
+  "custom": [
+    { "label": "EMPLOYEE_ID", "pattern": "\\bEMP-\\d{6}\\b" },
+    { "label": "MEMBER", "fields": ["no_member"] }
+  ],
+  "allow": ["0800-1-500-500"]
+}
+```
+
 ## Kembaran
 
 `lokal-mcp kembaran prod.sql export.csv -o staging/ [--secret <text>] [--keep FINANCIAL] [--keep-birth-date]` copies text files with every person replaced by a realistic stand-in, consistent across the files. See the [Lokal README](https://github.com/lokal-id/lokal#kembaran-production-data-for-staging-without-real-people).

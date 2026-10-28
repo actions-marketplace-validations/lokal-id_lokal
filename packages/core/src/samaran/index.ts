@@ -1,9 +1,11 @@
 import { parsePhone } from '../phone.ts';
+import { checkCustomRules, type CustomRule } from './custom.ts';
 import { detectPii, type DetectOptions } from './detectors.ts';
 import { PII_TYPES, UU_PDP_CATEGORY, type Confidence, type PiiMatch, type PiiType } from './types.ts';
 
 export { detectPii, PII_TYPES, UU_PDP_CATEGORY, type Confidence, type DetectOptions, type PiiMatch, type PiiType };
 export { fieldType } from './fields.ts';
+export { checkCustomRules, type CustomRule };
 
 export interface MaskedMatch extends PiiMatch {
   /** What replaced the value: "[NIK_1]" in placeholder mode, "3201********0001" in partial mode. */
@@ -106,6 +108,8 @@ export function partialMask(type: PiiType, value: string): string {
         .join(' ');
     case 'ADDRESS':
       return `${value.split(/\s+/)[0]} ${stars(3)}`;
+    case 'CUSTOM':
+      return `${stars(value.length - 2)}${value.length > 6 ? value.slice(-2) : ''}`;
   }
 }
 
@@ -126,9 +130,11 @@ export class Samaran {
   readonly options: SamaranOptions;
   private byCanonical = new Map<string, string>();
   private byPlaceholder = new Map<string, string>();
-  private counters = new Map<PiiType, number>();
+  /** Last number used per placeholder name: a type, or a custom rule's label. */
+  private counters = new Map<string, number>();
 
   constructor(options: SamaranOptions = {}) {
+    if (options.custom?.length) checkCustomRules(options.custom);
     this.options = options;
   }
 
@@ -173,32 +179,38 @@ export class Samaran {
     for (const [placeholder, value] of entries) {
       const match = /^\[([A-Z_]+)_(\d+)\]$/.exec(placeholder);
       if (!match) continue;
-      const type = match[1] as PiiType;
+      const name = match[1]!;
+      // A name that is not a built-in type is a custom rule's label.
+      const type: PiiType = PII_TYPES.includes(name as PiiType) ? (name as PiiType) : 'CUSTOM';
       this.byPlaceholder.set(placeholder, value);
-      this.byCanonical.set(`${type}:${canonical(type, value)}`, placeholder);
-      this.counters.set(type, Math.max(this.counters.get(type) ?? 0, Number(match[2])));
+      this.byCanonical.set(`${name}:${canonical(type, value)}`, placeholder);
+      this.counters.set(name, Math.max(this.counters.get(name) ?? 0, Number(match[2])));
     }
   }
 
   /**
    * The placeholder for a value you already know is personal data, such as the street a parser split out of a
-   * masked address. A value gets the same placeholder here as from `mask`, and `unmask` restores it.
+   * masked address. A value gets the same placeholder here as from `mask`, and `unmask` restores it. CUSTOM takes
+   * the rule's label: `placeholder('CUSTOM', 'EMP-004211', 'EMPLOYEE_ID')` gives [EMPLOYEE_ID_1].
    */
-  placeholder(type: PiiType, value: string): string {
+  placeholder(type: PiiType, value: string, label?: string): string {
     if (!PII_TYPES.includes(type)) throw new RangeError(`Unknown PII type "${type}". Valid types: ${PII_TYPES.join(', ')}`);
-    const key = `${type}:${canonical(type, value)}`;
+    if (type === 'CUSTOM') checkCustomRules([{ label: label ?? '', fields: ['-'] }]);
+    else if (label !== undefined) throw new RangeError('A label is only used with the CUSTOM type.');
+    const name = type === 'CUSTOM' ? label! : type;
+    const key = `${name}:${canonical(type, value)}`;
     const existing = this.byCanonical.get(key);
     if (existing) return existing;
-    const n = (this.counters.get(type) ?? 0) + 1;
-    this.counters.set(type, n);
-    const placeholder = `[${type}_${n}]`;
+    const n = (this.counters.get(name) ?? 0) + 1;
+    this.counters.set(name, n);
+    const placeholder = `[${name}_${n}]`;
     this.byCanonical.set(key, placeholder);
     this.byPlaceholder.set(placeholder, value);
     return placeholder;
   }
 
   private placeholderFor(m: PiiMatch): string {
-    return this.placeholder(m.type, m.value);
+    return this.placeholder(m.type, m.value, m.type === 'CUSTOM' ? m.label : undefined);
   }
 }
 

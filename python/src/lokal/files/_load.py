@@ -6,15 +6,17 @@ guard use. Results equal the TypeScript ones; the parity vectors check it.
 
 from __future__ import annotations
 
+import json
 import os
 import re
 from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Literal, Optional, Union
+from typing import Literal, NoReturn, Optional, Union
 
 from .. import _js
 from .._result import Result
+from ..samaran.custom import CustomRule, check_custom_rules
 from ._docx import read_docx
 from ._pdf import read_pdf
 from ._xlsx import read_xlsx
@@ -226,6 +228,62 @@ def glob_to_regexp(glob: str) -> re.Pattern[str]:
             out += re.escape(c)
         i += 1
     return re.compile(f'^{out}$')
+
+
+def load_config(root: StrPath) -> tuple[list[CustomRule], list[str]]:
+    r"""``.samaran.json`` at the project root: a team's own rules and the values it never wants masked, as
+    ``(custom, allow)``; empty when there is none. The MCP server, the guard, and ``lokal-mcp scan`` read the same
+    file::
+
+        {"custom": [{"label": "EMPLOYEE_ID", "pattern": "\\bEMP-\\d{6}\\b"},
+                    {"label": "MEMBER", "fields": ["no_member"]}],
+         "allow": ["0800-1-500-500"]}
+
+    A file that is there but wrong raises ValueError: a rule that silently did nothing would mask less than expected.
+    """
+    file = Path(root) / '.samaran.json'
+    if not file.is_file():
+        return [], []
+    try:
+        raw = json.loads(file.read_text(encoding='utf-8'))
+    except ValueError as e:
+        raise ValueError(f'.samaran.json is not valid JSON: {e}') from None
+
+    def fail(why: str) -> NoReturn:
+        raise ValueError(f'.samaran.json: {why}')
+
+    if not isinstance(raw, dict):
+        fail('expected an object with "custom" and "allow"')
+    unknown = [k for k in raw if k not in ('custom', 'allow') and not k.startswith('$')]
+    if unknown:
+        fail(f'unknown key {", ".join(chr(34) + k + chr(34) for k in unknown)} (expected "custom" and "allow")')
+    custom = raw.get('custom', [])
+    allow = raw.get('allow', [])
+    if not isinstance(custom, list):
+        fail('"custom" must be a list of rules')
+    if not isinstance(allow, list) or not all(isinstance(a, str) for a in allow):
+        fail('"allow" must be a list of strings')
+    rules: list[CustomRule] = []
+    for i, r in enumerate(custom):
+        if not isinstance(r, dict):
+            fail(f'custom[{i}] must be an object')
+        extra = [k for k in r if k not in ('label', 'pattern', 'fields')]
+        if extra:
+            fail(f'custom[{i}]: unknown key {", ".join(chr(34) + k + chr(34) for k in extra)}')
+        if not isinstance(r.get('label'), str):
+            fail(f'custom[{i}] needs a "label"')
+        if r.get('pattern') is not None and not isinstance(r['pattern'], str):
+            fail(f'custom[{i}].pattern must be a string')
+        fields = r.get('fields')
+        names_ok = isinstance(fields, list) and all(isinstance(f, str) and f.strip() for f in fields)
+        if fields is not None and not names_ok:
+            fail(f'custom[{i}].fields must be a list of field names')
+        rules.append(CustomRule(r['label'], r.get('pattern'), tuple(fields or ())))
+    try:
+        check_custom_rules(rules)
+    except ValueError as e:
+        fail(str(e))
+    return rules, list(allow)
 
 
 def load_ignore(root: StrPath) -> IgnoreRule:

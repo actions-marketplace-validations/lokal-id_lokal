@@ -17,17 +17,22 @@
 //
 // Exit code 2 blocks; stderr is shown to the user (prompts) or to Claude (tool calls). Asking prints
 // a permissionDecision of "ask" on stdout, whose reason Claude Code shows in its permission prompt.
-// Anything unexpected exits 0: a broken guard must never break the session.
+// Anything unexpected exits 0: a broken guard must never break the session. SAMARAN_GUARD=strict blocks instead.
 import { existsSync, statSync } from 'node:fs';
 import path from 'node:path';
-import { detectPii, partialMask, type PiiMatch, type PiiType } from '@lokal-id/core';
-import { GUARD_MAX_ZIP_BYTES, GUARD_SAMPLE_BYTES, globToRegExp, loadDocument, loadIgnore, walkFiles, type Document } from './files.ts';
-import { dataReadsInCommand, SHELL_DATA_FILE } from './shell-reads.ts';
+import { partialMask, type PiiMatch, type PiiType } from '@lokal-id/core';
+import {
+  detectConfigured, GUARD_MAX_ZIP_BYTES, GUARD_SAMPLE_BYTES, globToRegExp, loadConfig, loadDocument, loadIgnore, walkFiles,
+  type Document, type SamaranConfig,
+} from './files.ts';
+import { dataReadsInCommand, inlineCodeReads, SHELL_DATA_FILE } from './shell-reads.ts';
 
 // One of these is enough to hold a prompt or a file back: identity numbers, and labeled sensitive data.
 const STRICT: PiiType[] = [
   'NIK', 'KK', 'NPWP', 'PASSPORT', 'SIM', 'NIP', 'NISN', 'AKTA', 'BANK_ACCOUNT', 'BPJS', 'CARD', 'HEALTH',
   'CRIMINAL_RECORD', 'BIOMETRIC',
+  // A team's own rules in .samaran.json: they wrote them because those values must not leave.
+  'CUSTOM',
 ];
 // Common on their own (a support email, a sample phone number); a file with several is a data export.
 const BULK_THRESHOLD = 3;
@@ -72,12 +77,15 @@ interface HookInput {
 }
 
 function summarize(matches: PiiMatch[], examples = true): string {
-  const counts = new Map<PiiType, number>();
-  for (const m of matches) counts.set(m.type, (counts.get(m.type) ?? 0) + 1);
+  // Custom matches are counted under their own label: EMPLOYEE_ID×2.
+  const name = (m: PiiMatch) => m.label ?? m.type;
+  const counts = new Map<string, number>();
+  for (const m of matches) counts.set(name(m), (counts.get(name(m)) ?? 0) + 1);
   return [...counts.entries()]
-    .map(([type, n]) => {
-      const sample = examples ? ` (${partialMask(type, matches.find((m) => m.type === type)!.value)})` : '';
-      return `${type}×${n}${sample}`;
+    .map(([label, n]) => {
+      const first = matches.find((m) => name(m) === label)!;
+      const sample = examples ? ` (${partialMask(first.type, first.value)})` : '';
+      return `${label}×${n}${sample}`;
     })
     .join(', ');
 }
@@ -102,7 +110,7 @@ function withHeader(full: string, shown: string, file: string): string {
 
 /** Personal data worth blocking for, or undefined. */
 function verdict(texts: string[]): PiiMatch[] | undefined {
-  return verdictOf(texts.flatMap((t) => detectPii(t, { minConfidence: 'high' })));
+  return verdictOf(texts.flatMap((t) => detectConfigured(t, { minConfidence: 'high' }, config)));
 }
 
 function verdictOf(found: PiiMatch[]): PiiMatch[] | undefined {
@@ -115,7 +123,7 @@ function verdictOf(found: PiiMatch[]): PiiMatch[] | undefined {
  * and labels give context (`cut -d, -f2` prints a bare column of names), and counts what reaches the output.
  */
 function shownPii(full: string, shown: string, file: string): PiiMatch[] {
-  const all = detectPii(full, { minConfidence: 'high' });
+  const all = detectConfigured(full, { minConfidence: 'high' }, config);
   let inFile: PiiMatch[];
   if (shown.length >= full.length) {
     inFile = all; // `cat`: everything is shown
@@ -127,12 +135,22 @@ function shownPii(full: string, shown: string, file: string): PiiMatch[] {
     const fields = new Set(shown.split(/[\t\n\r,;|]+/).map((f) => f.trim().replace(/^"|"$/g, '')));
     inFile = all.filter((m) => fields.has(m.value));
   }
-  const direct = detectPii(withHeader(full, shown, file), { minConfidence: 'high' });
+  const direct = detectConfigured(withHeader(full, shown, file), { minConfidence: 'high' }, config);
   return inFile.length >= direct.length ? inFile : direct;
 }
 
 const PROCESS_HINT =
   'To process the data, run a script that reads the file and writes its results to a file (or prints only counts), or use `write_file_unmasked`.';
+
+/**
+ * SAMARAN_GUARD=strict, for teams that want the guard to fail closed: an error in the guard blocks instead of allowing,
+ * and code run from the command line (python -c, node -e, a heredoc fed to python) that names a data file with
+ * personal data is blocked like `cat`. It narrows what gets through; it is still not a sandbox.
+ */
+export const strictMode = () => process.env.SAMARAN_GUARD === 'strict';
+
+/** The project's .samaran.json, loaded by `evaluate`. */
+let config: SamaranConfig = { custom: [], allow: [] };
 
 /** What the guard does with a prompt or tool call: block it (the message goes to Claude), or ask the user. */
 export type Verdict = { action: 'block' | 'ask'; message: string };
@@ -190,7 +208,8 @@ function readTool(file: string, shownAs: string, root: string, ignored: (f: stri
 }
 
 function shellTool(command: string, cwd: string, powershell: boolean, ignored: (f: string) => boolean): Verdict | undefined {
-  const reads = dataReadsInCommand(command, cwd, powershell).filter((r) => !ignored(r.file));
+  const reads = [...dataReadsInCommand(command, cwd, powershell), ...(strictMode() ? inlineCodeReads(command, cwd, powershell) : [])]
+    .filter((r) => !ignored(r.file));
   const matches: PiiMatch[] = [];
   const files = new Set<string>();
   for (const r of reads) {
@@ -269,10 +288,13 @@ function grepTool(input: NonNullable<HookInput['tool_input']>, cwd: string, igno
 /** Whether to block or ask, with the message; undefined to allow. */
 export function evaluate(input: HookInput, projectRoot?: string): Verdict | undefined {
   if (process.env.SAMARAN_GUARD === 'off') return undefined;
+  const root = projectRoot ?? process.env.CLAUDE_PROJECT_DIR ?? input.cwd ?? process.cwd();
+  // One hook call is one process: the project's rules apply to every check below.
+  config = loadConfig(root);
 
   if (input.hook_event_name === 'UserPromptSubmit' && input.prompt) {
     if (BYPASS.test(input.prompt)) return undefined;
-    const found = detectPii(input.prompt, { types: STRICT, minConfidence: 'high' });
+    const found = detectConfigured(input.prompt, { types: STRICT, minConfidence: 'high' }, config);
     if (!found.length) return undefined;
     return block([
       `🛡️  Samaran menahan prompt ini: ada data pribadi ${summarize(found)}.`,
@@ -282,7 +304,6 @@ export function evaluate(input: HookInput, projectRoot?: string): Verdict | unde
   }
 
   if (input.hook_event_name !== 'PreToolUse' || !input.tool_input) return undefined;
-  const root = projectRoot ?? process.env.CLAUDE_PROJECT_DIR ?? input.cwd ?? process.cwd();
   const cwd = input.cwd ?? root;
   const ignored = loadIgnore(root);
   const tool = input.tool_input;
@@ -407,10 +428,14 @@ export async function runGuard(): Promise<void> {
     process.exitCode = out.exitCode;
   } catch (e) {
     process.stderr.write(`samaran-guard: ${(e as Error).message}\n`);
-    // A broken guard must never break the session: allow, in the agent's format.
-    const out = respond(agent, event, undefined);
+    // By default a broken guard must never break the session: allow, in the agent's format. Strict mode blocks.
+    const failed = strictMode()
+      ? block(`Samaran guard failed (${(e as Error).message}), and SAMARAN_GUARD=strict blocks what it cannot check.`)
+      : undefined;
+    const out = respond(agent, event, failed);
     if (out.stdout) process.stdout.write(`${out.stdout}\n`);
-    process.exitCode = 0;
+    if (out.stderr) process.stderr.write(`${out.stderr}\n`);
+    process.exitCode = out.exitCode;
   }
 }
 

@@ -9,6 +9,7 @@ import {
   GIVEN_NAMES,
   SECOND_NAMES,
 } from './names.ts';
+import { checkCustomRules, detectCustom, type CustomRule } from './custom.ts';
 import { PII_TYPES, type Confidence, type PiiMatch, type PiiType } from './types.ts';
 
 export { PII_TYPES, UU_PDP_CATEGORY, type Confidence, type PiiMatch, type PiiType } from './types.ts';
@@ -1689,6 +1690,8 @@ export interface DetectOptions {
   exclude?: readonly PiiType[];
   /** "high" only keeps validated or keyword-anchored matches. Default "medium". */
   minConfidence?: Confidence;
+  /** A team's own rules: ID formats and field names Samaran does not know. Matches are CUSTOM, with the rule's label. */
+  custom?: readonly CustomRule[];
 }
 
 /** All personal data in the text, non-overlapping, in reading order. */
@@ -1701,11 +1704,15 @@ export function detectPii(text: string, options: DetectOptions = {}): PiiMatch[]
   const minRank = options.minConfidence === 'high' ? 2 : 1;
   const rank = (m: PiiMatch) => (m.confidence === 'high' ? 2 : 1);
 
-  const candidates = DETECTORS.flatMap((d) => d(text)).filter(
-    (m) => m.end > m.start && types.has(m.type) && rank(m) >= minRank,
+  if (options.custom?.length) checkCustomRules(options.custom);
+  const found = DETECTORS.flatMap((d) => d(text));
+  if (options.custom?.length) found.push(...detectCustom(text, options.custom));
+  const candidates = found.filter((m) => m.end > m.start && types.has(m.type) && rank(m) >= minRank);
+  // Prefer confident, then longer matches, then a team's own rule; drop anything overlapping an accepted match.
+  const own = (m: PiiMatch) => (m.type === 'CUSTOM' ? 1 : 0);
+  candidates.sort(
+    (a, b) => rank(b) - rank(a) || b.end - b.start - (a.end - a.start) || own(b) - own(a) || a.start - b.start,
   );
-  // Prefer confident, then longer matches; drop anything overlapping an accepted match.
-  candidates.sort((a, b) => rank(b) - rank(a) || b.end - b.start - (a.end - a.start) || a.start - b.start);
   // One flag per character: checking a candidate costs its own length, not the number of matches so far.
   const taken = new Uint8Array(text.length + 1);
   const accepted: PiiMatch[] = [];

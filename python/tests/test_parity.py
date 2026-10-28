@@ -203,6 +203,18 @@ def test_field_type_and_partial_mask() -> None:
         assert lokal.partial_mask(case['type'], case['value']) == case['out'], case
 
 
+def test_custom_rules_match() -> None:
+    vectors = load('samaran_custom.json')
+    rules = vectors['rules']
+    for case in vectors['cases']:
+        got = [[m.type, m.label, m.start, m.end, m.value] for m in lokal.detect_pii(case['text'], custom=rules)]
+        assert got == case['matches'], case['text'][:200]
+        s = lokal.Samaran(custom=rules)
+        assert s.mask(case['text']).text == case['placeholder'], case['text'][:200]
+        assert [list(e) for e in s.export_vault()] == case['vault']
+        assert lokal.mask_pii(case['text'], custom=rules, mode='partial').text == case['partial'], case['text'][:200]
+
+
 _CAMEL_LEVEL = {'kabupaten_kota': 'kabupatenKota', 'kelurahan_desa': 'kelurahanDesa'}
 
 

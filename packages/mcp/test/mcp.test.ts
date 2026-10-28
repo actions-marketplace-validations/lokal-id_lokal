@@ -425,6 +425,38 @@ test('guard: input rusak tidak pernah memblokir', () => {
   assert.equal(res.status, 0);
 });
 
+test('guard SAMARAN_GUARD=strict: input rusak memblokir, kode inline yang membaca file data ditahan', () => {
+  const strict = { SAMARAN_GUARD: 'strict' };
+  const broken = spawnSync(process.execPath, [CLI, 'guard'], { input: 'bukan json', encoding: 'utf8', env: { ...process.env, ...strict } });
+  assert.equal(broken.status, 2);
+  assert.match(broken.stderr, /SAMARAN_GUARD=strict/);
+
+  const sh = (command: string, env: Record<string, string>, tool = 'Bash') =>
+    guard({ hook_event_name: 'PreToolUse', tool_name: tool, tool_input: { command }, cwd: dir }, env).status;
+  const inline = [
+    `python3 -c "print(open('pelanggan.csv').read())"`,
+    `node -e "console.log(require('fs').readFileSync('./pelanggan.csv', 'utf8'))"`,
+    `python3 - <<'EOF'\nimport csv\nfor row in csv.reader(open("pelanggan.csv")): print(row)\nEOF`,
+  ];
+  for (const command of inline) {
+    assert.equal(sh(command, {}), 0, `default: ${command}`);
+    assert.equal(sh(command, strict), 2, `strict: ${command}`);
+  }
+  assert.equal(sh(`[IO.File]::ReadAllText('pelanggan.csv')`, strict, 'PowerShell'), 2);
+  assert.equal(sh(`@'\nprint(open('pelanggan.csv').read())\n'@ | python -`, strict, 'PowerShell'), 2);
+  // Still allowed in strict mode: scripts in files, output written to a file, code that names no data file.
+  for (const command of [
+    'node dedupe.js pelanggan.csv',
+    `python3 -c "print(open('pelanggan.csv').read())" > salinan.csv`,
+    `python3 -c "print(1 + 1)"`,
+    `python3 -c "print(open('kode.ts').read())"`,
+    "cat > dedupe.js <<'EOF'\nconst rows = require('fs').readFileSync('pelanggan.csv', 'utf8');\nEOF",
+  ]) {
+    assert.equal(sh(command, strict), 0, command);
+  }
+  assert.equal(sh('cat pelanggan.csv', strict), 2);
+});
+
 test('Word: teks, header, dan tabel dipindai dan disamarkan', async () => {
   mkdirSync(path.join(dir, 'dokumen'), { recursive: true });
   copyFileSync(path.join(import.meta.dirname, 'fixtures', 'surat.docx'), path.join(dir, 'dokumen', 'surat.docx'));

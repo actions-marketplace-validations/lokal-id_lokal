@@ -11,7 +11,8 @@
 // including tool call arguments, so the app works with real values. Thinking and reasoning blocks are left alone:
 // they are signed, and the model only ever saw placeholders in them anyway.
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
-import { PII_TYPES, Samaran, type PiiType } from '@lokal-id/core';
+import { PII_TYPES, Samaran, type CustomRule, type PiiType } from '@lokal-id/core';
+import { loadConfig, type SamaranConfig } from './files.ts';
 
 export interface ProxyOptions {
   /** Default 127.0.0.1: the proxy sees real personal data, so it is not exposed to the network unless asked. */
@@ -22,6 +23,9 @@ export interface ProxyOptions {
   anthropic?: string;
   /** Types the model may see, such as FINANCIAL for a credit simulation. */
   exclude?: PiiType[];
+  /** A team's own rules, and values never masked: from .samaran.json in the folder the proxy starts in. */
+  custom?: CustomRule[];
+  allow?: string[];
   /** Forward requests whose body cannot be masked (file uploads) instead of refusing them. */
   allowUnmasked?: boolean;
   /** One line per request, without content. Default: stderr. */
@@ -273,7 +277,7 @@ export function startProxy(options: ProxyOptions = {}): Promise<Server> {
     const upstream = toAnthropic ? anthropic : openai;
     // An upstream base URL may end in /v1 already (OpenRouter, Groq, Ollama): do not repeat it.
     const target = upstream.endsWith('/v1') && url.startsWith('/v1/') ? `${upstream}${url.slice(3)}` : `${upstream}${url}`;
-    const samaran = new Samaran({ exclude: options.exclude });
+    const samaran = new Samaran({ exclude: options.exclude, custom: options.custom, allow: options.allow });
     const counts = new Map<PiiType, number>();
     try {
       const raw = await readBody(req);
@@ -373,6 +377,14 @@ export async function runProxy(args: string[]): Promise<void> {
     process.exitCode = 1;
     return;
   }
+  let config: SamaranConfig;
+  try {
+    config = loadConfig(process.cwd());
+  } catch (e) {
+    process.stderr.write(`${(e as Error).message}\n`);
+    process.exitCode = 1;
+    return;
+  }
   const host = opt('host') ?? '127.0.0.1';
   const port = Number(opt('port') ?? process.env.LOKAL_PROXY_PORT ?? 8787);
   await startProxy({
@@ -382,6 +394,8 @@ export async function runProxy(args: string[]): Promise<void> {
     openai: opt('openai') ?? process.env.LOKAL_PROXY_OPENAI,
     anthropic: opt('anthropic') ?? process.env.LOKAL_PROXY_ANTHROPIC,
     exclude: exclude as PiiType[],
+    custom: config.custom,
+    allow: config.allow,
     allowUnmasked: args.includes('--allow-unmasked'),
   });
   process.stderr.write(`Samaran Proxy listening on http://${host}:${port}\n`);

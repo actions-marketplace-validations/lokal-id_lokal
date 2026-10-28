@@ -273,6 +273,176 @@ var DATA = {
 };
 var HOLIDAY_YEARS = Object.keys(DATA).map(Number);
 
+// packages/core/dist/samaran/types.js
+var PII_TYPES = [
+  "NIK",
+  "KK",
+  "NPWP",
+  "PASSPORT",
+  "SIM",
+  "NIP",
+  "BPJS",
+  "NISN",
+  "AKTA",
+  "PHONE",
+  "EMAIL",
+  "BANK_ACCOUNT",
+  "CARD",
+  "PLATE",
+  "IP",
+  "GEO",
+  "NAME",
+  "ADDRESS",
+  "BIRTH_DATE",
+  "GENDER",
+  "RELIGION",
+  "MARITAL_STATUS",
+  "NATIONALITY",
+  "HEALTH",
+  "FINANCIAL",
+  "CRIMINAL_RECORD",
+  "BIOMETRIC",
+  "CUSTOM"
+];
+var UU_PDP_CATEGORY = Object.fromEntries(PII_TYPES.map((t) => [
+  t,
+  ["HEALTH", "BIOMETRIC", "CRIMINAL_RECORD", "FINANCIAL", "BANK_ACCOUNT", "CARD", "NISN"].includes(t) ? "spesifik" : "umum"
+]));
+
+// packages/core/dist/samaran/custom.js
+var LABEL = /^[A-Z][A-Z_]*[A-Z]$|^[A-Z]$/;
+function checkCustomRules(rules) {
+  for (const rule of rules) {
+    if (!LABEL.test(rule.label ?? "")) {
+      throw new RangeError(`Custom rule label "${rule.label}" must be capital letters and underscores, like EMPLOYEE_ID.`);
+    }
+    if (PII_TYPES.includes(rule.label)) {
+      throw new RangeError(`Custom rule label "${rule.label}" is a built-in type; choose another name.`);
+    }
+    if (rule.pattern === void 0 && !rule.fields?.length) {
+      throw new RangeError(`Custom rule ${rule.label} needs a pattern or fields.`);
+    }
+    if (typeof rule.pattern === "string") {
+      try {
+        new RegExp(rule.pattern);
+      } catch (e) {
+        throw new RangeError(`Custom rule ${rule.label}: pattern does not compile (${e.message}).`);
+      }
+    }
+  }
+}
+var escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function custom(label, start, value) {
+  return { type: "CUSTOM", label, start, end: start + value.length, value, confidence: "high" };
+}
+function byPattern(text, rule) {
+  const source = typeof rule.pattern === "string" ? rule.pattern : rule.pattern.source;
+  const flags = typeof rule.pattern === "string" ? "" : rule.pattern.flags.replace(/[gy]/g, "");
+  const out = [];
+  for (const m of text.matchAll(new RegExp(source, `${flags}g`))) {
+    if (m[0])
+      out.push(custom(rule.label, m.index, m[0]));
+  }
+  return out;
+}
+function byLabel(text, rule, names) {
+  const re = new RegExp(`(?:^|[^A-Za-z0-9_])(["']?)(?:${names})\\1[ \\t]*[:=][ \\t]*(?:"([^"\\r\\n]*)"|'([^'\\r\\n]*)'|([^\\s,;}\\]"'][^,;}\\]\\r\\n]*))`, "gi");
+  const out = [];
+  for (const m of text.matchAll(re)) {
+    const quoted = m[2] ?? m[3];
+    if (quoted !== void 0) {
+      if (quoted.trim())
+        out.push(custom(rule.label, m.index + m[0].length - 1 - quoted.length, quoted));
+      continue;
+    }
+    const raw = m[4];
+    const words = raw.split(/(\s+)/);
+    let value = words[0];
+    for (let i = 1; i + 1 < words.length && i < 12 && /^[A-Z0-9]/.test(words[i + 1]); i += 2)
+      value += words[i] + words[i + 1];
+    out.push(custom(rule.label, m.index + m[0].length - raw.length, value));
+  }
+  return out;
+}
+function cells(line, delimiter) {
+  const out = [];
+  let i = 0;
+  for (; ; ) {
+    let start = i;
+    let end;
+    if (line[i] === '"') {
+      let j = i + 1;
+      while (j < line.length && !(line[j] === '"' && line[j + 1] !== '"'))
+        j += line[j] === '"' ? 2 : 1;
+      start = i + 1;
+      end = j;
+      i = j + 1;
+      while (i < line.length && line[i] !== delimiter)
+        i++;
+    } else {
+      end = line.indexOf(delimiter, i);
+      if (end === -1)
+        end = line.length;
+      i = end;
+    }
+    out.push({ start, text: line.slice(start, end) });
+    if (i >= line.length)
+      return out;
+    i++;
+  }
+}
+function byColumn(text, rule, wanted) {
+  const out = [];
+  let columns;
+  let delimiter = ",";
+  let width = 0;
+  for (let pos = 0; pos <= text.length; ) {
+    let end = text.indexOf("\n", pos);
+    if (end === -1)
+      end = text.length;
+    const line = text.slice(pos, end).replace(/\r$/, "");
+    if (!line.trim()) {
+      columns = void 0;
+    } else if (columns) {
+      const row = cells(line, delimiter);
+      if (row.length === width) {
+        for (const c of columns) {
+          const value = row[c].text.trim();
+          if (value)
+            out.push(custom(rule.label, pos + row[c].start + row[c].text.indexOf(value), value));
+        }
+      }
+    } else {
+      for (const d of [",", "	", ";", "|"]) {
+        const header = cells(line, d);
+        if (header.length < 2)
+          continue;
+        const hit = header.flatMap((c, i) => wanted.has(c.text.trim().toLowerCase()) ? [i] : []);
+        if (hit.length) {
+          columns = hit;
+          delimiter = d;
+          width = header.length;
+          break;
+        }
+      }
+    }
+    pos = end + 1;
+  }
+  return out;
+}
+function detectCustom(text, rules) {
+  const out = [];
+  for (const rule of rules) {
+    if (rule.pattern !== void 0)
+      out.push(...byPattern(text, rule));
+    if (rule.fields?.length) {
+      out.push(...byLabel(text, rule, rule.fields.map(escape).join("|")));
+      out.push(...byColumn(text, rule, new Set(rule.fields.map((f) => f.toLowerCase()))));
+    }
+  }
+  return out;
+}
+
 // packages/core/dist/samaran/names.js
 var GIVEN_NAMES = new Set(
   // Male
@@ -462,41 +632,6 @@ function isPlausibleValue(type, value, key) {
   }
   return true;
 }
-
-// packages/core/dist/samaran/types.js
-var PII_TYPES = [
-  "NIK",
-  "KK",
-  "NPWP",
-  "PASSPORT",
-  "SIM",
-  "NIP",
-  "BPJS",
-  "NISN",
-  "AKTA",
-  "PHONE",
-  "EMAIL",
-  "BANK_ACCOUNT",
-  "CARD",
-  "PLATE",
-  "IP",
-  "GEO",
-  "NAME",
-  "ADDRESS",
-  "BIRTH_DATE",
-  "GENDER",
-  "RELIGION",
-  "MARITAL_STATUS",
-  "NATIONALITY",
-  "HEALTH",
-  "FINANCIAL",
-  "CRIMINAL_RECORD",
-  "BIOMETRIC"
-];
-var UU_PDP_CATEGORY = Object.fromEntries(PII_TYPES.map((t) => [
-  t,
-  ["HEALTH", "BIOMETRIC", "CRIMINAL_RECORD", "FINANCIAL", "BANK_ACCOUNT", "CARD", "NISN"].includes(t) ? "spesifik" : "umum"
-]));
 
 // packages/core/dist/samaran/detectors.js
 function before(text, index, window = 40) {
@@ -1313,30 +1448,30 @@ function detectHtml(text) {
   let columns;
   let headers = [];
   for (const row of text.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)) {
-    const cells = [...row[1].matchAll(/<(t[hd])\b[^>]*>([^<]*)<\/t[hd]>/gi)].map((c) => ({
+    const cells2 = [...row[1].matchAll(/<(t[hd])\b[^>]*>([^<]*)<\/t[hd]>/gi)].map((c) => ({
       header: c[1].toLowerCase() === "th",
       text: decodeEntities(c[2]).trim(),
       start: row.index + row[0].indexOf(row[1]) + c.index + c[0].indexOf(">") + 1,
       raw: c[2]
     }));
-    if (!cells.length)
+    if (!cells2.length)
       continue;
-    const types = cells.map((c) => c.text.length <= 40 ? fieldType(c.text) : void 0);
-    if (cells.length === 2 && types[0] && !types[1]) {
-      const [label, cell] = cells;
+    const types = cells2.map((c) => c.text.length <= 40 ? fieldType(c.text) : void 0);
+    if (cells2.length === 2 && types[0] && !types[1]) {
+      const [label, cell] = cells2;
       if (cell.text && isPlausibleValue(types[0], cell.text, label.text)) {
         out.push(match(types[0], cell.start + cell.raw.indexOf(cell.text.slice(0, 1)), cell.raw.trim(), "high"));
       }
       continue;
     }
-    if (cells.every((c) => c.header) || !columns && types.some(Boolean) && cells.every((c) => !/\d{3}/.test(c.text))) {
+    if (cells2.every((c) => c.header) || !columns && types.some(Boolean) && cells2.every((c) => !/\d{3}/.test(c.text))) {
       columns = types;
-      headers = cells.map((c) => c.text);
+      headers = cells2.map((c) => c.text);
       continue;
     }
     if (!columns)
       continue;
-    cells.forEach((c, i) => {
+    cells2.forEach((c, i) => {
       const type = columns[i];
       if (!type || !c.text || !isPlausibleValue(type, c.text, headers[i]))
         return;
@@ -1886,18 +2021,18 @@ function detectTabTables(text) {
     if (end === -1)
       end = text.length;
     const line = text.slice(pos, end > pos && text[end - 1] === "\r" ? end - 1 : end);
-    const cells = [];
+    const cells2 = [];
     if (line.includes("	")) {
       let at = 0;
       for (const part of line.split("	")) {
         const value = part.trim();
-        cells.push({ start: pos + at + (value ? part.indexOf(value) : 0), value });
+        cells2.push({ start: pos + at + (value ? part.indexOf(value) : 0), value });
         at += part.length + 1;
       }
     }
-    const filled = cells.filter((c) => c.value);
-    if (header && filled.length >= 2 && cells.length <= header.length) {
-      cells.forEach((c, i) => {
+    const filled = cells2.filter((c) => c.value);
+    if (header && filled.length >= 2 && cells2.length <= header.length) {
+      cells2.forEach((c, i) => {
         const type = columns[i];
         if (!type || !c.value || !isPlausibleValue(type, c.value, header[i]))
           return;
@@ -1905,7 +2040,7 @@ function detectTabTables(text) {
       });
     } else {
       header = void 0;
-      const types = cells.map((c) => c.value ? fieldType(c.value) : void 0);
+      const types = cells2.map((c) => c.value ? fieldType(c.value) : void 0);
       const [label, value] = filled;
       if (filled.length === 2 && /^[A-Z]/.test(label.value) && fieldType(label.value) && !fieldType(value.value)) {
         const type = fieldType(label.value);
@@ -1914,7 +2049,7 @@ function detectTabTables(text) {
         }
       } else if (filled.length >= 2 && filled.every((c) => c.value.length <= 40 && /[A-Za-z]/.test(c.value) && !/[.!?]$|\d{3}/.test(c.value)) && // Data files have tabs too ("n01687978<TAB>agama"): a document table's header is capitalized, or names two fields.
       (types.filter(Boolean).length >= 2 || types.some(Boolean) && filled.every((c) => /^[A-Z]/.test(c.value)))) {
-        header = cells.map((c) => c.value);
+        header = cells2.map((c) => c.value);
         columns = types;
       }
     }
@@ -1976,8 +2111,14 @@ function detectPii(text, options = {}) {
     types.delete(t);
   const minRank = options.minConfidence === "high" ? 2 : 1;
   const rank = (m) => m.confidence === "high" ? 2 : 1;
-  const candidates = DETECTORS.flatMap((d) => d(text)).filter((m) => m.end > m.start && types.has(m.type) && rank(m) >= minRank);
-  candidates.sort((a, b) => rank(b) - rank(a) || b.end - b.start - (a.end - a.start) || a.start - b.start);
+  if (options.custom?.length)
+    checkCustomRules(options.custom);
+  const found = DETECTORS.flatMap((d) => d(text));
+  if (options.custom?.length)
+    found.push(...detectCustom(text, options.custom));
+  const candidates = found.filter((m) => m.end > m.start && types.has(m.type) && rank(m) >= minRank);
+  const own = (m) => m.type === "CUSTOM" ? 1 : 0;
+  candidates.sort((a, b) => rank(b) - rank(a) || b.end - b.start - (a.end - a.start) || own(b) - own(a) || a.start - b.start);
   const taken = new Uint8Array(text.length + 1);
   const accepted = [];
   for (const c of candidates) {
@@ -2044,6 +2185,8 @@ function partialMask(type, value) {
       return value.split(/\s+/).map((w) => `${[...w][0] ?? ""}${stars(3)}`).join(" ");
     case "ADDRESS":
       return `${value.split(/\s+/)[0]} ${stars(3)}`;
+    case "CUSTOM":
+      return `${stars(value.length - 2)}${value.length > 6 ? value.slice(-2) : ""}`;
   }
 }
 
@@ -2136,7 +2279,7 @@ function readXlsx(buf) {
     if (!xml) continue;
     const rows = [];
     for (const row of xml.matchAll(/<row\b[^>]*>([\s\S]*?)<\/row>/g)) {
-      const cells = [];
+      const cells2 = [];
       for (const c of row[1].matchAll(/<c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g)) {
         const attrs = c[1];
         const body = c[2] ?? "";
@@ -2147,11 +2290,11 @@ function readXlsx(buf) {
         if (type === "s" && v !== void 0) value = shared[Number(v)] ?? "";
         else if (type === "inlineStr") value = textOf(body);
         else if (v !== void 0) value = decodeXml(v);
-        const idx = ref ? columnIndex(ref) : cells.length;
-        while (cells.length < idx) cells.push("");
-        cells[idx] = value;
+        const idx = ref ? columnIndex(ref) : cells2.length;
+        while (cells2.length < idx) cells2.push("");
+        cells2[idx] = value;
       }
-      rows.push(cells);
+      rows.push(cells2);
     }
     const width = rows.reduce((w, r) => Math.max(w, r.length), 0);
     const csv = rows.map((r) => [...r, ...Array(width - r.length).fill("")].map(csvCell).join(",")).join("\n");
@@ -3207,6 +3350,50 @@ function globToRegExp(glob) {
   }
   return new RegExp(`^${re}$`);
 }
+function loadConfig(root) {
+  const file = path.join(root, ".samaran.json");
+  if (!existsSync(file)) return { custom: [], allow: [] };
+  let raw;
+  try {
+    raw = JSON.parse(readFileSync(file, "utf8"));
+  } catch (e) {
+    throw new Error(`.samaran.json is not valid JSON: ${e.message}`);
+  }
+  const fail = (why) => {
+    throw new Error(`.samaran.json: ${why}`);
+  };
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) fail('expected an object with "custom" and "allow"');
+  const { custom: custom2 = [], allow = [], ...rest } = raw;
+  const unknownKeys = Object.keys(rest).filter((k) => !k.startsWith("$"));
+  if (unknownKeys.length) fail(`unknown key ${unknownKeys.map((k) => `"${k}"`).join(", ")} (expected "custom" and "allow")`);
+  if (!Array.isArray(custom2)) fail('"custom" must be a list of rules');
+  if (!Array.isArray(allow) || !allow.every((a) => typeof a === "string")) fail('"allow" must be a list of strings');
+  const rules = custom2.map((r, i) => {
+    if (!r || typeof r !== "object") fail(`custom[${i}] must be an object`);
+    const { label, pattern, fields: fields2, ...extra } = r;
+    if (Object.keys(extra).length) fail(`custom[${i}]: unknown key ${Object.keys(extra).map((k) => `"${k}"`).join(", ")}`);
+    if (typeof label !== "string") fail(`custom[${i}] needs a "label"`);
+    if (pattern !== void 0 && typeof pattern !== "string") fail(`custom[${i}].pattern must be a string`);
+    if (fields2 !== void 0 && (!Array.isArray(fields2) || !fields2.every((f) => typeof f === "string" && f.trim()))) {
+      fail(`custom[${i}].fields must be a list of field names`);
+    }
+    return {
+      label,
+      ...pattern !== void 0 ? { pattern } : {},
+      ...fields2 !== void 0 ? { fields: fields2 } : {}
+    };
+  });
+  try {
+    checkCustomRules(rules);
+  } catch (e) {
+    fail(e.message);
+  }
+  return { custom: rules, allow };
+}
+function detectConfigured(text, options, config2) {
+  const found = detectPii(text, { ...options, custom: config2.custom });
+  return config2.allow.length ? found.filter((m) => !config2.allow.includes(m.value)) : found;
+}
 function loadIgnore(root) {
   const file = path.join(root, ".samaranignore");
   if (!existsSync(file)) return () => false;
@@ -3405,7 +3592,7 @@ function stripHeredocs(command) {
   return command.replace(/(<<-?[ \t]*(['"]?)(\w+)\2)[^\n]*\n[\s\S]*?\n[ \t]*\3[ \t]*(?=\r?\n|$)/g, "$1").replace(/@(['"])\r?\n[\s\S]*?\r?\n\1@/g, "''");
 }
 function parse(command, powershell) {
-  const escape = powershell ? "`" : "\\";
+  const escape2 = powershell ? "`" : "\\";
   const pipelines = [];
   let segments = [];
   let words = [];
@@ -3436,7 +3623,7 @@ function parse(command, powershell) {
       cur += command.slice(i + 1, end);
       quoted = started = true;
       i = end;
-    } else if (c === escape && i + 1 < command.length && command[i + 1] !== "\n") {
+    } else if (c === escape2 && i + 1 < command.length && command[i + 1] !== "\n") {
       cur += command[++i];
       started = true;
     } else if (c === "\n" || c === ";" || c === "&" && command[i + 1] === "&" || c === "|" && command[i + 1] === "|") {
@@ -3681,6 +3868,48 @@ function dataReadsInCommand(command, cwd, powershell = false) {
   }
   return out;
 }
+var INLINE_CODE = {
+  python: ["-c"],
+  python3: ["-c"],
+  py: ["-c"],
+  node: ["-e", "--eval", "-p", "--print"],
+  bun: ["-e", "--eval", "-p", "--print"],
+  deno: ["eval"],
+  ruby: ["-e"],
+  perl: ["-e", "-E"],
+  php: ["-r"],
+  rscript: ["-e"],
+  pwsh: ["-c", "-command"],
+  powershell: ["-c", "-command"]
+};
+var NAMED_FILE = /[\w.~:\\/-]+\.(?:csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out)(?:\.\d+)?(?![\w.])/gi;
+var DOTNET_READ = /\[(?:system\.)?io\.file\]::\s*read/i;
+var HEREDOC = /(?:^|\n)[ \t]*(\S+)[^\n]*?<<-?[ \t]*(['"]?)(\w+)\2[^\n]*\n([\s\S]*?)\n[ \t]*\3[ \t]*(?=\r?\n|$)/g;
+var HERE_STRING = /@(['"])\r?\n([\s\S]*?)\r?\n\1@[ \t]*\|[ \t]*(\S+)/g;
+function namedFiles(code, cwd, powershell) {
+  return [...code.matchAll(NAMED_FILE)].flatMap((m) => expand(m[0].replace(/^[(]+/, ""), cwd, powershell));
+}
+function inlineCodeReads(command, cwd, powershell = false) {
+  const files = /* @__PURE__ */ new Set();
+  for (const m of command.matchAll(HEREDOC)) {
+    if (programName(m[1]) in INLINE_CODE) for (const f of namedFiles(m[4], cwd, powershell)) files.add(f);
+  }
+  for (const m of command.matchAll(HERE_STRING)) {
+    if (programName(m[3]) in INLINE_CODE) for (const f of namedFiles(m[2], cwd, powershell)) files.add(f);
+  }
+  for (const pipeline of parse(stripHeredocs(command), powershell)) {
+    for (const words of pipeline) {
+      const seg = toSegment(words);
+      if (!seg || seg.writesToFile) continue;
+      const flags = INLINE_CODE[seg.program];
+      const at = flags ? seg.args.findIndex((a) => flags.includes(a.toLowerCase())) : -1;
+      const joined = words.map((w) => w.text).join(" ");
+      const code = at >= 0 ? seg.args.slice(at + 1).join(" ") : powershell && DOTNET_READ.test(joined) ? joined : void 0;
+      if (code !== void 0) for (const f of namedFiles(code, cwd, powershell)) files.add(f);
+    }
+  }
+  return [...files].map((file) => ({ file, select: all }));
+}
 
 // packages/mcp/src/guard.ts
 var STRICT = [
@@ -3697,7 +3926,9 @@ var STRICT = [
   "CARD",
   "HEALTH",
   "CRIMINAL_RECORD",
-  "BIOMETRIC"
+  "BIOMETRIC",
+  // A team's own rules in .samaran.json: they wrote them because those values must not leave.
+  "CUSTOM"
 ];
 var BULK_THRESHOLD = 3;
 var BYPASS = /#izinkan-pii\b/i;
@@ -3719,11 +3950,13 @@ var GREP_TYPES = {
   log: /\.log$/i
 };
 function summarize(matches, examples = true) {
+  const name = (m) => m.label ?? m.type;
   const counts = /* @__PURE__ */ new Map();
-  for (const m of matches) counts.set(m.type, (counts.get(m.type) ?? 0) + 1);
-  return [...counts.entries()].map(([type, n]) => {
-    const sample = examples ? ` (${partialMask(type, matches.find((m) => m.type === type).value)})` : "";
-    return `${type}\xD7${n}${sample}`;
+  for (const m of matches) counts.set(name(m), (counts.get(name(m)) ?? 0) + 1);
+  return [...counts.entries()].map(([label, n]) => {
+    const first = matches.find((m) => name(m) === label);
+    const sample = examples ? ` (${partialMask(first.type, first.value)})` : "";
+    return `${label}\xD7${n}${sample}`;
   }).join(", ");
 }
 function fileTexts(file) {
@@ -3742,14 +3975,14 @@ function withHeader(full, shown, file) {
 ${shown}`;
 }
 function verdict(texts) {
-  return verdictOf(texts.flatMap((t) => detectPii(t, { minConfidence: "high" })));
+  return verdictOf(texts.flatMap((t) => detectConfigured(t, { minConfidence: "high" }, config)));
 }
 function verdictOf(found) {
   const strict = found.some((m) => STRICT.includes(m.type));
   return strict || found.length >= BULK_THRESHOLD ? found : void 0;
 }
 function shownPii(full, shown, file) {
-  const all2 = detectPii(full, { minConfidence: "high" });
+  const all2 = detectConfigured(full, { minConfidence: "high" }, config);
   let inFile;
   if (shown.length >= full.length) {
     inFile = all2;
@@ -3759,10 +3992,12 @@ function shownPii(full, shown, file) {
     const fields2 = new Set(shown.split(/[\t\n\r,;|]+/).map((f) => f.trim().replace(/^"|"$/g, "")));
     inFile = all2.filter((m) => fields2.has(m.value));
   }
-  const direct = detectPii(withHeader(full, shown, file), { minConfidence: "high" });
+  const direct = detectConfigured(withHeader(full, shown, file), { minConfidence: "high" }, config);
   return inFile.length >= direct.length ? inFile : direct;
 }
 var PROCESS_HINT = "To process the data, run a script that reads the file and writes its results to a file (or prints only counts), or use `write_file_unmasked`.";
+var strictMode = () => process.env.SAMARAN_GUARD === "strict";
+var config = { custom: [], allow: [] };
 var block = (message) => ({ action: "block", message });
 function ask(shownAs, what) {
   return {
@@ -3809,7 +4044,7 @@ function readTool(file, shownAs, root, ignored) {
   return void 0;
 }
 function shellTool(command, cwd, powershell, ignored) {
-  const reads = dataReadsInCommand(command, cwd, powershell).filter((r) => !ignored(r.file));
+  const reads = [...dataReadsInCommand(command, cwd, powershell), ...strictMode() ? inlineCodeReads(command, cwd, powershell) : []].filter((r) => !ignored(r.file));
   const matches = [];
   const files = /* @__PURE__ */ new Set();
   for (const r of reads) {
@@ -3880,9 +4115,11 @@ function grepTool(input, cwd, ignored) {
 }
 function evaluate(input, projectRoot) {
   if (process.env.SAMARAN_GUARD === "off") return void 0;
+  const root = projectRoot ?? process.env.CLAUDE_PROJECT_DIR ?? input.cwd ?? process.cwd();
+  config = loadConfig(root);
   if (input.hook_event_name === "UserPromptSubmit" && input.prompt) {
     if (BYPASS.test(input.prompt)) return void 0;
-    const found = detectPii(input.prompt, { types: STRICT, minConfidence: "high" });
+    const found = detectConfigured(input.prompt, { types: STRICT, minConfidence: "high" }, config);
     if (!found.length) return void 0;
     return block([
       `\u{1F6E1}\uFE0F  Samaran menahan prompt ini: ada data pribadi ${summarize(found)}.`,
@@ -3891,7 +4128,6 @@ function evaluate(input, projectRoot) {
     ].join("\n"));
   }
   if (input.hook_event_name !== "PreToolUse" || !input.tool_input) return void 0;
-  const root = projectRoot ?? process.env.CLAUDE_PROJECT_DIR ?? input.cwd ?? process.cwd();
   const cwd = input.cwd ?? root;
   const ignored = loadIgnore(root);
   const tool = input.tool_input;
@@ -3988,10 +4224,13 @@ async function runGuard() {
   } catch (e) {
     process.stderr.write(`samaran-guard: ${e.message}
 `);
-    const out = respond(agent, event, void 0);
+    const failed = strictMode() ? block(`Samaran guard failed (${e.message}), and SAMARAN_GUARD=strict blocks what it cannot check.`) : void 0;
+    const out = respond(agent, event, failed);
     if (out.stdout) process.stdout.write(`${out.stdout}
 `);
-    process.exitCode = 0;
+    if (out.stderr) process.stderr.write(`${out.stderr}
+`);
+    process.exitCode = out.exitCode;
   }
 }
 if (process.argv[1] && /samaran-guard\.m?js$/.test(process.argv[1])) {
@@ -4001,5 +4240,6 @@ export {
   evaluate,
   respond,
   runGuard,
+  strictMode,
   translate
 };

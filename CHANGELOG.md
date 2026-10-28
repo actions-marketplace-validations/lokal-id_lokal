@@ -4,6 +4,18 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+### Added
+
+- `.samaran.json` at the project root adds a team's own data types: rules with a `label` and a regular expression `pattern` (an employee ID like `EMP-004211`) or `fields` (JSON keys, `key: value` labels, and CSV columns such as `no_member`). Matches are masked as `[EMPLOYEE_ID_1]` and restored like any placeholder; `allow` lists values that are never masked. The MCP server, the guard, `lokal-mcp scan` and the GitHub Action, the proxy, `lokal-mcp kembaran`, and `lokal.files.scan_path` read it. A broken file makes the file tools and `lokal-mcp scan` fail with the reason, instead of masking less than the team expects. In the libraries, pass the rules as `custom`: `new Samaran({ custom })`, `detectPii(text, { custom })`, `new Kembaran({ custom })`, and the same keyword in Python. Matches have type `CUSTOM` and the rule's `label`; a rule whose label is a built-in type, or whose pattern does not compile, is refused. Both ports match the same text, checked by 309 shared vectors.
+- `SAMARAN_GUARD=strict` makes the guard fail closed. An error in the guard, such as a broken `.samaran.json` or malformed hook input, blocks instead of allowing. Code run from the command line that names a data file with personal data is blocked like `cat`: `python -c`, `node -e`, `ruby -e`, `perl -e`, `php -r`, a heredoc or PowerShell here-string fed to an interpreter, and `[IO.File]::ReadAllText`. Scripts saved in files still run. The default is unchanged.
+- A test proves the "no network calls" claim. The MCP server runs every one of its 17 tools, then the guard, `lokal-mcp scan`, and `lokal-mcp kembaran` run, all with every Node network API (sockets, TLS, HTTP, DNS, UDP, `fetch`) replaced by one that throws and logs. The Python library does the same with sockets and name lookups. A new MCP tool without a call in the test fails it.
+- README: "What Lokal is not" near the top, and "Defense in depth", with Claude Code permission rules and strict mode for data that must never reach a model provider.
+
+### Changed
+
+- The browser extension no longer uploads files it cannot check without asking. A scanned or password-protected PDF, a damaged document, a file over 20 MB, and a photo whose name says it is an ID document (`ktp-budi.jpg`, `selfie_kyc.png`, `npwp.png`) are held, and the browser asks whether to upload them as they are. Cancel, Esc, and a site that blocks dialogs leave them out. Before, they were uploaded with a notice afterwards.
+- A team's own rules count as identity numbers in the guard: one match is enough to hold a prompt or a file.
+
 ## [0.7.2] - 2026-10-27
 
 The browser extension. npm, PyPI, and the GitHub Action are released with the same version and no other changes.

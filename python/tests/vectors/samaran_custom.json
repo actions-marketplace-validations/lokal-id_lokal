@@ -1,0 +1,5167 @@
+{
+ "rules": [
+  {
+   "label": "EMPLOYEE_ID",
+   "pattern": "\\bEMP-\\d{6}\\b"
+  },
+  {
+   "label": "ORDER_REF",
+   "pattern": "INV/\\d{4}/[A-Z]+/\\d+"
+  },
+  {
+   "label": "MEMBER",
+   "fields": [
+    "no_member",
+    "Kode Member",
+    "member_id"
+   ]
+  },
+  {
+   "label": "NOTE",
+   "fields": [
+    "catatan",
+    "nik"
+   ]
+  },
+  {
+   "label": "TICKET",
+   "pattern": "\\b(?:TKT|tkt)-\\d+\\s?[A-Z]?"
+  }
+ ],
+ "cases": [
+  {
+   "text": "Tiket dari EMP-004211 soal EMP-000317, lalu EMP-004211 lagi. emp-004211 huruf kecil tidak cocok.",
+   "matches": [
+    [
+     "CUSTOM",
+     "EMPLOYEE_ID",
+     11,
+     21,
+     "EMP-004211"
+    ],
+    [
+     "CUSTOM",
+     "EMPLOYEE_ID",
+     27,
+     37,
+     "EMP-000317"
+    ],
+    [
+     "CUSTOM",
+     "EMPLOYEE_ID",
+     44,
+     54,
+     "EMP-004211"
+    ]
+   ],
+   "placeholder": "Tiket dari [EMPLOYEE_ID_1] soal [EMPLOYEE_ID_2], lalu [EMPLOYEE_ID_1] lagi. emp-004211 huruf kecil tidak cocok.",
+   "vault": [
+    [
+     "[EMPLOYEE_ID_1]",
+     "EMP-004211"
+    ],
+    [
+     "[EMPLOYEE_ID_2]",
+     "EMP-000317"
+    ]
+   ],
+   "partial": "Tiket dari ********11 soal ********17, lalu ********11 lagi. emp-004211 huruf kecil tidak cocok."
+  },
+  {
+   "text": "member no_member=M-0042 minta reset. member_id: Siti Aminah Putri dan lain-lain",
+   "matches": [
+    [
+     "CUSTOM",
+     "MEMBER",
+     17,
+     23,
+     "M-0042"
+    ],
+    [
+     "NAME",
+     null,
+     48,
+     65,
+     "Siti Aminah Putri"
+    ]
+   ],
+   "placeholder": "member no_member=[MEMBER_1] minta reset. member_id: [NAME_1] dan lain-lain",
+   "vault": [
+    [
+     "[MEMBER_1]",
+     "M-0042"
+    ],
+    [
+     "[NAME_1]",
+     "Siti Aminah Putri"
+    ]
+   ],
+   "partial": "member no_member=**** minta reset. member_id: S*** A*** P*** dan lain-lain"
+  },
+  {
+   "text": "{\"no_member\": \"M-0099\", \"nik\": \"3201011508950001\", \"catatan\": \"telepon 0812-3456-7890\"}",
+   "matches": [
+    [
+     "CUSTOM",
+     "MEMBER",
+     15,
+     21,
+     "M-0099"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     32,
+     48,
+     "3201011508950001"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     63,
+     85,
+     "telepon 0812-3456-7890"
+    ]
+   ],
+   "placeholder": "{\"no_member\": \"[MEMBER_1]\", \"nik\": \"[NOTE_1]\", \"catatan\": \"[NOTE_2]\"}",
+   "vault": [
+    [
+     "[MEMBER_1]",
+     "M-0099"
+    ],
+    [
+     "[NOTE_1]",
+     "3201011508950001"
+    ],
+    [
+     "[NOTE_2]",
+     "telepon 0812-3456-7890"
+    ]
+   ],
+   "partial": "{\"no_member\": \"****\", \"nik\": \"**************01\", \"catatan\": \"********************90\"}"
+  },
+  {
+   "text": "kode member: M-1234\nKODE MEMBER = 'M 77'\nno_member:\nno_member: \"\"",
+   "matches": [
+    [
+     "CUSTOM",
+     "MEMBER",
+     13,
+     19,
+     "M-1234"
+    ],
+    [
+     "CUSTOM",
+     "MEMBER",
+     35,
+     39,
+     "M 77"
+    ]
+   ],
+   "placeholder": "kode member: [MEMBER_1]\nKODE MEMBER = '[MEMBER_2]'\nno_member:\nno_member: \"\"",
+   "vault": [
+    [
+     "[MEMBER_1]",
+     "M-1234"
+    ],
+    [
+     "[MEMBER_2]",
+     "M 77"
+    ]
+   ],
+   "partial": "kode member: ****\nKODE MEMBER = '***'\nno_member:\nno_member: \"\""
+  },
+  {
+   "text": "nama,Kode Member,kota\r\nSiti Aminah,\"M, 77\",Bogor\r\nBudi Santoso,M-0042,Depok\r\n\r\nkota,catatan\r\nDepok,bukan kolom member",
+   "matches": [
+    [
+     "NAME",
+     null,
+     23,
+     34,
+     "Siti Aminah"
+    ],
+    [
+     "CUSTOM",
+     "MEMBER",
+     36,
+     41,
+     "M, 77"
+    ],
+    [
+     "NAME",
+     null,
+     50,
+     62,
+     "Budi Santoso"
+    ],
+    [
+     "CUSTOM",
+     "MEMBER",
+     63,
+     69,
+     "M-0042"
+    ],
+    [
+     "NAME",
+     null,
+     79,
+     83,
+     "kota"
+    ],
+    [
+     "NAME",
+     null,
+     93,
+     98,
+     "Depok"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     99,
+     117,
+     "bukan kolom member"
+    ]
+   ],
+   "placeholder": "nama,Kode Member,kota\r\n[NAME_1],\"[MEMBER_1]\",Bogor\r\n[NAME_2],[MEMBER_2],Depok\r\n\r\n[NAME_3],catatan\r\n[NAME_4],[NOTE_1]",
+   "vault": [
+    [
+     "[NAME_1]",
+     "Siti Aminah"
+    ],
+    [
+     "[MEMBER_1]",
+     "M, 77"
+    ],
+    [
+     "[NAME_2]",
+     "Budi Santoso"
+    ],
+    [
+     "[MEMBER_2]",
+     "M-0042"
+    ],
+    [
+     "[NAME_3]",
+     "kota"
+    ],
+    [
+     "[NAME_4]",
+     "Depok"
+    ],
+    [
+     "[NOTE_1]",
+     "bukan kolom member"
+    ]
+   ],
+   "partial": "nama,Kode Member,kota\r\nS*** A***,\"***\",Bogor\r\nB*** S***,****,Depok\r\n\r\nk***,catatan\r\nD***,****************er"
+  },
+  {
+   "text": "id\tmember_id\tnama\n1\tA-1\tDewi Lestari\n2\t\tJoko Widodo\n3\tA-3",
+   "matches": [
+    [
+     "CUSTOM",
+     "MEMBER",
+     20,
+     23,
+     "A-1"
+    ],
+    [
+     "NAME",
+     null,
+     24,
+     36,
+     "Dewi Lestari"
+    ],
+    [
+     "NAME",
+     null,
+     40,
+     51,
+     "Joko Widodo"
+    ]
+   ],
+   "placeholder": "id\tmember_id\tnama\n1\t[MEMBER_1]\t[NAME_1]\n2\t\t[NAME_2]\n3\tA-3",
+   "vault": [
+    [
+     "[MEMBER_1]",
+     "A-1"
+    ],
+    [
+     "[NAME_1]",
+     "Dewi Lestari"
+    ],
+    [
+     "[NAME_2]",
+     "Joko Widodo"
+    ]
+   ],
+   "partial": "id\tmember_id\tnama\n1\t***\tD*** L***\n2\t\tJ*** W***\n3\tA-3"
+  },
+  {
+   "text": "no;no_member;hp\n1;\"M \"\"kutip\"\" 5\";0812-1111-2222",
+   "matches": [
+    [
+     "CUSTOM",
+     "MEMBER",
+     19,
+     32,
+     "M \"\"kutip\"\" 5"
+    ],
+    [
+     "PHONE",
+     null,
+     34,
+     48,
+     "0812-1111-2222"
+    ]
+   ],
+   "placeholder": "no;no_member;hp\n1;\"[MEMBER_1]\";[PHONE_1]",
+   "vault": [
+    [
+     "[MEMBER_1]",
+     "M \"\"kutip\"\" 5"
+    ],
+    [
+     "[PHONE_1]",
+     "0812-1111-2222"
+    ]
+   ],
+   "partial": "no;no_member;hp\n1;\"*********** 5\";0812****2222"
+  },
+  {
+   "text": "Invoice INV/2026/BDG/00042 untuk TKT-889 B, 🌸 TKT-12 dan tkt-7.",
+   "matches": [
+    [
+     "CUSTOM",
+     "ORDER_REF",
+     8,
+     26,
+     "INV/2026/BDG/00042"
+    ],
+    [
+     "CUSTOM",
+     "TICKET",
+     33,
+     42,
+     "TKT-889 B"
+    ],
+    [
+     "CUSTOM",
+     "TICKET",
+     46,
+     53,
+     "TKT-12 "
+    ],
+    [
+     "CUSTOM",
+     "TICKET",
+     57,
+     62,
+     "tkt-7"
+    ]
+   ],
+   "placeholder": "Invoice [ORDER_REF_1] untuk [TICKET_1], 🌸 [TICKET_2]dan [TICKET_3].",
+   "vault": [
+    [
+     "[ORDER_REF_1]",
+     "INV/2026/BDG/00042"
+    ],
+    [
+     "[TICKET_1]",
+     "TKT-889 B"
+    ],
+    [
+     "[TICKET_2]",
+     "TKT-12 "
+    ],
+    [
+     "[TICKET_3]",
+     "tkt-7"
+    ]
+   ],
+   "partial": "Invoice ****************42 untuk ******* B, 🌸 *****2 dan ***."
+  },
+  {
+   "text": "HP 0812-3456-7890, nik: 3201011508950001, no_member: 3201011508950002",
+   "matches": [
+    [
+     "PHONE",
+     null,
+     3,
+     17,
+     "0812-3456-7890"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     24,
+     40,
+     "3201011508950001"
+    ],
+    [
+     "CUSTOM",
+     "MEMBER",
+     53,
+     69,
+     "3201011508950002"
+    ]
+   ],
+   "placeholder": "HP [PHONE_1], nik: [NOTE_1], no_member: [MEMBER_1]",
+   "vault": [
+    [
+     "[PHONE_1]",
+     "0812-3456-7890"
+    ],
+    [
+     "[NOTE_1]",
+     "3201011508950001"
+    ],
+    [
+     "[MEMBER_1]",
+     "3201011508950002"
+    ]
+   ],
+   "partial": "HP 0812****7890, nik: **************01, no_member: **************02"
+  },
+  {
+   "text": "2026-10-14T01:02:17.000Z INFO  checkout started user_email=budi.santoso@gmail.com hp=081234567890\n2026-10-14T01:02:17.000Z ERROR checkout failed order=INV-10231 nik=3201011508950001 hp=081234567890 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:04:43.000Z INFO  checkout started user_email=siti.aminah@yahoo.co.id hp=085711112222\n2026-10-14T01:04:43.000Z ERROR checkout failed order=INV-10232 nik=3276015508030002 hp=085711112222 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:07:18.000Z INFO  checkout started user_email=andi.wijaya@gmail.com hp=081399990000\n2026-10-14T01:07:18.000Z ERROR checkout failed order=INV-10233 nik=3171012003880003 hp=081399990000 err=\"InvalidAddress: kode_pos 16xxx not found\"\n2026-10-14T01:10:02.000Z INFO  checkout started user_email=dewi.lestari@outlook.com hp=083812345678\n2026-10-14T01:10:02.000Z ERROR checkout failed order=INV-10234 nik=3578014607910004 hp=083812345678 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:12:55.000Z INFO  checkout started user_email=budi.santoso@gmail.com hp=081234567890\n2026-10-14T01:12:55.000Z ERROR checkout failed order=INV-10235 nik=3201011508950001 hp=081234567890 err=\"OtpExpired: OTP older than 300s\"\n2026-10-14T01:15:57.000Z INFO  checkout started user_email=siti.aminah@yahoo.co.id hp=085711112222\n2026-10-14T01:15:57.000Z ERROR checkout failed order=INV-10236 nik=3276015508030002 hp=085711112222 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:19:08.000Z INFO  checkout started user_email=andi.wijaya@gmail.com hp=081399990000\n2026-10-14T01:19:08.000Z ERROR checkout failed order=INV-10237 nik=3171012003880003 hp=081399990000 err=\"InvalidAddress: kecamatan missing\"\n2026-10-14T01:22:28.000Z INFO  checkout started user_email=dewi.lestari@outlook.com hp=083812345678\n2026-10-14T01:22:28.000Z ERROR checkout failed order=INV-10238 nik=3578014607910004 hp=083812345678 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:25:57.000Z INFO  checkout started user_email=budi.santoso@gmail.com hp=081234567890\n2026-10-14T01:25:57.000Z ERROR checkout failed order=INV-10239 nik=3201011508950001 hp=081234567890 err=\"OtpExpired: OTP older than 300s\"\n2026-10-14T01:29:35.000Z INFO  checkout started user_email=siti.aminah@yahoo.co.id hp=085711112222\n2026-10-14T01:29:35.000Z ERROR checkout failed order=INV-10240 nik=3276015508030002 hp=085711112222 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:33:22.000Z INFO  checkout started user_email=andi.wijaya@gmail.com hp=081399990000\n2026-10-14T01:33:22.000Z ERROR checkout failed order=INV-10241 nik=3171012003880003 hp=081399990000 err=\"InvalidAddress: kode_pos 16xxx not found\"\n2026-10-14T01:37:18.000Z INFO  checkout started user_email=dewi.lestari@outlook.com hp=083812345678\n2026-10-14T01:37:18.000Z ERROR checkout failed order=INV-10242 nik=3578014607910004 hp=083812345678 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n",
+   "matches": [
+    [
+     "EMAIL",
+     null,
+     59,
+     81,
+     "budi.santoso@gmail.com"
+    ],
+    [
+     "PHONE",
+     null,
+     85,
+     97,
+     "081234567890"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     165,
+     181,
+     "3201011508950001"
+    ],
+    [
+     "PHONE",
+     null,
+     185,
+     197,
+     "081234567890"
+    ],
+    [
+     "EMAIL",
+     null,
+     314,
+     337,
+     "siti.aminah@yahoo.co.id"
+    ],
+    [
+     "PHONE",
+     null,
+     341,
+     353,
+     "085711112222"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     421,
+     437,
+     "3276015508030002"
+    ],
+    [
+     "PHONE",
+     null,
+     441,
+     453,
+     "085711112222"
+    ],
+    [
+     "EMAIL",
+     null,
+     570,
+     591,
+     "andi.wijaya@gmail.com"
+    ],
+    [
+     "PHONE",
+     null,
+     595,
+     607,
+     "081399990000"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     675,
+     691,
+     "3171012003880003"
+    ],
+    [
+     "PHONE",
+     null,
+     695,
+     707,
+     "081399990000"
+    ],
+    [
+     "EMAIL",
+     null,
+     814,
+     838,
+     "dewi.lestari@outlook.com"
+    ],
+    [
+     "PHONE",
+     null,
+     842,
+     854,
+     "083812345678"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     922,
+     938,
+     "3578014607910004"
+    ],
+    [
+     "PHONE",
+     null,
+     942,
+     954,
+     "083812345678"
+    ],
+    [
+     "EMAIL",
+     null,
+     1071,
+     1093,
+     "budi.santoso@gmail.com"
+    ],
+    [
+     "PHONE",
+     null,
+     1097,
+     1109,
+     "081234567890"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     1177,
+     1193,
+     "3201011508950001"
+    ],
+    [
+     "PHONE",
+     null,
+     1197,
+     1209,
+     "081234567890"
+    ],
+    [
+     "EMAIL",
+     null,
+     1307,
+     1330,
+     "siti.aminah@yahoo.co.id"
+    ],
+    [
+     "PHONE",
+     null,
+     1334,
+     1346,
+     "085711112222"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     1414,
+     1430,
+     "3276015508030002"
+    ],
+    [
+     "PHONE",
+     null,
+     1434,
+     1446,
+     "085711112222"
+    ],
+    [
+     "EMAIL",
+     null,
+     1563,
+     1584,
+     "andi.wijaya@gmail.com"
+    ],
+    [
+     "PHONE",
+     null,
+     1588,
+     1600,
+     "081399990000"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     1668,
+     1684,
+     "3171012003880003"
+    ],
+    [
+     "PHONE",
+     null,
+     1688,
+     1700,
+     "081399990000"
+    ],
+    [
+     "EMAIL",
+     null,
+     1800,
+     1824,
+     "dewi.lestari@outlook.com"
+    ],
+    [
+     "PHONE",
+     null,
+     1828,
+     1840,
+     "083812345678"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     1908,
+     1924,
+     "3578014607910004"
+    ],
+    [
+     "PHONE",
+     null,
+     1928,
+     1940,
+     "083812345678"
+    ],
+    [
+     "EMAIL",
+     null,
+     2057,
+     2079,
+     "budi.santoso@gmail.com"
+    ],
+    [
+     "PHONE",
+     null,
+     2083,
+     2095,
+     "081234567890"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     2163,
+     2179,
+     "3201011508950001"
+    ],
+    [
+     "PHONE",
+     null,
+     2183,
+     2195,
+     "081234567890"
+    ],
+    [
+     "EMAIL",
+     null,
+     2293,
+     2316,
+     "siti.aminah@yahoo.co.id"
+    ],
+    [
+     "PHONE",
+     null,
+     2320,
+     2332,
+     "085711112222"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     2400,
+     2416,
+     "3276015508030002"
+    ],
+    [
+     "PHONE",
+     null,
+     2420,
+     2432,
+     "085711112222"
+    ],
+    [
+     "EMAIL",
+     null,
+     2549,
+     2570,
+     "andi.wijaya@gmail.com"
+    ],
+    [
+     "PHONE",
+     null,
+     2574,
+     2586,
+     "081399990000"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     2654,
+     2670,
+     "3171012003880003"
+    ],
+    [
+     "PHONE",
+     null,
+     2674,
+     2686,
+     "081399990000"
+    ],
+    [
+     "EMAIL",
+     null,
+     2793,
+     2817,
+     "dewi.lestari@outlook.com"
+    ],
+    [
+     "PHONE",
+     null,
+     2821,
+     2833,
+     "083812345678"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     2901,
+     2917,
+     "3578014607910004"
+    ],
+    [
+     "PHONE",
+     null,
+     2921,
+     2933,
+     "083812345678"
+    ]
+   ],
+   "placeholder": "2026-10-14T01:02:17.000Z INFO  checkout started user_email=[EMAIL_1] hp=[PHONE_1]\n2026-10-14T01:02:17.000Z ERROR checkout failed order=INV-10231 nik=[NOTE_1] hp=[PHONE_1] err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:04:43.000Z INFO  checkout started user_email=[EMAIL_2] hp=[PHONE_2]\n2026-10-14T01:04:43.000Z ERROR checkout failed order=INV-10232 nik=[NOTE_2] hp=[PHONE_2] err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:07:18.000Z INFO  checkout started user_email=[EMAIL_3] hp=[PHONE_3]\n2026-10-14T01:07:18.000Z ERROR checkout failed order=INV-10233 nik=[NOTE_3] hp=[PHONE_3] err=\"InvalidAddress: kode_pos 16xxx not found\"\n2026-10-14T01:10:02.000Z INFO  checkout started user_email=[EMAIL_4] hp=[PHONE_4]\n2026-10-14T01:10:02.000Z ERROR checkout failed order=INV-10234 nik=[NOTE_4] hp=[PHONE_4] err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:12:55.000Z INFO  checkout started user_email=[EMAIL_1] hp=[PHONE_1]\n2026-10-14T01:12:55.000Z ERROR checkout failed order=INV-10235 nik=[NOTE_1] hp=[PHONE_1] err=\"OtpExpired: OTP older than 300s\"\n2026-10-14T01:15:57.000Z INFO  checkout started user_email=[EMAIL_2] hp=[PHONE_2]\n2026-10-14T01:15:57.000Z ERROR checkout failed order=INV-10236 nik=[NOTE_2] hp=[PHONE_2] err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:19:08.000Z INFO  checkout started user_email=[EMAIL_3] hp=[PHONE_3]\n2026-10-14T01:19:08.000Z ERROR checkout failed order=INV-10237 nik=[NOTE_3] hp=[PHONE_3] err=\"InvalidAddress: kecamatan missing\"\n2026-10-14T01:22:28.000Z INFO  checkout started user_email=[EMAIL_4] hp=[PHONE_4]\n2026-10-14T01:22:28.000Z ERROR checkout failed order=INV-10238 nik=[NOTE_4] hp=[PHONE_4] err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:25:57.000Z INFO  checkout started user_email=[EMAIL_1] hp=[PHONE_1]\n2026-10-14T01:25:57.000Z ERROR checkout failed order=INV-10239 nik=[NOTE_1] hp=[PHONE_1] err=\"OtpExpired: OTP older than 300s\"\n2026-10-14T01:29:35.000Z INFO  checkout started user_email=[EMAIL_2] hp=[PHONE_2]\n2026-10-14T01:29:35.000Z ERROR checkout failed order=INV-10240 nik=[NOTE_2] hp=[PHONE_2] err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:33:22.000Z INFO  checkout started user_email=[EMAIL_3] hp=[PHONE_3]\n2026-10-14T01:33:22.000Z ERROR checkout failed order=INV-10241 nik=[NOTE_3] hp=[PHONE_3] err=\"InvalidAddress: kode_pos 16xxx not found\"\n2026-10-14T01:37:18.000Z INFO  checkout started user_email=[EMAIL_4] hp=[PHONE_4]\n2026-10-14T01:37:18.000Z ERROR checkout failed order=INV-10242 nik=[NOTE_4] hp=[PHONE_4] err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n",
+   "vault": [
+    [
+     "[EMAIL_1]",
+     "budi.santoso@gmail.com"
+    ],
+    [
+     "[PHONE_1]",
+     "081234567890"
+    ],
+    [
+     "[NOTE_1]",
+     "3201011508950001"
+    ],
+    [
+     "[EMAIL_2]",
+     "siti.aminah@yahoo.co.id"
+    ],
+    [
+     "[PHONE_2]",
+     "085711112222"
+    ],
+    [
+     "[NOTE_2]",
+     "3276015508030002"
+    ],
+    [
+     "[EMAIL_3]",
+     "andi.wijaya@gmail.com"
+    ],
+    [
+     "[PHONE_3]",
+     "081399990000"
+    ],
+    [
+     "[NOTE_3]",
+     "3171012003880003"
+    ],
+    [
+     "[EMAIL_4]",
+     "dewi.lestari@outlook.com"
+    ],
+    [
+     "[PHONE_4]",
+     "083812345678"
+    ],
+    [
+     "[NOTE_4]",
+     "3578014607910004"
+    ]
+   ],
+   "partial": "2026-10-14T01:02:17.000Z INFO  checkout started user_email=b***@gmail.com hp=0812****7890\n2026-10-14T01:02:17.000Z ERROR checkout failed order=INV-10231 nik=**************01 hp=0812****7890 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:04:43.000Z INFO  checkout started user_email=s***@yahoo.co.id hp=0857****2222\n2026-10-14T01:04:43.000Z ERROR checkout failed order=INV-10232 nik=**************02 hp=0857****2222 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:07:18.000Z INFO  checkout started user_email=a***@gmail.com hp=0813****0000\n2026-10-14T01:07:18.000Z ERROR checkout failed order=INV-10233 nik=**************03 hp=0813****0000 err=\"InvalidAddress: kode_pos 16xxx not found\"\n2026-10-14T01:10:02.000Z INFO  checkout started user_email=d***@outlook.com hp=0838****5678\n2026-10-14T01:10:02.000Z ERROR checkout failed order=INV-10234 nik=**************04 hp=0838****5678 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:12:55.000Z INFO  checkout started user_email=b***@gmail.com hp=0812****7890\n2026-10-14T01:12:55.000Z ERROR checkout failed order=INV-10235 nik=**************01 hp=0812****7890 err=\"OtpExpired: OTP older than 300s\"\n2026-10-14T01:15:57.000Z INFO  checkout started user_email=s***@yahoo.co.id hp=0857****2222\n2026-10-14T01:15:57.000Z ERROR checkout failed order=INV-10236 nik=**************02 hp=0857****2222 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:19:08.000Z INFO  checkout started user_email=a***@gmail.com hp=0813****0000\n2026-10-14T01:19:08.000Z ERROR checkout failed order=INV-10237 nik=**************03 hp=0813****0000 err=\"InvalidAddress: kecamatan missing\"\n2026-10-14T01:22:28.000Z INFO  checkout started user_email=d***@outlook.com hp=0838****5678\n2026-10-14T01:22:28.000Z ERROR checkout failed order=INV-10238 nik=**************04 hp=0838****5678 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:25:57.000Z INFO  checkout started user_email=b***@gmail.com hp=0812****7890\n2026-10-14T01:25:57.000Z ERROR checkout failed order=INV-10239 nik=**************01 hp=0812****7890 err=\"OtpExpired: OTP older than 300s\"\n2026-10-14T01:29:35.000Z INFO  checkout started user_email=s***@yahoo.co.id hp=0857****2222\n2026-10-14T01:29:35.000Z ERROR checkout failed order=INV-10240 nik=**************02 hp=0857****2222 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n2026-10-14T01:33:22.000Z INFO  checkout started user_email=a***@gmail.com hp=0813****0000\n2026-10-14T01:33:22.000Z ERROR checkout failed order=INV-10241 nik=**************03 hp=0813****0000 err=\"InvalidAddress: kode_pos 16xxx not found\"\n2026-10-14T01:37:18.000Z INFO  checkout started user_email=d***@outlook.com hp=0838****5678\n2026-10-14T01:37:18.000Z ERROR checkout failed order=INV-10242 nik=**************04 hp=0838****5678 err=\"PaymentTimeout: gateway did not respond in 30000ms\"\n"
+  },
+  {
+   "text": "Chat WhatsApp dengan Dewi Lestari\n12/10/26 09.14 - Pesan dan panggilan terenkripsi secara end-to-end. Tidak seorang pun di luar chat ini, termasuk WhatsApp, yang dapat membaca atau mendengarkannya.\n12/10/26 09.14 - Dewi Lestari: kak pesanan saya 2610018GH6WX3S kok mug nya pecah ya 😭\n12/10/26 09.16 - Toko Kopi Senja: Mohon maaf kak Dewi, boleh kirim foto mug dan paketnya?\n12/10/26 09.20 - Dewi Lestari: <Media tidak disertakan>\n12/10/26 09.21 - Dewi Lestari: saya mau refund aja kak, ke rek BCA 1234567890 a.n. Dewi Lestari\n12/10/26 09.25 - Toko Kopi Senja: Baik kak, refund Rp75.000 kami proses maksimal 3 hari kerja ya\n\nChat WhatsApp dengan Maria Yosefina Gebze\n13/10/26 14.02 - Maria Yosefina Gebze: selamat siang, paket saya ke merauke sudah seminggu belum sampai\n13/10/26 14.03 - Maria Yosefina Gebze: no hp saya 0878.1234.5678 kalau kurir mau telpon\n13/10/26 14.10 - Toko Kopi Senja: Siang kak Maria, kami cek ke J&T dulu ya\n13/10/26 16.45 - Toko Kopi Senja: Kak, paketnya tertahan di hub Jayapura, estimasi tiba 2 hari lagi\n13/10/26 16.50 - Maria Yosefina Gebze: oke kak makasih, tolong dikabari lagi ya\n\nChat WhatsApp dengan +62 881-2345-6789\n14/10/26 08.30 - +62 881-2345-6789: halo kak ini rina, pesanan saya dibatalin sistem padahal udah transfer\n14/10/26 08.31 - +62 881-2345-6789: transfer dari rekening mandiri 1370012345678 atas nama rina kartika sari\n14/10/26 08.40 - Toko Kopi Senja: Halo kak Rina, VA-nya kedaluwarsa sebelum pembayaran masuk. Dananya akan otomatis kembali ya\n14/10/26 08.42 - +62 881-2345-6789: oh gitu, oke kak\n\nChat WhatsApp dengan Siti Aminah\n15/10/26 19.05 - Siti Aminah: kak tolong pesanan saya dipercepat, isinya obat insulin buat ibu saya yg lagi dirawat di RSUD Cibinong\n15/10/26 19.06 - Siti Aminah: alamat kirim ganti ya ke Jl. Mawar No. 12 RT 02/RW 04, Kel. Cinere, Depok\n15/10/26 19.20 - Toko Kopi Senja: Baik kak Siti, alamat sudah kami ubah dan pesanan kami prioritaskan\n\nChat WhatsApp dengan Hendra Gunawan\n16/10/26 10.00 - Hendra Gunawan: min kopi arabika gayo 250gr ready lagi kapan?\n16/10/26 10.05 - Toko Kopi Senja: Siang kak Hendra, restock minggu depan ya\n16/10/26 10.06 - Hendra Gunawan: sip, kabarin ya min\n",
+   "matches": [
+    [
+     "NAME",
+     null,
+     21,
+     33,
+     "Dewi Lestari"
+    ],
+    [
+     "NAME",
+     null,
+     215,
+     227,
+     "Dewi Lestari"
+    ],
+    [
+     "NAME",
+     null,
+     333,
+     337,
+     "Dewi"
+    ],
+    [
+     "NAME",
+     null,
+     391,
+     403,
+     "Dewi Lestari"
+    ],
+    [
+     "NAME",
+     null,
+     447,
+     459,
+     "Dewi Lestari"
+    ],
+    [
+     "BANK_ACCOUNT",
+     null,
+     497,
+     507,
+     "1234567890"
+    ],
+    [
+     "NAME",
+     null,
+     513,
+     525,
+     "Dewi Lestari"
+    ],
+    [
+     "NAME",
+     null,
+     645,
+     665,
+     "Maria Yosefina Gebze"
+    ],
+    [
+     "NAME",
+     null,
+     683,
+     703,
+     "Maria Yosefina Gebze"
+    ],
+    [
+     "NAME",
+     null,
+     787,
+     807,
+     "Maria Yosefina Gebze"
+    ],
+    [
+     "PHONE",
+     null,
+     820,
+     834,
+     "0878.1234.5678"
+    ],
+    [
+     "NAME",
+     null,
+     902,
+     907,
+     "Maria"
+    ],
+    [
+     "NAME",
+     null,
+     1050,
+     1070,
+     "Maria Yosefina Gebze"
+    ],
+    [
+     "PHONE",
+     null,
+     1135,
+     1152,
+     "+62 881-2345-6789"
+    ],
+    [
+     "PHONE",
+     null,
+     1170,
+     1187,
+     "+62 881-2345-6789"
+    ],
+    [
+     "NAME",
+     null,
+     1202,
+     1206,
+     "rina"
+    ],
+    [
+     "PHONE",
+     null,
+     1277,
+     1294,
+     "+62 881-2345-6789"
+    ],
+    [
+     "BANK_ACCOUNT",
+     null,
+     1327,
+     1340,
+     "1370012345678"
+    ],
+    [
+     "NAME",
+     null,
+     1351,
+     1368,
+     "rina kartika sari"
+    ],
+    [
+     "NAME",
+     null,
+     1412,
+     1416,
+     "Rina"
+    ],
+    [
+     "PHONE",
+     null,
+     1513,
+     1530,
+     "+62 881-2345-6789"
+    ],
+    [
+     "NAME",
+     null,
+     1571,
+     1582,
+     "Siti Aminah"
+    ],
+    [
+     "NAME",
+     null,
+     1600,
+     1611,
+     "Siti Aminah"
+    ],
+    [
+     "HEALTH",
+     null,
+     1661,
+     1668,
+     "insulin"
+    ],
+    [
+     "HEALTH",
+     null,
+     1691,
+     1715,
+     "dirawat di RSUD Cibinong"
+    ],
+    [
+     "NAME",
+     null,
+     1733,
+     1744,
+     "Siti Aminah"
+    ],
+    [
+     "ADDRESS",
+     null,
+     1771,
+     1799,
+     "Jl. Mawar No. 12 RT 02/RW 04"
+    ],
+    [
+     "NAME",
+     null,
+     1863,
+     1867,
+     "Siti"
+    ],
+    [
+     "NAME",
+     null,
+     1944,
+     1958,
+     "Hendra Gunawan"
+    ],
+    [
+     "NAME",
+     null,
+     1976,
+     1990,
+     "Hendra Gunawan"
+    ],
+    [
+     "NAME",
+     null,
+     2082,
+     2088,
+     "Hendra"
+    ],
+    [
+     "NAME",
+     null,
+     2131,
+     2145,
+     "Hendra Gunawan"
+    ]
+   ],
+   "placeholder": "Chat WhatsApp dengan [NAME_1]\n12/10/26 09.14 - Pesan dan panggilan terenkripsi secara end-to-end. Tidak seorang pun di luar chat ini, termasuk WhatsApp, yang dapat membaca atau mendengarkannya.\n12/10/26 09.14 - [NAME_1]: kak pesanan saya 2610018GH6WX3S kok mug nya pecah ya 😭\n12/10/26 09.16 - Toko Kopi Senja: Mohon maaf kak [NAME_2], boleh kirim foto mug dan paketnya?\n12/10/26 09.20 - [NAME_1]: <Media tidak disertakan>\n12/10/26 09.21 - [NAME_1]: saya mau refund aja kak, ke rek BCA [BANK_ACCOUNT_1] a.n. [NAME_1]\n12/10/26 09.25 - Toko Kopi Senja: Baik kak, refund Rp75.000 kami proses maksimal 3 hari kerja ya\n\nChat WhatsApp dengan [NAME_3]\n13/10/26 14.02 - [NAME_3]: selamat siang, paket saya ke merauke sudah seminggu belum sampai\n13/10/26 14.03 - [NAME_3]: no hp saya [PHONE_1] kalau kurir mau telpon\n13/10/26 14.10 - Toko Kopi Senja: Siang kak [NAME_4], kami cek ke J&T dulu ya\n13/10/26 16.45 - Toko Kopi Senja: Kak, paketnya tertahan di hub Jayapura, estimasi tiba 2 hari lagi\n13/10/26 16.50 - [NAME_3]: oke kak makasih, tolong dikabari lagi ya\n\nChat WhatsApp dengan [PHONE_2]\n14/10/26 08.30 - [PHONE_2]: halo kak ini [NAME_5], pesanan saya dibatalin sistem padahal udah transfer\n14/10/26 08.31 - [PHONE_2]: transfer dari rekening mandiri [BANK_ACCOUNT_2] atas nama [NAME_6]\n14/10/26 08.40 - Toko Kopi Senja: Halo kak [NAME_5], VA-nya kedaluwarsa sebelum pembayaran masuk. Dananya akan otomatis kembali ya\n14/10/26 08.42 - [PHONE_2]: oh gitu, oke kak\n\nChat WhatsApp dengan [NAME_7]\n15/10/26 19.05 - [NAME_7]: kak tolong pesanan saya dipercepat, isinya obat [HEALTH_1] buat ibu saya yg lagi [HEALTH_2]\n15/10/26 19.06 - [NAME_7]: alamat kirim ganti ya ke [ADDRESS_1], Kel. Cinere, Depok\n15/10/26 19.20 - Toko Kopi Senja: Baik kak [NAME_8], alamat sudah kami ubah dan pesanan kami prioritaskan\n\nChat WhatsApp dengan [NAME_9]\n16/10/26 10.00 - [NAME_9]: min kopi arabika gayo 250gr ready lagi kapan?\n16/10/26 10.05 - Toko Kopi Senja: Siang kak [NAME_10], restock minggu depan ya\n16/10/26 10.06 - [NAME_9]: sip, kabarin ya min\n",
+   "vault": [
+    [
+     "[NAME_1]",
+     "Dewi Lestari"
+    ],
+    [
+     "[NAME_2]",
+     "Dewi"
+    ],
+    [
+     "[BANK_ACCOUNT_1]",
+     "1234567890"
+    ],
+    [
+     "[NAME_3]",
+     "Maria Yosefina Gebze"
+    ],
+    [
+     "[PHONE_1]",
+     "0878.1234.5678"
+    ],
+    [
+     "[NAME_4]",
+     "Maria"
+    ],
+    [
+     "[PHONE_2]",
+     "+62 881-2345-6789"
+    ],
+    [
+     "[NAME_5]",
+     "rina"
+    ],
+    [
+     "[BANK_ACCOUNT_2]",
+     "1370012345678"
+    ],
+    [
+     "[NAME_6]",
+     "rina kartika sari"
+    ],
+    [
+     "[NAME_7]",
+     "Siti Aminah"
+    ],
+    [
+     "[HEALTH_1]",
+     "insulin"
+    ],
+    [
+     "[HEALTH_2]",
+     "dirawat di RSUD Cibinong"
+    ],
+    [
+     "[ADDRESS_1]",
+     "Jl. Mawar No. 12 RT 02/RW 04"
+    ],
+    [
+     "[NAME_8]",
+     "Siti"
+    ],
+    [
+     "[NAME_9]",
+     "Hendra Gunawan"
+    ],
+    [
+     "[NAME_10]",
+     "Hendra"
+    ]
+   ],
+   "partial": "Chat WhatsApp dengan D*** L***\n12/10/26 09.14 - Pesan dan panggilan terenkripsi secara end-to-end. Tidak seorang pun di luar chat ini, termasuk WhatsApp, yang dapat membaca atau mendengarkannya.\n12/10/26 09.14 - D*** L***: kak pesanan saya 2610018GH6WX3S kok mug nya pecah ya 😭\n12/10/26 09.16 - Toko Kopi Senja: Mohon maaf kak D***, boleh kirim foto mug dan paketnya?\n12/10/26 09.20 - D*** L***: <Media tidak disertakan>\n12/10/26 09.21 - D*** L***: saya mau refund aja kak, ke rek BCA ******7890 a.n. D*** L***\n12/10/26 09.25 - Toko Kopi Senja: Baik kak, refund Rp75.000 kami proses maksimal 3 hari kerja ya\n\nChat WhatsApp dengan M*** Y*** G***\n13/10/26 14.02 - M*** Y*** G***: selamat siang, paket saya ke merauke sudah seminggu belum sampai\n13/10/26 14.03 - M*** Y*** G***: no hp saya 0878****5678 kalau kurir mau telpon\n13/10/26 14.10 - Toko Kopi Senja: Siang kak M***, kami cek ke J&T dulu ya\n13/10/26 16.45 - Toko Kopi Senja: Kak, paketnya tertahan di hub Jayapura, estimasi tiba 2 hari lagi\n13/10/26 16.50 - M*** Y*** G***: oke kak makasih, tolong dikabari lagi ya\n\nChat WhatsApp dengan 0881****6789\n14/10/26 08.30 - 0881****6789: halo kak ini r***, pesanan saya dibatalin sistem padahal udah transfer\n14/10/26 08.31 - 0881****6789: transfer dari rekening mandiri *********5678 atas nama r*** k*** s***\n14/10/26 08.40 - Toko Kopi Senja: Halo kak R***, VA-nya kedaluwarsa sebelum pembayaran masuk. Dananya akan otomatis kembali ya\n14/10/26 08.42 - 0881****6789: oh gitu, oke kak\n\nChat WhatsApp dengan S*** A***\n15/10/26 19.05 - S*** A***: kak tolong pesanan saya dipercepat, isinya obat *** buat ibu saya yg lagi ***\n15/10/26 19.06 - S*** A***: alamat kirim ganti ya ke Jl. ***, Kel. Cinere, Depok\n15/10/26 19.20 - Toko Kopi Senja: Baik kak S***, alamat sudah kami ubah dan pesanan kami prioritaskan\n\nChat WhatsApp dengan H*** G***\n16/10/26 10.00 - H*** G***: min kopi arabika gayo 250gr ready lagi kapan?\n16/10/26 10.05 - Toko Kopi Senja: Siang kak H***, restock minggu depan ya\n16/10/26 10.06 - H*** G***: sip, kabarin ya min\n"
+  },
+  {
+   "text": "No. Pesanan,Status Pesanan,No. Resi,Opsi Pengiriman,Waktu Pesanan Dibuat,Username (Pembeli),Nama Penerima,No. Telepon,Alamat Pengiriman,Kota/Kabupaten,Provinsi,Total Pembayaran,Catatan dari Pembeli\n2610014KQ7ZB2M,Perlu Dikirim,,SPX Standard,2026-10-01 08:12,sitirahayu88,Siti Rahayu,6281298765432,\"Jl. Margonda Raya No. 45, RT 03/RW 05, Kel. Depok, Kec. Pancoran Mas\",KOTA DEPOK,JAWA BARAT,Rp185.000,tolong a.n. Ibu Siti Rahayu ya kak\n2610015AB3XY9P,Dikirim,SPXID045123456789,SPX Standard,2026-10-01 09:40,budi_s,Budi Santoso,+62 857-1111-2222,\"Perum Griya Asri Blok C2 No. 7, Cibinong\",KAB. BOGOR,JAWA BARAT,Rp92.500,\n2610016CD4ZT1Q,Perlu Dikirim,,J&T Express,2026-10-02 10:05,mamah.yosef,Maria Yosefina Gebze,0878.1234.5678,\"Jl. Raya Mandala No. 12, Kel. Mandala, Distrik Merauke\",KAB. MERAUKE,PAPUA SELATAN,Rp310.000,kalau kurir nyasar hub suami saya Pak Yohanes 0813-1111-2233\n2610017EF5UV2R,Perlu Dikirim,,JNE REG,2026-10-02 13:22,andiwj,Andi Wijaya,081234560001,\"Jl. Basuki Rahmat No. 9, Kota Sorong\",KOTA SORONG,PAPUA BARAT DAYA,Rp1.250.000,NIK saya 9671 0125 1187 0004 untuk klaim garansi\n2610018GH6WX3S,Selesai,JX4417730215,J&T Express,2026-10-03 07:55,dewi.lestari,Dewi Lestari,0896-7777-8888,\"Jl. Gajah Mada No. 101, Denpasar\",KOTA DENPASAR,BALI,Rp75.000,\n2610019IJ7YZ4T,Perlu Dikirim,,SiCepat REG,2026-10-03 16:30,rina_kartika,Rina Kartika Sari,0881-2345-6789,\"Jl. Provinsi No. 3, Penajam\",KAB. PENAJAM PASER UTARA,KALIMANTAN TIMUR,Rp640.000,\"rumah cat hijau sebelah masjid, titip ke satpam\"\n2610020KL8AB5U,Perlu Dikirim,,SPX Hemat,2026-10-04 11:11,yuliana.n,Yuliana Nawipa,0821 9876 5432,\"Jl. Merdeka No. 5, Nabire\",KAB. NABIRE,PAPUA TENGAH,Rp230.000,\n2610021MN9CD6V,Perlu Dikirim,,JNE YES,2026-10-04 19:45,hendra88,Hendra Gunawan,(0751) 812345,\"Jl. Sudirman No. 20, Padang\",KOTA PADANG,SUMATERA BARAT,Rp415.000,bayar pake VA BCA 12345678901 sudah ya\n2610022OP1EF7W,Batal,,SPX Standard,2026-10-05 08:00,fitri_h,Fitri Handayani,0852-3456-7891,\"Jl. Ahmad Yani No. 8, Surabaya\",KOTA SURABAYA,JAWA TIMUR,Rp99.000,\n2610023QR2GH8X,Perlu Dikirim,,SiCepat BEST,2026-10-05 14:20,lukman.h,Lukman Hakim,6281377778888,\"Jl. Raya Tapos No. 1, Kel. Tapos\",KOTA DEPOK,JAWA BARAT,Rp150.000,\n2610024ST3IJ9Y,Perlu Dikirim,,J&T Express,2026-10-06 09:09,siti.aminah,Siti Aminah,0838-1234-5679,\"Jl. Raya Cinere No. 77, Kel. Cinere\",KOTA DEPOK,JAWA BARAT,Rp88.000,\"tolong jgn dibanting, isi obat insulin buat ibu saya (diabetes)\"\n2610025UV4KL1Z,Dikirim,CGK7700123456789,JNE REG,2026-10-06 10:10,agus_p,Agus Prasetyo,0819-1234-5678,\"Jl. Kaliurang Km 5, Sleman\",KAB. SLEMAN,DI YOGYAKARTA,Rp56.000,\n",
+   "matches": [
+    [
+     "NAME",
+     null,
+     271,
+     282,
+     "Siti Rahayu"
+    ],
+    [
+     "PHONE",
+     null,
+     283,
+     296,
+     "6281298765432"
+    ],
+    [
+     "ADDRESS",
+     null,
+     298,
+     366,
+     "Jl. Margonda Raya No. 45, RT 03/RW 05, Kel. Depok, Kec. Pancoran Mas"
+    ],
+    [
+     "NAME",
+     null,
+     416,
+     427,
+     "Siti Rahayu"
+    ],
+    [
+     "NAME",
+     null,
+     513,
+     525,
+     "Budi Santoso"
+    ],
+    [
+     "PHONE",
+     null,
+     526,
+     543,
+     "+62 857-1111-2222"
+    ],
+    [
+     "ADDRESS",
+     null,
+     545,
+     585,
+     "Perum Griya Asri Blok C2 No. 7, Cibinong"
+    ],
+    [
+     "NAME",
+     null,
+     690,
+     710,
+     "Maria Yosefina Gebze"
+    ],
+    [
+     "PHONE",
+     null,
+     711,
+     725,
+     "0878.1234.5678"
+    ],
+    [
+     "ADDRESS",
+     null,
+     727,
+     781,
+     "Jl. Raya Mandala No. 12, Kel. Mandala, Distrik Merauke"
+    ],
+    [
+     "NAME",
+     null,
+     858,
+     865,
+     "Yohanes"
+    ],
+    [
+     "PHONE",
+     null,
+     866,
+     880,
+     "0813-1111-2233"
+    ],
+    [
+     "NAME",
+     null,
+     936,
+     942,
+     "andiwj"
+    ],
+    [
+     "NAME",
+     null,
+     943,
+     954,
+     "Andi Wijaya"
+    ],
+    [
+     "PHONE",
+     null,
+     955,
+     967,
+     "081234560001"
+    ],
+    [
+     "ADDRESS",
+     null,
+     969,
+     1005,
+     "Jl. Basuki Rahmat No. 9, Kota Sorong"
+    ],
+    [
+     "NIK",
+     null,
+     1057,
+     1076,
+     "9671 0125 1187 0004"
+    ],
+    [
+     "NAME",
+     null,
+     1175,
+     1187,
+     "Dewi Lestari"
+    ],
+    [
+     "PHONE",
+     null,
+     1188,
+     1202,
+     "0896-7777-8888"
+    ],
+    [
+     "ADDRESS",
+     null,
+     1204,
+     1236,
+     "Jl. Gajah Mada No. 101, Denpasar"
+    ],
+    [
+     "NAME",
+     null,
+     1339,
+     1356,
+     "Rina Kartika Sari"
+    ],
+    [
+     "PHONE",
+     null,
+     1357,
+     1371,
+     "0881-2345-6789"
+    ],
+    [
+     "ADDRESS",
+     null,
+     1373,
+     1400,
+     "Jl. Provinsi No. 3, Penajam"
+    ],
+    [
+     "NAME",
+     null,
+     1571,
+     1585,
+     "Yuliana Nawipa"
+    ],
+    [
+     "PHONE",
+     null,
+     1586,
+     1600,
+     "0821 9876 5432"
+    ],
+    [
+     "ADDRESS",
+     null,
+     1602,
+     1627,
+     "Jl. Merdeka No. 5, Nabire"
+    ],
+    [
+     "NAME",
+     null,
+     1729,
+     1743,
+     "Hendra Gunawan"
+    ],
+    [
+     "PHONE",
+     null,
+     1744,
+     1757,
+     "(0751) 812345"
+    ],
+    [
+     "ADDRESS",
+     null,
+     1759,
+     1786,
+     "Jl. Sudirman No. 20, Padang"
+    ],
+    [
+     "BANK_ACCOUNT",
+     null,
+     1843,
+     1854,
+     "12345678901"
+    ],
+    [
+     "NAME",
+     null,
+     1924,
+     1939,
+     "Fitri Handayani"
+    ],
+    [
+     "PHONE",
+     null,
+     1940,
+     1954,
+     "0852-3456-7891"
+    ],
+    [
+     "ADDRESS",
+     null,
+     1956,
+     1986,
+     "Jl. Ahmad Yani No. 8, Surabaya"
+    ],
+    [
+     "NAME",
+     null,
+     2092,
+     2104,
+     "Lukman Hakim"
+    ],
+    [
+     "PHONE",
+     null,
+     2105,
+     2118,
+     "6281377778888"
+    ],
+    [
+     "ADDRESS",
+     null,
+     2120,
+     2152,
+     "Jl. Raya Tapos No. 1, Kel. Tapos"
+    ],
+    [
+     "NAME",
+     null,
+     2258,
+     2269,
+     "Siti Aminah"
+    ],
+    [
+     "PHONE",
+     null,
+     2270,
+     2284,
+     "0838-1234-5679"
+    ],
+    [
+     "ADDRESS",
+     null,
+     2286,
+     2321,
+     "Jl. Raya Cinere No. 77, Kel. Cinere"
+    ],
+    [
+     "HEALTH",
+     null,
+     2386,
+     2393,
+     "insulin"
+    ],
+    [
+     "HEALTH",
+     null,
+     2409,
+     2417,
+     "diabetes"
+    ],
+    [
+     "NAME",
+     null,
+     2492,
+     2505,
+     "Agus Prasetyo"
+    ],
+    [
+     "PHONE",
+     null,
+     2506,
+     2520,
+     "0819-1234-5678"
+    ],
+    [
+     "ADDRESS",
+     null,
+     2522,
+     2548,
+     "Jl. Kaliurang Km 5, Sleman"
+    ]
+   ],
+   "placeholder": "No. Pesanan,Status Pesanan,No. Resi,Opsi Pengiriman,Waktu Pesanan Dibuat,Username (Pembeli),Nama Penerima,No. Telepon,Alamat Pengiriman,Kota/Kabupaten,Provinsi,Total Pembayaran,Catatan dari Pembeli\n2610014KQ7ZB2M,Perlu Dikirim,,SPX Standard,2026-10-01 08:12,sitirahayu88,[NAME_1],[PHONE_1],\"[ADDRESS_1]\",KOTA DEPOK,JAWA BARAT,Rp185.000,tolong a.n. Ibu [NAME_1] ya kak\n2610015AB3XY9P,Dikirim,SPXID045123456789,SPX Standard,2026-10-01 09:40,budi_s,[NAME_2],[PHONE_2],\"[ADDRESS_2]\",KAB. BOGOR,JAWA BARAT,Rp92.500,\n2610016CD4ZT1Q,Perlu Dikirim,,J&T Express,2026-10-02 10:05,mamah.yosef,[NAME_3],[PHONE_3],\"[ADDRESS_3]\",KAB. MERAUKE,PAPUA SELATAN,Rp310.000,kalau kurir nyasar hub suami saya Pak [NAME_4] [PHONE_4]\n2610017EF5UV2R,Perlu Dikirim,,JNE REG,2026-10-02 13:22,[NAME_5],[NAME_6],[PHONE_5],\"[ADDRESS_4]\",KOTA SORONG,PAPUA BARAT DAYA,Rp1.250.000,NIK saya [NIK_1] untuk klaim garansi\n2610018GH6WX3S,Selesai,JX4417730215,J&T Express,2026-10-03 07:55,dewi.lestari,[NAME_7],[PHONE_6],\"[ADDRESS_5]\",KOTA DENPASAR,BALI,Rp75.000,\n2610019IJ7YZ4T,Perlu Dikirim,,SiCepat REG,2026-10-03 16:30,rina_kartika,[NAME_8],[PHONE_7],\"[ADDRESS_6]\",KAB. PENAJAM PASER UTARA,KALIMANTAN TIMUR,Rp640.000,\"rumah cat hijau sebelah masjid, titip ke satpam\"\n2610020KL8AB5U,Perlu Dikirim,,SPX Hemat,2026-10-04 11:11,yuliana.n,[NAME_9],[PHONE_8],\"[ADDRESS_7]\",KAB. NABIRE,PAPUA TENGAH,Rp230.000,\n2610021MN9CD6V,Perlu Dikirim,,JNE YES,2026-10-04 19:45,hendra88,[NAME_10],[PHONE_9],\"[ADDRESS_8]\",KOTA PADANG,SUMATERA BARAT,Rp415.000,bayar pake VA BCA [BANK_ACCOUNT_1] sudah ya\n2610022OP1EF7W,Batal,,SPX Standard,2026-10-05 08:00,fitri_h,[NAME_11],[PHONE_10],\"[ADDRESS_9]\",KOTA SURABAYA,JAWA TIMUR,Rp99.000,\n2610023QR2GH8X,Perlu Dikirim,,SiCepat BEST,2026-10-05 14:20,lukman.h,[NAME_12],[PHONE_11],\"[ADDRESS_10]\",KOTA DEPOK,JAWA BARAT,Rp150.000,\n2610024ST3IJ9Y,Perlu Dikirim,,J&T Express,2026-10-06 09:09,siti.aminah,[NAME_13],[PHONE_12],\"[ADDRESS_11]\",KOTA DEPOK,JAWA BARAT,Rp88.000,\"tolong jgn dibanting, isi obat [HEALTH_1] buat ibu saya ([HEALTH_2])\"\n2610025UV4KL1Z,Dikirim,CGK7700123456789,JNE REG,2026-10-06 10:10,agus_p,[NAME_14],[PHONE_13],\"[ADDRESS_12]\",KAB. SLEMAN,DI YOGYAKARTA,Rp56.000,\n",
+   "vault": [
+    [
+     "[NAME_1]",
+     "Siti Rahayu"
+    ],
+    [
+     "[PHONE_1]",
+     "6281298765432"
+    ],
+    [
+     "[ADDRESS_1]",
+     "Jl. Margonda Raya No. 45, RT 03/RW 05, Kel. Depok, Kec. Pancoran Mas"
+    ],
+    [
+     "[NAME_2]",
+     "Budi Santoso"
+    ],
+    [
+     "[PHONE_2]",
+     "+62 857-1111-2222"
+    ],
+    [
+     "[ADDRESS_2]",
+     "Perum Griya Asri Blok C2 No. 7, Cibinong"
+    ],
+    [
+     "[NAME_3]",
+     "Maria Yosefina Gebze"
+    ],
+    [
+     "[PHONE_3]",
+     "0878.1234.5678"
+    ],
+    [
+     "[ADDRESS_3]",
+     "Jl. Raya Mandala No. 12, Kel. Mandala, Distrik Merauke"
+    ],
+    [
+     "[NAME_4]",
+     "Yohanes"
+    ],
+    [
+     "[PHONE_4]",
+     "0813-1111-2233"
+    ],
+    [
+     "[NAME_5]",
+     "andiwj"
+    ],
+    [
+     "[NAME_6]",
+     "Andi Wijaya"
+    ],
+    [
+     "[PHONE_5]",
+     "081234560001"
+    ],
+    [
+     "[ADDRESS_4]",
+     "Jl. Basuki Rahmat No. 9, Kota Sorong"
+    ],
+    [
+     "[NIK_1]",
+     "9671 0125 1187 0004"
+    ],
+    [
+     "[NAME_7]",
+     "Dewi Lestari"
+    ],
+    [
+     "[PHONE_6]",
+     "0896-7777-8888"
+    ],
+    [
+     "[ADDRESS_5]",
+     "Jl. Gajah Mada No. 101, Denpasar"
+    ],
+    [
+     "[NAME_8]",
+     "Rina Kartika Sari"
+    ],
+    [
+     "[PHONE_7]",
+     "0881-2345-6789"
+    ],
+    [
+     "[ADDRESS_6]",
+     "Jl. Provinsi No. 3, Penajam"
+    ],
+    [
+     "[NAME_9]",
+     "Yuliana Nawipa"
+    ],
+    [
+     "[PHONE_8]",
+     "0821 9876 5432"
+    ],
+    [
+     "[ADDRESS_7]",
+     "Jl. Merdeka No. 5, Nabire"
+    ],
+    [
+     "[NAME_10]",
+     "Hendra Gunawan"
+    ],
+    [
+     "[PHONE_9]",
+     "(0751) 812345"
+    ],
+    [
+     "[ADDRESS_8]",
+     "Jl. Sudirman No. 20, Padang"
+    ],
+    [
+     "[BANK_ACCOUNT_1]",
+     "12345678901"
+    ],
+    [
+     "[NAME_11]",
+     "Fitri Handayani"
+    ],
+    [
+     "[PHONE_10]",
+     "0852-3456-7891"
+    ],
+    [
+     "[ADDRESS_9]",
+     "Jl. Ahmad Yani No. 8, Surabaya"
+    ],
+    [
+     "[NAME_12]",
+     "Lukman Hakim"
+    ],
+    [
+     "[PHONE_11]",
+     "6281377778888"
+    ],
+    [
+     "[ADDRESS_10]",
+     "Jl. Raya Tapos No. 1, Kel. Tapos"
+    ],
+    [
+     "[NAME_13]",
+     "Siti Aminah"
+    ],
+    [
+     "[PHONE_12]",
+     "0838-1234-5679"
+    ],
+    [
+     "[ADDRESS_11]",
+     "Jl. Raya Cinere No. 77, Kel. Cinere"
+    ],
+    [
+     "[HEALTH_1]",
+     "insulin"
+    ],
+    [
+     "[HEALTH_2]",
+     "diabetes"
+    ],
+    [
+     "[NAME_14]",
+     "Agus Prasetyo"
+    ],
+    [
+     "[PHONE_13]",
+     "0819-1234-5678"
+    ],
+    [
+     "[ADDRESS_12]",
+     "Jl. Kaliurang Km 5, Sleman"
+    ]
+   ],
+   "partial": "No. Pesanan,Status Pesanan,No. Resi,Opsi Pengiriman,Waktu Pesanan Dibuat,Username (Pembeli),Nama Penerima,No. Telepon,Alamat Pengiriman,Kota/Kabupaten,Provinsi,Total Pembayaran,Catatan dari Pembeli\n2610014KQ7ZB2M,Perlu Dikirim,,SPX Standard,2026-10-01 08:12,sitirahayu88,S*** R***,0812****5432,\"Jl. ***\",KOTA DEPOK,JAWA BARAT,Rp185.000,tolong a.n. Ibu S*** R*** ya kak\n2610015AB3XY9P,Dikirim,SPXID045123456789,SPX Standard,2026-10-01 09:40,budi_s,B*** S***,0857****2222,\"Perum ***\",KAB. BOGOR,JAWA BARAT,Rp92.500,\n2610016CD4ZT1Q,Perlu Dikirim,,J&T Express,2026-10-02 10:05,mamah.yosef,M*** Y*** G***,0878****5678,\"Jl. ***\",KAB. MERAUKE,PAPUA SELATAN,Rp310.000,kalau kurir nyasar hub suami saya Pak Y*** 0813****2233\n2610017EF5UV2R,Perlu Dikirim,,JNE REG,2026-10-02 13:22,a***,A*** W***,0812****0001,\"Jl. ***\",KOTA SORONG,PAPUA BARAT DAYA,Rp1.250.000,NIK saya 9671********0004 untuk klaim garansi\n2610018GH6WX3S,Selesai,JX4417730215,J&T Express,2026-10-03 07:55,dewi.lestari,D*** L***,0896****8888,\"Jl. ***\",KOTA DENPASAR,BALI,Rp75.000,\n2610019IJ7YZ4T,Perlu Dikirim,,SiCepat REG,2026-10-03 16:30,rina_kartika,R*** K*** S***,0881****6789,\"Jl. ***\",KAB. PENAJAM PASER UTARA,KALIMANTAN TIMUR,Rp640.000,\"rumah cat hijau sebelah masjid, titip ke satpam\"\n2610020KL8AB5U,Perlu Dikirim,,SPX Hemat,2026-10-04 11:11,yuliana.n,Y*** N***,0821****5432,\"Jl. ***\",KAB. NABIRE,PAPUA TENGAH,Rp230.000,\n2610021MN9CD6V,Perlu Dikirim,,JNE YES,2026-10-04 19:45,hendra88,H*** G***,0751***2345,\"Jl. ***\",KOTA PADANG,SUMATERA BARAT,Rp415.000,bayar pake VA BCA *******8901 sudah ya\n2610022OP1EF7W,Batal,,SPX Standard,2026-10-05 08:00,fitri_h,F*** H***,0852****7891,\"Jl. ***\",KOTA SURABAYA,JAWA TIMUR,Rp99.000,\n2610023QR2GH8X,Perlu Dikirim,,SiCepat BEST,2026-10-05 14:20,lukman.h,L*** H***,0813****8888,\"Jl. ***\",KOTA DEPOK,JAWA BARAT,Rp150.000,\n2610024ST3IJ9Y,Perlu Dikirim,,J&T Express,2026-10-06 09:09,siti.aminah,S*** A***,0838****5679,\"Jl. ***\",KOTA DEPOK,JAWA BARAT,Rp88.000,\"tolong jgn dibanting, isi obat *** buat ibu saya (***)\"\n2610025UV4KL1Z,Dikirim,CGK7700123456789,JNE REG,2026-10-06 10:10,agus_p,A*** P***,0819****5678,\"Jl. ***\",KAB. SLEMAN,DI YOGYAKARTA,Rp56.000,\n"
+  },
+  {
+   "text": "[2026-10-01 08:12:40] production.INFO: midtrans.charge {\"order_id\":\"2610014KQ7ZB2M\",\"gross_amount\":185000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"Siti\",\"last_name\":\"Rahayu\",\"email\":\"siti.rahayu88@example.com\",\"phone\":\"+6281298765432\"}}\n[2026-10-01 08:14:02] production.INFO: midtrans.notification {\"order_id\":\"2610014KQ7ZB2M\",\"transaction_status\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"185000.00\",\"transaction_time\":\"2026-10-01 08:13:55\"}\n[2026-10-01 09:40:31] production.INFO: midtrans.charge {\"order_id\":\"2610015AB3XY9P\",\"gross_amount\":92500,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"Budi\",\"last_name\":\"Santoso\",\"email\":\"budi.santoso@example.com\",\"phone\":\"+6285711112222\"}}\n[2026-10-01 09:41:10] production.INFO: midtrans.notification {\"order_id\":\"2610015AB3XY9P\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"92500.00\",\"transaction_time\":\"2026-10-01 09:41:02\"}\n[2026-10-02 10:05:12] production.INFO: midtrans.charge {\"order_id\":\"2610016CD4ZT1Q\",\"gross_amount\":310000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Maria Yosefina\",\"last_name\":\"Gebze\",\"email\":\"maria.gebze@example.com\",\"phone\":\"+6287812345678\"}}\n[2026-10-02 10:05:13] production.INFO: midtrans.va_created {\"order_id\":\"2610016CD4ZT1Q\",\"va_numbers\":[{\"bank\":\"bca\",\"va_number\":\"70012000123456\"}]}\n[2026-10-02 11:47:20] production.INFO: midtrans.notification {\"order_id\":\"2610016CD4ZT1Q\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"310000.00\",\"transaction_time\":\"2026-10-02 11:47:11\"}\n[2026-10-02 13:22:05] production.INFO: midtrans.charge {\"order_id\":\"2610017EF5UV2R\",\"gross_amount\":1250000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Andi\",\"last_name\":\"Wijaya\",\"email\":\"andi.wijaya@example.com\",\"phone\":\"+6281234560001\"}}\n[2026-10-02 13:22:06] production.INFO: midtrans.notification {\"order_id\":\"2610017EF5UV2R\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"1250000.00\",\"transaction_time\":\"2026-10-02 13:22:06\"}\n[2026-10-02 13:25:41] production.ERROR: Gagal verifikasi KTP untuk klaim garansi {\"order_id\":\"2610017EF5UV2R\",\"nik\":\"9671012511870004\",\"nama\":\"Andi Wijaya\",\"alasan\":\"foto KTP buram\"}\n[2026-10-03 07:55:18] production.INFO: midtrans.charge {\"order_id\":\"2610018GH6WX3S\",\"gross_amount\":75000,\"payment_type\":\"shopeepay\",\"customer_details\":{\"first_name\":\"Dewi\",\"last_name\":\"Lestari\",\"email\":\"dewi.lestari@example.com\",\"phone\":\"+6289677778888\"}}\n[2026-10-03 07:56:02] production.INFO: midtrans.notification {\"order_id\":\"2610018GH6WX3S\",\"transaction_status\":\"settlement\",\"payment_type\":\"shopeepay\",\"gross_amount\":\"75000.00\",\"transaction_time\":\"2026-10-03 07:55:58\"}\n[2026-10-03 09:30:00] production.INFO: midtrans.notification {\"order_id\":\"2610017EF5UV2R\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"1250000.00\",\"transaction_time\":\"2026-10-03 09:29:47\"}\n[2026-10-03 16:30:44] production.INFO: midtrans.charge {\"order_id\":\"2610019IJ7YZ4T\",\"gross_amount\":640000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Rina Kartika\",\"last_name\":\"Sari\",\"email\":\"rina.kartika@example.com\",\"phone\":\"+6288123456789\"}}\n[2026-10-03 16:30:45] production.INFO: midtrans.notification {\"order_id\":\"2610019IJ7YZ4T\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"640000.00\",\"transaction_time\":\"2026-10-03 16:30:45\"}\n[2026-10-04 11:11:09] production.INFO: midtrans.charge {\"order_id\":\"2610020KL8AB5U\",\"gross_amount\":230000,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"Yuliana\",\"last_name\":\"Nawipa\",\"email\":\"yuliana.nawipa@example.com\",\"phone\":\"+6282198765432\"}}\n[2026-10-04 11:12:30] production.INFO: midtrans.notification {\"order_id\":\"2610020KL8AB5U\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"230000.00\",\"transaction_time\":\"2026-10-04 11:12:21\"}\n[2026-10-04 16:30:46] production.INFO: midtrans.notification {\"order_id\":\"2610019IJ7YZ4T\",\"transaction_status\":\"expire\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"640000.00\",\"transaction_time\":\"2026-10-04 16:30:46\"}\n[2026-10-04 19:45:51] production.INFO: midtrans.charge {\"order_id\":\"2610021MN9CD6V\",\"gross_amount\":415000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Hendra\",\"last_name\":\"Gunawan\",\"email\":\"hendra.gunawan@example.com\",\"phone\":\"+62751812345\"}}\n[2026-10-04 20:02:13] production.INFO: midtrans.notification {\"order_id\":\"2610021MN9CD6V\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"415000.00\",\"transaction_time\":\"2026-10-04 20:02:04\"}\n[2026-10-05 08:00:22] production.INFO: midtrans.charge {\"order_id\":\"2610022OP1EF7W\",\"gross_amount\":99000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"Fitri\",\"last_name\":\"Handayani\",\"email\":\"fitri.h@example.com\",\"phone\":\"+6285234567891\"}}\n[2026-10-05 08:20:00] production.INFO: midtrans.notification {\"order_id\":\"2610022OP1EF7W\",\"transaction_status\":\"cancel\",\"payment_type\":\"qris\",\"gross_amount\":\"99000.00\",\"transaction_time\":\"2026-10-05 08:19:58\"}\n[2026-10-05 14:20:37] production.INFO: midtrans.charge {\"order_id\":\"2610023QR2GH8X\",\"gross_amount\":150000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Lukman\",\"last_name\":\"Hakim\",\"email\":\"lukman.hakim@example.com\",\"phone\":\"+6281377778888\"}}\n[2026-10-05 14:20:38] production.INFO: midtrans.notification {\"order_id\":\"2610023QR2GH8X\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"150000.00\",\"transaction_time\":\"2026-10-05 14:20:38\"}\n[2026-10-06 09:09:15] production.INFO: midtrans.charge {\"order_id\":\"2610024ST3IJ9Y\",\"gross_amount\":88000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"Siti\",\"last_name\":\"Aminah\",\"email\":\"siti.aminah@example.com\",\"phone\":\"+6283812345679\"}}\n[2026-10-06 09:10:01] production.INFO: midtrans.notification {\"order_id\":\"2610024ST3IJ9Y\",\"transaction_status\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"88000.00\",\"transaction_time\":\"2026-10-06 09:09:52\"}\n[2026-10-06 10:10:28] production.INFO: midtrans.charge {\"order_id\":\"2610025UV4KL1Z\",\"gross_amount\":56000,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"Agus\",\"last_name\":\"Prasetyo\",\"email\":\"agus.prasetyo@example.com\",\"phone\":\"+6281912345678\"}}\n[2026-10-06 10:11:44] production.INFO: midtrans.notification {\"order_id\":\"2610025UV4KL1Z\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"56000.00\",\"transaction_time\":\"2026-10-06 10:11:35\"}\n[2026-10-06 12:00:03] production.WARNING: midtrans.notification order tidak dikenal {\"order_id\":\"TEST-0001\",\"transaction_status\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"1.00\"}\n",
+   "matches": [
+    [
+     "NAME",
+     null,
+     162,
+     166,
+     "Siti"
+    ],
+    [
+     "NAME",
+     null,
+     181,
+     187,
+     "Rahayu"
+    ],
+    [
+     "EMAIL",
+     null,
+     198,
+     223,
+     "siti.rahayu88@example.com"
+    ],
+    [
+     "PHONE",
+     null,
+     234,
+     248,
+     "+6281298765432"
+    ],
+    [
+     "NAME",
+     null,
+     629,
+     633,
+     "Budi"
+    ],
+    [
+     "NAME",
+     null,
+     648,
+     655,
+     "Santoso"
+    ],
+    [
+     "EMAIL",
+     null,
+     666,
+     690,
+     "budi.santoso@example.com"
+    ],
+    [
+     "PHONE",
+     null,
+     701,
+     715,
+     "+6285711112222"
+    ],
+    [
+     "NAME",
+     null,
+     1105,
+     1119,
+     "Maria Yosefina"
+    ],
+    [
+     "NAME",
+     null,
+     1134,
+     1139,
+     "Gebze"
+    ],
+    [
+     "EMAIL",
+     null,
+     1150,
+     1173,
+     "maria.gebze@example.com"
+    ],
+    [
+     "PHONE",
+     null,
+     1184,
+     1198,
+     "+6287812345678"
+    ],
+    [
+     "BANK_ACCOUNT",
+     null,
+     1331,
+     1345,
+     "70012000123456"
+    ],
+    [
+     "NAME",
+     null,
+     1746,
+     1750,
+     "Andi"
+    ],
+    [
+     "NAME",
+     null,
+     1765,
+     1771,
+     "Wijaya"
+    ],
+    [
+     "EMAIL",
+     null,
+     1782,
+     1805,
+     "andi.wijaya@example.com"
+    ],
+    [
+     "PHONE",
+     null,
+     1816,
+     1830,
+     "+6281234560001"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     2173,
+     2189,
+     "9671012511870004"
+    ],
+    [
+     "NAME",
+     null,
+     2199,
+     2210,
+     "Andi Wijaya"
+    ],
+    [
+     "NAME",
+     null,
+     2405,
+     2409,
+     "Dewi"
+    ],
+    [
+     "NAME",
+     null,
+     2424,
+     2431,
+     "Lestari"
+    ],
+    [
+     "EMAIL",
+     null,
+     2442,
+     2466,
+     "dewi.lestari@example.com"
+    ],
+    [
+     "PHONE",
+     null,
+     2477,
+     2491,
+     "+6289677778888"
+    ],
+    [
+     "NAME",
+     null,
+     3110,
+     3122,
+     "Rina Kartika"
+    ],
+    [
+     "NAME",
+     null,
+     3137,
+     3141,
+     "Sari"
+    ],
+    [
+     "EMAIL",
+     null,
+     3152,
+     3176,
+     "rina.kartika@example.com"
+    ],
+    [
+     "PHONE",
+     null,
+     3187,
+     3201,
+     "+6288123456789"
+    ],
+    [
+     "NAME",
+     null,
+     3589,
+     3596,
+     "Yuliana"
+    ],
+    [
+     "NAME",
+     null,
+     3611,
+     3617,
+     "Nawipa"
+    ],
+    [
+     "EMAIL",
+     null,
+     3628,
+     3654,
+     "yuliana.nawipa@example.com"
+    ],
+    [
+     "PHONE",
+     null,
+     3665,
+     3679,
+     "+6282198765432"
+    ],
+    [
+     "NAME",
+     null,
+     4290,
+     4296,
+     "Hendra"
+    ],
+    [
+     "NAME",
+     null,
+     4311,
+     4318,
+     "Gunawan"
+    ],
+    [
+     "EMAIL",
+     null,
+     4329,
+     4355,
+     "hendra.gunawan@example.com"
+    ],
+    [
+     "PHONE",
+     null,
+     4366,
+     4378,
+     "+62751812345"
+    ],
+    [
+     "NAME",
+     null,
+     4767,
+     4772,
+     "Fitri"
+    ],
+    [
+     "NAME",
+     null,
+     4787,
+     4796,
+     "Handayani"
+    ],
+    [
+     "EMAIL",
+     null,
+     4807,
+     4826,
+     "fitri.h@example.com"
+    ],
+    [
+     "PHONE",
+     null,
+     4837,
+     4851,
+     "+6285234567891"
+    ],
+    [
+     "NAME",
+     null,
+     5236,
+     5242,
+     "Lukman"
+    ],
+    [
+     "NAME",
+     null,
+     5257,
+     5262,
+     "Hakim"
+    ],
+    [
+     "EMAIL",
+     null,
+     5273,
+     5297,
+     "lukman.hakim@example.com"
+    ],
+    [
+     "PHONE",
+     null,
+     5308,
+     5322,
+     "+6281377778888"
+    ],
+    [
+     "NAME",
+     null,
+     5708,
+     5712,
+     "Siti"
+    ],
+    [
+     "NAME",
+     null,
+     5727,
+     5733,
+     "Aminah"
+    ],
+    [
+     "EMAIL",
+     null,
+     5744,
+     5767,
+     "siti.aminah@example.com"
+    ],
+    [
+     "PHONE",
+     null,
+     5778,
+     5792,
+     "+6283812345679"
+    ],
+    [
+     "NAME",
+     null,
+     6172,
+     6176,
+     "Agus"
+    ],
+    [
+     "NAME",
+     null,
+     6191,
+     6199,
+     "Prasetyo"
+    ],
+    [
+     "EMAIL",
+     null,
+     6210,
+     6235,
+     "agus.prasetyo@example.com"
+    ],
+    [
+     "PHONE",
+     null,
+     6246,
+     6260,
+     "+6281912345678"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     6588,
+     6606,
+     "transaction_status"
+    ]
+   ],
+   "placeholder": "[2026-10-01 08:12:40] production.INFO: midtrans.charge {\"order_id\":\"2610014KQ7ZB2M\",\"gross_amount\":185000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"[NAME_1]\",\"last_name\":\"[NAME_2]\",\"email\":\"[EMAIL_1]\",\"phone\":\"[PHONE_1]\"}}\n[2026-10-01 08:14:02] production.INFO: midtrans.notification {\"order_id\":\"2610014KQ7ZB2M\",\"transaction_status\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"185000.00\",\"transaction_time\":\"2026-10-01 08:13:55\"}\n[2026-10-01 09:40:31] production.INFO: midtrans.charge {\"order_id\":\"2610015AB3XY9P\",\"gross_amount\":92500,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"[NAME_3]\",\"last_name\":\"[NAME_4]\",\"email\":\"[EMAIL_2]\",\"phone\":\"[PHONE_2]\"}}\n[2026-10-01 09:41:10] production.INFO: midtrans.notification {\"order_id\":\"2610015AB3XY9P\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"92500.00\",\"transaction_time\":\"2026-10-01 09:41:02\"}\n[2026-10-02 10:05:12] production.INFO: midtrans.charge {\"order_id\":\"2610016CD4ZT1Q\",\"gross_amount\":310000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"[NAME_5]\",\"last_name\":\"[NAME_6]\",\"email\":\"[EMAIL_3]\",\"phone\":\"[PHONE_3]\"}}\n[2026-10-02 10:05:13] production.INFO: midtrans.va_created {\"order_id\":\"2610016CD4ZT1Q\",\"va_numbers\":[{\"bank\":\"bca\",\"va_number\":\"[BANK_ACCOUNT_1]\"}]}\n[2026-10-02 11:47:20] production.INFO: midtrans.notification {\"order_id\":\"2610016CD4ZT1Q\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"310000.00\",\"transaction_time\":\"2026-10-02 11:47:11\"}\n[2026-10-02 13:22:05] production.INFO: midtrans.charge {\"order_id\":\"2610017EF5UV2R\",\"gross_amount\":1250000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"[NAME_7]\",\"last_name\":\"[NAME_8]\",\"email\":\"[EMAIL_4]\",\"phone\":\"[PHONE_4]\"}}\n[2026-10-02 13:22:06] production.INFO: midtrans.notification {\"order_id\":\"2610017EF5UV2R\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"1250000.00\",\"transaction_time\":\"2026-10-02 13:22:06\"}\n[2026-10-02 13:25:41] production.ERROR: Gagal verifikasi KTP untuk klaim garansi {\"order_id\":\"2610017EF5UV2R\",\"nik\":\"[NOTE_1]\",\"nama\":\"[NAME_9]\",\"alasan\":\"foto KTP buram\"}\n[2026-10-03 07:55:18] production.INFO: midtrans.charge {\"order_id\":\"2610018GH6WX3S\",\"gross_amount\":75000,\"payment_type\":\"shopeepay\",\"customer_details\":{\"first_name\":\"[NAME_10]\",\"last_name\":\"[NAME_11]\",\"email\":\"[EMAIL_5]\",\"phone\":\"[PHONE_5]\"}}\n[2026-10-03 07:56:02] production.INFO: midtrans.notification {\"order_id\":\"2610018GH6WX3S\",\"transaction_status\":\"settlement\",\"payment_type\":\"shopeepay\",\"gross_amount\":\"75000.00\",\"transaction_time\":\"2026-10-03 07:55:58\"}\n[2026-10-03 09:30:00] production.INFO: midtrans.notification {\"order_id\":\"2610017EF5UV2R\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"1250000.00\",\"transaction_time\":\"2026-10-03 09:29:47\"}\n[2026-10-03 16:30:44] production.INFO: midtrans.charge {\"order_id\":\"2610019IJ7YZ4T\",\"gross_amount\":640000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"[NAME_12]\",\"last_name\":\"[NAME_13]\",\"email\":\"[EMAIL_6]\",\"phone\":\"[PHONE_6]\"}}\n[2026-10-03 16:30:45] production.INFO: midtrans.notification {\"order_id\":\"2610019IJ7YZ4T\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"640000.00\",\"transaction_time\":\"2026-10-03 16:30:45\"}\n[2026-10-04 11:11:09] production.INFO: midtrans.charge {\"order_id\":\"2610020KL8AB5U\",\"gross_amount\":230000,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"[NAME_14]\",\"last_name\":\"[NAME_15]\",\"email\":\"[EMAIL_7]\",\"phone\":\"[PHONE_7]\"}}\n[2026-10-04 11:12:30] production.INFO: midtrans.notification {\"order_id\":\"2610020KL8AB5U\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"230000.00\",\"transaction_time\":\"2026-10-04 11:12:21\"}\n[2026-10-04 16:30:46] production.INFO: midtrans.notification {\"order_id\":\"2610019IJ7YZ4T\",\"transaction_status\":\"expire\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"640000.00\",\"transaction_time\":\"2026-10-04 16:30:46\"}\n[2026-10-04 19:45:51] production.INFO: midtrans.charge {\"order_id\":\"2610021MN9CD6V\",\"gross_amount\":415000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"[NAME_16]\",\"last_name\":\"[NAME_17]\",\"email\":\"[EMAIL_8]\",\"phone\":\"[PHONE_8]\"}}\n[2026-10-04 20:02:13] production.INFO: midtrans.notification {\"order_id\":\"2610021MN9CD6V\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"415000.00\",\"transaction_time\":\"2026-10-04 20:02:04\"}\n[2026-10-05 08:00:22] production.INFO: midtrans.charge {\"order_id\":\"2610022OP1EF7W\",\"gross_amount\":99000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"[NAME_18]\",\"last_name\":\"[NAME_19]\",\"email\":\"[EMAIL_9]\",\"phone\":\"[PHONE_9]\"}}\n[2026-10-05 08:20:00] production.INFO: midtrans.notification {\"order_id\":\"2610022OP1EF7W\",\"transaction_status\":\"cancel\",\"payment_type\":\"qris\",\"gross_amount\":\"99000.00\",\"transaction_time\":\"2026-10-05 08:19:58\"}\n[2026-10-05 14:20:37] production.INFO: midtrans.charge {\"order_id\":\"2610023QR2GH8X\",\"gross_amount\":150000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"[NAME_20]\",\"last_name\":\"[NAME_21]\",\"email\":\"[EMAIL_10]\",\"phone\":\"[PHONE_10]\"}}\n[2026-10-05 14:20:38] production.INFO: midtrans.notification {\"order_id\":\"2610023QR2GH8X\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"150000.00\",\"transaction_time\":\"2026-10-05 14:20:38\"}\n[2026-10-06 09:09:15] production.INFO: midtrans.charge {\"order_id\":\"2610024ST3IJ9Y\",\"gross_amount\":88000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"[NAME_1]\",\"last_name\":\"[NAME_22]\",\"email\":\"[EMAIL_11]\",\"phone\":\"[PHONE_11]\"}}\n[2026-10-06 09:10:01] production.INFO: midtrans.notification {\"order_id\":\"2610024ST3IJ9Y\",\"transaction_status\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"88000.00\",\"transaction_time\":\"2026-10-06 09:09:52\"}\n[2026-10-06 10:10:28] production.INFO: midtrans.charge {\"order_id\":\"2610025UV4KL1Z\",\"gross_amount\":56000,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"[NAME_23]\",\"last_name\":\"[NAME_24]\",\"email\":\"[EMAIL_12]\",\"phone\":\"[PHONE_12]\"}}\n[2026-10-06 10:11:44] production.INFO: midtrans.notification {\"order_id\":\"2610025UV4KL1Z\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"56000.00\",\"transaction_time\":\"2026-10-06 10:11:35\"}\n[2026-10-06 12:00:03] production.WARNING: midtrans.notification order tidak dikenal {\"order_id\":\"TEST-0001\",\"[NOTE_2]\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"1.00\"}\n",
+   "vault": [
+    [
+     "[NAME_1]",
+     "Siti"
+    ],
+    [
+     "[NAME_2]",
+     "Rahayu"
+    ],
+    [
+     "[EMAIL_1]",
+     "siti.rahayu88@example.com"
+    ],
+    [
+     "[PHONE_1]",
+     "+6281298765432"
+    ],
+    [
+     "[NAME_3]",
+     "Budi"
+    ],
+    [
+     "[NAME_4]",
+     "Santoso"
+    ],
+    [
+     "[EMAIL_2]",
+     "budi.santoso@example.com"
+    ],
+    [
+     "[PHONE_2]",
+     "+6285711112222"
+    ],
+    [
+     "[NAME_5]",
+     "Maria Yosefina"
+    ],
+    [
+     "[NAME_6]",
+     "Gebze"
+    ],
+    [
+     "[EMAIL_3]",
+     "maria.gebze@example.com"
+    ],
+    [
+     "[PHONE_3]",
+     "+6287812345678"
+    ],
+    [
+     "[BANK_ACCOUNT_1]",
+     "70012000123456"
+    ],
+    [
+     "[NAME_7]",
+     "Andi"
+    ],
+    [
+     "[NAME_8]",
+     "Wijaya"
+    ],
+    [
+     "[EMAIL_4]",
+     "andi.wijaya@example.com"
+    ],
+    [
+     "[PHONE_4]",
+     "+6281234560001"
+    ],
+    [
+     "[NOTE_1]",
+     "9671012511870004"
+    ],
+    [
+     "[NAME_9]",
+     "Andi Wijaya"
+    ],
+    [
+     "[NAME_10]",
+     "Dewi"
+    ],
+    [
+     "[NAME_11]",
+     "Lestari"
+    ],
+    [
+     "[EMAIL_5]",
+     "dewi.lestari@example.com"
+    ],
+    [
+     "[PHONE_5]",
+     "+6289677778888"
+    ],
+    [
+     "[NAME_12]",
+     "Rina Kartika"
+    ],
+    [
+     "[NAME_13]",
+     "Sari"
+    ],
+    [
+     "[EMAIL_6]",
+     "rina.kartika@example.com"
+    ],
+    [
+     "[PHONE_6]",
+     "+6288123456789"
+    ],
+    [
+     "[NAME_14]",
+     "Yuliana"
+    ],
+    [
+     "[NAME_15]",
+     "Nawipa"
+    ],
+    [
+     "[EMAIL_7]",
+     "yuliana.nawipa@example.com"
+    ],
+    [
+     "[PHONE_7]",
+     "+6282198765432"
+    ],
+    [
+     "[NAME_16]",
+     "Hendra"
+    ],
+    [
+     "[NAME_17]",
+     "Gunawan"
+    ],
+    [
+     "[EMAIL_8]",
+     "hendra.gunawan@example.com"
+    ],
+    [
+     "[PHONE_8]",
+     "+62751812345"
+    ],
+    [
+     "[NAME_18]",
+     "Fitri"
+    ],
+    [
+     "[NAME_19]",
+     "Handayani"
+    ],
+    [
+     "[EMAIL_9]",
+     "fitri.h@example.com"
+    ],
+    [
+     "[PHONE_9]",
+     "+6285234567891"
+    ],
+    [
+     "[NAME_20]",
+     "Lukman"
+    ],
+    [
+     "[NAME_21]",
+     "Hakim"
+    ],
+    [
+     "[EMAIL_10]",
+     "lukman.hakim@example.com"
+    ],
+    [
+     "[PHONE_10]",
+     "+6281377778888"
+    ],
+    [
+     "[NAME_22]",
+     "Aminah"
+    ],
+    [
+     "[EMAIL_11]",
+     "siti.aminah@example.com"
+    ],
+    [
+     "[PHONE_11]",
+     "+6283812345679"
+    ],
+    [
+     "[NAME_23]",
+     "Agus"
+    ],
+    [
+     "[NAME_24]",
+     "Prasetyo"
+    ],
+    [
+     "[EMAIL_12]",
+     "agus.prasetyo@example.com"
+    ],
+    [
+     "[PHONE_12]",
+     "+6281912345678"
+    ],
+    [
+     "[NOTE_2]",
+     "transaction_status"
+    ]
+   ],
+   "partial": "[2026-10-01 08:12:40] production.INFO: midtrans.charge {\"order_id\":\"2610014KQ7ZB2M\",\"gross_amount\":185000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"S***\",\"last_name\":\"R***\",\"email\":\"s***@example.com\",\"phone\":\"0812****5432\"}}\n[2026-10-01 08:14:02] production.INFO: midtrans.notification {\"order_id\":\"2610014KQ7ZB2M\",\"transaction_status\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"185000.00\",\"transaction_time\":\"2026-10-01 08:13:55\"}\n[2026-10-01 09:40:31] production.INFO: midtrans.charge {\"order_id\":\"2610015AB3XY9P\",\"gross_amount\":92500,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"B***\",\"last_name\":\"S***\",\"email\":\"b***@example.com\",\"phone\":\"0857****2222\"}}\n[2026-10-01 09:41:10] production.INFO: midtrans.notification {\"order_id\":\"2610015AB3XY9P\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"92500.00\",\"transaction_time\":\"2026-10-01 09:41:02\"}\n[2026-10-02 10:05:12] production.INFO: midtrans.charge {\"order_id\":\"2610016CD4ZT1Q\",\"gross_amount\":310000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"M*** Y***\",\"last_name\":\"G***\",\"email\":\"m***@example.com\",\"phone\":\"0878****5678\"}}\n[2026-10-02 10:05:13] production.INFO: midtrans.va_created {\"order_id\":\"2610016CD4ZT1Q\",\"va_numbers\":[{\"bank\":\"bca\",\"va_number\":\"**********3456\"}]}\n[2026-10-02 11:47:20] production.INFO: midtrans.notification {\"order_id\":\"2610016CD4ZT1Q\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"310000.00\",\"transaction_time\":\"2026-10-02 11:47:11\"}\n[2026-10-02 13:22:05] production.INFO: midtrans.charge {\"order_id\":\"2610017EF5UV2R\",\"gross_amount\":1250000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"A***\",\"last_name\":\"W***\",\"email\":\"a***@example.com\",\"phone\":\"0812****0001\"}}\n[2026-10-02 13:22:06] production.INFO: midtrans.notification {\"order_id\":\"2610017EF5UV2R\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"1250000.00\",\"transaction_time\":\"2026-10-02 13:22:06\"}\n[2026-10-02 13:25:41] production.ERROR: Gagal verifikasi KTP untuk klaim garansi {\"order_id\":\"2610017EF5UV2R\",\"nik\":\"**************04\",\"nama\":\"A*** W***\",\"alasan\":\"foto KTP buram\"}\n[2026-10-03 07:55:18] production.INFO: midtrans.charge {\"order_id\":\"2610018GH6WX3S\",\"gross_amount\":75000,\"payment_type\":\"shopeepay\",\"customer_details\":{\"first_name\":\"D***\",\"last_name\":\"L***\",\"email\":\"d***@example.com\",\"phone\":\"0896****8888\"}}\n[2026-10-03 07:56:02] production.INFO: midtrans.notification {\"order_id\":\"2610018GH6WX3S\",\"transaction_status\":\"settlement\",\"payment_type\":\"shopeepay\",\"gross_amount\":\"75000.00\",\"transaction_time\":\"2026-10-03 07:55:58\"}\n[2026-10-03 09:30:00] production.INFO: midtrans.notification {\"order_id\":\"2610017EF5UV2R\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"1250000.00\",\"transaction_time\":\"2026-10-03 09:29:47\"}\n[2026-10-03 16:30:44] production.INFO: midtrans.charge {\"order_id\":\"2610019IJ7YZ4T\",\"gross_amount\":640000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"R*** K***\",\"last_name\":\"S***\",\"email\":\"r***@example.com\",\"phone\":\"0881****6789\"}}\n[2026-10-03 16:30:45] production.INFO: midtrans.notification {\"order_id\":\"2610019IJ7YZ4T\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"640000.00\",\"transaction_time\":\"2026-10-03 16:30:45\"}\n[2026-10-04 11:11:09] production.INFO: midtrans.charge {\"order_id\":\"2610020KL8AB5U\",\"gross_amount\":230000,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"Y***\",\"last_name\":\"N***\",\"email\":\"y***@example.com\",\"phone\":\"0821****5432\"}}\n[2026-10-04 11:12:30] production.INFO: midtrans.notification {\"order_id\":\"2610020KL8AB5U\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"230000.00\",\"transaction_time\":\"2026-10-04 11:12:21\"}\n[2026-10-04 16:30:46] production.INFO: midtrans.notification {\"order_id\":\"2610019IJ7YZ4T\",\"transaction_status\":\"expire\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"640000.00\",\"transaction_time\":\"2026-10-04 16:30:46\"}\n[2026-10-04 19:45:51] production.INFO: midtrans.charge {\"order_id\":\"2610021MN9CD6V\",\"gross_amount\":415000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"H***\",\"last_name\":\"G***\",\"email\":\"h***@example.com\",\"phone\":\"0751***2345\"}}\n[2026-10-04 20:02:13] production.INFO: midtrans.notification {\"order_id\":\"2610021MN9CD6V\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"415000.00\",\"transaction_time\":\"2026-10-04 20:02:04\"}\n[2026-10-05 08:00:22] production.INFO: midtrans.charge {\"order_id\":\"2610022OP1EF7W\",\"gross_amount\":99000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"F***\",\"last_name\":\"H***\",\"email\":\"f***@example.com\",\"phone\":\"0852****7891\"}}\n[2026-10-05 08:20:00] production.INFO: midtrans.notification {\"order_id\":\"2610022OP1EF7W\",\"transaction_status\":\"cancel\",\"payment_type\":\"qris\",\"gross_amount\":\"99000.00\",\"transaction_time\":\"2026-10-05 08:19:58\"}\n[2026-10-05 14:20:37] production.INFO: midtrans.charge {\"order_id\":\"2610023QR2GH8X\",\"gross_amount\":150000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"L***\",\"last_name\":\"H***\",\"email\":\"l***@example.com\",\"phone\":\"0813****8888\"}}\n[2026-10-05 14:20:38] production.INFO: midtrans.notification {\"order_id\":\"2610023QR2GH8X\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"150000.00\",\"transaction_time\":\"2026-10-05 14:20:38\"}\n[2026-10-06 09:09:15] production.INFO: midtrans.charge {\"order_id\":\"2610024ST3IJ9Y\",\"gross_amount\":88000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"S***\",\"last_name\":\"A***\",\"email\":\"s***@example.com\",\"phone\":\"0838****5679\"}}\n[2026-10-06 09:10:01] production.INFO: midtrans.notification {\"order_id\":\"2610024ST3IJ9Y\",\"transaction_status\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"88000.00\",\"transaction_time\":\"2026-10-06 09:09:52\"}\n[2026-10-06 10:10:28] production.INFO: midtrans.charge {\"order_id\":\"2610025UV4KL1Z\",\"gross_amount\":56000,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"A***\",\"last_name\":\"P***\",\"email\":\"a***@example.com\",\"phone\":\"0819****5678\"}}\n[2026-10-06 10:11:44] production.INFO: midtrans.notification {\"order_id\":\"2610025UV4KL1Z\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"56000.00\",\"transaction_time\":\"2026-10-06 10:11:35\"}\n[2026-10-06 12:00:03] production.WARNING: midtrans.notification order tidak dikenal {\"order_id\":\"TEST-0001\",\"****************us\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"1.00\"}\n"
+  },
+  {
+   "text": "id,nama,nik,no_hp,kota,total_belanja\n1,Budi Santoso,3201011508950001,0812-3456-7890,Bogor,1250000\n2,Siti Aminah,3276015508030002,+62 857 1111 2222,Depok,430000\n3,Andi Wijaya,3171012003880003,0813-9999-0000,Jakarta Pusat,89000\n4,Budi Santoso,3201011508950001,081234567890,Bogor,500000\n5,Dewi Lestari,3578014607910004,0838-1234-5678,Surabaya,2100000\n6,Siti Aminah,3276015508030002,6285711112222,Depok,75000\n",
+   "matches": [
+    [
+     "NAME",
+     null,
+     39,
+     51,
+     "Budi Santoso"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     52,
+     68,
+     "3201011508950001"
+    ],
+    [
+     "PHONE",
+     null,
+     69,
+     83,
+     "0812-3456-7890"
+    ],
+    [
+     "NAME",
+     null,
+     100,
+     111,
+     "Siti Aminah"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     112,
+     128,
+     "3276015508030002"
+    ],
+    [
+     "PHONE",
+     null,
+     129,
+     146,
+     "+62 857 1111 2222"
+    ],
+    [
+     "NAME",
+     null,
+     162,
+     173,
+     "Andi Wijaya"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     174,
+     190,
+     "3171012003880003"
+    ],
+    [
+     "PHONE",
+     null,
+     191,
+     205,
+     "0813-9999-0000"
+    ],
+    [
+     "NAME",
+     null,
+     228,
+     240,
+     "Budi Santoso"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     241,
+     257,
+     "3201011508950001"
+    ],
+    [
+     "PHONE",
+     null,
+     258,
+     270,
+     "081234567890"
+    ],
+    [
+     "NAME",
+     null,
+     286,
+     298,
+     "Dewi Lestari"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     299,
+     315,
+     "3578014607910004"
+    ],
+    [
+     "PHONE",
+     null,
+     316,
+     330,
+     "0838-1234-5678"
+    ],
+    [
+     "NAME",
+     null,
+     350,
+     361,
+     "Siti Aminah"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     362,
+     378,
+     "3276015508030002"
+    ],
+    [
+     "PHONE",
+     null,
+     379,
+     392,
+     "6285711112222"
+    ]
+   ],
+   "placeholder": "id,nama,nik,no_hp,kota,total_belanja\n1,[NAME_1],[NOTE_1],[PHONE_1],Bogor,1250000\n2,[NAME_2],[NOTE_2],[PHONE_2],Depok,430000\n3,[NAME_3],[NOTE_3],[PHONE_3],Jakarta Pusat,89000\n4,[NAME_1],[NOTE_1],[PHONE_1],Bogor,500000\n5,[NAME_4],[NOTE_4],[PHONE_4],Surabaya,2100000\n6,[NAME_2],[NOTE_2],[PHONE_2],Depok,75000\n",
+   "vault": [
+    [
+     "[NAME_1]",
+     "Budi Santoso"
+    ],
+    [
+     "[NOTE_1]",
+     "3201011508950001"
+    ],
+    [
+     "[PHONE_1]",
+     "0812-3456-7890"
+    ],
+    [
+     "[NAME_2]",
+     "Siti Aminah"
+    ],
+    [
+     "[NOTE_2]",
+     "3276015508030002"
+    ],
+    [
+     "[PHONE_2]",
+     "+62 857 1111 2222"
+    ],
+    [
+     "[NAME_3]",
+     "Andi Wijaya"
+    ],
+    [
+     "[NOTE_3]",
+     "3171012003880003"
+    ],
+    [
+     "[PHONE_3]",
+     "0813-9999-0000"
+    ],
+    [
+     "[NAME_4]",
+     "Dewi Lestari"
+    ],
+    [
+     "[NOTE_4]",
+     "3578014607910004"
+    ],
+    [
+     "[PHONE_4]",
+     "0838-1234-5678"
+    ]
+   ],
+   "partial": "id,nama,nik,no_hp,kota,total_belanja\n1,B*** S***,**************01,0812****7890,Bogor,1250000\n2,S*** A***,**************02,0857****2222,Depok,430000\n3,A*** W***,**************03,0813****0000,Jakarta Pusat,89000\n4,B*** S***,**************01,0812****7890,Bogor,500000\n5,D*** L***,**************04,0838****5678,Surabaya,2100000\n6,S*** A***,**************02,0857****2222,Depok,75000\n"
+  },
+  {
+   "text": "node:test",
+   "matches": [],
+   "placeholder": "node:test",
+   "vault": [],
+   "partial": "node:test"
+  },
+  {
+   "text": "node:assert/strict",
+   "matches": [],
+   "placeholder": "node:assert/strict",
+   "vault": [],
+   "partial": "node:assert/strict"
+  },
+  {
+   "text": "ai",
+   "matches": [],
+   "placeholder": "ai",
+   "vault": [],
+   "partial": "ai"
+  },
+  {
+   "text": "ai/test",
+   "matches": [],
+   "placeholder": "ai/test",
+   "vault": [],
+   "partial": "ai/test"
+  },
+  {
+   "text": "ai-v6",
+   "matches": [],
+   "placeholder": "ai-v6",
+   "vault": [],
+   "partial": "ai-v6"
+  },
+  {
+   "text": "ai-v6/test",
+   "matches": [],
+   "placeholder": "ai-v6/test",
+   "vault": [],
+   "partial": "ai-v6/test"
+  },
+  {
+   "text": "@ai-sdk/provider",
+   "matches": [],
+   "placeholder": "@ai-sdk/provider",
+   "vault": [],
+   "partial": "@ai-sdk/provider"
+  },
+  {
+   "text": "../src/ai-sdk.ts",
+   "matches": [],
+   "placeholder": "../src/ai-sdk.ts",
+   "vault": [],
+   "partial": "../src/ai-sdk.ts"
+  },
+  {
+   "text": "Nama: Budi Santoso, NIK 3201011508950001, HP 0812-3456-7890. Minta refund.",
+   "matches": [
+    [
+     "NAME",
+     null,
+     6,
+     18,
+     "Budi Santoso"
+    ],
+    [
+     "NIK",
+     null,
+     24,
+     40,
+     "3201011508950001"
+    ],
+    [
+     "PHONE",
+     null,
+     45,
+     59,
+     "0812-3456-7890"
+    ]
+   ],
+   "placeholder": "Nama: [NAME_1], NIK [NIK_1], HP [PHONE_1]. Minta refund.",
+   "vault": [
+    [
+     "[NAME_1]",
+     "Budi Santoso"
+    ],
+    [
+     "[NIK_1]",
+     "3201011508950001"
+    ],
+    [
+     "[PHONE_1]",
+     "0812-3456-7890"
+    ]
+   ],
+   "partial": "Nama: B*** S***, NIK 3201********0001, HP 0812****7890. Minta refund."
+  },
+  {
+   "text": "Budi Santoso",
+   "matches": [
+    [
+     "NAME",
+     null,
+     0,
+     12,
+     "Budi Santoso"
+    ]
+   ],
+   "placeholder": "[NAME_1]",
+   "vault": [
+    [
+     "[NAME_1]",
+     "Budi Santoso"
+    ]
+   ],
+   "partial": "B*** S***"
+  },
+  {
+   "text": "3201011508950001",
+   "matches": [
+    [
+     "NIK",
+     null,
+     0,
+     16,
+     "3201011508950001"
+    ]
+   ],
+   "placeholder": "[NIK_1]",
+   "vault": [
+    [
+     "[NIK_1]",
+     "3201011508950001"
+    ]
+   ],
+   "partial": "3201********0001"
+  },
+  {
+   "text": "3456-7890",
+   "matches": [],
+   "placeholder": "3456-7890",
+   "vault": [],
+   "partial": "3456-7890"
+  },
+  {
+   "text": "stop",
+   "matches": [],
+   "placeholder": "stop",
+   "vault": [],
+   "partial": "stop"
+  },
+  {
+   "text": "tool-calls",
+   "matches": [],
+   "placeholder": "tool-calls",
+   "vault": [],
+   "partial": "tool-calls"
+  },
+  {
+   "text": "stop",
+   "matches": [],
+   "placeholder": "stop",
+   "vault": [],
+   "partial": "stop"
+  },
+  {
+   "text": "AI SDK: the model sees placeholders, the app gets real values back",
+   "matches": [],
+   "placeholder": "AI SDK: the model sees placeholders, the app gets real values back",
+   "vault": [],
+   "partial": "AI SDK: the model sees placeholders, the app gets real values back"
+  },
+  {
+   "text": "text",
+   "matches": [],
+   "placeholder": "text",
+   "vault": [],
+   "partial": "text"
+  },
+  {
+   "text": "Refund untuk [NAME_1] ([PHONE_1]) diproses.",
+   "matches": [],
+   "placeholder": "Refund untuk [NAME_1] ([PHONE_1]) diproses.",
+   "vault": [],
+   "partial": "Refund untuk [NAME_1] ([PHONE_1]) diproses."
+  },
+  {
+   "text": "Kamu agen CS.",
+   "matches": [],
+   "placeholder": "Kamu agen CS.",
+   "vault": [],
+   "partial": "Kamu agen CS."
+  },
+  {
+   "text": "Refund untuk Budi Santoso (0812-3456-7890) diproses.",
+   "matches": [
+    [
+     "NAME",
+     null,
+     13,
+     25,
+     "Budi Santoso"
+    ],
+    [
+     "PHONE",
+     null,
+     27,
+     41,
+     "0812-3456-7890"
+    ]
+   ],
+   "placeholder": "Refund untuk [NAME_1] ([PHONE_1]) diproses.",
+   "vault": [
+    [
+     "[NAME_1]",
+     "Budi Santoso"
+    ],
+    [
+     "[PHONE_1]",
+     "0812-3456-7890"
+    ]
+   ],
+   "partial": "Refund untuk B*** S*** (0812****7890) diproses."
+  },
+  {
+   "text": "counts only, never values",
+   "matches": [],
+   "placeholder": "counts only, never values",
+   "vault": [],
+   "partial": "counts only, never values"
+  },
+  {
+   "text": "AI SDK: streamed placeholders split across chunks are restored whole",
+   "matches": [],
+   "placeholder": "AI SDK: streamed placeholders split across chunks are restored whole",
+   "vault": [],
+   "partial": "AI SDK: streamed placeholders split across chunks are restored whole"
+  },
+  {
+   "text": "stream-start",
+   "matches": [],
+   "placeholder": "stream-start",
+   "vault": [],
+   "partial": "stream-start"
+  },
+  {
+   "text": "text-start",
+   "matches": [],
+   "placeholder": "text-start",
+   "vault": [],
+   "partial": "text-start"
+  },
+  {
+   "text": "0",
+   "matches": [],
+   "placeholder": "0",
+   "vault": [],
+   "partial": "0"
+  },
+  {
+   "text": "text-delta",
+   "matches": [],
+   "placeholder": "text-delta",
+   "vault": [],
+   "partial": "text-delta"
+  },
+  {
+   "text": "0",
+   "matches": [],
+   "placeholder": "0",
+   "vault": [],
+   "partial": "0"
+  },
+  {
+   "text": "Halo [NA",
+   "matches": [],
+   "placeholder": "Halo [NA",
+   "vault": [],
+   "partial": "Halo [NA"
+  },
+  {
+   "text": "text-delta",
+   "matches": [],
+   "placeholder": "text-delta",
+   "vault": [],
+   "partial": "text-delta"
+  },
+  {
+   "text": "0",
+   "matches": [],
+   "placeholder": "0",
+   "vault": [],
+   "partial": "0"
+  },
+  {
+   "text": "ME_1], NIK [NIK_",
+   "matches": [],
+   "placeholder": "ME_1], NIK [NIK_",
+   "vault": [],
+   "partial": "ME_1], NIK [NIK_"
+  },
+  {
+   "text": "text-delta",
+   "matches": [],
+   "placeholder": "text-delta",
+   "vault": [],
+   "partial": "text-delta"
+  },
+  {
+   "text": "0",
+   "matches": [],
+   "placeholder": "0",
+   "vault": [],
+   "partial": "0"
+  },
+  {
+   "text": "1] sudah dicek. [",
+   "matches": [],
+   "placeholder": "1] sudah dicek. [",
+   "vault": [],
+   "partial": "1] sudah dicek. ["
+  },
+  {
+   "text": "text-delta",
+   "matches": [],
+   "placeholder": "text-delta",
+   "vault": [],
+   "partial": "text-delta"
+  },
+  {
+   "text": "0",
+   "matches": [],
+   "placeholder": "0",
+   "vault": [],
+   "partial": "0"
+  },
+  {
+   "text": "PHONE_1",
+   "matches": [],
+   "placeholder": "PHONE_1",
+   "vault": [],
+   "partial": "PHONE_1"
+  },
+  {
+   "text": "text-end",
+   "matches": [],
+   "placeholder": "text-end",
+   "vault": [],
+   "partial": "text-end"
+  },
+  {
+   "text": "0",
+   "matches": [],
+   "placeholder": "0",
+   "vault": [],
+   "partial": "0"
+  },
+  {
+   "text": "finish",
+   "matches": [],
+   "placeholder": "finish",
+   "vault": [],
+   "partial": "finish"
+  },
+  {
+   "text": "",
+   "matches": [],
+   "placeholder": "",
+   "vault": [],
+   "partial": ""
+  },
+  {
+   "text": "Halo Budi Santoso, NIK 3201011508950001 sudah dicek. [PHONE_1",
+   "matches": [
+    [
+     "NAME",
+     null,
+     5,
+     17,
+     "Budi Santoso"
+    ],
+    [
+     "NIK",
+     null,
+     23,
+     39,
+     "3201011508950001"
+    ]
+   ],
+   "placeholder": "Halo [NAME_1], NIK [NIK_1] sudah dicek. [PHONE_1",
+   "vault": [
+    [
+     "[NAME_1]",
+     "Budi Santoso"
+    ],
+    [
+     "[NIK_1]",
+     "3201011508950001"
+    ]
+   ],
+   "partial": "Halo B*** S***, NIK 3201********0001 sudah dicek. [PHONE_1"
+  },
+  {
+   "text": "no chunk shows a piece of a placeholder",
+   "matches": [],
+   "placeholder": "no chunk shows a piece of a placeholder",
+   "vault": [],
+   "partial": "no chunk shows a piece of a placeholder"
+  },
+  {
+   "text": "AI SDK: tools run on real values, their results are masked on the next step",
+   "matches": [],
+   "placeholder": "AI SDK: tools run on real values, their results are masked on the next step",
+   "vault": [],
+   "partial": "AI SDK: tools run on real values, their results are masked on the next step"
+  },
+  {
+   "text": "tool-call",
+   "matches": [],
+   "placeholder": "tool-call",
+   "vault": [],
+   "partial": "tool-call"
+  },
+  {
+   "text": "c1",
+   "matches": [],
+   "placeholder": "c1",
+   "vault": [],
+   "partial": "c1"
+  },
+  {
+   "text": "cariPelanggan",
+   "matches": [],
+   "placeholder": "cariPelanggan",
+   "vault": [],
+   "partial": "cariPelanggan"
+  },
+  {
+   "text": "{\"nik\":\"[NIK_1]\"}",
+   "matches": [
+    [
+     "CUSTOM",
+     "NOTE",
+     8,
+     15,
+     "[NIK_1]"
+    ]
+   ],
+   "placeholder": "{\"nik\":\"[NOTE_1]\"}",
+   "vault": [
+    [
+     "[NOTE_1]",
+     "[NIK_1]"
+    ]
+   ],
+   "partial": "{\"nik\":\"*****1]\"}"
+  },
+  {
+   "text": "tool-calls",
+   "matches": [],
+   "placeholder": "tool-calls",
+   "vault": [],
+   "partial": "tool-calls"
+  },
+  {
+   "text": "text",
+   "matches": [],
+   "placeholder": "text",
+   "vault": [],
+   "partial": "text"
+  },
+  {
+   "text": "Alamat [NAME_1]: [ADDRESS_1]",
+   "matches": [],
+   "placeholder": "Alamat [NAME_1]: [ADDRESS_1]",
+   "vault": [],
+   "partial": "Alamat [NAME_1]: [ADDRESS_1]"
+  },
+  {
+   "text": "object",
+   "matches": [],
+   "placeholder": "object",
+   "vault": [],
+   "partial": "object"
+  },
+  {
+   "text": "string",
+   "matches": [],
+   "placeholder": "string",
+   "vault": [],
+   "partial": "string"
+  },
+  {
+   "text": "nik",
+   "matches": [],
+   "placeholder": "nik",
+   "vault": [],
+   "partial": "nik"
+  },
+  {
+   "text": "Budi Santoso",
+   "matches": [
+    [
+     "NAME",
+     null,
+     0,
+     12,
+     "Budi Santoso"
+    ]
+   ],
+   "placeholder": "[NAME_1]",
+   "vault": [
+    [
+     "[NAME_1]",
+     "Budi Santoso"
+    ]
+   ],
+   "partial": "B*** S***"
+  },
+  {
+   "text": "Jl. Mawar No. 5 RT 03/RW 07, Cibinong",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     27,
+     "Jl. Mawar No. 5 RT 03/RW 07"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1], Cibinong",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Jl. Mawar No. 5 RT 03/RW 07"
+    ]
+   ],
+   "partial": "Jl. ***, Cibinong"
+  },
+  {
+   "text": "3201011508950001",
+   "matches": [
+    [
+     "NIK",
+     null,
+     0,
+     16,
+     "3201011508950001"
+    ]
+   ],
+   "placeholder": "[NIK_1]",
+   "vault": [
+    [
+     "[NIK_1]",
+     "3201011508950001"
+    ]
+   ],
+   "partial": "3201********0001"
+  },
+  {
+   "text": "the tool got the real NIK",
+   "matches": [],
+   "placeholder": "the tool got the real NIK",
+   "vault": [],
+   "partial": "the tool got the real NIK"
+  },
+  {
+   "text": "Mawar",
+   "matches": [],
+   "placeholder": "Mawar",
+   "vault": [],
+   "partial": "Mawar"
+  },
+  {
+   "text": "the same NIK keeps its placeholder across steps, even stored as a number",
+   "matches": [],
+   "placeholder": "the same NIK keeps its placeholder across steps, even stored as a number",
+   "vault": [],
+   "partial": "the same NIK keeps its placeholder across steps, even stored as a number"
+  },
+  {
+   "text": "Alamat Budi Santoso: Jl. Mawar No. 5 RT 03/RW 07, Cibinong",
+   "matches": [
+    [
+     "NAME",
+     null,
+     7,
+     19,
+     "Budi Santoso"
+    ],
+    [
+     "ADDRESS",
+     null,
+     21,
+     48,
+     "Jl. Mawar No. 5 RT 03/RW 07"
+    ]
+   ],
+   "placeholder": "Alamat [NAME_1]: [ADDRESS_1], Cibinong",
+   "vault": [
+    [
+     "[NAME_1]",
+     "Budi Santoso"
+    ],
+    [
+     "[ADDRESS_1]",
+     "Jl. Mawar No. 5 RT 03/RW 07"
+    ]
+   ],
+   "partial": "Alamat B*** S***: Jl. ***, Cibinong"
+  },
+  {
+   "text": "AI SDK: streamed tool input is restored as valid JSON",
+   "matches": [],
+   "placeholder": "AI SDK: streamed tool input is restored as valid JSON",
+   "vault": [],
+   "partial": "AI SDK: streamed tool input is restored as valid JSON"
+  },
+  {
+   "text": "Budi \"Bud\" Santoso",
+   "matches": [],
+   "placeholder": "Budi \"Bud\" Santoso",
+   "vault": [],
+   "partial": "Budi \"Bud\" Santoso"
+  },
+  {
+   "text": "tool-input-start",
+   "matches": [],
+   "placeholder": "tool-input-start",
+   "vault": [],
+   "partial": "tool-input-start"
+  },
+  {
+   "text": "t1",
+   "matches": [],
+   "placeholder": "t1",
+   "vault": [],
+   "partial": "t1"
+  },
+  {
+   "text": "kirim",
+   "matches": [],
+   "placeholder": "kirim",
+   "vault": [],
+   "partial": "kirim"
+  },
+  {
+   "text": "tool-input-delta",
+   "matches": [],
+   "placeholder": "tool-input-delta",
+   "vault": [],
+   "partial": "tool-input-delta"
+  },
+  {
+   "text": "t1",
+   "matches": [],
+   "placeholder": "t1",
+   "vault": [],
+   "partial": "t1"
+  },
+  {
+   "text": "{\"nama\":\"[NAM",
+   "matches": [],
+   "placeholder": "{\"nama\":\"[NAM",
+   "vault": [],
+   "partial": "{\"nama\":\"[NAM"
+  },
+  {
+   "text": "tool-input-delta",
+   "matches": [],
+   "placeholder": "tool-input-delta",
+   "vault": [],
+   "partial": "tool-input-delta"
+  },
+  {
+   "text": "t1",
+   "matches": [],
+   "placeholder": "t1",
+   "vault": [],
+   "partial": "t1"
+  },
+  {
+   "text": "E_1]\"}",
+   "matches": [],
+   "placeholder": "E_1]\"}",
+   "vault": [],
+   "partial": "E_1]\"}"
+  },
+  {
+   "text": "tool-input-end",
+   "matches": [],
+   "placeholder": "tool-input-end",
+   "vault": [],
+   "partial": "tool-input-end"
+  },
+  {
+   "text": "t1",
+   "matches": [],
+   "placeholder": "t1",
+   "vault": [],
+   "partial": "t1"
+  },
+  {
+   "text": "tool-call",
+   "matches": [],
+   "placeholder": "tool-call",
+   "vault": [],
+   "partial": "tool-call"
+  },
+  {
+   "text": "t1",
+   "matches": [],
+   "placeholder": "t1",
+   "vault": [],
+   "partial": "t1"
+  },
+  {
+   "text": "kirim",
+   "matches": [],
+   "placeholder": "kirim",
+   "vault": [],
+   "partial": "kirim"
+  },
+  {
+   "text": "{\"nama\":\"[NAME_1]\"}",
+   "matches": [],
+   "placeholder": "{\"nama\":\"[NAME_1]\"}",
+   "vault": [],
+   "partial": "{\"nama\":\"[NAME_1]\"}"
+  },
+  {
+   "text": "finish",
+   "matches": [],
+   "placeholder": "finish",
+   "vault": [],
+   "partial": "finish"
+  },
+  {
+   "text": "tool-calls",
+   "matches": [],
+   "placeholder": "tool-calls",
+   "vault": [],
+   "partial": "tool-calls"
+  },
+  {
+   "text": "object",
+   "matches": [],
+   "placeholder": "object",
+   "vault": [],
+   "partial": "object"
+  },
+  {
+   "text": "string",
+   "matches": [],
+   "placeholder": "string",
+   "vault": [],
+   "partial": "string"
+  },
+  {
+   "text": "tool-input-delta",
+   "matches": [],
+   "placeholder": "tool-input-delta",
+   "vault": [],
+   "partial": "tool-input-delta"
+  },
+  {
+   "text": "tool-call",
+   "matches": [],
+   "placeholder": "tool-call",
+   "vault": [],
+   "partial": "tool-call"
+  },
+  {
+   "text": "Santoso",
+   "matches": [],
+   "placeholder": "Santoso",
+   "vault": [],
+   "partial": "Santoso"
+  },
+  {
+   "text": "",
+   "matches": [],
+   "placeholder": "",
+   "vault": [],
+   "partial": ""
+  },
+  {
+   "text": "AI SDK: exclude and allow pass through, reasoning stays as the model wrote it",
+   "matches": [],
+   "placeholder": "AI SDK: exclude and allow pass through, reasoning stays as the model wrote it",
+   "vault": [],
+   "partial": "AI SDK: exclude and allow pass through, reasoning stays as the model wrote it"
+  },
+  {
+   "text": "reasoning",
+   "matches": [],
+   "placeholder": "reasoning",
+   "vault": [],
+   "partial": "reasoning"
+  },
+  {
+   "text": "User [NAME_1] earns a lot.",
+   "matches": [],
+   "placeholder": "User [NAME_1] earns a lot.",
+   "vault": [],
+   "partial": "User [NAME_1] earns a lot."
+  },
+  {
+   "text": "text",
+   "matches": [],
+   "placeholder": "text",
+   "vault": [],
+   "partial": "text"
+  },
+  {
+   "text": "Oke [NAME_1].",
+   "matches": [],
+   "placeholder": "Oke [NAME_1].",
+   "vault": [],
+   "partial": "Oke [NAME_1]."
+  },
+  {
+   "text": "FINANCIAL",
+   "matches": [],
+   "placeholder": "FINANCIAL",
+   "vault": [],
+   "partial": "FINANCIAL"
+  },
+  {
+   "text": "0800-1-500-888",
+   "matches": [],
+   "placeholder": "0800-1-500-888",
+   "vault": [],
+   "partial": "0800-1-500-888"
+  },
+  {
+   "text": "Nama: Budi Santoso, gaji: Rp15.000.000. Hubungi CS 0800-1-500-888.",
+   "matches": [
+    [
+     "NAME",
+     null,
+     6,
+     18,
+     "Budi Santoso"
+    ],
+    [
+     "FINANCIAL",
+     null,
+     26,
+     65,
+     "Rp15.000.000. Hubungi CS 0800-1-500-888"
+    ]
+   ],
+   "placeholder": "Nama: [NAME_1], gaji: [FINANCIAL_1].",
+   "vault": [
+    [
+     "[NAME_1]",
+     "Budi Santoso"
+    ],
+    [
+     "[FINANCIAL_1]",
+     "Rp15.000.000. Hubungi CS 0800-1-500-888"
+    ]
+   ],
+   "partial": "Nama: B*** S***, gaji: ***."
+  },
+  {
+   "text": "Rp15.000.000",
+   "matches": [],
+   "placeholder": "Rp15.000.000",
+   "vault": [],
+   "partial": "Rp15.000.000"
+  },
+  {
+   "text": "0800-1-500-888",
+   "matches": [],
+   "placeholder": "0800-1-500-888",
+   "vault": [],
+   "partial": "0800-1-500-888"
+  },
+  {
+   "text": "Budi",
+   "matches": [],
+   "placeholder": "Budi",
+   "vault": [],
+   "partial": "Budi"
+  },
+  {
+   "text": "Oke Budi Santoso.",
+   "matches": [
+    [
+     "NAME",
+     null,
+     4,
+     16,
+     "Budi Santoso"
+    ]
+   ],
+   "placeholder": "Oke [NAME_1].",
+   "vault": [
+    [
+     "[NAME_1]",
+     "Budi Santoso"
+    ]
+   ],
+   "partial": "Oke B*** S***."
+  },
+  {
+   "text": "User [NAME_1] earns a lot.",
+   "matches": [],
+   "placeholder": "User [NAME_1] earns a lot.",
+   "vault": [],
+   "partial": "User [NAME_1] earns a lot."
+  },
+  {
+   "text": "AI SDK: structured output gets JSON-escaped values",
+   "matches": [],
+   "placeholder": "AI SDK: structured output gets JSON-escaped values",
+   "vault": [],
+   "partial": "AI SDK: structured output gets JSON-escaped values"
+  },
+  {
+   "text": "text",
+   "matches": [],
+   "placeholder": "text",
+   "vault": [],
+   "partial": "text"
+  },
+  {
+   "text": "{\"nama\":\"[NAME_1]\"}",
+   "matches": [],
+   "placeholder": "{\"nama\":\"[NAME_1]\"}",
+   "vault": [],
+   "partial": "{\"nama\":\"[NAME_1]\"}"
+  },
+  {
+   "text": "Nama: Budi \"Bud\" Santoso",
+   "matches": [
+    [
+     "NAME",
+     null,
+     6,
+     24,
+     "Budi \"Bud\" Santoso"
+    ]
+   ],
+   "placeholder": "Nama: [NAME_1]",
+   "vault": [
+    [
+     "[NAME_1]",
+     "Budi \"Bud\" Santoso"
+    ]
+   ],
+   "partial": "Nama: B*** \"*** S***"
+  },
+  {
+   "text": "object",
+   "matches": [],
+   "placeholder": "object",
+   "vault": [],
+   "partial": "object"
+  },
+  {
+   "text": "string",
+   "matches": [],
+   "placeholder": "string",
+   "vault": [],
+   "partial": "string"
+  },
+  {
+   "text": "json",
+   "matches": [],
+   "placeholder": "json",
+   "vault": [],
+   "partial": "json"
+  },
+  {
+   "text": "Budi \"Bud\" Santoso",
+   "matches": [],
+   "placeholder": "Budi \"Bud\" Santoso",
+   "vault": [],
+   "partial": "Budi \"Bud\" Santoso"
+  },
+  {
+   "text": "AI SDK 6: the same middleware with specificationVersion v3",
+   "matches": [],
+   "placeholder": "AI SDK 6: the same middleware with specificationVersion v3",
+   "vault": [],
+   "partial": "AI SDK 6: the same middleware with specificationVersion v3"
+  },
+  {
+   "text": "text",
+   "matches": [],
+   "placeholder": "text",
+   "vault": [],
+   "partial": "text"
+  },
+  {
+   "text": "Halo [NAME_1].",
+   "matches": [],
+   "placeholder": "Halo [NAME_1].",
+   "vault": [],
+   "partial": "Halo [NAME_1]."
+  },
+  {
+   "text": "v3",
+   "matches": [],
+   "placeholder": "v3",
+   "vault": [],
+   "partial": "v3"
+  },
+  {
+   "text": "Halo Budi Santoso.",
+   "matches": [
+    [
+     "NAME",
+     null,
+     5,
+     17,
+     "Budi Santoso"
+    ]
+   ],
+   "placeholder": "Halo [NAME_1].",
+   "vault": [
+    [
+     "[NAME_1]",
+     "Budi Santoso"
+    ]
+   ],
+   "partial": "Halo B*** S***."
+  },
+  {
+   "text": "node:test",
+   "matches": [],
+   "placeholder": "node:test",
+   "vault": [],
+   "partial": "node:test"
+  },
+  {
+   "text": "node:assert/strict",
+   "matches": [],
+   "placeholder": "node:assert/strict",
+   "vault": [],
+   "partial": "node:assert/strict"
+  },
+  {
+   "text": "../src/wilayah.ts",
+   "matches": [],
+   "placeholder": "../src/wilayah.ts",
+   "vault": [],
+   "partial": "../src/wilayah.ts"
+  },
+  {
+   "text": "a full address with commas and level words",
+   "matches": [],
+   "placeholder": "a full address with commas and level words",
+   "vault": [],
+   "partial": "a full address with commas and level words"
+  },
+  {
+   "text": "Jl. Melati No. 12 RT 003/RW 005, Kel. Cempaka Putih Timur, Kec. Cempaka Putih, Jakarta Pusat 10510",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     31,
+     "Jl. Melati No. 12 RT 003/RW 005"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1], Kel. Cempaka Putih Timur, Kec. Cempaka Putih, Jakarta Pusat 10510",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Jl. Melati No. 12 RT 003/RW 005"
+    ]
+   ],
+   "partial": "Jl. ***, Kel. Cempaka Putih Timur, Kec. Cempaka Putih, Jakarta Pusat 10510"
+  },
+  {
+   "text": "31.71.05.1001",
+   "matches": [],
+   "placeholder": "31.71.05.1001",
+   "vault": [],
+   "partial": "31.71.05.1001"
+  },
+  {
+   "text": "high",
+   "matches": [],
+   "placeholder": "high",
+   "vault": [],
+   "partial": "high"
+  },
+  {
+   "text": "Jl. Melati No. 12",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     17,
+     "Jl. Melati No. 12"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1]",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Jl. Melati No. 12"
+    ]
+   ],
+   "partial": "Jl. ***"
+  },
+  {
+   "text": "003",
+   "matches": [],
+   "placeholder": "003",
+   "vault": [],
+   "partial": "003"
+  },
+  {
+   "text": "005",
+   "matches": [],
+   "placeholder": "005",
+   "vault": [],
+   "partial": "005"
+  },
+  {
+   "text": "10510",
+   "matches": [],
+   "placeholder": "10510",
+   "vault": [],
+   "partial": "10510"
+  },
+  {
+   "text": "Cempaka Putih Timur",
+   "matches": [],
+   "placeholder": "Cempaka Putih Timur",
+   "vault": [],
+   "partial": "Cempaka Putih Timur"
+  },
+  {
+   "text": "Cempaka Putih",
+   "matches": [],
+   "placeholder": "Cempaka Putih",
+   "vault": [],
+   "partial": "Cempaka Putih"
+  },
+  {
+   "text": "Kota Administrasi Jakarta Pusat",
+   "matches": [],
+   "placeholder": "Kota Administrasi Jakarta Pusat",
+   "vault": [],
+   "partial": "Kota Administrasi Jakarta Pusat"
+  },
+  {
+   "text": "31",
+   "matches": [],
+   "placeholder": "31",
+   "vault": [],
+   "partial": "31"
+  },
+  {
+   "text": "provinsi",
+   "matches": [],
+   "placeholder": "provinsi",
+   "vault": [],
+   "partial": "provinsi"
+  },
+  {
+   "text": "Jl. Melati No. 12, RT 003/RW 005, Kelurahan Cempaka Putih Timur, Kecamatan Cempaka Putih, Kota Administrasi Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10510",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     32,
+     "Jl. Melati No. 12, RT 003/RW 005"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1], Kelurahan Cempaka Putih Timur, Kecamatan Cempaka Putih, Kota Administrasi Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10510",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Jl. Melati No. 12, RT 003/RW 005"
+    ]
+   ],
+   "partial": "Jl. ***, Kelurahan Cempaka Putih Timur, Kecamatan Cempaka Putih, Kota Administrasi Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10510"
+  },
+  {
+   "text": "lowercase, no commas, RT/RW written short",
+   "matches": [],
+   "placeholder": "lowercase, no commas, RT/RW written short",
+   "vault": [],
+   "partial": "lowercase, no commas, RT/RW written short"
+  },
+  {
+   "text": "jl margonda raya no 100 rt 3/5 kemiri muka beji depok 16423",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     23,
+     "jl margonda raya no 100"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1] rt 3/5 kemiri muka beji depok 16423",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "jl margonda raya no 100"
+    ]
+   ],
+   "partial": "jl *** rt 3/5 kemiri muka beji depok 16423"
+  },
+  {
+   "text": "32.76.06.1004",
+   "matches": [],
+   "placeholder": "32.76.06.1004",
+   "vault": [],
+   "partial": "32.76.06.1004"
+  },
+  {
+   "text": "high",
+   "matches": [],
+   "placeholder": "high",
+   "vault": [],
+   "partial": "high"
+  },
+  {
+   "text": "jl margonda raya no 100",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     23,
+     "jl margonda raya no 100"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1]",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "jl margonda raya no 100"
+    ]
+   ],
+   "partial": "jl ***"
+  },
+  {
+   "text": "003",
+   "matches": [],
+   "placeholder": "003",
+   "vault": [],
+   "partial": "003"
+  },
+  {
+   "text": "005",
+   "matches": [],
+   "placeholder": "005",
+   "vault": [],
+   "partial": "005"
+  },
+  {
+   "text": "16423",
+   "matches": [],
+   "placeholder": "16423",
+   "vault": [],
+   "partial": "16423"
+  },
+  {
+   "text": "jl. melati wuwur gabus pati 59173",
+   "matches": [],
+   "placeholder": "jl. melati wuwur gabus pati 59173",
+   "vault": [],
+   "partial": "jl. melati wuwur gabus pati 59173"
+  },
+  {
+   "text": "33.18.11.2001",
+   "matches": [],
+   "placeholder": "33.18.11.2001",
+   "vault": [],
+   "partial": "33.18.11.2001"
+  },
+  {
+   "text": "capitals and abbreviations as on a KTP",
+   "matches": [],
+   "placeholder": "capitals and abbreviations as on a KTP",
+   "vault": [],
+   "partial": "capitals and abbreviations as on a KTP"
+  },
+  {
+   "text": "alamat: ds. ciherang kec. pacet kab. cianjur",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     8,
+     44,
+     "ds. ciherang kec. pacet kab. cianjur"
+    ]
+   ],
+   "placeholder": "alamat: [ADDRESS_1]",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "ds. ciherang kec. pacet kab. cianjur"
+    ]
+   ],
+   "partial": "alamat: ds. ***"
+  },
+  {
+   "text": "32.03.10.2001",
+   "matches": [],
+   "placeholder": "32.03.10.2001",
+   "vault": [],
+   "partial": "32.03.10.2001"
+  },
+  {
+   "text": "Gg. Mawar 3, Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor, Jabar",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     11,
+     "Gg. Mawar 3"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1], Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor, Jabar",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Gg. Mawar 3"
+    ]
+   ],
+   "partial": "Gg. ***, Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor, Jabar"
+  },
+  {
+   "text": "32.01.16.2013",
+   "matches": [],
+   "placeholder": "32.01.16.2013",
+   "vault": [],
+   "partial": "32.01.16.2013"
+  },
+  {
+   "text": "Dsn. Krajan RT 2 RW 1 Ds. Sumberejo Kec. Batu Kota Batu",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     21,
+     "Dsn. Krajan RT 2 RW 1"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1] Ds. Sumberejo Kec. Batu Kota Batu",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Dsn. Krajan RT 2 RW 1"
+    ]
+   ],
+   "partial": "Dsn. *** Ds. Sumberejo Kec. Batu Kota Batu"
+  },
+  {
+   "text": "35.79.01.2005",
+   "matches": [],
+   "placeholder": "35.79.01.2005",
+   "vault": [],
+   "partial": "35.79.01.2005"
+  },
+  {
+   "text": "Dsn. Krajan",
+   "matches": [],
+   "placeholder": "Dsn. Krajan",
+   "vault": [],
+   "partial": "Dsn. Krajan"
+  },
+  {
+   "text": "short names for Jakarta, Tangerang Selatan, and provinces",
+   "matches": [],
+   "placeholder": "short names for Jakarta, Tangerang Selatan, and provinces",
+   "vault": [],
+   "partial": "short names for Jakarta, Tangerang Selatan, and provinces"
+  },
+  {
+   "text": "Kebayoran Baru, Jaksel",
+   "matches": [],
+   "placeholder": "Kebayoran Baru, Jaksel",
+   "vault": [],
+   "partial": "Kebayoran Baru, Jaksel"
+  },
+  {
+   "text": "31.74.07",
+   "matches": [],
+   "placeholder": "31.74.07",
+   "vault": [],
+   "partial": "31.74.07"
+  },
+  {
+   "text": "Pondok Aren, Tangsel",
+   "matches": [],
+   "placeholder": "Pondok Aren, Tangsel",
+   "vault": [],
+   "partial": "Pondok Aren, Tangsel"
+  },
+  {
+   "text": "36.74.03",
+   "matches": [],
+   "placeholder": "36.74.03",
+   "vault": [],
+   "partial": "36.74.03"
+  },
+  {
+   "text": "Medan Baru, Medan, Sumut",
+   "matches": [],
+   "placeholder": "Medan Baru, Medan, Sumut",
+   "vault": [],
+   "partial": "Medan Baru, Medan, Sumut"
+  },
+  {
+   "text": "12.71.17",
+   "matches": [],
+   "placeholder": "12.71.17",
+   "vault": [],
+   "partial": "12.71.17"
+  },
+  {
+   "text": "Depok, Sleman, DIY",
+   "matches": [],
+   "placeholder": "Depok, Sleman, DIY",
+   "vault": [],
+   "partial": "Depok, Sleman, DIY"
+  },
+  {
+   "text": "34.04.07",
+   "matches": [],
+   "placeholder": "34.04.07",
+   "vault": [],
+   "partial": "34.04.07"
+  },
+  {
+   "text": "Depok the kecamatan in Sleman, not Kota Depok",
+   "matches": [],
+   "placeholder": "Depok the kecamatan in Sleman, not Kota Depok",
+   "vault": [],
+   "partial": "Depok the kecamatan in Sleman, not Kota Depok"
+  },
+  {
+   "text": "\"Kota\" and \"Kab.\" tell the kota from the kabupaten; without them it is a guess",
+   "matches": [],
+   "placeholder": "\"Kota\" and \"Kab.\" tell the kota from the kabupaten; without them it is a guess",
+   "vault": [],
+   "partial": "\"Kota\" and \"Kab.\" tell the kota from the kabupaten; without them it is a guess"
+  },
+  {
+   "text": "Kota Bogor",
+   "matches": [],
+   "placeholder": "Kota Bogor",
+   "vault": [],
+   "partial": "Kota Bogor"
+  },
+  {
+   "text": "32.71",
+   "matches": [],
+   "placeholder": "32.71",
+   "vault": [],
+   "partial": "32.71"
+  },
+  {
+   "text": "Kab. Bogor",
+   "matches": [],
+   "placeholder": "Kab. Bogor",
+   "vault": [],
+   "partial": "Kab. Bogor"
+  },
+  {
+   "text": "32.01",
+   "matches": [],
+   "placeholder": "32.01",
+   "vault": [],
+   "partial": "32.01"
+  },
+  {
+   "text": "Bogor",
+   "matches": [],
+   "placeholder": "Bogor",
+   "vault": [],
+   "partial": "Bogor"
+  },
+  {
+   "text": "low",
+   "matches": [],
+   "placeholder": "low",
+   "vault": [],
+   "partial": "low"
+  },
+  {
+   "text": "32.71",
+   "matches": [],
+   "placeholder": "32.71",
+   "vault": [],
+   "partial": "32.71"
+  },
+  {
+   "text": "a kode pos that belongs elsewhere is reported, one that is not registered too",
+   "matches": [],
+   "placeholder": "a kode pos that belongs elsewhere is reported, one that is not registered too",
+   "vault": [],
+   "partial": "a kode pos that belongs elsewhere is reported, one that is not registered too"
+  },
+  {
+   "text": "Kemiri Muka, Beji, Depok 16424",
+   "matches": [],
+   "placeholder": "Kemiri Muka, Beji, Depok 16424",
+   "vault": [],
+   "partial": "Kemiri Muka, Beji, Depok 16424"
+  },
+  {
+   "text": "32.76.06.1004",
+   "matches": [],
+   "placeholder": "32.76.06.1004",
+   "vault": [],
+   "partial": "32.76.06.1004"
+  },
+  {
+   "text": "high",
+   "matches": [],
+   "placeholder": "high",
+   "vault": [],
+   "partial": "high"
+  },
+  {
+   "text": "Kode pos 16424 bukan milik Kelurahan Kemiri Muka (kode posnya 16423).",
+   "matches": [],
+   "placeholder": "Kode pos 16424 bukan milik Kelurahan Kemiri Muka (kode posnya 16423).",
+   "vault": [],
+   "partial": "Kode pos 16424 bukan milik Kelurahan Kemiri Muka (kode posnya 16423)."
+  },
+  {
+   "text": "Kemiri Muka, Beji, Depok 16999",
+   "matches": [],
+   "placeholder": "Kemiri Muka, Beji, Depok 16999",
+   "vault": [],
+   "partial": "Kemiri Muka, Beji, Depok 16999"
+  },
+  {
+   "text": "Kode pos 16999 tidak terdaftar.",
+   "matches": [],
+   "placeholder": "Kode pos 16999 tidak terdaftar.",
+   "vault": [],
+   "partial": "Kode pos 16999 tidak terdaftar."
+  },
+  {
+   "text": "the kode pos fills in the kelurahan the address leaves out",
+   "matches": [],
+   "placeholder": "the kode pos fills in the kelurahan the address leaves out",
+   "vault": [],
+   "partial": "the kode pos fills in the kelurahan the address leaves out"
+  },
+  {
+   "text": "Jalan Diponegoro 22 Bandung 40115",
+   "matches": [],
+   "placeholder": "Jalan Diponegoro 22 Bandung 40115",
+   "vault": [],
+   "partial": "Jalan Diponegoro 22 Bandung 40115"
+  },
+  {
+   "text": "32.73.09.1003",
+   "matches": [],
+   "placeholder": "32.73.09.1003",
+   "vault": [],
+   "partial": "32.73.09.1003"
+  },
+  {
+   "text": "provinsi",
+   "matches": [],
+   "placeholder": "provinsi",
+   "vault": [],
+   "partial": "provinsi"
+  },
+  {
+   "text": "kecamatan",
+   "matches": [],
+   "placeholder": "kecamatan",
+   "vault": [],
+   "partial": "kecamatan"
+  },
+  {
+   "text": "kelurahanDesa",
+   "matches": [],
+   "placeholder": "kelurahanDesa",
+   "vault": [],
+   "partial": "kelurahanDesa"
+  },
+  {
+   "text": "Jalan Diponegoro 22",
+   "matches": [],
+   "placeholder": "Jalan Diponegoro 22",
+   "vault": [],
+   "partial": "Jalan Diponegoro 22"
+  },
+  {
+   "text": "16424",
+   "matches": [],
+   "placeholder": "16424",
+   "vault": [],
+   "partial": "16424"
+  },
+  {
+   "text": "32.76.06.1005",
+   "matches": [],
+   "placeholder": "32.76.06.1005",
+   "vault": [],
+   "partial": "32.76.06.1005"
+  },
+  {
+   "text": "low",
+   "matches": [],
+   "placeholder": "low",
+   "vault": [],
+   "partial": "low"
+  },
+  {
+   "text": "a named village that is not in the data is reported, and the rest still found",
+   "matches": [],
+   "placeholder": "a named village that is not in the data is reported, and the rest still found",
+   "vault": [],
+   "partial": "a named village that is not in the data is reported, and the rest still found"
+  },
+  {
+   "text": "KP. RAWA BADAK RT 01 RW 02 DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     15,
+     26,
+     "RT 01 RW 02"
+    ]
+   ],
+   "placeholder": "KP. RAWA BADAK [ADDRESS_1] DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "RT 01 RW 02"
+    ]
+   ],
+   "partial": "KP. RAWA BADAK RT *** DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG"
+  },
+  {
+   "text": "32.15.30",
+   "matches": [],
+   "placeholder": "32.15.30",
+   "vault": [],
+   "partial": "32.15.30"
+  },
+  {
+   "text": "Kelurahan/desa Sukamaju tidak ditemukan di Kecamatan Cilebar menurut data Kemendagri.",
+   "matches": [],
+   "placeholder": "Kelurahan/desa Sukamaju tidak ditemukan di Kecamatan Cilebar menurut data Kemendagri.",
+   "vault": [],
+   "partial": "Kelurahan/desa Sukamaju tidak ditemukan di Kecamatan Cilebar menurut data Kemendagri."
+  },
+  {
+   "text": "a city inside a street name does not win over the kecamatan after it",
+   "matches": [],
+   "placeholder": "a city inside a street name does not win over the kecamatan after it",
+   "vault": [],
+   "partial": "a city inside a street name does not win over the kecamatan after it"
+  },
+  {
+   "text": "Jl. Raya Bogor KM 30, Cimanggis, Depok",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     20,
+     "Jl. Raya Bogor KM 30"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1], Cimanggis, Depok",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Jl. Raya Bogor KM 30"
+    ]
+   ],
+   "partial": "Jl. ***, Cimanggis, Depok"
+  },
+  {
+   "text": "32.76.02",
+   "matches": [],
+   "placeholder": "32.76.02",
+   "vault": [],
+   "partial": "32.76.02"
+  },
+  {
+   "text": "Jl. Raya Bogor KM 30",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     20,
+     "Jl. Raya Bogor KM 30"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1]",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Jl. Raya Bogor KM 30"
+    ]
+   ],
+   "partial": "Jl. ***"
+  },
+  {
+   "text": "Jl. Bogor Raya No 5, Cibubur, Ciracas, Jakarta Timur",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     19,
+     "Jl. Bogor Raya No 5"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1], Cibubur, Ciracas, Jakarta Timur",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Jl. Bogor Raya No 5"
+    ]
+   ],
+   "partial": "Jl. ***, Cibubur, Ciracas, Jakarta Timur"
+  },
+  {
+   "text": "31.75.09.1002",
+   "matches": [],
+   "placeholder": "31.75.09.1002",
+   "vault": [],
+   "partial": "31.75.09.1002"
+  },
+  {
+   "text": "a kecamatan and kelurahan with the same name: the kecamatan, unless something points at the kelurahan",
+   "matches": [],
+   "placeholder": "a kecamatan and kelurahan with the same name: the kecamatan, unless something points at the kelurahan",
+   "vault": [],
+   "partial": "a kecamatan and kelurahan with the same name: the kecamatan, unless something points at the kelurahan"
+  },
+  {
+   "text": "Kuta, Badung, Bali",
+   "matches": [],
+   "placeholder": "Kuta, Badung, Bali",
+   "vault": [],
+   "partial": "Kuta, Badung, Bali"
+  },
+  {
+   "text": "51.03.01",
+   "matches": [],
+   "placeholder": "51.03.01",
+   "vault": [],
+   "partial": "51.03.01"
+  },
+  {
+   "text": "Kel. Kuta, Kuta, Badung",
+   "matches": [],
+   "placeholder": "Kel. Kuta, Kuta, Badung",
+   "vault": [],
+   "partial": "Kel. Kuta, Kuta, Badung"
+  },
+  {
+   "text": "51.03.01.1002",
+   "matches": [],
+   "placeholder": "51.03.01.1002",
+   "vault": [],
+   "partial": "51.03.01.1002"
+  },
+  {
+   "text": "Sumbersari, Jember 68121",
+   "matches": [],
+   "placeholder": "Sumbersari, Jember 68121",
+   "vault": [],
+   "partial": "Sumbersari, Jember 68121"
+  },
+  {
+   "text": "35.09.21.1002",
+   "matches": [],
+   "placeholder": "35.09.21.1002",
+   "vault": [],
+   "partial": "35.09.21.1002"
+  },
+  {
+   "text": "the kode pos is the kelurahan’s",
+   "matches": [],
+   "placeholder": "the kode pos is the kelurahan’s",
+   "vault": [],
+   "partial": "the kode pos is the kelurahan’s"
+  },
+  {
+   "text": "names written with or without spaces and apostrophes",
+   "matches": [],
+   "placeholder": "names written with or without spaces and apostrophes",
+   "vault": [],
+   "partial": "names written with or without spaces and apostrophes"
+  },
+  {
+   "text": "Ds. Suka Maju, Kec. Cibungbulang, Kab. Bogor",
+   "matches": [],
+   "placeholder": "Ds. Suka Maju, Kec. Cibungbulang, Kab. Bogor",
+   "vault": [],
+   "partial": "Ds. Suka Maju, Kec. Cibungbulang, Kab. Bogor"
+  },
+  {
+   "text": "Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor",
+   "matches": [],
+   "placeholder": "Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor",
+   "vault": [],
+   "partial": "Ds. Sukamaju, Kec. Cibungbulang, Kab. Bogor"
+  },
+  {
+   "text": "Murung Ta’al, Labuan Amas Selatan, Hulu Sungai Tengah",
+   "matches": [],
+   "placeholder": "Murung Ta’al, Labuan Amas Selatan, Hulu Sungai Tengah",
+   "vault": [],
+   "partial": "Murung Ta’al, Labuan Amas Selatan, Hulu Sungai Tengah"
+  },
+  {
+   "text": "63.07.03.2015",
+   "matches": [],
+   "placeholder": "63.07.03.2015",
+   "vault": [],
+   "partial": "63.07.03.2015"
+  },
+  {
+   "text": "text with no region in it",
+   "matches": [],
+   "placeholder": "text with no region in it",
+   "vault": [],
+   "partial": "text with no region in it"
+  },
+  {
+   "text": "tolong kirim besok pagi ya",
+   "matches": [],
+   "placeholder": "tolong kirim besok pagi ya",
+   "vault": [],
+   "partial": "tolong kirim besok pagi ya"
+  },
+  {
+   "text": "none",
+   "matches": [],
+   "placeholder": "none",
+   "vault": [],
+   "partial": "none"
+  },
+  {
+   "text": "",
+   "matches": [],
+   "placeholder": "",
+   "vault": [],
+   "partial": ""
+  },
+  {
+   "text": "none",
+   "matches": [],
+   "placeholder": "none",
+   "vault": [],
+   "partial": "none"
+  },
+  {
+   "text": "Google Maps style: shortened words, a Plus Code, the province written out",
+   "matches": [],
+   "placeholder": "Google Maps style: shortened words, a Plus Code, the province written out",
+   "vault": [],
+   "partial": "Google Maps style: shortened words, a Plus Code, the province written out"
+  },
+  {
+   "text": "Jl. Kenanga No.8, Gandaria Utara, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12140",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     16,
+     "Jl. Kenanga No.8"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1], Gandaria Utara, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12140",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Jl. Kenanga No.8"
+    ]
+   ],
+   "partial": "Jl. ***, Gandaria Utara, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12140"
+  },
+  {
+   "text": "31.74.07.1009",
+   "matches": [],
+   "placeholder": "31.74.07.1009",
+   "vault": [],
+   "partial": "31.74.07.1009"
+  },
+  {
+   "text": "high",
+   "matches": [],
+   "placeholder": "high",
+   "vault": [],
+   "partial": "high"
+  },
+  {
+   "text": "Jl. Mawar No.3, Kec. Metro Bar., Kota Metro, Lampung",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     14,
+     "Jl. Mawar No.3"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1], Kec. Metro Bar., Kota Metro, Lampung",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Jl. Mawar No.3"
+    ]
+   ],
+   "partial": "Jl. ***, Kec. Metro Bar., Kota Metro, Lampung"
+  },
+  {
+   "text": "18.72.03",
+   "matches": [],
+   "placeholder": "18.72.03",
+   "vault": [],
+   "partial": "18.72.03"
+  },
+  {
+   "text": "Jl. Anggrek 4, Tj. Priok, Kota Jkt Utara",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     13,
+     "Jl. Anggrek 4"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1], Tj. Priok, Kota Jkt Utara",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Jl. Anggrek 4"
+    ]
+   ],
+   "partial": "Jl. ***, Tj. Priok, Kota Jkt Utara"
+  },
+  {
+   "text": "31.72.02",
+   "matches": [],
+   "placeholder": "31.72.02",
+   "vault": [],
+   "partial": "31.72.02"
+  },
+  {
+   "text": "92JW+6X7, Jl. Kenanga No. 2, Beji, Depok",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     10,
+     27,
+     "Jl. Kenanga No. 2"
+    ]
+   ],
+   "placeholder": "92JW+6X7, [ADDRESS_1], Beji, Depok",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Jl. Kenanga No. 2"
+    ]
+   ],
+   "partial": "92JW+6X7, Jl. ***, Beji, Depok"
+  },
+  {
+   "text": "Jl. Kenanga No. 2",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     17,
+     "Jl. Kenanga No. 2"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1]",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Jl. Kenanga No. 2"
+    ]
+   ],
+   "partial": "Jl. ***"
+  },
+  {
+   "text": "a kelurahan named with its kecamatan wins over the kelurahan that owns a wrong kode pos",
+   "matches": [],
+   "placeholder": "a kelurahan named with its kecamatan wins over the kelurahan that owns a wrong kode pos",
+   "vault": [],
+   "partial": "a kelurahan named with its kecamatan wins over the kelurahan that owns a wrong kode pos"
+  },
+  {
+   "text": "Jl. Tulip 5, Lengkong Gudang, Serpong, Tangerang Selatan 15311",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     11,
+     "Jl. Tulip 5"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1], Lengkong Gudang, Serpong, Tangerang Selatan 15311",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Jl. Tulip 5"
+    ]
+   ],
+   "partial": "Jl. ***, Lengkong Gudang, Serpong, Tangerang Selatan 15311"
+  },
+  {
+   "text": "36.74.01.1004",
+   "matches": [],
+   "placeholder": "36.74.01.1004",
+   "vault": [],
+   "partial": "36.74.01.1004"
+  },
+  {
+   "text": "Kode pos 15311 bukan milik Kelurahan Lengkong Gudang (kode posnya 15321).",
+   "matches": [],
+   "placeholder": "Kode pos 15311 bukan milik Kelurahan Lengkong Gudang (kode posnya 15321).",
+   "vault": [],
+   "partial": "Kode pos 15311 bukan milik Kelurahan Lengkong Gudang (kode posnya 15321)."
+  },
+  {
+   "text": "\"Kel.\" prefers a kelurahan and \"Desa\" a desa; a dusun is part of the street",
+   "matches": [],
+   "placeholder": "\"Kel.\" prefers a kelurahan and \"Desa\" a desa; a dusun is part of the street",
+   "vault": [],
+   "partial": "\"Kel.\" prefers a kelurahan and \"Desa\" a desa; a dusun is part of the street"
+  },
+  {
+   "text": "Gg. Mawar, Kel. Kamal",
+   "matches": [],
+   "placeholder": "Gg. Mawar, Kel. Kamal",
+   "vault": [],
+   "partial": "Gg. Mawar, Kel. Kamal"
+  },
+  {
+   "text": "31.73.06.1004",
+   "matches": [],
+   "placeholder": "31.73.06.1004",
+   "vault": [],
+   "partial": "31.73.06.1004"
+  },
+  {
+   "text": "Dusun Donomulyo, Desa Adipuro",
+   "matches": [],
+   "placeholder": "Dusun Donomulyo, Desa Adipuro",
+   "vault": [],
+   "partial": "Dusun Donomulyo, Desa Adipuro"
+  },
+  {
+   "text": "Dusun Donomulyo",
+   "matches": [],
+   "placeholder": "Dusun Donomulyo",
+   "vault": [],
+   "partial": "Dusun Donomulyo"
+  },
+  {
+   "text": "Adipuro",
+   "matches": [],
+   "placeholder": "Adipuro",
+   "vault": [],
+   "partial": "Adipuro"
+  },
+  {
+   "text": "level words and province names inside other names",
+   "matches": [],
+   "placeholder": "level words and province names inside other names",
+   "vault": [],
+   "partial": "level words and province names inside other names"
+  },
+  {
+   "text": "Jalan Kota Baru No. 3",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     21,
+     "Jalan Kota Baru No. 3"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1]",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Jalan Kota Baru No. 3"
+    ]
+   ],
+   "partial": "Jalan ***"
+  },
+  {
+   "text": "none",
+   "matches": [],
+   "placeholder": "none",
+   "vault": [],
+   "partial": "none"
+  },
+  {
+   "text": "Jalan Kota Baru No. 3",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     21,
+     "Jalan Kota Baru No. 3"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1]",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Jalan Kota Baru No. 3"
+    ]
+   ],
+   "partial": "Jalan ***"
+  },
+  {
+   "text": "Jl. Merpati, Sidodadi, Lampung Timur",
+   "matches": [],
+   "placeholder": "Jl. Merpati, Sidodadi, Lampung Timur",
+   "vault": [],
+   "partial": "Jl. Merpati, Sidodadi, Lampung Timur"
+  },
+  {
+   "text": "18.07",
+   "matches": [],
+   "placeholder": "18.07",
+   "vault": [],
+   "partial": "18.07"
+  },
+  {
+   "text": "RT/RW and kode pos written with a colon, numbers in names written as Roman numerals",
+   "matches": [],
+   "placeholder": "RT/RW and kode pos written with a colon, numbers in names written as Roman numerals",
+   "vault": [],
+   "partial": "RT/RW and kode pos written with a colon, numbers in names written as Roman numerals"
+  },
+  {
+   "text": "Jl. Rambutan Rt:30 Rw:10 Kode Pos:30144 Kecamatan: Ilir Barat II",
+   "matches": [],
+   "placeholder": "Jl. Rambutan Rt:30 Rw:10 Kode Pos:30144 Kecamatan: Ilir Barat II",
+   "vault": [],
+   "partial": "Jl. Rambutan Rt:30 Rw:10 Kode Pos:30144 Kecamatan: Ilir Barat II"
+  },
+  {
+   "text": "Jl. Rambutan",
+   "matches": [],
+   "placeholder": "Jl. Rambutan",
+   "vault": [],
+   "partial": "Jl. Rambutan"
+  },
+  {
+   "text": "030",
+   "matches": [],
+   "placeholder": "030",
+   "vault": [],
+   "partial": "030"
+  },
+  {
+   "text": "010",
+   "matches": [],
+   "placeholder": "010",
+   "vault": [],
+   "partial": "010"
+  },
+  {
+   "text": "30144",
+   "matches": [],
+   "placeholder": "30144",
+   "vault": [],
+   "partial": "30144"
+  },
+  {
+   "text": "Ilir Barat Dua",
+   "matches": [],
+   "placeholder": "Ilir Barat Dua",
+   "vault": [],
+   "partial": "Ilir Barat Dua"
+  },
+  {
+   "text": "names with a typo, inside the kota or kabupaten the address names",
+   "matches": [],
+   "placeholder": "names with a typo, inside the kota or kabupaten the address names",
+   "vault": [],
+   "partial": "names with a typo, inside the kota or kabupaten the address names"
+  },
+  {
+   "text": "Kp. Nagrog RT 13 RW 03, Kab. Tasikmalayah",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     22,
+     "Kp. Nagrog RT 13 RW 03"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1], Kab. Tasikmalayah",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Kp. Nagrog RT 13 RW 03"
+    ]
+   ],
+   "partial": "Kp. ***, Kab. Tasikmalayah"
+  },
+  {
+   "text": "32.06",
+   "matches": [],
+   "placeholder": "32.06",
+   "vault": [],
+   "partial": "32.06"
+  },
+  {
+   "text": "\"Tasikmalayah\" dibaca sebagai Kabupaten Tasikmalaya.",
+   "matches": [],
+   "placeholder": "\"Tasikmalayah\" dibaca sebagai Kabupaten Tasikmalaya.",
+   "vault": [],
+   "partial": "\"Tasikmalayah\" dibaca sebagai Kabupaten Tasikmalaya."
+  },
+  {
+   "text": "medium",
+   "matches": [],
+   "placeholder": "medium",
+   "vault": [],
+   "partial": "medium"
+  },
+  {
+   "text": "Jl. Melati 5, Cibinog, Kab. Bogor",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     12,
+     "Jl. Melati 5"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1], Cibinog, Kab. Bogor",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Jl. Melati 5"
+    ]
+   ],
+   "partial": "Jl. ***, Cibinog, Kab. Bogor"
+  },
+  {
+   "text": "32.01.01",
+   "matches": [],
+   "placeholder": "32.01.01",
+   "vault": [],
+   "partial": "32.01.01"
+  },
+  {
+   "text": "\"Cibinog\" dibaca sebagai Kecamatan Cibinong.",
+   "matches": [],
+   "placeholder": "\"Cibinog\" dibaca sebagai Kecamatan Cibinong.",
+   "vault": [],
+   "partial": "\"Cibinog\" dibaca sebagai Kecamatan Cibinong."
+  },
+  {
+   "text": "Jl. Anggrek 2, Kec. Tanah Sereal, Kota Bogor",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     13,
+     "Jl. Anggrek 2"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1], Kec. Tanah Sereal, Kota Bogor",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Jl. Anggrek 2"
+    ]
+   ],
+   "partial": "Jl. ***, Kec. Tanah Sereal, Kota Bogor"
+  },
+  {
+   "text": "32.71.06",
+   "matches": [],
+   "placeholder": "32.71.06",
+   "vault": [],
+   "partial": "32.71.06"
+  },
+  {
+   "text": "a real name is not read as a typo of another",
+   "matches": [],
+   "placeholder": "a real name is not read as a typo of another",
+   "vault": [],
+   "partial": "a real name is not read as a typo of another"
+  },
+  {
+   "text": "Jl. Raya Metro Wates Km 05, Desa Purwodadi",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     26,
+     "Jl. Raya Metro Wates Km 05"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1], Desa Purwodadi",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Jl. Raya Metro Wates Km 05"
+    ]
+   ],
+   "partial": "Jl. ***, Desa Purwodadi"
+  },
+  {
+   "text": "Purwodadi",
+   "matches": [],
+   "placeholder": "Purwodadi",
+   "vault": [],
+   "partial": "Purwodadi"
+  },
+  {
+   "text": "low",
+   "matches": [],
+   "placeholder": "low",
+   "vault": [],
+   "partial": "low"
+  },
+  {
+   "text": "Gg. Bukit 2, Jaga Baya I, Way Halim, Kota Bandar Lampung",
+   "matches": [
+    [
+     "ADDRESS",
+     null,
+     0,
+     11,
+     "Gg. Bukit 2"
+    ]
+   ],
+   "placeholder": "[ADDRESS_1], Jaga Baya I, Way Halim, Kota Bandar Lampung",
+   "vault": [
+    [
+     "[ADDRESS_1]",
+     "Gg. Bukit 2"
+    ]
+   ],
+   "partial": "Gg. ***, Jaga Baya I, Way Halim, Kota Bandar Lampung"
+  },
+  {
+   "text": "18.71.15",
+   "matches": [],
+   "placeholder": "18.71.15",
+   "vault": [],
+   "partial": "18.71.15"
+  },
+  {
+   "text": "node:test",
+   "matches": [],
+   "placeholder": "node:test",
+   "vault": [],
+   "partial": "node:test"
+  },
+  {
+   "text": "node:assert/strict",
+   "matches": [],
+   "placeholder": "node:assert/strict",
+   "vault": [],
+   "partial": "node:assert/strict"
+  },
+  {
+   "text": "../src/index.ts",
+   "matches": [],
+   "placeholder": "../src/index.ts",
+   "vault": [],
+   "partial": "../src/index.ts"
+  },
+  {
+   "text": "../src/kembaran.ts",
+   "matches": [],
+   "placeholder": "../src/kembaran.ts",
+   "vault": [],
+   "partial": "../src/kembaran.ts"
+  },
+  {
+   "text": "EMPLOYEE_ID",
+   "matches": [],
+   "placeholder": "EMPLOYEE_ID",
+   "vault": [],
+   "partial": "EMPLOYEE_ID"
+  },
+  {
+   "text": "MEMBER",
+   "matches": [],
+   "placeholder": "MEMBER",
+   "vault": [],
+   "partial": "MEMBER"
+  },
+  {
+   "text": "no_member",
+   "matches": [],
+   "placeholder": "no_member",
+   "vault": [],
+   "partial": "no_member"
+  },
+  {
+   "text": "Kode Member",
+   "matches": [],
+   "placeholder": "Kode Member",
+   "vault": [],
+   "partial": "Kode Member"
+  },
+  {
+   "text": "custom patterns mask under their own label and restore",
+   "matches": [],
+   "placeholder": "custom patterns mask under their own label and restore",
+   "vault": [],
+   "partial": "custom patterns mask under their own label and restore"
+  },
+  {
+   "text": "Tiket dari EMP-004211 soal EMP-000317, lalu EMP-004211 lagi. emp-004211 huruf kecil tidak cocok.",
+   "matches": [
+    [
+     "CUSTOM",
+     "EMPLOYEE_ID",
+     11,
+     21,
+     "EMP-004211"
+    ],
+    [
+     "CUSTOM",
+     "EMPLOYEE_ID",
+     27,
+     37,
+     "EMP-000317"
+    ],
+    [
+     "CUSTOM",
+     "EMPLOYEE_ID",
+     44,
+     54,
+     "EMP-004211"
+    ]
+   ],
+   "placeholder": "Tiket dari [EMPLOYEE_ID_1] soal [EMPLOYEE_ID_2], lalu [EMPLOYEE_ID_1] lagi. emp-004211 huruf kecil tidak cocok.",
+   "vault": [
+    [
+     "[EMPLOYEE_ID_1]",
+     "EMP-004211"
+    ],
+    [
+     "[EMPLOYEE_ID_2]",
+     "EMP-000317"
+    ]
+   ],
+   "partial": "Tiket dari ********11 soal ********17, lalu ********11 lagi. emp-004211 huruf kecil tidak cocok."
+  },
+  {
+   "text": "Tiket dari [EMPLOYEE_ID_1] soal [EMPLOYEE_ID_2], lalu [EMPLOYEE_ID_1] lagi. emp-004211 huruf kecil tidak cocok.",
+   "matches": [],
+   "placeholder": "Tiket dari [EMPLOYEE_ID_1] soal [EMPLOYEE_ID_2], lalu [EMPLOYEE_ID_1] lagi. emp-004211 huruf kecil tidak cocok.",
+   "vault": [],
+   "partial": "Tiket dari [EMPLOYEE_ID_1] soal [EMPLOYEE_ID_2], lalu [EMPLOYEE_ID_1] lagi. emp-004211 huruf kecil tidak cocok."
+  },
+  {
+   "text": "CUSTOM",
+   "matches": [],
+   "placeholder": "CUSTOM",
+   "vault": [],
+   "partial": "CUSTOM"
+  },
+  {
+   "text": "EMPLOYEE_ID",
+   "matches": [],
+   "placeholder": "EMPLOYEE_ID",
+   "vault": [],
+   "partial": "EMPLOYEE_ID"
+  },
+  {
+   "text": "high",
+   "matches": [],
+   "placeholder": "high",
+   "vault": [],
+   "partial": "high"
+  },
+  {
+   "text": "CUSTOM",
+   "matches": [],
+   "placeholder": "CUSTOM",
+   "vault": [],
+   "partial": "CUSTOM"
+  },
+  {
+   "text": "EMPLOYEE_ID",
+   "matches": [],
+   "placeholder": "EMPLOYEE_ID",
+   "vault": [],
+   "partial": "EMPLOYEE_ID"
+  },
+  {
+   "text": "high",
+   "matches": [],
+   "placeholder": "high",
+   "vault": [],
+   "partial": "high"
+  },
+  {
+   "text": "CUSTOM",
+   "matches": [],
+   "placeholder": "CUSTOM",
+   "vault": [],
+   "partial": "CUSTOM"
+  },
+  {
+   "text": "EMPLOYEE_ID",
+   "matches": [],
+   "placeholder": "EMPLOYEE_ID",
+   "vault": [],
+   "partial": "EMPLOYEE_ID"
+  },
+  {
+   "text": "high",
+   "matches": [],
+   "placeholder": "high",
+   "vault": [],
+   "partial": "high"
+  },
+  {
+   "text": "custom fields: labels, JSON keys, and CSV columns",
+   "matches": [],
+   "placeholder": "custom fields: labels, JSON keys, and CSV columns",
+   "vault": [],
+   "partial": "custom fields: labels, JSON keys, and CSV columns"
+  },
+  {
+   "text": "member no_member=M-0042 minta reset.",
+   "matches": [
+    [
+     "CUSTOM",
+     "MEMBER",
+     17,
+     23,
+     "M-0042"
+    ]
+   ],
+   "placeholder": "member no_member=[MEMBER_1] minta reset.",
+   "vault": [
+    [
+     "[MEMBER_1]",
+     "M-0042"
+    ]
+   ],
+   "partial": "member no_member=**** minta reset."
+  },
+  {
+   "text": "{\"no_member\": \"M-0099\", \"nik\": \"3201011508950001\"}",
+   "matches": [
+    [
+     "CUSTOM",
+     "MEMBER",
+     15,
+     21,
+     "M-0099"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     32,
+     48,
+     "3201011508950001"
+    ]
+   ],
+   "placeholder": "{\"no_member\": \"[MEMBER_1]\", \"nik\": \"[NOTE_1]\"}",
+   "vault": [
+    [
+     "[MEMBER_1]",
+     "M-0099"
+    ],
+    [
+     "[NOTE_1]",
+     "3201011508950001"
+    ]
+   ],
+   "partial": "{\"no_member\": \"****\", \"nik\": \"**************01\"}"
+  },
+  {
+   "text": "kode member: M-1234",
+   "matches": [
+    [
+     "CUSTOM",
+     "MEMBER",
+     13,
+     19,
+     "M-1234"
+    ]
+   ],
+   "placeholder": "kode member: [MEMBER_1]",
+   "vault": [
+    [
+     "[MEMBER_1]",
+     "M-1234"
+    ]
+   ],
+   "partial": "kode member: ****"
+  },
+  {
+   "text": "",
+   "matches": [],
+   "placeholder": "",
+   "vault": [],
+   "partial": ""
+  },
+  {
+   "text": "nama,Kode Member,kota",
+   "matches": [],
+   "placeholder": "nama,Kode Member,kota",
+   "vault": [],
+   "partial": "nama,Kode Member,kota"
+  },
+  {
+   "text": "Siti Aminah,\"M, 77\",Bogor",
+   "matches": [
+    [
+     "NAME",
+     null,
+     0,
+     11,
+     "Siti Aminah"
+    ]
+   ],
+   "placeholder": "[NAME_1],\"M, 77\",Bogor",
+   "vault": [
+    [
+     "[NAME_1]",
+     "Siti Aminah"
+    ]
+   ],
+   "partial": "S*** A***,\"M, 77\",Bogor"
+  },
+  {
+   "text": "Budi Santoso,M-0042,Depok",
+   "matches": [
+    [
+     "NAME",
+     null,
+     0,
+     12,
+     "Budi Santoso"
+    ]
+   ],
+   "placeholder": "[NAME_1],M-0042,Depok",
+   "vault": [
+    [
+     "[NAME_1]",
+     "Budi Santoso"
+    ]
+   ],
+   "partial": "B*** S***,M-0042,Depok"
+  },
+  {
+   "text": "",
+   "matches": [],
+   "placeholder": "",
+   "vault": [],
+   "partial": ""
+  },
+  {
+   "text": "kota,catatan",
+   "matches": [],
+   "placeholder": "kota,catatan",
+   "vault": [],
+   "partial": "kota,catatan"
+  },
+  {
+   "text": "Depok,M-5555 bukan kolom member",
+   "matches": [],
+   "placeholder": "Depok,M-5555 bukan kolom member",
+   "vault": [],
+   "partial": "Depok,M-5555 bukan kolom member"
+  },
+  {
+   "text": "\n",
+   "matches": [],
+   "placeholder": "\n",
+   "vault": [],
+   "partial": "\n"
+  },
+  {
+   "text": "member no_member=[MEMBER_1] minta reset.",
+   "matches": [
+    [
+     "CUSTOM",
+     "MEMBER",
+     17,
+     26,
+     "[MEMBER_1"
+    ]
+   ],
+   "placeholder": "member no_member=[MEMBER_1]] minta reset.",
+   "vault": [
+    [
+     "[MEMBER_1]",
+     "[MEMBER_1"
+    ]
+   ],
+   "partial": "member no_member=*******_1] minta reset."
+  },
+  {
+   "text": "{\"no_member\": \"[MEMBER_2]\", \"nik\": \"[NIK_1]\"}",
+   "matches": [
+    [
+     "CUSTOM",
+     "MEMBER",
+     15,
+     25,
+     "[MEMBER_2]"
+    ],
+    [
+     "CUSTOM",
+     "NOTE",
+     36,
+     43,
+     "[NIK_1]"
+    ]
+   ],
+   "placeholder": "{\"no_member\": \"[MEMBER_1]\", \"nik\": \"[NOTE_1]\"}",
+   "vault": [
+    [
+     "[MEMBER_1]",
+     "[MEMBER_2]"
+    ],
+    [
+     "[NOTE_1]",
+     "[NIK_1]"
+    ]
+   ],
+   "partial": "{\"no_member\": \"********2]\", \"nik\": \"*****1]\"}"
+  },
+  {
+   "text": "kode member: [MEMBER_3]",
+   "matches": [
+    [
+     "CUSTOM",
+     "MEMBER",
+     13,
+     22,
+     "[MEMBER_3"
+    ]
+   ],
+   "placeholder": "kode member: [MEMBER_1]]",
+   "vault": [
+    [
+     "[MEMBER_1]",
+     "[MEMBER_3"
+    ]
+   ],
+   "partial": "kode member: *******_3]"
+  },
+  {
+   "text": "",
+   "matches": [],
+   "placeholder": "",
+   "vault": [],
+   "partial": ""
+  }
+ ]
+}

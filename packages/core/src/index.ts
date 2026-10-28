@@ -48,4 +48,6 @@ export {
   type SamaranOptions,
   type DetectOptions,
   type Confidence,
+  checkCustomRules,
+  type CustomRule,
 } from './samaran/index.ts';

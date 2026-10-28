@@ -3,9 +3,9 @@
 // runs it, an agent included, never sees the data.
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { PII_TYPES, type PiiType } from '@lokal-id/core';
+import { PII_TYPES, type CustomRule, type PiiType } from '@lokal-id/core';
 import { KEEP_BY_DEFAULT, Kembaran } from '@lokal-id/core/kembaran';
-import { isTextFile, MAX_FILE_BYTES } from './files.ts';
+import { isTextFile, loadConfig, MAX_FILE_BYTES } from './files.ts';
 
 export interface AnonymizeOptions {
   secret?: string;
@@ -13,6 +13,8 @@ export interface AnonymizeOptions {
   keep?: PiiType[];
   keepBirthDate?: boolean;
   overwrite?: boolean;
+  /** The project's own rules from .samaran.json. */
+  custom?: CustomRule[];
 }
 
 export interface AnonymizedFile {
@@ -44,6 +46,7 @@ export function anonymizeFiles(inputs: string[], output: string, options: Anonym
     secret: options.secret,
     keep: [...KEEP_BY_DEFAULT, ...(options.keep ?? [])],
     keepBirthDate: options.keepBirthDate,
+    custom: options.custom,
   });
   return inputs.map((file, i) => {
     const { text, replaced } = kembaran.text(readFileSync(file, 'utf8'));
@@ -94,6 +97,7 @@ export function runKembaran(args: string[]): void {
       keep: keep as PiiType[],
       keepBirthDate: args.includes('--keep-birth-date'),
       overwrite: args.includes('--overwrite'),
+      custom: loadConfig(process.cwd()).custom,
     });
     for (const f of files) {
       const counts = Object.entries(f.replaced).map(([t, n]) => `${t}=${n}`).join(', ') || 'nothing found';

@@ -21,15 +21,17 @@ We aim to acknowledge reports within 7 days and to agree on a disclosure date wi
 - MCP file tools reading or writing outside `LOKAL_ROOT`
 - Weaknesses in how releases are built and published (`.github/workflows`), or a published package that differs from what the tagged commit builds
 - Placeholders that unmask to the wrong person's data
+- A rule in `.samaran.json` that is accepted but silently matches nothing, or a broken `.samaran.json` that a file tool ignores
+- Any network request from the MCP server's stdio mode, the guard, the scanner, the browser extension, or the libraries
 
 ## Out of scope
 
 These are known limitations, documented in the [README](README.md#limitations). Improvements are welcome as regular issues or pull requests:
 
 - Personal data that the detectors do not recognize (use the *Detection report* issue template, with made-up data)
-- Scripts that deliberately print a data file, such as `python -c "print(open(...).read())"`
+- Scripts that deliberately print a data file. `SAMARAN_GUARD=strict` blocks one-liners such as `python -c "print(open(...).read())"`; a script saved in a file is not read
 - File formats that are reported as *not scanned* (scanned or encrypted PDFs, `.xls`, images)
-- The guard allowing a command when its input is malformed. It fails open on purpose, so that a bug in the guard cannot lock you out of your agent
+- The guard allowing a command when its input is malformed. By default it fails open, so that a bug in the guard cannot lock you out of your agent; `SAMARAN_GUARD=strict` makes it fail closed
 
 ## How releases are protected
 

@@ -2770,6 +2770,418 @@
   "matches": []
  },
  {
+  "text": "../src/kembaran.ts",
+  "matches": []
+ },
+ {
+  "text": "EMPLOYEE_ID",
+  "matches": []
+ },
+ {
+  "text": "MEMBER",
+  "matches": []
+ },
+ {
+  "text": "no_member",
+  "matches": []
+ },
+ {
+  "text": "Kode Member",
+  "matches": []
+ },
+ {
+  "text": "custom patterns mask under their own label and restore",
+  "matches": []
+ },
+ {
+  "text": "Tiket dari EMP-004211 soal EMP-000317, lalu EMP-004211 lagi. emp-004211 huruf kecil tidak cocok.",
+  "matches": []
+ },
+ {
+  "text": "Tiket dari [EMPLOYEE_ID_1] soal [EMPLOYEE_ID_2], lalu [EMPLOYEE_ID_1] lagi. emp-004211 huruf kecil tidak cocok.",
+  "matches": []
+ },
+ {
+  "text": "CUSTOM",
+  "matches": []
+ },
+ {
+  "text": "EMPLOYEE_ID",
+  "matches": []
+ },
+ {
+  "text": "high",
+  "matches": []
+ },
+ {
+  "text": "CUSTOM",
+  "matches": []
+ },
+ {
+  "text": "EMPLOYEE_ID",
+  "matches": []
+ },
+ {
+  "text": "high",
+  "matches": []
+ },
+ {
+  "text": "CUSTOM",
+  "matches": []
+ },
+ {
+  "text": "EMPLOYEE_ID",
+  "matches": []
+ },
+ {
+  "text": "high",
+  "matches": []
+ },
+ {
+  "text": "custom fields: labels, JSON keys, and CSV columns",
+  "matches": []
+ },
+ {
+  "text": "member no_member=M-0042 minta reset.",
+  "matches": []
+ },
+ {
+  "text": "{\"no_member\": \"M-0099\", \"nik\": \"3201011508950001\"}",
+  "matches": [
+   [
+    "NIK",
+    32,
+    48,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "kode member: M-1234",
+  "matches": []
+ },
+ {
+  "text": "",
+  "matches": []
+ },
+ {
+  "text": "nama,Kode Member,kota",
+  "matches": []
+ },
+ {
+  "text": "Siti Aminah,\"M, 77\",Bogor",
+  "matches": [
+   [
+    "NAME",
+    0,
+    11,
+    "Siti Aminah",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "Budi Santoso,M-0042,Depok",
+  "matches": [
+   [
+    "NAME",
+    0,
+    12,
+    "Budi Santoso",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "",
+  "matches": []
+ },
+ {
+  "text": "kota,catatan",
+  "matches": []
+ },
+ {
+  "text": "Depok,M-5555 bukan kolom member",
+  "matches": []
+ },
+ {
+  "text": "\n",
+  "matches": []
+ },
+ {
+  "text": "member no_member=[MEMBER_1] minta reset.",
+  "matches": []
+ },
+ {
+  "text": "{\"no_member\": \"[MEMBER_2]\", \"nik\": \"[NIK_1]\"}",
+  "matches": []
+ },
+ {
+  "text": "kode member: [MEMBER_3]",
+  "matches": []
+ },
+ {
+  "text": "",
+  "matches": []
+ },
+ {
+  "text": "nama,Kode Member,kota",
+  "matches": []
+ },
+ {
+  "text": "[NAME_1],\"[MEMBER_4]\",Bogor",
+  "matches": []
+ },
+ {
+  "text": "[NAME_2],[MEMBER_1],Depok",
+  "matches": []
+ },
+ {
+  "text": "",
+  "matches": []
+ },
+ {
+  "text": "kota,catatan",
+  "matches": []
+ },
+ {
+  "text": "Depok,M-5555 bukan kolom member",
+  "matches": []
+ },
+ {
+  "text": "\n",
+  "matches": []
+ },
+ {
+  "text": "a custom rule does not cut a built-in match short",
+  "matches": []
+ },
+ {
+  "text": "HP 0812-3456-7890",
+  "matches": [
+   [
+    "PHONE",
+    3,
+    17,
+    "0812-3456-7890",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "SHORT_CODE",
+  "matches": []
+ },
+ {
+  "text": "PHONE",
+  "matches": []
+ },
+ {
+  "text": "no_member: 3201011508950001",
+  "matches": [
+   [
+    "NIK",
+    11,
+    27,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "MEMBER",
+  "matches": []
+ },
+ {
+  "text": "no_member",
+  "matches": []
+ },
+ {
+  "text": "CUSTOM",
+  "matches": []
+ },
+ {
+  "text": "MEMBER",
+  "matches": []
+ },
+ {
+  "text": "custom placeholders survive export and import of the vault",
+  "matches": []
+ },
+ {
+  "text": "EMP-004211 dan EMP-000317",
+  "matches": []
+ },
+ {
+  "text": "EMP-000317, EMP-123456",
+  "matches": []
+ },
+ {
+  "text": "[EMPLOYEE_ID_2], [EMPLOYEE_ID_3]",
+  "matches": []
+ },
+ {
+  "text": "[EMPLOYEE_ID_1]",
+  "matches": []
+ },
+ {
+  "text": "EMP-004211",
+  "matches": []
+ },
+ {
+  "text": "CUSTOM",
+  "matches": []
+ },
+ {
+  "text": "EMP-004211",
+  "matches": []
+ },
+ {
+  "text": "EMPLOYEE_ID",
+  "matches": []
+ },
+ {
+  "text": "[EMPLOYEE_ID_1]",
+  "matches": []
+ },
+ {
+  "text": "partial masks and stand-ins for custom values",
+  "matches": []
+ },
+ {
+  "text": "CUSTOM",
+  "matches": []
+ },
+ {
+  "text": "EMP-004211",
+  "matches": []
+ },
+ {
+  "text": "********11",
+  "matches": []
+ },
+ {
+  "text": "CUSTOM",
+  "matches": []
+ },
+ {
+  "text": "M-42",
+  "matches": []
+ },
+ {
+  "text": "***",
+  "matches": []
+ },
+ {
+  "text": "partial",
+  "matches": []
+ },
+ {
+  "text": "id EMP-004211",
+  "matches": []
+ },
+ {
+  "text": "id ********11",
+  "matches": []
+ },
+ {
+  "text": "uji",
+  "matches": []
+ },
+ {
+  "text": "id EMP-004211, no_member: M-0042",
+  "matches": []
+ },
+ {
+  "text": "EMP-004211",
+  "matches": []
+ },
+ {
+  "text": "M-0042",
+  "matches": []
+ },
+ {
+  "text": "rules that cannot work are refused",
+  "matches": []
+ },
+ {
+  "text": "employee",
+  "matches": []
+ },
+ {
+  "text": "x",
+  "matches": []
+ },
+ {
+  "text": "NIK",
+  "matches": []
+ },
+ {
+  "text": "x",
+  "matches": []
+ },
+ {
+  "text": "EMP_",
+  "matches": []
+ },
+ {
+  "text": "x",
+  "matches": []
+ },
+ {
+  "text": "EMP",
+  "matches": []
+ },
+ {
+  "text": "(",
+  "matches": []
+ },
+ {
+  "text": "EMP",
+  "matches": []
+ },
+ {
+  "text": "CUSTOM",
+  "matches": []
+ },
+ {
+  "text": "x",
+  "matches": []
+ },
+ {
+  "text": "NIK",
+  "matches": []
+ },
+ {
+  "text": "3201011508950001",
+  "matches": [
+   [
+    "NIK",
+    0,
+    16,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "EMP",
+  "matches": []
+ },
+ {
+  "text": "node:test",
+  "matches": []
+ },
+ {
+  "text": "node:assert/strict",
+  "matches": []
+ },
+ {
+  "text": "../src/index.ts",
+  "matches": []
+ },
+ {
   "text": "Minggu",
   "matches": []
  },
@@ -13550,6 +13962,106 @@
  },
  {
   "text": "utf8",
+  "matches": []
+ },
+ {
+  "text": "guard SAMARAN_GUARD=strict: input rusak memblokir, kode inline yang membaca file data ditahan",
+  "matches": []
+ },
+ {
+  "text": "strict",
+  "matches": []
+ },
+ {
+  "text": "guard",
+  "matches": []
+ },
+ {
+  "text": "bukan json",
+  "matches": []
+ },
+ {
+  "text": "utf8",
+  "matches": []
+ },
+ {
+  "text": "Bash",
+  "matches": []
+ },
+ {
+  "text": "PreToolUse",
+  "matches": []
+ },
+ {
+  "text": "pelanggan.csv",
+  "matches": []
+ },
+ {
+  "text": "fs",
+  "matches": []
+ },
+ {
+  "text": "./pelanggan.csv",
+  "matches": []
+ },
+ {
+  "text": "utf8",
+  "matches": []
+ },
+ {
+  "text": "EOF",
+  "matches": []
+ },
+ {
+  "text": "pelanggan.csv",
+  "matches": []
+ },
+ {
+  "text": "PowerShell",
+  "matches": []
+ },
+ {
+  "text": "\nprint(open(",
+  "matches": []
+ },
+ {
+  "text": ").read())\n",
+  "matches": []
+ },
+ {
+  "text": "PowerShell",
+  "matches": []
+ },
+ {
+  "text": "node dedupe.js pelanggan.csv",
+  "matches": []
+ },
+ {
+  "text": "pelanggan.csv",
+  "matches": []
+ },
+ {
+  "text": "kode.ts",
+  "matches": []
+ },
+ {
+  "text": "EOF",
+  "matches": []
+ },
+ {
+  "text": "fs",
+  "matches": []
+ },
+ {
+  "text": "pelanggan.csv",
+  "matches": []
+ },
+ {
+  "text": "utf8",
+  "matches": []
+ },
+ {
+  "text": "cat pelanggan.csv",
   "matches": []
  },
  {

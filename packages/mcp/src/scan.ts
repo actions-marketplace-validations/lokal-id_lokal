@@ -5,8 +5,10 @@
 import { execFileSync } from 'node:child_process';
 import { appendFileSync, existsSync, statSync } from 'node:fs';
 import path from 'node:path';
-import { detectPii, partialMask, PII_TYPES, UU_PDP_CATEGORY, type PiiType } from '@lokal-id/core';
-import { loadBuffer, loadDocument, loadIgnore, toPosix, walkFiles, type Document } from './files.ts';
+import { partialMask, PII_TYPES, UU_PDP_CATEGORY, type PiiType } from '@lokal-id/core';
+import {
+  detectConfigured, loadBuffer, loadConfig, loadDocument, loadIgnore, toPosix, walkFiles, type Document, type SamaranConfig,
+} from './files.ts';
 
 /** A line containing this is never reported, like `// samaran-ignore` after a made-up NIK in a test. */
 export const IGNORE_MARKER = 'samaran-ignore';
@@ -17,6 +19,8 @@ export interface Finding {
   line?: number;
   sheet?: string;
   type: PiiType;
+  /** For CUSTOM: the label of the rule in .samaran.json that found it. */
+  label?: string;
   uuPdp: 'umum' | 'spesifik';
   confidence: 'high' | 'medium';
   preview: string;
@@ -41,6 +45,8 @@ export interface ScanOptions {
   types?: PiiType[];
   minConfidence?: 'high' | 'medium';
   isIgnored?: (file: string) => boolean;
+  /** The project's .samaran.json. */
+  config?: SamaranConfig;
 }
 
 function lineStarts(text: string): number[] {
@@ -81,20 +87,21 @@ export function scanTargets(targets: Target[], options: ScanOptions = {}): ScanR
     }
     report.filesScanned++;
     const detect = { types: options.types, minConfidence: options.minConfidence ?? 'high' } as const;
+    const config = options.config ?? { custom: [], allow: [] };
     if (doc.kind === 'text') {
       const starts = lineStarts(doc.text);
-      for (const m of detectPii(doc.text, detect)) {
+      for (const m of detectConfigured(doc.text, detect, config)) {
         const line = lineAt(starts, m.start);
         if (target.lines !== 'all' && !target.lines.has(line)) continue;
         const end = starts[line] ?? doc.text.length;
         if (doc.text.slice(starts[line - 1], end).includes(IGNORE_MARKER)) continue;
-        report.findings.push({ file: target.file, line, type: m.type, uuPdp: UU_PDP_CATEGORY[m.type], confidence: m.confidence, preview: partialMask(m.type, m.value) });
+        report.findings.push({ file: target.file, line, type: m.type, ...(m.label ? { label: m.label } : {}), uuPdp: UU_PDP_CATEGORY[m.type], confidence: m.confidence, preview: partialMask(m.type, m.value) });
       }
     } else {
       if (doc.unscanned) report.notScanned.push({ file: target.file, reason: `partly scanned: ${doc.unscanned}` });
       for (const sheet of doc.sheets) {
-        for (const m of detectPii(sheet.csv, detect)) {
-          report.findings.push({ file: target.file, sheet: sheet.name, type: m.type, uuPdp: UU_PDP_CATEGORY[m.type], confidence: m.confidence, preview: partialMask(m.type, m.value) });
+        for (const m of detectConfigured(sheet.csv, detect, config)) {
+          report.findings.push({ file: target.file, sheet: sheet.name, type: m.type, ...(m.label ? { label: m.label } : {}), uuPdp: UU_PDP_CATEGORY[m.type], confidence: m.confidence, preview: partialMask(m.type, m.value) });
         }
       }
     }
@@ -224,7 +231,7 @@ export function formatText(report: ScanReport): string {
   const byFile = new Map<string, Finding[]>();
   for (const f of report.findings) byFile.set(f.file, [...(byFile.get(f.file) ?? []), f]);
   for (const findings of byFile.values()) {
-    for (const f of findings.slice(0, PER_FILE)) out.push(`${where(f)}: ${f.type} ${f.preview}${f.uuPdp === 'spesifik' ? ' (UU PDP: spesifik)' : ''}`);
+    for (const f of findings.slice(0, PER_FILE)) out.push(`${where(f)}: ${f.label ?? f.type} ${f.preview}${f.uuPdp === 'spesifik' ? ' (UU PDP: spesifik)' : ''}`);
     if (findings.length > PER_FILE) out.push(`${findings[0]!.file}: … and ${findings.length - PER_FILE} more`);
   }
   for (const s of report.notScanned) out.push(`warning: ${s.file} was not scanned (${s.reason})`);
@@ -243,8 +250,8 @@ const escapeProperty = (s: string) => escapeData(s).replace(/:/g, '%3A').replace
 export function formatGithub(report: ScanReport): string {
   const out: string[] = [];
   for (const f of report.findings.slice(0, 500)) {
-    const props = [`file=${escapeProperty(f.file)}`, f.line ? `line=${f.line}` : '', `title=${escapeProperty(`Personal data: ${f.type}`)}`].filter(Boolean).join(',');
-    out.push(`::error ${props}::${escapeData(`${f.type} ${f.preview}${f.sheet ? ` in ${f.sheet}` : ''}. ${ADVICE[0]}`)}`);
+    const props = [`file=${escapeProperty(f.file)}`, f.line ? `line=${f.line}` : '', `title=${escapeProperty(`Personal data: ${f.label ?? f.type}`)}`].filter(Boolean).join(',');
+    out.push(`::error ${props}::${escapeData(`${f.label ?? f.type} ${f.preview}${f.sheet ? ` in ${f.sheet}` : ''}. ${ADVICE[0]}`)}`);
   }
   for (const s of report.notScanned) out.push(`::warning file=${escapeProperty(s.file)},title=Not scanned::${escapeData(s.reason)}`);
   return `${out.join('\n')}${out.length ? '\n' : ''}${formatText(report)}`;
@@ -255,7 +262,7 @@ export function formatSummary(report: ScanReport): string {
     return `### Lokal scan\n\nNo personal data found in ${report.filesScanned} file(s).\n`;
   }
   const cell = (s: string) => s.replace(/\|/g, '\\|');
-  const rows = report.findings.slice(0, 200).map((f) => `| \`${cell(where(f))}\` | ${f.type} | \`${cell(f.preview)}\` | ${f.uuPdp} |`);
+  const rows = report.findings.slice(0, 200).map((f) => `| \`${cell(where(f))}\` | ${f.label ?? f.type} | \`${cell(f.preview)}\` | ${f.uuPdp} |`);
   const lines = [
     '### Lokal scan',
     '',
@@ -338,10 +345,19 @@ export function runScan(args: string[]): void {
 
   const ignoreRoot = root ?? process.cwd();
   const isIgnoredAbs = loadIgnore(ignoreRoot);
+  let config: SamaranConfig;
+  try {
+    config = loadConfig(ignoreRoot);
+  } catch (e) {
+    process.stderr.write(`${(e as Error).message}\n`);
+    process.exitCode = 2;
+    return;
+  }
   const report = scanTargets(targets, {
     types: types.length ? (types as PiiType[]) : undefined,
     minConfidence,
     isIgnored: (file) => isIgnoredAbs(path.resolve(ignoreRoot, file)),
+    config,
   });
 
   if (format === 'json') process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);

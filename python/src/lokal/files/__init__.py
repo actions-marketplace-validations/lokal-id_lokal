@@ -15,7 +15,7 @@ Scanned PDFs and photos need OCR and are reported as not scanned, never as clean
 """
 
 from ._docx import read_docx
-from ._load import MAX_FILE_BYTES, Document, DocumentKind, Part, is_text_file, load_document, walk_files
+from ._load import MAX_FILE_BYTES, Document, DocumentKind, Part, is_text_file, load_config, load_document, walk_files
 from ._pdf import PdfError, read_pdf_pages
 from ._scan import Finding, NotScanned, ScanReport, scan_path
 from ._xlsx import ZipError, read_xlsx
@@ -31,6 +31,7 @@ __all__ = [
     'ScanReport',
     'ZipError',
     'is_text_file',
+    'load_config',
     'load_document',
     'read_docx',
     'read_pdf_pages',

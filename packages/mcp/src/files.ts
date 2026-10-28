@@ -1,5 +1,6 @@
 import { closeSync, existsSync, openSync, readdirSync, readFileSync, readSync, statSync } from 'node:fs';
 import path from 'node:path';
+import { checkCustomRules, detectPii, type CustomRule, type DetectOptions, type PiiMatch } from '@lokal-id/core';
 import { readDocx } from './docx.ts';
 import { readPdf } from './pdf.ts';
 import { readXlsx, type Sheet } from './xlsx.ts';
@@ -82,6 +83,67 @@ export function globToRegExp(glob: string): RegExp {
     } else re += c.replace(/[.+^${}()|[\]\\]/g, '\\$&');
   }
   return new RegExp(`^${re}$`);
+}
+
+/** `.samaran.json`: a team's own rules and the values it never wants masked. */
+export interface SamaranConfig {
+  custom: CustomRule[];
+  allow: string[];
+}
+
+/**
+ * `.samaran.json` at the project root, or empty rules when there is none:
+ *
+ *   { "custom": [{ "label": "EMPLOYEE_ID", "pattern": "\\bEMP-\\d{6}\\b" }, { "label": "MEMBER", "fields": ["no_member"] }],
+ *     "allow": ["0800-1-500-500"] }
+ *
+ * A file that is there but wrong throws: a rule that silently did nothing would mask less than the team expects.
+ */
+export function loadConfig(root: string): SamaranConfig {
+  const file = path.join(root, '.samaran.json');
+  if (!existsSync(file)) return { custom: [], allow: [] };
+  let raw: unknown;
+  try {
+    raw = JSON.parse(readFileSync(file, 'utf8'));
+  } catch (e) {
+    throw new Error(`.samaran.json is not valid JSON: ${(e as Error).message}`);
+  }
+  const fail = (why: string): never => {
+    throw new Error(`.samaran.json: ${why}`);
+  };
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) fail('expected an object with "custom" and "allow"');
+  const { custom = [], allow = [], ...rest } = raw as Record<string, unknown>;
+  const unknownKeys = Object.keys(rest).filter((k) => !k.startsWith('$'));
+  if (unknownKeys.length) fail(`unknown key ${unknownKeys.map((k) => `"${k}"`).join(', ')} (expected "custom" and "allow")`);
+  if (!Array.isArray(custom)) fail('"custom" must be a list of rules');
+  if (!Array.isArray(allow) || !allow.every((a) => typeof a === 'string')) fail('"allow" must be a list of strings');
+  const rules = (custom as unknown[]).map((r, i): CustomRule => {
+    if (!r || typeof r !== 'object') fail(`custom[${i}] must be an object`);
+    const { label, pattern, fields, ...extra } = r as Record<string, unknown>;
+    if (Object.keys(extra).length) fail(`custom[${i}]: unknown key ${Object.keys(extra).map((k) => `"${k}"`).join(', ')}`);
+    if (typeof label !== 'string') fail(`custom[${i}] needs a "label"`);
+    if (pattern !== undefined && typeof pattern !== 'string') fail(`custom[${i}].pattern must be a string`);
+    if (fields !== undefined && (!Array.isArray(fields) || !fields.every((f) => typeof f === 'string' && f.trim()))) {
+      fail(`custom[${i}].fields must be a list of field names`);
+    }
+    return {
+      label: label as string,
+      ...(pattern !== undefined ? { pattern: pattern as string } : {}),
+      ...(fields !== undefined ? { fields: fields as string[] } : {}),
+    };
+  });
+  try {
+    checkCustomRules(rules);
+  } catch (e) {
+    fail((e as Error).message);
+  }
+  return { custom: rules, allow: allow as string[] };
+}
+
+/** detectPii with the project's own rules, minus the values it allows. */
+export function detectConfigured(text: string, options: DetectOptions, config: SamaranConfig): PiiMatch[] {
+  const found = detectPii(text, { ...options, custom: config.custom });
+  return config.allow.length ? found.filter((m) => !config.allow.includes(m.value)) : found;
 }
 
 /**

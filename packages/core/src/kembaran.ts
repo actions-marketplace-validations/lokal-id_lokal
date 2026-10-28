@@ -16,7 +16,7 @@ import {
   FEMALE_FIRST, FEMALE_LAST, HEALTH, MALE_FIRST, MALE_LAST, MARITAL, NAME_KEEP, RELIGIONS, STREETS,
 } from './kembaran-data.ts';
 import { parsePhone } from './phone.ts';
-import { canonical, detectPii, PII_TYPES, type Confidence, type PiiType } from './samaran/index.ts';
+import { canonical, checkCustomRules, detectPii, PII_TYPES, type Confidence, type CustomRule, type PiiType } from './samaran/index.ts';
 
 export interface KembaranOptions {
   /** The same secret gives the same stand-ins on every run. Without one, each run picks a random secret. */
@@ -27,6 +27,8 @@ export interface KembaranOptions {
   keepBirthDate?: boolean;
   /** "high" replaces only validated or labeled matches. Default "medium". */
   minConfidence?: Confidence;
+  /** A team's own rules, as for Samaran: their values get stand-ins of the same shape. */
+  custom?: readonly CustomRule[];
 }
 
 export interface KembaranResult {
@@ -176,6 +178,7 @@ export class Kembaran {
   private readonly keep: ReadonlySet<PiiType>;
   private readonly keepBirthDate: boolean;
   private readonly minConfidence: Confidence;
+  private readonly custom: readonly CustomRule[];
   private readonly fakes = new Map<string, string>();
   private readonly used = new Map<PiiType, Set<string>>();
   private readonly nikDays = new Map<string, Day>();
@@ -188,11 +191,13 @@ export class Kembaran {
     this.keep = new Set(options.keep ?? KEEP_BY_DEFAULT);
     this.keepBirthDate = options.keepBirthDate ?? false;
     this.minConfidence = options.minConfidence ?? 'medium';
+    if (options.custom?.length) checkCustomRules(options.custom);
+    this.custom = options.custom ?? [];
   }
 
   /** Replaces every piece of personal data in a text: a CSV, an SQL dump, JSON, a log, or prose. */
   text(input: string): KembaranResult {
-    const matches = detectPii(input, { minConfidence: this.minConfidence, exclude: [...this.keep] });
+    const matches = detectPii(input, { minConfidence: this.minConfidence, exclude: [...this.keep], custom: this.custom });
     const lineStarts = [0];
     for (let i = input.indexOf('\n'); i >= 0; i = input.indexOf('\n', i + 1)) lineStarts.push(i + 1);
     const lineOf = (pos: number) => {

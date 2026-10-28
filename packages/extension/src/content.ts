@@ -3,7 +3,7 @@
 // (analytics, session replay) could read them there. Placeholders stay in the page, highlighted; the value shows in a
 // tooltip inside a closed shadow root, and copying puts the real values on the clipboard.
 import { detectPii } from '../../core/src/samaran/detectors.ts';
-import { attachmentKind, maskedFiles, readAttachment } from './attachments.ts';
+import { attachmentKind, looksLikeIdPhoto, maskedFiles, readAttachment } from './attachments.ts';
 import {
   findPlaceholders,
   describe,
@@ -195,8 +195,12 @@ window.addEventListener(
 // --- attachments -----------------------------------------------------------------------------------------------
 
 // Files chosen with the site's file picker, dropped on the page, or pasted are held until they are checked. A file
-// with personal data is replaced by a masked copy; one without is let through unchanged, formatting and all. Images
-// and other files Lokal cannot read pass at once.
+// with personal data is replaced by a masked copy; one without is let through unchanged, formatting and all. A file
+// Lokal cannot check (a scanned or encrypted PDF, one over 20 MB, a photo named like a KTP or selfie) goes out only if
+// the user says so. Other images and binaries pass at once.
+
+/** Files worth holding: ones Lokal can read, and photos of documents the user is asked about. */
+const held = (f: File) => attachmentKind(f.name, f.type) !== undefined || looksLikeIdPhoto(f.name, f.type);
 
 const fileList = (files: Iterable<File>) => {
   const data = new DataTransfer();
@@ -209,17 +213,22 @@ async function maskFiles(files: File[]): Promise<File[]> {
   const types: MaskResponse['types'] = [];
   const changed: string[] = [];
   const notes: string[] = [];
+  /** Files Lokal could not check, with why. They go out only if the user says so. */
+  const unchecked: Array<{ file: File; why: keyof typeof t.why; at: number }> = [];
   let converted = false;
   if (files.some((f) => f.size > 1024 * 1024)) toast(t.checkingFiles);
   for (const file of files) {
+    if (looksLikeIdPhoto(file.name, file.type)) {
+      unchecked.push({ file, why: 'id-photo', at: out.length });
+      continue;
+    }
     const read = readAttachment(file.name, new Uint8Array(await file.arrayBuffer()), file.type);
     if (!read) {
       out.push(file);
       continue;
     }
     if ('reason' in read) {
-      notes.push(t.unreadableFile(file.name, t.why[read.reason]));
-      out.push(file);
+      unchecked.push({ file, why: read.reason, at: out.length });
       continue;
     }
     const masked: string[] = [];
@@ -242,6 +251,23 @@ async function maskFiles(files: File[]): Promise<File[]> {
     }
     if (read.scannedPages) notes.push(t.scannedPages(read.scannedPages.join(', ')));
   }
+  if (unchecked.length) {
+    const names = unchecked.map((u) => u.file.name).join(', ');
+    // Leaving the files out is the default: Cancel, Esc, and a page that blocks dialogs all keep them back.
+    let upload = false;
+    try {
+      upload = window.confirm(t.askUnchecked(unchecked.map((u) => `${u.file.name} (${t.why[u.why]})`).join(', ')));
+    } catch {
+      upload = false;
+    }
+    if (upload) {
+      // Back in their place among the other files, so the order the user picked stays.
+      for (const u of [...unchecked].reverse()) out.splice(u.at, 0, u.file);
+      notes.push(t.sentUnchecked(names));
+    } else {
+      notes.push(t.leftOut(names));
+    }
+  }
   const messages = [];
   if (types.length) messages.push(t.maskedFiles(describe(types, lang), changed.join(', ')));
   if (converted) messages.push(t.convertedFiles);
@@ -256,13 +282,14 @@ async function maskFiles(files: File[]): Promise<File[]> {
  */
 function holdFiles(event: Event, files: FileList | null | undefined, redispatch?: (files: File[]) => void): boolean {
   const list = [...(files ?? [])];
-  if (!list.some((f) => attachmentKind(f.name, f.type))) return false;
+  if (!list.some(held)) return false;
   event.preventDefault();
   event.stopImmediatePropagation();
   const target = event.target as EventTarget;
   maskFiles(list).then(
     (checked) => {
       if (redispatch) return redispatch(checked);
+      if (!checked.length) return; // every file was left out
       const again = new ClipboardEvent('paste', { clipboardData: fileList(checked), bubbles: true, cancelable: true, composed: true });
       ours.add(again);
       target.dispatchEvent(again);
@@ -281,11 +308,12 @@ for (const type of ['input', 'change'] as const) {
       const input = event.target;
       if (!(input instanceof HTMLInputElement) || input.type !== 'file' || !input.files?.length) return;
       if (type === 'input') {
-        if ([...input.files].some((f) => attachmentKind(f.name, f.type))) event.stopImmediatePropagation();
+        if ([...input.files].some(held)) event.stopImmediatePropagation();
         return;
       }
       holdFiles(event, input.files, (checked) => {
         input.files = fileList(checked).files;
+        if (!checked.length) return;
         for (const name of ['input', 'change']) {
           const again = new Event(name, { bubbles: true });
           ours.add(again);
@@ -304,6 +332,7 @@ window.addEventListener(
     const { clientX, clientY, screenX, screenY, ctrlKey, shiftKey, altKey, metaKey } = event;
     const target = event.target as EventTarget;
     holdFiles(event, event.dataTransfer?.files, (checked) => {
+      if (!checked.length) return;
       const again = new DragEvent('drop', {
         dataTransfer: fileList(checked),
         bubbles: true,

@@ -113,8 +113,17 @@ export const TEXT = {
     maskedFiles: (what: string, files: string) => `Lokal menyamarkan ${what} di ${files} sebelum diunggah.`,
     convertedFiles: 'Spreadsheet, dokumen Word, dan PDF diunggah sebagai teks (CSV atau TXT).',
     scannedPages: (pages: string) => `Halaman ${pages} berupa hasil scan, jadi tidak ikut diunggah.`,
-    unreadableFile: (file: string, why: string) => `Lokal tidak bisa memeriksa ${file} (${why}), jadi file itu diunggah apa adanya.`,
-    why: { 'too-large': 'lebih dari 20 MB', scanned: 'PDF hasil scan', encrypted: 'dilindungi kata sandi', damaged: 'file rusak' },
+    askUnchecked: (files: string) =>
+      `Lokal tidak bisa memeriksa ${files}. File itu bisa berisi data pribadi dan akan diunggah apa adanya.\n\nOK: tetap unggah. Batal: jangan unggah file itu.`,
+    leftOut: (files: string) => `${files} tidak diunggah.`,
+    sentUnchecked: (files: string) => `${files} diunggah tanpa diperiksa.`,
+    why: {
+      'too-large': 'lebih dari 20 MB',
+      scanned: 'PDF hasil scan',
+      encrypted: 'dilindungi kata sandi',
+      damaged: 'file rusak',
+      'id-photo': 'foto dokumen',
+    },
     fileFailed: 'Lokal gagal menyamarkan lampiran, jadi tidak ada yang diunggah. Muat ulang halaman lalu coba lagi.',
   },
   en: {
@@ -128,8 +137,17 @@ export const TEXT = {
     maskedFiles: (what: string, files: string) => `Lokal masked ${what} in ${files} before uploading.`,
     convertedFiles: 'Spreadsheets, Word documents, and PDFs are uploaded as text (CSV or TXT).',
     scannedPages: (pages: string) => `Pages ${pages} are scans, so they were left out.`,
-    unreadableFile: (file: string, why: string) => `Lokal could not check ${file} (${why}), so it was uploaded as it is.`,
-    why: { 'too-large': 'over 20 MB', scanned: 'a scanned PDF', encrypted: 'password-protected', damaged: 'damaged' },
+    askUnchecked: (files: string) =>
+      `Lokal cannot check ${files}. It may hold personal data and would be uploaded as it is.\n\nOK: upload anyway. Cancel: leave it out.`,
+    leftOut: (files: string) => `${files} not uploaded.`,
+    sentUnchecked: (files: string) => `${files} uploaded without a check.`,
+    why: {
+      'too-large': 'over 20 MB',
+      scanned: 'a scanned PDF',
+      encrypted: 'password-protected',
+      damaged: 'damaged',
+      'id-photo': 'a photo of a document',
+    },
     fileFailed: 'Lokal could not mask the attachment, so nothing was uploaded. Reload the page and try again.',
   },
 } as const;

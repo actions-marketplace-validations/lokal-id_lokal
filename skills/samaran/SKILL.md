@@ -23,6 +23,8 @@ Counting and aggregating without reading rows is fine: `wc -l`, `grep -c ERROR a
 
 Files that only hold fake data (fixtures, seeders) can be listed in `.samaranignore` at the project root.
 
+**The team's own identifiers.** Employee IDs, member numbers, internal account codes, and other formats Samaran cannot know go in `.samaran.json` at the project root, as rules with a label (`{"custom": [{"label": "EMPLOYEE_ID", "pattern": "..."}, {"label": "MEMBER", "fields": ["no_member"]}]}`); they come back as `[EMPLOYEE_ID_1]`. When the user mentions such an ID, offer to add a rule, and tell them to restart the MCP server afterwards. Values that must never be masked, like the company's own hotline, go in its `"allow"` list. If a file tool reports that `.samaran.json` is broken, show the user the error; do not read the data another way.
+
 If the `lokal` MCP server is not connected, say so and ask the user for a masked or synthetic sample instead of the raw file.
 
 ## 2. In the code you write: privacy by default
