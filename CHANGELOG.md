@@ -4,6 +4,12 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.8.2] - 2026-10-29
+
+### Fixed
+
+- Browser extension: after the extension was updated or reloaded while a chat stayed open, pasting or sending personal data in that tab showed "Uncaught Error: Extension context invalidated." on the extension's page and no message in the chat. The data was already held back and never sent; now the tab also says that Lokal was updated and the page needs a reload.
+
 ## [0.8.1] - 2026-10-29
 
 ### Fixed
@@ -220,7 +226,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.8.1...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.8.2...HEAD
+[0.8.2]: https://github.com/lokal-id/lokal/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/lokal-id/lokal/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/lokal-id/lokal/compare/v0.7.2...v0.8.0
 [0.7.2]: https://github.com/lokal-id/lokal/compare/v0.7.1...v0.7.2
