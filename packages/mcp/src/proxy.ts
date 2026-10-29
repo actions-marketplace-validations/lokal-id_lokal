@@ -73,6 +73,8 @@ function maskJson(value: Json, samaran: Samaran, counts: Map<PiiType, number>): 
 class Unmasker {
   private readonly vault: Map<string, string>;
   private readonly held = new Map<string, string>();
+  /** Placeholders in the answer that this request never made: the model made them up, or copied a template. */
+  readonly unknown = new Set<string>();
 
   constructor(samaran: Samaran) {
     this.vault = new Map(samaran.exportVault());
@@ -83,7 +85,10 @@ class Unmasker {
     if (!this.vault.size) return s;
     return s.replace(PLACEHOLDER, (whole) => {
       const value = this.vault.get(whole);
-      if (value === undefined) return whole;
+      if (value === undefined) {
+        this.unknown.add(whole);
+        return whole;
+      }
       return json ? JSON.stringify(value).slice(1, -1) : value;
     });
   }
@@ -286,7 +291,10 @@ export function startProxy(options: ProxyOptions = {}): Promise<Server> {
       if (raw.length) {
         if (req.headers['content-encoding']) return fail(res, 415, 'Samaran Proxy cannot mask a compressed request body; send it uncompressed.');
         if (contentType.includes('json')) {
-          body = JSON.stringify(maskJson(JSON.parse(raw.toString('utf8')) as Json, samaran, counts));
+          const parsed = JSON.parse(raw.toString('utf8')) as Json;
+          // Placeholder-like text anywhere in the request (an e-mail template in the system prompt) keeps its number.
+          samaran.reserve(JSON.stringify(parsed));
+          body = JSON.stringify(maskJson(parsed, samaran, counts));
         } else if (!options.allowUnmasked) {
           return fail(
             res,
@@ -330,10 +338,13 @@ export function startProxy(options: ProxyOptions = {}): Promise<Server> {
             payload = un.text(text);
           }
         }
+        if (un.unknown.size) out['x-samaran-unrestored'] = String(un.unknown.size);
         res.writeHead(response.status, out);
         res.end(payload);
       }
-      log(`${req.method} ${path} → ${response.status} ${Date.now() - started} ms${counts.size ? ` masked ${summary(counts)}` : ''}`);
+      // Not the placeholders themselves: a log line never says anything about the content.
+      const unrestored = un.unknown.size ? `, ${un.unknown.size} placeholder(s) not restored` : '';
+      log(`${req.method} ${path} → ${response.status} ${Date.now() - started} ms${counts.size ? ` masked ${summary(counts)}` : ''}${unrestored}`);
     } catch (e) {
       log(`${req.method} ${path} failed: ${(e as Error).message}`);
       if (!res.headersSent) fail(res, 502, `Samaran Proxy: ${(e as Error).message}`);

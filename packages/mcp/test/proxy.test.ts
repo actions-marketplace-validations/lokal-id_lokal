@@ -149,8 +149,47 @@ test('proxy: Chat Completions dikirim tersamar, jawaban dan argumen tool kembali
   const message = reply.choices[0].message;
   assert.equal(message.content, 'Baik, data Budi Santoso dengan NIK 3201011508950001 sudah dicek. [UNKNOWN_9] tetap.');
   assert.deepEqual(JSON.parse(message.tool_calls[0].function.arguments), { nama: 'Budi Santoso', hp: '0812-3456-7890' });
-  assert.match(logs.at(-1)!, /POST \/v1\/chat\/completions → 200 \d+ ms masked NAME=2,NIK=2,PHONE=2,FINANCIAL=1/);
+  assert.match(logs.at(-1)!, /POST \/v1\/chat\/completions → 200 \d+ ms masked NAME=2,NIK=2,PHONE=2,FINANCIAL=1, 1 placeholder\(s\) not restored$/);
+  assert.equal(res.headers.get('x-samaran-unrestored'), '1', '[UNKNOWN_9] came from nowhere');
   assert.ok(!logs.join('\n').includes('3201011508950001'), 'the log has no values');
+  assert.ok(!logs.join('\n').includes('UNKNOWN_9'), 'nor the placeholders');
+});
+
+test('proxy: parallel requests from different users never get each other\'s data', async () => {
+  // Every request gets its own vault: [NAME_1] is Budi in one answer and Siti in the other.
+  const people = ['Budi Santoso', 'Siti Aminah', 'Joko Susilo', 'Dewi Lestari', 'Agus Salim', 'Rina Wulandari'];
+  const replies = await Promise.all(
+    people.map((name, i) =>
+      post('/v1/chat/completions', {
+        model: 'gpt-test',
+        messages: [{ role: 'user', content: `Nama: ${name}, NIK 320101150895000${i}` }],
+      }).then((r) => r.json()),
+    ),
+  );
+  replies.forEach((reply, i) => {
+    const content: string = reply.choices[0].message.content;
+    assert.ok(content.startsWith(`Baik, data ${people[i]} dengan NIK`), content);
+    for (const other of people) if (other !== people[i]) assert.ok(!content.includes(other), `${other} leaked into ${people[i]}'s answer`);
+  });
+});
+
+test('proxy: a template with placeholder-like text never gets real values restored into it', async () => {
+  received = [];
+  const res = await post('/v1/chat/completions', {
+    model: 'gpt-test',
+    messages: [
+      { role: 'user', content: 'Pelanggan: Budi Santoso, NIK 3201011508950001' },
+      // A later message holds a template whose tokens look like Samaran's own.
+      { role: 'system', content: 'Balas dengan template: "Halo [NAME_1], data kamu sudah kami terima."' },
+    ],
+  });
+  const body = JSON.parse(received[0]!.body);
+  assert.equal(body.messages[0].content, 'Pelanggan: [NAME_2], NIK [NIK_1]', 'the real name skips the template number');
+  assert.equal(body.messages[1].content, 'Balas dengan template: "Halo [NAME_1], data kamu sudah kami terima."');
+  // The fake model answers "data [NAME_1] dengan NIK [NIK_1]": [NAME_1] is the template's, so it stays.
+  const message = (await res.json()).choices[0].message;
+  assert.match(message.content, /^Baik, data \[NAME_1\] dengan NIK 3201011508950001 sudah dicek/);
+  assert.ok(!message.content.includes('Budi Santoso'));
 });
 
 test('proxy: streaming dengan placeholder yang terpotong di antara potongan', async () => {

@@ -440,3 +440,17 @@ def test_uu_pdp_sensitive_data_in_everyday_language() -> None:
         'Risiko gagal bayar obligasi. Saya menikah tahun depan.'
     )
     assert values(text) == []
+
+
+def test_placeholder_like_text_in_the_input_keeps_its_number() -> None:
+    s = Samaran()
+    text = 'Template: "Halo [NAME_1], NIK kamu [NIK_1]". Data: Budi Santoso, NIK 3201011508950001'
+    masked = s.mask(text).text
+    assert masked == 'Template: "Halo [NAME_1], NIK kamu [NIK_1]". Data: [NAME_2], NIK [NIK_2]'
+    assert s.unmask(masked) == text
+    assert s.mask('Bagaimana dengan [NAME_2]? Ada juga Siti Aminah.').text == 'Bagaimana dengan [NAME_2]? Ada juga [NAME_3].'
+    r = Samaran()
+    r.reserve('Pelanggan: Joko Susilo ... template: Yth. [NAME_4]')
+    assert r.mask('Pelanggan: Joko Susilo').text == 'Pelanggan: [NAME_5]'
+    assert mask_pii('[NIK_3] 3201011508950001', mode='partial').text == '[NIK_3] 3201********0001'
+    assert Samaran().mask('[NIK_99999999999] NIK 3201011508950001').text == '[NIK_99999999999] NIK [NIK_1]'

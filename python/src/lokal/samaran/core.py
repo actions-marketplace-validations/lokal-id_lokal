@@ -161,7 +161,23 @@ class Samaran:
         )
         return [m for m in matches if not self._allowed(m.value)]
 
+    def reserve(self, text: str) -> None:
+        """Keeps placeholder-like text that is already in ``text`` and did not come from this vault apart from real
+        values: with "Halo [NAME_1]" in an e-mail template, the real name becomes [NAME_2], so restoring never fills
+        the template with it. ``mask`` does this for its own input. When the parts of one request are masked one by
+        one, call it on the whole request first, so a template in a later part does not take a number an earlier part
+        already gave out."""
+        for m in _PLACEHOLDER.finditer(text):
+            if m.group(0) in self._by_placeholder:
+                continue  # ours: the user or the model referring to a masked value
+            name, _, number = m.group(1).rpartition('_')
+            n = int(number)
+            if self._counters.get(name, 0) < n < 1_000_000_000:
+                self._counters[name] = n
+
     def mask(self, text: str) -> MaskResult:
+        if self.mode != 'partial':
+            self.reserve(text)
         masked: list[MaskedMatch] = []
         out: list[str] = []
         cursor = 0

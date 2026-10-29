@@ -2,6 +2,23 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { Samaran, detectPii, maskPii } from '../src/index.ts';
 
+test('placeholder-like text in the input keeps its number; real values never restore into it', () => {
+  const s = new Samaran();
+  const text = 'Template: "Halo [NAME_1], NIK kamu [NIK_1]". Data: Budi Santoso, NIK 3201011508950001';
+  const { text: masked } = s.mask(text);
+  assert.equal(masked, 'Template: "Halo [NAME_1], NIK kamu [NIK_1]". Data: [NAME_2], NIK [NIK_2]');
+  assert.equal(s.unmask(masked), text);
+  // A placeholder this vault made, quoted back by the user, still means that person.
+  assert.equal(s.mask('Bagaimana dengan [NAME_2]? Ada juga Siti Aminah.').text, 'Bagaimana dengan [NAME_2]? Ada juga [NAME_3].');
+  // Several parts of one request: reserve them all first.
+  const r = new Samaran();
+  r.reserve('Pelanggan: Joko Susilo ... template: Yth. [NAME_4]');
+  assert.equal(r.mask('Pelanggan: Joko Susilo').text, 'Pelanggan: [NAME_5]');
+  // Partial mode has no placeholders to collide with; absurd numbers are not reserved.
+  assert.equal(new Samaran({ mode: 'partial' }).mask('[NIK_3] 3201011508950001').text, '[NIK_3] 3201********0001');
+  assert.equal(new Samaran().mask('[NIK_99999999999] NIK 3201011508950001').text, '[NIK_99999999999] NIK [NIK_1]');
+});
+
 const chat = [
   'Halo kak, saya mau komplain. Nama: Budi Santoso',
   'NIK 3201011508950001, NPWP 01.234.567.8-901.000',

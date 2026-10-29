@@ -535,12 +535,15 @@ export function createServer(
       const tabular = (doc.kind === 'sheets' && doc.unit !== 'page') || /\.(csv|tsv)$/i.test(abs);
       const blocks: string[] = [];
       const all: PiiMatch[] = [];
+      // Text in the file that looks like a placeholder this session already gave out: restoring would read it as one.
+      const clashes = new Set<string>();
       let textRange = '';
       for (const part of parts(doc)) {
         const lines = part.text.split(/\r?\n/);
         let slice = lines.slice(start_line - 1, start_line - 1 + max_lines).join('\n');
         const withHeader = tabular && start_line > 1;
         if (withHeader) slice = `${lines[0]}\n${slice}`;
+        for (const t of slice.match(/\[[A-Z_]+_\d+\]/g) ?? []) if (samaran.unmask(t) !== t) clashes.add(t);
         let { text: masked, matches } = samaran.mask(slice);
         if (withHeader) masked = masked.slice(masked.indexOf('\n') + 1);
         for (const m of matches) all.push(m);
@@ -567,6 +570,9 @@ export function createServer(
         `File: ${rel} (${what})`,
         ...(doc.kind === 'sheets' && doc.unscanned ? [`Not read: ${doc.unscanned}. They may hold personal data, such as an ID card photo.`] : []),
         `Masked: ${all.length ? JSON.stringify(countByType(all.map((m) => m.label ?? m.type))) : 'nothing found'}`,
+        ...(clashes.size
+          ? [`Note: the file itself contains ${[...clashes].slice(0, 5).join(', ')}, which this session also uses as placeholders. write_file_unmasked would restore them; do not copy that text into output.`]
+          : []),
         '---',
       ];
       return { content: [{ type: 'text' as const, text: `${header.join('\n')}\n${blocks.join('\n\n')}` }] };
@@ -605,6 +611,9 @@ export function createServer(
         bytes: Buffer.byteLength(restoredText),
         restored: placeholders.filter((p) => !unknown.includes(p)).length,
         unknownPlaceholders: unknown.length ? unknown : undefined,
+        warning: unknown.length
+          ? `${unknown.length} placeholder(s) were not made in this session and were written as they are. If you wrote them (a made-up or mistyped placeholder), fix the content and write it again; if they come from the data itself, such as a template, this is expected.`
+          : undefined,
       });
     },
   );

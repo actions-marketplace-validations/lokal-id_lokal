@@ -5096,10 +5096,10 @@
      "[MEMBER_1"
     ]
    ],
-   "placeholder": "member no_member=[MEMBER_1]] minta reset.",
+   "placeholder": "member no_member=[MEMBER_2]] minta reset.",
    "vault": [
     [
-     "[MEMBER_1]",
+     "[MEMBER_2]",
      "[MEMBER_1"
     ]
    ],
@@ -5123,10 +5123,10 @@
      "[NIK_1]"
     ]
    ],
-   "placeholder": "{\"no_member\": \"[MEMBER_1]\", \"nik\": \"[NOTE_1]\"}",
+   "placeholder": "{\"no_member\": \"[MEMBER_3]\", \"nik\": \"[NOTE_1]\"}",
    "vault": [
     [
-     "[MEMBER_1]",
+     "[MEMBER_3]",
      "[MEMBER_2]"
     ],
     [
@@ -5147,10 +5147,10 @@
      "[MEMBER_3"
     ]
    ],
-   "placeholder": "kode member: [MEMBER_1]]",
+   "placeholder": "kode member: [MEMBER_4]]",
    "vault": [
     [
-     "[MEMBER_1]",
+     "[MEMBER_4]",
      "[MEMBER_3"
     ]
    ],

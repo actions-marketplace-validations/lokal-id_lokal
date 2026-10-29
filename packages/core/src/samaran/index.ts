@@ -145,7 +145,24 @@ export class Samaran {
     );
   }
 
+  /**
+   * Keeps placeholder-like text that is already in `text` and did not come from this vault apart from real values:
+   * with "Halo [NAME_1]" in an e-mail template, the real name becomes [NAME_2], so restoring never fills the template
+   * with it. `mask` does this for its own input. When the parts of one request are masked one by one, call it on the
+   * whole request first, so a template in a later part does not take a number an earlier part already gave out.
+   */
+  reserve(text: string): void {
+    for (const m of text.matchAll(PLACEHOLDER)) {
+      if (this.byPlaceholder.has(m[0])) continue; // ours: the user or the model referring to a masked value
+      const at = m[1]!.lastIndexOf('_');
+      const name = m[1]!.slice(0, at);
+      const n = Number(m[1]!.slice(at + 1));
+      if (n > (this.counters.get(name) ?? 0) && n < 1e9) this.counters.set(name, n);
+    }
+  }
+
   mask(text: string): MaskResult {
+    if (this.options.mode !== 'partial') this.reserve(text);
     const matches = this.scan(text);
     const masked: MaskedMatch[] = [];
     let out = '';

@@ -193,6 +193,20 @@ test('read_file_masked → olah → write_file_unmasked (round trip)', async () 
 
   const again = await call('write_file_unmasked', { path: 'out/unik.csv', content: 'x' });
   assert.equal(again.isError, true, 'refuses to overwrite without overwrite: true');
+
+  // A placeholder the model made up is written as it is, and said so.
+  const madeUp = await call('write_file_unmasked', { path: 'out/karangan.csv', content: '[NAME_1],[NIK_77]' });
+  assert.deepEqual(madeUp.data.unknownPlaceholders, ['[NIK_77]']);
+  assert.match(madeUp.data.warning, /1 placeholder\(s\) were not made in this session/);
+  assert.equal(readFileSync(path.join(dir, 'out', 'karangan.csv'), 'utf8'), 'Budi Santoso,[NIK_77]');
+});
+
+test('read_file_masked: text in a file that looks like a placeholder', async () => {
+  // A template that uses a number this session already gave out to a real person.
+  writeFileSync(path.join(dir, 'template.txt'), 'Halo [NAME_1], tagihan kamu jatuh tempo.\nHalo [NAME_99], ini lain.\n');
+  const read = await call('read_file_masked', { path: 'template.txt' });
+  assert.match(read.text, /Note: the file itself contains \[NAME_1\], which this session also uses as placeholders/);
+  assert.ok(!read.text.includes('[NAME_99], which'), 'a number nobody has yet is no clash');
 });
 
 test('tool data membaca placeholder dari read_file_masked tanpa membuka nilainya', async () => {

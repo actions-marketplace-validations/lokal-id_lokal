@@ -5490,6 +5490,113 @@
   "matches": []
  },
  {
+  "text": "placeholder-like text in the input keeps its number; real values never restore into it",
+  "matches": []
+ },
+ {
+  "text": "Template: \"Halo [NAME_1], NIK kamu [NIK_1]\". Data: Budi Santoso, NIK 3201011508950001",
+  "matches": [
+   [
+    "NAME",
+    51,
+    63,
+    "Budi Santoso",
+    "medium"
+   ],
+   [
+    "NIK",
+    69,
+    85,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Template: \"Halo [NAME_1], NIK kamu [NIK_1]\". Data: [NAME_2], NIK [NIK_2]",
+  "matches": []
+ },
+ {
+  "text": "Bagaimana dengan [NAME_2]? Ada juga Siti Aminah.",
+  "matches": [
+   [
+    "NAME",
+    36,
+    47,
+    "Siti Aminah",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "Bagaimana dengan [NAME_2]? Ada juga [NAME_3].",
+  "matches": []
+ },
+ {
+  "text": "Pelanggan: Joko Susilo ... template: Yth. [NAME_4]",
+  "matches": [
+   [
+    "NAME",
+    11,
+    22,
+    "Joko Susilo",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Pelanggan: Joko Susilo",
+  "matches": [
+   [
+    "NAME",
+    11,
+    22,
+    "Joko Susilo",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Pelanggan: [NAME_5]",
+  "matches": []
+ },
+ {
+  "text": "partial",
+  "matches": []
+ },
+ {
+  "text": "[NIK_3] 3201011508950001",
+  "matches": [
+   [
+    "NIK",
+    8,
+    24,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "[NIK_3] 3201********0001",
+  "matches": []
+ },
+ {
+  "text": "[NIK_99999999999] NIK 3201011508950001",
+  "matches": [
+   [
+    "NIK",
+    22,
+    38,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "[NIK_99999999999] NIK [NIK_1]",
+  "matches": []
+ },
+ {
   "text": "Halo kak, saya mau komplain. Nama: Budi Santoso",
   "matches": [
    [
@@ -13027,6 +13134,74 @@
  },
  {
   "text": "refuses to overwrite without overwrite: true",
+  "matches": []
+ },
+ {
+  "text": "write_file_unmasked",
+  "matches": []
+ },
+ {
+  "text": "out/karangan.csv",
+  "matches": []
+ },
+ {
+  "text": "[NAME_1],[NIK_77]",
+  "matches": []
+ },
+ {
+  "text": "[NIK_77]",
+  "matches": []
+ },
+ {
+  "text": "out",
+  "matches": []
+ },
+ {
+  "text": "karangan.csv",
+  "matches": []
+ },
+ {
+  "text": "utf8",
+  "matches": []
+ },
+ {
+  "text": "Budi Santoso,[NIK_77]",
+  "matches": [
+   [
+    "NAME",
+    0,
+    12,
+    "Budi Santoso",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "read_file_masked: text in a file that looks like a placeholder",
+  "matches": []
+ },
+ {
+  "text": "template.txt",
+  "matches": []
+ },
+ {
+  "text": "Halo [NAME_1], tagihan kamu jatuh tempo.\nHalo [NAME_99], ini lain.\n",
+  "matches": []
+ },
+ {
+  "text": "read_file_masked",
+  "matches": []
+ },
+ {
+  "text": "template.txt",
+  "matches": []
+ },
+ {
+  "text": "[NAME_99], which",
+  "matches": []
+ },
+ {
+  "text": "a number nobody has yet is no clash",
   "matches": []
  },
  {
