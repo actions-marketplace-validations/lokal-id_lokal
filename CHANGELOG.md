@@ -4,6 +4,24 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+### Added
+
+- A held-out benchmark, `npm run bench`: precision, recall, F1, and the share of values fully masked, per type of personal data, on 1,200 made-up documents in eleven formats (forms, chat, mixed Indonesian and English, informal spelling, unlabelled text, JSON, CSV, logs, OCR output, letters, and traps with no personal data). The test split uses different templates and names from the dev split, and CI fails when a change scores below the baseline. On 0.8.2 it masks 95.0% of values fully, with 99.5% precision; its weakest spots are OCR text with misread characters and names without a label. Method and limits are in `evals/bench/README.md`.
+- One set of states for what a check saw, so "no personal data found" is never confused with "never looked": `scanned`, `partial`, `unsupported`, and `failed` (`ScanStatus` and `SCAN_STATUSES` in both libraries). `lokal-mcp scan`, `scan_pii` (with a `byStatus` count), `read_file_masked`, the Python `scan_path`, and the browser extension's attachment reader all report them.
+- Samaran Proxy: images, audio, and files inside a JSON request cannot be checked for personal data. They are still forwarded, but the response now says `x-samaran-status: partial` with the count in `x-samaran-unchecked`, and the log line says so. Every response carries `x-samaran-status`. `--strict` refuses such requests with HTTP 422, and also refuses file uploads even with `--allow-unmasked`.
+- Leak tests: one made-up person with every kind of personal data (`packages/core/test/canary.json`) goes through both libraries, the AI SDK middleware, every MCP tool, the guard, every API shape of the proxy, `lokal-mcp scan`, Kembaran, the Python logging filter, and the browser extension, as a form, JSON, a log line, CSV, and JSON inside JSON. A test fails if any value, or part of the name or street, comes out.
+
+### Fixed
+
+Found by the leak tests. Each one let some values through unmasked:
+
+- A CSV after a sentence ("Tolong cek data ini:" and then the table) was only read by its columns when the header was the first line, so names, bank accounts, BPJS and passport numbers, birth dates, religion, and diagnoses in it went through. Now a header in the first 20 lines is found, and a table that starts after a sentence ends at its last row. A header after a log prefix ("import csv: nama,nik") is found too.
+- Text from JSON or a log formatter keeps its line breaks as `\n`. A label after one ("...\nAgama: Islam") was not found, and a name before one was cut short. Escaped line breaks now count as line breaks, also after two rounds of JSON.
+- JSON inside a JSON string, as logs write a request body and tool calls their arguments, had its field names escaped, so names, birth dates, religion, and diagnoses in it were not found. Such strings are now read unescaped, in one pass for a whole log.
+- The proxy now masks a tool call's arguments and other JSON in a string field by field, with each field's name as context, including fields such as `name` and `id` that it leaves alone in the request itself.
+- A labelled value inside a JSON string took the closing quote with it (`{"note":"Agama: Islam"}`), so masking a JSON file broke it. A quoted value with an escaped quote in it (`"Budi \"Bob\" Santoso"`) stopped at that quote and left the surname.
+- `scan_pii` and the Python `scan_path` skipped a file silently when it could not even be opened (permissions, a file removed while scanning). It is now reported as `failed`, not left out.
+
 ## [0.8.2] - 2026-10-29
 
 ### Fixed

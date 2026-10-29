@@ -107,7 +107,7 @@ The file tools can only access `LOKAL_ROOT`, which defaults to `CLAUDE_PROJECT_D
 npx @lokal-id/mcp proxy --port 8787 [--openai <url>] [--anthropic <url>] [--exclude FINANCIAL]
 ```
 
-Then use `OpenAI(base_url="http://127.0.0.1:8787/v1")` or `Anthropic(base_url="http://127.0.0.1:8787")`. See the [Lokal README](https://github.com/lokal-id/lokal#samaran-proxy-protect-an-apps-llm-calls).
+Then use `OpenAI(base_url="http://127.0.0.1:8787/v1")` or `Anthropic(base_url="http://127.0.0.1:8787")`. Requests with images or files inside are forwarded with `x-samaran-status: partial`, since they cannot be checked; `--strict` refuses them. See the [Lokal README](https://github.com/lokal-id/lokal#samaran-proxy-protect-an-apps-llm-calls).
 
 ## License
 

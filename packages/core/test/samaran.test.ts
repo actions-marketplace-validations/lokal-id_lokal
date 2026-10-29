@@ -27,6 +27,56 @@ const chat = [
   'Alamat Jl. Mawar No. 5 RT 03/RW 07, motor B 1234 XYZ',
 ].join('\n');
 
+test('a CSV pasted after a sentence is still read by its columns, and ends where its rows end', () => {
+  const pasted = 'Tolong cek data ini ya:\nnama,agama,diagnosa,no_bpjs\nSiti Aminah,Katolik,asma,0001234567890\nAgus Salim,Islam,TBC,0009876543210\n\nmakasih, nanti kabari';
+  const { text } = new Samaran().mask(pasted);
+  for (const v of ['Siti Aminah', 'Katolik', 'asma', '0001234567890', 'Agus Salim', 'TBC']) assert.ok(!text.includes(v), `${v} leaked`);
+  assert.match(text, /^Tolong cek data ini ya:\nnama,agama,diagnosa,no_bpjs\n/);
+  assert.match(text, /\n\nmakasih, nanti kabari$/, 'the sentence after the table is not a row');
+  // The table ends at a line that is not one of its rows.
+  const after = 'Datanya:\nnama,kota\nRina Wati,Depok\nmakasih ya';
+  assert.equal(new Samaran().mask(after).text, 'Datanya:\nnama,kota\n[NAME_1],Depok\nmakasih ya');
+  // A data row with a field name in it is not a header: labels from an image dataset.
+  const labels = 'n01687978\tagama\nn01688243\tfrilled lizard\nn01689811\tChamaeleo oweni';
+  assert.deepEqual(detectPii(`daftar label:\n${labels}`).map((m) => m.type), []);
+  // A sentence with commas is still not a header.
+  assert.equal(new Samaran().mask('Catatan rapat:\nhadir, izin, sakit\n3, 1, 0').text, 'Catatan rapat:\nhadir, izin, sakit\n3, 1, 0');
+});
+
+test('text from JSON or a log keeps its labels across escaped line breaks and quotes', () => {
+  const values = (t: string) => detectPii(t).map((m) => `${m.type}:${m.value}`);
+  // One round of JSON ("\n"), and two (a tool call's arguments: "\\n").
+  const form = 'Nama: Kenanga Purbasari\nPaspor: C7788120\nAgama: Konghucu\nDiagnosa: hipertensi';
+  const expected = ['NAME:Kenanga Purbasari', 'PASSPORT:C7788120', 'RELIGION:Konghucu', 'HEALTH:hipertensi'];
+  assert.deepEqual(values(JSON.stringify({ data: form })), expected);
+  assert.deepEqual(values(JSON.stringify(JSON.stringify({ data: form }))), expected);
+  // The value ends where its string does: the closing quote stays, so masked JSON is still JSON.
+  const masked = new Samaran().mask('{"catatan":"Agama: Konghucu","nama":"Budi \\"Bob\\" Santoso"}').text;
+  assert.equal(masked, '{"catatan":"Agama: [RELIGION_1]","nama":"[NAME_1]"}');
+  assert.doesNotThrow(() => JSON.parse(masked));
+  // A Windows path is not a line break, and its text is left as it was.
+  assert.deepEqual(values('path C:\\new\\data, Nama: Budi Santoso'), ['NAME:Budi Santoso']);
+});
+
+test('JSON and CSV inside a JSON string are read with their field names', () => {
+  // A log line with the request body as a string, and a tool call's arguments carrying a CSV export.
+  const body = JSON.stringify({ level: 'info', body: JSON.stringify({ nama: 'Siti Aminah', agama: 'Katolik', diagnosa: 'asma' }) });
+  const csv = JSON.stringify({ data: 'nama,agama\n"Agus Salim","Islam"\n' });
+  for (const t of [body, csv, JSON.stringify({ args: body })]) {
+    const s = new Samaran();
+    const out = s.mask(t).text;
+    for (const v of ['Siti Aminah', 'Katolik', 'asma', 'Agus Salim', 'Islam']) assert.ok(!out.includes(v), `${v} leaked from ${t}`);
+    assert.doesNotThrow(() => JSON.parse(out), 'still JSON');
+    assert.equal(s.unmask(out), t);
+  }
+  // Many bodies are read in one pass, and a match never joins two of them.
+  const many = JSON.stringify(Array.from({ length: 50 }, (_, i) => ({ body: JSON.stringify({ id: i, nama: 'Rina Wati' }) })));
+  assert.doesNotThrow(() => JSON.parse(new Samaran().mask(many).text));
+  assert.ok(!new Samaran().mask(many).text.includes('Rina'));
+  // A CSV header after a log prefix.
+  assert.equal(new Samaran().mask('import csv: nama,kota\nDewi Lestari,Depok').text, 'import csv: nama,kota\n[NAME_1],Depok');
+});
+
 test('mendeteksi semua jenis PII khas Indonesia dalam satu chat', () => {
   const types = detectPii(chat).map((m) => `${m.type}:${m.value}`);
   assert.deepEqual(types, [

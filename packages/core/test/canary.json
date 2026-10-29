@@ -1,0 +1,20 @@
+{
+  "$comment": "One made-up person with every kind of personal data Samaran knows, for the leak tests in TypeScript and Python. Nobody here is real: the NIK has a valid structure and the card passes Luhn, nothing more. Every value must be found in every format below; a value that comes out of any integration unmasked is a leak.",
+  "fields": [
+    ["nama", "Nama", "NAME", "Kenanga Purbasari"],
+    ["nik", "NIK", "NIK", "3174015507880099"],
+    ["no_kk", "No. KK", "KK", "3174012201150077"],
+    ["npwp", "NPWP", "NPWP", "12.345.678.9-012.345"],
+    ["no_hp", "No. HP", "PHONE", "0813-7788-1290"],
+    ["email", "Email", "EMAIL", "kenanga.purbasari@surelkanari.id"],
+    ["rekening", "Rekening BCA", "BANK_ACCOUNT", "7720019934"],
+    ["no_bpjs", "No. BPJS Kesehatan", "BPJS", "0001778899001"],
+    ["paspor", "Paspor", "PASSPORT", "C7788120"],
+    ["kartu_kredit", "Kartu kredit", "CARD", "5281 0377 1234 5678"],
+    ["alamat", "Alamat", "ADDRESS", "Jl. Kanari Raya No. 47 RT 004/RW 009"],
+    ["tgl_lahir", "Tanggal lahir", "BIRTH_DATE", "15-07-1988"],
+    ["agama", "Agama", "RELIGION", "Konghucu"],
+    ["diagnosa", "Diagnosa", "HEALTH", "hipertensi"],
+    ["plat_nomor", "Plat nomor", "PLATE", "B 7712 KNR"]
+  ]
+}

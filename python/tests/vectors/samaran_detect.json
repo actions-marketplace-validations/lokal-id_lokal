@@ -2758,6 +2758,66 @@
   "matches": []
  },
  {
+  "text": "node:assert/strict",
+  "matches": []
+ },
+ {
+  "text": "node:fs",
+  "matches": []
+ },
+ {
+  "text": "node:path",
+  "matches": []
+ },
+ {
+  "text": "canary.json",
+  "matches": []
+ },
+ {
+  "text": "utf8",
+  "matches": []
+ },
+ {
+  "text": "\n",
+  "matches": []
+ },
+ {
+  "text": " ",
+  "matches": []
+ },
+ {
+  "text": ",",
+  "matches": []
+ },
+ {
+  "text": ",",
+  "matches": []
+ },
+ {
+  "text": "",
+  "matches": []
+ },
+ {
+  "text": "NAME",
+  "matches": []
+ },
+ {
+  "text": " ",
+  "matches": []
+ },
+ {
+  "text": "ADDRESS",
+  "matches": []
+ },
+ {
+  "text": "Kanari Raya",
+  "matches": []
+ },
+ {
+  "text": ", ",
+  "matches": []
+ },
+ {
   "text": "node:test",
   "matches": []
  },
@@ -4674,6 +4734,134 @@
   "matches": []
  },
  {
+  "text": "ai",
+  "matches": []
+ },
+ {
+  "text": "ai/test",
+  "matches": []
+ },
+ {
+  "text": "@ai-sdk/provider",
+  "matches": []
+ },
+ {
+  "text": "../src/index.ts",
+  "matches": []
+ },
+ {
+  "text": "../src/ai-sdk.ts",
+  "matches": []
+ },
+ {
+  "text": "../src/kembaran.ts",
+  "matches": []
+ },
+ {
+  "text": "./canary.ts",
+  "matches": []
+ },
+ {
+  "text": "stop",
+  "matches": []
+ },
+ {
+  "text": "stop",
+  "matches": []
+ },
+ {
+  "text": "canary: every value is found in every format, as its own type in the labelled form",
+  "matches": []
+ },
+ {
+  "text": "json",
+  "matches": []
+ },
+ {
+  "text": "canary: Samaran and maskPii leave no value, and unmask gives the input back",
+  "matches": []
+ },
+ {
+  "text": "partial",
+  "matches": []
+ },
+ {
+  "text": "canary: the AI SDK middleware sends no value to the provider, in generate and stream",
+  "matches": []
+ },
+ {
+  "text": "text",
+  "matches": []
+ },
+ {
+  "text": "Data [NAME_1] dengan NIK [NIK_1] sudah dicek.",
+  "matches": []
+ },
+ {
+  "text": "the app gets the real name back",
+  "matches": []
+ },
+ {
+  "text": "stream-start",
+  "matches": []
+ },
+ {
+  "text": "text-start",
+  "matches": []
+ },
+ {
+  "text": "0",
+  "matches": []
+ },
+ {
+  "text": "text-delta",
+  "matches": []
+ },
+ {
+  "text": "0",
+  "matches": []
+ },
+ {
+  "text": "ok",
+  "matches": []
+ },
+ {
+  "text": "text-end",
+  "matches": []
+ },
+ {
+  "text": "0",
+  "matches": []
+ },
+ {
+  "text": "finish",
+  "matches": []
+ },
+ {
+  "text": "canary: Kembaran replaces every value it does not keep on purpose",
+  "matches": []
+ },
+ {
+  "text": "",
+  "matches": []
+ },
+ {
+  "text": "canary",
+  "matches": []
+ },
+ {
+  "text": ", ",
+  "matches": []
+ },
+ {
+  "text": "node:test",
+  "matches": []
+ },
+ {
+  "text": "node:assert/strict",
+  "matches": []
+ },
+ {
   "text": "../src/index.ts",
   "matches": []
  },
@@ -5686,6 +5874,401 @@
  },
  {
   "text": "\n",
+  "matches": []
+ },
+ {
+  "text": "a CSV pasted after a sentence is still read by its columns, and ends where its rows end",
+  "matches": []
+ },
+ {
+  "text": "Tolong cek data ini ya:\nnama,agama,diagnosa,no_bpjs\nSiti Aminah,Katolik,asma,0001234567890\nAgus Salim,Islam,TBC,0009876543210\n\nmakasih, nanti kabari",
+  "matches": [
+   [
+    "NAME",
+    52,
+    63,
+    "Siti Aminah",
+    "high"
+   ],
+   [
+    "RELIGION",
+    64,
+    71,
+    "Katolik",
+    "high"
+   ],
+   [
+    "HEALTH",
+    72,
+    76,
+    "asma",
+    "high"
+   ],
+   [
+    "BPJS",
+    77,
+    90,
+    "0001234567890",
+    "high"
+   ],
+   [
+    "NAME",
+    91,
+    101,
+    "Agus Salim",
+    "high"
+   ],
+   [
+    "RELIGION",
+    102,
+    107,
+    "Islam",
+    "high"
+   ],
+   [
+    "HEALTH",
+    108,
+    111,
+    "TBC",
+    "high"
+   ],
+   [
+    "BPJS",
+    112,
+    125,
+    "0009876543210",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Siti Aminah",
+  "matches": [
+   [
+    "NAME",
+    0,
+    11,
+    "Siti Aminah",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "Katolik",
+  "matches": []
+ },
+ {
+  "text": "asma",
+  "matches": []
+ },
+ {
+  "text": "0001234567890",
+  "matches": []
+ },
+ {
+  "text": "Agus Salim",
+  "matches": [
+   [
+    "NAME",
+    0,
+    10,
+    "Agus Salim",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "TBC",
+  "matches": []
+ },
+ {
+  "text": "the sentence after the table is not a row",
+  "matches": []
+ },
+ {
+  "text": "Datanya:\nnama,kota\nRina Wati,Depok\nmakasih ya",
+  "matches": [
+   [
+    "NAME",
+    19,
+    28,
+    "Rina Wati",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Datanya:\nnama,kota\n[NAME_1],Depok\nmakasih ya",
+  "matches": []
+ },
+ {
+  "text": "n01687978\tagama\nn01688243\tfrilled lizard\nn01689811\tChamaeleo oweni",
+  "matches": [
+   [
+    "RELIGION",
+    26,
+    40,
+    "frilled lizard",
+    "high"
+   ],
+   [
+    "RELIGION",
+    51,
+    66,
+    "Chamaeleo oweni",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Catatan rapat:\nhadir, izin, sakit\n3, 1, 0",
+  "matches": []
+ },
+ {
+  "text": "Catatan rapat:\nhadir, izin, sakit\n3, 1, 0",
+  "matches": []
+ },
+ {
+  "text": "text from JSON or a log keeps its labels across escaped line breaks and quotes",
+  "matches": []
+ },
+ {
+  "text": "Nama: Kenanga Purbasari\nPaspor: C7788120\nAgama: Konghucu\nDiagnosa: hipertensi",
+  "matches": [
+   [
+    "NAME",
+    6,
+    23,
+    "Kenanga Purbasari",
+    "high"
+   ],
+   [
+    "PASSPORT",
+    32,
+    40,
+    "C7788120",
+    "high"
+   ],
+   [
+    "RELIGION",
+    48,
+    56,
+    "Konghucu",
+    "high"
+   ],
+   [
+    "HEALTH",
+    67,
+    77,
+    "hipertensi",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "NAME:Kenanga Purbasari",
+  "matches": [
+   [
+    "NAME",
+    5,
+    22,
+    "Kenanga Purbasari",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "PASSPORT:C7788120",
+  "matches": [
+   [
+    "PASSPORT",
+    9,
+    17,
+    "C7788120",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "RELIGION:Konghucu",
+  "matches": [
+   [
+    "RELIGION",
+    9,
+    17,
+    "Konghucu",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "HEALTH:hipertensi",
+  "matches": []
+ },
+ {
+  "text": "{\"catatan\":\"Agama: Konghucu\",\"nama\":\"Budi \\\"Bob\\\" Santoso\"}",
+  "matches": [
+   [
+    "RELIGION",
+    19,
+    27,
+    "Konghucu",
+    "high"
+   ],
+   [
+    "NAME",
+    37,
+    57,
+    "Budi \\\"Bob\\\" Santoso",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "{\"catatan\":\"Agama: [RELIGION_1]\",\"nama\":\"[NAME_1]\"}",
+  "matches": []
+ },
+ {
+  "text": "path C:\\new\\data, Nama: Budi Santoso",
+  "matches": [
+   [
+    "NAME",
+    24,
+    36,
+    "Budi Santoso",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "NAME:Budi Santoso",
+  "matches": [
+   [
+    "NAME",
+    5,
+    17,
+    "Budi Santoso",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "JSON and CSV inside a JSON string are read with their field names",
+  "matches": []
+ },
+ {
+  "text": "info",
+  "matches": []
+ },
+ {
+  "text": "Siti Aminah",
+  "matches": [
+   [
+    "NAME",
+    0,
+    11,
+    "Siti Aminah",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "Katolik",
+  "matches": []
+ },
+ {
+  "text": "asma",
+  "matches": []
+ },
+ {
+  "text": "nama,agama\n\"Agus Salim\",\"Islam\"\n",
+  "matches": [
+   [
+    "NAME",
+    12,
+    22,
+    "Agus Salim",
+    "high"
+   ],
+   [
+    "RELIGION",
+    25,
+    30,
+    "Islam",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Siti Aminah",
+  "matches": [
+   [
+    "NAME",
+    0,
+    11,
+    "Siti Aminah",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "Katolik",
+  "matches": []
+ },
+ {
+  "text": "asma",
+  "matches": []
+ },
+ {
+  "text": "Agus Salim",
+  "matches": [
+   [
+    "NAME",
+    0,
+    10,
+    "Agus Salim",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "Islam",
+  "matches": []
+ },
+ {
+  "text": "still JSON",
+  "matches": []
+ },
+ {
+  "text": "Rina Wati",
+  "matches": [
+   [
+    "NAME",
+    0,
+    9,
+    "Rina Wati",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "Rina",
+  "matches": []
+ },
+ {
+  "text": "import csv: nama,kota\nDewi Lestari,Depok",
+  "matches": [
+   [
+    "NAME",
+    22,
+    34,
+    "Dewi Lestari",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "import csv: nama,kota\n[NAME_1],Depok",
   "matches": []
  },
  {
@@ -12997,7 +13580,7 @@
   "matches": []
  },
  {
-  "text": "ekspor/laporan.pdf (unreadable PDF: No pages found)",
+  "text": "ekspor/laporan.pdf (failed: unreadable PDF: No pages found)",
   "matches": []
  },
  {
@@ -14505,7 +15088,7 @@
   "matches": []
  },
  {
-  "text": "pdf/surat-keterangan.pdf (partly scanned: page 2 of 3 has no text layer (scanned) and needs OCR)",
+  "text": "pdf/surat-keterangan.pdf (partial: page 2 of 3 has no text layer (scanned) and needs OCR)",
   "matches": []
  },
  {
@@ -44147,6 +44730,13 @@
     "high"
    ],
    [
+    "NAME",
+    42,
+    46,
+    "Budi",
+    "high"
+   ],
+   [
     "NIK",
     47,
     63,
@@ -56070,6 +56660,13 @@
     "high"
    ],
    [
+    "NAME",
+    78,
+    82,
+    "Budi",
+    "high"
+   ],
+   [
     "NIK",
     83,
     99,
@@ -61095,6 +61692,13 @@
     155,
     166,
     "Siti Aminah",
+    "high"
+   ],
+   [
+    "NAME",
+    180,
+    184,
+    "Budi",
     "high"
    ],
    [
@@ -74029,8 +74633,8 @@
    [
     "HEALTH",
     184,
-    201,
-    "TBC﻿{\"first_name\"",
+    189,
+    "TBC﻿{",
     "high"
    ],
    [

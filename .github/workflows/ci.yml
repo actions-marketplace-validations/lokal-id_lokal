@@ -40,6 +40,9 @@ jobs:
       - name: Python parity vectors are up to date
         if: matrix.os == 'ubuntu-latest'
         run: node python/scripts/gen_vectors.mjs --check
+      - name: Detection is not worse than the benchmark baseline
+        if: matrix.os == 'ubuntu-latest'
+        run: npm run bench
       - name: Release versions agree
         if: matrix.os == 'ubuntu-latest'
         run: node scripts/check-release.mjs

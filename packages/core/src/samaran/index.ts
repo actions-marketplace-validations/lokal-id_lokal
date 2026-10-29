@@ -1,9 +1,9 @@
 import { parsePhone } from '../phone.ts';
 import { checkCustomRules, type CustomRule } from './custom.ts';
 import { detectPii, type DetectOptions } from './detectors.ts';
-import { PII_TYPES, UU_PDP_CATEGORY, type Confidence, type PiiMatch, type PiiType } from './types.ts';
+import { PII_TYPES, SCAN_STATUSES, UU_PDP_CATEGORY, type Confidence, type PiiMatch, type PiiType, type ScanStatus } from './types.ts';
 
-export { detectPii, PII_TYPES, UU_PDP_CATEGORY, type Confidence, type DetectOptions, type PiiMatch, type PiiType };
+export { detectPii, PII_TYPES, SCAN_STATUSES, UU_PDP_CATEGORY, type Confidence, type DetectOptions, type PiiMatch, type PiiType, type ScanStatus };
 export { fieldType } from './fields.ts';
 export { checkCustomRules, type CustomRule };
 

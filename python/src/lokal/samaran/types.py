@@ -34,6 +34,14 @@ UU_PDP_CATEGORY: Mapping[PiiType, Literal['spesifik', 'umum']] = MappingProxyTyp
 
 Confidence = Literal['high', 'medium']
 
+#: How much of an input a check could see, the same in every Lokal integration, so "no personal data found" is never
+#: confused with "never looked": ``scanned`` (all of it), ``partial`` (some of it, such as a PDF with scanned pages),
+#: ``unsupported`` (none, Lokal does not read this kind of input: .xls, archives, images, too large), or ``failed``
+#: (none, this input could not be read although its kind is supported: damaged, encrypted).
+ScanStatus = Literal['scanned', 'partial', 'unsupported', 'failed']
+
+SCAN_STATUSES: tuple[ScanStatus, ...] = ('scanned', 'partial', 'unsupported', 'failed')
+
 
 @dataclass(slots=True, frozen=True)
 class PiiMatch(Result):

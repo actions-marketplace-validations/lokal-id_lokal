@@ -5,7 +5,7 @@
 import { execFileSync } from 'node:child_process';
 import { appendFileSync, existsSync, statSync } from 'node:fs';
 import path from 'node:path';
-import { partialMask, PII_TYPES, UU_PDP_CATEGORY, type PiiType } from '@lokal-id/core';
+import { partialMask, PII_TYPES, UU_PDP_CATEGORY, type PiiType, type ScanStatus } from '@lokal-id/core';
 import {
   detectConfigured, loadBuffer, loadConfig, loadDocument, loadIgnore, toPosix, walkFiles, type Document, type SamaranConfig,
 } from './files.ts';
@@ -30,8 +30,11 @@ export interface ScanReport {
   filesScanned: number;
   filesIgnored: number;
   findings: Finding[];
-  /** Files that may hold personal data but could not be read: encrypted PDFs, .xls, archives, … */
-  notScanned: Array<{ file: string; reason: string }>;
+  /**
+   * Files that may hold personal data and were not read in full: `partial` (scanned pages in a PDF), `unsupported`
+   * (.xls, archives), or `failed` (an encrypted or damaged file). A partial file is also counted in filesScanned.
+   */
+  notScanned: Array<{ file: string; status: Exclude<ScanStatus, 'scanned'>; reason: string }>;
 }
 
 /** A file to check, and which of its lines count: `all`, or the lines a change adds. */
@@ -78,11 +81,11 @@ export function scanTargets(targets: Target[], options: ScanOptions = {}): ScanR
     try {
       doc = target.load();
     } catch (e) {
-      report.notScanned.push({ file: target.file, reason: `unreadable: ${(e as Error).message}` });
+      report.notScanned.push({ file: target.file, status: 'failed', reason: `unreadable: ${(e as Error).message}` });
       continue;
     }
     if (doc.kind === 'skipped') {
-      if (doc.dataBearing && !doc.reason.startsWith('image')) report.notScanned.push({ file: target.file, reason: doc.reason });
+      if (doc.dataBearing && !doc.reason.startsWith('image')) report.notScanned.push({ file: target.file, status: doc.status, reason: doc.reason });
       continue;
     }
     report.filesScanned++;
@@ -98,7 +101,7 @@ export function scanTargets(targets: Target[], options: ScanOptions = {}): ScanR
         report.findings.push({ file: target.file, line, type: m.type, ...(m.label ? { label: m.label } : {}), uuPdp: UU_PDP_CATEGORY[m.type], confidence: m.confidence, preview: partialMask(m.type, m.value) });
       }
     } else {
-      if (doc.unscanned) report.notScanned.push({ file: target.file, reason: `partly scanned: ${doc.unscanned}` });
+      if (doc.unscanned) report.notScanned.push({ file: target.file, status: 'partial', reason: doc.unscanned });
       for (const sheet of doc.sheets) {
         for (const m of detectConfigured(sheet.csv, detect, config)) {
           report.findings.push({ file: target.file, sheet: sheet.name, type: m.type, ...(m.label ? { label: m.label } : {}), uuPdp: UU_PDP_CATEGORY[m.type], confidence: m.confidence, preview: partialMask(m.type, m.value) });
@@ -226,6 +229,12 @@ const ADVICE = [
 
 const PER_FILE = 10;
 
+const NOT_SCANNED: Record<Exclude<ScanStatus, 'scanned'>, string> = {
+  partial: 'was only partly scanned',
+  unsupported: 'was not scanned: unsupported',
+  failed: 'was not scanned: could not be read',
+};
+
 export function formatText(report: ScanReport): string {
   const out: string[] = [];
   const byFile = new Map<string, Finding[]>();
@@ -234,7 +243,7 @@ export function formatText(report: ScanReport): string {
     for (const f of findings.slice(0, PER_FILE)) out.push(`${where(f)}: ${f.label ?? f.type} ${f.preview}${f.uuPdp === 'spesifik' ? ' (UU PDP: spesifik)' : ''}`);
     if (findings.length > PER_FILE) out.push(`${findings[0]!.file}: … and ${findings.length - PER_FILE} more`);
   }
-  for (const s of report.notScanned) out.push(`warning: ${s.file} was not scanned (${s.reason})`);
+  for (const s of report.notScanned) out.push(`warning: ${s.file} ${NOT_SCANNED[s.status]} (${s.reason})`);
   if (report.findings.length) {
     out.push('', `Found ${report.findings.length} personal data value(s) in ${byFile.size} file(s).`, ...ADVICE);
   } else {
@@ -253,7 +262,7 @@ export function formatGithub(report: ScanReport): string {
     const props = [`file=${escapeProperty(f.file)}`, f.line ? `line=${f.line}` : '', `title=${escapeProperty(`Personal data: ${f.label ?? f.type}`)}`].filter(Boolean).join(',');
     out.push(`::error ${props}::${escapeData(`${f.label ?? f.type} ${f.preview}${f.sheet ? ` in ${f.sheet}` : ''}. ${ADVICE[0]}`)}`);
   }
-  for (const s of report.notScanned) out.push(`::warning file=${escapeProperty(s.file)},title=Not scanned::${escapeData(s.reason)}`);
+  for (const s of report.notScanned) out.push(`::warning file=${escapeProperty(s.file)},title=${s.status === 'partial' ? 'Partly scanned' : 'Not scanned'}::${escapeData(s.reason)}`);
   return `${out.join('\n')}${out.length ? '\n' : ''}${formatText(report)}`;
 }
 
@@ -271,7 +280,7 @@ export function formatSummary(report: ScanReport): string {
   ];
   if (rows.length) lines.push('| Location | Type | Value (masked) | UU PDP |', '|---|---|---|---|', ...rows, '');
   if (report.findings.length > rows.length) lines.push(`… and ${report.findings.length - rows.length} more.`, '');
-  if (report.notScanned.length) lines.push('**Not scanned:**', '', ...report.notScanned.map((s) => `- \`${s.file}\`: ${s.reason}`), '');
+  if (report.notScanned.length) lines.push('**Not scanned in full:**', '', ...report.notScanned.map((s) => `- \`${s.file}\` (${s.status}): ${s.reason}`), '');
   if (report.findings.length) lines.push(...ADVICE.map((a) => `- ${a}`), '');
   return lines.join('\n');
 }

@@ -1170,6 +1170,66 @@
     "replaced": {}
    },
    {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "node:fs",
+    "replaced": {}
+   },
+   {
+    "text": "node:path",
+    "replaced": {}
+   },
+   {
+    "text": "canary.json",
+    "replaced": {}
+   },
+   {
+    "text": "utf8",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": " ",
+    "replaced": {}
+   },
+   {
+    "text": ",",
+    "replaced": {}
+   },
+   {
+    "text": ",",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "NAME",
+    "replaced": {}
+   },
+   {
+    "text": " ",
+    "replaced": {}
+   },
+   {
+    "text": "ADDRESS",
+    "replaced": {}
+   },
+   {
+    "text": "Kanari Raya",
+    "replaced": {}
+   },
+   {
+    "text": ", ",
+    "replaced": {}
+   },
+   {
     "text": "node:test",
     "replaced": {}
    },
@@ -2063,66 +2123,6 @@
    },
    {
     "text": "2026-03-25",
-    "replaced": {}
-   },
-   {
-    "text": "2026-03-17",
-    "replaced": {}
-   },
-   {
-    "text": "2026-03-16",
-    "replaced": {}
-   },
-   {
-    "text": "2026-03-27",
-    "replaced": {}
-   },
-   {
-    "text": "tahun tanpa data resmi gagal dengan jelas, bukan diam-diam",
-    "replaced": {}
-   },
-   {
-    "text": "2028-01-03",
-    "replaced": {}
-   },
-   {
-    "text": "tanggal yang tidak ada ditolak, bukan digeser ke bulan berikutnya",
-    "replaced": {}
-   },
-   {
-    "text": "2026-02-30",
-    "replaced": {}
-   },
-   {
-    "text": "2026-13-01",
-    "replaced": {}
-   },
-   {
-    "text": "17-08-2026",
-    "replaced": {}
-   },
-   {
-    "text": "node:test",
-    "replaced": {}
-   },
-   {
-    "text": "node:assert/strict",
-    "replaced": {}
-   },
-   {
-    "text": "../src/index.ts",
-    "replaced": {}
-   },
-   {
-    "text": "../src/wilayah.ts",
-    "replaced": {}
-   },
-   {
-    "text": "2026-10-15",
-    "replaced": {}
-   },
-   {
-    "text": "NIK: laki-laki, wilayah dari data Kemendagri",
     "replaced": {}
    }
   ]
@@ -3299,6 +3299,66 @@
     "replaced": {}
    },
    {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "node:fs",
+    "replaced": {}
+   },
+   {
+    "text": "node:path",
+    "replaced": {}
+   },
+   {
+    "text": "canary.json",
+    "replaced": {}
+   },
+   {
+    "text": "utf8",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": " ",
+    "replaced": {}
+   },
+   {
+    "text": ",",
+    "replaced": {}
+   },
+   {
+    "text": ",",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "NAME",
+    "replaced": {}
+   },
+   {
+    "text": " ",
+    "replaced": {}
+   },
+   {
+    "text": "ADDRESS",
+    "replaced": {}
+   },
+   {
+    "text": "Kanari Raya",
+    "replaced": {}
+   },
+   {
+    "text": ", ",
+    "replaced": {}
+   },
+   {
     "text": "node:test",
     "replaced": {}
    },
@@ -4192,66 +4252,6 @@
    },
    {
     "text": "2026-03-25",
-    "replaced": {}
-   },
-   {
-    "text": "2026-03-17",
-    "replaced": {}
-   },
-   {
-    "text": "2026-03-16",
-    "replaced": {}
-   },
-   {
-    "text": "2026-03-27",
-    "replaced": {}
-   },
-   {
-    "text": "tahun tanpa data resmi gagal dengan jelas, bukan diam-diam",
-    "replaced": {}
-   },
-   {
-    "text": "2028-01-03",
-    "replaced": {}
-   },
-   {
-    "text": "tanggal yang tidak ada ditolak, bukan digeser ke bulan berikutnya",
-    "replaced": {}
-   },
-   {
-    "text": "2026-02-30",
-    "replaced": {}
-   },
-   {
-    "text": "2026-13-01",
-    "replaced": {}
-   },
-   {
-    "text": "17-08-2026",
-    "replaced": {}
-   },
-   {
-    "text": "node:test",
-    "replaced": {}
-   },
-   {
-    "text": "node:assert/strict",
-    "replaced": {}
-   },
-   {
-    "text": "../src/index.ts",
-    "replaced": {}
-   },
-   {
-    "text": "../src/wilayah.ts",
-    "replaced": {}
-   },
-   {
-    "text": "2026-10-15",
-    "replaced": {}
-   },
-   {
-    "text": "NIK: laki-laki, wilayah dari data Kemendagri",
     "replaced": {}
    }
   ]
@@ -5387,6 +5387,66 @@
     "replaced": {}
    },
    {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "node:fs",
+    "replaced": {}
+   },
+   {
+    "text": "node:path",
+    "replaced": {}
+   },
+   {
+    "text": "canary.json",
+    "replaced": {}
+   },
+   {
+    "text": "utf8",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": " ",
+    "replaced": {}
+   },
+   {
+    "text": ",",
+    "replaced": {}
+   },
+   {
+    "text": ",",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "NAME",
+    "replaced": {}
+   },
+   {
+    "text": " ",
+    "replaced": {}
+   },
+   {
+    "text": "ADDRESS",
+    "replaced": {}
+   },
+   {
+    "text": "Kanari Raya",
+    "replaced": {}
+   },
+   {
+    "text": ", ",
+    "replaced": {}
+   },
+   {
     "text": "node:test",
     "replaced": {}
    },
@@ -6276,66 +6336,6 @@
    },
    {
     "text": "2026-03-25",
-    "replaced": {}
-   },
-   {
-    "text": "2026-03-17",
-    "replaced": {}
-   },
-   {
-    "text": "2026-03-16",
-    "replaced": {}
-   },
-   {
-    "text": "2026-03-27",
-    "replaced": {}
-   },
-   {
-    "text": "tahun tanpa data resmi gagal dengan jelas, bukan diam-diam",
-    "replaced": {}
-   },
-   {
-    "text": "2028-01-03",
-    "replaced": {}
-   },
-   {
-    "text": "tanggal yang tidak ada ditolak, bukan digeser ke bulan berikutnya",
-    "replaced": {}
-   },
-   {
-    "text": "2026-02-30",
-    "replaced": {}
-   },
-   {
-    "text": "2026-13-01",
-    "replaced": {}
-   },
-   {
-    "text": "17-08-2026",
-    "replaced": {}
-   },
-   {
-    "text": "node:test",
-    "replaced": {}
-   },
-   {
-    "text": "node:assert/strict",
-    "replaced": {}
-   },
-   {
-    "text": "../src/index.ts",
-    "replaced": {}
-   },
-   {
-    "text": "../src/wilayah.ts",
-    "replaced": {}
-   },
-   {
-    "text": "2026-10-15",
-    "replaced": {}
-   },
-   {
-    "text": "NIK: laki-laki, wilayah dari data Kemendagri",
     "replaced": {}
    }
   ]

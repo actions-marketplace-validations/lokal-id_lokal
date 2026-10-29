@@ -4755,6 +4755,111 @@
    "partial": "18.71.15"
   },
   {
+   "text": "node:assert/strict",
+   "matches": [],
+   "placeholder": "node:assert/strict",
+   "vault": [],
+   "partial": "node:assert/strict"
+  },
+  {
+   "text": "node:fs",
+   "matches": [],
+   "placeholder": "node:fs",
+   "vault": [],
+   "partial": "node:fs"
+  },
+  {
+   "text": "node:path",
+   "matches": [],
+   "placeholder": "node:path",
+   "vault": [],
+   "partial": "node:path"
+  },
+  {
+   "text": "canary.json",
+   "matches": [],
+   "placeholder": "canary.json",
+   "vault": [],
+   "partial": "canary.json"
+  },
+  {
+   "text": "utf8",
+   "matches": [],
+   "placeholder": "utf8",
+   "vault": [],
+   "partial": "utf8"
+  },
+  {
+   "text": "\n",
+   "matches": [],
+   "placeholder": "\n",
+   "vault": [],
+   "partial": "\n"
+  },
+  {
+   "text": " ",
+   "matches": [],
+   "placeholder": " ",
+   "vault": [],
+   "partial": " "
+  },
+  {
+   "text": ",",
+   "matches": [],
+   "placeholder": ",",
+   "vault": [],
+   "partial": ","
+  },
+  {
+   "text": ",",
+   "matches": [],
+   "placeholder": ",",
+   "vault": [],
+   "partial": ","
+  },
+  {
+   "text": "",
+   "matches": [],
+   "placeholder": "",
+   "vault": [],
+   "partial": ""
+  },
+  {
+   "text": "NAME",
+   "matches": [],
+   "placeholder": "NAME",
+   "vault": [],
+   "partial": "NAME"
+  },
+  {
+   "text": " ",
+   "matches": [],
+   "placeholder": " ",
+   "vault": [],
+   "partial": " "
+  },
+  {
+   "text": "ADDRESS",
+   "matches": [],
+   "placeholder": "ADDRESS",
+   "vault": [],
+   "partial": "ADDRESS"
+  },
+  {
+   "text": "Kanari Raya",
+   "matches": [],
+   "placeholder": "Kanari Raya",
+   "vault": [],
+   "partial": "Kanari Raya"
+  },
+  {
+   "text": ", ",
+   "matches": [],
+   "placeholder": ", ",
+   "vault": [],
+   "partial": ", "
+  },
+  {
    "text": "node:test",
    "matches": [],
    "placeholder": "node:test",
@@ -4931,237 +5036,6 @@
    "placeholder": "custom fields: labels, JSON keys, and CSV columns",
    "vault": [],
    "partial": "custom fields: labels, JSON keys, and CSV columns"
-  },
-  {
-   "text": "member no_member=M-0042 minta reset.",
-   "matches": [
-    [
-     "CUSTOM",
-     "MEMBER",
-     17,
-     23,
-     "M-0042"
-    ]
-   ],
-   "placeholder": "member no_member=[MEMBER_1] minta reset.",
-   "vault": [
-    [
-     "[MEMBER_1]",
-     "M-0042"
-    ]
-   ],
-   "partial": "member no_member=**** minta reset."
-  },
-  {
-   "text": "{\"no_member\": \"M-0099\", \"nik\": \"3201011508950001\"}",
-   "matches": [
-    [
-     "CUSTOM",
-     "MEMBER",
-     15,
-     21,
-     "M-0099"
-    ],
-    [
-     "CUSTOM",
-     "NOTE",
-     32,
-     48,
-     "3201011508950001"
-    ]
-   ],
-   "placeholder": "{\"no_member\": \"[MEMBER_1]\", \"nik\": \"[NOTE_1]\"}",
-   "vault": [
-    [
-     "[MEMBER_1]",
-     "M-0099"
-    ],
-    [
-     "[NOTE_1]",
-     "3201011508950001"
-    ]
-   ],
-   "partial": "{\"no_member\": \"****\", \"nik\": \"**************01\"}"
-  },
-  {
-   "text": "kode member: M-1234",
-   "matches": [
-    [
-     "CUSTOM",
-     "MEMBER",
-     13,
-     19,
-     "M-1234"
-    ]
-   ],
-   "placeholder": "kode member: [MEMBER_1]",
-   "vault": [
-    [
-     "[MEMBER_1]",
-     "M-1234"
-    ]
-   ],
-   "partial": "kode member: ****"
-  },
-  {
-   "text": "",
-   "matches": [],
-   "placeholder": "",
-   "vault": [],
-   "partial": ""
-  },
-  {
-   "text": "nama,Kode Member,kota",
-   "matches": [],
-   "placeholder": "nama,Kode Member,kota",
-   "vault": [],
-   "partial": "nama,Kode Member,kota"
-  },
-  {
-   "text": "Siti Aminah,\"M, 77\",Bogor",
-   "matches": [
-    [
-     "NAME",
-     null,
-     0,
-     11,
-     "Siti Aminah"
-    ]
-   ],
-   "placeholder": "[NAME_1],\"M, 77\",Bogor",
-   "vault": [
-    [
-     "[NAME_1]",
-     "Siti Aminah"
-    ]
-   ],
-   "partial": "S*** A***,\"M, 77\",Bogor"
-  },
-  {
-   "text": "Budi Santoso,M-0042,Depok",
-   "matches": [
-    [
-     "NAME",
-     null,
-     0,
-     12,
-     "Budi Santoso"
-    ]
-   ],
-   "placeholder": "[NAME_1],M-0042,Depok",
-   "vault": [
-    [
-     "[NAME_1]",
-     "Budi Santoso"
-    ]
-   ],
-   "partial": "B*** S***,M-0042,Depok"
-  },
-  {
-   "text": "",
-   "matches": [],
-   "placeholder": "",
-   "vault": [],
-   "partial": ""
-  },
-  {
-   "text": "kota,catatan",
-   "matches": [],
-   "placeholder": "kota,catatan",
-   "vault": [],
-   "partial": "kota,catatan"
-  },
-  {
-   "text": "Depok,M-5555 bukan kolom member",
-   "matches": [],
-   "placeholder": "Depok,M-5555 bukan kolom member",
-   "vault": [],
-   "partial": "Depok,M-5555 bukan kolom member"
-  },
-  {
-   "text": "\n",
-   "matches": [],
-   "placeholder": "\n",
-   "vault": [],
-   "partial": "\n"
-  },
-  {
-   "text": "member no_member=[MEMBER_1] minta reset.",
-   "matches": [
-    [
-     "CUSTOM",
-     "MEMBER",
-     17,
-     26,
-     "[MEMBER_1"
-    ]
-   ],
-   "placeholder": "member no_member=[MEMBER_2]] minta reset.",
-   "vault": [
-    [
-     "[MEMBER_2]",
-     "[MEMBER_1"
-    ]
-   ],
-   "partial": "member no_member=*******_1] minta reset."
-  },
-  {
-   "text": "{\"no_member\": \"[MEMBER_2]\", \"nik\": \"[NIK_1]\"}",
-   "matches": [
-    [
-     "CUSTOM",
-     "MEMBER",
-     15,
-     25,
-     "[MEMBER_2]"
-    ],
-    [
-     "CUSTOM",
-     "NOTE",
-     36,
-     43,
-     "[NIK_1]"
-    ]
-   ],
-   "placeholder": "{\"no_member\": \"[MEMBER_3]\", \"nik\": \"[NOTE_1]\"}",
-   "vault": [
-    [
-     "[MEMBER_3]",
-     "[MEMBER_2]"
-    ],
-    [
-     "[NOTE_1]",
-     "[NIK_1]"
-    ]
-   ],
-   "partial": "{\"no_member\": \"********2]\", \"nik\": \"*****1]\"}"
-  },
-  {
-   "text": "kode member: [MEMBER_3]",
-   "matches": [
-    [
-     "CUSTOM",
-     "MEMBER",
-     13,
-     22,
-     "[MEMBER_3"
-    ]
-   ],
-   "placeholder": "kode member: [MEMBER_4]]",
-   "vault": [
-    [
-     "[MEMBER_4]",
-     "[MEMBER_3"
-    ]
-   ],
-   "partial": "kode member: *******_3]"
-  },
-  {
-   "text": "",
-   "matches": [],
-   "placeholder": "",
-   "vault": [],
-   "partial": ""
   }
  ]
 }

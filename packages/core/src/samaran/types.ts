@@ -60,3 +60,15 @@ export interface PiiMatch {
   /** For CUSTOM matches: the rule's label, which names the placeholder. */
   label?: string;
 }
+
+/**
+ * How much of an input a check could see. Every Lokal integration reports one of these, so "no personal data found"
+ * is never confused with "never looked":
+ * - `scanned`: all of it.
+ * - `partial`: some of it, such as a PDF with scanned pages, or a request with an image in it.
+ * - `unsupported`: none of it, because Lokal does not read this kind of input (.xls, archives, images, too large).
+ * - `failed`: none of it, because this input could not be read although its kind is supported (damaged, encrypted).
+ */
+export type ScanStatus = 'scanned' | 'partial' | 'unsupported' | 'failed';
+
+export const SCAN_STATUSES: readonly ScanStatus[] = ['scanned', 'partial', 'unsupported', 'failed'];

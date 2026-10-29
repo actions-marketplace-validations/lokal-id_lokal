@@ -27,6 +27,7 @@ import {
   terbilang,
   type PiiMatch,
   type PiiType,
+  type ScanStatus,
 } from '@lokal-id/core';
 import {
   findByPostalCode,
@@ -426,7 +427,7 @@ export function createServer(
       const files = statSync(abs).isDirectory() ? [...walkFiles(abs, FILE_LIMIT)] : [abs];
       const findings: Array<Record<string, unknown>> = [];
       const totals: string[] = [];
-      const skipped: Array<{ file: string; reason: string; dataBearing: boolean }> = [];
+      const skipped: Array<{ file: string; status: Exclude<ScanStatus, 'scanned'>; reason: string; dataBearing: boolean }> = [];
       let scanned = 0;
       let withPii = 0;
       let ignored = 0;
@@ -440,15 +441,17 @@ export function createServer(
         let doc: Document;
         try {
           doc = loadDocument(file);
-        } catch {
+        } catch (e) {
+          // Not silently: a file that could not even be opened may hold anything.
+          skipped.push({ file: rel, status: 'failed', reason: `unreadable: ${(e as Error).message}`, dataBearing: true });
           continue;
         }
         if (doc.kind === 'skipped') {
-          skipped.push({ file: rel, reason: doc.reason, dataBearing: doc.dataBearing });
+          skipped.push({ file: rel, status: doc.status, reason: doc.reason, dataBearing: doc.dataBearing });
           continue;
         }
         scanned++;
-        if (doc.kind === 'sheets' && doc.unscanned) skipped.push({ file: rel, reason: `partly scanned: ${doc.unscanned}`, dataBearing: true });
+        if (doc.kind === 'sheets' && doc.unscanned) skipped.push({ file: rel, status: 'partial', reason: doc.unscanned, dataBearing: true });
         let fileHasPii = false;
         for (const part of parts(doc)) {
           const matches = detectConfigured(part.text, { types, minConfidence: min_confidence }, config);
@@ -474,7 +477,11 @@ export function createServer(
 
       const notScanned = skipped.filter((s) => s.dataBearing);
       const byReason: Record<string, number> = {};
-      for (const s of notScanned) byReason[s.reason] = (byReason[s.reason] ?? 0) + 1;
+      const byStatus: Partial<Record<ScanStatus, number>> = {};
+      for (const s of notScanned) {
+        byReason[s.reason] = (byReason[s.reason] ?? 0) + 1;
+        byStatus[s.status] = (byStatus[s.status] ?? 0) + 1;
+      }
       const spesifik = totals.filter((t) => UU_PDP_CATEGORY[t as PiiType] === 'spesifik').length;
 
       return json({
@@ -489,15 +496,16 @@ export function createServer(
         notScanned: notScanned.length
           ? {
               count: notScanned.length,
+              byStatus,
               byReason,
               files: notScanned
                 .filter((s) => !s.reason.startsWith('image'))
                 .slice(0, 30)
-                .map((s) => `${s.file} (${s.reason})`),
+                .map((s) => `${s.file} (${s.status}: ${s.reason})`),
             }
           : undefined,
         warning: notScanned.length
-          ? `${notScanned.length} file(s) may hold personal data but were NOT scanned. Do not treat them as clean.`
+          ? `${notScanned.length} file(s) may hold personal data but were NOT scanned in full (${Object.entries(byStatus).map(([k, n]) => `${n} ${k}`).join(', ')}). Do not treat them as clean.`
           : undefined,
         next: withPii
           ? 'Read these files with read_file_masked, not directly. Files that only hold fake data can be listed in .samaranignore.'
@@ -529,7 +537,9 @@ export function createServer(
       if (configError) return fail(configError);
       if (!existsSync(abs)) return fail(`Not found: ${target}`);
       const doc = loadDocument(abs);
-      if (doc.kind === 'skipped') return fail(`Cannot read ${target}: ${doc.reason}.`);
+      if (doc.kind === 'skipped') {
+        return fail(`Cannot read ${target} (${doc.status}): ${doc.reason}. It was not checked for personal data, so do not read it another way.`);
+      }
 
       // Paging through a table: keep the header in view of the detector so its columns stay masked.
       const tabular = (doc.kind === 'sheets' && doc.unit !== 'page') || /\.(csv|tsv)$/i.test(abs);

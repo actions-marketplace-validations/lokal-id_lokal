@@ -893,8 +893,8 @@ var SYMPTOMS = "(?:demam(?:\\s+tinggi)?|batuk(?:\\s+berdahak)?|pilek|flu|sesak(?
 var MEDICATIONS = "insulin|metformin|glibenclamide|arv|antiretroviral|obat tbc|rifampisin|isoniazid|kemoterapi|kemo|antidepresan|antipsikotik|fluoxetine|sertraline|risperidone|haloperidol|lithium|metadon|methadone|warfarin|amlodipine|captopril|levothyroxine|tamoxifen|hormon|kb|pil kb";
 function detectHealth(text) {
   const out = [];
-  const strong = /\b(?:didiagnosis|didiagnosa|terdiagnosis|terdiagnosa|mengidap|terinfeksi|riwayat penyakit|divonis)\s+(?:menderita\s+|mengidap\s+|penyakit\s+)?(?!(?:yang|dan|atau|di|ke|dari|untuk|ini|itu|tersebut|adalah|dapat|bisa|tidak|belum|anda|kamu|pasien|seseorang)\b)([^\n\r,.;:()]{2,60}?)(?=\s+(?:sejak|selama|dan sudah|dan sedang|tapi|namun|sehingga|jadi)\b|[\n\r,.;:()]|$)/gi;
-  const dx = /\b(?:Dx|DX|Diagnosis|Diagnosa|Diag)\s*:\s*([^\n\r,;()]{2,60}?)(?=\s*(?:[\n\r,;()]|\.(?:\s|$)|$))/g;
+  const strong = /\b(?:didiagnosis|didiagnosa|terdiagnosis|terdiagnosa|mengidap|terinfeksi|riwayat penyakit|divonis)\s+(?:menderita\s+|mengidap\s+|penyakit\s+)?(?!(?:yang|dan|atau|di|ke|dari|untuk|ini|itu|tersebut|adalah|dapat|bisa|tidak|belum|anda|kamu|pasien|seseorang)\b)([^\n\r,.;:()"]{2,60}?)(?=\s+(?:sejak|selama|dan sudah|dan sedang|tapi|namun|sehingga|jadi)\b|[\n\r,.;:()"]|$)/gi;
+  const dx = /\b(?:Dx|DX|Diagnosis|Diagnosa|Diag)\s*:\s*([^\n\r,;()"]{2,60}?)(?=\s*(?:[\n\r,;()"]|\.(?:\s|$)|$))/g;
   for (const m of [...text.matchAll(strong), ...text.matchAll(dx)]) {
     out.push(match("HEALTH", m.index + m[0].length - m[1].length, m[1], "high"));
   }
@@ -1886,6 +1886,18 @@ function valueExtent(text, start, end) {
   }
   return end;
 }
+function closingQuote(text, start, end) {
+  for (let i = start; i < end; i++) {
+    if (text[i] !== '"' || text[i - 1] === "\\")
+      continue;
+    let j = i + 1;
+    while (j < end && (text[j] === " " || text[j] === "	"))
+      j++;
+    if (j >= end || text[j] === "," || text[j] === "}" || text[j] === "]")
+      return i;
+  }
+  return end;
+}
 function detectLabeledFields(text) {
   const out = [];
   let lineStart = 0;
@@ -1920,7 +1932,7 @@ function detectLabeledFields(text) {
     const quote = text[valueStart];
     if (valueStart < rawEnd && isQuote(quote)) {
       let close = valueStart + 1;
-      while (close < rawEnd && text[close] !== quote)
+      while (close < rawEnd && (text[close] !== quote || text[close - 1] === "\\"))
         close++;
       if (close >= rawEnd)
         continue;
@@ -1929,7 +1941,8 @@ function detectLabeledFields(text) {
         continue;
       start += 1;
     } else {
-      const raw = text.slice(valueStart, valueExtent(text, valueStart, rawEnd));
+      const end = closingQuote(text, valueStart, rawEnd);
+      const raw = text.slice(valueStart, valueExtent(text, valueStart, end));
       value = cutValue(type, raw);
       if (value)
         start += raw.indexOf(value);
@@ -1971,35 +1984,63 @@ function blankLineNumbers(text) {
     return text;
   return text.replace(NUMBERED_LINES, (prefix) => " ".repeat(prefix.length));
 }
+var CSV_HEADER_LINES = 20;
 function detectCsvColumns(text) {
   text = blankLineNumbers(text);
-  const firstBreak = text.indexOf("\n");
+  const table = csvTableAt(text, 0, true);
+  if (table)
+    return table;
+  let lineStart = 0;
+  for (let n = 1; n < CSV_HEADER_LINES; n++) {
+    const lineBreak = text.indexOf("\n", lineStart);
+    if (lineBreak === -1)
+      break;
+    lineStart = lineBreak + 1;
+    const later = csvTableAt(text, lineStart, false);
+    if (later)
+      return later;
+  }
+  return [];
+}
+var CSV_HEADER_PREFIX = /^[^,;|\t:]{1,60}:[ \t]+/;
+function csvTableAt(text, at, toEnd, header) {
+  const firstBreak = text.indexOf("\n", at);
   if (firstBreak === -1)
-    return [];
-  const header = text.slice(0, firstBreak).replace(/\r$/, "");
+    return void 0;
+  if (header === void 0) {
+    const line = text.slice(at, firstBreak).replace(/\r$/, "");
+    const prefix = CSV_HEADER_PREFIX.exec(line);
+    return prefix && csvTableAt(text, at, false, line.slice(prefix[0].length)) || csvTableAt(text, at, toEnd, line);
+  }
   const delimiter = [",", ";", "	", "|"].find((d) => header.includes(d));
-  if (!delimiter)
-    return [];
+  if (!delimiter || !toEnd && delimiter === "	")
+    return void 0;
   const headerFields = csvFields(header, delimiter).map((f) => header.slice(f.start, f.end).trim());
   const secondLine = text.slice(firstBreak + 1).split("\n", 1)[0].replace(/\r$/, "");
-  if (headerFields.length < 2 || headerFields.some((h) => h.length > 40 || /[.!?]$/.test(h)) || csvFields(secondLine, delimiter).length !== headerFields.length) {
-    return [];
+  if (headerFields.length < 2 || headerFields.some((h) => h.length > 40 || /[.!?]$/.test(h)) || csvFields(secondLine, delimiter).length !== headerFields.length || // In the middle of a text, a header is labels only: not a data row such as "n01687978<TAB>agama".
+  !toEnd && headerFields.some((h) => !/[A-Za-z]/.test(h) || /\d{3}/.test(h))) {
+    return void 0;
   }
   const columns = headerFields.map((h) => fieldType(h));
   if (!columns.some(Boolean))
-    return [];
+    return void 0;
   const second = csvFields(secondLine, delimiter);
   if (columns.some((t, i) => t && fieldType(secondLine.slice(second[i].start, second[i].end).trim())))
-    return [];
+    return void 0;
   const out = [];
   let offset = firstBreak + 1;
   for (const rawLine of text.slice(offset).split("\n")) {
     const line = rawLine.replace(/\r$/, "");
-    csvFields(line, delimiter).forEach((f, idx) => {
+    const fields2 = csvFields(line, delimiter);
+    if (!toEnd && fields2.length !== headerFields.length)
+      break;
+    fields2.forEach((f, idx) => {
       const type = columns[idx];
       const cell = line.slice(f.start, f.end);
       const value = cell.trim();
       if (!type || !isPlausibleValue(type, value, headerFields[idx]))
+        return;
+      if (!toEnd && NUMBER_TYPES.has(type) && !/^[+\d\s().\/-]+$/.test(value))
         return;
       const start = offset + f.start + cell.indexOf(value);
       out.push(match(type, start, value, isGenericNameKey(headerFields[idx]) ? "medium" : "high"));
@@ -2101,6 +2142,82 @@ var DETECTORS = [
   detectCsvColumns,
   detectTabTables
 ];
+var JSON_STRING = /"((?:[^"\\]|\\[\s\S])*)"/g;
+var UNESCAPED = { n: "\n", r: "\r", t: "	", b: "\b", f: "\f" };
+var JSON_BODY = /^[ \t\r\n]*[{[]/;
+function worthUnescaping(body) {
+  if (!body.includes('\\"'))
+    return false;
+  return JSON_BODY.test(body) || body.includes("\\n") && /[,;|]/.test(body);
+}
+function detectEscapedStrings(text) {
+  if (!text.includes("\\"))
+    return [];
+  const out = [];
+  let joined = "";
+  let joinedAt = [];
+  let joinedPart = [];
+  let part = 0;
+  const flush = () => {
+    if (!joined)
+      return;
+    joinedAt.push(joinedAt.at(-1));
+    joinedPart.push(-1);
+    for (const f of [...DETECTORS.flatMap((d) => d(joined)), ...detectEscapedStrings(joined)]) {
+      if (joinedPart[f.start] !== joinedPart[f.end - 1])
+        continue;
+      const start = joinedAt[f.start];
+      const end = joinedAt[f.end];
+      out.push({ ...f, start, end, value: text.slice(start, end) });
+    }
+    joined = "";
+    joinedAt = [];
+    joinedPart = [];
+  };
+  for (const m of text.matchAll(JSON_STRING)) {
+    const body = m[1];
+    if (!worthUnescaping(body))
+      continue;
+    const json = JSON_BODY.test(body);
+    if (!json)
+      flush();
+    if (joined) {
+      joined += "\n\n";
+      joinedAt.push(joinedAt.at(-1), joinedAt.at(-1));
+      joinedPart.push(-1, -1);
+    }
+    const base = m.index + 1;
+    part++;
+    for (let i = 0; i < body.length; ) {
+      joinedAt.push(base + i);
+      joinedPart.push(part);
+      if (body[i] !== "\\") {
+        joined += body[i++];
+      } else if (body[i + 1] === "u" && /^[0-9a-fA-F]{4}$/.test(body.slice(i + 2, i + 6))) {
+        joined += String.fromCharCode(parseInt(body.slice(i + 2, i + 6), 16));
+        i += 6;
+      } else {
+        const e = body[i + 1] ?? "";
+        joined += UNESCAPED[e] ?? e;
+        i += 2;
+      }
+    }
+    joinedAt.push(base + body.length);
+    joinedPart.push(part);
+    joined += " ";
+    if (!json)
+      flush();
+  }
+  flush();
+  return out;
+}
+var ESCAPED_BREAK = /\\+[nrt]/g;
+var BREAK_FOR = { n: "\n", r: "\r", t: "	" };
+function escapesAsBreaks(text) {
+  if (!text.includes("\\"))
+    return text;
+  return text.replace(ESCAPED_BREAK, (e) => " ".repeat(e.length - 1) + BREAK_FOR[e[e.length - 1]]);
+}
 function detectPii(text, options = {}) {
   for (const t of [...options.types ?? [], ...options.exclude ?? []]) {
     if (!PII_TYPES.includes(t))
@@ -2113,9 +2230,10 @@ function detectPii(text, options = {}) {
   const rank = (m) => m.confidence === "high" ? 2 : 1;
   if (options.custom?.length)
     checkCustomRules(options.custom);
-  const found = DETECTORS.flatMap((d) => d(text));
+  const view = escapesAsBreaks(text);
+  const found = [...DETECTORS.flatMap((d) => d(view)), ...detectEscapedStrings(text)];
   if (options.custom?.length)
-    found.push(...detectCustom(text, options.custom));
+    found.push(...detectCustom(view, options.custom));
   const candidates = found.filter((m) => m.end > m.start && types.has(m.type) && rank(m) >= minRank);
   const own = (m) => m.type === "CUSTOM" ? 1 : 0;
   candidates.sort((a, b) => rank(b) - rank(a) || b.end - b.start - (a.end - a.start) || own(b) - own(a) || a.start - b.start);
@@ -2130,7 +2248,23 @@ function detectPii(text, options = {}) {
     taken.fill(1, c.start, c.end);
     accepted.push(c);
   }
-  return accepted.sort((a, b) => a.start - b.start);
+  accepted.sort((a, b) => a.start - b.start);
+  return accepted.flatMap((m) => {
+    let end = m.end;
+    for (; ; ) {
+      if (end > m.start && view[end - 1] !== text[end - 1])
+        end--;
+      else if (end > m.start && text[end - 1] === "\\")
+        end--;
+      else if (end - 1 > m.start && text[end - 1] === '"' && text[end - 2] === "\\")
+        end -= 2;
+      else
+        break;
+    }
+    if (end === m.end)
+      return [m];
+    return end > m.start ? [{ ...m, end, value: text.slice(m.start, end) }] : [];
+  });
 }
 
 // packages/core/dist/samaran/index.js
@@ -3419,6 +3553,8 @@ function loadIgnore(root) {
     });
   };
 }
+var unsupported = (reason, dataBearing = true) => ({ kind: "skipped", status: "unsupported", reason, dataBearing });
+var failed = (reason) => ({ kind: "skipped", status: "failed", reason, dataBearing: true });
 function readHead(file, bytes) {
   const fd = openSync(file, "r");
   try {
@@ -3465,21 +3601,20 @@ function parseWhole(ext, buf) {
     try {
       return { kind: "sheets", sheets: readXlsx(buf) };
     } catch (e) {
-      return { kind: "skipped", reason: `unreadable spreadsheet: ${e.message}`, dataBearing: true };
+      return failed(`unreadable spreadsheet: ${e.message}`);
     }
   }
   if (ext === ".docx") {
     try {
       return { kind: "sheets", sheets: readDocx(buf), unit: "part" };
     } catch (e) {
-      return { kind: "skipped", reason: `unreadable Word document: ${e.message}`, dataBearing: true };
+      return failed(`unreadable Word document: ${e.message}`);
     }
   }
   try {
     const { pages, scanned, damaged, total } = readPdf(buf);
     if (!pages.length && (scanned.length || damaged.length)) {
-      const reason = damaged.length ? "damaged PDF: no readable text" : "PDF without a text layer (scanned); needs OCR";
-      return { kind: "skipped", reason, dataBearing: true };
+      return damaged.length ? failed("damaged PDF: no readable text") : unsupported("PDF without a text layer (scanned); needs OCR");
     }
     const notes = [];
     if (scanned.length) {
@@ -3493,23 +3628,22 @@ function parseWhole(ext, buf) {
     return { kind: "sheets", sheets: pages, unit: "page", unscanned: notes.join("; ") || void 0 };
   } catch (e) {
     const message = e.message;
-    const reason = /encrypted/.test(message) ? "encrypted PDF (password-protected)" : `unreadable PDF: ${message.replace(/\.$/, "")}`;
-    return { kind: "skipped", reason, dataBearing: true };
+    return failed(/encrypted/.test(message) ? "encrypted PDF (password-protected)" : `unreadable PDF: ${message.replace(/\.$/, "")}`);
   }
 }
 function loadDocument(file, options = {}) {
   const ext = path.extname(file).toLowerCase();
   const st = statSync(file);
-  if (st.size > MAX_FILE_BYTES) return { kind: "skipped", reason: `larger than ${mb(MAX_FILE_BYTES)}`, dataBearing: true };
+  if (st.size > MAX_FILE_BYTES) return unsupported(`larger than ${mb(MAX_FILE_BYTES)}`);
   if (PARSED_WHOLE.has(ext)) {
     if (options.maxZipBytes !== void 0 && st.size > options.maxZipBytes) {
-      return { kind: "skipped", reason: `larger than ${mb(options.maxZipBytes)}`, dataBearing: true };
+      return unsupported(`larger than ${mb(options.maxZipBytes)}`);
     }
     return parseWhole(ext, readFileSync(file));
   }
-  const unsupported = UNSUPPORTED_DATA[ext];
-  if (unsupported) return { kind: "skipped", reason: unsupported, dataBearing: true };
-  if (!isTextFile(file)) return { kind: "skipped", reason: "binary file", dataBearing: false };
+  const why = UNSUPPORTED_DATA[ext];
+  if (why) return unsupported(why);
+  if (!isTextFile(file)) return unsupported("binary file", false);
   if (options.sampleBytes !== void 0 && st.size > options.sampleBytes) {
     return { kind: "text", text: readHead(file, options.sampleBytes), sampled: true };
   }
@@ -4224,8 +4358,8 @@ async function runGuard() {
   } catch (e) {
     process.stderr.write(`samaran-guard: ${e.message}
 `);
-    const failed = strictMode() ? block(`Samaran guard failed (${e.message}), and SAMARAN_GUARD=strict blocks what it cannot check.`) : void 0;
-    const out = respond(agent, event, failed);
+    const failed2 = strictMode() ? block(`Samaran guard failed (${e.message}), and SAMARAN_GUARD=strict blocks what it cannot check.`) : void 0;
+    const out = respond(agent, event, failed2);
     if (out.stdout) process.stdout.write(`${out.stdout}
 `);
     if (out.stderr) process.stderr.write(`${out.stderr}

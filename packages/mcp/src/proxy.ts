@@ -11,7 +11,7 @@
 // including tool call arguments, so the app works with real values. Thinking and reasoning blocks are left alone:
 // they are signed, and the model only ever saw placeholders in them anyway.
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
-import { PII_TYPES, Samaran, type CustomRule, type PiiType } from '@lokal-id/core';
+import { PII_TYPES, Samaran, type CustomRule, type PiiType, type ScanStatus } from '@lokal-id/core';
 import { loadConfig, type SamaranConfig } from './files.ts';
 
 export interface ProxyOptions {
@@ -28,6 +28,11 @@ export interface ProxyOptions {
   allow?: string[];
   /** Forward requests whose body cannot be masked (file uploads) instead of refusing them. */
   allowUnmasked?: boolean;
+  /**
+   * Refuse requests that Samaran can only check in part: images, audio, and files inside the JSON (a photo of a KTP
+   * for a vision model). Without it they are forwarded, and the response says so in `x-samaran-status: partial`.
+   */
+  strict?: boolean;
   /** One line per request, without content. Default: stderr. */
   log?: (line: string) => void;
 }
@@ -52,19 +57,57 @@ function isBinaryText(s: string): boolean {
   return s.startsWith('data:') || (s.length >= 200 && !/\s/.test(s.slice(0, 200)) && /^[A-Za-z0-9+/=_-]+$/.test(s.slice(0, 200)));
 }
 
-/** Masks every text value in a request body, in document order. */
-function maskJson(value: Json, samaran: Samaran, counts: Map<PiiType, number>): Json {
+/** A string that holds a JSON object or array, parsed; undefined for any other text. */
+function parseJsonText(s: string): Json | undefined {
+  const t = s.trim();
+  if (!((t.startsWith('{') && t.endsWith('}')) || (t.startsWith('[') && t.endsWith(']')))) return undefined;
+  try {
+    return JSON.parse(t) as Json;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * A value of JSON that was inside a string, masked with its field name as a label: "Kenanga Purbasari" alone is just
+ * two words, "nama: Kenanga Purbasari" is a name.
+ */
+function maskField(samaran: Samaran, key: string, value: string) {
+  if (!key) return samaran.mask(value);
+  // A document in a field (a CSV, a form) keeps its own first line: the label goes on a line before it.
+  const label = value.includes('\n') ? `${key}:\n` : `${key}: `;
+  const labelled = samaran.mask(label + value);
+  if (labelled.text.startsWith(label) && labelled.matches.every((m) => m.start >= label.length)) {
+    return { text: labelled.text.slice(label.length), matches: labelled.matches };
+  }
+  return samaran.mask(value);
+}
+
+/**
+ * Masks every text value in a request body, in document order; counts what it could not check in `unchecked`.
+ * `key` is set inside JSON that was in a string (tool call arguments, tool results): there every field is someone's
+ * data, so none is skipped, and each is masked with its field name.
+ */
+function maskJson(value: Json, samaran: Samaran, counts: Map<PiiType, number>, unchecked: { parts: number }, key?: string): Json {
   if (typeof value === 'string') {
-    if (isBinaryText(value)) return value;
-    const { text, matches } = samaran.mask(value);
+    if (isBinaryText(value)) {
+      unchecked.parts++;
+      return value;
+    }
+    // Tool call arguments and many tool results are JSON in a string: mask them field by field, as JSON.
+    const nested = parseJsonText(value);
+    if (nested !== undefined) return JSON.stringify(maskJson(nested, samaran, counts, unchecked, key ?? ''));
+    const { text, matches } = key === undefined ? samaran.mask(value) : maskField(samaran, key, value);
     for (const m of matches) counts.set(m.type, (counts.get(m.type) ?? 0) + 1);
     return text;
   }
-  if (Array.isArray(value)) return value.map((v) => maskJson(v, samaran, counts));
+  if (Array.isArray(value)) return value.map((v) => maskJson(v, samaran, counts, unchecked, key));
   if (value && typeof value === 'object') {
     if (typeof value.type === 'string' && OPAQUE_TYPES.has(value.type)) return value;
     const out: { [key: string]: Json } = {};
-    for (const [k, v] of Object.entries(value)) out[k] = SKIP_KEYS.has(k) ? v : maskJson(v, samaran, counts);
+    for (const [k, v] of Object.entries(value)) {
+      out[k] = key === undefined && SKIP_KEYS.has(k) ? v : maskJson(v, samaran, counts, unchecked, key === undefined ? undefined : k);
+    }
     return out;
   }
   return value;
@@ -284,6 +327,7 @@ export function startProxy(options: ProxyOptions = {}): Promise<Server> {
     const target = upstream.endsWith('/v1') && url.startsWith('/v1/') ? `${upstream}${url.slice(3)}` : `${upstream}${url}`;
     const samaran = new Samaran({ exclude: options.exclude, custom: options.custom, allow: options.allow });
     const counts = new Map<PiiType, number>();
+    const unchecked = { parts: 0 };
     try {
       const raw = await readBody(req);
       const contentType = String(req.headers['content-type'] ?? '');
@@ -294,8 +338,16 @@ export function startProxy(options: ProxyOptions = {}): Promise<Server> {
           const parsed = JSON.parse(raw.toString('utf8')) as Json;
           // Placeholder-like text anywhere in the request (an e-mail template in the system prompt) keeps its number.
           samaran.reserve(JSON.stringify(parsed));
-          body = JSON.stringify(maskJson(parsed, samaran, counts));
-        } else if (!options.allowUnmasked) {
+          body = JSON.stringify(maskJson(parsed, samaran, counts, unchecked));
+          if (unchecked.parts && options.strict) {
+            log(`${req.method} ${path} refused: ${unchecked.parts} image or file part(s) Samaran cannot check`);
+            return fail(
+              res,
+              422,
+              `This request has ${unchecked.parts} image or file part(s) that Samaran cannot check for personal data, and the proxy runs with --strict, so it was not sent.`,
+            );
+          }
+        } else if (!options.allowUnmasked || options.strict) {
           return fail(
             res,
             415,
@@ -314,6 +366,10 @@ export function startProxy(options: ProxyOptions = {}): Promise<Server> {
         if (!HOP_BY_HOP.has(k) && k !== 'content-encoding') out[k] = v;
       });
       if (counts.size) out['x-samaran-masked'] = summary(counts);
+      // Forwarded as it was: an upload with --allow-unmasked. Partial: images or files inside the JSON went unchecked.
+      const status: ScanStatus = raw.length && !contentType.includes('json') ? 'unsupported' : unchecked.parts ? 'partial' : 'scanned';
+      out['x-samaran-status'] = status;
+      if (unchecked.parts) out['x-samaran-unchecked'] = String(unchecked.parts);
 
       const type = response.headers.get('content-type') ?? '';
       if (type.includes('text/event-stream') && response.body) {
@@ -344,7 +400,8 @@ export function startProxy(options: ProxyOptions = {}): Promise<Server> {
       }
       // Not the placeholders themselves: a log line never says anything about the content.
       const unrestored = un.unknown.size ? `, ${un.unknown.size} placeholder(s) not restored` : '';
-      log(`${req.method} ${path} → ${response.status} ${Date.now() - started} ms${counts.size ? ` masked ${summary(counts)}` : ''}${unrestored}`);
+      const notChecked = unchecked.parts ? `, ${unchecked.parts} image or file part(s) not checked` : status === 'unsupported' ? ', forwarded unmasked' : '';
+      log(`${req.method} ${path} → ${response.status} ${Date.now() - started} ms${counts.size ? ` masked ${summary(counts)}` : ''}${notChecked}${unrestored}`);
     } catch (e) {
       log(`${req.method} ${path} failed: ${(e as Error).message}`);
       if (!res.headersSent) fail(res, 502, `Samaran Proxy: ${(e as Error).message}`);
@@ -365,6 +422,7 @@ const USAGE = `Usage: lokal-mcp proxy [options]
   --anthropic <url>   Anthropic upstream (default https://api.anthropic.com, or LOKAL_PROXY_ANTHROPIC)
   --exclude <types>   Types the model may see, comma-separated, e.g. FINANCIAL,NAME
   --allow-unmasked    Forward requests that cannot be masked (file uploads) instead of refusing them
+  --strict            Refuse requests with images or files inside, which Samaran cannot check
 
 Point your app at it: OpenAI(base_url="http://127.0.0.1:8787/v1"), Anthropic(base_url="http://127.0.0.1:8787").
 API keys pass through to the upstream; the proxy keeps nothing.`;
@@ -408,6 +466,7 @@ export async function runProxy(args: string[]): Promise<void> {
     custom: config.custom,
     allow: config.allow,
     allowUnmasked: args.includes('--allow-unmasked'),
+    strict: args.includes('--strict'),
   });
   process.stderr.write(`Samaran Proxy listening on http://${host}:${port}\n`);
   if (host !== '127.0.0.1' && host !== 'localhost') {

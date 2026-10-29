@@ -416,11 +416,11 @@ _MEDICATIONS = (
 )
 # Strong medical verbs: whatever follows is the condition.
 _HEALTH_STRONG = rx(
-    r'\b(?:didiagnosis|didiagnosa|terdiagnosis|terdiagnosa|mengidap|terinfeksi|riwayat penyakit|divonis)\s+(?:menderita\s+|mengidap\s+|penyakit\s+)?(?!(?:yang|dan|atau|di|ke|dari|untuk|ini|itu|tersebut|adalah|dapat|bisa|tidak|belum|anda|kamu|pasien|seseorang)\b)([^\n\r,.;:()]{2,60}?)(?=\s+(?:sejak|selama|dan sudah|dan sedang|tapi|namun|sehingga|jadi)\b|[\n\r,.;:()]|$)',  # noqa: E501
+    r'\b(?:didiagnosis|didiagnosa|terdiagnosis|terdiagnosa|mengidap|terinfeksi|riwayat penyakit|divonis)\s+(?:menderita\s+|mengidap\s+|penyakit\s+)?(?!(?:yang|dan|atau|di|ke|dari|untuk|ini|itu|tersebut|adalah|dapat|bisa|tidak|belum|anda|kamu|pasien|seseorang)\b)([^\n\r,.;:()"]{2,60}?)(?=\s+(?:sejak|selama|dan sudah|dan sedang|tapi|namun|sehingga|jadi)\b|[\n\r,.;:()"]|$)',  # noqa: E501
     'gi',
 )
 # "Dx: TB paru" in a medical note; capitalized, so "dx" in code is not one.
-_HEALTH_DX = rx(r'\b(?:Dx|DX|Diagnosis|Diagnosa|Diag)\s*:\s*([^\n\r,;()]{2,60}?)(?=\s*(?:[\n\r,;()]|\.(?:\s|$)|$))', 'g')
+_HEALTH_DX = rx(r'\b(?:Dx|DX|Diagnosis|Diagnosa|Diag)\s*:\s*([^\n\r,;()"]{2,60}?)(?=\s*(?:[\n\r,;()"]|\.(?:\s|$)|$))', 'g')
 # Everyday words ("positif", "karena", "saya") only count before a known condition: "saya diabetes",
 # "riwayat hipertensi dan diabetes melitus".
 _HEALTH_GATED = rx(
@@ -1910,6 +1910,24 @@ def _label_before(text: str, line_start: int, end: int) -> Optional[str]:
     return None if start < 0 else text[start:end]
 
 
+def _closing_quote(text: str, start: int, end: int) -> int:
+    """Where a value inside a JSON string ends: at an unescaped double quote that closes the string.
+
+    That is one followed by a comma, a bracket, or the end of the line. {"note":"Agama: Islam"} ends before its quote;
+    'kata dia "ok" lalu' does not.
+    """
+    i = text.find('"', start, end)
+    while i != -1:
+        if i == 0 or text[i - 1] != '\\':
+            j = i + 1
+            while j < end and text[j] in ' \t':
+                j += 1
+            if j >= end or text[j] in ',}]':
+                return i
+        i = text.find('"', i + 1, end)
+    return end
+
+
 def _value_extent(text: str, start: int, end: int) -> int:
     """How much of the line after a label `_cut_value` can look at.
 
@@ -1970,6 +1988,9 @@ def _detect_labeled_fields(text: str) -> list[PiiMatch]:
         quote = text[value_start] if value_start < raw_end else ''
         if quote in _QUOTES:
             close = text.find(quote, value_start + 1, raw_end)
+            # "Budi \"Bob\" Santoso" in JSON: an escaped quote does not close the value.
+            while close != -1 and text[close - 1] == '\\':
+                close = text.find(quote, close + 1, raw_end)
             if close == -1:
                 continue
             value = text[value_start + 1 : close]
@@ -1978,7 +1999,9 @@ def _detect_labeled_fields(text: str) -> list[PiiMatch]:
                 continue
             start += 1
         else:
-            raw = text[value_start : _value_extent(text, value_start, raw_end)]
+            # {"note":"Agama: Islam"}: the value ends where the string does, not with its closing quote.
+            end = _closing_quote(text, value_start, raw_end)
+            raw = text[value_start : _value_extent(text, value_start, end)]
             value = _cut_value(pii_type, raw)
             # _cut_value trims; "nama: Budi" starts after the no-break space, not at it.
             if value:
@@ -2036,16 +2059,56 @@ def _blank_line_numbers(text: str) -> str:
     return _NUMBERED_LINES.sub(lambda m: ' ' * len(m.group(0)), text)
 
 
+#: How many lines into a text a table's header is looked for when the text does not start with one.
+_CSV_HEADER_LINES = 20
+_THREE_DIGITS = re.compile(r'\d{3}', re.ASCII)
+_NUMBER_CELL = re.compile(r'[+\d\s().\/-]+\Z', re.ASCII)
+
+
 def _detect_csv_columns(text: str) -> list[PiiMatch]:
     """Every cell under a header that says what it holds: nama, nik, agama, diagnosa, gaji, …"""
     text = _blank_line_numbers(text)
-    first_break = text.find('\n')
+    table = _csv_table_at(text, 0, to_end=True)
+    if table is not None:
+        return table
+    # A chat message or a prompt often has a sentence before the table: "Tolong cek data ini:" and then the CSV.
+    line_start = 0
+    for _ in range(1, _CSV_HEADER_LINES):
+        line_break = text.find('\n', line_start)
+        if line_break == -1:
+            break
+        line_start = line_break + 1
+        later = _csv_table_at(text, line_start, to_end=False)
+        if later is not None:
+            return later
+    return []
+
+
+_CSV_HEADER_PREFIX = re.compile(r'[^,;|\t:]{1,60}:[ \t]+')
+
+
+def _csv_table_at(text: str, at: int, *, to_end: bool, header: Optional[str] = None) -> Optional[list[PiiMatch]]:
+    """The cells of a table whose header row starts at ``at``, or None when there is no header there.
+
+    A table at the start of a text runs to its end (a CSV file); one after a sentence ends at the first line that is
+    not one of its rows, such as a blank line or "makasih".
+    """
+    first_break = text.find('\n', at)
     if first_break == -1:
-        return []
-    header = _strip_cr(text[:first_break])
+        return None
+    if header is None:
+        line = _strip_cr(text[at:first_break])
+        # A log line or a sentence that ends in the header: "checkout csv: nama,nik,hp". A field name has no ": ".
+        prefix = _CSV_HEADER_PREFIX.match(line)
+        if prefix:
+            table = _csv_table_at(text, at, to_end=False, header=line[prefix.end() :])
+            if table:
+                return table
+        return _csv_table_at(text, at, to_end=to_end, header=line)
     delimiter = next((d for d in (',', ';', '\t', '|') if d in header), None)
-    if not delimiter:
-        return []
+    # Tab tables in the middle of a text are _detect_tab_tables' job, with rules of their own.
+    if not delimiter or (not to_end and delimiter == '\t'):
+        return None
     header_fields = [_js.trim(header[s:e]) for s, e in _csv_fields(header, delimiter)]
     # A header is short labels, and the next row has as many fields — not a sentence with commas.
     second_line = _strip_cr(text[first_break + 1 :].split('\n', 1)[0])
@@ -2053,25 +2116,33 @@ def _detect_csv_columns(text: str) -> list[PiiMatch]:
         len(header_fields) < 2
         or any(len(h) > 40 or _HEADER_SENTENCE_END.search(h) for h in header_fields)
         or len(_csv_fields(second_line, delimiter)) != len(header_fields)
+        # In the middle of a text, a header is labels only: not a data row such as "n01687978<TAB>agama".
+        or (not to_end and any(not _HAS_LETTER.search(h) or _THREE_DIGITS.search(h) for h in header_fields))
     ):
-        return []
+        return None
     columns = [field_type(h) for h in header_fields]
     if not any(columns):
-        return []
+        return None
     # "Nama<TAB>Budi Santoso" then "NIK<TAB>3201…" is a list of labels and values, not a table with a header.
     second = _csv_fields(second_line, delimiter)
     if any(t and field_type(_js.trim(second_line[second[i][0] : second[i][1]])) for i, t in enumerate(columns)):
-        return []
+        return None
 
     out: list[PiiMatch] = []
     offset = first_break + 1
     for raw_line in text[offset:].split('\n'):
         line = _strip_cr(raw_line)
-        for idx, (s, e) in enumerate(_csv_fields(line, delimiter)):
+        fields = _csv_fields(line, delimiter)
+        if not to_end and len(fields) != len(header_fields):
+            break
+        for idx, (s, e) in enumerate(fields):
             t = columns[idx] if idx < len(columns) else None
             cell = line[s:e]
             value = _js.trim(cell)
             if not t or not is_plausible_value(t, value, header_fields[idx]):
+                continue
+            # After a sentence the text may go on in the same line: a number column then holds the number and nothing else.
+            if not to_end and t in _NUMBER_TYPES and not _NUMBER_CELL.match(value):
                 continue
             start = offset + s + cell.find(value)
             # A plain "name" column can hold product names as easily as people.
@@ -2149,6 +2220,97 @@ def _detect_tab_tables(text: str) -> list[PiiMatch]:
                 header = [value for _, value in cells]
                 columns = types
         pos = end + 1
+    return out
+
+
+_JSON_STRING = re.compile(r'"((?:[^"\\]|\\[\s\S])*)"')
+_UNESCAPED = {'n': '\n', 'r': '\r', 't': '\t', 'b': '\b', 'f': '\f'}
+_HEX4 = re.compile(r'[0-9a-fA-F]{4}\Z')
+
+
+def _worth_unescaping(body: str) -> bool:
+    """Only what the escapes hide: JSON (its field names are escaped) and a quoted CSV.
+
+    Line breaks alone are read through _escapes_as_breaks already, and unescaping every log message would make
+    detection many times slower.
+    """
+    if '\\"' not in body:
+        return False
+    return _JSON_BODY.match(body) is not None or ('\\n' in body and _CSV_DELIMITER.search(body) is not None)
+
+
+_CSV_DELIMITER = re.compile(r'[,;|]')
+_JSON_BODY = re.compile(r'[ \t\r\n]*[{\[]')
+
+
+def _detect_escaped_strings(text: str) -> list[PiiMatch]:
+    """A JSON string with escapes in it, read unescaped.
+
+    JSON inside JSON, as a log writes a request body and a tool call its arguments ('{\\"nama\\":\\"Budi\\"}'), or a
+    CSV export in a field. The detectors, this one included, read the unescaped text; the matches are mapped back onto
+    the escaped text.
+    """
+    if '\\' not in text:
+        return []
+    out: list[PiiMatch] = []
+    # JSON strings go into one text, a blank line apart, for one pass of the detectors: a log with a JSON body on every
+    # line would otherwise run them once per line. A CSV is read on its own, since a table runs to the end of its text.
+    joined: list[str] = []
+    joined_at: list[int] = []
+    joined_part: list[int] = []
+
+    def flush() -> None:
+        if not joined:
+            return
+        joined_at.append(joined_at[-1])
+        joined_part.append(-1)
+        unescaped = ''.join(joined)
+        for f in [*(f for detector in _DETECTORS for f in detector(unescaped)), *_detect_escaped_strings(unescaped)]:
+            # Never across two strings: the text between them is JSON, not data.
+            if joined_part[f.start] != joined_part[f.end - 1]:
+                continue
+            start, end = joined_at[f.start], joined_at[f.end]
+            out.append(PiiMatch(f.type, start, end, text[start:end], f.confidence, f.label))
+        joined.clear()
+        joined_at.clear()
+        joined_part.clear()
+
+    part = 0
+    for m in _JSON_STRING.finditer(text):
+        body = m.group(1)
+        if not _worth_unescaping(body):
+            continue
+        is_json = _JSON_BODY.match(body) is not None
+        if not is_json:
+            flush()
+        if joined:
+            # The blank line maps to the end of the string before it.
+            joined.append('\n\n')
+            joined_at.extend((joined_at[-1], joined_at[-1]))
+            joined_part.extend((-1, -1))
+        base = m.start() + 1
+        part += 1
+        i = 0
+        while i < len(body):
+            joined_at.append(base + i)
+            joined_part.append(part)
+            if body[i] != '\\':
+                joined.append(body[i])
+                i += 1
+            elif body[i + 1 : i + 2] == 'u' and _HEX4.match(body[i + 2 : i + 6]):
+                joined.append(chr(int(body[i + 2 : i + 6], 16)))
+                i += 6
+            else:
+                e = body[i + 1 : i + 2]
+                joined.append(_UNESCAPED.get(e, e))
+                i += 2
+        # Where the string ends, for a match that runs to its last character.
+        joined_at.append(base + len(body))
+        joined_part.append(part)
+        joined.append(' ')
+        if not is_json:
+            flush()
+    flush()
     return out
 
 
@@ -2235,9 +2397,10 @@ def detect_pii(
         return 2 if m.confidence == 'high' else 1
 
     astral = _ASTRAL.search(text) is not None
-    view = _to_utf16_view(text) if astral else text
+    units = _to_utf16_view(text) if astral else text
+    view = _escapes_as_breaks(units)
 
-    found = [m for detector in _DETECTORS for m in detector(view)]
+    found = [m for detector in _DETECTORS for m in detector(view)] + _detect_escaped_strings(units)
     if rules:
         found.extend(detect_custom(view, rules))
     candidates = [m for m in found if m.end > m.start and m.type in wanted and rank(m) >= min_rank]
@@ -2251,10 +2414,28 @@ def detect_pii(
         taken[c.start : c.end] = b'\x01' * (c.end - c.start)
         accepted.append(c)
     accepted.sort(key=lambda m: m.start)
+    # A match stops before an escape it ran into: a line break read from "\\n", or a quote written '\\"' in JSON that
+    # went through twice. Its value is the text as it is.
+    trimmed: list[PiiMatch] = []
+    for m in accepted:
+        end = m.end
+        while True:
+            if end > m.start and (view[end - 1] != units[end - 1] or units[end - 1] == '\\'):
+                end -= 1
+            elif end - 1 > m.start and units[end - 1] == '"' and units[end - 2] == '\\':
+                end -= 2
+            else:
+                break
+        if end == m.end:
+            trimmed.append(m)
+        elif end > m.start:
+            trimmed.append(PiiMatch(m.type, m.start, end, units[m.start : end], m.confidence, m.label))
+    accepted = trimmed
     if not astral:
         return accepted
 
     # Map UTF-16 offsets back to Python characters, never splitting an emoji.
+    view = units
     unit_to_char = [0] * (len(view) + 1)
     unit = 0
     for i, ch in enumerate(text):
@@ -2278,3 +2459,12 @@ def detect_pii(
 
 
 _ASTRAL = re.compile('[\U00010000-\U0010ffff]')
+_ESCAPED_BREAK = re.compile(r'\\+[nrt]')
+_BREAK_FOR = {'n': '\n', 'r': '\r', 't': '\t'}
+
+
+def _escapes_as_breaks(text: str) -> str:
+    """Escaped line breaks ("\\n", or "\\\\n" after two rounds of JSON) as spaces and a real break, same length."""
+    if '\\' not in text:
+        return text
+    return _ESCAPED_BREAK.sub(lambda e: ' ' * (len(e.group(0)) - 1) + _BREAK_FOR[e.group(0)[-1]], text)

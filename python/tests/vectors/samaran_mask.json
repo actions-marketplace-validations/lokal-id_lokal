@@ -3100,6 +3100,126 @@
   "high": []
  },
  {
+  "text": "node:assert/strict",
+  "placeholder": "node:assert/strict",
+  "vault": [],
+  "partial": "node:assert/strict",
+  "noFinanceNoName": "node:assert/strict",
+  "high": []
+ },
+ {
+  "text": "node:fs",
+  "placeholder": "node:fs",
+  "vault": [],
+  "partial": "node:fs",
+  "noFinanceNoName": "node:fs",
+  "high": []
+ },
+ {
+  "text": "node:path",
+  "placeholder": "node:path",
+  "vault": [],
+  "partial": "node:path",
+  "noFinanceNoName": "node:path",
+  "high": []
+ },
+ {
+  "text": "canary.json",
+  "placeholder": "canary.json",
+  "vault": [],
+  "partial": "canary.json",
+  "noFinanceNoName": "canary.json",
+  "high": []
+ },
+ {
+  "text": "utf8",
+  "placeholder": "utf8",
+  "vault": [],
+  "partial": "utf8",
+  "noFinanceNoName": "utf8",
+  "high": []
+ },
+ {
+  "text": "\n",
+  "placeholder": "\n",
+  "vault": [],
+  "partial": "\n",
+  "noFinanceNoName": "\n",
+  "high": []
+ },
+ {
+  "text": " ",
+  "placeholder": " ",
+  "vault": [],
+  "partial": " ",
+  "noFinanceNoName": " ",
+  "high": []
+ },
+ {
+  "text": ",",
+  "placeholder": ",",
+  "vault": [],
+  "partial": ",",
+  "noFinanceNoName": ",",
+  "high": []
+ },
+ {
+  "text": ",",
+  "placeholder": ",",
+  "vault": [],
+  "partial": ",",
+  "noFinanceNoName": ",",
+  "high": []
+ },
+ {
+  "text": "",
+  "placeholder": "",
+  "vault": [],
+  "partial": "",
+  "noFinanceNoName": "",
+  "high": []
+ },
+ {
+  "text": "NAME",
+  "placeholder": "NAME",
+  "vault": [],
+  "partial": "NAME",
+  "noFinanceNoName": "NAME",
+  "high": []
+ },
+ {
+  "text": " ",
+  "placeholder": " ",
+  "vault": [],
+  "partial": " ",
+  "noFinanceNoName": " ",
+  "high": []
+ },
+ {
+  "text": "ADDRESS",
+  "placeholder": "ADDRESS",
+  "vault": [],
+  "partial": "ADDRESS",
+  "noFinanceNoName": "ADDRESS",
+  "high": []
+ },
+ {
+  "text": "Kanari Raya",
+  "placeholder": "Kanari Raya",
+  "vault": [],
+  "partial": "Kanari Raya",
+  "noFinanceNoName": "Kanari Raya",
+  "high": []
+ },
+ {
+  "text": ", ",
+  "placeholder": ", ",
+  "vault": [],
+  "partial": ", ",
+  "noFinanceNoName": ", ",
+  "high": []
+ },
+ {
   "text": "node:test",
   "placeholder": "node:test",
   "vault": [],
@@ -5849,162 +5969,6 @@
   "vault": [],
   "partial": "L",
   "noFinanceNoName": "L",
-  "high": []
- },
- {
-  "text": "1995",
-  "placeholder": "1995",
-  "vault": [],
-  "partial": "1995",
-  "noFinanceNoName": "1995",
-  "high": []
- },
- {
-  "text": "P",
-  "placeholder": "P",
-  "vault": [],
-  "partial": "P",
-  "noFinanceNoName": "P",
-  "high": []
- },
- {
-  "text": "-",
-  "placeholder": "-",
-  "vault": [],
-  "partial": "-",
-  "noFinanceNoName": "-",
-  "high": []
- },
- {
-  "text": "Telkomsel",
-  "placeholder": "Telkomsel",
-  "vault": [],
-  "partial": "Telkomsel",
-  "noFinanceNoName": "Telkomsel",
-  "high": []
- },
- {
-  "text": "0812-… and 0812… are one person",
-  "placeholder": "0812-… and 0812… are one person",
-  "vault": [],
-  "partial": "0812-… and 0812… are one person",
-  "noFinanceNoName": "0812-… and 0812… are one person",
-  "high": []
- },
- {
-  "text": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
-  "placeholder": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
-  "vault": [],
-  "partial": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
-  "noFinanceNoName": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
-  "high": []
- },
- {
-  "text": "uji",
-  "placeholder": "uji",
-  "vault": [],
-  "partial": "uji",
-  "noFinanceNoName": "uji",
-  "high": []
- },
- {
-  "text": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
-  "placeholder": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
-  "vault": [],
-  "partial": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
-  "noFinanceNoName": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
-  "high": []
- },
- {
-  "text": "Budi Santoso",
-  "placeholder": "[NAME_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Budi Santoso"
-   ]
-  ],
-  "partial": "B*** S***",
-  "noFinanceNoName": "Budi Santoso",
-  "high": []
- },
- {
-  "text": "3201011508950001",
-  "placeholder": "[NIK_1]",
-  "vault": [
-   [
-    "[NIK_1]",
-    "3201011508950001"
-   ]
-  ],
-  "partial": "3201********0001",
-  "noFinanceNoName": "[NIK_1]",
-  "high": [
-   "3201011508950001"
-  ]
- },
- {
-  "text": "Siti Aminah",
-  "placeholder": "[NAME_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Siti Aminah"
-   ]
-  ],
-  "partial": "S*** A***",
-  "noFinanceNoName": "Siti Aminah",
-  "high": []
- },
- {
-  "text": "3201014408960002",
-  "placeholder": "[NIK_1]",
-  "vault": [
-   [
-    "[NIK_1]",
-    "3201014408960002"
-   ]
-  ],
-  "partial": "3201********0002",
-  "noFinanceNoName": "[NIK_1]",
-  "high": [
-   "3201014408960002"
-  ]
- },
- {
-  "text": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tBudi Santoso\t3201011508950001\n\\.\n",
-  "placeholder": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\t[NAME_1]\t[NIK_1]\n\\.\n",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Budi Santoso"
-   ],
-   [
-    "[NIK_1]",
-    "3201011508950001"
-   ]
-  ],
-  "partial": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tB*** S***\t3201********0001\n\\.\n",
-  "noFinanceNoName": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tBudi Santoso\t[NIK_1]\n\\.\n",
-  "high": [
-   "Budi Santoso",
-   "3201011508950001"
-  ]
- },
- {
-  "text": "([^",
-  "placeholder": "([^",
-  "vault": [],
-  "partial": "([^",
-  "noFinanceNoName": "([^",
-  "high": []
- },
- {
-  "text": "\n",
-  "placeholder": "\n",
-  "vault": [],
-  "partial": "\n",
-  "noFinanceNoName": "\n",
   "high": []
  }
 ]

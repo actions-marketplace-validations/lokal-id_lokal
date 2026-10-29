@@ -41,6 +41,8 @@ export {
   fieldType,
   PII_TYPES,
   UU_PDP_CATEGORY,
+  SCAN_STATUSES,
+  type ScanStatus,
   type PiiType,
   type PiiMatch,
   type MaskedMatch,

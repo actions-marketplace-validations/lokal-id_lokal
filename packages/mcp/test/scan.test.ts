@@ -148,7 +148,7 @@ test('a path scan follows .gitignore and reports files it cannot read', () => {
     try {
       const report = scanTargets(pathTargets(dir, ['.']));
       assert.equal(report.findings.length, 0);
-      assert.deepEqual(report.notScanned, [{ file: 'backup.zip', reason: 'archive' }]);
+      assert.deepEqual(report.notScanned, [{ file: 'backup.zip', status: 'unsupported', reason: 'archive' }]);
     } finally {
       process.chdir(cwd);
     }

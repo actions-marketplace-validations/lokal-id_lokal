@@ -72,9 +72,9 @@ test('a PDF becomes one masked text file with a heading per page', () => {
 });
 
 test('unreadable and oversized documents say why', () => {
-  assert.deepEqual(readAttachment('rusak.xlsx', new TextEncoder().encode('bukan zip')), { kind: 'sheets', reason: 'damaged' });
-  assert.deepEqual(readAttachment('rusak.pdf', new TextEncoder().encode('%PDF-1.7\n')), { kind: 'pdf', reason: 'damaged' });
-  assert.deepEqual(readAttachment('besar.csv', new Uint8Array(MAX_ATTACHMENT_BYTES + 1)), { kind: 'text', reason: 'too-large' });
+  assert.deepEqual(readAttachment('rusak.xlsx', new TextEncoder().encode('bukan zip')), { kind: 'sheets', status: 'failed', reason: 'damaged' });
+  assert.deepEqual(readAttachment('rusak.pdf', new TextEncoder().encode('%PDF-1.7\n')), { kind: 'pdf', status: 'failed', reason: 'damaged' });
+  assert.deepEqual(readAttachment('besar.csv', new Uint8Array(MAX_ATTACHMENT_BYTES + 1)), { kind: 'text', status: 'unsupported', reason: 'too-large' });
 });
 
 test('photos named like ID documents are recognised; other images are not', () => {

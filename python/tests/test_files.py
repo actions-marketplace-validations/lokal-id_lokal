@@ -24,7 +24,7 @@ UNITS = {'spreadsheet': None, 'word': 'part', 'pdf': 'page'}
 def ts_shape(doc: Document) -> dict[str, Any]:
     """A Document in the shape of the TypeScript loadDocument result."""
     if doc.kind == 'skipped':
-        return {'kind': 'skipped', 'reason': doc.reason, 'dataBearing': doc.data_bearing}
+        return {'kind': 'skipped', 'status': doc.scan_status, 'reason': doc.reason, 'dataBearing': doc.data_bearing}
     if doc.kind == 'text':
         out: dict[str, Any] = {'kind': 'text', 'text': doc.parts[0].text}
         if doc.sampled:
@@ -79,10 +79,10 @@ def test_scan_path_reports_findings_without_values(tmp_path: Path) -> None:
     assert report.files_ignored == 1
     assert report.totals['NIK'] >= 9
     assert not report.clean
-    assert sorted((n.file, n.reason) for n in report.not_scanned) == [
-        ('encrypted.pdf', 'encrypted PDF (password-protected)'),
-        ('ktp.jpg', 'image (may be a KTP or selfie photo)'),
-        ('surat-keterangan.pdf', 'partly scanned: page 2 of 3 has no text layer (scanned) and needs OCR'),
+    assert sorted((n.file, n.status, n.reason) for n in report.not_scanned) == [
+        ('encrypted.pdf', 'failed', 'encrypted PDF (password-protected)'),
+        ('ktp.jpg', 'unsupported', 'image (may be a KTP or selfie photo)'),
+        ('surat-keterangan.pdf', 'partial', 'page 2 of 3 has no text layer (scanned) and needs OCR'),
     ]
     invoice = [f for f in report.findings if f.file == 'invoice.pdf']
     assert {f.part for f in invoice} == {'Halaman 1'}

@@ -17,6 +17,7 @@ from typing import Literal, NoReturn, Optional, Union
 from .. import _js
 from .._result import Result
 from ..samaran.custom import CustomRule, check_custom_rules
+from ..samaran.types import ScanStatus
 from ._docx import read_docx
 from ._pdf import read_pdf
 from ._xlsx import read_xlsx
@@ -50,6 +51,16 @@ class Document(Result):
     reason: Optional[str] = None
     #: Whether a skipped file may hold personal data (images, PDFs, archives) or not (other binary files).
     data_bearing: Optional[bool] = None
+    #: For a skipped file: ``unsupported`` (a kind Lokal does not read) or ``failed`` (a kind it reads, but this one
+    #: would not). Read :attr:`scan_status` for any document.
+    skip_status: Optional[Literal['unsupported', 'failed']] = None
+
+    @property
+    def scan_status(self) -> ScanStatus:
+        """How much of the file a check saw."""
+        if self.kind == 'skipped':
+            return self.skip_status or 'unsupported'
+        return 'partial' if self.sampled or self.unscanned else 'scanned'
 
     @property
     def text(self) -> str:
@@ -95,7 +106,11 @@ _UNSUPPORTED_DATA = {
 
 
 def _skipped(reason: str, data_bearing: bool = True) -> Document:
-    return Document('skipped', reason=reason, data_bearing=data_bearing)
+    return Document('skipped', reason=reason, data_bearing=data_bearing, skip_status='unsupported')
+
+
+def _failed(reason: str) -> Document:
+    return Document('skipped', reason=reason, data_bearing=True, skip_status='failed')
 
 
 def is_text_file(file: StrPath) -> bool:
@@ -133,13 +148,13 @@ def load_document(
         try:
             sheets = read_xlsx(Path(file).read_bytes())
         except Exception as e:  # a damaged file is reported, never raised
-            return _skipped(f'unreadable spreadsheet: {_error(e)}')
+            return _failed(f'unreadable spreadsheet: {_error(e)}')
         return Document('spreadsheet', tuple(Part(name, text) for name, text in sheets))
     if ext == '.docx':
         try:
             parts = read_docx(Path(file).read_bytes())
         except Exception as e:
-            return _skipped(f'unreadable Word document: {_error(e)}')
+            return _failed(f'unreadable Word document: {_error(e)}')
         return Document('word', tuple(Part(name, text) for name, text in parts))
     if ext == '.pdf':
         try:
@@ -147,11 +162,12 @@ def load_document(
         except Exception as e:
             message = _error(e)
             if re.search('encrypted', message):
-                return _skipped('encrypted PDF (password-protected)')
-            return _skipped(f'unreadable PDF: {re.sub(r"[.]$", "", message)}')
+                return _failed('encrypted PDF (password-protected)')
+            return _failed(f'unreadable PDF: {re.sub(r"[.]$", "", message)}')
         if not pages and (scanned or damaged):
-            reason = 'damaged PDF: no readable text' if damaged else 'PDF without a text layer (scanned); needs OCR'
-            return _skipped(reason)
+            if damaged:
+                return _failed('damaged PDF: no readable text')
+            return _skipped('PDF without a text layer (scanned); needs OCR')
         notes = []
         if scanned:
             one = len(scanned) == 1

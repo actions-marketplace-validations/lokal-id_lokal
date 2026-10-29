@@ -156,7 +156,8 @@ test('scan_pii melapor tanpa membocorkan nilai, menghormati .samaranignore', asy
 test('scan_pii tidak pernah diam soal file yang tidak bisa dipindai', async () => {
   const { data } = await call('scan_pii', { path: 'ekspor' });
   assert.equal(data.notScanned.count, 2);
-  assert.deepEqual(data.notScanned.files, ['ekspor/laporan.pdf (unreadable PDF: No pages found)']);
+  assert.deepEqual(data.notScanned.files, ['ekspor/laporan.pdf (failed: unreadable PDF: No pages found)']);
+  assert.deepEqual(data.notScanned.byStatus, { failed: 1, unsupported: 1 });
   assert.match(data.warning, /NOT scanned/);
 });
 
@@ -527,7 +528,7 @@ test('PDF: teks dipindai dan disamarkan, halaman hasil scan dilaporkan, guard me
   assert.equal(scan.data.totals.NIK, 4);
   assert.ok(scan.data.findings.some((f: any) => f.file === 'pdf/invoice.pdf' && f.sheet === 'Halaman 1' && f.type === 'NAME'));
   assert.deepEqual(scan.data.notScanned.files, [
-    'pdf/surat-keterangan.pdf (partly scanned: page 2 of 3 has no text layer (scanned) and needs OCR)',
+    'pdf/surat-keterangan.pdf (partial: page 2 of 3 has no text layer (scanned) and needs OCR)',
   ]);
   for (const secret of ['3201011508950001', 'Budi Santoso', 'Rina Wati', '0812-3456-7890']) assert.ok(!scan.text.includes(secret), secret);
 

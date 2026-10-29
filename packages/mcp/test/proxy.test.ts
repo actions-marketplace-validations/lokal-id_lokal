@@ -149,7 +149,9 @@ test('proxy: Chat Completions dikirim tersamar, jawaban dan argumen tool kembali
   const message = reply.choices[0].message;
   assert.equal(message.content, 'Baik, data Budi Santoso dengan NIK 3201011508950001 sudah dicek. [UNKNOWN_9] tetap.');
   assert.deepEqual(JSON.parse(message.tool_calls[0].function.arguments), { nama: 'Budi Santoso', hp: '0812-3456-7890' });
-  assert.match(logs.at(-1)!, /POST \/v1\/chat\/completions → 200 \d+ ms masked NAME=2,NIK=2,PHONE=2,FINANCIAL=1, 1 placeholder\(s\) not restored$/);
+  assert.match(logs.at(-1)!, /POST \/v1\/chat\/completions → 200 \d+ ms masked NAME=2,NIK=2,PHONE=2,FINANCIAL=1, 1 image or file part\(s\) not checked, 1 placeholder\(s\) not restored$/);
+  assert.equal(res.headers.get('x-samaran-status'), 'partial', 'the image was not checked');
+  assert.equal(res.headers.get('x-samaran-unchecked'), '1');
   assert.equal(res.headers.get('x-samaran-unrestored'), '1', '[UNKNOWN_9] came from nowhere');
   assert.ok(!logs.join('\n').includes('3201011508950001'), 'the log has no values');
   assert.ok(!logs.join('\n').includes('UNKNOWN_9'), 'nor the placeholders');
@@ -238,6 +240,37 @@ test('proxy: OpenAI Responses API', async () => {
   assert.equal(text, 'NIK 3201011508950001 milik [NAME_');
   assert.equal(events.find((e) => e.data.type === 'response.output_text.done')!.data.text, 'NIK 3201011508950001 milik Budi Santoso');
   assert.equal(events.at(-1)!.data.response.output[0].content[0].text, 'NIK 3201011508950001 milik Budi Santoso');
+});
+
+test('proxy: --strict refuses images and files it cannot check; text-only requests still go', async () => {
+  const up = `http://127.0.0.1:${(upstream.address() as AddressInfo).port}`;
+  const strictLogs: string[] = [];
+  const strict = await startProxy({ port: 0, openai: up, strict: true, allowUnmasked: true, log: (l) => strictLogs.push(l) });
+  const url = `http://127.0.0.1:${(strict.address() as AddressInfo).port}`;
+  try {
+    received = [];
+    const withImage = await post('/v1/chat/completions', {
+      model: 'gpt-test',
+      messages: [{ role: 'user', content: [{ type: 'text', text: 'Ini KTP saya' }, { type: 'image_url', image_url: { url: IMAGE } }] }],
+    }, url);
+    assert.equal(withImage.status, 422);
+    assert.match((await withImage.json()).error.message, /1 image or file part\(s\) that Samaran cannot check/);
+    assert.equal(received.length, 0, 'nothing was forwarded');
+    assert.match(strictLogs.at(-1)!, /refused: 1 image or file part\(s\)/);
+
+    const form = new FormData();
+    form.append('file', new Blob(['nama,nik\nBudi Santoso,3201011508950001\n']), 'pelanggan.csv');
+    const upload = await fetch(`${url}/v1/files`, { method: 'POST', body: form });
+    assert.equal(upload.status, 415, '--strict wins over --allow-unmasked');
+    assert.equal(received.length, 0);
+
+    const text = await post('/v1/chat/completions', { model: 'gpt-test', messages: [{ role: 'user', content: PROMPT }] }, url);
+    assert.equal(text.status, 200);
+    assert.equal(text.headers.get('x-samaran-status'), 'scanned');
+    assert.equal(text.headers.get('x-samaran-unchecked'), null);
+  } finally {
+    strict.close();
+  }
 });
 
 test('proxy: unggahan berkas ditolak, request tanpa body diteruskan, exclude, dan base URL /v1', async () => {

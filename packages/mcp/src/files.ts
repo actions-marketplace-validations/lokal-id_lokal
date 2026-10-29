@@ -1,6 +1,6 @@
 import { closeSync, existsSync, openSync, readdirSync, readFileSync, readSync, statSync } from 'node:fs';
 import path from 'node:path';
-import { checkCustomRules, detectPii, type CustomRule, type DetectOptions, type PiiMatch } from '@lokal-id/core';
+import { checkCustomRules, detectPii, type CustomRule, type DetectOptions, type PiiMatch, type ScanStatus } from '@lokal-id/core';
 import { readDocx } from './docx.ts';
 import { readPdf } from './pdf.ts';
 import { readXlsx, type Sheet } from './xlsx.ts';
@@ -190,7 +190,18 @@ export type Document =
    * `unscanned` says what could not be read, such as scanned pages in an otherwise text-based PDF.
    */
   | { kind: 'sheets'; sheets: Sheet[]; unit?: 'sheet' | 'part' | 'page'; unscanned?: string }
-  | { kind: 'skipped'; reason: string; dataBearing: boolean };
+  /** `status`: unsupported (a kind of file Lokal does not read) or failed (a kind it reads, but this one would not). */
+  | { kind: 'skipped'; status: 'unsupported' | 'failed'; reason: string; dataBearing: boolean };
+
+/** How much of a loaded document a check saw. */
+export function documentStatus(doc: Document): ScanStatus {
+  if (doc.kind === 'skipped') return doc.status;
+  if ((doc.kind === 'text' && doc.sampled) || (doc.kind === 'sheets' && doc.unscanned)) return 'partial';
+  return 'scanned';
+}
+
+const unsupported = (reason: string, dataBearing = true): Document => ({ kind: 'skipped', status: 'unsupported', reason, dataBearing });
+const failed = (reason: string): Document => ({ kind: 'skipped', status: 'failed', reason, dataBearing: true });
 
 export interface LoadOptions {
   /** Read only this many bytes of a larger text file (the guard's time budget). */
@@ -253,21 +264,20 @@ function parseWhole(ext: string, buf: Buffer): Document {
     try {
       return { kind: 'sheets', sheets: readXlsx(buf) };
     } catch (e) {
-      return { kind: 'skipped', reason: `unreadable spreadsheet: ${(e as Error).message}`, dataBearing: true };
+      return failed(`unreadable spreadsheet: ${(e as Error).message}`);
     }
   }
   if (ext === '.docx') {
     try {
       return { kind: 'sheets', sheets: readDocx(buf), unit: 'part' };
     } catch (e) {
-      return { kind: 'skipped', reason: `unreadable Word document: ${(e as Error).message}`, dataBearing: true };
+      return failed(`unreadable Word document: ${(e as Error).message}`);
     }
   }
   try {
     const { pages, scanned, damaged, total } = readPdf(buf);
     if (!pages.length && (scanned.length || damaged.length)) {
-      const reason = damaged.length ? 'damaged PDF: no readable text' : 'PDF without a text layer (scanned); needs OCR';
-      return { kind: 'skipped', reason, dataBearing: true };
+      return damaged.length ? failed('damaged PDF: no readable text') : unsupported('PDF without a text layer (scanned); needs OCR');
     }
     const notes: string[] = [];
     if (scanned.length) {
@@ -281,8 +291,7 @@ function parseWhole(ext: string, buf: Buffer): Document {
     return { kind: 'sheets', sheets: pages, unit: 'page', unscanned: notes.join('; ') || undefined };
   } catch (e) {
     const message = (e as Error).message;
-    const reason = /encrypted/.test(message) ? 'encrypted PDF (password-protected)' : `unreadable PDF: ${message.replace(/\.$/, '')}`;
-    return { kind: 'skipped', reason, dataBearing: true };
+    return failed(/encrypted/.test(message) ? 'encrypted PDF (password-protected)' : `unreadable PDF: ${message.replace(/\.$/, '')}`);
   }
 }
 
@@ -290,16 +299,16 @@ function parseWhole(ext: string, buf: Buffer): Document {
 export function loadDocument(file: string, options: LoadOptions = {}): Document {
   const ext = path.extname(file).toLowerCase();
   const st = statSync(file);
-  if (st.size > MAX_FILE_BYTES) return { kind: 'skipped', reason: `larger than ${mb(MAX_FILE_BYTES)}`, dataBearing: true };
+  if (st.size > MAX_FILE_BYTES) return unsupported(`larger than ${mb(MAX_FILE_BYTES)}`);
   if (PARSED_WHOLE.has(ext)) {
     if (options.maxZipBytes !== undefined && st.size > options.maxZipBytes) {
-      return { kind: 'skipped', reason: `larger than ${mb(options.maxZipBytes)}`, dataBearing: true };
+      return unsupported(`larger than ${mb(options.maxZipBytes)}`);
     }
     return parseWhole(ext, readFileSync(file));
   }
-  const unsupported = UNSUPPORTED_DATA[ext];
-  if (unsupported) return { kind: 'skipped', reason: unsupported, dataBearing: true };
-  if (!isTextFile(file)) return { kind: 'skipped', reason: 'binary file', dataBearing: false };
+  const why = UNSUPPORTED_DATA[ext];
+  if (why) return unsupported(why);
+  if (!isTextFile(file)) return unsupported('binary file', false);
   if (options.sampleBytes !== undefined && st.size > options.sampleBytes) {
     return { kind: 'text', text: readHead(file, options.sampleBytes), sampled: true };
   }
@@ -309,10 +318,10 @@ export function loadDocument(file: string, options: LoadOptions = {}): Document 
 /** Like loadDocument, for content that is not on disk, such as a file staged in git. */
 export function loadBuffer(name: string, buf: Buffer): Document {
   const ext = path.extname(name).toLowerCase();
-  if (buf.length > MAX_FILE_BYTES) return { kind: 'skipped', reason: `larger than ${mb(MAX_FILE_BYTES)}`, dataBearing: true };
+  if (buf.length > MAX_FILE_BYTES) return unsupported(`larger than ${mb(MAX_FILE_BYTES)}`);
   if (PARSED_WHOLE.has(ext)) return parseWhole(ext, buf);
-  const unsupported = UNSUPPORTED_DATA[ext];
-  if (unsupported) return { kind: 'skipped', reason: unsupported, dataBearing: true };
-  if (buf.subarray(0, 8000).includes(0)) return { kind: 'skipped', reason: 'binary file', dataBearing: false };
+  const why = UNSUPPORTED_DATA[ext];
+  if (why) return unsupported(why);
+  if (buf.subarray(0, 8000).includes(0)) return unsupported('binary file', false);
   return { kind: 'text', text: buf.toString('utf8') };
 }

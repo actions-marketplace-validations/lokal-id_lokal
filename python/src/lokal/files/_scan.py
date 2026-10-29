@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Literal, Optional
 
 from .._result import Result
-from ..samaran import UU_PDP_CATEGORY, Confidence, PiiType, detect_pii, partial_mask
+from ..samaran import UU_PDP_CATEGORY, Confidence, PiiType, ScanStatus, detect_pii, partial_mask
 from ..samaran.custom import RuleLike, to_rules
 from ..samaran.detectors import check_types
 from ._load import Document, StrPath, load_config, load_document, load_ignore, walk_files
@@ -41,6 +41,8 @@ class Finding(Result):
 class NotScanned(Result):
     file: str
     reason: str
+    #: ``partial``, ``unsupported``, or ``failed``.
+    status: ScanStatus = 'unsupported'
 
 
 @dataclass(slots=True)
@@ -104,15 +106,17 @@ def scan_path(
         rel = Path(os.path.relpath(file, root)).as_posix() if is_dir else file.name
         try:
             doc: Document = load_document(file)
-        except OSError:
-            continue  # removed or unreadable while scanning
+        except OSError as e:
+            # Not silently: a file that could not even be opened may hold anything.
+            report.not_scanned.append(NotScanned(rel, f'unreadable: {e}', 'failed'))
+            continue
         if doc.kind == 'skipped':
             if doc.data_bearing:
-                report.not_scanned.append(NotScanned(rel, doc.reason or ''))
+                report.not_scanned.append(NotScanned(rel, doc.reason or '', doc.scan_status))
             continue
         report.files_scanned += 1
         if doc.unscanned:
-            report.not_scanned.append(NotScanned(rel, f'partly scanned: {doc.unscanned}'))
+            report.not_scanned.append(NotScanned(rel, doc.unscanned, 'partial'))
         has_pii = False
         for part in doc.parts:
             matches = detect_pii(

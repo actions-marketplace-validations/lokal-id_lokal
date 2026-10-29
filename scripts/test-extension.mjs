@@ -11,6 +11,7 @@ import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { CANARY_FORMATS, CANARY_NEEDLES } from '../packages/core/test/canary.ts';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const EXT = path.join(ROOT, 'packages/extension/dist-test');
@@ -374,6 +375,18 @@ try {
     assert.equal(dialogs.length, 0);
   });
 
+  await check('the canary person, pasted as a form, JSON, a log line, and CSV, never reaches the site', async () => {
+    for (const [format, doc] of Object.entries(CANARY_FORMATS)) {
+      await evaluate('editor.textContent = ""; window.pastes = []');
+      await pasteInto('#editor', `tolong cek:
+${doc}`);
+      await until(() => evaluate('window.pastes.length > 0'), `the ${format} paste`);
+      const seen = JSON.stringify(await evaluate('[window.pastes, editor.innerText]'));
+      const leaked = CANARY_NEEDLES.filter((n) => seen.includes(n));
+      assert.deepEqual(leaked, [], `${format} leaked ${leaked.join(', ')}`);
+    }
+  });
+
   await check('the same value gets the same placeholder in another tab', async () => {
     const second = await send('Target.createTarget', { url: pageUrl });
     const s2 = (await send('Target.attachToTarget', { targetId: second.targetId, flatten: true })).sessionId;
@@ -399,8 +412,9 @@ try {
     client.on('Runtime.exceptionThrown', (params, sid) => {
       if (sid === sessionId) errors.push(params.exceptionDetails.exception?.description ?? params.exceptionDetails.text);
     });
-    const world = contexts.find((c) => c.origin === `chrome-extension://${worker.url.split('/')[2]}`);
-    assert.ok(world, "the content script's world");
+    // By name: the browser may run extensions of its own, so the first service worker is not always Lokal's.
+    const world = contexts.find((c) => c.auxData?.type === 'isolated' && c.name.startsWith('Lokal'));
+    assert.ok(world, `the content script's world in ${JSON.stringify(contexts.map((c) => [c.id, c.origin, c.name, c.auxData?.type]))}`);
     await page('Runtime.evaluate', {
       contextId: world.id,
       expression: `chrome.runtime.sendMessage = () => { throw new Error('Extension context invalidated.'); }`,
