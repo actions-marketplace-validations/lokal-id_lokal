@@ -391,7 +391,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: lokal-id/lokal@v0.8.3
+      - uses: lokal-id/lokal@v0.9.0
         # with:
         #   scope: all              # every tracked file, not only the changes
         #   min-confidence: medium  # also values without a label or column name
@@ -410,7 +410,7 @@ repos:
         name: Indonesian personal data
         entry: lokal-mcp scan --staged
         language: node
-        additional_dependencies: ['@lokal-id/mcp@0.8.3']
+        additional_dependencies: ['@lokal-id/mcp@0.9.0']
         pass_filenames: false
 ```
 
@@ -619,10 +619,10 @@ The guard lets one ordinary value through on purpose, such as a single phone num
 | | Precision | Recall | Protected | 95% interval |
 |---|---|---|---|---|
 | 0.8.3: all 6,160 values | 96.7% | 91.3% | 94.0% | 93.4–94.6% |
-| **Now: all 6,160 values** | **99.8%** | **95.8%** | **96.6%** | 96.1–97.0% |
-| Now, weakest: religion | | | 85.7% | 81.1–89.3% |
-| Now, weakest: NIK | | | 88.1% | 84.1–91.2% |
-| Now, weakest: names | | | 93.6% | 92.4–94.6% |
+| **0.9.0: all 6,160 values** | **99.8%** | **95.8%** | **96.6%** | 96.1–97.0% |
+| 0.9.0, weakest: religion | | | 85.7% | 81.1–89.3% |
+| 0.9.0, weakest: NIK | | | 88.1% | 84.1–91.2% |
+| 0.9.0, weakest: names | | | 93.6% | 92.4–94.6% |
 
 *Protected* means every letter and digit of the value was masked, by a detection of any type. The gaps left are OCR output with misread characters (a NIK read as "3674O2 53097l0l22", "AGAMA. ISLAM" without a colon) and names with no label in front of them. None of the 400 trap documents has a false positive. CI fails when a release scores lower than the last baseline.
 

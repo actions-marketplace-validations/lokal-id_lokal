@@ -391,7 +391,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: lokal-id/lokal@v0.8.3
+      - uses: lokal-id/lokal@v0.9.0
         # with:
         #   scope: all              # semua file yang dilacak git, bukan hanya perubahan
         #   min-confidence: medium  # termasuk nilai tanpa label atau nama kolom
@@ -410,7 +410,7 @@ repos:
         name: Data pribadi Indonesia
         entry: lokal-mcp scan --staged
         language: node
-        additional_dependencies: ['@lokal-id/mcp@0.8.3']
+        additional_dependencies: ['@lokal-id/mcp@0.9.0']
         pass_filenames: false
 ```
 
@@ -619,10 +619,10 @@ Guard sengaja meloloskan satu nilai biasa, misalnya satu nomor HP di hasil `grep
 | | Precision | Recall | Terlindungi | Interval 95% |
 |---|---|---|---|---|
 | 0.8.3: semua 6.160 nilai | 96,7% | 91,3% | 94,0% | 93,4–94,6% |
-| **Sekarang: semua 6.160 nilai** | **99,8%** | **95,8%** | **96,6%** | 96,1–97,0% |
-| Sekarang, terlemah: agama | | | 85,7% | 81,1–89,3% |
-| Sekarang, terlemah: NIK | | | 88,1% | 84,1–91,2% |
-| Sekarang, terlemah: nama | | | 93,6% | 92,4–94,6% |
+| **0.9.0: semua 6.160 nilai** | **99,8%** | **95,8%** | **96,6%** | 96,1–97,0% |
+| 0.9.0, terlemah: agama | | | 85,7% | 81,1–89,3% |
+| 0.9.0, terlemah: NIK | | | 88,1% | 84,1–91,2% |
+| 0.9.0, terlemah: nama | | | 93,6% | 92,4–94,6% |
 
 *Terlindungi* artinya setiap huruf dan angka dari nilai itu tersamar, oleh deteksi jenis apa pun. Celah yang tersisa: hasil OCR yang salah baca (NIK terbaca "3674O2 53097l0l22", "AGAMA. ISLAM" tanpa titik dua) dan nama tanpa label di depannya. Tidak ada false positive di 400 dokumen jebakan. CI gagal kalau sebuah rilis mendapat skor di bawah baseline terakhir.
 

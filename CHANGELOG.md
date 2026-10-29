@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-10-30
+
 ### Added
 
 - The held-out benchmark is now corpus 2: 70 templates instead of 30 and twice as many names in each split, 2,800 documents and 6,160 labelled values in the test split, with at least 200 of every type. It reports a 95% interval for each number and will not compare numbers across corpus versions. The new test templates were written before measuring and found gaps that corpus 1 could not show: religion after "Agama/Kepercayaan" or in a sentence (57.1% protected), health data in English text (81.7%), BPJS under a "nomor_jkn" column (83.3%), and a timestamp read as a bank account number. On 0.8.3, 94.0% of values are fully masked (93.4–94.6%), with 96.7% precision; with the fixes below, made against new development templates only, 96.6% (96.1–97.0%) with 99.8% precision, and no false positive in the 400 trap documents.
@@ -266,7 +268,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.8.3...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/lokal-id/lokal/compare/v0.8.3...v0.9.0
 [0.8.3]: https://github.com/lokal-id/lokal/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/lokal-id/lokal/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/lokal-id/lokal/compare/v0.8.0...v0.8.1
