@@ -17,7 +17,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { detectPii } from '../../packages/core/dist/index.js';
-import { generate } from './corpus.mjs';
+import { CORPUS_VERSION, generate } from './corpus.mjs';
 
 const HERE = import.meta.dirname;
 const argv = process.argv.slice(2);
@@ -79,12 +79,24 @@ for (const doc of docs) {
 const ms = performance.now() - started;
 
 const ratio = (a, b) => (b ? a / b : null);
+/** 95% Wilson score interval for k of n: how far the number could move on another corpus of the same size. */
+const wilson = (k, n) => {
+  if (!n) return null;
+  const z = 1.96;
+  const p = k / n;
+  const centre = (p + (z * z) / (2 * n)) / (1 + (z * z) / n);
+  const half = (z * Math.sqrt((p * (1 - p)) / n + (z * z) / (4 * n * n))) / (1 + (z * z) / n);
+  return [Math.max(0, centre - half), Math.min(1, centre + half)];
+};
 const f1 = (p, r) => (p === null || r === null || p + r === 0 ? null : (2 * p * r) / (p + r));
 const types = [...stats.entries()]
   .map(([type, s]) => {
     const precision = ratio(s.correct, s.detected);
     const recall = ratio(s.found, s.gold);
-    return { type, gold: s.gold, detected: s.detected, precision, recall, f1: f1(precision, recall), protected: ratio(s.protected, s.gold) };
+    return {
+      type, gold: s.gold, detected: s.detected, precision, recall, f1: f1(precision, recall),
+      protected: ratio(s.protected, s.gold), protectedCI: wilson(s.protected, s.gold),
+    };
   })
   .sort((a, b) => b.gold - a.gold || a.type.localeCompare(b.type));
 const total = [...stats.values()].reduce(
@@ -95,11 +107,13 @@ const overall = {
   precision: ratio(total.correct, total.detected),
   recall: ratio(total.found, total.gold),
   protected: ratio(total.protected, total.gold),
+  protectedCI: wilson(total.protected, total.gold),
   falsePositives: falsePositives.length,
 };
 overall.f1 = f1(overall.precision, overall.recall);
 const result = {
   version,
+  corpus: CORPUS_VERSION,
   split,
   documents: docs.length,
   labelled: total.gold,
@@ -111,12 +125,13 @@ const result = {
 // --- report --------------------------------------------------------------------------------------------------------
 
 const pct = (x) => (x === null ? '    -' : `${(100 * x).toFixed(1).padStart(5)}`);
-console.log(`Samaran benchmark ${version}, ${split} split: ${docs.length} documents, ${total.gold} labelled values, ${(ms / docs.length).toFixed(2)} ms per document\n`);
-console.log('type             labelled  precision  recall     F1  protected');
+const ci = (r) => (r ? `${pct(r[0]).trim()}–${pct(r[1]).trim()}` : '-');
+console.log(`Samaran benchmark ${version}, corpus ${CORPUS_VERSION}, ${split} split: ${docs.length} documents, ${total.gold} labelled values, ${(ms / docs.length).toFixed(2)} ms per document\n`);
+console.log('type             labelled  precision  recall     F1  protected  95% CI');
 for (const t of types) {
-  console.log(`${t.type.padEnd(16)} ${String(t.gold).padStart(8)}  ${pct(t.precision).padStart(9)}  ${pct(t.recall).padStart(6)}  ${pct(t.f1)}  ${pct(t.protected).padStart(9)}`);
+  console.log(`${t.type.padEnd(16)} ${String(t.gold).padStart(8)}  ${pct(t.precision).padStart(9)}  ${pct(t.recall).padStart(6)}  ${pct(t.f1)}  ${pct(t.protected).padStart(9)}  ${ci(t.protectedCI)}`);
 }
-console.log(`${'all'.padEnd(16)} ${String(total.gold).padStart(8)}  ${pct(overall.precision).padStart(9)}  ${pct(overall.recall).padStart(6)}  ${pct(overall.f1)}  ${pct(overall.protected).padStart(9)}`);
+console.log(`${'all'.padEnd(16)} ${String(total.gold).padStart(8)}  ${pct(overall.precision).padStart(9)}  ${pct(overall.recall).padStart(6)}  ${pct(overall.f1)}  ${pct(overall.protected).padStart(9)}  ${ci(overall.protectedCI)}`);
 console.log('\nformat       documents  protected  false positives');
 for (const [f, s] of Object.entries(result.formats)) {
   console.log(`${f.padEnd(12)} ${String(s.documents).padStart(9)}  ${pct(s.protected).padStart(9)}  ${String(s.falsePositives).padStart(15)}`);
@@ -143,7 +158,10 @@ if (flag('update-baseline')) {
   } catch {
     console.log('\nno baseline yet: run with --update-baseline');
   }
-  if (baseline) {
+  if (baseline && (baseline.corpus ?? 1) !== CORPUS_VERSION) {
+    console.log(`\nthe baseline is from corpus ${baseline.corpus ?? 1}, this is corpus ${CORPUS_VERSION}: run with --update-baseline`);
+    process.exitCode = 1;
+  } else if (baseline) {
     const drops = [];
     const compare = (what, now, before) => {
       for (const key of Object.keys(TOLERANCE)) {

@@ -21,6 +21,22 @@ function before(text: string, index: number, window = 40): string {
   return (nl >= 0 ? slice.slice(nl + 1) : slice).toLowerCase();
 }
 
+/**
+ * A company's call center, not a person: six digits starting with 500 after the area code, as Telkom hands out for
+ * hotlines ("(021) 500-888", "021 500 123").
+ */
+function isCallCenter(value: string): boolean {
+  const local = value.replace(/^\s*(?:\(\s*)?(?:\+62|0)\s?\d{2,3}\)?[\s.-]?/, '').replace(/\D/g, '');
+  return local.length === 6 && local.startsWith('500');
+}
+
+/** The line above the one `index` is on, lowercased; empty on the first line. */
+function previousLine(text: string, index: number): string {
+  const lineStart = text.lastIndexOf('\n', index - 1) + 1;
+  if (lineStart === 0) return '';
+  return text.slice(text.lastIndexOf('\n', lineStart - 2) + 1, lineStart - 1).toLowerCase();
+}
+
 /** The line above a value that stands alone on its own line, lowercased; empty when the value shares its line. */
 function lineAbove(text: string, index: number, length: number): string {
   const lineStart = text.lastIndexOf('\n', index - 1) + 1;
@@ -74,7 +90,10 @@ const TEST_CARDS = new Set([
   '3530111333300000', '3566002020360505', '4811111111111114', '5211111111111117', '4911111111111113',
 ]);
 
-const KK_KEYWORD = /\b(kk|kartu keluarga)\b[^\d]*$/;
+// After a word or a key's underscore: "No. KK", "no_kk", "family_card".
+const KK_KEYWORD = /(?:\b|_)(kk|kartu[ _]?keluarga|family[ _]?card)\b[^\d]*$/;
+// A card's title on the line above, with only "No." in front of the number: "KARTU KELUARGA\nNo. 3201…".
+const NUMBER_ONLY_LABEL = /^\W*(?:no|nomor|no\.\s*kartu|nomor\s+kartu)?\W*$/;
 const SIM_KEYWORD = /\b(sim|surat izin mengemudi|driving licen[cs]e)\b[^\d]*$/;
 const NIK_KEYWORD = /\b(nik|ktp|nomor induk kependudukan)\b/;
 const NPWP_KEYWORD = /\bnpwp\b/;
@@ -99,8 +118,11 @@ function detectDigitRuns(text: string): PiiMatch[] {
 
     // Mobile numbers (also used as e-wallet accounts) are left to the phone detector.
     if (/^(08|628)/.test(digits) && parsePhone(digits).valid) continue;
+    // A date and time ("2026-12-03 04:15"), not a number.
+    if (/^(?:19|20)\d{2}-\d{2}-\d{2}(?: \d{2})?$|^\d{2}-\d{2}-(?:19|20)\d{2}(?: \d{2})?$/.test(value)) continue;
+    const title = NUMBER_ONLY_LABEL.test(label) ? previousLine(text, m.index) : '';
 
-    if (digits.length === 16 && KK_KEYWORD.test(label)) push('KK', 'high');
+    if (digits.length === 16 && (KK_KEYWORD.test(label) || /\bkartu keluarga\b/.test(title))) push('KK', 'high');
     else if (digits.length >= 12 && digits.length <= 16 && SIM_KEYWORD.test(label)) push('SIM', 'high');
     else if (digits.length === 16 && parseNik(digits).valid) push('NIK', 'high');
     else if (isNip(digits)) push('NIP', 'high');
@@ -110,7 +132,7 @@ function detectDigitRuns(text: string): PiiMatch[] {
     else if ((digits.length === 15 || digits.length === 16) && NPWP_KEYWORD.test(ctx)) push('NPWP', 'high');
     else if (digits.length === 16 && NIK_KEYWORD.test(ctx)) push('NIK', 'medium');
     else if (digits.length === 10 && NISN_KEYWORD.test(label)) push('NISN', 'high');
-    else if ((digits.length === 13 || digits.length === 11) && BPJS_KEYWORD.test(ctx)) push('BPJS', 'high');
+    else if ((digits.length === 13 || digits.length === 11) && (BPJS_KEYWORD.test(ctx) || BPJS_KEYWORD.test(title))) push('BPJS', 'high');
     else if (digits.length >= 8 && digits.length <= 18 && BANK_KEYWORD.test(ctx)) push('BANK_ACCOUNT', 'high');
     else if (digits.length >= 8 && digits.length <= 18 && BANK_KEYWORD.test(lineAbove(text, m.index, m[0].length))) {
       // A transfer receipt stacks the bank and the account: "Bank BNI\n0123456789".
@@ -178,7 +200,7 @@ function detectPhones(text: string): PiiMatch[] {
     if (parsePhone(m[0].replace(/^00/, '+')).valid && !gluedToCode(text, m.index)) out.push(match('PHONE', m.index, m[0], 'high'));
   }
   const landline = /\((?:\+62[ \t]?|0)\d{2,3}\)[ \t]?\d{3,4}[ \t-]?\d{3,4}(?!\d)|(?<![\d\w])\+62[ \t]?[2-79]\d{1,2}[ \t-]?\d{3,4}[ \t-]?\d{3,4}(?!\d)/g;
-  for (const m of text.matchAll(landline)) out.push(match('PHONE', m.index, m[0], 'medium'));
+  for (const m of text.matchAll(landline)) if (!isCallCenter(m[0])) out.push(match('PHONE', m.index, m[0], 'medium'));
   // "+62 (812) 3456-7890", "(0812) 3456 7890".
   const bracketed = /(?<![\d\w])(?:\+?62[ \t]?\(8\d{1,2}\)|\(08\d{1,2}\))[ \t]?\d{3,4}[ \t.-]?\d{3,4}(?!\d)/g;
   for (const m of text.matchAll(bracketed)) if (parsePhone(m[0]).valid) out.push(match('PHONE', m.index, m[0], 'high'));
@@ -200,7 +222,7 @@ function detectPhones(text: string): PiiMatch[] {
   for (const m of text.matchAll(areaCode)) {
     if (!PHONE_WORD.test(before(text, m.index, 30))) continue;
     const info = parsePhone(m[0]);
-    if (info.valid && info.type === 'landline') out.push(match('PHONE', m.index, m[0], 'medium'));
+    if (info.valid && info.type === 'landline' && !isCallCenter(m[0])) out.push(match('PHONE', m.index, m[0], 'medium'));
   }
   return out;
 }
@@ -301,7 +323,7 @@ function detectHealth(text: string): PiiMatch[] {
   // Everyday words ("positif", "karena", "saya") only count before a known condition: "saya diabetes",
   // "riwayat hipertensi dan diabetes melitus".
   const gated = new RegExp(
-    `\\b(?:(?:dokter|dok|dr)\\.?\\s+(?:bilang|bilangnya|menyatakan|mendiagnosis)(?:\\s+(?:ada|kena|positif))?|positif|menderita|terkena|kena|sakit|pasien|komplikasi|kambuh|kumat|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|riwayat|diagnosa|diagnosis|didiagnosa|pembawa\\s+sifat|carrier|saya|aku|gue|gw|gua|dia|beliau|ayah|bapak|ibu|mama|mamah|papa|papah|suami|istri|anak|anaknya|adik|adek|kakak|nenek|kakek|mertua|pacar|teman|temen)` +
+    `\\b(?:(?:dokter|dok|dr)\\.?\\s+(?:bilang|bilangnya|menyatakan|mendiagnosis)(?:\\s+(?:ada|kena|positif))?|perawatan|pengobatan|dirawat\\s+karena|kontrol|has|have|had|with|suffers\\s+from|suffering\\s+from|diagnosed\\s+with|history\\s+of|positif|menderita|terkena|kena|sakit|pasien|komplikasi|kambuh|kumat|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|riwayat|diagnosa|diagnosis|didiagnosa|pembawa\\s+sifat|carrier|saya|aku|gue|gw|gua|dia|beliau|ayah|bapak|ibu|mama|mamah|papa|papah|suami|istri|anak|anaknya|adik|adek|kakak|nenek|kakek|mertua|pacar|teman|temen)` +
       `\\s+(?:(?:saya|aku|gue|dia|lagi|sedang|sdg|sudah|udah|sdh|sempat|pernah|baru|kena|terkena)\\s+){0,2}` +
       `((?:penyakit\\s+)?(?:${CONDITIONS})(?:\\s*(?:,|dan|serta)\\s+(?:${CONDITIONS}))*)\\b`,
     'gi',
@@ -414,6 +436,14 @@ function detectReligion(text: string): PiiMatch[] {
   const re =
     /\b(?:beragama|agamanya|agama\s+(?:saya|aku|dia|beliau|kami|mereka))\s+(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Hindu|Buddha|Budha|Konghucu|Khonghucu|Kong Hu Cu)\b/gi;
   const out = [...text.matchAll(re)].map((m) => match('RELIGION', m.index + m[0].length - m[1]!.length, m[1]!, 'high'));
+  // "(agama Hindu)", "religion Islam" said of someone. Not religious education, institutions, or holidays:
+  // "pendidikan agama Islam", "Pengadilan Agama", "hari raya agama Hindu".
+  const bare =
+    /\b(?:agama|religion)\s*:?\s+(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Catholic|Christian|Muslim|Hindu|Buddha|Budha|Buddhist|Konghucu|Khonghucu)\b/gi;
+  for (const m of text.matchAll(bare)) {
+    if (/\b(?:pendidikan|pelajaran|mata\s+pelajaran|guru|umat|hari(?:\s+raya)?|tokoh|kementerian|pengadilan|universitas|institut|sekolah|ajaran|nilai|organisasi|lembaga|majelis|studi|fakultas|ilmu|perayaan|kitab|rumah\s+ibadah|penyuluh|pemuka)\s+$/i.test(before(text, m.index, 30))) continue;
+    out.push(match('RELIGION', m.index + m[0].length - m[1]!.length, m[1]!, 'medium'));
+  }
   // An adjective of a person: "saya muslim", "suami saya kristen protestan". Not "umat Muslim" or "Gereja Kristen".
   const adjective =
     /\b(?:saya|aku|gue|gw|dia|beliau|kami|keluarga\s+(?:saya|kami)|(?:suami|istri|ayah|bapak|ibu|mama|papa|ortu|orang\s+tua|anak|adik|kakak|pacar|calon)(?:\s+(?:saya|aku|gue|dia)|nya|ku)?)\s+(?:(?:seorang|itu|adalah|sudah|udah|baru|jadi)\s+)?(muslim(?:ah)?|islam|nasrani|kristiani?|kristen(?:\s+protestan)?|protestan|katolik|katholik|hindu|buddhis|buddha|budha|konghucu|khonghucu|mualaf|muallaf|ateis|atheis|agnostik|non[- ]?muslim)\b/gi;
@@ -1278,7 +1308,9 @@ function detectSqlInserts(text: string): PiiMatch[] {
 
 const STREET =
   'Jl|Jln|Jalan|Gg|Gang|Komp|Kompl|Komplek|Kompleks|Perum|Perumahan|Cluster|Klaster|Apartemen|Apartment|Apt|Rusun|' +
-  'Rusunawa|Tower|Ruko|Wisma|Asrama|Dusun|Dsn|Dukuh|Kampung|Kp|Lingkungan|Ling';
+  'Rusunawa|Tower|Ruko|Wisma|Asrama|Dusun|Dsn|Dukuh|Kampung|Kp|Lingkungan|Ling|' +
+  // A KTP or NPWP card prints the address in capitals.
+  'JL|JLN|JALAN|GG|GANG|KOMP|KOMPLEK|KOMPLEKS|PERUM|PERUMAHAN|DUSUN|DSN|KAMPUNG|KP';
 // What pins a street to one house: No., Blok, Kav., or an apartment's floor and unit. Chat writes "blok b no 9".
 const PIN = '[Nn][Oo]|[Nn]omor|[Bb]lok|[Kk]av|[Uu]nit|[Ll]t|[Ll]antai|[Kk]amar|[Kk]mr|NO|BLOK';
 const RT_RW = 'RT\\.?\\s*0*\\d{1,3}\\s*[/,]?\\s*RW\\.?\\s*0*\\d{1,3}';

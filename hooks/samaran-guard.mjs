@@ -467,7 +467,7 @@ var FIELDS = [
   ["NIP", "nip|nip_?baru|nrp|nomor_?induk_?pegawai"],
   ["NISN", "nisn|no_?nisn|nomor_?nisn|nomor_?induk_?siswa_?nasional"],
   ["AKTA", "akta|no_?akta|nomor_?akta|(?:no_?|nomor_?)?akta_?(?:kelahiran|lahir|nikah|perkawinan|kawin|cerai|perceraian|kematian)|birth_?certificate(?:_?(?:no|number))?|marriage_?certificate(?:_?(?:no|number))?"],
-  ["BPJS", "bpjs|no_?bpjs|nomor_?bpjs|bpjs_?kesehatan|bpjs_?ketenagakerjaan|kis|no_?kis|jkn|kpj"],
+  ["BPJS", "bpjs|no_?bpjs|nomor_?bpjs|bpjs_?kesehatan|bpjs_?ketenagakerjaan|kis|no_?kis|jkn|kpj|(?:no_?|nomor_?)?(?:kartu_?)?(?:jkn|kis|jkn_?kis)|(?:no_?|nomor_?)kartu_?(?:bpjs|jkn|kis)"],
   ["PHONE", "hp|no_?hp|nomor_?hp|nohp|telp|tlp|telepon|telpon|no_?telp|no_?telepon|nomor_?telepon|phone|phone_?number|mobile|mobile_?phone|handphone|whatsapp|wa|no_?wa|nomor_?wa|msisdn"],
   ["EMAIL", "email|e_?mail|surel|alamat_?email|email_?address"],
   ["BANK_ACCOUNT", "rekening|no_?rek|no_?rekening|nomor_?rekening|norek|rek|account_?number|bank_?account|account_?no|va|virtual_?account|no_?va"],
@@ -476,7 +476,8 @@ var FIELDS = [
   ["GEO", "lat|lng|lon|latitude|longitude|koordinat|coordinates|coords|geo|geolocation|latlng|lat_?long"],
   ["BIRTH_DATE", "tanggal_?lahir|tgl_?lahir|tgl_?lhr|tanggal_?kelahiran|tempat_?lahir|ttl|tempat_?tanggal_?lahir|tempat_?tgl_?lahir|tempat_?tgl_?lhr|date_?of_?birth|dob|birth_?date|birthdate|birthday|birth_?place|place_?of_?birth"],
   ["GENDER", "jenis_?kelamin|jns_?kelamin|kelamin|gender|sex|jk|l_?p"],
-  ["RELIGION", "agama|religion|kepercayaan"],
+  // "Agama/Kepercayaan", as Dukcapil forms print it.
+  ["RELIGION", "agama|religion|kepercayaan|agama_(?:dan_|atau_)?kepercayaan|kepercayaan_(?:dan_|atau_)?agama"],
   ["MARITAL_STATUS", "status_?perkawinan|status_?kawin|status_?pernikahan|status_?nikah|perkawinan|marital_?status|status_?marital"],
   ["NATIONALITY", "kewarganegaraan|warga_?negara|wn|nationality|citizenship"],
   ["HEALTH", "diagnosa|diagnosis|diagnose|penyakit|riwayat_?penyakit|riwayat_?medis|rekam_?medis|kondisi_?medis|kondisi_?kesehatan|keluhan|gejala|alergi|allergy|allergies|golongan_?darah|gol_?darah|blood_?type|hasil_?lab|lab_?result|obat|medication|medications|resep|prescription|icd|icd_?10|medical_?history|medical_?record|disabilitas|disability|kehamilan|pregnancy|status_?vaksin|vaccination_?status|tindakan_?medis"],
@@ -599,6 +600,8 @@ function isPlausibleValue(type, value, key) {
   const digitCount = v.replace(/\D/g, "").length;
   if (DIGIT_TYPES.has(type) && digitCount < 6)
     return false;
+  if (type === "CARD" && /^0/.test(v.replace(/\D/g, "")))
+    return false;
   if ((type === "GEO" || type === "IP") && digitCount < 2)
     return false;
   if (type === "IP" && !/^(?:\d{1,3}\.){3}\d{1,3}/.test(v) && !v.includes(":"))
@@ -638,6 +641,16 @@ function before(text, index, window = 40) {
   const slice = text.slice(Math.max(0, index - window), index);
   const nl = slice.lastIndexOf("\n");
   return (nl >= 0 ? slice.slice(nl + 1) : slice).toLowerCase();
+}
+function isCallCenter(value) {
+  const local = value.replace(/^\s*(?:\(\s*)?(?:\+62|0)\s?\d{2,3}\)?[\s.-]?/, "").replace(/\D/g, "");
+  return local.length === 6 && local.startsWith("500");
+}
+function previousLine(text, index) {
+  const lineStart = text.lastIndexOf("\n", index - 1) + 1;
+  if (lineStart === 0)
+    return "";
+  return text.slice(text.lastIndexOf("\n", lineStart - 2) + 1, lineStart - 1).toLowerCase();
 }
 function lineAbove(text, index, length) {
   const lineStart = text.lastIndexOf("\n", index - 1) + 1;
@@ -700,7 +713,8 @@ var TEST_CARDS = /* @__PURE__ */ new Set([
   "5211111111111117",
   "4911111111111113"
 ]);
-var KK_KEYWORD = /\b(kk|kartu keluarga)\b[^\d]*$/;
+var KK_KEYWORD = /(?:\b|_)(kk|kartu[ _]?keluarga|family[ _]?card)\b[^\d]*$/;
+var NUMBER_ONLY_LABEL = /^\W*(?:no|nomor|no\.\s*kartu|nomor\s+kartu)?\W*$/;
 var SIM_KEYWORD = /\b(sim|surat izin mengemudi|driving licen[cs]e)\b[^\d]*$/;
 var NIK_KEYWORD = /\b(nik|ktp|nomor induk kependudukan)\b/;
 var NPWP_KEYWORD = /\bnpwp\b/;
@@ -718,7 +732,10 @@ function detectDigitRuns(text) {
     const push = (type, confidence) => out.push(match(type, m.index, value, confidence));
     if (/^(08|628)/.test(digits) && parsePhone(digits).valid)
       continue;
-    if (digits.length === 16 && KK_KEYWORD.test(label))
+    if (/^(?:19|20)\d{2}-\d{2}-\d{2}(?: \d{2})?$|^\d{2}-\d{2}-(?:19|20)\d{2}(?: \d{2})?$/.test(value))
+      continue;
+    const title = NUMBER_ONLY_LABEL.test(label) ? previousLine(text, m.index) : "";
+    if (digits.length === 16 && (KK_KEYWORD.test(label) || /\bkartu keluarga\b/.test(title)))
       push("KK", "high");
     else if (digits.length >= 12 && digits.length <= 16 && SIM_KEYWORD.test(label))
       push("SIM", "high");
@@ -735,7 +752,7 @@ function detectDigitRuns(text) {
       push("NIK", "medium");
     else if (digits.length === 10 && NISN_KEYWORD.test(label))
       push("NISN", "high");
-    else if ((digits.length === 13 || digits.length === 11) && BPJS_KEYWORD.test(ctx))
+    else if ((digits.length === 13 || digits.length === 11) && (BPJS_KEYWORD.test(ctx) || BPJS_KEYWORD.test(title)))
       push("BPJS", "high");
     else if (digits.length >= 8 && digits.length <= 18 && BANK_KEYWORD.test(ctx))
       push("BANK_ACCOUNT", "high");
@@ -811,7 +828,8 @@ function detectPhones(text) {
   }
   const landline = /\((?:\+62[ \t]?|0)\d{2,3}\)[ \t]?\d{3,4}[ \t-]?\d{3,4}(?!\d)|(?<![\d\w])\+62[ \t]?[2-79]\d{1,2}[ \t-]?\d{3,4}[ \t-]?\d{3,4}(?!\d)/g;
   for (const m of text.matchAll(landline))
-    out.push(match("PHONE", m.index, m[0], "medium"));
+    if (!isCallCenter(m[0]))
+      out.push(match("PHONE", m.index, m[0], "medium"));
   const bracketed = /(?<![\d\w])(?:\+?62[ \t]?\(8\d{1,2}\)|\(08\d{1,2}\))[ \t]?\d{3,4}[ \t.-]?\d{3,4}(?!\d)/g;
   for (const m of text.matchAll(bracketed))
     if (parsePhone(m[0]).valid)
@@ -832,7 +850,7 @@ function detectPhones(text) {
     if (!PHONE_WORD.test(before(text, m.index, 30)))
       continue;
     const info = parsePhone(m[0]);
-    if (info.valid && info.type === "landline")
+    if (info.valid && info.type === "landline" && !isCallCenter(m[0]))
       out.push(match("PHONE", m.index, m[0], "medium"));
   }
   return out;
@@ -898,7 +916,7 @@ function detectHealth(text) {
   for (const m of [...text.matchAll(strong), ...text.matchAll(dx)]) {
     out.push(match("HEALTH", m.index + m[0].length - m[1].length, m[1], "high"));
   }
-  const gated = new RegExp(`\\b(?:(?:dokter|dok|dr)\\.?\\s+(?:bilang|bilangnya|menyatakan|mendiagnosis)(?:\\s+(?:ada|kena|positif))?|positif|menderita|terkena|kena|sakit|pasien|komplikasi|kambuh|kumat|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|riwayat|diagnosa|diagnosis|didiagnosa|pembawa\\s+sifat|carrier|saya|aku|gue|gw|gua|dia|beliau|ayah|bapak|ibu|mama|mamah|papa|papah|suami|istri|anak|anaknya|adik|adek|kakak|nenek|kakek|mertua|pacar|teman|temen)\\s+(?:(?:saya|aku|gue|dia|lagi|sedang|sdg|sudah|udah|sdh|sempat|pernah|baru|kena|terkena)\\s+){0,2}((?:penyakit\\s+)?(?:${CONDITIONS})(?:\\s*(?:,|dan|serta)\\s+(?:${CONDITIONS}))*)\\b`, "gi");
+  const gated = new RegExp(`\\b(?:(?:dokter|dok|dr)\\.?\\s+(?:bilang|bilangnya|menyatakan|mendiagnosis)(?:\\s+(?:ada|kena|positif))?|perawatan|pengobatan|dirawat\\s+karena|kontrol|has|have|had|with|suffers\\s+from|suffering\\s+from|diagnosed\\s+with|history\\s+of|positif|menderita|terkena|kena|sakit|pasien|komplikasi|kambuh|kumat|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|riwayat|diagnosa|diagnosis|didiagnosa|pembawa\\s+sifat|carrier|saya|aku|gue|gw|gua|dia|beliau|ayah|bapak|ibu|mama|mamah|papa|papah|suami|istri|anak|anaknya|adik|adek|kakak|nenek|kakek|mertua|pacar|teman|temen)\\s+(?:(?:saya|aku|gue|dia|lagi|sedang|sdg|sudah|udah|sdh|sempat|pernah|baru|kena|terkena)\\s+){0,2}((?:penyakit\\s+)?(?:${CONDITIONS})(?:\\s*(?:,|dan|serta)\\s+(?:${CONDITIONS}))*)\\b`, "gi");
   for (const m of text.matchAll(gated)) {
     out.push(match("HEALTH", m.index + m[0].length - m[1].length, m[1], "medium"));
   }
@@ -982,6 +1000,12 @@ function detectMaritalStatus(text) {
 function detectReligion(text) {
   const re = /\b(?:beragama|agamanya|agama\s+(?:saya|aku|dia|beliau|kami|mereka))\s+(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Hindu|Buddha|Budha|Konghucu|Khonghucu|Kong Hu Cu)\b/gi;
   const out = [...text.matchAll(re)].map((m) => match("RELIGION", m.index + m[0].length - m[1].length, m[1], "high"));
+  const bare = /\b(?:agama|religion)\s*:?\s+(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Catholic|Christian|Muslim|Hindu|Buddha|Budha|Buddhist|Konghucu|Khonghucu)\b/gi;
+  for (const m of text.matchAll(bare)) {
+    if (/\b(?:pendidikan|pelajaran|mata\s+pelajaran|guru|umat|hari(?:\s+raya)?|tokoh|kementerian|pengadilan|universitas|institut|sekolah|ajaran|nilai|organisasi|lembaga|majelis|studi|fakultas|ilmu|perayaan|kitab|rumah\s+ibadah|penyuluh|pemuka)\s+$/i.test(before(text, m.index, 30)))
+      continue;
+    out.push(match("RELIGION", m.index + m[0].length - m[1].length, m[1], "medium"));
+  }
   const adjective = /\b(?:saya|aku|gue|gw|dia|beliau|kami|keluarga\s+(?:saya|kami)|(?:suami|istri|ayah|bapak|ibu|mama|papa|ortu|orang\s+tua|anak|adik|kakak|pacar|calon)(?:\s+(?:saya|aku|gue|dia)|nya|ku)?)\s+(?:(?:seorang|itu|adalah|sudah|udah|baru|jadi)\s+)?(muslim(?:ah)?|islam|nasrani|kristiani?|kristen(?:\s+protestan)?|protestan|katolik|katholik|hindu|buddhis|buddha|budha|konghucu|khonghucu|mualaf|muallaf|ateis|atheis|agnostik|non[- ]?muslim)\b/gi;
   for (const m of text.matchAll(adjective))
     out.push(match("RELIGION", m.index + m[0].length - m[1].length, m[1], "medium"));
@@ -1743,7 +1767,7 @@ function detectSqlInserts(text) {
   }
   return out;
 }
-var STREET = "Jl|Jln|Jalan|Gg|Gang|Komp|Kompl|Komplek|Kompleks|Perum|Perumahan|Cluster|Klaster|Apartemen|Apartment|Apt|Rusun|Rusunawa|Tower|Ruko|Wisma|Asrama|Dusun|Dsn|Dukuh|Kampung|Kp|Lingkungan|Ling";
+var STREET = "Jl|Jln|Jalan|Gg|Gang|Komp|Kompl|Komplek|Kompleks|Perum|Perumahan|Cluster|Klaster|Apartemen|Apartment|Apt|Rusun|Rusunawa|Tower|Ruko|Wisma|Asrama|Dusun|Dsn|Dukuh|Kampung|Kp|Lingkungan|Ling|JL|JLN|JALAN|GG|GANG|KOMP|KOMPLEK|KOMPLEKS|PERUM|PERUMAHAN|DUSUN|DSN|KAMPUNG|KP";
 var PIN = "[Nn][Oo]|[Nn]omor|[Bb]lok|[Kk]av|[Uu]nit|[Ll]t|[Ll]antai|[Kk]amar|[Kk]mr|NO|BLOK";
 var RT_RW = "RT\\.?\\s*0*\\d{1,3}\\s*[/,]?\\s*RW\\.?\\s*0*\\d{1,3}";
 function detectStreetAddresses(text) {
@@ -4068,6 +4092,8 @@ var BULK_THRESHOLD = 3;
 var BYPASS = /#izinkan-pii\b/i;
 var DATA_FILE = /\.(csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out|xlsx|xlsm|docx|pdf)(\.\d+)?$/i;
 var GREP_MAX_FILES = 300;
+var READ_LINES = 2e3;
+var STRICT_BUDGET_MS = 7e3;
 var IMAGE_FILE = /\.(jpe?g|png|heic|heif|webp|gif|bmp|tiff?)$/i;
 var PERSONAL_PATH = /(?:^|[^a-z])(?:e?ktp|kk|kartu[ _-]?keluarga|npwp|sim|paspor|passport|selfie|swafoto|identitas|identity|id[ _-]?card|akta|ijazah|slip[ _-]?gaji|rekening|tabungan|bpjs|kyc|verifikasi|verification|pelanggan|customers?|nasabah|pasien|patients?|karyawan|employees?|pegawai|pemohon|applicants?|debitur|peserta|siswa|students?)(?:[^a-z]|$)/i;
 var UPLOAD_PATH = /(?:^|[\\/])(?:media|uploads?|storage|attachments?|lampiran|berkas|dokumen|documents?|scans?|private|var)(?:[\\/]|$)/i;
@@ -4094,13 +4120,22 @@ function summarize(matches, examples = true) {
   }).join(", ");
 }
 function fileTexts(file) {
+  let doc;
   try {
-    const doc = loadDocument(file, { sampleBytes: GUARD_SAMPLE_BYTES, maxZipBytes: GUARD_MAX_ZIP_BYTES });
-    if (doc.kind === "skipped") return void 0;
-    return doc.kind === "text" ? [doc.text] : doc.sheets.map((s) => s.csv);
-  } catch {
-    return void 0;
+    doc = loadDocument(file, { sampleBytes: GUARD_SAMPLE_BYTES, maxZipBytes: GUARD_MAX_ZIP_BYTES });
+  } catch (e) {
+    return { texts: [], unchecked: existsSync3(file) ? `could not be read: ${e.message}` : void 0 };
   }
+  if (doc.kind === "skipped") return { texts: [], unchecked: doc.dataBearing ? doc.reason : void 0 };
+  if (doc.kind === "text") return { texts: [doc.text], sampled: doc.sampled };
+  return { texts: doc.sheets.map((s) => s.csv), unchecked: doc.unscanned };
+}
+function withinSample(select, sample, shown) {
+  if (!shown.trim()) return false;
+  const first = sample.slice(0, sample.indexOf("\n") + 1 || sample.length).trimEnd();
+  return select(`${sample}
+${sample}`) === shown && select(`${sample}
+${first}~`) === shown;
 }
 function withHeader(full, shown, file) {
   if (!/\.(csv|tsv)$/i.test(file)) return shown;
@@ -4132,7 +4167,16 @@ function shownPii(full, shown, file) {
 var PROCESS_HINT = "To process the data, run a script that reads the file and writes its results to a file (or prints only counts), or use `write_file_unmasked`.";
 var strictMode = () => process.env.SAMARAN_GUARD === "strict";
 var config = { custom: [], allow: [] };
+var deadline = Infinity;
+var outOfTime = () => strictMode() && Date.now() > deadline;
 var block = (message) => ({ action: "block", message });
+function uncheckedBlock(what, why) {
+  return block([
+    `Samaran blocked ${what}: ${why.join("; ")}, so it could not be checked for personal data, and SAMARAN_GUARD=strict blocks what it cannot check.`,
+    "Use the `read_file_masked` tool from the lokal MCP server, or narrow the command to what you need (`head -n 50`).",
+    "If the user confirms the file holds no real personal data, they can add it to .samaranignore."
+  ].join(" "));
+}
 function ask(shownAs, what) {
   return {
     action: "ask",
@@ -4148,20 +4192,23 @@ function personalImage(file, root) {
   const where = rel.startsWith("..") || path3.isAbsolute(rel) ? file : rel;
   return PERSONAL_PATH.test(where) || UPLOAD_PATH.test(path3.dirname(where)) && !ASSET_PATH.test(path3.dirname(where));
 }
-function readTool(file, shownAs, root, ignored) {
+function uncheckedRead(shownAs, what, why) {
+  return strictMode() ? uncheckedBlock(`reading ${shownAs}`, [why]) : ask(shownAs, what);
+}
+function readTool(file, shownAs, root, ignored, lines) {
   if (ignored(file)) return void 0;
   if (IMAGE_FILE.test(file)) {
-    return personalImage(file, root) && existsSync3(file) ? ask(shownAs, "mungkin foto KTP atau dokumen pribadi") : void 0;
+    return personalImage(file, root) && existsSync3(file) ? uncheckedRead(shownAs, "mungkin foto KTP atau dokumen pribadi", "it is an image that may be a photo of an ID card or document") : void 0;
   }
   if (!DATA_FILE.test(file)) return void 0;
   let doc;
   try {
     doc = loadDocument(file, { sampleBytes: GUARD_SAMPLE_BYTES, maxZipBytes: GUARD_MAX_ZIP_BYTES });
-  } catch {
-    return void 0;
+  } catch (e) {
+    return strictMode() && existsSync3(file) ? uncheckedBlock(`reading ${shownAs}`, [`it could not be read (${e.message})`]) : void 0;
   }
   if (doc.kind === "skipped") {
-    return doc.dataBearing ? ask(shownAs, `tidak bisa dibaca Samaran (${doc.reason})`) : void 0;
+    return doc.dataBearing ? uncheckedRead(shownAs, `tidak bisa dibaca Samaran (${doc.reason})`, doc.reason) : void 0;
   }
   const found = verdict(doc.kind === "text" ? [doc.text] : doc.sheets.map((s) => s.csv));
   if (found) {
@@ -4174,16 +4221,35 @@ function readTool(file, shownAs, root, ignored) {
       ].join(" ")
     );
   }
-  if (doc.kind === "sheets" && doc.unscanned) return ask(shownAs, `hanya terbaca sebagian (${doc.unscanned})`);
+  if (doc.kind === "sheets" && doc.unscanned) return uncheckedRead(shownAs, `hanya terbaca sebagian (${doc.unscanned})`, doc.unscanned);
+  if (doc.kind === "text" && doc.sampled) {
+    const checked = doc.text.split("\n").length;
+    const last = Math.max(0, (lines.offset ?? 1) - 1) + (lines.limit ?? READ_LINES);
+    if (last > checked) {
+      const mb2 = `${GUARD_SAMPLE_BYTES / 1024 / 1024} MB`;
+      return uncheckedRead(shownAs, `hanya ${mb2} pertama yang diperiksa Samaran`, `only its first ${mb2} (${checked} lines) were checked`);
+    }
+  }
   return void 0;
 }
 function shellTool(command, cwd, powershell, ignored) {
   const reads = [...dataReadsInCommand(command, cwd, powershell), ...strictMode() ? inlineCodeReads(command, cwd, powershell) : []].filter((r) => !ignored(r.file));
   const matches = [];
   const files = /* @__PURE__ */ new Set();
+  const unchecked = [];
+  const nameOf = (f) => path3.relative(cwd, f) || f;
   for (const r of reads) {
-    for (const full of fileTexts(r.file) ?? []) {
+    if (outOfTime()) {
+      unchecked.push(`checking ${nameOf(r.file)} took too long`);
+      break;
+    }
+    const loaded = fileTexts(r.file);
+    if (loaded.unchecked) unchecked.push(`${nameOf(r.file)}: ${loaded.unchecked}`);
+    for (const full of loaded.texts) {
       const shown = r.select(full);
+      if (loaded.sampled && !withinSample(r.select, full, shown)) {
+        unchecked.push(`${nameOf(r.file)}: only its first ${GUARD_SAMPLE_BYTES / 1024 / 1024} MB were checked`);
+      }
       if (!shown.trim()) continue;
       const here = shownPii(full, shown, r.file);
       for (const m of here) matches.push(m);
@@ -4191,8 +4257,8 @@ function shellTool(command, cwd, powershell, ignored) {
     }
   }
   const found = verdictOf(matches);
-  if (!found) return void 0;
-  const names = [...files.size ? files : new Set(reads.map((r) => r.file))].map((f) => path3.relative(cwd, f) || f);
+  if (!found) return strictMode() && unchecked.length ? uncheckedBlock("this command", unchecked) : void 0;
+  const names = [...files.size ? files : new Set(reads.map((r) => r.file))].map(nameOf);
   return block([
     `Samaran blocked this command: it would print personal data from ${names.join(", ")} into the conversation (${summarize(found, false)}).`,
     "To look at the data, use the `read_file_masked` tool from the lokal MCP server (personal data replaced by stable placeholders).",
@@ -4212,7 +4278,13 @@ function grepTool(input, cwd, ignored) {
   const glob = input.glob ? globToRegExp(input.glob.includes("/") ? input.glob : `**/${input.glob}`) : void 0;
   const typeFilter = input.type ? GREP_TYPES[input.type.toLowerCase()] : void 0;
   if (input.type && !typeFilter) return void 0;
-  candidates = candidates.filter((f) => SHELL_DATA_FILE.test(f) && !ignored(f)).filter((f) => !glob || glob.test(path3.relative(target, f).split(path3.sep).join("/")) || glob.test(path3.basename(f))).filter((f) => !typeFilter || typeFilter.test(f)).slice(0, GREP_MAX_FILES);
+  candidates = candidates.filter((f) => SHELL_DATA_FILE.test(f) && !ignored(f)).filter((f) => !glob || glob.test(path3.relative(target, f).split(path3.sep).join("/")) || glob.test(path3.basename(f))).filter((f) => !typeFilter || typeFilter.test(f));
+  const unchecked = [];
+  if (candidates.length > GREP_MAX_FILES) {
+    unchecked.push(`only ${GREP_MAX_FILES} of the ${candidates.length} data files it searches were checked`);
+    candidates = candidates.slice(0, GREP_MAX_FILES);
+  }
+  const nameOf = (f) => path3.relative(cwd, f) || f;
   let re;
   try {
     re = new RegExp(input.pattern, input["-i"] ? "i" : "");
@@ -4224,7 +4296,14 @@ function grepTool(input, cwd, ignored) {
   const matches = [];
   const files = [];
   for (const file of candidates) {
-    for (const full of fileTexts(file) ?? []) {
+    if (outOfTime()) {
+      unchecked.push(`checking the files took too long (stopped at ${nameOf(file)})`);
+      break;
+    }
+    const loaded = fileTexts(file);
+    if (loaded.unchecked) unchecked.push(`${nameOf(file)}: ${loaded.unchecked}`);
+    if (loaded.sampled) unchecked.push(`${nameOf(file)}: only its first ${GUARD_SAMPLE_BYTES / 1024 / 1024} MB were checked`);
+    for (const full of loaded.texts) {
       const lines = full.split("\n");
       const keep = /* @__PURE__ */ new Set();
       lines.forEach((line, i) => {
@@ -4239,8 +4318,8 @@ function grepTool(input, cwd, ignored) {
     }
   }
   const found = verdictOf(matches);
-  if (!found) return void 0;
-  const names = (files.length ? files : candidates).slice(0, 5).map((f) => path3.relative(cwd, f) || f);
+  if (!found) return strictMode() && unchecked.length ? uncheckedBlock("this search", unchecked) : void 0;
+  const names = (files.length ? files : candidates).slice(0, 5).map(nameOf);
   return block([
     `Samaran blocked this search: the matching lines in ${names.join(", ")} contain personal data (${summarize(found, false)}).`,
     'Search with output_mode "files_with_matches" or "count", or read the file with `read_file_masked` from the lokal MCP server.',
@@ -4250,6 +4329,8 @@ function grepTool(input, cwd, ignored) {
 function evaluate(input, projectRoot) {
   if (process.env.SAMARAN_GUARD === "off") return void 0;
   const root = projectRoot ?? process.env.CLAUDE_PROJECT_DIR ?? input.cwd ?? process.cwd();
+  const budget = Math.min(Number(process.env.SAMARAN_GUARD_BUDGET_MS) || STRICT_BUDGET_MS, STRICT_BUDGET_MS);
+  deadline = Date.now() + budget;
   config = loadConfig(root);
   if (input.hook_event_name === "UserPromptSubmit" && input.prompt) {
     if (BYPASS.test(input.prompt)) return void 0;
@@ -4272,7 +4353,7 @@ function evaluate(input, projectRoot) {
         const file = path3.resolve(root, tool.file_path);
         const rel = path3.relative(root, file);
         const shownAs = rel && !rel.startsWith("..") && !path3.isAbsolute(rel) ? rel.split(path3.sep).join("/") : tool.file_path;
-        return readTool(file, shownAs, root, ignored);
+        return readTool(file, shownAs, root, ignored, tool);
       }
     case "Grep":
       return grepTool(tool, cwd, ignored);

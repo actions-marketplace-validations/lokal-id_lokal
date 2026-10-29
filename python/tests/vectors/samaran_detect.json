@@ -2322,10 +2322,10 @@
   "matches": [
    [
     "ADDRESS",
-    15,
+    0,
     26,
-    "RT 01 RW 02",
-    "medium"
+    "KP. RAWA BADAK RT 01 RW 02",
+    "high"
    ]
   ]
  },
@@ -14823,6 +14823,238 @@
   "matches": []
  },
  {
+  "text": "guard SAMARAN_GUARD=strict: yang tidak bisa diperiksa ditahan, mode biasa tetap meloloskan atau bertanya",
+  "matches": []
+ },
+ {
+  "text": "strict",
+  "matches": []
+ },
+ {
+  "text": "ketat",
+  "matches": []
+ },
+ {
+  "text": "banyak",
+  "matches": []
+ },
+ {
+  "text": "folder.csv",
+  "matches": []
+ },
+ {
+  "text": "ktp",
+  "matches": []
+ },
+ {
+  "text": "ktp",
+  "matches": []
+ },
+ {
+  "text": "budi.jpg",
+  "matches": []
+ },
+ {
+  "text": "rusak.pdf",
+  "matches": []
+ },
+ {
+  "text": "bukan pdf",
+  "matches": []
+ },
+ {
+  "text": "lampiran.pdf",
+  "matches": []
+ },
+ {
+  "text": "rusak.xlsx",
+  "matches": []
+ },
+ {
+  "text": "bukan zip",
+  "matches": []
+ },
+ {
+  "text": "bersih.csv",
+  "matches": []
+ },
+ {
+  "text": "id,kota\n1,Bandung\n2,Medan\n",
+  "matches": []
+ },
+ {
+  "text": "-",
+  "matches": []
+ },
+ {
+  "text": "besar.csv",
+  "matches": []
+ },
+ {
+  "text": "banyak",
+  "matches": []
+ },
+ {
+  "text": "id,kota\n1,Bandung\n",
+  "matches": []
+ },
+ {
+  "text": "PreToolUse",
+  "matches": []
+ },
+ {
+  "text": "Bash",
+  "matches": []
+ },
+ {
+  "text": "PreToolUse",
+  "matches": []
+ },
+ {
+  "text": "Read",
+  "matches": []
+ },
+ {
+  "text": "cat rusak.pdf",
+  "matches": []
+ },
+ {
+  "text": "cat lampiran.pdf",
+  "matches": []
+ },
+ {
+  "text": "cat besar.csv",
+  "matches": []
+ },
+ {
+  "text": "tail -n 2 besar.csv",
+  "matches": []
+ },
+ {
+  "text": "grep 3174 besar.csv",
+  "matches": []
+ },
+ {
+  "text": "head -n 20 besar.csv",
+  "matches": []
+ },
+ {
+  "text": "cat bersih.csv",
+  "matches": []
+ },
+ {
+  "text": "wc -l besar.csv",
+  "matches": []
+ },
+ {
+  "text": "cat tidak-ada.csv",
+  "matches": []
+ },
+ {
+  "text": "ktp/budi.jpg",
+  "matches": []
+ },
+ {
+  "text": "rusak.pdf",
+  "matches": []
+ },
+ {
+  "text": "lampiran.pdf",
+  "matches": []
+ },
+ {
+  "text": "rusak.xlsx",
+  "matches": []
+ },
+ {
+  "text": "folder.csv",
+  "matches": []
+ },
+ {
+  "text": "default: Read fails on its own",
+  "matches": []
+ },
+ {
+  "text": "folder.csv",
+  "matches": []
+ },
+ {
+  "text": "besar.csv",
+  "matches": []
+ },
+ {
+  "text": "",
+  "matches": []
+ },
+ {
+  "text": "besar.csv",
+  "matches": []
+ },
+ {
+  "text": "besar.csv",
+  "matches": []
+ },
+ {
+  "text": "besar.csv",
+  "matches": []
+ },
+ {
+  "text": "PreToolUse",
+  "matches": []
+ },
+ {
+  "text": "Grep",
+  "matches": []
+ },
+ {
+  "text": "Bandung",
+  "matches": []
+ },
+ {
+  "text": "banyak",
+  "matches": []
+ },
+ {
+  "text": "content",
+  "matches": []
+ },
+ {
+  "text": "cat bersih.csv",
+  "matches": []
+ },
+ {
+  "text": "-1",
+  "matches": []
+ },
+ {
+  "text": "cat bersih.csv",
+  "matches": []
+ },
+ {
+  "text": "-1",
+  "matches": []
+ },
+ {
+  "text": "cat bersih.csv",
+  "matches": []
+ },
+ {
+  "text": "-1",
+  "matches": []
+ },
+ {
+  "text": "default mode has no budget",
+  "matches": []
+ },
+ {
+  "text": "cat bersih.csv",
+  "matches": []
+ },
+ {
+  "text": "999999999",
+  "matches": []
+ },
+ {
   "text": "Word: teks, header, dan tabel dipindai dan disamarkan",
   "matches": []
  },
@@ -15726,7 +15958,15 @@
  },
  {
   "text": "JL. MARGONDA RAYA NO. 45",
-  "matches": []
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    24,
+    "JL. MARGONDA RAYA NO. 45",
+    "high"
+   ]
+  ]
  },
  {
   "text": "ISLAM",
@@ -32495,6 +32735,13 @@
   "text": " | Agama: Islam. INSERT INTO `pelanggan` (`nama`,`nik`) VALUES\r\n('Siti Aminah','3276015508030002'),\r\n('Dewi', 3578014607910004);",
   "matches": [
    [
+    "RELIGION",
+    10,
+    15,
+    "Islam",
+    "medium"
+   ],
+   [
     "NAME",
     66,
     77,
@@ -33674,6 +33921,13 @@
     32,
     "Komplek Taman Asri blok B no 9",
     "high"
+   ],
+   [
+    "RELIGION",
+    40,
+    45,
+    "Islam",
+    "medium"
    ],
    [
     "NAME",
@@ -45502,6 +45756,13 @@
     27,
     "09.254.294.3-407.000",
     "high"
+   ],
+   [
+    "RELIGION",
+    36,
+    41,
+    "Islam",
+    "medium"
    ],
    [
     "PLATE",
@@ -61754,6 +62015,13 @@
     "medium"
    ],
    [
+    "RELIGION",
+    36,
+    41,
+    "Islam",
+    "medium"
+   ],
+   [
     "EMAIL",
     42,
     67,
@@ -74162,6 +74430,13 @@
  {
   "text": "﻿Agama: Islam. siti [at] gmail [dot] com 🇮🇩 ayah stroke",
   "matches": [
+   [
+    "RELIGION",
+    8,
+    13,
+    "Islam",
+    "medium"
+   ],
    [
     "EMAIL",
     15,

@@ -11,7 +11,7 @@ npm run bench -- --export out/         # the corpus as JSON Lines, to score anot
 
 ## The corpus
 
-[`corpus.mjs`](corpus.mjs) builds made-up documents from templates in eleven formats: forms, chat, mixed Indonesian and English, informal spelling, unlabelled text, JSON, CSV, logs, OCR output (including misread characters), letters, and traps with no personal data at all (invoice numbers, trace ids, call center numbers, prices, timestamps). Every value of personal data is labelled with its type and position.
+[`corpus.mjs`](corpus.mjs) builds made-up documents from 70 templates per split, 40 documents each, in eleven formats: forms, chat, mixed Indonesian and English, informal spelling, unlabelled text, JSON, CSV, logs, OCR output (including misread characters), letters, and traps with no personal data at all (invoice numbers, trace ids, call center numbers, prices, timestamps). Every value of personal data is labelled with its type and position.
 
 Nobody in it is real. Names are random pairs of common first names and surnames; numbers are random with a valid structure: a NIK has a real district code and a possible birth date, a card number passes the Luhn check, a phone number has a real operator prefix. The same seed gives the same corpus on every machine.
 
@@ -19,6 +19,10 @@ Nobody in it is real. Names are random pairs of common first names and surnames;
 |---|---|---|---|
 | `dev` | Work on the detectors; read its misses as much as you like | Own set | Own pool |
 | `test` | Held out: only for reporting | Different set | Different first names and surnames |
+
+Each split has 2,800 documents and over 6,000 labelled values, at least 200 of every type, so a type's number moves by 0.5 points or less per value. The name pools have 24 male and 24 female first names and 32 surnames per split. For every number the runner also prints a 95% Wilson interval: how far it could move on another corpus of the same size and kind. Two numbers whose intervals overlap may not differ at all.
+
+`CORPUS_VERSION` in `corpus.mjs` goes up whenever templates or name pools change, and numbers from different corpus versions are not compared: the baseline check fails until the baseline is refreshed. Corpus 1 (30 templates, 1,200 documents per split) is what the results for 0.8.3 in `results/` were measured on.
 
 The corpus is public, so the held-out split is held out by agreement: **do not change a detector to fix a test document.** When the test split shows a gap, write a dev template for it, fix the detector against that, and let the test number follow. Changes to test templates are only for labelling mistakes, and say so in the commit.
 

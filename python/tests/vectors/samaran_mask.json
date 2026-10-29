@@ -2392,16 +2392,18 @@
  },
  {
   "text": "KP. RAWA BADAK RT 01 RW 02 DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
-  "placeholder": "KP. RAWA BADAK [ADDRESS_1] DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+  "placeholder": "[ADDRESS_1] DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
   "vault": [
    [
     "[ADDRESS_1]",
-    "RT 01 RW 02"
+    "KP. RAWA BADAK RT 01 RW 02"
    ]
   ],
-  "partial": "KP. RAWA BADAK RT *** DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
-  "noFinanceNoName": "KP. RAWA BADAK [ADDRESS_1] DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
-  "high": []
+  "partial": "KP. *** DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+  "noFinanceNoName": "[ADDRESS_1] DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+  "high": [
+   "KP. RAWA BADAK RT 01 RW 02"
+  ]
  },
  {
   "text": "32.15.30",

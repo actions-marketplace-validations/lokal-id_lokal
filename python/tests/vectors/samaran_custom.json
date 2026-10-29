@@ -4007,19 +4007,19 @@
     [
      "ADDRESS",
      null,
-     15,
+     0,
      26,
-     "RT 01 RW 02"
+     "KP. RAWA BADAK RT 01 RW 02"
     ]
    ],
-   "placeholder": "KP. RAWA BADAK [ADDRESS_1] DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+   "placeholder": "[ADDRESS_1] DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
    "vault": [
     [
      "[ADDRESS_1]",
-     "RT 01 RW 02"
+     "KP. RAWA BADAK RT 01 RW 02"
     ]
    ],
-   "partial": "KP. RAWA BADAK RT *** DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG"
+   "partial": "KP. *** DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG"
   },
   {
    "text": "32.15.30",

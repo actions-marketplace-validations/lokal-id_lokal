@@ -473,7 +473,15 @@ Otomatis aktif lewat plugin Claude Code.
   ```
 
 - `SAMARAN_GUARD=off` mematikan guard.
-- `SAMARAN_GUARD=strict` untuk tim yang ingin guard gagal dalam keadaan tertutup. Error di guard, misalnya `.samaran.json` yang rusak, akan memblokir alih-alih meloloskan. Kode yang dijalankan langsung dari command line dan menyebut file data berisi data pribadi diblokir seperti `cat`: `python -c "…open('data.csv')…"`, `node -e`, heredoc ke `python3 -`, dan `[IO.File]::ReadAllText` di PowerShell. Skrip yang disimpan di file tetap jalan.
+- `SAMARAN_GUARD=strict` untuk tim yang ingin guard gagal dalam keadaan tertutup: apa pun yang tidak bisa diperiksa guard diblokir, tidak diloloskan atau ditanyakan. Ini mencakup:
+  - error di guard, misalnya `.samaran.json` yang rusak;
+  - file yang tidak bisa dibaca, misalnya PDF hasil scan, terenkripsi, atau rusak, dan spreadsheet yang rusak;
+  - foto dan PDF yang biasanya ditanyakan dulu;
+  - output dari bagian setelah 5 MB pertama sebuah file besar, misalnya `cat`, `tail`, `grep`, atau `Read` dengan offset melewati batas itu (`head -n 50` tetap jalan);
+  - `Grep` atas lebih dari 300 file data;
+  - pemeriksaan yang lebih lama dari 7 detik, sebelum batas hook 10 detik meloloskan perintahnya.
+
+  Kode yang dijalankan langsung dari command line dan menyebut file data berisi data pribadi diblokir seperti `cat`: `python -c "…open('data.csv')…"`, `node -e`, heredoc ke `python3 -`, dan `[IO.File]::ReadAllText` di PowerShell. Skrip yang disimpan di file tetap jalan.
 
 #### Di Codex CLI, Cursor, dan Gemini CLI
 
@@ -533,6 +541,25 @@ Hook di Gemini CLI masih eksperimental; aktifkan sesuai dokumentasi Gemini CLI u
 
 </details>
 
+### Cakupan tiap integrasi
+
+Tiap integrasi hanya melihat apa yang lewat di dalamnya. Pilih sesuai jalur data Anda, dan gabungkan kalau datanya lewat lebih dari satu jalur.
+
+| Integrasi | Memeriksa | Tidak melihat | Yang tidak bisa diperiksa |
+|---|---|---|---|
+| **Claude Code** (plugin: MCP, skill, guard) | Prompt, `Read`, `Grep` mode content, pembaca file di Bash dan PowerShell | Tool lain yang mengembalikan isi file, misalnya MCP server lain; skrip yang mencetak data | Ditanyakan dulu; diblokir dengan `strict` |
+| **Codex CLI** (MCP, skill, hook guard) | Prompt, perintah shell | Tool selain shell | Diloloskan; diblokir dengan `strict` |
+| **Cursor** (MCP, hook guard) | Prompt, baca file, perintah shell | Tool tanpa hook, misalnya pencarian codebase | Ditahan, karena Cursor tidak bisa bertanya |
+| **Gemini CLI** (MCP, hook guard, eksperimental) | Prompt, `read_file`, `run_shell_command` | Tool lainnya, misalnya baca banyak file sekaligus atau cari isi file | Ditahan, karena Gemini CLI tidak bisa bertanya |
+| **Claude Desktop, Windsurf, VS Code, client MCP lain** | File yang dibaca lewat `read_file_masked` dan `scan_pii` | Prompt dan pembacaan file oleh client itu sendiri: client ini tidak punya hook | Ditolak `read_file_masked` |
+| **Connector ChatGPT dan Claude.ai** (mode HTTP) | Tool data saja; tidak ada tool file | Yang diketik atau diunggah di chat: pakai ekstensi | n/a |
+| **Ekstensi browser** | Teks yang di-paste dan diketik, lampiran CSV, Excel, Word, dan PDF berlapis teks | Teks yang di-drag and drop, aturan `.samaran.json` | Ditahan sampai Anda izinkan; foto lain terkirim apa adanya |
+| **Samaran Proxy** | Semua teks di request gaya OpenAI dan Anthropic, termasuk tool call dan JSON di dalam string | Upload file, yang ditolak kecuali `--allow-unmasked` | Diteruskan dengan `x-samaran-status: partial`; ditolak dengan `--strict` |
+| **Middleware AI SDK** | System prompt, pesan, tool call dan hasilnya | Gambar dan file | Dikirim apa adanya |
+| **Lokal Scan** (CLI, pre-commit, GitHub Action) | Perubahan yang di-stage, diff, file dan folder | Data yang tidak pernah masuk repository | Dilaporkan tidak terpindai; gagal dengan `--strict` |
+
+Guard menahan satu nomor identitas saja (NIK, KK, NPWP, paspor, rekening, kartu, BPJS, …), data kesehatan, catatan kriminal, atau biometrik yang berlabel, dan aturan `.samaran.json`. Satu nilai biasa diloloskan, misalnya satu nomor HP atau alamat e-mail di hasil `grep`, dan tiga nilai atau lebih diblokir. `strict` tidak mengubah aturan itu; yang diubah adalah apa yang terjadi kalau guard tidak bisa memeriksa.
+
 ### Pertahanan berlapis
 
 Guard menangkap cara-cara umum agent melihat data. Guard bukan sandbox: agent yang bisa menjalankan kode apa pun bisa menemukan cara mencetak isi file. Kalau data pelanggan asli ada di komputer developer, tambahkan kontrol yang tidak bergantung pada tertangkap atau tidaknya:
@@ -587,14 +614,17 @@ Guard sengaja meloloskan satu nilai biasa, misalnya satu nomor HP di hasil `grep
 
 ### Benchmark held-out
 
-`npm run bench` menilai detektor per jenis data pada 1.200 dokumen karangan yang tidak dipakai untuk menyetelnya: template dan nama berbeda dari set pengembangan, dalam sebelas format mulai dari formulir dan chat sampai JSON, log, dan hasil OCR ([metode](evals/bench/README.md)). Pada 0.8.3:
+`npm run bench` menilai detektor per jenis data pada 2.800 dokumen karangan yang tidak dipakai untuk menyetelnya: 70 template dan kumpulan nama yang terpisah dari set pengembangan, dalam sebelas format mulai dari formulir dan chat sampai JSON, log, dan hasil OCR, dengan minimal 200 nilai berlabel untuk setiap jenis ([metode](evals/bench/README.md)). Korpus 2, sebelum dan sesudah perbaikan yang dipicunya (dibuat hanya dengan set pengembangan):
 
-| | Precision | Recall | Terlindungi |
-|---|---|---|---|
-| Semua 2.800 nilai | 99,5% | 93,6% | 95,0% |
-| Terlemah: teks OCR | | | 77,0% |
+| | Precision | Recall | Terlindungi | Interval 95% |
+|---|---|---|---|---|
+| 0.8.3: semua 6.160 nilai | 96,7% | 91,3% | 94,0% | 93,4–94,6% |
+| **Sekarang: semua 6.160 nilai** | **99,8%** | **95,8%** | **96,6%** | 96,1–97,0% |
+| Sekarang, terlemah: agama | | | 85,7% | 81,1–89,3% |
+| Sekarang, terlemah: NIK | | | 88,1% | 84,1–91,2% |
+| Sekarang, terlemah: nama | | | 93,6% | 92,4–94,6% |
 
-*Terlindungi* artinya setiap huruf dan angka dari nilai itu tersamar, oleh deteksi jenis apa pun. Celah yang terlihat: agama dan NIK pada hasil OCR yang salah baca, dan nama tanpa label di depannya. Sepuluh dari 200 dokumen jebakan punya false positive, semuanya nomor call center yang sama yang terbaca sebagai nomor HP. CI gagal kalau sebuah rilis mendapat skor di bawah baseline terakhir.
+*Terlindungi* artinya setiap huruf dan angka dari nilai itu tersamar, oleh deteksi jenis apa pun. Celah yang tersisa: hasil OCR yang salah baca (NIK terbaca "3674O2 53097l0l22", "AGAMA. ISLAM" tanpa titik dua) dan nama tanpa label di depannya. Tidak ada false positive di 400 dokumen jebakan. CI gagal kalau sebuah rilis mendapat skor di bawah baseline terakhir.
 
 `npm run eval:pii` menjalankan benchmark formatnya saja: 618 dari 618 data pribadi tersamar di 418 format, dan 338 dari 338 nilai yang mirip tetap utuh, dan setiap temuan dicek berada tepat di posisinya. Formatnya mulai dari KTP hasil OCR, export WhatsApp, JSON Midtrans, log Laravel, pesan HL7, dan dump SQL sampai teks tanpa label sama sekali: tiket CS, tanda tangan email, mutasi rekening, bukti transfer, form HTML, URL, nama file, chat berbahasa Sunda dan Jawa, dan chat santai soal kesehatan, genetika, utang, agama, pernikahan, dan catatan kriminal. Nilai yang mirip meliputi nomor resi, ID invoice, timestamp, nama lembaga, nama produk bank, tempat yang memakai nama orang, dan kata yang juga nama orang. **Angka 100% itu diukur pada kasus yang sudah dipakai untuk menyetel aturan.** Delapan kelompok kasus masing-masing ditulis setelah aturan saat itu jadi dan dijalankan sekali sebelum ada perbaikan: hasilnya 40 dari 49, 21 dari 24, 59 dari 90, 57 dari 65, 48 dari 57, 55 dari 67, 46 dari 55, dan 51 dari 61. Pada teks bebas yang belum pernah dilihat, perkirakan sekitar 82 sampai 88% data pribadi tertangkap. Dijalankan pada teks resmi UU 27/2022 (64.000 karakter), yang tersamar hanya nama Presiden di bagian tanda tangan.
 
@@ -604,7 +634,7 @@ Ini sampel kecil yang disusun dari keseharian developer Indonesia. Jangan dibaca
 
 - **Deteksi berbasis pola dan mengutamakan presisi.** Nama dikenali dari label, header kolom dan key JSON, pengirim di export chat, frasa pengantar ("nama saya budi", "a.n.", "nami abdi"), sapaan dan gelar ("Pak Joko", "Dr. Ir. H. Bambang"), peran ("Pelanggan Budi Santoso", "Tergugat Joko Susilo"), salam pembuka dan penutup, nama tampilan email, handle media sosial, umur dalam kurung ("Kevin (19)"), daftar hadir dan kontak, serta daftar sekitar 680 nama depan dan nama keluarga Indonesia yang umum, marga Batak, dan pola nama Bali, Tionghoa-Indonesia, dan Jawa. Pada teks bebas yang belum pernah dilihat, sekitar 82 sampai 88% data pribadi tertangkap: nama yang juga kata sehari-hari tanpa penanda ("pesanan budi belum sampai"), nama yang tidak ada di daftar tanpa penanda apa pun, data sensitif dengan kalimat yang baru, dan data anak yang tidak ditandai sebagai data anak masih bisa lolos. Anggap Samaran sebagai jaring pengaman yang kuat, bukan jaminan.
 - **Diuji terhadap salah deteksi** di 22,5 MB kode dan dokumentasi open source: aturan nama tidak menambah satu pun salah deteksi di sana, dan setiap temuan baru adalah nama asli penulis package. Pada teks lengkap UU 27/2022, yang tersamar hanya nama penanda tangan. Dari 91.599 nama kecamatan dan desa di data Kemendagri, sendiri maupun dalam kalimat alamat, 0,15% masih terbaca sebagai nama orang, kebanyakan desa yang memakai nama marga Batak ("Pintu Pohan") atau nama orang ("Jati Utomo"). Deteksi nama di chat menangkap 29 dari 29 kalimat uji berisi nama dan tidak salah tangkap di 26 kalimat chat biasa. Kalimatnya disusun untuk tes, jadi akurasi di data asli bisa lebih rendah.
-- **Tidak semua format terbaca.** PDF terbaca kalau punya lapisan teks, seperti invoice, surat, rekening koran, dan formulir dari browser, Word, atau library PDF. Halaman hasil scan, PDF terenkripsi, `.xls` dan `.doc` lama, gambar (foto KTP, selfie), dan arsip tidak dipindai. `scan_pii` melaporkannya sebagai *tidak terpindai*, bukan *bersih*, termasuk halaman scan di dalam PDF yang selebihnya terbaca. Semua integrasi memakai empat status yang sama untuk apa yang terlihat: `scanned`, `partial` (halaman scan di PDF, gambar di request lewat proxy), `unsupported` (jenis input yang tidak dibaca Lokal), dan `failed` (jenis yang didukung tetapi gagal dibaca, misalnya PDF terenkripsi). Guard bertanya dulu sebelum `Read` mengirim PDF seperti itu, atau foto yang tampak seperti dokumen orang, ke model; guard tidak bisa membedakan foto KTP dari gambar lain, jadi foto dinilai dari nama dan foldernya. File di atas 100 MB juga dilaporkan. Untuk file data di atas 5 MB, guard memeriksa 5 MB pertamanya, dan spreadsheet, dokumen Word, serta PDF di atas 20 MB dilaporkan alih-alih diurai, supaya tetap di bawah batas waktu hook 10 detik.
+- **Tidak semua format terbaca.** PDF terbaca kalau punya lapisan teks, seperti invoice, surat, rekening koran, dan formulir dari browser, Word, atau library PDF. Halaman hasil scan, PDF terenkripsi, `.xls` dan `.doc` lama, gambar (foto KTP, selfie), dan arsip tidak dipindai. `scan_pii` melaporkannya sebagai *tidak terpindai*, bukan *bersih*, termasuk halaman scan di dalam PDF yang selebihnya terbaca. Semua integrasi memakai empat status yang sama untuk apa yang terlihat: `scanned`, `partial` (halaman scan di PDF, gambar di request lewat proxy), `unsupported` (jenis input yang tidak dibaca Lokal), dan `failed` (jenis yang didukung tetapi gagal dibaca, misalnya PDF terenkripsi). Guard bertanya dulu sebelum `Read` mengirim PDF seperti itu, atau foto yang tampak seperti dokumen orang, ke model; guard tidak bisa membedakan foto KTP dari gambar lain, jadi foto dinilai dari nama dan foldernya. File di atas 100 MB juga dilaporkan. Untuk file data di atas 5 MB, guard memeriksa 5 MB pertamanya dan bertanya dulu sebelum `Read` menampilkan baris setelahnya. Spreadsheet, dokumen Word, serta PDF di atas 20 MB dilaporkan alih-alih diurai, supaya tetap di bawah batas waktu hook 10 detik.
 - **Validasi NIK dan NPWP hanya struktur.** Tidak bisa memastikan nomornya terdaftar di Dukcapil atau DJP.
 - **Deteksi operator memakai prefix nomor**, yang cocok dengan daftar alokasi publik, termasuk merger XLSmart 2025. Indonesia belum punya *number portability* (gugatannya masih di MK, perkara 319/PUU-XXIV/2026), jadi prefix masih bisa diandalkan. Kode area telepon rumah baru mencakup 19 kota besar.
 - **Guard mencegat prompt, `Read`, `Grep`, dan perintah shell umum.** Skrip yang sengaja mencetak isi file data, atau perintah seperti `python -c "print(open(...).read())"`, tidak bisa dicegat 100%. Untuk itu skill `samaran` mengarahkan agent, `SAMARAN_GUARD=strict` memblokir one-liner semacam itu, dan [Pertahanan berlapis](#pertahanan-berlapis) menutup sisanya.

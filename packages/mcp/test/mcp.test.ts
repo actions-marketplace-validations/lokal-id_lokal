@@ -472,6 +472,74 @@ test('guard SAMARAN_GUARD=strict: input rusak memblokir, kode inline yang membac
   assert.equal(sh('cat pelanggan.csv', strict), 2);
 });
 
+test('guard SAMARAN_GUARD=strict: yang tidak bisa diperiksa ditahan, mode biasa tetap meloloskan atau bertanya', () => {
+  const strict = { SAMARAN_GUARD: 'strict' };
+  const base = path.join(dir, 'ketat');
+  mkdirSync(path.join(base, 'banyak'), { recursive: true });
+  mkdirSync(path.join(base, 'folder.csv'), { recursive: true }); // exists, but will not load
+  mkdirSync(path.join(base, 'ktp'), { recursive: true });
+  writeFileSync(path.join(base, 'ktp', 'budi.jpg'), Buffer.from([0xff, 0xd8, 0xff, 0x00]));
+  writeFileSync(path.join(base, 'rusak.pdf'), 'bukan pdf');
+  writeFileSync(path.join(base, 'lampiran.pdf'), samples().scanned!);
+  writeFileSync(path.join(base, 'rusak.xlsx'), 'bukan zip');
+  writeFileSync(path.join(base, 'bersih.csv'), 'id,kota\n1,Bandung\n2,Medan\n');
+  // Bigger than the 5 MB the guard reads: the rows with NIKs come after it.
+  const filler = `1,${'-'.repeat(200)}\n`.repeat(28_000);
+  writeFileSync(path.join(base, 'besar.csv'), `id,nik\n${filler}2,3174015507880099\n3,3174012201150077\n`);
+  for (let i = 0; i < 301; i++) writeFileSync(path.join(base, 'banyak', `f${i}.csv`), 'id,kota\n1,Bandung\n');
+
+  const sh = (command: string, env: Record<string, string> = {}) =>
+    guard({ hook_event_name: 'PreToolUse', tool_name: 'Bash', tool_input: { command }, cwd: base }, env);
+  const read = (file: string, env: Record<string, string> = {}, extra: object = {}) =>
+    guard({ hook_event_name: 'PreToolUse', tool_name: 'Read', tool_input: { file_path: path.join(base, file), ...extra } }, env);
+  const asks = (r: ReturnType<typeof guard>) => r.status === 0 && /"permissionDecision":"ask"/.test(r.stdout);
+
+  // Shell reads the guard cannot check: allowed by default, blocked in strict mode, with the reason.
+  for (const [command, why] of [
+    ['cat rusak.pdf', /rusak\.pdf: unreadable PDF/],
+    ['cat lampiran.pdf', /no text layer/],
+    ['cat besar.csv', /only its first 5 MB were checked/],
+    ['tail -n 2 besar.csv', /only its first 5 MB/],
+    ['grep 3174 besar.csv', /only its first 5 MB/],
+  ] as const) {
+    assert.equal(sh(command).status, 0, `default: ${command}`);
+    const r = sh(command, strict);
+    assert.equal(r.status, 2, `strict: ${command}`);
+    assert.match(r.stderr, why, command);
+    assert.match(r.stderr, /SAMARAN_GUARD=strict blocks what it cannot check/);
+  }
+  // What the guard did check still passes in strict mode: the start of a big file, and a clean file.
+  for (const command of ['head -n 20 besar.csv', 'cat bersih.csv', 'wc -l besar.csv', 'cat tidak-ada.csv']) {
+    assert.equal(sh(command, strict).status, 0, command);
+  }
+
+  // Read: what is asked about by default is blocked in strict mode.
+  for (const file of ['ktp/budi.jpg', 'rusak.pdf', 'lampiran.pdf', 'rusak.xlsx']) {
+    assert.ok(asks(read(file)), `default asks: ${file}`);
+    assert.equal(read(file, strict).status, 2, `strict: ${file}`);
+  }
+  assert.equal(read('folder.csv').status, 0, 'default: Read fails on its own');
+  assert.equal(read('folder.csv', strict).status, 2);
+  // Past the part that was checked: the first lines of a big file pass, lines further on are asked about.
+  assert.equal(read('besar.csv').stdout, '');
+  assert.equal(read('besar.csv', strict).status, 0);
+  assert.ok(asks(read('besar.csv', {}, { offset: 28_000, limit: 10 })));
+  assert.match(read('besar.csv', strict, { offset: 28_000, limit: 10 }).stderr, /only its first 5 MB/);
+
+  // Grep over more data files than it checks.
+  const grep = (env: Record<string, string> = {}) =>
+    guard({ hook_event_name: 'PreToolUse', tool_name: 'Grep', tool_input: { pattern: 'Bandung', path: 'banyak', output_mode: 'content' }, cwd: base }, env);
+  assert.equal(grep().status, 0);
+  assert.match(grep(strict).stderr, /only 300 of the 301 data files/);
+
+  // A check that runs out of time is blocked in strict mode; the budget can only be shortened.
+  assert.equal(sh('cat bersih.csv', { ...strict, SAMARAN_GUARD_BUDGET_MS: '-1' }).status, 2);
+  assert.match(sh('cat bersih.csv', { ...strict, SAMARAN_GUARD_BUDGET_MS: '-1' }).stderr, /took too long/);
+  assert.equal(sh('cat bersih.csv', { SAMARAN_GUARD_BUDGET_MS: '-1' }).status, 0, 'default mode has no budget');
+  assert.equal(sh('cat bersih.csv', { ...strict, SAMARAN_GUARD_BUDGET_MS: '999999999' }).status, 0);
+  rmSync(base, { recursive: true, force: true });
+});
+
 test('Word: teks, header, dan tabel dipindai dan disamarkan', async () => {
   mkdirSync(path.join(dir, 'dokumen'), { recursive: true });
   copyFileSync(path.join(import.meta.dirname, 'fixtures', 'surat.docx'), path.join(dir, 'dokumen', 'surat.docx'));

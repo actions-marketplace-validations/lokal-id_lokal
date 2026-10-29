@@ -832,7 +832,7 @@
     "replaced": {}
    },
    {
-    "text": "KP. RAWA BADAK RT 02 RW 06 DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+    "text": "KP. RAWA BADAK RT 00 RW 03 DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
     "replaced": {
      "ADDRESS": 1
     }
@@ -2961,7 +2961,7 @@
     "replaced": {}
    },
    {
-    "text": "KP. RAWA BADAK RT 02 RW 01 DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+    "text": "KP. RAWA BADAK RT 07 RW 00 DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
     "replaced": {
      "ADDRESS": 1
     }
@@ -5067,8 +5067,10 @@
     "replaced": {}
    },
    {
-    "text": "KP. RAWA BADAK RT 01 RW 02 DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
-    "replaced": {}
+    "text": "KP. RAWA BADAK RT 04 RW 03 DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+    "replaced": {
+     "ADDRESS": 1
+    }
    },
    {
     "text": "32.15.30",

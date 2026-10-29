@@ -473,7 +473,15 @@ Enabled automatically by the Claude Code plugin.
   ```
 
 - Set `SAMARAN_GUARD=off` to disable the guard.
-- Set `SAMARAN_GUARD=strict` for teams that want it to fail closed. A guard error, such as a broken `.samaran.json`, then blocks instead of letting the call through. Code run from the command line that names a data file with personal data is blocked like `cat`: `python -c "…open('data.csv')…"`, `node -e`, a heredoc fed to `python3 -`, and `[IO.File]::ReadAllText` in PowerShell. Scripts saved in files still run.
+- Set `SAMARAN_GUARD=strict` for teams that want it to fail closed: what the guard cannot check is blocked instead of let through or asked about. That covers:
+  - a guard error, such as a broken `.samaran.json`;
+  - a file it cannot read, such as a scanned, encrypted, or damaged PDF or a damaged spreadsheet;
+  - the photos and PDFs it would otherwise ask about;
+  - output from beyond the first 5 MB of a big file, such as `cat`, `tail`, `grep`, or `Read` with an offset past that point (`head -n 50` still runs);
+  - a `Grep` over more than 300 data files;
+  - a check that runs longer than 7 seconds, before the hook's 10-second limit would let the call through.
+
+  Code run from the command line that names a data file with personal data is blocked like `cat`: `python -c "…open('data.csv')…"`, `node -e`, a heredoc fed to `python3 -`, and `[IO.File]::ReadAllText` in PowerShell. Scripts saved in files still run.
 
 #### In Codex CLI, Cursor, and Gemini CLI
 
@@ -533,6 +541,25 @@ Hooks are experimental in Gemini CLI; turn them on as its documentation describe
 
 </details>
 
+### What each integration covers
+
+Each integration sees only what passes through it. Choose by where the data goes, and combine them where it goes more than one way.
+
+| Integration | Checks | Does not see | What it cannot check |
+|---|---|---|---|
+| **Claude Code** (plugin: MCP, skills, guard) | Prompts, `Read`, `Grep` in content mode, file readers in Bash and PowerShell | Other tools that return file contents, such as another MCP server; scripts that print data | Asked about; blocked with `strict` |
+| **Codex CLI** (MCP, skills, guard hook) | Prompts, shell commands | Tools other than the shell | Let through; blocked with `strict` |
+| **Cursor** (MCP, guard hooks) | Prompts, file reads, shell commands | Tools without a hook, such as its codebase search | Held back, since Cursor cannot ask |
+| **Gemini CLI** (MCP, guard hooks, experimental) | Prompts, `read_file`, `run_shell_command` | Its other tools, such as reading several files at once or searching file contents | Held back, since Gemini CLI cannot ask |
+| **Claude Desktop, Windsurf, VS Code, other MCP clients** | Files read through `read_file_masked` and `scan_pii` | Prompts and the client's own file reads: these clients have no hook | `read_file_masked` refuses it |
+| **ChatGPT and Claude.ai connectors** (HTTP mode) | The data tools only; no file tools | What is typed or uploaded in the chat: use the extension | n/a |
+| **Browser extension** | Pasted and typed text, attached CSV, Excel, Word, and text-based PDF files | Text dropped by drag and drop, `.samaran.json` rules | Held until you allow it; other photos go as they are |
+| **Samaran Proxy** | Every text in OpenAI- and Anthropic-style requests, including tool calls and JSON inside strings | File uploads, which are refused unless `--allow-unmasked` | Forwarded with `x-samaran-status: partial`; refused with `--strict` |
+| **AI SDK middleware** | System prompt, messages, tool calls and results | Images and files | Sent as they are |
+| **Lokal Scan** (CLI, pre-commit, GitHub Action) | Staged changes, diffs, files and folders | Data that never reaches the repository | Reported as not scanned; fails with `--strict` |
+
+The guard holds back any one identifier (NIK, KK, NPWP, passport, bank account, card, BPJS, …), labeled health, criminal-record, or biometric data, and a `.samaran.json` rule. It lets one ordinary value through, such as a single phone number or e-mail address in a `grep` result, and blocks three or more. `strict` does not change that rule; it changes what happens when the guard cannot check.
+
 ### Defense in depth
 
 The guard catches the common ways an agent looks at data. It is not a sandbox: an agent that can run arbitrary code can find a way to print a file. When real customer data sits on a developer's machine, add controls that do not depend on catching it:
@@ -587,14 +614,17 @@ The guard lets one ordinary value through on purpose, such as a single phone num
 
 ### Held-out benchmark
 
-`npm run bench` scores the detectors per type on 1,200 made-up documents that they were not tuned on: different templates and different names from the development set, in eleven formats from forms and chat to JSON, logs, and OCR output ([method](evals/bench/README.md)). On 0.8.3:
+`npm run bench` scores the detectors per type on 2,800 made-up documents that they were not tuned on: 70 templates and a pool of names apart from the development set, in eleven formats from forms and chat to JSON, logs, and OCR output, with at least 200 labelled values of every type ([method](evals/bench/README.md)). Corpus 2, before and after the fixes it led to (made on the development set only):
 
-| | Precision | Recall | Protected |
-|---|---|---|---|
-| All 2,800 values | 99.5% | 93.6% | 95.0% |
-| Weakest: OCR text | | | 77.0% |
+| | Precision | Recall | Protected | 95% interval |
+|---|---|---|---|---|
+| 0.8.3: all 6,160 values | 96.7% | 91.3% | 94.0% | 93.4–94.6% |
+| **Now: all 6,160 values** | **99.8%** | **95.8%** | **96.6%** | 96.1–97.0% |
+| Now, weakest: religion | | | 85.7% | 81.1–89.3% |
+| Now, weakest: NIK | | | 88.1% | 84.1–91.2% |
+| Now, weakest: names | | | 93.6% | 92.4–94.6% |
 
-*Protected* means every letter and digit of the value was masked, by a detection of any type. The gaps it shows are religion and NIK in OCR output with misread characters, and names with no label in front of them. Ten of the 200 trap documents had a false positive, all the same call center number read as a phone number. CI fails when a release scores lower than the last baseline.
+*Protected* means every letter and digit of the value was masked, by a detection of any type. The gaps left are OCR output with misread characters (a NIK read as "3674O2 53097l0l22", "AGAMA. ISLAM" without a colon) and names with no label in front of them. None of the 400 trap documents has a false positive. CI fails when a release scores lower than the last baseline.
 
 `npm run eval:pii` runs the format benchmark on its own: 618 of 618 personal values masked across 418 formats, and 338 of 338 look-alikes left intact, with every match checked to sit exactly at its offsets. The formats range from KTP OCR, WhatsApp exports, Midtrans JSON, Laravel logs, HL7 messages, and SQL dumps to text with no labels at all: support tickets, e-mail signatures, bank statements, receipts, HTML forms, URLs, file names, chat in Sundanese and Javanese, and casual chat about health, genetics, debt, religion, marriage, and criminal records. The look-alikes include resi numbers, invoice IDs, timestamps, institutions, bank product names, places named after people, and words that are also given names. **The 100% is measured on cases the rules were tuned on.** Eight batches of cases were each written after the rules of the day and run once before any fix: they caught 40 of 49, 21 of 24, 59 of 90, 57 of 65, 48 of 57, 55 of 67, 46 of 55, and 51 of 61 values. On free text it has not seen, expect it to catch about 82 to 88% of personal values. Run over the official text of UU 27/2022 (64,000 characters), it masks only the President's name in the signature block.
 
@@ -604,7 +634,7 @@ This is a small sample built around everyday tasks for Indonesian developers. Do
 
 - **Detection is pattern-based and favors precision.** Names are found through labels, column headers and JSON keys, chat export senders, introductions ("nama saya budi", "a.n.", "nami abdi"), honorifics and titles ("Pak Joko", "Dr. Ir. H. Bambang"), roles ("Pelanggan Budi Santoso", "Tergugat Joko Susilo"), greetings and sign-offs, e-mail display names, social media handles, an age in brackets ("Kevin (19)"), attendance and contact lists, and a list of about 680 common Indonesian given and family names, Batak clan names, and Balinese, Chinese-Indonesian, and Javanese name patterns. On free text it has not seen it catches about 82 to 88% of personal values: a name that is also an everyday word and has no cue ("pesanan budi belum sampai"), a name the list does not know with nothing around it, sensitive data phrased in a new way, and children's data that is not marked as such can still slip through. Treat Samaran as a strong safety net, not a guarantee.
 - **Tested for false positives** on 22.5 MB of open-source code and documentation: the name rules added no false detections there, and every new hit was a package author's real name. On the full text of UU 27/2022 only the signatory's name is masked. Of 91,599 kecamatan and desa names in the Kemendagri data, alone and in an address sentence, 0.15% still read as a person's name, mostly villages named after a Batak clan ("Pintu Pohan") or a person ("Jati Utomo"). Chat name detection catches 29 of 29 test sentences with names and flags 0 of 26 ordinary ones. The test sentences were written for the suite, so accuracy on real data may be lower.
-- **Not every format is read.** PDFs are read when they have a text layer, as invoices, letters, statements, and forms from a browser, Word, or a PDF library do. Scanned pages, encrypted PDFs, legacy `.xls` and `.doc`, images (ID card photos, selfies), and archives are not scanned. `scan_pii` reports them as *not scanned*, never as clean, including scanned pages inside an otherwise readable PDF. Every integration uses the same four states for what it saw: `scanned`, `partial` (scanned pages in a PDF, an image in a proxied request), `unsupported` (a kind of input Lokal does not read), and `failed` (a supported kind that could not be read, such as an encrypted PDF). The guard asks before `Read` sends such a PDF, or a photo that looks like someone's document, to the model; it cannot tell a KTP photo from any other picture, so it judges photos by name and folder. Files over 100 MB are reported too. For data files over 5 MB the guard checks the first 5 MB, and it reports spreadsheets, Word documents, and PDFs over 20 MB instead of parsing them, to stay within the hook's 10-second limit.
+- **Not every format is read.** PDFs are read when they have a text layer, as invoices, letters, statements, and forms from a browser, Word, or a PDF library do. Scanned pages, encrypted PDFs, legacy `.xls` and `.doc`, images (ID card photos, selfies), and archives are not scanned. `scan_pii` reports them as *not scanned*, never as clean, including scanned pages inside an otherwise readable PDF. Every integration uses the same four states for what it saw: `scanned`, `partial` (scanned pages in a PDF, an image in a proxied request), `unsupported` (a kind of input Lokal does not read), and `failed` (a supported kind that could not be read, such as an encrypted PDF). The guard asks before `Read` sends such a PDF, or a photo that looks like someone's document, to the model; it cannot tell a KTP photo from any other picture, so it judges photos by name and folder. Files over 100 MB are reported too. For data files over 5 MB the guard checks the first 5 MB, and asks before `Read` shows lines past them. It reports spreadsheets, Word documents, and PDFs over 20 MB instead of parsing them, to stay within the hook's 10-second limit.
 - **NIK and NPWP checks are structural.** They cannot confirm that a number is registered with Dukcapil or the tax office.
 - **Carrier detection uses number prefixes,** which match the public allocation list, including the 2025 XLSmart merger. Indonesia has no mobile number portability yet (a case is pending at the Constitutional Court, 319/PUU-XXIV/2026), so prefixes are still reliable. Landline area codes cover 19 major cities.
 - **The guard intercepts prompts, `Read`, `Grep`, and common shell readers.** A script that deliberately prints a data file, or something like `python -c "print(open(...).read())"`, cannot be caught every time. The `samaran` skill steers the agent away from that, `SAMARAN_GUARD=strict` blocks such one-liners, and [Defense in depth](#defense-in-depth) covers the rest.

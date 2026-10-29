@@ -4,6 +4,26 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+### Added
+
+- The held-out benchmark is now corpus 2: 70 templates instead of 30 and twice as many names in each split, 2,800 documents and 6,160 labelled values in the test split, with at least 200 of every type. It reports a 95% interval for each number and will not compare numbers across corpus versions. The new test templates were written before measuring and found gaps that corpus 1 could not show: religion after "Agama/Kepercayaan" or in a sentence (57.1% protected), health data in English text (81.7%), BPJS under a "nomor_jkn" column (83.3%), and a timestamp read as a bank account number. On 0.8.3, 94.0% of values are fully masked (93.4–94.6%), with 96.7% precision; with the fixes below, made against new development templates only, 96.6% (96.1–97.0%) with 99.8% precision, and no false positive in the 400 trap documents.
+- A table in the README of what each integration checks, what it does not see, and what it does with what it cannot check: Claude Code, Codex CLI, Cursor, Gemini CLI, other MCP clients, the connectors, the browser extension, the proxy, the AI SDK middleware, and Lokal Scan.
+
+### Changed
+
+- `SAMARAN_GUARD=strict` now blocks whatever the guard could not check, instead of only guard errors and one-liners: a file it cannot read (a scanned, encrypted, or damaged PDF, a damaged spreadsheet), the photos and PDFs it would otherwise ask about, output from beyond the first 5 MB of a big file (`cat`, `tail`, `grep`, or `Read` with an offset past it; `head` still runs), a `Grep` over more than 300 data files, and a check that runs longer than 7 seconds, which the hook's 10-second limit would otherwise let through. Each message says what could not be checked.
+
+### Fixed
+
+- `Read` with an offset past the first 5 MB of a big file showed lines the guard had not checked. It now asks first.
+- Samaran, in both libraries:
+  - Religion after "Agama/Kepercayaan" or "Agama atau kepercayaan", and in a sentence ("(agama Hindu)", "religion: Islam"), is found; religious education, courts, and holidays ("pendidikan agama Islam", "Pengadilan Agama") are not.
+  - A known disease after English words ("has asma", "suffers from", "diagnosed with") or after "perawatan", "pengobatan", and "kontrol" is found.
+  - A BPJS number under "nomor_jkn", "no_kartu_jkn", or "No. Kartu" on a KIS card is BPJS, not a payment card: card numbers never start with 0.
+  - A KK number under "no_kk" or "family_card", or after "No." below a "KARTU KELUARGA" title, is a KK, not a NIK.
+  - A street in capitals ("JL. MERDEKA NO. 95", "KP. RAWA BADAK RT 01 RW 02"), as KTP and NPWP cards print it, is masked whole.
+  - A date and time ("2026-12-03 04:15") is no longer read as a bank account number, and a call center number ("(021) 500-888") no longer as a phone number.
+
 ## [0.8.3] - 2026-10-29
 
 ### Added

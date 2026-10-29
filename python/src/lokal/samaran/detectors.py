@@ -61,6 +61,24 @@ def _last_units(s: str, n: int) -> str:
     return s[-n:] if n else ''
 
 
+def _is_call_center(value: str) -> bool:
+    """A company's call center, not a person: six digits starting with 500 after the area code ("(021) 500-888")."""
+    local = _digits(_CALL_CENTER_PREFIX.sub('', value, count=1))
+    return len(local) == 6 and local.startswith('500')
+
+
+_CALL_CENTER_PREFIX = rx(r'^\s*(?:\(\s*)?(?:\+62|0)\s?\d{2,3}\)?[\s.-]?')
+
+
+def _previous_line(text: str, index: int) -> str:
+    """The line above the one `index` is on, lowercased; empty on the first line."""
+    line_start = text.rfind('\n', 0, max(0, index)) + 1 if index > 0 else 0
+    if line_start == 0:
+        return ''
+    above_start = text.rfind('\n', 0, max(0, line_start - 1)) + 1 if line_start >= 2 else 0
+    return text[above_start : line_start - 1].lower()
+
+
 def _line_above(text: str, index: int, length: int) -> str:
     """The line above a value that stands alone on its own line, lowercased; empty when the value shares its line."""
     line_start = text.rfind('\n', 0, max(0, index)) + 1 if index > 0 else 0
@@ -124,7 +142,13 @@ _TEST_CARDS = {
     '3530111333300000', '3566002020360505', '4811111111111114', '5211111111111117', '4911111111111113',
 }
 
-_KK_KEYWORD = rx(r'\b(kk|kartu keluarga)\b[^\d]*$')
+# After a word or a key's underscore: "No. KK", "no_kk", "family_card".
+_KK_KEYWORD = rx(r'(?:\b|_)(kk|kartu[ _]?keluarga|family[ _]?card)\b[^\d]*$')
+# A card's title on the line above, with only "No." in front of the number: "KARTU KELUARGA\nNo. 3201…".
+_NUMBER_ONLY_LABEL = rx(r'^\W*(?:no|nomor|no\.\s*kartu|nomor\s+kartu)?\W*$')
+_KARTU_KELUARGA = rx(r'\bkartu keluarga\b')
+# A date and time ("2026-12-03 04:15"), not a number.
+_DATE_RUN = rx(r'^(?:19|20)\d{2}-\d{2}-\d{2}(?: \d{2})?$|^\d{2}-\d{2}-(?:19|20)\d{2}(?: \d{2})?$')
 _SIM_KEYWORD = rx(r'\b(sim|surat izin mengemudi|driving licen[cs]e)\b[^\d]*$')
 _NIK_KEYWORD = rx(r'\b(nik|ktp|nomor induk kependudukan)\b')
 _NPWP_KEYWORD = rx(r'\bnpwp\b')
@@ -155,8 +179,11 @@ def _detect_digit_runs(text: str) -> list[PiiMatch]:
         # Mobile numbers (also used as e-wallet accounts) are left to the phone detector.
         if _MOBILE_START.match(digits) and parse_phone(digits).valid:
             continue
+        if _DATE_RUN.search(value):
+            continue
+        title = _previous_line(text, m.start()) if _NUMBER_ONLY_LABEL.search(label) else ''
         n = len(digits)
-        if n == 16 and _KK_KEYWORD.search(label):
+        if n == 16 and (_KK_KEYWORD.search(label) or _KARTU_KELUARGA.search(title)):
             push('KK', 'high')
         elif 12 <= n <= 16 and _SIM_KEYWORD.search(label):
             push('SIM', 'high')
@@ -173,7 +200,7 @@ def _detect_digit_runs(text: str) -> list[PiiMatch]:
             push('NIK', 'medium')
         elif n == 10 and _NISN_KEYWORD.search(label):
             push('NISN', 'high')
-        elif n in (13, 11) and _BPJS_KEYWORD.search(ctx):
+        elif n in (13, 11) and (_BPJS_KEYWORD.search(ctx) or _BPJS_KEYWORD.search(title)):
             push('BPJS', 'high')
         elif 8 <= n <= 18 and _BANK_KEYWORD.search(ctx):
             push('BANK_ACCOUNT', 'high')
@@ -273,7 +300,10 @@ def _detect_phones(text: str) -> list[PiiMatch]:
         if parse_phone('+' + m.group(0)[2:] if m.group(0).startswith('00') else m.group(0)).valid
         and not _glued_to_code(text, m.start())
     ]
-    out += [_match('PHONE', m.start(), m.group(0), 'medium') for m in _LANDLINE.finditer(text)]
+    out += [
+        _match('PHONE', m.start(), m.group(0), 'medium') for m in _LANDLINE.finditer(text)
+        if not _is_call_center(m.group(0))
+    ]
     out += [
         _match('PHONE', m.start(), m.group(0), 'high') for m in _BRACKETED_MOBILE.finditer(text)
         if parse_phone(m.group(0)).valid
@@ -295,7 +325,7 @@ def _detect_phones(text: str) -> list[PiiMatch]:
         if not _PHONE_WORD.search(_before(text, m.start(), 30)):
             continue
         info = parse_phone(m.group(0))
-        if info.valid and info.type == 'landline':
+        if info.valid and info.type == 'landline' and not _is_call_center(m.group(0)):
             out.append(_match('PHONE', m.start(), m.group(0), 'medium'))
     return out
 
@@ -424,7 +454,7 @@ _HEALTH_DX = rx(r'\b(?:Dx|DX|Diagnosis|Diagnosa|Diag)\s*:\s*([^\n\r,;()"]{2,60}?
 # Everyday words ("positif", "karena", "saya") only count before a known condition: "saya diabetes",
 # "riwayat hipertensi dan diabetes melitus".
 _HEALTH_GATED = rx(
-    r'\b(?:(?:dokter|dok|dr)\.?\s+(?:bilang|bilangnya|menyatakan|mendiagnosis)(?:\s+(?:ada|kena|positif))?|positif|menderita|terkena|kena|sakit|pasien|komplikasi|kambuh|kumat|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|riwayat|diagnosa|diagnosis|didiagnosa|pembawa\s+sifat|carrier|saya|aku|gue|gw|gua|dia|beliau|ayah|bapak|ibu|mama|mamah|papa|papah|suami|istri|anak|anaknya|adik|adek|kakak|nenek|kakek|mertua|pacar|teman|temen)'  # noqa: E501
+    r'\b(?:(?:dokter|dok|dr)\.?\s+(?:bilang|bilangnya|menyatakan|mendiagnosis)(?:\s+(?:ada|kena|positif))?|perawatan|pengobatan|dirawat\s+karena|kontrol|has|have|had|with|suffers\s+from|suffering\s+from|diagnosed\s+with|history\s+of|positif|menderita|terkena|kena|sakit|pasien|komplikasi|kambuh|kumat|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|riwayat|diagnosa|diagnosis|didiagnosa|pembawa\s+sifat|carrier|saya|aku|gue|gw|gua|dia|beliau|ayah|bapak|ibu|mama|mamah|papa|papah|suami|istri|anak|anaknya|adik|adek|kakak|nenek|kakek|mertua|pacar|teman|temen)'  # noqa: E501
     r'\s+(?:(?:saya|aku|gue|dia|lagi|sedang|sdg|sudah|udah|sdh|sempat|pernah|baru|kena|terkena)\s+){0,2}'
     rf'((?:penyakit\s+)?(?:{_CONDITIONS})(?:\s*(?:,|dan|serta)\s+(?:{_CONDITIONS}))*)\b',
     'gi',
@@ -603,8 +633,24 @@ _CONVERSION = rx(
 )
 
 
+# "(agama Hindu)", "religion Islam" said of someone. Not religious education, institutions, or holidays:
+# "pendidikan agama Islam", "Pengadilan Agama", "hari raya agama Hindu".
+_RELIGION_BARE = rx(
+    r'\b(?:agama|religion)\s*:?\s+(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Catholic|Christian|Muslim|Hindu|Buddha|Budha|Buddhist|Konghucu|Khonghucu)\b',  # noqa: E501
+    'gi',
+)
+_RELIGION_INSTITUTION = rx(
+    r'\b(?:pendidikan|pelajaran|mata\s+pelajaran|guru|umat|hari(?:\s+raya)?|tokoh|kementerian|pengadilan|universitas|institut|sekolah|ajaran|nilai|organisasi|lembaga|majelis|studi|fakultas|ilmu|perayaan|kitab|rumah\s+ibadah|penyuluh|pemuka)\s+$',  # noqa: E501
+    'i',
+)
+
+
 def _detect_religion(text: str) -> list[PiiMatch]:
     out = [_match('RELIGION', *_group_tail(m), 'high') for m in _RELIGION.finditer(text)]
+    for m in _RELIGION_BARE.finditer(text):
+        if _RELIGION_INSTITUTION.search(_before(text, m.start(), 30)):
+            continue
+        out.append(_match('RELIGION', *_group_tail(m), 'medium'))
     out += [_match('RELIGION', *_group_tail(m), 'medium') for m in _RELIGION_ADJECTIVE.finditer(text)]
     for m in _CONVERSION.finditer(text):
         value = m.group(1) if m.group(1) is not None else m.group(2)
@@ -1712,7 +1758,9 @@ def _sql_values(text: str, i: int, types: list[Optional[PiiType]], columns: list
 
 _STREET_WORDS = (
     'Jl|Jln|Jalan|Gg|Gang|Komp|Kompl|Komplek|Kompleks|Perum|Perumahan|Cluster|Klaster|Apartemen|Apartment|Apt|Rusun|'
-    'Rusunawa|Tower|Ruko|Wisma|Asrama|Dusun|Dsn|Dukuh|Kampung|Kp|Lingkungan|Ling'
+    'Rusunawa|Tower|Ruko|Wisma|Asrama|Dusun|Dsn|Dukuh|Kampung|Kp|Lingkungan|Ling|'
+    # A KTP or NPWP card prints the address in capitals.
+    'JL|JLN|JALAN|GG|GANG|KOMP|KOMPLEK|KOMPLEKS|PERUM|PERUMAHAN|DUSUN|DSN|KAMPUNG|KP'
 )
 # What pins a street to one house: No., Blok, Kav., or an apartment's floor and unit. Chat writes "blok b no 9".
 _PIN = '[Nn][Oo]|[Nn]omor|[Bb]lok|[Kk]av|[Uu]nit|[Ll]t|[Ll]antai|[Kk]amar|[Kk]mr|NO|BLOK'
