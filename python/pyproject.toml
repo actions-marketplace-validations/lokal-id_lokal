@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "lokal-id"
-version = "0.8.2"
+version = "0.8.3"
 description = "Indonesian data primitives for apps and AI agents: NIK, NPWP, phone numbers, Rupiah, terbilang, holidays, Kemendagri regions with postal codes, and Samaran PII masking (UU PDP)."
 readme = "README.md"
 requires-python = ">=3.10"

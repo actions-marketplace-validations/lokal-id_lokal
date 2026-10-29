@@ -4,9 +4,11 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.8.3] - 2026-10-29
+
 ### Added
 
-- A held-out benchmark, `npm run bench`: precision, recall, F1, and the share of values fully masked, per type of personal data, on 1,200 made-up documents in eleven formats (forms, chat, mixed Indonesian and English, informal spelling, unlabelled text, JSON, CSV, logs, OCR output, letters, and traps with no personal data). The test split uses different templates and names from the dev split, and CI fails when a change scores below the baseline. On 0.8.2 it masks 95.0% of values fully, with 99.5% precision; its weakest spots are OCR text with misread characters and names without a label. Method and limits are in `evals/bench/README.md`.
+- A held-out benchmark, `npm run bench`: precision, recall, F1, and the share of values fully masked, per type of personal data, on 1,200 made-up documents in eleven formats (forms, chat, mixed Indonesian and English, informal spelling, unlabelled text, JSON, CSV, logs, OCR output, letters, and traps with no personal data). The test split uses different templates and names from the dev split, and CI fails when a change scores below the baseline. On 0.8.3 it masks 95.0% of values fully, with 99.5% precision; its weakest spots are OCR text with misread characters and names without a label. Method and limits are in `evals/bench/README.md`.
 - One set of states for what a check saw, so "no personal data found" is never confused with "never looked": `scanned`, `partial`, `unsupported`, and `failed` (`ScanStatus` and `SCAN_STATUSES` in both libraries). `lokal-mcp scan`, `scan_pii` (with a `byStatus` count), `read_file_masked`, the Python `scan_path`, and the browser extension's attachment reader all report them.
 - Samaran Proxy: images, audio, and files inside a JSON request cannot be checked for personal data. They are still forwarded, but the response now says `x-samaran-status: partial` with the count in `x-samaran-unchecked`, and the log line says so. Every response carries `x-samaran-status`. `--strict` refuses such requests with HTTP 422, and also refuses file uploads even with `--allow-unmasked`.
 - Leak tests: one made-up person with every kind of personal data (`packages/core/test/canary.json`) goes through both libraries, the AI SDK middleware, every MCP tool, the guard, every API shape of the proxy, `lokal-mcp scan`, Kembaran, the Python logging filter, and the browser extension, as a form, JSON, a log line, CSV, and JSON inside JSON. A test fails if any value, or part of the name or street, comes out.
@@ -244,7 +246,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.8.2...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.8.3...HEAD
+[0.8.3]: https://github.com/lokal-id/lokal/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/lokal-id/lokal/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/lokal-id/lokal/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/lokal-id/lokal/compare/v0.7.2...v0.8.0

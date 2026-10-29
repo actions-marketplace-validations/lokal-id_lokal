@@ -391,7 +391,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: lokal-id/lokal@v0.8.2
+      - uses: lokal-id/lokal@v0.8.3
         # with:
         #   scope: all              # every tracked file, not only the changes
         #   min-confidence: medium  # also values without a label or column name
@@ -410,7 +410,7 @@ repos:
         name: Indonesian personal data
         entry: lokal-mcp scan --staged
         language: node
-        additional_dependencies: ['@lokal-id/mcp@0.8.2']
+        additional_dependencies: ['@lokal-id/mcp@0.8.3']
         pass_filenames: false
 ```
 
@@ -587,7 +587,7 @@ The guard lets one ordinary value through on purpose, such as a single phone num
 
 ### Held-out benchmark
 
-`npm run bench` scores the detectors per type on 1,200 made-up documents that they were not tuned on: different templates and different names from the development set, in eleven formats from forms and chat to JSON, logs, and OCR output ([method](evals/bench/README.md)). On 0.8.2:
+`npm run bench` scores the detectors per type on 1,200 made-up documents that they were not tuned on: different templates and different names from the development set, in eleven formats from forms and chat to JSON, logs, and OCR output ([method](evals/bench/README.md)). On 0.8.3:
 
 | | Precision | Recall | Protected |
 |---|---|---|---|

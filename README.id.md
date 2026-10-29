@@ -391,7 +391,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: lokal-id/lokal@v0.8.2
+      - uses: lokal-id/lokal@v0.8.3
         # with:
         #   scope: all              # semua file yang dilacak git, bukan hanya perubahan
         #   min-confidence: medium  # termasuk nilai tanpa label atau nama kolom
@@ -410,7 +410,7 @@ repos:
         name: Data pribadi Indonesia
         entry: lokal-mcp scan --staged
         language: node
-        additional_dependencies: ['@lokal-id/mcp@0.8.2']
+        additional_dependencies: ['@lokal-id/mcp@0.8.3']
         pass_filenames: false
 ```
 
@@ -587,7 +587,7 @@ Guard sengaja meloloskan satu nilai biasa, misalnya satu nomor HP di hasil `grep
 
 ### Benchmark held-out
 
-`npm run bench` menilai detektor per jenis data pada 1.200 dokumen karangan yang tidak dipakai untuk menyetelnya: template dan nama berbeda dari set pengembangan, dalam sebelas format mulai dari formulir dan chat sampai JSON, log, dan hasil OCR ([metode](evals/bench/README.md)). Pada 0.8.2:
+`npm run bench` menilai detektor per jenis data pada 1.200 dokumen karangan yang tidak dipakai untuk menyetelnya: template dan nama berbeda dari set pengembangan, dalam sebelas format mulai dari formulir dan chat sampai JSON, log, dan hasil OCR ([metode](evals/bench/README.md)). Pada 0.8.3:
 
 | | Precision | Recall | Terlindungi |
 |---|---|---|---|
