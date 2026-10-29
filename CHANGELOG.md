@@ -4,6 +4,18 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-10-29
+
+### Fixed
+
+- Text that already looked like a placeholder could be restored with a real person's data. With an e-mail template such as "Halo [NAME_1]" in the input, the real name was masked as [NAME_1] too, the model could not tell them apart, and restoring filled the template with the real name. Now numbers already used in the input are skipped: the real name becomes [NAME_2], and [NAME_1] stays as it was. This applies to the libraries (TypeScript and Python), the MCP server, the browser extension, and the proxy, which reserves the numbers across every message of a request first. `Samaran.reserve(text)` does the same for code that masks a request in parts. A placeholder that the session made itself, quoted back by the user, still means that person.
+
+### Added
+
+- The proxy counts placeholders in an answer that the request never made (made up by the model, or copied from a template): a log line says how many, without naming them, and a non-streamed answer carries an `x-samaran-unrestored` header.
+- `write_file_unmasked` adds a `warning` when the content has placeholders that the session did not make, next to the existing `unknownPlaceholders` list, so the agent can fix a mistyped placeholder instead of writing it into the file.
+- `read_file_masked` notes when the file itself contains text that is also a placeholder from this session, which `write_file_unmasked` would restore.
+
 ## [0.8.0] - 2026-10-29
 
 npm (`@lokal-id/core`, `@lokal-id/mcp`), PyPI (`lokal-id`), the GitHub Action, and the browser extension.
@@ -208,7 +220,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.8.1...HEAD
+[0.8.1]: https://github.com/lokal-id/lokal/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/lokal-id/lokal/compare/v0.7.2...v0.8.0
 [0.7.2]: https://github.com/lokal-id/lokal/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/lokal-id/lokal/compare/v0.7.0...v0.7.1
