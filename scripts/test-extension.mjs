@@ -172,6 +172,11 @@ try {
   const { sessionId } = await send('Target.attachToTarget', { targetId, flatten: true });
   const page = (method, params) => send(method, params, sessionId);
   await page('Page.enable');
+  // The page's JavaScript worlds, the content script's among them.
+  const contexts = [];
+  client.on('Runtime.executionContextCreated', (params, sid) => {
+    if (sid === sessionId) contexts.push(params.context);
+  });
   await page('Runtime.enable');
   await send('Browser.grantPermissions', { origin: pageUrl.slice(0, -1), permissions: ['clipboardReadWrite', 'clipboardSanitizedWrite'] });
   await page('Page.navigate', { url: pageUrl });
@@ -384,6 +389,28 @@ try {
     // The attachments above added more phone numbers to the vault; the NIK is the same one.
     assert.match(text, /^NIK \[NIK_1\] dan HP \[PHONE_\d+\]$/);
     assert.notEqual(text, 'NIK [NIK_1] dan HP [PHONE_1]', 'a new number gets a new placeholder');
+  });
+
+  // Last, since it breaks the content script. When the extension is updated or reloaded while a page stays open, the
+  // old script's sendMessage throws "Extension context invalidated." Reloading here does not cut the script off in
+  // every browser build, so the check makes sendMessage throw the same way in the script's own world.
+  await check('after the extension is updated under an open page, personal data is still held, without an error', async () => {
+    const errors = [];
+    client.on('Runtime.exceptionThrown', (params, sid) => {
+      if (sid === sessionId) errors.push(params.exceptionDetails.exception?.description ?? params.exceptionDetails.text);
+    });
+    const world = contexts.find((c) => c.origin === `chrome-extension://${worker.url.split('/')[2]}`);
+    assert.ok(world, "the content script's world");
+    await page('Runtime.evaluate', {
+      contextId: world.id,
+      expression: `chrome.runtime.sendMessage = () => { throw new Error('Extension context invalidated.'); }`,
+    });
+    await evaluate('editor.textContent = ""; window.pastes = []');
+    await pasteInto('#editor', `NIK ${NIK}`);
+    await sleep(500);
+    assert.deepEqual(await evaluate('window.pastes'), [], 'the paste was held back');
+    assert.ok(!(await evaluate('editor.innerText')).includes(NIK), 'the real NIK is not in the editor');
+    assert.deepEqual(errors, [], 'no uncaught error');
   });
 } finally {
   client?.close();

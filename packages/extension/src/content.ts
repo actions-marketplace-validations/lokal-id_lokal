@@ -24,11 +24,35 @@ let enabled = true;
 const ours = new WeakSet<Event>();
 let lastComposer: HTMLElement | undefined;
 
+/**
+ * Set once the extension was updated, reloaded, or turned off while this page stayed open: this copy of the script
+ * can no longer reach the service worker, so it keeps holding personal data back and asks for a reload.
+ */
+let cutOff = false;
+
 function send<T>(request: Request): Promise<T> {
-  return chrome.runtime.sendMessage<T & { error?: string }>(request).then((response) => {
-    if (response && typeof response === 'object' && 'error' in response && response.error) throw new Error(response.error);
-    return response;
-  });
+  try {
+    if (!chrome.runtime?.id) throw new Error('Extension context invalidated.');
+    return chrome.runtime.sendMessage<T & { error?: string }>(request).then(
+      (response) => {
+        if (response && typeof response === 'object' && 'error' in response && response.error) throw new Error(response.error);
+        return response;
+      },
+      (error: unknown) => {
+        if (!chrome.runtime?.id) cutOff = true;
+        throw error;
+      },
+    );
+  } catch (error) {
+    // sendMessage throws instead of rejecting when the extension is gone.
+    cutOff = true;
+    return Promise.reject(error);
+  }
+}
+
+/** The message for a failed mask: a reload when the extension was updated under this page. */
+function failure(message: string): string {
+  return cutOff ? t.reload : message;
 }
 
 // --- settings and vault ----------------------------------------------------------------------------------------
@@ -187,7 +211,7 @@ window.addEventListener(
         insert(target, root, result.text);
         if (result.types.length) toast(t.masked(describe(result.types, lang)));
       })
-      .catch(() => toast(t.failed));
+      .catch(() => toast(failure(t.failed)));
   },
   true,
 );
@@ -294,7 +318,7 @@ function holdFiles(event: Event, files: FileList | null | undefined, redispatch?
       ours.add(again);
       target.dispatchEvent(again);
     },
-    () => toast(t.fileFailed),
+    () => toast(failure(t.fileFailed)),
   );
   return true;
 }
@@ -360,7 +384,7 @@ function guardSend(root: HTMLElement, event: Event): boolean {
       if (await replaceAll(root, result.text)) toast(t.maskedOnSend(describe(result.types, lang)));
       else toast(t.replaceFailed);
     })
-    .catch(() => toast(t.failed));
+    .catch(() => toast(failure(t.failed)));
   return true;
 }
 
