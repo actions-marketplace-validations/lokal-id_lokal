@@ -1,15 +1,19 @@
 """Optional NER for names that Samaran's rules do not know: ``pip install "lokal-id[ner]"``.
 
 Samaran finds a name from its label ("Nama:"), its place in a CSV or a form, a cue ("Pelanggan …", "a.n. …"), or a
-known given or family name. A name with none of these, in a sentence, is missed. ``NerNames`` adds a model that reads
-the sentence: ``cahya/bert-base-indonesian-NER`` (MIT), an IndoBERT fine-tuned for Indonesian NER, of which only the
-person spans are kept, and only those that pass the filters below.
+known given or family name. A name with none of these, in a sentence, is missed: in news, and most of all in chat
+("saya di chat sama rianto surya tadi pagi"). ``NerNames`` adds a model that reads the sentence, of which only the
+person spans are kept, and only those that pass the filters below. Two models, both MIT, both IndoBERT fine-tuned for
+Indonesian NER:
 
-Settings were chosen on development data only. On Samaran's held-out benchmark it raised names protected from 93.6% to
-98.1%, with no new false positive in 2,800 documents. On real news, where the rules alone find few names, it found 91.3%
-of the people in the idner-news-2k test set (rules alone: 21.6%), at 98.3% precision.
-The cost is the model: 440 MB, downloaded once from Hugging Face (or loaded from a folder), and about 20 ms per short
-document on a laptop CPU instead of 0.2 ms. It is off unless you pass it:
+- ``'gold'`` (the default): ``treamyracle/indobert-ner-gold``, IndoBERT-large. 1.3 GB, about 100 ms per short document
+  on a laptop CPU. On the held-out chat corpus it protects 89.3% of the names; on Samaran's held-out benchmark, 99.6%.
+- ``'fast'``: ``cahya/bert-base-indonesian-NER``, IndoBERT-base. 440 MB, about 30 ms per short document. On the same
+  data, 62.2% and 98.1%.
+
+Settings were chosen on development data only, and neither added a false positive in the benchmarks' trap documents.
+On real news (the idner-news-2k test set) they found 96.1% and 91.5% of the people, against 21.6% for the rules alone.
+The rules take 0.2 ms per document. NER is off unless you pass it:
 
     >>> from lokal.samaran import Samaran                                   # doctest: +SKIP
     >>> from lokal.samaran.ner import NerNames                              # doctest: +SKIP
@@ -30,16 +34,61 @@ from .detectors import _NOT_NAME, _TITLE_WORDS
 from .fields import field_type
 from .types import PiiMatch
 
-MODEL = 'cahya/bert-base-indonesian-NER'
-#: Hugging Face's safetensors conversion of the model (pull request 5): the same weights, without a pickle file.
-REVISION = '195cbbd70fa6b64c0965c5f7d3cb8758c93171ff'
-_FILES = ['config.json', 'special_tokens_map.json', 'tokenizer_config.json', 'vocab.txt', 'model.safetensors']
+#: The models ``NerNames(model=…)`` can load: Hugging Face id, pinned revision, and the files read from it.
+MODELS: dict[str, tuple[str, str, tuple[str, ...]]] = {
+    'gold': (
+        'treamyracle/indobert-ner-gold',
+        '014ef5da775cdc6ffea1bdcce8f5db2557791d99',
+        ('config.json', 'special_tokens_map.json', 'tokenizer.json', 'tokenizer_config.json', 'vocab.txt',
+         'model.safetensors'),
+    ),
+    'fast': (
+        'cahya/bert-base-indonesian-NER',
+        # Hugging Face's safetensors conversion of the model (pull request 5): the same weights, without a pickle file.
+        '195cbbd70fa6b64c0965c5f7d3cb8758c93171ff',
+        ('config.json', 'special_tokens_map.json', 'tokenizer_config.json', 'vocab.txt', 'model.safetensors'),
+    ),
+}
+DEFAULT_MODEL = 'gold'
+MODEL, REVISION, _ = MODELS[DEFAULT_MODEL]
 
-# Chat words and forms of address the model takes for names.
+# Chat words, slang, and forms of address the model takes for names, most of all in lower-case chat.
 _CHAT = frozenset((
     'kak', 'bu', 'pak', 'gan', 'sis', 'bro', 'min', 'mas', 'mbak', 'bang', 'dek', 'om', 'tante', 'hi', 'halo', 'hai',
     'sih', 'maka', 'ret',
+    # greetings, calls, and fillers
+    'woy', 'woi', 'oi', 'oy', 'hei', 'hey', 'hallo', 'helo', 'cuy', 'coy', 'bestie', 'beb', 'say', 'sayang', 'bos',
+    'boss', 'bund', 'bunda', 'ayah', 'mama', 'papa', 'mamah', 'papah', 'nak', 'dik', 'kang', 'teh', 'neng', 'akang',
+    'uda', 'uni', 'abang', 'kakak', 'adek', 'mba', 'mbok', 'pakde', 'bude', 'paklik', 'bulik', 'cak', 'ko',
+    'cik', 'ci', 'koh', 'ncek', 'engkoh', 'gais', 'guys', 'gaes', 'gengs', 'bray', 'brader', 'bruh', 'sob',
+    'wkwk', 'wkwkwk', 'haha', 'hahaha', 'hehe', 'hihi', 'xixi', 'awokwok', 'anjir', 'anjay', 'anjim', 'buset',
+    'astaga', 'astagfirullah', 'alhamdulillah', 'insyaallah', 'masyaallah', 'aamiin', 'amin', 'yaudah', 'yaudahlah',
+    'mantap', 'mantul', 'sip', 'siap', 'oke', 'okey', 'okay', 'ok', 'gas', 'gaskeun', 'santuy', 'santai', 'mager',
+    # abbreviations
+    'otw', 'btw', 'gpp', 'gapapa', 'gak', 'ga', 'nggak', 'enggak', 'kagak', 'gk', 'tdk', 'blm', 'udh', 'udah', 'sdh',
+    'yg', 'dgn', 'utk', 'krn', 'tp', 'tpi', 'sm', 'td', 'tadi', 'skrg', 'gmn', 'gimana', 'knp', 'kenapa', 'emg',
+    'emang', 'bgt', 'banget', 'aja', 'doang', 'kuy', 'yuk', 'cmiiw', 'imho', 'fyi', 'asap', 'thx', 'tq', 'makasih',
+    'trims', 'mksh', 'pls', 'plis', 'tolong', 'maaf', 'sorry', 'sori', 'dong', 'deh', 'kok', 'kan', 'lho', 'loh',
+    'nih', 'tuh', 'gitu', 'gini', 'gue', 'gua', 'gw', 'lu', 'lo', 'elu', 'elo', 'aku', 'kamu', 'kau', 'dia', 'ane',
+    'ente', 'saya', 'kita', 'kami', 'mereka', 'anda', 'admin', 'kurir', 'driver', 'cs', 'ka', 'kk',
 ))
+# Everyday verbs of chat, informal and plain, that the model takes for names in lower case ("nelpon", "nungguin").
+_INFORMAL = frozenset((
+    'nelpon', 'nelfon', 'telpon', 'telepon', 'telponan', 'nanya', 'nanyain', 'nyari', 'nyariin', 'nyampe', 'nyusul',
+    'nyuruh', 'nyetir', 'nunggu', 'nungguin', 'nemenin', 'nganter', 'nganterin', 'ngabarin', 'ngajak', 'ngasih',
+    'ngirim', 'ngomong', 'ngobrol', 'ngopi', 'ngantor', 'ngecek', 'nitip', 'titip', 'balikin', 'kabarin', 'beliin',
+    'bilangin', 'jemput', 'jemputin', 'nebeng', 'mampir', 'nongkrong', 'bales', 'balas', 'bilang', 'dateng', 'datang',
+    'pulang', 'pergi', 'makan', 'minum', 'tidur', 'mandi', 'kerja', 'belajar', 'main', 'liat', 'lihat', 'denger',
+    'ketemu', 'ketemuan', 'chat', 'chatting', 'japri', 'dm', 'wa', 'transfer', 'tf', 'bayar', 'kirim', 'kasih',
+    'tanya', 'hubungi', 'telat', 'izin', 'cuti', 'sakit', 'resign', 'lembur', 'piket', 'rapat', 'meeting',
+))
+# Informal verbs by their form: "nge-" ("ngeliat", "ngerjain") and the passive "di-…-in" ("dibeliin"). Not "ng-" or
+# "ny-" alone, nor "-in" alone: Ngurah, Nyoman, Ngadiman, Arifin, and Syamsudin are names.
+_INFORMAL_VERB = re.compile(r'^nge[a-z]{3,}$|^di[a-z]{3,}in$')
+# A letter repeated at the end of a chat word ("kakk", "makasihh").
+_STRETCHED = re.compile(r'([a-z])\1+$')
+#: The score a name written without capitals needs: the model reads lower case, but a capital letter is evidence too.
+LOWER_MIN_SCORE = 0.7
 # Police and military ranks, which news puts before a name ("Kombes Pol. …", "AKBP …").
 _RANKS = frozenset((
     'kombes', 'pol', 'akbp', 'akp', 'kompol', 'iptu', 'ipda', 'aipda', 'aiptu', 'bripka', 'brigadir', 'briptu',
@@ -47,6 +96,8 @@ _RANKS = frozenset((
     'brigjen', 'irjen', 'komjen', 'jenderal', 'mayjen', 'letjen', 'marsekal', 'laksamana', 'kolonel', 'letkol', 'mayor',
     'kapten', 'lettu', 'letda', 'serma', 'serka', 'kopda', 'prada', 'tni', 'polri',
 ))
+# Words in front of a name that are left out of it: ranks, titles, and forms of address ("mama rina", "ci lina").
+_LEADING = _RANKS | _TITLE_WORDS | _CHAT
 _REGION_PREFIX = re.compile(r'^(?:kabupaten|kota|kab\.?|provinsi)\s+')
 _CHUNK = 600
 _SENTENCE_START = re.compile(r'(?<=[.!?])\s+(?=["“A-Z])')
@@ -61,25 +112,57 @@ def _place_names() -> frozenset[str]:
     return _places
 
 
-def keep_name(value: str, score: float, min_score: float = 0.7) -> bool:
-    """Whether a person span from the model is kept: what the filters, tuned on the dev split, let through."""
+def keep_name(value: str, score: float, min_score: float = 0.7, min_lower_score: float = LOWER_MIN_SCORE) -> bool:
+    """Whether a person span from the model is kept: what the filters, tuned on the dev split, let through.
+
+    The model reads lower case (its tokenizer lowercases everything), so a name in chat ("sama rianto surya") gets the
+    same score as a capitalized one. A name not written with capitals must score ``min_lower_score``, as it has no
+    capital letter to back it, and must not be a chat word or an informal verb.
+    """
     value = value.strip(' .,:;\'"()')
     words = value.split()
     if score < min_score or not words or len(re.sub(r'[^A-Za-z]', '', value)) < 3:
         return False
-    # A name is written with capitals; lower-case names are the rules' job, where a cue says they are names.
-    if not all(w[0].isupper() for w in words if w[0].isalpha()):
+    if not _cased(value) and score < min_lower_score:
         return False
     # "NIK", "SD"; but a name the model is sure of may be initials, as news writes public figures ("SBY").
     if len(words) == 1 and value.isupper() and len(value) <= 4 and score < 0.9:
         return False
     low = [w.lower().strip('.,') for w in words]
-    if any(w in _NOT_NAME or w in _TITLE_WORDS or w in _CHAT or w in _RANKS for w in low):
+    # A chat word or verb is not a name in any case: at the start of a sentence ("Nitip ya") or in capitals too.
+    plain = [_STRETCHED.sub(r'\1', w) for w in low]
+    if any(w in _INFORMAL for w in low + plain):
+        return False
+    # By form only in lower case: "Ngesti" is a name.
+    if not _cased(value) and any(_INFORMAL_VERB.match(w) for w in low):
+        return False
+    if any(w in _NOT_NAME or w in _TITLE_WORDS or w in _CHAT or w in _RANKS for w in low + plain):
         return False
     if field_type('_'.join(low)) is not None:
         return False  # a column name
     places = _place_names()
     return ' '.join(low) not in places
+
+
+def _cased(value: str) -> bool:
+    """Whether the value is written as a name: every word capitalized (in capitals too, as on an ID card)."""
+    words = [w for w in value.split() if w[0].isalpha()]
+    return bool(words) and all(w[0].isupper() for w in words)
+
+
+def _in_prose(text: str, start: int, end: int) -> bool:
+    """Whether a lower-case word sits in a sentence, not in a CSV header, a ``key=value``, or a JSON key, where a
+    lower-case word is a field name ("nopol,pemilik", "retry=1")."""
+    line_start = text.rfind('\n', 0, start) + 1
+    line_end = text.find('\n', end)
+    line = text[line_start : line_end if line_end >= 0 else len(text)]
+    after = text[end : end + 2].lstrip(' ')
+    before = text[max(0, start - 2) : start].rstrip(' ')
+    if after[:1] in ('=', '"', '_', '@') or before[-1:] in ('=', '"', '_', '.', '/', '@'):
+        return False
+    if after[:1] == '.' and after[1:2].isalnum():
+        return False  # "budi.susanto@…"
+    return len(re.findall(r'[^\W\d_]{2,}', line)) >= 3 and ' ' in line.strip()
 
 
 def _chunks(text: str) -> list[tuple[int, int]]:
@@ -108,14 +191,17 @@ def _chunks(text: str) -> list[tuple[int, int]]:
 class NerNames:
     """Finds people's names with a local NER model, for ``Samaran(ner=…)`` and ``detect_pii(…, ner=…)``.
 
-    ``model_path`` loads the model from a folder (offline, or an approved copy); otherwise it is downloaded once from
-    Hugging Face at the pinned ``REVISION``, without pickle files. ``min_score`` is the model's confidence below which
-    a name is dropped. Needs ``pip install "lokal-id[ner]"`` (transformers and PyTorch).
+    ``model`` is ``'gold'`` (the default, most accurate) or ``'fast'`` (three times faster, a third of the size); see
+    ``MODELS``. ``model_path`` loads the model from a folder instead (offline, or an approved copy); otherwise it is
+    downloaded once from Hugging Face at its pinned revision, without pickle files. ``min_score`` is the model's
+    confidence below which a name is dropped. Needs ``pip install "lokal-id[ner]"`` (transformers and PyTorch).
     """
 
     __slots__ = ('_pipeline', 'min_score')
 
-    def __init__(self, *, model_path: Optional[str] = None, min_score: float = 0.7) -> None:
+    def __init__(self, *, model: str = DEFAULT_MODEL, model_path: Optional[str] = None, min_score: float = 0.7) -> None:
+        if model not in MODELS:
+            raise ValueError(f'model must be one of {", ".join(map(repr, MODELS))}, not {model!r}')
         try:
             from huggingface_hub import snapshot_download  # type: ignore[import-not-found,unused-ignore]
             from transformers import (  # type: ignore[import-not-found,unused-ignore]
@@ -125,16 +211,17 @@ class NerNames:
             )
         except ImportError as e:  # pragma: no cover - depends on the extra
             raise ImportError('NerNames needs the NER extra: pip install "lokal-id[ner]"') from e
-        path = model_path or snapshot_download(MODEL, revision=REVISION, allow_patterns=_FILES)
+        repo, revision, files = MODELS[model]
+        path = model_path or snapshot_download(repo, revision=revision, allow_patterns=list(files))
         tokenizer = AutoTokenizer.from_pretrained(path)
-        model = AutoModelForTokenClassification.from_pretrained(path, use_safetensors=True)
-        # This tokenizer's config leaves its maximum length unset, so long text would reach the model in one piece and
+        weights = AutoModelForTokenClassification.from_pretrained(path, use_safetensors=True)
+        # These tokenizers' configs leave the maximum length unset, so long text would reach the model in one piece and
         # fail past 512 tokens; with the limit set, the pipeline reads it in overlapping windows (stride).
-        limit = int(getattr(model.config, 'max_position_embeddings', 512))
+        limit = int(getattr(weights.config, 'max_position_embeddings', 512))
         if not tokenizer.model_max_length or tokenizer.model_max_length > limit:
             tokenizer.model_max_length = limit
         self._pipeline: Callable[..., Any] = pipeline(
-            'token-classification', model=model, tokenizer=tokenizer, aggregation_strategy='simple', stride=64,
+            'token-classification', model=weights, tokenizer=tokenizer, aggregation_strategy='simple', stride=64,
             device=-1,
         )
         self.min_score = min_score
@@ -168,16 +255,18 @@ class NerNames:
                 text[end].isalpha() or (text[end] in "'’" and end + 1 < len(text) and text[end + 1].isalpha())
             ):
                 end += 1
-            # A rank or title in front stays: "Kombes Pol. Ronni" masks the name, not the rank.
+            # A rank, title, or form of address in front stays: "Kombes Pol. Ronni" masks the name, not the rank.
             while True:
                 head = re.match(r"[A-Za-z]+\.?\s+", text[start:end])
-                if not head or head.group(0).strip().rstrip('.').lower() not in _RANKS | _TITLE_WORDS:
+                if not head or head.group(0).strip().rstrip('.').lower() not in _LEADING:
                     break
                 start += head.end()
             value = text[start:end]
-            if keep_name(value, float(r['score']), self.min_score):
+            # A lower-case name counts in a sentence only: in a CSV header or a key=value it is a field name.
+            in_place = _cased(value) or _in_prose(text, start, end)
+            if in_place and keep_name(value, float(r['score']), self.min_score):
                 out.append(PiiMatch('NAME', start, end, value, 'medium'))
         return out
 
 
-__all__ = ['MODEL', 'REVISION', 'NerNames', 'keep_name']
+__all__ = ['DEFAULT_MODEL', 'MODEL', 'MODELS', 'REVISION', 'NerNames', 'keep_name']

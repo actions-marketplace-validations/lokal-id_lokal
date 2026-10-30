@@ -6923,6 +6923,48 @@
   ]
  },
  {
+  "text": "allow-list dengan RegExp global berlaku untuk setiap kemunculan",
+  "matches": []
+ },
+ {
+  "text": "HP utama 0812-3456-7890; HP cadangan 0812-3456-7890",
+  "matches": [
+   [
+    "PHONE",
+    9,
+    23,
+    "0812-3456-7890",
+    "high"
+   ],
+   [
+    "PHONE",
+    37,
+    51,
+    "0812-3456-7890",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "HP utama 0812-3456-7890; HP cadangan 0812-3456-7890",
+  "matches": [
+   [
+    "PHONE",
+    9,
+    23,
+    "0812-3456-7890",
+    "high"
+   ],
+   [
+    "PHONE",
+    37,
+    51,
+    "0812-3456-7890",
+    "high"
+   ]
+  ]
+ },
+ {
   "text": "kolom nama dan alamat di CSV dikenali dari header-nya",
   "matches": []
  },
@@ -14434,6 +14476,70 @@
  },
  {
   "text": "../../etc/passwd",
+  "matches": []
+ },
+ {
+  "text": "symlink di dalam root yang menunjuk ke luar root ditolak, untuk dibaca maupun ditulis",
+  "matches": []
+ },
+ {
+  "text": "lokal-luar-",
+  "matches": []
+ },
+ {
+  "text": "rahasia.txt",
+  "matches": []
+ },
+ {
+  "text": "OUTSIDE_CANARY_NOT_PII_7F31",
+  "matches": []
+ },
+ {
+  "text": "tautan",
+  "matches": []
+ },
+ {
+  "text": "junction",
+  "matches": []
+ },
+ {
+  "text": "read_file_masked",
+  "matches": []
+ },
+ {
+  "text": "tautan/rahasia.txt",
+  "matches": []
+ },
+ {
+  "text": "scan_pii",
+  "matches": []
+ },
+ {
+  "text": "tautan/rahasia.txt",
+  "matches": []
+ },
+ {
+  "text": "write_file_unmasked",
+  "matches": []
+ },
+ {
+  "text": "tautan/baru.txt",
+  "matches": []
+ },
+ {
+  "text": "x",
+  "matches": []
+ },
+ {
+  "text": "OUTSIDE_CANARY",
+  "matches": []
+ },
+ {
+  "text": "baru.txt",
+  "matches": []
+ },
+ {
+  "text": "tautan",
   "matches": []
  },
  {

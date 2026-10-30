@@ -55,4 +55,4 @@ A Python backend that masks prompts should cap their size, as the proxy's caller
 
 ## Optional NER model
 
-`lokal.samaran.ner.NerNames` costs about 20 ms per short document in batches and 42 ms one at a time, on CPU. That is about 4,600 characters a second, against Samaran's rules at about 0.2 ms per document. It also takes 8 seconds to load. Use it where recall on names matters more than speed: batch jobs, exports, and data sent to a vendor. Do not put it on the guard's path.
+`lokal.samaran.ner.NerNames(model='fast')` costs about 20 ms per short document in batches and 42 ms one at a time, on CPU. That is about 4,600 characters a second, against Samaran's rules at about 0.2 ms per document. It also takes 8 seconds to load. The default `gold` model is about three times slower: about 100 ms per short chat message and 110 ms per news sentence, measured one at a time on the same CPU. Use it where recall on names matters more than speed: batch jobs, exports, and data sent to a vendor. Do not put it on the guard's path.

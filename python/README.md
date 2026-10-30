@@ -94,7 +94,7 @@ To cover every LLM call of an app without calling `mask()` and `unmask()` at eac
 
 ### Names the rules do not know: an optional NER model
 
-Samaran finds a name from its label, its column, a cue ("Pelanggan …", "a.n. …"), or a known Indonesian given or family name. A name with none of these in a sentence slips through. For batch jobs where that matters, add a local NER model:
+Samaran finds a name from its label, its column, a cue ("Pelanggan …", "a.n. …", "pak …"), or a known Indonesian given or family name. A name with none of these slips through, and in chat that is most names: "saya di chat sama rianto surya tadi pagi", "ada yang ngeliat minan minanto ga ya". For batch jobs where that matters, add a local NER model:
 
 ```sh
 pip install "lokal-id[ner]"     # transformers and PyTorch: large
@@ -104,23 +104,31 @@ pip install "lokal-id[ner]"     # transformers and PyTorch: large
 from lokal.samaran import Samaran
 from lokal.samaran.ner import NerNames
 
-ner = NerNames()                          # downloads the model once; NerNames(model_path=...) loads an approved copy
+ner = NerNames()                  # downloads the model once; NerNames(model_path=...) loads an approved copy
 samaran = Samaran(ner=ner)
-samaran.mask('Tadi sore Raditya Wiraguna datang ke kantor cabang.').text
-# 'Tadi sore [NAME_1] datang ke kantor cabang.'
+samaran.mask('td pagi rianto surya nelpon, katanya mau resign').text
+# 'td pagi [NAME_1] nelpon, katanya mau resign'
 ```
 
-- **The model.** [cahya/bert-base-indonesian-NER](https://huggingface.co/cahya/bert-base-indonesian-NER) (MIT), an IndoBERT fine-tuned for Indonesian NER. Only its person names are used, and only those that pass filters for chat words, field names, abbreviations, and place names. It is read from Hugging Face's safetensors conversion at a pinned revision, never from a pickle file.
-- **Privacy.** It runs on your machine, and the text never leaves it. The only network access is downloading the model, once.
-- **Benchmark.** Settings were chosen on development data only, and each result below is on data that played no part in choosing them:
-  - On Samaran's held-out benchmark, names protected went from 93.6% to 98.1% and all values from 97.2% to 98.7%, with no false positive in 2,800 documents.
-  - On real news, names are a different problem: most are public figures in sentences with no cue the rules know. In the test set of [idner-news-2k](https://github.com/khairunnisaor/idner-news-2k) (509 annotated news sentences, 515 people), the rules alone found 21.6% of the people; with the model they found 91.3%, at 98.3% precision.
-  - In 2,277 articles from 14 Indonesian news sites, published in October 2026 after the model was trained, the 2,250 speakers named after "kata", "ujar", or "sebut" were found 18.5% of the time by the rules and 90.6% with the model. By section, that ranges from 83.7% (technology) to 97.2% (entertainment). The speakers were labelled automatically, and in a sample of the ones missed, more than half were job titles or organizations rather than people, so 90.6% is a lower bound.
-  - In a random sample of 300 of the model's own detections in those articles, 285 (95%) were people. The other 15 were organizations, media, and clubs (8), brands (3), a place, and names of things that are not people.
-  - The news texts were processed on one machine for the test, and only these numbers were kept.
-- **Merging.** The model's matches merge with the rules' matches, and the rules win where they overlap. A name the model cut inside a word is masked whole, and a rank in front of it ("Kombes Pol.") is left out.
-- **Long text.** The model reads each line, and a long line in passages of about 600 characters cut at sentence ends. In one long passage it starts to miss names it finds when they stand alone, and past 512 tokens it could not read the text at all.
-- **Cost.** About 20 to 50 ms per short document on a laptop CPU, against 0.2 ms for the rules, plus 440 MB of model and 8 seconds to load. Use it for exports, batch masking, and data for vendors, not per keystroke. The TypeScript package, the guard, and the proxy do not use it.
+There are two models. Both are IndoBERT fine-tuned for Indonesian NER, MIT-licensed, and read from safetensors at a pinned revision, never from a pickle file:
+
+| | `NerNames()`, `model='gold'` | `NerNames(model='fast')` | Rules alone |
+|---|---|---|---|
+| Model | [treamyracle/indobert-ner-gold](https://huggingface.co/treamyracle/indobert-ner-gold) (IndoBERT-large) | [cahya/bert-base-indonesian-NER](https://huggingface.co/cahya/bert-base-indonesian-NER) (IndoBERT-base) | |
+| Names in chat (held-out [chat corpus](../evals/chat/README.md)) | **89.3%** | 62.2% | 19.5% |
+| Names in lower-case chat | **89.4%** | 59.5% | 11.1% |
+| People in news ([idner-news-2k](https://github.com/khairunnisaor/idner-news-2k) test set) | **96.1%**, 99.0% precision | 91.5%, 97.7% precision | 21.6% |
+| Names in Samaran's held-out benchmark | **99.6%** | 98.1% | 93.6% |
+| False positives in the benchmarks' trap documents | 0 | 0 | 0 |
+| Size, time per short document on a laptop CPU | 1.3 GB, about 100 ms | 440 MB, about 30 ms | 0.2 ms |
+
+- **Settings.** Thresholds and filters were chosen on development data only. Every number above is on data that played no part in choosing them.
+- **Filters.** Only the model's person names are used, and only those that pass filters for chat words and slang, informal verbs ("nungguin", "dibeliin"), field names, abbreviations, and place names. The model reads lower case, so a name in lower-case chat counts, but only in a sentence: not in a CSV header, a `key=value`, or an e-mail address.
+- **Real news.** In 2,277 articles from 14 Indonesian news sites, published in October 2026, the 2,250 speakers named after "kata", "ujar", or "sebut" were found 18.5% of the time by the rules and 90.6% with the fast model. That ranges from 83.7% (technology) to 97.2% (entertainment). The speakers were labelled automatically, and in a sample of the ones missed, more than half were job titles or organizations rather than people, so 90.6% is a lower bound. In a random sample of 300 of the fast model's detections there, 285 (95%) were people. The news texts were processed on one machine for the test, and only these numbers were kept.
+- **Privacy.** The model runs on your machine, and the text never leaves it. The only network access is downloading the model, once.
+- **Merging.** The model's matches merge with the rules' matches, and the rules win where they overlap. A name the model cut inside a word is masked whole, and a rank or form of address in front of it ("Kombes Pol.", "mama") is left out.
+- **Long text.** The model reads each line, and a long line in passages of about 600 characters cut at sentence ends. In one long passage it starts to miss names it finds when they stand alone.
+- **Where to use it.** Exports, batch masking, and data for vendors, not per keystroke. The TypeScript package, the guard, and the proxy do not use it.
 
 ### Logging
 

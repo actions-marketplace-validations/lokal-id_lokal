@@ -15,7 +15,7 @@ Lokal mendeteksi dan menyamarkan data pribadi secara lokal. Lokal tidak punya se
 | `lokal-mcp kembaran`, `anonymize_file` | Tidak ada. | Tidak ada. Hasilnya berisi orang-orang karangan. |
 | Audit log, `lokal-mcp audit` | Tidak ada. | Tidak ada nilai. Tiap baris berisi jumlah per jenis, aksi, dan file atau path API. |
 | **Samaran Proxy** | Mendengarkan di `127.0.0.1:8787`. Request yang sudah **disamarkan** dikirim ke upstream yang Anda atur (bawaannya OpenAI dan Anthropic). Request berisi jenis `route` dikirim **tanpa disamarkan** ke endpoint lokal di `.samaran.json`, dan tidak ke tempat lain. | Di memori, untuk satu request. Nilai dipulihkan di jawaban lalu dilupakan. |
-| Model NER opsional (`lokal-id[ner]`, Python) | Mengunduh model dari Hugging Face sekali, di revisi yang di-pin, kecuali Anda memuatnya dari folder dengan `model_path`. Setelah itu berjalan lokal. | Di proses Anda, seperti bagian lain library Python. |
+| Model NER opsional (`lokal-id[ner]`, Python) | Mengunduh model dari Hugging Face sekali (1,3 GB untuk `gold`, 440 MB untuk `fast`), di revisi yang di-pin, kecuali Anda memuatnya dari folder dengan `model_path`. Setelah itu berjalan lokal. | Di proses Anda, seperti bagian lain library Python. |
 | Middleware Vercel AI SDK | Tidak membuat koneksi sendiri. Panggilan model dari aplikasi membawa teks yang sudah disamarkan. | Di memori, untuk satu panggilan. |
 | Ekstensi browser | Tidak ada. Ekstensi tidak membuat request jaringan. Situs AI-lah yang mengirim pesan Anda, setelah disamarkan oleh ekstensi. Izinnya hanya `storage` dan `activeTab`, dan ekstensi hanya berjalan di situs AI yang tercantum di manifest-nya. | Di session storage browser, hanya di memori, sampai browser ditutup atau Anda memilih **Lupakan semua data asli**. |
 

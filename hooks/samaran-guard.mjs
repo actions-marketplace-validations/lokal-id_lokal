@@ -2387,7 +2387,7 @@ function partialMask(type, value) {
 }
 
 // packages/mcp/src/files.ts
-import { closeSync, existsSync, openSync, readdirSync, readFileSync, readSync, statSync } from "node:fs";
+import { closeSync, existsSync, openSync, readdirSync, readFileSync, readSync, realpathSync, statSync } from "node:fs";
 import path from "node:path";
 
 // packages/mcp/src/xlsx.ts
