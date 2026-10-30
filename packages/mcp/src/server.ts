@@ -38,8 +38,10 @@ import {
   searchWilayah,
   wilayahName,
 } from '@lokal-id/core/wilayah';
+import { countMatches, writeAudit } from './audit.ts';
 import {
-  detectConfigured, loadConfig, loadDocument, loadIgnore, resolveInRoot, toPosix, walkFiles, type Document, type SamaranConfig,
+  allowedTypes, detectConfigured, loadConfig, loadDocument, loadIgnore, resolveInRoot, toPosix, underPolicy, walkFiles,
+  type Document, type SamaranConfig,
 } from './files.ts';
 import { anonymizeFiles, KEMBARAN_NOTE } from './kembaran-files.ts';
 
@@ -50,7 +52,7 @@ const INSTRUCTIONS = `Lokal makes you Indonesia-ready.
 
 Data tools (use them instead of guessing): parse_nik, validate_npwp, parse_phone, format_rupiah, parse_rupiah, search_wilayah, list_wilayah, lookup_kode_pos, parse_alamat, list_holidays, working_days, parse_qris, set_qris_amount. Region lists, kode pos, holidays, NIK structure, Rupiah formatting, and QRIS checksums are easy to get subtly wrong from memory.
 
-Privacy tools (Samaran): when a task touches real user data — logs, CSV/Excel exports, database dumps, support tickets, seed files from production — run scan_pii first, then read it with read_file_masked instead of reading the raw file (also never cat/head/type it in a shell). Identifiers (NIK, KK, NPWP, phone, bank account, BPJS, passport …), names, addresses, birth dates, and the UU PDP categories (religion, marital status, health, finances, criminal records, biometrics) come back as stable placeholders like [NIK_1]. Work with the placeholders; never ask the user for the real values. parse_alamat, parse_nik, parse_phone, and validate_npwp also take those placeholders ([ADDRESS_3], [NIK_1]): they read the real value on the user's machine and return the regions, validity, and operator, with anything about the person (street, RT/RW, birth date) as placeholders. When output must contain the real data (a cleaned CSV, a report), write it with write_file_unmasked, which restores the placeholders on the user's machine. To copy production data to staging, build seeders, or share it with a vendor, use anonymize_file: it writes a copy where every person is a realistic stand-in. If scan_pii reports files it could not scan, tell the user; do not treat them as clean.`;
+Privacy tools (Samaran): when a task touches real user data — logs, CSV/Excel exports, database dumps, support tickets, seed files from production — run scan_pii first, then read it with read_file_masked instead of reading the raw file (also never cat/head/type it in a shell). Identifiers (NIK, KK, NPWP, phone, bank account, BPJS, passport …), names, addresses, birth dates, and the UU PDP categories (religion, marital status, health, finances, criminal records, biometrics) come back as stable placeholders like [NIK_1]. Work with the placeholders; never ask the user for the real values. parse_alamat, parse_nik, parse_phone, and validate_npwp also take those placeholders ([ADDRESS_3], [NIK_1]): they read the real value on the user's machine and return the regions, validity, and operator, with anything about the person (street, RT/RW, birth date) as placeholders. When output must contain the real data (a cleaned CSV, a report), write it with write_file_unmasked, which restores the placeholders on the user's machine. To copy production data to staging, build seeders, or share it with a vendor, use anonymize_file: it writes a copy where every person is a realistic stand-in. If scan_pii reports files it could not scan, tell the user; do not treat them as clean. If read_file_masked refuses a file because of the project's policy, tell the user and do not read it another way. When the task with real data is done, call clear_vault so this session forgets the values.`;
 
 function json(value: unknown) {
   return { content: [{ type: 'text' as const, text: JSON.stringify(value, null, 2) }] };
@@ -105,14 +107,29 @@ export function createServer(
   } catch (e) {
     configError = `${(e as Error).message} Fix .samaran.json, then restart the MCP server.`;
   }
-  const samaran = new Samaran({ custom: config.custom, allow: config.allow });
+  const newVault = () => new Samaran({ custom: config.custom, allow: config.allow, exclude: allowedTypes(config) });
+  let samaran = newVault();
+  const audit = (action: string, what: string, extra: { file?: string; counts?: Record<string, number>; reason?: string; values?: number } = {}) =>
+    writeAudit(config.audit, { source: 'mcp', action, what, ...extra });
+  // A session that runs for days should not keep real values that long: forgotten after this many minutes unused.
+  const ttlMinutes = Number(process.env.LOKAL_VAULT_TTL_MINUTES) || config.vaultTtlMinutes;
+  let lastUse = Date.now();
+  /** The session's vault; a new, empty one once the old one went unused for longer than the TTL. */
+  const vault = (): Samaran => {
+    if (ttlMinutes && samaran.size && Date.now() - lastUse > ttlMinutes * 60_000) {
+      audit('forgot', 'vault', { reason: `unused for more than ${ttlMinutes} minutes`, values: samaran.size });
+      samaran = newVault();
+    }
+    lastUse = Date.now();
+    return samaran;
+  };
   const isIgnored = loadIgnore(root);
   const readOnly = { readOnlyHint: true, openWorldHint: false } as const;
   const inRoot = (p: string) => resolveInRoot(root, p);
   // A placeholder from read_file_masked stands for a value only this server knows. The data tools below work on the
   // real value, and what they say about the person comes back as placeholders too, so the model still sees none of it.
   const fromVault = (input: string) => {
-    const value = samaran.unmask(input);
+    const value = vault().unmask(input);
     return value === input ? undefined : value;
   };
   const MASKED_NOTE =
@@ -142,8 +159,8 @@ export function createServer(
         province: r.province,
         regency: r.regency,
         district: r.district,
-        gender: r.gender && samaran.placeholder('GENDER', r.gender),
-        birthDate: r.birthDate && samaran.placeholder('BIRTH_DATE', r.birthDate),
+        gender: r.gender && vault().placeholder('GENDER', r.gender),
+        birthDate: r.birthDate && vault().placeholder('BIRTH_DATE', r.birthDate),
         note: MASKED_NOTE,
       });
     },
@@ -341,9 +358,9 @@ export function createServer(
       if (real === undefined) return json(parseAlamat(address));
       // The regions are public; the street, house number, and RT/RW narrow it down to a household.
       const r = parseAlamat(real);
-      const street = r.street && samaran.placeholder('ADDRESS', r.street);
-      const rt = r.rt && samaran.placeholder('ADDRESS', `RT ${r.rt}`);
-      const rw = r.rw && samaran.placeholder('ADDRESS', `RW ${r.rw}`);
+      const street = r.street && vault().placeholder('ADDRESS', r.street);
+      const rt = r.rt && vault().placeholder('ADDRESS', `RT ${r.rt}`);
+      const rw = r.rw && vault().placeholder('ADDRESS', `RW ${r.rw}`);
       let formatted = r.formatted;
       if (formatted && r.street && street) formatted = formatted.replace(r.street, street);
       if (formatted && (r.rt || r.rw)) {
@@ -553,8 +570,8 @@ export function createServer(
         let slice = lines.slice(start_line - 1, start_line - 1 + max_lines).join('\n');
         const withHeader = tabular && start_line > 1;
         if (withHeader) slice = `${lines[0]}\n${slice}`;
-        for (const t of slice.match(/\[[A-Z_]+_\d+\]/g) ?? []) if (samaran.unmask(t) !== t) clashes.add(t);
-        let { text: masked, matches } = samaran.mask(slice);
+        for (const t of slice.match(/\[[A-Z_]+_\d+\]/g) ?? []) if (vault().unmask(t) !== t) clashes.add(t);
+        let { text: masked, matches } = vault().mask(slice);
         if (withHeader) masked = masked.slice(masked.indexOf('\n') + 1);
         for (const m of matches) all.push(m);
         const end = Math.min(lines.length, start_line - 1 + max_lines);
@@ -568,6 +585,15 @@ export function createServer(
         }
       }
       const rel = toPosix(path.relative(root, abs));
+      const blocked = underPolicy(config, all, ['block']);
+      if (blocked.size) {
+        const types = [...blocked].map(([t, n]) => `${t}×${n}`).join(', ');
+        audit('blocked', 'read_file_masked', { file: rel, counts: countMatches(all), reason: `policy blocks ${[...blocked.keys()].join(', ')}` });
+        return fail(
+          `${target} holds personal data that the project's policy in .samaran.json does not let reach the model, even masked (${types}). It was not read. Tell the user; do not read it another way.`,
+        );
+      }
+      audit('masked', 'read_file_masked', { file: rel, counts: countMatches(all) });
       const what =
         doc.kind === 'text'
           ? textRange
@@ -612,10 +638,15 @@ export function createServer(
       if (existsSync(abs) && !overwrite) return fail(`${target} already exists. Pass overwrite: true to replace it.`);
 
       const placeholders = content.match(/\[[A-Z_]+_\d+\]/g) ?? [];
-      const unknown = [...new Set(placeholders.filter((p) => samaran.unmask(p) === p))];
-      const restoredText = samaran.unmask(content);
+      const unknown = [...new Set(placeholders.filter((p) => vault().unmask(p) === p))];
+      const restoredText = vault().unmask(content);
       mkdirSync(path.dirname(abs), { recursive: true });
       writeFileSync(abs, restoredText, 'utf8');
+      const restored = placeholders.filter((p) => !unknown.includes(p));
+      audit('restored', 'write_file_unmasked', {
+        file: toPosix(path.relative(root, abs)),
+        counts: countMatches(restored.map((p) => ({ type: p.slice(1, p.lastIndexOf('_')) }))),
+      });
       return json({
         wrote: toPosix(path.relative(root, abs)),
         bytes: Buffer.byteLength(restoredText),
@@ -652,6 +683,9 @@ export function createServer(
         inputs = paths.map(inRoot);
         out = inRoot(output);
         const files = anonymizeFiles(inputs, out, { keep, keepBirthDate: keep_birth_date, secret, overwrite, custom: config.custom });
+        for (const f of files) {
+          audit('anonymized', 'anonymize_file', { file: toPosix(path.relative(root, f.from)), counts: f.replaced as Record<string, number> });
+        }
         return json({
           files: files.map((f) => ({ from: toPosix(path.relative(root, f.from)), to: toPosix(path.relative(root, f.to)), replaced: f.replaced })),
           note: KEMBARAN_NOTE,
@@ -659,6 +693,23 @@ export function createServer(
       } catch (e) {
         return fail((e as Error).message);
       }
+    },
+  );
+
+  server.registerTool(
+    'clear_vault',
+    {
+      title: 'Forget the masked values',
+      description:
+        'Forget every real value behind the placeholders this session gave out. Afterwards write_file_unmasked can no longer restore them, and reading a file again gives new placeholders. Use it when a task with real data is done, or when the user asks to forget the data.',
+      inputSchema: {},
+      annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
+    },
+    async () => {
+      const forgot = samaran.size;
+      samaran = newVault();
+      audit('forgot', 'clear_vault', { values: forgot });
+      return json({ forgot, note: 'Placeholders from earlier in this session no longer stand for anything; read the files again if you need them.' });
     },
   );
 

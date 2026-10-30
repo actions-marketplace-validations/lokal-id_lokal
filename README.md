@@ -306,6 +306,31 @@ claude = Anthropic(base_url='http://127.0.0.1:8787')   # Messages
 
 Tested end to end with Claude Code itself running through it: the model only ever saw placeholders, and the files it wrote with its tools had the real values.
 
+### Policy, local routing, and the audit log
+
+Masking is the default for every type. In `.samaran.json` a team can choose another action per type, or per custom rule label:
+
+```json
+{
+  "policy": { "HEALTH": "block", "FINANCIAL": "allow", "PASSPORT": "route" },
+  "route": { "openai": "http://127.0.0.1:11434/v1", "model": "llama3.2" },
+  "audit": true,
+  "vaultTtlMinutes": 60
+}
+```
+
+| Action | Proxy | MCP file tools | Guard |
+|---|---|---|---|
+| `mask` (default) | masked, restored in the answer | placeholders | blocks identifiers, health, criminal, and biometric data, or 3+ values |
+| `allow` | the model sees it | not masked | not counted |
+| `block` | the request is refused (HTTP 403) | `read_file_masked` refuses the file | one value is enough to block |
+| `route` | sent as it is to the local model in `route` instead of the cloud | masked | one value is enough to block |
+
+- **Routing** keeps sensitive requests on your own hardware: with `route.openai` pointing at Ollama, a request with a passport number goes there unmasked, with `route.model` in place of the model the app asked for. It never reaches the cloud, and the cloud API key is not sent with it (`LOKAL_ROUTE_API_KEY` is, if set). A request to an API with no local endpoint in `route` is refused rather than sent to the cloud.
+- **Audit log**: `"audit": true` appends one JSON line per decision to `.lokal/audit.jsonl` (or a path you give): the source (proxy, MCP, guard), the action (masked, blocked, routed, refused, restored, anonymized, forgot), the file or API path, and counts per type, never a value. Lokal creates `.lokal/` with a `.gitignore`. `lokal-mcp audit [--since 7d] [--json]` summarizes it.
+- **Vault**: the MCP server forgets every real value behind its placeholders after `vaultTtlMinutes` without use (or `LOKAL_VAULT_TTL_MINUTES`), and on the `clear_vault` tool.
+- `lokal-mcp scan` ignores the policy: what may reach a model and what may enter the repository are different questions.
+
 ### Samaran for the Vercel AI SDK: masking inside the app
 
 Where the proxy cannot run, such as serverless and edge functions, or with APIs it does not speak, such as Gemini's native API and Bedrock, wrap the model instead. The middleware does the same work in-process, for every provider the [AI SDK](https://ai-sdk.dev) supports:
@@ -452,6 +477,7 @@ Found 2 personal data value(s) in 1 file(s).
 | `read_file_masked` | Read a file, including `.xlsx` sheets, `.docx` documents (text and tables), and PDFs (page text, tables, and filled-in form fields), with personal data replaced by stable placeholders |
 | `write_file_unmasked` | Write results with placeholders restored, on your machine |
 | `anonymize_file` | Copy dumps and exports with realistic stand-ins for every person (Kembaran), returning only counts |
+| `clear_vault` | Forget every real value behind this session's placeholders |
 
 The data tools also work on masked data. `parse_alamat`, `parse_nik`, `parse_phone`, and `validate_npwp` take a placeholder from `read_file_masked`, such as `[ADDRESS_3]` or `[NIK_1]`, and read the real value on your machine. The model gets the kelurahan, kecamatan, kota, and their codes, or whether a NIK or number is valid; the street, RT/RW, and birth date come back as new placeholders, which `write_file_unmasked` restores. An agent can clean a customer address column without seeing any address.
 

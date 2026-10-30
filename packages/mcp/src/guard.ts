@@ -22,11 +22,12 @@
 // more files than a search checks, and a check that runs too long.
 import { existsSync, statSync } from 'node:fs';
 import path from 'node:path';
-import { partialMask, type PiiMatch, type PiiType } from '@lokal-id/core';
+import { partialMask, PII_TYPES, type PiiMatch, type PiiType } from '@lokal-id/core';
 import {
-  detectConfigured, GUARD_MAX_ZIP_BYTES, GUARD_SAMPLE_BYTES, globToRegExp, loadConfig, loadDocument, loadIgnore, walkFiles,
-  type Document, type SamaranConfig,
+  detectConfigured, GUARD_MAX_ZIP_BYTES, GUARD_SAMPLE_BYTES, globToRegExp, loadConfig, loadDocument, loadIgnore, policyFor,
+  walkFiles, type Document, type SamaranConfig,
 } from './files.ts';
+import { countMatches, writeAudit } from './audit.ts';
 import { dataReadsInCommand, inlineCodeReads, SHELL_DATA_FILE } from './shell-reads.ts';
 
 // One of these is enough to hold a prompt or a file back: identity numbers, and labeled sensitive data.
@@ -140,7 +141,8 @@ function verdict(texts: string[]): PiiMatch[] | undefined {
 }
 
 function verdictOf(found: PiiMatch[]): PiiMatch[] | undefined {
-  const strict = found.some((m) => STRICT.includes(m.type));
+  // What the project's policy blocks or keeps local is held back like an identity number: one is enough.
+  const strict = found.some((m) => STRICT.includes(m.type) || ['block', 'route'].includes(policyFor(config, m)));
   return strict || found.length >= BULK_THRESHOLD ? found : undefined;
 }
 
@@ -182,8 +184,8 @@ let deadline = Infinity;
 const outOfTime = () => strictMode() && Date.now() > deadline;
 
 /** What the guard does with a prompt or tool call: block it (the message goes to Claude), or ask the user. */
-export type Verdict = { action: 'block' | 'ask'; message: string };
-const block = (message: string): Verdict => ({ action: 'block', message });
+export type Verdict = { action: 'block' | 'ask'; message: string; counts?: Record<string, number> };
+const block = (message: string, found?: PiiMatch[]): Verdict => ({ action: 'block', message, ...(found ? { counts: countMatches(found) } : {}) });
 
 /** Strict mode's answer to a tool call the guard could not check in full. */
 function uncheckedBlock(what: string, why: string[]): Verdict {
@@ -249,6 +251,7 @@ function readTool(
         'Write results that need the real values with `write_file_unmasked`.',
         'If the user confirms the file only holds fake data, they can add it to .samaranignore.',
       ].join(' '),
+      found,
     );
   }
   if (doc.kind === 'sheets' && doc.unscanned) return uncheckedRead(shownAs, `hanya terbaca sebagian (${doc.unscanned})`, doc.unscanned);
@@ -297,7 +300,7 @@ function shellTool(command: string, cwd: string, powershell: boolean, ignored: (
     'To look at the data, use the `read_file_masked` tool from the lokal MCP server (personal data replaced by stable placeholders).',
     PROCESS_HINT,
     'If the user confirms the file only holds fake data, they can add it to .samaranignore.',
-  ].join(' '));
+  ].join(' '), found);
 }
 
 function grepTool(input: NonNullable<HookInput['tool_input']>, cwd: string, ignored: (f: string) => boolean): Verdict | undefined {
@@ -363,7 +366,7 @@ function grepTool(input: NonNullable<HookInput['tool_input']>, cwd: string, igno
     `Samaran blocked this search: the matching lines in ${names.join(', ')} contain personal data (${summarize(found, false)}).`,
     'Search with output_mode "files_with_matches" or "count", or read the file with `read_file_masked` from the lokal MCP server.',
     'Add a glob or type that leaves data files out if you meant to search code.',
-  ].join(' '));
+  ].join(' '), found);
 }
 
 /** Whether to block or ask, with the message; undefined to allow. */
@@ -378,13 +381,17 @@ export function evaluate(input: HookInput, projectRoot?: string): Verdict | unde
 
   if (input.hook_event_name === 'UserPromptSubmit' && input.prompt) {
     if (BYPASS.test(input.prompt)) return undefined;
-    const found = detectConfigured(input.prompt, { types: STRICT, minConfidence: 'high' }, config);
+    // Identity numbers, and whatever the project's policy blocks or keeps local.
+    const held = Object.entries(config.policy ?? {})
+      .filter(([type, action]) => (action === 'block' || action === 'route') && PII_TYPES.includes(type as PiiType))
+      .map(([type]) => type as PiiType);
+    const found = detectConfigured(input.prompt, { types: [...new Set([...STRICT, ...held])], minConfidence: 'high' }, config);
     if (!found.length) return undefined;
     return block([
       `🛡️  Samaran menahan prompt ini: ada data pribadi ${summarize(found)}.`,
       'Prompt akan terkirim ke server model AI. Ganti dengan data contoh atau samarkan dulu,',
       'atau kirim ulang dengan menambahkan #izinkan-pii jika memang disengaja.',
-    ].join('\n'));
+    ].join('\n'), found);
   }
 
   if (input.hook_event_name !== 'PreToolUse' || !input.tool_input) return undefined;
@@ -506,7 +513,17 @@ export async function runGuard(): Promise<void> {
     const translated = translate(parsed);
     agent = translated.agent;
     event = parsed.hook_event_name ?? '';
-    const out = respond(agent, event, evaluate(translated.input, translated.root));
+    const verdict = evaluate(translated.input, translated.root);
+    if (verdict) {
+      const tool = translated.input.tool_name;
+      writeAudit(config.audit, {
+        source: 'guard',
+        action: verdict.action === 'block' ? 'blocked' : 'asked',
+        what: `${translated.input.hook_event_name ?? event}${tool ? ` ${tool}` : ''}`,
+        ...(verdict.counts ? { counts: verdict.counts } : { reason: 'could not be checked' }),
+      });
+    }
+    const out = respond(agent, event, verdict);
     if (out.stdout) process.stdout.write(`${out.stdout}\n`);
     if (out.stderr) process.stderr.write(`${out.stderr}\n`);
     process.exitCode = out.exitCode;

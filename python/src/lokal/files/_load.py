@@ -9,7 +9,7 @@ from __future__ import annotations
 import json
 import os
 import re
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal, NoReturn, Optional, Union
@@ -17,7 +17,7 @@ from typing import Literal, NoReturn, Optional, Union
 from .. import _js
 from .._result import Result
 from ..samaran.custom import CustomRule, check_custom_rules
-from ..samaran.types import ScanStatus
+from ..samaran.types import PII_TYPES, ScanStatus
 from ._docx import read_docx
 from ._pdf import read_pdf
 from ._xlsx import read_xlsx
@@ -270,9 +270,13 @@ def load_config(root: StrPath) -> tuple[list[CustomRule], list[str]]:
 
     if not isinstance(raw, dict):
         fail('expected an object with "custom" and "allow"')
-    unknown = [k for k in raw if k not in ('custom', 'allow') and not k.startswith('$')]
+    known = ('custom', 'allow', 'policy', 'route', 'audit', 'vaultTtlMinutes')
+    unknown = [k for k in raw if k not in known and not k.startswith('$')]
     if unknown:
-        fail(f'unknown key {", ".join(chr(34) + k + chr(34) for k in unknown)} (expected "custom" and "allow")')
+        fail(
+            f'unknown key {", ".join(chr(34) + k + chr(34) for k in unknown)} '
+            '(expected "custom", "allow", "policy", "route", "audit", or "vaultTtlMinutes")'
+        )
     custom = raw.get('custom', [])
     allow = raw.get('allow', [])
     if not isinstance(custom, list):
@@ -299,7 +303,49 @@ def load_config(root: StrPath) -> tuple[list[CustomRule], list[str]]:
         check_custom_rules(rules)
     except ValueError as e:
         fail(str(e))
+    _check_policy(raw, {r.label for r in rules}, fail)
     return rules, list(allow)
+
+
+_POLICY_ACTIONS = ('mask', 'allow', 'block', 'route')
+
+
+def _check_policy(raw: dict[str, object], labels: set[str], fail: Callable[[str], NoReturn]) -> None:
+    """The keys the proxy, the MCP server, and the guard use, checked as they check them, so a file that works there
+    also loads here. This library masks by its own options; the policy is theirs."""
+    policy = raw.get('policy')
+    if policy is not None:
+        if not isinstance(policy, dict):
+            fail('"policy" must be an object such as { "HEALTH": "block" }')
+        for key, action in policy.items():
+            if key not in PII_TYPES and key not in labels:
+                fail(f'policy: "{key}" is neither a type ({", ".join(PII_TYPES)}) nor a label in "custom"')
+            if action not in _POLICY_ACTIONS:
+                fail(f'policy.{key} must be one of {", ".join(chr(34) + a + chr(34) for a in _POLICY_ACTIONS)}')
+            if action == 'allow' and key in labels:
+                fail(f'policy.{key}: "allow" for a custom rule; remove the rule from "custom" instead')
+    route = raw.get('route')
+    if route is not None:
+        if not isinstance(route, dict):
+            fail('"route" must be an object such as { "openai": "http://127.0.0.1:11434/v1" }')
+        extra = [k for k in route if k not in ('openai', 'anthropic', 'model')]
+        if extra:
+            fail(f'route: unknown key {", ".join(chr(34) + k + chr(34) for k in extra)}')
+        for k in ('openai', 'anthropic'):
+            v = route.get(k)
+            if v is not None and (not isinstance(v, str) or not re.match(r'https?://', v)):
+                fail(f'route.{k} must be an http(s) URL')
+        if route.get('model') is not None and not isinstance(route['model'], str):
+            fail('route.model must be a string')
+    routes = isinstance(route, dict) and (route.get('openai') or route.get('anthropic'))
+    if isinstance(policy, dict) and 'route' in policy.values() and not routes:
+        fail('"route" in policy needs a local endpoint: add "route": { "openai": "http://127.0.0.1:11434/v1" }')
+    audit = raw.get('audit')
+    if not isinstance(audit, (bool, type(None))) and (not isinstance(audit, str) or not audit.strip()):
+        fail('"audit" must be true or a file path')
+    ttl = raw.get('vaultTtlMinutes')
+    if ttl is not None and (isinstance(ttl, bool) or not isinstance(ttl, (int, float)) or not ttl > 0):
+        fail('"vaultTtlMinutes" must be a positive number')
 
 
 def load_ignore(root: StrPath) -> IgnoreRule:

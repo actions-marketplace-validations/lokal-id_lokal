@@ -306,6 +306,31 @@ claude = Anthropic(base_url='http://127.0.0.1:8787')   # Messages
 
 Sudah diuji end-to-end dengan Claude Code sendiri yang dijalankan lewat proxy: model hanya pernah melihat placeholder, dan file yang ditulisnya lewat tool berisi nilai asli.
 
+### Policy, routing lokal, dan audit log
+
+Bawaannya, semua jenis data disamarkan. Di `.samaran.json` tim bisa memilih aksi lain per jenis, atau per label aturan custom:
+
+```json
+{
+  "policy": { "HEALTH": "block", "FINANCIAL": "allow", "PASSPORT": "route" },
+  "route": { "openai": "http://127.0.0.1:11434/v1", "model": "llama3.2" },
+  "audit": true,
+  "vaultTtlMinutes": 60
+}
+```
+
+| Aksi | Proxy | Tool file MCP | Guard |
+|---|---|---|---|
+| `mask` (bawaan) | disamarkan, dipulihkan di jawaban | placeholder | menahan nomor identitas, data kesehatan, kriminal, dan biometrik, atau 3+ nilai |
+| `allow` | model melihatnya | tidak disamarkan | tidak dihitung |
+| `block` | request ditolak (HTTP 403) | `read_file_masked` menolak file itu | satu nilai sudah cukup untuk menahan |
+| `route` | dikirim apa adanya ke model lokal di `route`, bukan ke cloud | disamarkan | satu nilai sudah cukup untuk menahan |
+
+- **Routing** menjaga request sensitif tetap di perangkat Anda sendiri: dengan `route.openai` mengarah ke Ollama, request berisi nomor paspor dikirim ke sana tanpa disamarkan, dengan `route.model` menggantikan model yang diminta aplikasi. Request itu tidak pernah sampai ke cloud, dan API key cloud tidak ikut terkirim (yang dikirim `LOKAL_ROUTE_API_KEY`, kalau diisi). Request ke API yang tidak punya endpoint lokal di `route` ditolak, tidak dikirim ke cloud.
+- **Audit log**: `"audit": true` menambahkan satu baris JSON per keputusan ke `.lokal/audit.jsonl` (atau path yang Anda tentukan): sumbernya (proxy, MCP, guard), aksinya (masked, blocked, routed, refused, restored, anonymized, forgot), file atau path API, dan jumlah per jenis, tidak pernah nilainya. Lokal membuat `.lokal/` beserta `.gitignore`. `lokal-mcp audit [--since 7d] [--json]` meringkasnya.
+- **Vault**: server MCP melupakan semua nilai asli di balik placeholder setelah `vaultTtlMinutes` tidak dipakai (atau `LOKAL_VAULT_TTL_MINUTES`), dan saat tool `clear_vault` dipanggil.
+- `lokal-mcp scan` tidak memakai policy: apa yang boleh sampai ke model dan apa yang boleh masuk repository adalah dua hal berbeda.
+
 ### Samaran untuk Vercel AI SDK: penyamaran di dalam aplikasi
 
 Untuk tempat yang tidak bisa menjalankan proxy, seperti fungsi serverless dan edge, atau untuk API yang tidak didukung proxy, seperti API native Gemini dan Bedrock, bungkus modelnya saja. Middleware ini melakukan pekerjaan yang sama di dalam proses, untuk semua provider yang didukung [AI SDK](https://ai-sdk.dev):
@@ -452,6 +477,7 @@ Found 2 personal data value(s) in 1 file(s).
 | `read_file_masked` | Baca file, termasuk sheet `.xlsx`, dokumen `.docx` (teks dan tabel), dan PDF (teks halaman, tabel, dan isian formulir), dengan data pribadi diganti placeholder yang stabil |
 | `write_file_unmasked` | Tulis hasil kerja dengan placeholder dipulihkan, di komputer kamu |
 | `anonymize_file` | Salin dump dan ekspor dengan kembaran realistis untuk setiap orang (Kembaran), hanya mengembalikan jumlah |
+| `clear_vault` | Lupakan semua nilai asli di balik placeholder sesi ini |
 
 Tool data juga bekerja pada data tersamar. `parse_alamat`, `parse_nik`, `parse_phone`, dan `validate_npwp` menerima placeholder dari `read_file_masked`, seperti `[ADDRESS_3]` atau `[NIK_1]`, lalu membaca nilai aslinya di komputer kamu. Model menerima kelurahan, kecamatan, kota, dan kodenya, atau apakah NIK atau nomornya valid; nama jalan, RT/RW, dan tanggal lahir kembali sebagai placeholder baru yang dipulihkan oleh `write_file_unmasked`. Agent bisa merapikan kolom alamat pelanggan tanpa melihat satu alamat pun.
 

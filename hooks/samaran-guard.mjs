@@ -1,6 +1,6 @@
 // packages/mcp/src/guard.ts
-import { existsSync as existsSync3, statSync as statSync3 } from "node:fs";
-import path3 from "node:path";
+import { existsSync as existsSync4, statSync as statSync3 } from "node:fs";
+import path4 from "node:path";
 
 // packages/core/dist/provinces.js
 var PROVINCES = {
@@ -3508,6 +3508,14 @@ function globToRegExp(glob) {
   }
   return new RegExp(`^${re}$`);
 }
+var POLICY_ACTIONS = ["mask", "allow", "block", "route"];
+function allowedTypes(config2) {
+  return Object.entries(config2.policy ?? {}).filter(([key, action]) => action === "allow" && PII_TYPES.includes(key)).map(([key]) => key);
+}
+function policyFor(config2, m) {
+  const policy = config2.policy ?? {};
+  return (m.label !== void 0 ? policy[m.label] : void 0) ?? policy[m.type] ?? "mask";
+}
 function loadConfig(root) {
   const file = path.join(root, ".samaran.json");
   if (!existsSync(file)) return { custom: [], allow: [] };
@@ -3521,9 +3529,11 @@ function loadConfig(root) {
     throw new Error(`.samaran.json: ${why}`);
   };
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) fail('expected an object with "custom" and "allow"');
-  const { custom: custom2 = [], allow = [], ...rest } = raw;
+  const { custom: custom2 = [], allow = [], policy, route, audit, vaultTtlMinutes, ...rest } = raw;
   const unknownKeys = Object.keys(rest).filter((k) => !k.startsWith("$"));
-  if (unknownKeys.length) fail(`unknown key ${unknownKeys.map((k) => `"${k}"`).join(", ")} (expected "custom" and "allow")`);
+  if (unknownKeys.length) {
+    fail(`unknown key ${unknownKeys.map((k) => `"${k}"`).join(", ")} (expected "custom", "allow", "policy", "route", "audit", or "vaultTtlMinutes")`);
+  }
   if (!Array.isArray(custom2)) fail('"custom" must be a list of rules');
   if (!Array.isArray(allow) || !allow.every((a) => typeof a === "string")) fail('"allow" must be a list of strings');
   const rules = custom2.map((r, i) => {
@@ -3546,10 +3556,47 @@ function loadConfig(root) {
   } catch (e) {
     fail(e.message);
   }
-  return { custom: rules, allow };
+  const config2 = { custom: rules, allow };
+  if (policy !== void 0) {
+    if (!policy || typeof policy !== "object" || Array.isArray(policy)) fail('"policy" must be an object such as { "HEALTH": "block" }');
+    const labels = new Set(rules.map((r) => r.label));
+    for (const [key, action] of Object.entries(policy)) {
+      if (!PII_TYPES.includes(key) && !labels.has(key)) {
+        fail(`policy: "${key}" is neither a type (${PII_TYPES.join(", ")}) nor a label in "custom"`);
+      }
+      if (!POLICY_ACTIONS.includes(action)) fail(`policy.${key} must be one of ${POLICY_ACTIONS.map((a) => `"${a}"`).join(", ")}`);
+      if (action === "allow" && labels.has(key)) fail(`policy.${key}: "allow" for a custom rule; remove the rule from "custom" instead`);
+    }
+    config2.policy = policy;
+  }
+  if (route !== void 0) {
+    if (!route || typeof route !== "object" || Array.isArray(route)) fail('"route" must be an object such as { "openai": "http://127.0.0.1:11434/v1" }');
+    const { openai, anthropic, model, ...extra } = route;
+    if (Object.keys(extra).length) fail(`route: unknown key ${Object.keys(extra).map((k) => `"${k}"`).join(", ")}`);
+    for (const [k, v] of Object.entries({ openai, anthropic })) {
+      if (v === void 0) continue;
+      if (typeof v !== "string" || !/^https?:\/\//.test(v)) fail(`route.${k} must be an http(s) URL`);
+    }
+    if (model !== void 0 && typeof model !== "string") fail("route.model must be a string");
+    config2.route = { openai, anthropic, model };
+  }
+  if (Object.values(config2.policy ?? {}).includes("route") && !config2.route?.openai && !config2.route?.anthropic) {
+    fail('"route" in policy needs a local endpoint: add "route": { "openai": "http://127.0.0.1:11434/v1" }');
+  }
+  if (audit !== void 0 && audit !== false) {
+    if (audit !== true && (typeof audit !== "string" || !audit.trim())) fail('"audit" must be true or a file path');
+    config2.audit = path.resolve(root, audit === true ? ".lokal/audit.jsonl" : audit);
+  }
+  if (vaultTtlMinutes !== void 0) {
+    if (typeof vaultTtlMinutes !== "number" || !(vaultTtlMinutes > 0)) fail('"vaultTtlMinutes" must be a positive number');
+    config2.vaultTtlMinutes = vaultTtlMinutes;
+  }
+  return config2;
 }
 function detectConfigured(text, options, config2) {
-  const found = detectPii(text, { ...options, custom: config2.custom });
+  const allowed = allowedTypes(config2);
+  const exclude = allowed.length ? [...options.exclude ?? [], ...allowed] : options.exclude;
+  const found = detectPii(text, { ...options, custom: config2.custom, ...exclude ? { exclude } : {} });
   return config2.allow.length ? found.filter((m) => !config2.allow.includes(m.value)) : found;
 }
 function loadIgnore(root) {
@@ -3674,9 +3721,33 @@ function loadDocument(file, options = {}) {
   return { kind: "text", text: readFileSync(file, "utf8") };
 }
 
-// packages/mcp/src/shell-reads.ts
-import { existsSync as existsSync2, readdirSync as readdirSync2, statSync as statSync2 } from "node:fs";
+// packages/mcp/src/audit.ts
+import { appendFileSync, existsSync as existsSync2, mkdirSync, readFileSync as readFileSync2, writeFileSync } from "node:fs";
 import path2 from "node:path";
+function writeAudit(file, event) {
+  if (!file) return;
+  try {
+    const dir = path2.dirname(file);
+    if (!existsSync2(dir)) {
+      mkdirSync(dir, { recursive: true });
+      if (path2.basename(dir) === ".lokal") writeFileSync(path2.join(dir, ".gitignore"), "*\n");
+    }
+    appendFileSync(file, `${JSON.stringify({ ts: (/* @__PURE__ */ new Date()).toISOString(), ...event })}
+`);
+  } catch (e) {
+    process.stderr.write(`lokal audit: could not write ${file}: ${e.message}
+`);
+  }
+}
+function countMatches(matches) {
+  const out = {};
+  for (const m of matches) out[m.label ?? m.type] = (out[m.label ?? m.type] ?? 0) + 1;
+  return out;
+}
+
+// packages/mcp/src/shell-reads.ts
+import { existsSync as existsSync3, readdirSync as readdirSync2, statSync as statSync2 } from "node:fs";
+import path3 from "node:path";
 var SHELL_DATA_FILE = /\.(csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out|pdf)(\.\d+)?$/i;
 var all = (t) => t;
 var READERS = /* @__PURE__ */ new Set([
@@ -3810,7 +3881,7 @@ function parse(command, powershell) {
   return pipelines;
 }
 function programName(word) {
-  return path2.basename(word).toLowerCase().replace(/\.(exe|cmd|bat)$/, "");
+  return path3.basename(word).toLowerCase().replace(/\.(exe|cmd|bat)$/, "");
 }
 function firstLines(n) {
   return (t) => t.split("\n").slice(0, Math.max(0, n)).join("\n");
@@ -3987,13 +4058,13 @@ function expand(raw, cwd, powershell) {
   if (process.platform === "win32") word = word.replace(/^\/([a-zA-Z])(?=\/|$)/, "$1:");
   else if (powershell) word = word.replace(/\\/g, "/");
   if (!/[*?]/.test(word)) {
-    const file = path2.resolve(cwd, word);
-    return SHELL_DATA_FILE.test(file) && existsSync2(file) && statSync2(file).isFile() ? [file] : [];
+    const file = path3.resolve(cwd, word);
+    return SHELL_DATA_FILE.test(file) && existsSync3(file) && statSync2(file).isFile() ? [file] : [];
   }
-  const dir = path2.resolve(cwd, path2.dirname(word));
-  const re = globToRegExp(path2.basename(word));
+  const dir = path3.resolve(cwd, path3.dirname(word));
+  const re = globToRegExp(path3.basename(word));
   try {
-    return readdirSync2(dir).filter((name) => re.test(name) && SHELL_DATA_FILE.test(name)).map((name) => path2.join(dir, name)).filter((f) => statSync2(f).isFile());
+    return readdirSync2(dir).filter((name) => re.test(name) && SHELL_DATA_FILE.test(name)).map((name) => path3.join(dir, name)).filter((f) => statSync2(f).isFile());
   } catch {
     return [];
   }
@@ -4124,7 +4195,7 @@ function fileTexts(file) {
   try {
     doc = loadDocument(file, { sampleBytes: GUARD_SAMPLE_BYTES, maxZipBytes: GUARD_MAX_ZIP_BYTES });
   } catch (e) {
-    return { texts: [], unchecked: existsSync3(file) ? `could not be read: ${e.message}` : void 0 };
+    return { texts: [], unchecked: existsSync4(file) ? `could not be read: ${e.message}` : void 0 };
   }
   if (doc.kind === "skipped") return { texts: [], unchecked: doc.dataBearing ? doc.reason : void 0 };
   if (doc.kind === "text") return { texts: [doc.text], sampled: doc.sampled };
@@ -4147,7 +4218,7 @@ function verdict(texts) {
   return verdictOf(texts.flatMap((t) => detectConfigured(t, { minConfidence: "high" }, config)));
 }
 function verdictOf(found) {
-  const strict = found.some((m) => STRICT.includes(m.type));
+  const strict = found.some((m) => STRICT.includes(m.type) || ["block", "route"].includes(policyFor(config, m)));
   return strict || found.length >= BULK_THRESHOLD ? found : void 0;
 }
 function shownPii(full, shown, file) {
@@ -4169,7 +4240,7 @@ var strictMode = () => process.env.SAMARAN_GUARD === "strict";
 var config = { custom: [], allow: [] };
 var deadline = Infinity;
 var outOfTime = () => strictMode() && Date.now() > deadline;
-var block = (message) => ({ action: "block", message });
+var block = (message, found) => ({ action: "block", message, ...found ? { counts: countMatches(found) } : {} });
 function uncheckedBlock(what, why) {
   return block([
     `Samaran blocked ${what}: ${why.join("; ")}, so it could not be checked for personal data, and SAMARAN_GUARD=strict blocks what it cannot check.`,
@@ -4188,9 +4259,9 @@ function ask(shownAs, what) {
   };
 }
 function personalImage(file, root) {
-  const rel = path3.relative(root, file);
-  const where = rel.startsWith("..") || path3.isAbsolute(rel) ? file : rel;
-  return PERSONAL_PATH.test(where) || UPLOAD_PATH.test(path3.dirname(where)) && !ASSET_PATH.test(path3.dirname(where));
+  const rel = path4.relative(root, file);
+  const where = rel.startsWith("..") || path4.isAbsolute(rel) ? file : rel;
+  return PERSONAL_PATH.test(where) || UPLOAD_PATH.test(path4.dirname(where)) && !ASSET_PATH.test(path4.dirname(where));
 }
 function uncheckedRead(shownAs, what, why) {
   return strictMode() ? uncheckedBlock(`reading ${shownAs}`, [why]) : ask(shownAs, what);
@@ -4198,14 +4269,14 @@ function uncheckedRead(shownAs, what, why) {
 function readTool(file, shownAs, root, ignored, lines) {
   if (ignored(file)) return void 0;
   if (IMAGE_FILE.test(file)) {
-    return personalImage(file, root) && existsSync3(file) ? uncheckedRead(shownAs, "mungkin foto KTP atau dokumen pribadi", "it is an image that may be a photo of an ID card or document") : void 0;
+    return personalImage(file, root) && existsSync4(file) ? uncheckedRead(shownAs, "mungkin foto KTP atau dokumen pribadi", "it is an image that may be a photo of an ID card or document") : void 0;
   }
   if (!DATA_FILE.test(file)) return void 0;
   let doc;
   try {
     doc = loadDocument(file, { sampleBytes: GUARD_SAMPLE_BYTES, maxZipBytes: GUARD_MAX_ZIP_BYTES });
   } catch (e) {
-    return strictMode() && existsSync3(file) ? uncheckedBlock(`reading ${shownAs}`, [`it could not be read (${e.message})`]) : void 0;
+    return strictMode() && existsSync4(file) ? uncheckedBlock(`reading ${shownAs}`, [`it could not be read (${e.message})`]) : void 0;
   }
   if (doc.kind === "skipped") {
     return doc.dataBearing ? uncheckedRead(shownAs, `tidak bisa dibaca Samaran (${doc.reason})`, doc.reason) : void 0;
@@ -4218,7 +4289,8 @@ function readTool(file, shownAs, root, ignored, lines) {
         "Use the `read_file_masked` tool from the lokal MCP server instead: same content, with personal data replaced by stable placeholders.",
         "Write results that need the real values with `write_file_unmasked`.",
         "If the user confirms the file only holds fake data, they can add it to .samaranignore."
-      ].join(" ")
+      ].join(" "),
+      found
     );
   }
   if (doc.kind === "sheets" && doc.unscanned) return uncheckedRead(shownAs, `hanya terbaca sebagian (${doc.unscanned})`, doc.unscanned);
@@ -4237,7 +4309,7 @@ function shellTool(command, cwd, powershell, ignored) {
   const matches = [];
   const files = /* @__PURE__ */ new Set();
   const unchecked = [];
-  const nameOf = (f) => path3.relative(cwd, f) || f;
+  const nameOf = (f) => path4.relative(cwd, f) || f;
   for (const r of reads) {
     if (outOfTime()) {
       unchecked.push(`checking ${nameOf(r.file)} took too long`);
@@ -4264,11 +4336,11 @@ function shellTool(command, cwd, powershell, ignored) {
     "To look at the data, use the `read_file_masked` tool from the lokal MCP server (personal data replaced by stable placeholders).",
     PROCESS_HINT,
     "If the user confirms the file only holds fake data, they can add it to .samaranignore."
-  ].join(" "));
+  ].join(" "), found);
 }
 function grepTool(input, cwd, ignored) {
   if (input.output_mode !== "content" || !input.pattern) return void 0;
-  const target = path3.resolve(cwd, input.path ?? ".");
+  const target = path4.resolve(cwd, input.path ?? ".");
   let candidates;
   try {
     candidates = statSync3(target).isDirectory() ? [...walkFiles(target)] : [target];
@@ -4278,13 +4350,13 @@ function grepTool(input, cwd, ignored) {
   const glob = input.glob ? globToRegExp(input.glob.includes("/") ? input.glob : `**/${input.glob}`) : void 0;
   const typeFilter = input.type ? GREP_TYPES[input.type.toLowerCase()] : void 0;
   if (input.type && !typeFilter) return void 0;
-  candidates = candidates.filter((f) => SHELL_DATA_FILE.test(f) && !ignored(f)).filter((f) => !glob || glob.test(path3.relative(target, f).split(path3.sep).join("/")) || glob.test(path3.basename(f))).filter((f) => !typeFilter || typeFilter.test(f));
+  candidates = candidates.filter((f) => SHELL_DATA_FILE.test(f) && !ignored(f)).filter((f) => !glob || glob.test(path4.relative(target, f).split(path4.sep).join("/")) || glob.test(path4.basename(f))).filter((f) => !typeFilter || typeFilter.test(f));
   const unchecked = [];
   if (candidates.length > GREP_MAX_FILES) {
     unchecked.push(`only ${GREP_MAX_FILES} of the ${candidates.length} data files it searches were checked`);
     candidates = candidates.slice(0, GREP_MAX_FILES);
   }
-  const nameOf = (f) => path3.relative(cwd, f) || f;
+  const nameOf = (f) => path4.relative(cwd, f) || f;
   let re;
   try {
     re = new RegExp(input.pattern, input["-i"] ? "i" : "");
@@ -4324,7 +4396,7 @@ function grepTool(input, cwd, ignored) {
     `Samaran blocked this search: the matching lines in ${names.join(", ")} contain personal data (${summarize(found, false)}).`,
     'Search with output_mode "files_with_matches" or "count", or read the file with `read_file_masked` from the lokal MCP server.',
     "Add a glob or type that leaves data files out if you meant to search code."
-  ].join(" "));
+  ].join(" "), found);
 }
 function evaluate(input, projectRoot) {
   if (process.env.SAMARAN_GUARD === "off") return void 0;
@@ -4334,13 +4406,14 @@ function evaluate(input, projectRoot) {
   config = loadConfig(root);
   if (input.hook_event_name === "UserPromptSubmit" && input.prompt) {
     if (BYPASS.test(input.prompt)) return void 0;
-    const found = detectConfigured(input.prompt, { types: STRICT, minConfidence: "high" }, config);
+    const held = Object.entries(config.policy ?? {}).filter(([type, action]) => (action === "block" || action === "route") && PII_TYPES.includes(type)).map(([type]) => type);
+    const found = detectConfigured(input.prompt, { types: [.../* @__PURE__ */ new Set([...STRICT, ...held])], minConfidence: "high" }, config);
     if (!found.length) return void 0;
     return block([
       `\u{1F6E1}\uFE0F  Samaran menahan prompt ini: ada data pribadi ${summarize(found)}.`,
       "Prompt akan terkirim ke server model AI. Ganti dengan data contoh atau samarkan dulu,",
       "atau kirim ulang dengan menambahkan #izinkan-pii jika memang disengaja."
-    ].join("\n"));
+    ].join("\n"), found);
   }
   if (input.hook_event_name !== "PreToolUse" || !input.tool_input) return void 0;
   const cwd = input.cwd ?? root;
@@ -4350,9 +4423,9 @@ function evaluate(input, projectRoot) {
     case "Read":
       if (!tool.file_path) return void 0;
       {
-        const file = path3.resolve(root, tool.file_path);
-        const rel = path3.relative(root, file);
-        const shownAs = rel && !rel.startsWith("..") && !path3.isAbsolute(rel) ? rel.split(path3.sep).join("/") : tool.file_path;
+        const file = path4.resolve(root, tool.file_path);
+        const rel = path4.relative(root, file);
+        const shownAs = rel && !rel.startsWith("..") && !path4.isAbsolute(rel) ? rel.split(path4.sep).join("/") : tool.file_path;
         return readTool(file, shownAs, root, ignored, tool);
       }
     case "Grep":
@@ -4430,7 +4503,17 @@ async function runGuard() {
     const translated = translate(parsed);
     agent = translated.agent;
     event = parsed.hook_event_name ?? "";
-    const out = respond(agent, event, evaluate(translated.input, translated.root));
+    const verdict2 = evaluate(translated.input, translated.root);
+    if (verdict2) {
+      const tool = translated.input.tool_name;
+      writeAudit(config.audit, {
+        source: "guard",
+        action: verdict2.action === "block" ? "blocked" : "asked",
+        what: `${translated.input.hook_event_name ?? event}${tool ? ` ${tool}` : ""}`,
+        ...verdict2.counts ? { counts: verdict2.counts } : { reason: "could not be checked" }
+      });
+    }
+    const out = respond(agent, event, verdict2);
     if (out.stdout) process.stdout.write(`${out.stdout}
 `);
     if (out.stderr) process.stderr.write(`${out.stderr}

@@ -4,6 +4,13 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+### Added
+
+- A policy per type of personal data in `.samaran.json`: `mask` (the default), `allow`, `block`, or `route`, per built-in type or custom rule label. The proxy refuses a request with a `block` type (HTTP 403); `read_file_masked` refuses such a file; the guard holds back a single value of a `block` or `route` type, as it does an identity number; `allow` leaves a type unmasked. `lokal-mcp scan` ignores the policy.
+- Routing to a local model: with `"route": { "openai": "http://127.0.0.1:11434/v1", "model": "llama3.2" }`, the proxy sends a request with a `route` type as it is to that endpoint (Ollama, or any OpenAI- or Anthropic-compatible server), never to the cloud, and without the cloud API key. Responses say `x-samaran-routed`. A request to an API with no local endpoint is refused.
+- An audit log: `"audit": true` appends one JSON line per decision of the proxy, the MCP file tools, and the guard to `.lokal/audit.jsonl` (with a `.gitignore`), holding counts per type and never values. `lokal-mcp audit [file] [--since 7d] [--json]` summarizes it.
+- The `clear_vault` MCP tool forgets every real value behind the session's placeholders, and `"vaultTtlMinutes"` (or `LOKAL_VAULT_TTL_MINUTES`) forgets them after that long without use.
+
 ## [0.9.0] - 2026-10-30
 
 ### Added

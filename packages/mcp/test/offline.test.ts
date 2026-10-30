@@ -40,6 +40,7 @@ const CALLS: Record<string, Record<string, unknown>> = {
   read_file_masked: { path: 'pelanggan.csv' },
   write_file_unmasked: { path: 'keluar.txt', content: 'halo' },
   anonymize_file: { paths: ['pelanggan.csv'], output: 'samaran.csv' },
+  clear_vault: {},
 };
 
 test('the MCP server, guard, scanner, and Kembaran make no network calls', async () => {

@@ -356,7 +356,9 @@ export function runScan(args: string[]): void {
   const isIgnoredAbs = loadIgnore(ignoreRoot);
   let config: SamaranConfig;
   try {
-    config = loadConfig(ignoreRoot);
+    // The policy says what may reach a model; what may enter the repository does not change with it.
+    const { custom, allow } = loadConfig(ignoreRoot);
+    config = { custom, allow };
   } catch (e) {
     process.stderr.write(`${(e as Error).message}\n`);
     process.exitCode = 2;

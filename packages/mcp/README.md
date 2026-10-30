@@ -64,6 +64,7 @@ The file tools can only access `LOKAL_ROOT`, which defaults to `CLAUDE_PROJECT_D
 | `read_file_masked` | Read a file (text, CSV, JSON, logs, `.xlsx`, `.docx`, text-based PDF) with personal data replaced by placeholders |
 | `write_file_unmasked` | Write results with placeholders restored, on your machine |
 | `anonymize_file` | Copy dumps and exports with realistic stand-ins for every person (Kembaran), returning only counts |
+| `clear_vault` | Forget every real value behind this session's placeholders |
 
 `parse_alamat`, `parse_nik`, `parse_phone`, and `validate_npwp` also take placeholders from `read_file_masked` (`[ADDRESS_3]`, `[NIK_1]`): the real value is read on your machine, and the street, RT/RW, and birth date come back as placeholders.
 
@@ -86,6 +87,10 @@ The file tools can only access `LOKAL_ROOT`, which defaults to `CLAUDE_PROJECT_D
   "allow": ["0800-1-500-500"]
 }
 ```
+
+## Policy and audit
+
+`.samaran.json` can also set an action per type: `"policy": { "HEALTH": "block", "FINANCIAL": "allow", "PASSPORT": "route" }`. `block` makes `read_file_masked` refuse a file and the proxy refuse a request; `allow` leaves a type unmasked; `route` sends proxied requests to a local model (`"route": { "openai": "http://127.0.0.1:11434/v1", "model": "llama3.2" }`). `"audit": true` writes one JSON line per decision, with counts and never values, to `.lokal/audit.jsonl`; `lokal-mcp audit` summarizes it. `"vaultTtlMinutes": 60` makes the server forget the real values after an hour without use. See the [Lokal README](https://github.com/lokal-id/lokal#policy-local-routing-and-the-audit-log).
 
 ## Kembaran
 

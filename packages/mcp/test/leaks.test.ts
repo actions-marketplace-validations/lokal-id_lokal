@@ -64,6 +64,7 @@ test('leaks: no MCP tool result carries a value, whatever the tool', async () =>
     assert.equal(written, `Yth. ${value('NAME')}, NIK ${value('NIK')}, HP ${value('PHONE')}.`, 'the file holds the real values');
     // A fixed secret: a random stand-in can, once in a few hundred runs, land on the same birth day.
     for (const file of Object.keys(FILES)) await call('anonymize_file', { paths: [file], output: `staging/${file}`, secret: 'canary' });
+    await call('clear_vault', {}); // answers with a count only
     for (const name of ['format_rupiah', 'parse_rupiah', 'search_wilayah', 'list_wilayah', 'lookup_kode_pos', 'list_holidays', 'working_days', 'parse_qris', 'set_qris_amount']) {
       results.push(name); // these tools never read files or placeholders; listed so a new tool is not forgotten
     }

@@ -133,3 +133,33 @@ def test_samaran_json_rules_apply_to_scan_path(tmp_path: Path) -> None:
         load_config(tmp_path)
     with pytest.raises(ValueError, match='built-in type'):
         scan_path(tmp_path)
+
+
+def test_samaran_json_policy_keys_load_as_the_mcp_server_checks_them(tmp_path: Path) -> None:
+    from lokal.files import load_config
+
+    config = {
+        'custom': [{'label': 'MEMBER', 'fields': ['no_member']}],
+        'policy': {'HEALTH': 'block', 'FINANCIAL': 'allow', 'PASSPORT': 'route', 'MEMBER': 'block'},
+        'route': {'openai': 'http://127.0.0.1:11434/v1', 'model': 'llama3.2'},
+        'audit': True,
+        'vaultTtlMinutes': 30,
+    }
+    (tmp_path / '.samaran.json').write_text(json.dumps(config), encoding='utf-8')
+    rules, _ = load_config(tmp_path)
+    assert [r.label for r in rules] == ['MEMBER']
+    # The policy is for the model: scanning the repository is not changed by it.
+    (tmp_path / 'gaji.csv').write_text('nama,gaji\nKenanga Purbasari,8500000\n', encoding='utf-8')
+    assert scan_path(tmp_path).totals.get('FINANCIAL') == 1
+    for bad, message in [
+        ({'policy': {'NOPE': 'mask'}}, 'neither a type'),
+        ({'policy': {'HEALTH': 'hide'}}, 'must be one of'),
+        ({'custom': [{'label': 'MEMBER', 'fields': ['m']}], 'policy': {'MEMBER': 'allow'}}, 'remove the rule'),
+        ({'policy': {'HEALTH': 'route'}}, 'needs a local endpoint'),
+        ({'route': {'openai': 'ftp://x'}}, 'http\\(s\\) URL'),
+        ({'audit': 3}, '"audit" must be'),
+        ({'vaultTtlMinutes': 0}, 'positive number'),
+    ]:
+        (tmp_path / '.samaran.json').write_text(json.dumps(bad), encoding='utf-8')
+        with pytest.raises(ValueError, match=message):
+            load_config(tmp_path)

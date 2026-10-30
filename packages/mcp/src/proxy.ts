@@ -12,7 +12,8 @@
 // they are signed, and the model only ever saw placeholders in them anyway.
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
 import { PII_TYPES, Samaran, type CustomRule, type PiiType, type ScanStatus } from '@lokal-id/core';
-import { loadConfig, type SamaranConfig } from './files.ts';
+import { countMatches, writeAudit } from './audit.ts';
+import { allowedTypes, loadConfig, underPolicy, type PolicyAction, type SamaranConfig } from './files.ts';
 
 export interface ProxyOptions {
   /** Default 127.0.0.1: the proxy sees real personal data, so it is not exposed to the network unless asked. */
@@ -33,6 +34,14 @@ export interface ProxyOptions {
    * for a vision model). Without it they are forwarded, and the response says so in `x-samaran-status: partial`.
    */
   strict?: boolean;
+  /**
+   * What to do per type, from .samaran.json: `allow` lets the model see it, `block` refuses a request that has it,
+   * and `route` sends such a request as it is to the local model in `route` instead of the cloud.
+   */
+  policy?: Record<string, PolicyAction>;
+  route?: SamaranConfig['route'];
+  /** The audit log to append one line per request to. */
+  audit?: string;
   /** One line per request, without content. Default: stderr. */
   log?: (line: string) => void;
 }
@@ -83,12 +92,18 @@ function maskField(samaran: Samaran, key: string, value: string) {
   return samaran.mask(value);
 }
 
+/** What masking a request saw besides its counts: parts it could not check, and every match, for the policy. */
+interface Unchecked {
+  parts: number;
+  found: Array<{ type: PiiType; label?: string }>;
+}
+
 /**
  * Masks every text value in a request body, in document order; counts what it could not check in `unchecked`.
  * `key` is set inside JSON that was in a string (tool call arguments, tool results): there every field is someone's
  * data, so none is skipped, and each is masked with its field name.
  */
-function maskJson(value: Json, samaran: Samaran, counts: Map<PiiType, number>, unchecked: { parts: number }, key?: string): Json {
+function maskJson(value: Json, samaran: Samaran, counts: Map<PiiType, number>, unchecked: Unchecked, key?: string): Json {
   if (typeof value === 'string') {
     if (isBinaryText(value)) {
       unchecked.parts++;
@@ -98,7 +113,10 @@ function maskJson(value: Json, samaran: Samaran, counts: Map<PiiType, number>, u
     const nested = parseJsonText(value);
     if (nested !== undefined) return JSON.stringify(maskJson(nested, samaran, counts, unchecked, key ?? ''));
     const { text, matches } = key === undefined ? samaran.mask(value) : maskField(samaran, key, value);
-    for (const m of matches) counts.set(m.type, (counts.get(m.type) ?? 0) + 1);
+    for (const m of matches) {
+      counts.set(m.type, (counts.get(m.type) ?? 0) + 1);
+      unchecked.found.push({ type: m.type, label: m.label });
+    }
     return text;
   }
   if (Array.isArray(value)) return value.map((v) => maskJson(v, samaran, counts, unchecked, key));
@@ -306,13 +324,55 @@ function fail(res: ServerResponse, status: number, message: string): void {
   res.end(JSON.stringify({ error: { type: 'samaran_proxy_error', message } }));
 }
 
-const summary = (counts: Map<PiiType, number>) => [...counts].map(([t, n]) => `${t}=${n}`).join(',');
+const summary = (counts: Map<string, number>) => [...counts].map(([t, n]) => `${t}=${n}`).join(',');
+// The cloud API's key must not reach another server: a routed request carries LOKAL_ROUTE_API_KEY, if any, instead.
+const KEY_HEADERS = new Set(['authorization', 'x-api-key', 'api-key', 'x-goog-api-key']);
+
+/**
+ * A request the policy keeps local: sent as it is, unmasked, to the local model, and its answer passed back as it is.
+ * `model` replaces the model the app asked for, which the local server does not have.
+ */
+async function forwardRouted(
+  req: IncomingMessage, res: ServerResponse, raw: Buffer, parsed: Json, local: string, model: string | undefined,
+  ctx: {
+    path: string; started: number; routed: Map<string, number>; found: Record<string, number>;
+    log: (line: string) => void; audit: (action: string, what: string, extra?: { counts?: Record<string, number>; reason?: string }) => void;
+  },
+): Promise<void> {
+  const base = local.replace(/\/+$/, '');
+  const url = req.url ?? '/';
+  const target = base.endsWith('/v1') && url.startsWith('/v1/') ? `${base}${url.slice(3)}` : `${base}${url}`;
+  const body = model && parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? JSON.stringify({ ...parsed, model }) : raw.toString('utf8');
+  const headers: Record<string, string> = {};
+  for (const [k, v] of Object.entries(req.headers)) {
+    if (!HOP_BY_HOP.has(k) && !KEY_HEADERS.has(k) && typeof v === 'string') headers[k] = v;
+  }
+  const key = process.env.LOKAL_ROUTE_API_KEY;
+  if (key && /^\/v1\/(messages|complete)\b/.test(ctx.path)) headers['x-api-key'] = key;
+  else if (key) headers.authorization = `Bearer ${key}`;
+  const response = await fetch(target, { method: req.method, headers, body });
+  const out: Record<string, string> = {};
+  response.headers.forEach((v, k) => {
+    if (!HOP_BY_HOP.has(k) && k !== 'content-encoding') out[k] = v;
+  });
+  out['x-samaran-routed'] = summary(ctx.routed);
+  out['x-samaran-status'] = 'scanned';
+  res.writeHead(response.status, out);
+  if (response.body) for await (const chunk of response.body) res.write(chunk as Uint8Array);
+  res.end();
+  ctx.log(`${req.method} ${ctx.path} → routed to the local model, ${response.status} ${Date.now() - ctx.started} ms (${summary(ctx.routed)})`);
+  ctx.audit('routed', ctx.path, { counts: ctx.found, reason: `policy routes ${[...ctx.routed.keys()].join(', ')}` });
+}
 
 /** Starts the proxy and resolves once it listens. */
 export function startProxy(options: ProxyOptions = {}): Promise<Server> {
   const openai = (options.openai ?? 'https://api.openai.com').replace(/\/+$/, '');
   const anthropic = (options.anthropic ?? 'https://api.anthropic.com').replace(/\/+$/, '');
   const log = options.log ?? ((line: string) => process.stderr.write(`${line}\n`));
+  const policyConfig: SamaranConfig = { custom: options.custom ?? [], allow: options.allow ?? [], policy: options.policy };
+  const exclude = [...(options.exclude ?? []), ...allowedTypes(policyConfig)];
+  const audit = (action: string, what: string, extra: { counts?: Record<string, number>; reason?: string; status?: string } = {}) =>
+    writeAudit(options.audit, { source: 'proxy', action, what, ...extra });
 
   const server = createServer(async (req, res) => {
     const started = Date.now();
@@ -325,9 +385,9 @@ export function startProxy(options: ProxyOptions = {}): Promise<Server> {
     const upstream = toAnthropic ? anthropic : openai;
     // An upstream base URL may end in /v1 already (OpenRouter, Groq, Ollama): do not repeat it.
     const target = upstream.endsWith('/v1') && url.startsWith('/v1/') ? `${upstream}${url.slice(3)}` : `${upstream}${url}`;
-    const samaran = new Samaran({ exclude: options.exclude, custom: options.custom, allow: options.allow });
+    const samaran = new Samaran({ exclude, custom: options.custom, allow: options.allow });
     const counts = new Map<PiiType, number>();
-    const unchecked = { parts: 0 };
+    const unchecked: Unchecked = { parts: 0, found: [] };
     try {
       const raw = await readBody(req);
       const contentType = String(req.headers['content-type'] ?? '');
@@ -339,8 +399,34 @@ export function startProxy(options: ProxyOptions = {}): Promise<Server> {
           // Placeholder-like text anywhere in the request (an e-mail template in the system prompt) keeps its number.
           samaran.reserve(JSON.stringify(parsed));
           body = JSON.stringify(maskJson(parsed, samaran, counts, unchecked));
+          const found = countMatches(unchecked.found);
+          const blocked = underPolicy(policyConfig, unchecked.found, ['block']);
+          if (blocked.size) {
+            log(`${req.method} ${path} blocked by policy: ${summary(blocked)}`);
+            audit('blocked', path, { counts: found, reason: `policy blocks ${[...blocked.keys()].join(', ')}` });
+            return fail(
+              res,
+              403,
+              `This request has personal data that the project's policy does not let leave this machine (${summary(blocked)}), so it was not sent.`,
+            );
+          }
+          const routed = underPolicy(policyConfig, unchecked.found, ['route']);
+          if (routed.size) {
+            const local = toAnthropic ? options.route?.anthropic : options.route?.openai;
+            if (!local) {
+              log(`${req.method} ${path} refused: policy routes ${summary(routed)} to a local model, and there is no local ${toAnthropic ? 'Anthropic' : 'OpenAI'}-compatible endpoint`);
+              audit('refused', path, { counts: found, reason: 'no local endpoint to route to' });
+              return fail(
+                res,
+                403,
+                `The project's policy sends requests with ${[...routed.keys()].join(', ')} to a local model, and no local ${toAnthropic ? 'Anthropic' : 'OpenAI'}-compatible endpoint is set in "route", so it was not sent.`,
+              );
+            }
+            return forwardRouted(req, res, raw, parsed, local, options.route?.model, { path, started, routed, found, log, audit });
+          }
           if (unchecked.parts && options.strict) {
             log(`${req.method} ${path} refused: ${unchecked.parts} image or file part(s) Samaran cannot check`);
+            audit('refused', path, { counts: found, reason: `${unchecked.parts} image or file part(s) cannot be checked`, status: 'partial' });
             return fail(
               res,
               422,
@@ -348,6 +434,7 @@ export function startProxy(options: ProxyOptions = {}): Promise<Server> {
             );
           }
         } else if (!options.allowUnmasked || options.strict) {
+          audit('refused', path, { reason: `cannot mask ${contentType || 'a body that is not JSON'}`, status: 'unsupported' });
           return fail(
             res,
             415,
@@ -402,6 +489,7 @@ export function startProxy(options: ProxyOptions = {}): Promise<Server> {
       const unrestored = un.unknown.size ? `, ${un.unknown.size} placeholder(s) not restored` : '';
       const notChecked = unchecked.parts ? `, ${unchecked.parts} image or file part(s) not checked` : status === 'unsupported' ? ', forwarded unmasked' : '';
       log(`${req.method} ${path} → ${response.status} ${Date.now() - started} ms${counts.size ? ` masked ${summary(counts)}` : ''}${notChecked}${unrestored}`);
+      audit(status === 'unsupported' ? 'forwarded' : 'masked', path, { counts: countMatches(unchecked.found), status });
     } catch (e) {
       log(`${req.method} ${path} failed: ${(e as Error).message}`);
       if (!res.headersSent) fail(res, 502, `Samaran Proxy: ${(e as Error).message}`);
@@ -425,7 +513,8 @@ const USAGE = `Usage: lokal-mcp proxy [options]
   --strict            Refuse requests with images or files inside, which Samaran cannot check
 
 Point your app at it: OpenAI(base_url="http://127.0.0.1:8787/v1"), Anthropic(base_url="http://127.0.0.1:8787").
-API keys pass through to the upstream; the proxy keeps nothing.`;
+API keys pass through to the upstream; the proxy keeps nothing. The policy (block, route to a local model, allow),
+and the audit log come from .samaran.json in the folder the proxy starts in.`;
 
 export async function runProxy(args: string[]): Promise<void> {
   const opt = (name: string) => {
@@ -467,6 +556,9 @@ export async function runProxy(args: string[]): Promise<void> {
     allow: config.allow,
     allowUnmasked: args.includes('--allow-unmasked'),
     strict: args.includes('--strict'),
+    policy: config.policy,
+    route: config.route,
+    audit: config.audit,
   });
   process.stderr.write(`Samaran Proxy listening on http://${host}:${port}\n`);
   if (host !== '127.0.0.1' && host !== 'localhost') {

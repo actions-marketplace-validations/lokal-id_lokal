@@ -65,7 +65,7 @@ async function call(name: string, args: Record<string, unknown> = {}) {
 test('server mengiklankan semua tool beserta instruksinya', async () => {
   const { tools } = await client.listTools();
   assert.deepEqual(tools.map((t) => t.name).sort(), [
-    'anonymize_file', 'format_rupiah', 'list_holidays', 'list_wilayah', 'lookup_kode_pos', 'parse_alamat', 'parse_nik', 'parse_phone', 'parse_qris',
+    'anonymize_file', 'clear_vault', 'format_rupiah', 'list_holidays', 'list_wilayah', 'lookup_kode_pos', 'parse_alamat', 'parse_nik', 'parse_phone', 'parse_qris',
     'parse_rupiah', 'read_file_masked', 'scan_pii', 'search_wilayah', 'set_qris_amount', 'validate_npwp',
     'working_days', 'write_file_unmasked',
   ]);

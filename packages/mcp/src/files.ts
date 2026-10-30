@@ -1,6 +1,8 @@
 import { closeSync, existsSync, openSync, readdirSync, readFileSync, readSync, statSync } from 'node:fs';
 import path from 'node:path';
-import { checkCustomRules, detectPii, type CustomRule, type DetectOptions, type PiiMatch, type ScanStatus } from '@lokal-id/core';
+import {
+  checkCustomRules, detectPii, PII_TYPES, type CustomRule, type DetectOptions, type PiiMatch, type PiiType, type ScanStatus,
+} from '@lokal-id/core';
 import { readDocx } from './docx.ts';
 import { readPdf } from './pdf.ts';
 import { readXlsx, type Sheet } from './xlsx.ts';
@@ -85,10 +87,51 @@ export function globToRegExp(glob: string): RegExp {
   return new RegExp(`^${re}$`);
 }
 
-/** `.samaran.json`: a team's own rules and the values it never wants masked. */
+/**
+ * What to do with a type of personal data: mask it (the default), let it through as it is, refuse what contains it,
+ * or, in the proxy, send the request to a local model instead of the cloud.
+ */
+export type PolicyAction = 'mask' | 'allow' | 'block' | 'route';
+export const POLICY_ACTIONS: readonly PolicyAction[] = ['mask', 'allow', 'block', 'route'];
+
+/** `.samaran.json`: a team's own rules, the values it never wants masked, and what to do per type. */
 export interface SamaranConfig {
   custom: CustomRule[];
   allow: string[];
+  /** Per type, or per custom rule label: `{ "HEALTH": "block", "FINANCIAL": "allow" }`. Unlisted types are masked. */
+  policy?: Record<string, PolicyAction>;
+  /** Where the proxy sends requests with a `route` type: OpenAI- and Anthropic-compatible local endpoints. */
+  route?: { openai?: string; anthropic?: string; model?: string };
+  /** Absolute path of the audit log (JSON Lines), when the team turned it on. */
+  audit?: string;
+  /** The MCP server forgets its placeholders after this many minutes without use. */
+  vaultTtlMinutes?: number;
+}
+
+/** Built-in types whose policy is `allow`: the model may see them. */
+export function allowedTypes(config: SamaranConfig): PiiType[] {
+  return Object.entries(config.policy ?? {})
+    .filter(([key, action]) => action === 'allow' && PII_TYPES.includes(key as PiiType))
+    .map(([key]) => key as PiiType);
+}
+
+/** The policy for a match: its custom label first, then its type. */
+export function policyFor(config: SamaranConfig, m: { type: PiiType; label?: string }): PolicyAction {
+  const policy = config.policy ?? {};
+  return (m.label !== undefined ? policy[m.label] : undefined) ?? policy[m.type] ?? 'mask';
+}
+
+/** Counts of the matches whose policy is one of `actions`, by label or type; empty when there are none. */
+export function underPolicy(
+  config: SamaranConfig, matches: Iterable<{ type: PiiType; label?: string }>, actions: readonly PolicyAction[],
+): Map<string, number> {
+  const out = new Map<string, number>();
+  for (const m of matches) {
+    if (!actions.includes(policyFor(config, m))) continue;
+    const name = m.label ?? m.type;
+    out.set(name, (out.get(name) ?? 0) + 1);
+  }
+  return out;
 }
 
 /**
@@ -112,9 +155,11 @@ export function loadConfig(root: string): SamaranConfig {
     throw new Error(`.samaran.json: ${why}`);
   };
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) fail('expected an object with "custom" and "allow"');
-  const { custom = [], allow = [], ...rest } = raw as Record<string, unknown>;
+  const { custom = [], allow = [], policy, route, audit, vaultTtlMinutes, ...rest } = raw as Record<string, unknown>;
   const unknownKeys = Object.keys(rest).filter((k) => !k.startsWith('$'));
-  if (unknownKeys.length) fail(`unknown key ${unknownKeys.map((k) => `"${k}"`).join(', ')} (expected "custom" and "allow")`);
+  if (unknownKeys.length) {
+    fail(`unknown key ${unknownKeys.map((k) => `"${k}"`).join(', ')} (expected "custom", "allow", "policy", "route", "audit", or "vaultTtlMinutes")`);
+  }
   if (!Array.isArray(custom)) fail('"custom" must be a list of rules');
   if (!Array.isArray(allow) || !allow.every((a) => typeof a === 'string')) fail('"allow" must be a list of strings');
   const rules = (custom as unknown[]).map((r, i): CustomRule => {
@@ -137,12 +182,53 @@ export function loadConfig(root: string): SamaranConfig {
   } catch (e) {
     fail((e as Error).message);
   }
-  return { custom: rules, allow: allow as string[] };
+  const config: SamaranConfig = { custom: rules, allow: allow as string[] };
+
+  if (policy !== undefined) {
+    if (!policy || typeof policy !== 'object' || Array.isArray(policy)) fail('"policy" must be an object such as { "HEALTH": "block" }');
+    const labels = new Set(rules.map((r) => r.label));
+    for (const [key, action] of Object.entries(policy as Record<string, unknown>)) {
+      if (!PII_TYPES.includes(key as PiiType) && !labels.has(key)) {
+        fail(`policy: "${key}" is neither a type (${PII_TYPES.join(', ')}) nor a label in "custom"`);
+      }
+      if (!POLICY_ACTIONS.includes(action as PolicyAction)) fail(`policy.${key} must be one of ${POLICY_ACTIONS.map((a) => `"${a}"`).join(', ')}`);
+      // A rule the model may see is a rule that does nothing: say so rather than keep it.
+      if (action === 'allow' && labels.has(key)) fail(`policy.${key}: "allow" for a custom rule; remove the rule from "custom" instead`);
+    }
+    config.policy = policy as Record<string, PolicyAction>;
+  }
+
+  if (route !== undefined) {
+    if (!route || typeof route !== 'object' || Array.isArray(route)) fail('"route" must be an object such as { "openai": "http://127.0.0.1:11434/v1" }');
+    const { openai, anthropic, model, ...extra } = route as Record<string, unknown>;
+    if (Object.keys(extra).length) fail(`route: unknown key ${Object.keys(extra).map((k) => `"${k}"`).join(', ')}`);
+    for (const [k, v] of Object.entries({ openai, anthropic })) {
+      if (v === undefined) continue;
+      if (typeof v !== 'string' || !/^https?:\/\//.test(v)) fail(`route.${k} must be an http(s) URL`);
+    }
+    if (model !== undefined && typeof model !== 'string') fail('route.model must be a string');
+    config.route = { openai: openai as string | undefined, anthropic: anthropic as string | undefined, model: model as string | undefined };
+  }
+  if (Object.values(config.policy ?? {}).includes('route') && !config.route?.openai && !config.route?.anthropic) {
+    fail('"route" in policy needs a local endpoint: add "route": { "openai": "http://127.0.0.1:11434/v1" }');
+  }
+
+  if (audit !== undefined && audit !== false) {
+    if (audit !== true && (typeof audit !== 'string' || !audit.trim())) fail('"audit" must be true or a file path');
+    config.audit = path.resolve(root, audit === true ? '.lokal/audit.jsonl' : (audit as string));
+  }
+  if (vaultTtlMinutes !== undefined) {
+    if (typeof vaultTtlMinutes !== 'number' || !(vaultTtlMinutes > 0)) fail('"vaultTtlMinutes" must be a positive number');
+    config.vaultTtlMinutes = vaultTtlMinutes as number;
+  }
+  return config;
 }
 
 /** detectPii with the project's own rules, minus the values it allows. */
 export function detectConfigured(text: string, options: DetectOptions, config: SamaranConfig): PiiMatch[] {
-  const found = detectPii(text, { ...options, custom: config.custom });
+  const allowed = allowedTypes(config);
+  const exclude = allowed.length ? [...(options.exclude ?? []), ...allowed] : options.exclude;
+  const found = detectPii(text, { ...options, custom: config.custom, ...(exclude ? { exclude } : {}) });
   return config.allow.length ? found.filter((m) => !config.allow.includes(m.value)) : found;
 }
 
