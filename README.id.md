@@ -443,7 +443,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: lokal-id/lokal@v0.12.0
+      - uses: lokal-id/lokal@v0.13.0
         # with:
         #   scope: all              # semua file yang dilacak git, bukan hanya perubahan
         #   min-confidence: medium  # termasuk nilai tanpa label atau nama kolom
@@ -462,7 +462,7 @@ repos:
         name: Data pribadi Indonesia
         entry: lokal-mcp scan --staged
         language: node
-        additional_dependencies: ['@lokal-id/mcp@0.12.0']
+        additional_dependencies: ['@lokal-id/mcp@0.13.0']
         pass_filenames: false
 ```
 
@@ -673,14 +673,14 @@ Guard sengaja meloloskan satu nilai biasa, misalnya satu nomor HP di hasil `grep
 |---|---|---|---|---|
 | 0.8.3: semua 6.160 nilai | 96,7% | 91,3% | 94,0% | 93,4–94,6% |
 | 0.9.0: semua 6.160 nilai | 99,8% | 95,8% | 96,6% | 96,1–97,0% |
-| **0.12.0: semua 6.160 nilai** | **99,8%** | **96,5%** | **97,2%** | 96,8–97,6% |
-| 0.12.0, NIK (0.9.0: 88,1%) | | | 100% | 98,8–100% |
-| 0.12.0, terlemah: agama | | | 85,7% | 81,1–89,3% |
-| 0.12.0, terlemah: nama | | | 93,6% | 92,4–94,6% |
+| **0.13.0: semua 6.160 nilai** | **99,8%** | **96,5%** | **97,2%** | 96,8–97,6% |
+| 0.13.0, NIK (0.9.0: 88,1%) | | | 100% | 98,8–100% |
+| 0.13.0, terlemah: agama | | | 85,7% | 81,1–89,3% |
+| 0.13.0, terlemah: nama | | | 93,6% | 92,4–94,6% |
 | 0.13.0 dengan model NER opsional (Python): semua nilai | 99,8% | 97,9% | 98,7% | 98,4–98,9% |
 | 0.13.0 dengan model NER opsional (Python): nama | | | 98,1% | 97,4–98,6% |
 
-*Terlindungi* artinya setiap huruf dan angka dari nilai itu tersamar, oleh deteksi jenis apa pun. Baris NER menambahkan [model opsional](python/README.md#names-the-rules-do-not-know-an-optional-ner-model) untuk nama ke aturan, dengan setelan yang dipilih di set pengembangan; tidak ada false positive juga, dengan waktu sekitar seratus kali lipat. Di berita asli, yang menyebut tokoh publik tanpa petunjuk yang dikenal aturan, aturan saja hanya menemukan sekitar seperlima nama orang (21,6% di set test [idner-news-2k](https://github.com/khairunnisaor/idner-news-2k)); dengan model, 91,3%, dengan presisi 98,3%. Di 2.277 artikel yang di-crawl dari 14 portal berita pada Oktober 2026, model menemukan 90,6% dari 2.250 narasumber yang dikutip (aturan saja: 18,5%), dan 95% deteksinya dalam sampel 300 memang nama orang. [Stress test](evals/stress) mengukur kecepatan dan batasnya pada input besar dan bermusuhan. Sejak 0.12.0, NIK yang salah baca oleh OCR ("3674O2 53097l0l22") dikenali dari labelnya. Celah yang tersisa: nama tanpa label atau bagian nama yang dikenal di sekitarnya, cara menyebut agama yang belum dikenal aturannya, dan salah baca OCR lainnya ("AGAMA. ISLAM" tanpa titik dua). Tidak ada false positive di 400 dokumen jebakan. CI gagal kalau sebuah rilis mendapat skor di bawah baseline terakhir.
+*Terlindungi* artinya setiap huruf dan angka dari nilai itu tersamar, oleh deteksi jenis apa pun. Baris NER menambahkan [model opsional](python/README.md#names-the-rules-do-not-know-an-optional-ner-model) untuk nama ke aturan, dengan setelan yang dipilih di set pengembangan; tidak ada false positive juga, dengan waktu sekitar seratus kali lipat. Di berita asli, yang menyebut tokoh publik tanpa petunjuk yang dikenal aturan, aturan saja hanya menemukan sekitar seperlima nama orang (21,6% di set test [idner-news-2k](https://github.com/khairunnisaor/idner-news-2k)); dengan model, 91,3%, dengan presisi 98,3%. Di 2.277 artikel yang di-crawl dari 14 portal berita pada Oktober 2026, model menemukan 90,6% dari 2.250 narasumber yang dikutip (aturan saja: 18,5%), dan 95% deteksinya dalam sampel 300 memang nama orang. [Stress test](evals/stress) mengukur kecepatan dan batasnya pada input besar dan bermusuhan. Sejak 0.13.0, NIK yang salah baca oleh OCR ("3674O2 53097l0l22") dikenali dari labelnya. Celah yang tersisa: nama tanpa label atau bagian nama yang dikenal di sekitarnya, cara menyebut agama yang belum dikenal aturannya, dan salah baca OCR lainnya ("AGAMA. ISLAM" tanpa titik dua). Tidak ada false positive di 400 dokumen jebakan. CI gagal kalau sebuah rilis mendapat skor di bawah baseline terakhir.
 
 `npm run eval:pii` menjalankan benchmark formatnya saja: 618 dari 618 data pribadi tersamar di 418 format, dan 338 dari 338 nilai yang mirip tetap utuh, dan setiap temuan dicek berada tepat di posisinya. Formatnya mulai dari KTP hasil OCR, export WhatsApp, JSON Midtrans, log Laravel, pesan HL7, dan dump SQL sampai teks tanpa label sama sekali: tiket CS, tanda tangan email, mutasi rekening, bukti transfer, form HTML, URL, nama file, chat berbahasa Sunda dan Jawa, dan chat santai soal kesehatan, genetika, utang, agama, pernikahan, dan catatan kriminal. Nilai yang mirip meliputi nomor resi, ID invoice, timestamp, nama lembaga, nama produk bank, tempat yang memakai nama orang, dan kata yang juga nama orang. **Angka 100% itu diukur pada kasus yang sudah dipakai untuk menyetel aturan.** Delapan kelompok kasus masing-masing ditulis setelah aturan saat itu jadi dan dijalankan sekali sebelum ada perbaikan: hasilnya 40 dari 49, 21 dari 24, 59 dari 90, 57 dari 65, 48 dari 57, 55 dari 67, 46 dari 55, dan 51 dari 61. Pada teks bebas yang belum pernah dilihat, perkirakan sekitar 82 sampai 88% data pribadi tertangkap. Dijalankan pada teks resmi UU 27/2022 (64.000 karakter), yang tersamar hanya nama Presiden di bagian tanda tangan.
 

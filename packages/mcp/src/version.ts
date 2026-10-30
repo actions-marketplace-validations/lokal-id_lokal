@@ -1,2 +1,2 @@
 // The release version, in one place: the MCP server reports it and `lokal-mcp init` pins it in what it writes.
-export const VERSION = '0.12.0';
+export const VERSION = '0.13.0';
