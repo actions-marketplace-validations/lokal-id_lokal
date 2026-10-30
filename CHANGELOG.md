@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-10-30
+
 ### Added
 
 - `lokal-mcp init --profile personal|team|strict` sets a project up: `.samaran.json`, `.samaranignore`, and for teams a GitHub workflow pinned to the same release. `--dry-run` shows the files without writing them. A file that is there is kept, except `.samaran.json` with `--force`.
@@ -286,7 +288,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/lokal-id/lokal/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/lokal-id/lokal/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/lokal-id/lokal/compare/v0.8.3...v0.9.0
 [0.8.3]: https://github.com/lokal-id/lokal/compare/v0.8.2...v0.8.3
