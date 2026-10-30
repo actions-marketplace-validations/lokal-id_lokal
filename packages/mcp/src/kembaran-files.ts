@@ -23,6 +23,14 @@ export interface AnonymizedFile {
   from: string;
   to: string;
   replaced: Partial<Record<PiiType, number>>;
+  /** Values the detector missed in this file, replaced because they were found in this or another input. */
+  crossed: Partial<Record<PiiType, number>>;
+}
+
+export interface Anonymized {
+  files: AnonymizedFile[];
+  /** Real identity numbers, phone numbers, e-mail addresses, and full names of the input left in the output: 0 unless glued to other text. */
+  leaked: number;
 }
 
 export const KEMBARAN_NOTE =
@@ -34,7 +42,7 @@ export function planOutputs(inputs: string[], output: string): string[] {
   return inputs.map((file) => (several ? path.join(output, path.basename(file)) : output));
 }
 
-export function anonymizeFiles(inputs: string[], output: string, options: AnonymizeOptions = {}): AnonymizedFile[] {
+export function anonymizeFiles(inputs: string[], output: string, options: AnonymizeOptions = {}): Anonymized {
   const targets = planOutputs(inputs, output);
   // Check everything before writing anything.
   inputs.forEach((file, i) => {
@@ -50,13 +58,16 @@ export function anonymizeFiles(inputs: string[], output: string, options: Anonym
     keepBirthDate: options.keepBirthDate,
     custom: options.custom,
   });
-  return inputs.map((file, i) => {
-    const { text, replaced } = kembaran.text(readFileSync(file, 'utf8'));
-    if (options.dryRun) return { from: file, to: targets[i]!, replaced };
-    mkdirSync(path.dirname(targets[i]!), { recursive: true });
-    writeFileSync(targets[i]!, text, 'utf8');
-    return { from: file, to: targets[i]!, replaced };
+  // All files at once: a value found in one is replaced in the others too, where it has no label or column name.
+  const result = kembaran.texts(inputs.map((file) => readFileSync(file, 'utf8')));
+  const files = result.files.map(({ text, replaced, crossed }, i) => {
+    if (!options.dryRun) {
+      mkdirSync(path.dirname(targets[i]!), { recursive: true });
+      writeFileSync(targets[i]!, text, 'utf8');
+    }
+    return { from: inputs[i]!, to: targets[i]!, replaced, crossed };
   });
+  return { files, leaked: result.leaked };
 }
 
 const USAGE = `Usage: lokal-mcp kembaran <input>... -o <output> [options]
@@ -97,7 +108,7 @@ export function runKembaran(args: string[]): void {
     return;
   }
   try {
-    const files = anonymizeFiles(inputs, output ?? '(dry run)', {
+    const { files, leaked } = anonymizeFiles(inputs, output ?? '(dry run)', {
       secret: opt('--secret'),
       keep: keep as PiiType[],
       keepBirthDate: args.includes('--keep-birth-date'),
@@ -106,9 +117,12 @@ export function runKembaran(args: string[]): void {
       custom: loadConfig(process.cwd()).custom,
     });
     for (const f of files) {
-      const counts = Object.entries(f.replaced).map(([t, n]) => `${t}=${n}`).join(', ') || 'nothing found';
+      const crossed = Object.values(f.crossed).reduce((a, b) => a + b, 0);
+      const counts = (Object.entries(f.replaced).map(([t, n]) => `${t}=${n}`).join(', ') || 'nothing found') +
+        (crossed ? `, and ${crossed} more found through the other values` : '');
       process.stderr.write(dryRun ? `${f.from}: would replace ${counts}\n` : `${f.from} -> ${f.to}: ${counts}\n`);
     }
+    if (leaked) process.stderr.write(`Warning: ${leaked} real value(s) are still in the output, glued to other text. Check it before sharing.\n`);
     process.stderr.write(dryRun ? 'Dry run: nothing was written.\n' : `${KEMBARAN_NOTE}\n`);
   } catch (e) {
     process.stderr.write(`${(e as Error).message}\n`);

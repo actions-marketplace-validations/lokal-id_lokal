@@ -615,3 +615,25 @@ test('kesehatan, keuangan, dan status dalam kalimat sehari-hari', () => {
     [],
   );
 });
+
+test('kata konteks: NIK hasil OCR, tanggal lahir di baris data, marga Tionghoa di akhir nama', () => {
+  // OCR reads 0 as O and 1 as l on a card photo; the label says what the number is.
+  assert.deepEqual(values('NIK : 33O521 6805000l43\nNama : WULAN HARTONO', ['NIK', 'KK']), ['NIK:33O521 6805000l43']);
+  assert.deepEqual(values('No. KK: 32O1O12OO1OOOO17', ['NIK', 'KK']), ['KK:32O1O12OO1OOOO17']);
+  // Digits only stay with the digit-run detector, and a word is not a number.
+  assert.deepEqual(values('NIK : 3201011508950001', ['NIK']), ['NIK:3201011508950001']);
+  assert.deepEqual(values('NIK : lolos verifikasi ok', ['NIK', 'KK']), []);
+  // A record with the birth date after the name, but not a dated letter or a date in the future.
+  assert.deepEqual(values('Sinta Wibowo, 12-03-1960, Jl. Cempaka No. 120', ['BIRTH_DATE']), ['BIRTH_DATE:12-03-1960']);
+  assert.deepEqual(values('Jakarta Selatan, 12-03-2024, perihal undangan', ['BIRTH_DATE']), []);
+  assert.deepEqual(values('Sinta Wibowo, 12-03-2999, Jl. Cempaka', ['BIRTH_DATE']), []);
+  assert.deepEqual(values('Sinta Wibowo, 31-02-1960, Jl. Cempaka', ['BIRTH_DATE']), []);
+  assert.deepEqual(values('Peserta: Dewi Lim dan Ayu Tan hadir. Wati Rahayu izin.', ['NAME']), [
+    'NAME:Dewi Lim', 'NAME:Ayu Tan', 'NAME:Wati Rahayu',
+  ]);
+  assert.deepEqual(values('Ia seorang muslim taat. religion - Islam. Ybs nonmuslim.', ['RELIGION']), [
+    'RELIGION:muslim', 'RELIGION:Islam', 'RELIGION:nonmuslim',
+  ]);
+  // About a group, not a person.
+  assert.deepEqual(values('umat Hindu di desa itu, pendidikan agama-Islam', ['RELIGION']), []);
+});

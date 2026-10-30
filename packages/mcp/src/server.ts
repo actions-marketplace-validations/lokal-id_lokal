@@ -683,19 +683,24 @@ export function createServer(
       try {
         inputs = paths.map(inRoot);
         out = inRoot(output);
-        const files = anonymizeFiles(inputs, out, { keep, keepBirthDate: keep_birth_date, secret, overwrite, dryRun: dry_run, custom: config.custom });
+        const { files, leaked } = anonymizeFiles(inputs, out, { keep, keepBirthDate: keep_birth_date, secret, overwrite, dryRun: dry_run, custom: config.custom });
         if (dry_run) {
           return json({
             dry_run: true,
-            files: files.map((f) => ({ from: toPosix(path.relative(root, f.from)), would_write: toPosix(path.relative(root, f.to)), would_replace: f.replaced })),
+            files: files.map((f) => ({ from: toPosix(path.relative(root, f.from)), would_write: toPosix(path.relative(root, f.to)), would_replace: f.replaced, also_found: f.crossed })),
+            real_values_left: leaked,
           });
         }
         for (const f of files) {
-          audit('anonymized', 'anonymize_file', { file: toPosix(path.relative(root, f.from)), counts: f.replaced as Record<string, number> });
+          const counts: Record<string, number> = { ...f.replaced };
+          for (const [t, n] of Object.entries(f.crossed)) counts[t] = (counts[t] ?? 0) + n;
+          audit('anonymized', 'anonymize_file', { file: toPosix(path.relative(root, f.from)), counts });
         }
         return json({
-          files: files.map((f) => ({ from: toPosix(path.relative(root, f.from)), to: toPosix(path.relative(root, f.to)), replaced: f.replaced })),
-          note: KEMBARAN_NOTE,
+          files: files.map((f) => ({ from: toPosix(path.relative(root, f.from)), to: toPosix(path.relative(root, f.to)), replaced: f.replaced, also_found: f.crossed })),
+          // Real values of the input still in the output: 0 unless one is glued to other text.
+          real_values_left: leaked,
+          note: leaked ? `${leaked} real value(s) are still in the output, glued to other text: tell the user to check it before sharing. ${KEMBARAN_NOTE}` : KEMBARAN_NOTE,
         });
       } catch (e) {
         return fail((e as Error).message);

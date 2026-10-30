@@ -43,7 +43,7 @@ export const AMBIGUOUS_GIVEN_NAMES = new Set(
   (
     'budi sri sekar laras murni indah putri putra ayu fajar agung mega intan sari dewi wahyu citra cahya kartika permata bunga suci ' +
     'wulan melati puspa lestari surya eka dwi tri catur imam hari kurnia nur bintang rizqi rezeki mulia setia ' +
-    'cinta kasih bagus santi sinar rahayu dian ratu asih mawar mutiara panca bima satria pandu panji puji tari gita okta octa vino yoga angel grace nana ana ida ina sudirman rejeki'
+    'cinta kasih bagus santi sinar rahayu dian ratu asih mawar mutiara panca bima satria pandu panji puji tari gita okta octa vino yoga angel grace nana ana ida ina sudirman rejeki wati'
   ).split(' '),
 );
 

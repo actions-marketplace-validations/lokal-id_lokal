@@ -404,6 +404,7 @@ Slamet Matondang,3201012409953895,24-09-1995,0812-8655-8077,rini.pertiwi10@examp
 | Card, bank account | Length; a card keeps its issuer prefix and passes Luhn |
 
 - The same value gets the same stand-in in every file of one run, so joins and foreign keys hold. `0812-3456-7890` and `+62 812 3456 7890` are one person. An individual's NPWP stays equal to their NIK.
+- The files of one run are read together first. A value found in one, such as a phone number in the `pelanggan` table, is replaced wherever else it appears, even where nothing labels it: a foreign key in `pesanan`, or a name in a notes column of a CSV export. No stand-in is the real value of anyone else in the data. The output is then checked for the real identity numbers, phone numbers, e-mail addresses, and full names, and the command warns if any is left.
 - Stand-ins come from HMAC-SHA256 under a secret. Without `--secret` it is random for each run; with one, a weekly staging refresh gives the same people. NIKs, phone numbers, and account numbers never collide.
 - Gender, religion, marital status, and nationality are kept by default; `--keep FINANCIAL` keeps more. `--keep-birth-date` keeps whole birth dates.
 - In an agent, the `anonymize_file` tool does it on your machine and returns only counts. TypeScript: `new Kembaran({ secret }).text(text)` from `@lokal-id/core/kembaran`; Python: `Kembaran(secret=…).text(text)` from `lokal.kembaran`, with the same output for the same secret.
@@ -442,7 +443,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: lokal-id/lokal@v0.11.0
+      - uses: lokal-id/lokal@v0.12.0
         # with:
         #   scope: all              # every tracked file, not only the changes
         #   min-confidence: medium  # also values without a label or column name
@@ -461,7 +462,7 @@ repos:
         name: Indonesian personal data
         entry: lokal-mcp scan --staged
         language: node
-        additional_dependencies: ['@lokal-id/mcp@0.11.0']
+        additional_dependencies: ['@lokal-id/mcp@0.12.0']
         pass_filenames: false
 ```
 
@@ -671,12 +672,13 @@ The guard lets one ordinary value through on purpose, such as a single phone num
 | | Precision | Recall | Protected | 95% interval |
 |---|---|---|---|---|
 | 0.8.3: all 6,160 values | 96.7% | 91.3% | 94.0% | 93.4–94.6% |
-| **0.9.0: all 6,160 values** | **99.8%** | **95.8%** | **96.6%** | 96.1–97.0% |
-| 0.9.0, weakest: religion | | | 85.7% | 81.1–89.3% |
-| 0.9.0, weakest: NIK | | | 88.1% | 84.1–91.2% |
-| 0.9.0, weakest: names | | | 93.6% | 92.4–94.6% |
+| 0.9.0: all 6,160 values | 99.8% | 95.8% | 96.6% | 96.1–97.0% |
+| **0.12.0: all 6,160 values** | **99.8%** | **96.5%** | **97.2%** | 96.8–97.6% |
+| 0.12.0, NIK (0.9.0: 88.1%) | | | 100% | 98.8–100% |
+| 0.12.0, weakest: religion | | | 85.7% | 81.1–89.3% |
+| 0.12.0, weakest: names | | | 93.6% | 92.4–94.6% |
 
-*Protected* means every letter and digit of the value was masked, by a detection of any type. The gaps left are OCR output with misread characters (a NIK read as "3674O2 53097l0l22", "AGAMA. ISLAM" without a colon) and names with no label in front of them. None of the 400 trap documents has a false positive. CI fails when a release scores lower than the last baseline.
+*Protected* means every letter and digit of the value was masked, by a detection of any type. 0.12.0 reads a NIK that OCR misread ("3674O2 53097l0l22") from its label. The gaps left are names with no label or known name part around them, ways of stating a religion the rules do not know, and other OCR misreads ("AGAMA. ISLAM" without a colon). None of the 400 trap documents has a false positive. CI fails when a release scores lower than the last baseline.
 
 `npm run eval:pii` runs the format benchmark on its own: 618 of 618 personal values masked across 418 formats, and 338 of 338 look-alikes left intact, with every match checked to sit exactly at its offsets. The formats range from KTP OCR, WhatsApp exports, Midtrans JSON, Laravel logs, HL7 messages, and SQL dumps to text with no labels at all: support tickets, e-mail signatures, bank statements, receipts, HTML forms, URLs, file names, chat in Sundanese and Javanese, and casual chat about health, genetics, debt, religion, marriage, and criminal records. The look-alikes include resi numbers, invoice IDs, timestamps, institutions, bank product names, places named after people, and words that are also given names. **The 100% is measured on cases the rules were tuned on.** Eight batches of cases were each written after the rules of the day and run once before any fix: they caught 40 of 49, 21 of 24, 59 of 90, 57 of 65, 48 of 57, 55 of 67, 46 of 55, and 51 of 61 values. On free text it has not seen, expect it to catch about 82 to 88% of personal values. Run over the official text of UU 27/2022 (64,000 characters), it masks only the President's name in the signature block.
 

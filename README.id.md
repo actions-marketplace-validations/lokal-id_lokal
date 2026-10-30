@@ -404,6 +404,7 @@ Slamet Matondang,3201012409953895,24-09-1995,0812-8655-8077,rini.pertiwi10@examp
 | Kartu, rekening | Panjangnya; kartu tetap berawalan penerbit yang sama dan lolos Luhn |
 
 - Nilai yang sama mendapat kembaran yang sama di semua file dalam satu kali jalan, jadi JOIN dan foreign key tetap jalan. `0812-3456-7890` dan `+62 812 3456 7890` dianggap satu orang. NPWP orang pribadi tetap sama dengan NIK-nya.
+- Semua file dalam satu kali jalan dibaca bersama dulu. Nilai yang ditemukan di satu file, misalnya nomor HP di tabel `pelanggan`, diganti di semua tempat lain, bahkan tanpa label: foreign key di tabel `pesanan`, atau nama di kolom catatan sebuah ekspor CSV. Tidak ada kembaran yang sama dengan nilai asli orang lain di data itu. Setelah itu hasilnya dicek ulang untuk nomor identitas, nomor HP, email, dan nama lengkap asli, dan perintahnya memberi peringatan kalau masih ada yang tersisa.
 - Kembaran dibuat dengan HMAC-SHA256 dan sebuah kunci. Tanpa `--secret`, kuncinya acak setiap kali jalan; dengan kunci, refresh staging mingguan menghasilkan orang palsu yang sama. NIK, nomor HP, dan nomor rekening palsu tidak pernah bertabrakan.
 - Jenis kelamin, agama, status perkawinan, dan kewarganegaraan dibiarkan secara default; `--keep FINANCIAL` membiarkan lebih banyak. `--keep-birth-date` mempertahankan tanggal lahir lengkap.
 - Di agent, tool `anonymize_file` melakukannya di komputer kamu dan hanya mengembalikan jumlah. TypeScript: `new Kembaran({ secret }).text(text)` dari `@lokal-id/core/kembaran`; Python: `Kembaran(secret=…).text(text)` dari `lokal.kembaran`, dengan hasil yang sama untuk kunci yang sama.
@@ -442,7 +443,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: lokal-id/lokal@v0.11.0
+      - uses: lokal-id/lokal@v0.12.0
         # with:
         #   scope: all              # semua file yang dilacak git, bukan hanya perubahan
         #   min-confidence: medium  # termasuk nilai tanpa label atau nama kolom
@@ -461,7 +462,7 @@ repos:
         name: Data pribadi Indonesia
         entry: lokal-mcp scan --staged
         language: node
-        additional_dependencies: ['@lokal-id/mcp@0.11.0']
+        additional_dependencies: ['@lokal-id/mcp@0.12.0']
         pass_filenames: false
 ```
 
@@ -671,12 +672,13 @@ Guard sengaja meloloskan satu nilai biasa, misalnya satu nomor HP di hasil `grep
 | | Precision | Recall | Terlindungi | Interval 95% |
 |---|---|---|---|---|
 | 0.8.3: semua 6.160 nilai | 96,7% | 91,3% | 94,0% | 93,4–94,6% |
-| **0.9.0: semua 6.160 nilai** | **99,8%** | **95,8%** | **96,6%** | 96,1–97,0% |
-| 0.9.0, terlemah: agama | | | 85,7% | 81,1–89,3% |
-| 0.9.0, terlemah: NIK | | | 88,1% | 84,1–91,2% |
-| 0.9.0, terlemah: nama | | | 93,6% | 92,4–94,6% |
+| 0.9.0: semua 6.160 nilai | 99,8% | 95,8% | 96,6% | 96,1–97,0% |
+| **0.12.0: semua 6.160 nilai** | **99,8%** | **96,5%** | **97,2%** | 96,8–97,6% |
+| 0.12.0, NIK (0.9.0: 88,1%) | | | 100% | 98,8–100% |
+| 0.12.0, terlemah: agama | | | 85,7% | 81,1–89,3% |
+| 0.12.0, terlemah: nama | | | 93,6% | 92,4–94,6% |
 
-*Terlindungi* artinya setiap huruf dan angka dari nilai itu tersamar, oleh deteksi jenis apa pun. Celah yang tersisa: hasil OCR yang salah baca (NIK terbaca "3674O2 53097l0l22", "AGAMA. ISLAM" tanpa titik dua) dan nama tanpa label di depannya. Tidak ada false positive di 400 dokumen jebakan. CI gagal kalau sebuah rilis mendapat skor di bawah baseline terakhir.
+*Terlindungi* artinya setiap huruf dan angka dari nilai itu tersamar, oleh deteksi jenis apa pun. Sejak 0.12.0, NIK yang salah baca oleh OCR ("3674O2 53097l0l22") dikenali dari labelnya. Celah yang tersisa: nama tanpa label atau bagian nama yang dikenal di sekitarnya, cara menyebut agama yang belum dikenal aturannya, dan salah baca OCR lainnya ("AGAMA. ISLAM" tanpa titik dua). Tidak ada false positive di 400 dokumen jebakan. CI gagal kalau sebuah rilis mendapat skor di bawah baseline terakhir.
 
 `npm run eval:pii` menjalankan benchmark formatnya saja: 618 dari 618 data pribadi tersamar di 418 format, dan 338 dari 338 nilai yang mirip tetap utuh, dan setiap temuan dicek berada tepat di posisinya. Formatnya mulai dari KTP hasil OCR, export WhatsApp, JSON Midtrans, log Laravel, pesan HL7, dan dump SQL sampai teks tanpa label sama sekali: tiket CS, tanda tangan email, mutasi rekening, bukti transfer, form HTML, URL, nama file, chat berbahasa Sunda dan Jawa, dan chat santai soal kesehatan, genetika, utang, agama, pernikahan, dan catatan kriminal. Nilai yang mirip meliputi nomor resi, ID invoice, timestamp, nama lembaga, nama produk bank, tempat yang memakai nama orang, dan kata yang juga nama orang. **Angka 100% itu diukur pada kasus yang sudah dipakai untuk menyetel aturan.** Delapan kelompok kasus masing-masing ditulis setelah aturan saat itu jadi dan dijalankan sekali sebelum ada perbaikan: hasilnya 40 dari 49, 21 dari 24, 59 dari 90, 57 dari 65, 48 dari 57, 55 dari 67, 46 dari 55, dan 51 dari 61. Pada teks bebas yang belum pernah dilihat, perkirakan sekitar 82 sampai 88% data pribadi tertangkap. Dijalankan pada teks resmi UU 27/2022 (64.000 karakter), yang tersamar hanya nama Presiden di bagian tanda tangan.
 

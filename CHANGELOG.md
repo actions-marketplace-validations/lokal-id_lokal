@@ -4,6 +4,19 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-10-30
+
+### Added
+
+- Kembaran reads the files of one run together (`Kembaran.texts` in TypeScript and Python, used by `lokal-mcp kembaran`, `python -m lokal.kembaran`, and `anonymize_file`). A value found in one file is replaced wherever it appears in the others, including a phone number used as a foreign key or a name in a notes column with nothing to label it. No stand-in is the real value of anyone else in the data. The output is checked for the real identity numbers, phone numbers, e-mail addresses, and full names: `anonymize_file` reports them as `real_values_left`, and the commands warn if any is left. Each file also reports `also_found`, the values replaced this way.
+- Samaran detects a NIK or KK read by OCR, with letters for digits (`NIK : 33O521 6805000l43`), and a birth date right after a name in a record (`Sinta Wibowo, 12-03-1960, Jl. …`).
+
+### Fixed
+
+- `INSERT INTO pelanggan VALUES (…)`: `VALUES` and other SQL keywords were taken for a name after a word such as "pelanggan".
+- Names with a short Chinese-Indonesian family name at the end (`Dewi Lim`, `Ayu Tan`), and `Wati` as a given name.
+- Religion after "ia" or "ybs" (`Ia seorang muslim`), and after a dash (`religion - Islam`).
+
 ## [0.11.0] - 2026-10-30
 
 ### Added
@@ -288,7 +301,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.11.0...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.12.0...HEAD
+[0.12.0]: https://github.com/lokal-id/lokal/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/lokal-id/lokal/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/lokal-id/lokal/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/lokal-id/lokal/compare/v0.8.3...v0.9.0

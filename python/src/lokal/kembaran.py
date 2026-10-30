@@ -11,6 +11,9 @@ person. Unlike Samaran's [NIK_1] placeholders, the result looks like the origina
 - Within one line (a CSV row, an SQL tuple), a birth date follows the stand-in NIK, so the row stays consistent.
 - Stand-ins come from HMAC-SHA256 under a secret: random for each run unless one is given, and never reversible
   without it. Unique values (NIK, phone, account numbers) never collide.
+- ``texts`` takes the files of one database together: a value found in one is replaced wherever it appears in the
+  others, where the detector alone would miss it (a phone number as a foreign key, a name in a notes column), no
+  stand-in is a real value of the input, and what is left of the real values is counted.
 
 For the same secret the output is identical to the TypeScript package's.
 
@@ -48,7 +51,7 @@ from ._result import Result
 from .samaran.core import _canonical
 from .samaran.custom import CustomRule, RuleLike, to_rules
 from .samaran.detectors import check_types, detect_pii
-from .samaran.types import Confidence, PiiType
+from .samaran.types import Confidence, PiiMatch, PiiType
 
 KEEP_BY_DEFAULT: tuple[PiiType, ...] = ('GENDER', 'RELIGION', 'MARITAL_STATUS', 'NATIONALITY')
 
@@ -98,6 +101,45 @@ class KembaranResult(Result):
     text: str
     #: How many values of each type were replaced.
     replaced: dict[str, int] = field(default_factory=dict)
+
+
+@dataclass(slots=True)
+class KembaranFile(Result):
+    text: str
+    #: How many values of each type the detector found and replaced.
+    replaced: dict[str, int] = field(default_factory=dict)
+    #: Values replaced because they were found in this or another input, where the detector missed them here.
+    crossed: dict[str, int] = field(default_factory=dict)
+
+
+@dataclass(slots=True)
+class KembaranTextsResult(Result):
+    files: list[KembaranFile]
+    #: Real identity numbers, phone numbers, e-mail addresses, and full names of the input still in the output. 0
+    #: unless one is glued to other text ("ID3201…"); a check, not a guarantee for what the detector never found.
+    leaked: int
+
+
+# Numbers looked up across inputs. Shorter or other numbers (amounts, IDs) are too common to look up.
+_CROSS_DIGITS = frozenset(('NIK', 'KK', 'NPWP', 'PHONE', 'BANK_ACCOUNT', 'CARD', 'BPJS', 'SIM', 'NIP', 'NISN'))
+_CROSS_DIGIT_RUN = re.compile(r'(?<![A-Za-z0-9_+])\+?[0-9](?:[ .-]?[0-9]){7,18}(?![A-Za-z0-9_])')
+_CROSS_EMAIL = re.compile(r'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}')
+_NAME_WORD = re.compile(r"[A-Za-z'’-]{2,}")
+
+
+def _digit_key(pii_type: str, digits: str) -> str:
+    # How `texts` looks a number up: a phone number in its national form, so 0812… and 62812… are one.
+    return '0' + digits[2:] if pii_type == 'PHONE' and digits.startswith('62') else digits
+
+
+class _Hit:
+    __slots__ = ('end', 'start', 'type', 'value')
+
+    def __init__(self, pii_type: str, start: int, end: int, value: str) -> None:
+        self.type = pii_type
+        self.start = start
+        self.end = end
+        self.value = value
 
 
 class _Hmac:
@@ -248,12 +290,97 @@ class Kembaran:
         self._fakes: dict[str, str] = {}
         self._used: dict[str, set[str]] = {}
         self._nik_days: dict[str, _Day] = {}
+        # Canonical real values of the inputs given to `texts`: no stand-in may be one of them.
+        self._originals: dict[str, set[str]] = {}
 
     def text(self, text: str) -> KembaranResult:
         """Replaces every piece of personal data in a text: a CSV, an SQL dump, JSON, a log, or prose."""
-        matches = detect_pii(
+        return self._replace_matches(text, self._detect(text))
+
+    def texts(self, inputs: Iterable[str]) -> KembaranTextsResult:
+        """The files of one database or export, with one set of stand-ins: an SQL dump and the CSV files made from it.
+
+        On top of what ``text`` does for each, a real value found in any of them is replaced wherever it appears, no
+        stand-in is a real value of the input, and ``leaked`` counts the real values left.
+        """
+        inputs = list(inputs)
+        found = [self._detect(t) for t in inputs]
+        digits: dict[str, str] = {}
+        emails: set[str] = set()
+        names: set[str] = set()
+        for matches in found:
+            for m in matches:
+                if m.type in self._keep:
+                    continue
+                if m.type in _CROSS_DIGITS or m.type == 'NAME':
+                    self._originals.setdefault(m.type, set()).add(self._canon(m.type, m.value))
+                if m.type in _CROSS_DIGITS:
+                    d = _only_digits(m.value)
+                    if len(d) >= 8 and _digit_key(m.type, d) not in digits:
+                        digits[_digit_key(m.type, d)] = m.type
+                elif m.type == 'EMAIL':
+                    emails.add(m.value.lower())
+                elif m.type == 'NAME':
+                    core = self._name_core(m.value)
+                    if len(core) >= 2 and all(_NAME_WORD.fullmatch(w) for w in core):
+                        names.add(' '.join(w.lower() for w in core))
+        # Longest first, so "Budi Santoso Wijaya" is replaced whole before "Budi Santoso".
+        name_re = (
+            re.compile(
+                '(?<![A-Za-z0-9])(?:'
+                + '|'.join(
+                    r'[ \t]+'.join(re.escape(w) for w in n.split(' '))
+                    for n in sorted(names, key=lambda n: (-len(n), n))
+                )
+                + ')(?![A-Za-z0-9])',
+                re.IGNORECASE | re.ASCII,
+            )
+            if names
+            else None
+        )
+
+        def real_values(text: str) -> list[_Hit]:
+            hits: list[_Hit] = []
+            for m in _CROSS_DIGIT_RUN.finditer(text):
+                d = _only_digits(m.group(0))
+                pii_type = digits.get(d)
+                if pii_type is None and d.startswith('62') and digits.get('0' + d[2:]) == 'PHONE':
+                    pii_type = 'PHONE'
+                if pii_type is not None:
+                    hits.append(_Hit(pii_type, m.start(), m.end(), m.group(0)))
+            for m in _CROSS_EMAIL.finditer(text):
+                if m.group(0).lower() in emails:
+                    hits.append(_Hit('EMAIL', m.start(), m.end(), m.group(0)))
+            if name_re is not None:
+                hits.extend(_Hit('NAME', m.start(), m.end(), m.group(0)) for m in name_re.finditer(text))
+            hits.sort(key=lambda h: (h.start, -h.end))
+            kept: list[_Hit] = []
+            for h in hits:
+                if not kept or h.start >= kept[-1].end:
+                    kept.append(h)
+            return kept
+
+        files: list[KembaranFile] = []
+        for text, matches in zip(inputs, found, strict=True):
+            first = self._replace_matches(text, matches)
+            crossed: dict[str, int] = {}
+            parts: list[str] = []
+            cursor = 0
+            for h in real_values(first.text):
+                parts.append(first.text[cursor : h.start])
+                parts.append(self._value(h.type, h.value, None))
+                cursor = h.end
+                crossed[h.type] = crossed.get(h.type, 0) + 1
+            parts.append(first.text[cursor:])
+            files.append(KembaranFile(''.join(parts), first.replaced, crossed))
+        return KembaranTextsResult(files, sum(len(real_values(f.text)) for f in files))
+
+    def _detect(self, text: str) -> list[PiiMatch]:
+        return detect_pii(
             text, min_confidence=self._min_confidence, exclude=sorted(self._keep), custom=self._custom  # type: ignore[arg-type]
         )
+
+    def _replace_matches(self, text: str, matches: list[PiiMatch]) -> KembaranResult:
         line_starts = [0]
         i = text.find('\n')
         while i >= 0:
@@ -296,11 +423,7 @@ class Kembaran:
     def _value(self, pii_type: str, original: str, row_day: Optional[_Day]) -> str:
         if pii_type in self._keep:
             return original
-        canon = (
-            ' '.join(t.lower() for t in self._name_core(original))
-            if pii_type == 'NAME'
-            else _canonical(pii_type, original)  # type: ignore[arg-type]
-        )
+        canon = self._canon(pii_type, original)
         if pii_type == 'BIRTH_DATE' and row_day is not None and not self._keep_birth_date:
             return self._birth_date(original, _Stream(self._key, 'BIRTH_DATE|row'), row_day)
         cache_key = f'{pii_type}|{canon}'
@@ -310,6 +433,10 @@ class Kembaran:
         fake = ''
         for attempt in range(100):
             fake = self._make(pii_type, original, canon, _Stream(self._key, f'{pii_type}|{canon}|{attempt}'))
+            # A stand-in that is someone's real value in the same data would put a real person back in it.
+            real = self._originals.get(pii_type)
+            if real and (fake.lower() if pii_type == 'NAME' else _canonical(pii_type, fake)) in real:  # type: ignore[arg-type]
+                continue
             if pii_type not in _UNIQUE:
                 break
             used = self._used.setdefault(pii_type, set())
@@ -318,6 +445,11 @@ class Kembaran:
                 break
         self._fakes[cache_key] = fake
         return self._render(pii_type, original, fake)
+
+    def _canon(self, pii_type: str, value: str) -> str:
+        if pii_type == 'NAME':
+            return ' '.join(t.lower() for t in self._name_core(value))
+        return _canonical(pii_type, value)  # type: ignore[arg-type]
 
     @staticmethod
     def _name_core(name: str) -> list[str]:
@@ -534,20 +666,31 @@ def main(argv: Optional[list[str]] = None) -> int:
     except ValueError as e:
         parser.error(str(e))
     several = len(args.inputs) > 1 or args.output.is_dir()
-    for src in args.inputs:
-        dest = args.output / src.name if several else args.output
+    targets = [args.output / src.name if several else args.output for src in args.inputs]
+    for dest in targets:
         if dest.exists() and not args.overwrite:
             print(f'{dest} exists; pass --overwrite to replace it', file=sys.stderr)
             return 1
-        result = k.text(src.read_bytes().decode('utf-8', 'replace'))
+    # All files at once: a value found in one is replaced in the others too, where it has no label or column name.
+    result = k.texts(src.read_bytes().decode('utf-8', 'replace') for src in args.inputs)
+    for src, dest, out in zip(args.inputs, targets, result.files, strict=True):
         dest.parent.mkdir(parents=True, exist_ok=True)
-        dest.write_bytes(result.text.encode('utf-8'))
-        counts = ', '.join(f'{t}={n}' for t, n in result.replaced.items()) or 'nothing found'
+        dest.write_bytes(out.text.encode('utf-8'))
+        counts = ', '.join(f'{t}={n}' for t, n in out.replaced.items()) or 'nothing found'
+        crossed = sum(out.crossed.values())
+        if crossed:
+            counts += f', and {crossed} more found through the other values'
         print(f'{src} -> {dest}: {counts}', file=sys.stderr)
+    if result.leaked:
+        print(
+            f'Warning: {result.leaked} real value(s) are still in the output, glued to other text. '
+            'Check it before sharing.',
+            file=sys.stderr,
+        )
     return 0
 
 
-__all__ = ['KEEP_BY_DEFAULT', 'Kembaran', 'KembaranResult', 'kembaran', 'main']
+__all__ = ['KEEP_BY_DEFAULT', 'Kembaran', 'KembaranFile', 'KembaranResult', 'KembaranTextsResult', 'kembaran', 'main']
 
 if __name__ == '__main__':
     sys.exit(main())

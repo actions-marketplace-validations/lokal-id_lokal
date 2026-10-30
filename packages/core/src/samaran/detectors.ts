@@ -439,14 +439,14 @@ function detectReligion(text: string): PiiMatch[] {
   // "(agama Hindu)", "religion Islam" said of someone. Not religious education, institutions, or holidays:
   // "pendidikan agama Islam", "Pengadilan Agama", "hari raya agama Hindu".
   const bare =
-    /\b(?:agama|religion)\s*:?\s+(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Catholic|Christian|Muslim|Hindu|Buddha|Budha|Buddhist|Konghucu|Khonghucu)\b/gi;
+    /\b(?:agama|religion)(?:\s*[:–-]\s*|\s+)(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Catholic|Christian|Muslim|Hindu|Buddha|Budha|Buddhist|Konghucu|Khonghucu)\b/gi;
   for (const m of text.matchAll(bare)) {
     if (/\b(?:pendidikan|pelajaran|mata\s+pelajaran|guru|umat|hari(?:\s+raya)?|tokoh|kementerian|pengadilan|universitas|institut|sekolah|ajaran|nilai|organisasi|lembaga|majelis|studi|fakultas|ilmu|perayaan|kitab|rumah\s+ibadah|penyuluh|pemuka)\s+$/i.test(before(text, m.index, 30))) continue;
     out.push(match('RELIGION', m.index + m[0].length - m[1]!.length, m[1]!, 'medium'));
   }
   // An adjective of a person: "saya muslim", "suami saya kristen protestan". Not "umat Muslim" or "Gereja Kristen".
   const adjective =
-    /\b(?:saya|aku|gue|gw|dia|beliau|kami|keluarga\s+(?:saya|kami)|(?:suami|istri|ayah|bapak|ibu|mama|papa|ortu|orang\s+tua|anak|adik|kakak|pacar|calon)(?:\s+(?:saya|aku|gue|dia)|nya|ku)?)\s+(?:(?:seorang|itu|adalah|sudah|udah|baru|jadi)\s+)?(muslim(?:ah)?|islam|nasrani|kristiani?|kristen(?:\s+protestan)?|protestan|katolik|katholik|hindu|buddhis|buddha|budha|konghucu|khonghucu|mualaf|muallaf|ateis|atheis|agnostik|non[- ]?muslim)\b/gi;
+    /\b(?:saya|aku|gue|gw|dia|ia|beliau|ybs|kami|keluarga\s+(?:saya|kami)|(?:suami|istri|ayah|bapak|ibu|mama|papa|ortu|orang\s+tua|anak|adik|kakak|pacar|calon)(?:\s+(?:saya|aku|gue|dia)|nya|ku)?)\s+(?:(?:seorang|itu|adalah|sudah|udah|baru|jadi)\s+)?(muslim(?:ah)?|islam|nasrani|kristiani?|kristen(?:\s+protestan)?|protestan|katolik|katholik|hindu|buddhis|buddha|budha|konghucu|khonghucu|mualaf|muallaf|ateis|atheis|agnostik|non[- ]?muslim)\b/gi;
   for (const m of text.matchAll(adjective)) out.push(match('RELIGION', m.index + m[0].length - m[1]!.length, m[1]!, 'medium'));
   // A conversion: "baru pindah agama, sekarang Kristen", "masuk Islam tahun lalu".
   const conversion =
@@ -510,6 +510,8 @@ const NOT_NAME = new Set(
     'pembeli penjual member anggota warga mahasiswa siswa karyawan pegawai seller buyer user pengguna manajemen ' +
     'management direksi pimpinan tim team seluruh keluarga pribadi rt rw satpam ojol cs domain file folder tabel ' +
     'table kolom column variabel fungsi function class akun aplikasi app server database program manfaat ' +
+    // SQL keywords: "INSERT INTO pelanggan VALUES (…)".
+    'values select insert into update delete where set null default primary key references ' +
     // Institutions: "atas nama Pengendali Data", "atas nama Menteri Keuangan".
     'pengendali prosesor pemerintah kementerian keuangan negeri daerah republik indonesia rakyat dewan lembaga ' +
     'badan dinas direktorat komisi mahkamah pengadilan kepolisian polri tni sekretariat umum nasional pusat ' +
@@ -740,7 +742,9 @@ function detectKnownNames(text: string): PiiMatch[] {
       // "Dewi Lestari", "Wahyu Hidayat"; not two words that are both also common nouns ("Permata Intan").
       else if (
         AMBIGUOUS_GIVEN_NAMES.has(w.bare) && nameish(i + 1) &&
-        (GIVEN_NAMES.has(next) || FAMILY_NAMES.has(next) || SECOND_NAMES.has(next))
+        (GIVEN_NAMES.has(next) || FAMILY_NAMES.has(next) || SECOND_NAMES.has(next) ||
+          // A Chinese-Indonesian family name at the end: "Dewi Lim", "Ayu Tan".
+          (CHINESE_FAMILY_NAMES.has(next) && !nameish(i + 2)))
       ) {
         len = extend(i);
       } else {
@@ -1061,6 +1065,41 @@ function detectGluedIds(text: string): PiiMatch[] {
 const DIGIT_WORD = '(?:nol|kosong|satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan)';
 
 /** A phone number read out in a voice-bot or call transcript: "nol delapan satu dua tiga …". */
+// A NIK or KK that OCR read from a card, with letters for the digits they look like: "NIK : 33O521 6805000l43".
+const OCR_ID = /\b(nik|no\.?\s*ktp|ktp|no\.?\s*kk|kk|nomor\s+induk\s+kependudukan)\b[ \t]*[:.=]?[ \t]*([0-9oil|](?:[ ]?[0-9oil|]){15})(?![0-9a-z|])/gi;
+
+function detectOcrIds(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  for (const m of text.matchAll(OCR_ID)) {
+    const raw = m[2]!;
+    // Digits only are the digit-run detector's.
+    if (!/[oil|]/i.test(raw)) continue;
+    const digits = raw.replace(/ /g, '').replace(/[oil|]/gi, (c) => (c.toLowerCase() === 'o' ? '0' : '1'));
+    const kk = /kk/i.test(m[1]!);
+    const confidence: Confidence = !kk && parseNik(digits).valid ? 'high' : 'medium';
+    out.push(match(kk ? 'KK' : 'NIK', m.index + m[0].length - raw.length, raw, confidence));
+  }
+  return out;
+}
+
+// A record that puts the birth date right after the name: "Sinta Wibowo, 12-03-1960, Jl. Cempaka …".
+const RECORD_BIRTH =
+  /^[ \t]*([A-Z][A-Za-z'’-]+(?:[ \t]+[A-Z][A-Za-z'’-]+){1,3})[ \t]*[,;|\t][ \t]*(\d{1,2})([-/.])(\d{1,2})\3((?:19|20)\d{2})[ \t]*[,;|\t]/gm;
+
+function detectRecordBirthDates(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  for (const m of text.matchAll(RECORD_BIRTH)) {
+    // "Jakarta Selatan, 12-03-2026, …" dates a letter.
+    const words = m[1]!.toLowerCase().split(/[ \t]+/);
+    if (words.some((w) => PLACE_WORDS.has(w) || PLACE_SUFFIX.has(w) || ORGANIZATION.has(w))) continue;
+    const year = Number(m[5]);
+    if (year > new Date().getUTCFullYear() || !isRealDate(year, Number(m[4]), Number(m[2]))) continue;
+    const value = `${m[2]}${m[3]}${m[4]}${m[3]}${m[5]}`;
+    out.push(match('BIRTH_DATE', m.index + m[0].search(/\d/), value, 'medium'));
+  }
+  return out;
+}
+
 function detectSpokenPhones(text: string): PiiMatch[] {
   const re = new RegExp(`\\b(?:nol|kosong)[\\s,.-]+delapan(?:[\\s,.-]+${DIGIT_WORD}){8,11}\\b`, 'gi');
   return [...text.matchAll(re)].map((m) => match('PHONE', m.index, m[0], 'medium'));
@@ -1751,6 +1790,8 @@ const DETECTORS: Array<(text: string) => PiiMatch[]> = [
   detectAkta,
   detectCriminal,
   detectGluedIds,
+  detectOcrIds,
+  detectRecordBirthDates,
   detectCardCodes,
   detectSpokenPhones,
   detectLoneGivenNames,

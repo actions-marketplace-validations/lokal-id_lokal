@@ -4726,6 +4726,162 @@
   "matches": []
  },
  {
+  "text": "Kembaran.texts: satu database dalam beberapa file, nilai yang lolos di satu file tetap terganti lewat file lain",
+  "matches": []
+ },
+ {
+  "text": "CREATE TABLE pelanggan (id int, nama varchar(100), nik char(16), hp varchar(20), email varchar(80));",
+  "matches": []
+ },
+ {
+  "text": "Kenanga Purbasari",
+  "matches": []
+ },
+ {
+  "text": "3201014508950001",
+  "matches": [
+   [
+    "NIK",
+    0,
+    16,
+    "3201014508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "081377881290",
+  "matches": [
+   [
+    "PHONE",
+    0,
+    12,
+    "081377881290",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "kenanga.p@example.com",
+  "matches": []
+ },
+ {
+  "text": "CREATE TABLE pesanan (id int, ref varchar(20), memo text);",
+  "matches": []
+ },
+ {
+  "text": "081377881290",
+  "matches": [
+   [
+    "PHONE",
+    0,
+    12,
+    "081377881290",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "kenanga purbasari minta kirim sore, cc KENANGA.P@EXAMPLE.COM",
+  "matches": []
+ },
+ {
+  "text": "\n",
+  "matches": []
+ },
+ {
+  "text": "kontak,catatan\n6281377881290,refund ke Kenanga Purbasari\n",
+  "matches": [
+   [
+    "PHONE",
+    15,
+    28,
+    "6281377881290",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "uji",
+  "matches": []
+ },
+ {
+  "text": "one file alone misses the name in the notes",
+  "matches": []
+ },
+ {
+  "text": "uji",
+  "matches": []
+ },
+ {
+  "text": "Kenanga",
+  "matches": []
+ },
+ {
+  "text": "kenanga",
+  "matches": []
+ },
+ {
+  "text": "KENANGA",
+  "matches": []
+ },
+ {
+  "text": "3201014508950001",
+  "matches": [
+   [
+    "NIK",
+    0,
+    16,
+    "3201014508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "81377881290",
+  "matches": []
+ },
+ {
+  "text": "[^",
+  "matches": []
+ },
+ {
+  "text": ",",
+  "matches": []
+ },
+ {
+  "text": ",",
+  "matches": []
+ },
+ {
+  "text": "${phone}",
+  "matches": []
+ },
+ {
+  "text": "uji",
+  "matches": []
+ },
+ {
+  "text": "Kembaran.texts: tidak ada pengganti yang sama dengan nilai asli orang lain di data yang sama",
+  "matches": []
+ },
+ {
+  "text": "nama,nik",
+  "matches": []
+ },
+ {
+  "text": "32010115089",
+  "matches": []
+ },
+ {
+  "text": "\n",
+  "matches": []
+ },
+ {
+  "text": "tabrakan",
+  "matches": []
+ },
+ {
   "text": "node:test",
   "matches": []
  },
@@ -11313,6 +11469,343 @@
  },
  {
   "text": "Deposito mulai Rp 10 juta, bunga 5%. Gejala diabetes antara lain sering haus. Kami tidak menyimpan riwayat penyakit yang Anda masukkan.",
+  "matches": []
+ },
+ {
+  "text": "kata konteks: NIK hasil OCR, tanggal lahir di baris data, marga Tionghoa di akhir nama",
+  "matches": []
+ },
+ {
+  "text": "NIK : 33O521 6805000l43\nNama : WULAN HARTONO",
+  "matches": [
+   [
+    "NIK",
+    6,
+    23,
+    "33O521 6805000l43",
+    "high"
+   ],
+   [
+    "NAME",
+    31,
+    44,
+    "WULAN HARTONO",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "NIK",
+  "matches": []
+ },
+ {
+  "text": "KK",
+  "matches": []
+ },
+ {
+  "text": "NIK:33O521 6805000l43",
+  "matches": [
+   [
+    "NIK",
+    4,
+    21,
+    "33O521 6805000l43",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "No. KK: 32O1O12OO1OOOO17",
+  "matches": [
+   [
+    "KK",
+    8,
+    24,
+    "32O1O12OO1OOOO17",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "NIK",
+  "matches": []
+ },
+ {
+  "text": "KK",
+  "matches": []
+ },
+ {
+  "text": "KK:32O1O12OO1OOOO17",
+  "matches": [
+   [
+    "KK",
+    3,
+    19,
+    "32O1O12OO1OOOO17",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "NIK : 3201011508950001",
+  "matches": [
+   [
+    "NIK",
+    6,
+    22,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "NIK",
+  "matches": []
+ },
+ {
+  "text": "NIK:3201011508950001",
+  "matches": [
+   [
+    "NIK",
+    4,
+    20,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "NIK : lolos verifikasi ok",
+  "matches": []
+ },
+ {
+  "text": "NIK",
+  "matches": []
+ },
+ {
+  "text": "KK",
+  "matches": []
+ },
+ {
+  "text": "Sinta Wibowo, 12-03-1960, Jl. Cempaka No. 120",
+  "matches": [
+   [
+    "NAME",
+    0,
+    12,
+    "Sinta Wibowo",
+    "medium"
+   ],
+   [
+    "BIRTH_DATE",
+    14,
+    24,
+    "12-03-1960",
+    "medium"
+   ],
+   [
+    "ADDRESS",
+    26,
+    45,
+    "Jl. Cempaka No. 120",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "BIRTH_DATE",
+  "matches": []
+ },
+ {
+  "text": "BIRTH_DATE:12-03-1960",
+  "matches": [
+   [
+    "BIRTH_DATE",
+    11,
+    21,
+    "12-03-1960",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Jakarta Selatan, 12-03-2024, perihal undangan",
+  "matches": []
+ },
+ {
+  "text": "BIRTH_DATE",
+  "matches": []
+ },
+ {
+  "text": "Sinta Wibowo, 12-03-2999, Jl. Cempaka",
+  "matches": [
+   [
+    "NAME",
+    0,
+    12,
+    "Sinta Wibowo",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "BIRTH_DATE",
+  "matches": []
+ },
+ {
+  "text": "Sinta Wibowo, 31-02-1960, Jl. Cempaka",
+  "matches": [
+   [
+    "NAME",
+    0,
+    12,
+    "Sinta Wibowo",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "BIRTH_DATE",
+  "matches": []
+ },
+ {
+  "text": "Peserta: Dewi Lim dan Ayu Tan hadir. Wati Rahayu izin.",
+  "matches": [
+   [
+    "NAME",
+    9,
+    17,
+    "Dewi Lim",
+    "high"
+   ],
+   [
+    "NAME",
+    22,
+    29,
+    "Ayu Tan",
+    "medium"
+   ],
+   [
+    "NAME",
+    37,
+    48,
+    "Wati Rahayu",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "NAME",
+  "matches": []
+ },
+ {
+  "text": "NAME:Dewi Lim",
+  "matches": [
+   [
+    "NAME",
+    5,
+    13,
+    "Dewi Lim",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "NAME:Ayu Tan",
+  "matches": [
+   [
+    "NAME",
+    5,
+    12,
+    "Ayu Tan",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "NAME:Wati Rahayu",
+  "matches": [
+   [
+    "NAME",
+    5,
+    16,
+    "Wati Rahayu",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "Ia seorang muslim taat. religion - Islam. Ybs nonmuslim.",
+  "matches": [
+   [
+    "RELIGION",
+    11,
+    17,
+    "muslim",
+    "medium"
+   ],
+   [
+    "RELIGION",
+    35,
+    40,
+    "Islam",
+    "medium"
+   ],
+   [
+    "RELIGION",
+    46,
+    55,
+    "nonmuslim",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "RELIGION",
+  "matches": []
+ },
+ {
+  "text": "RELIGION:muslim",
+  "matches": [
+   [
+    "RELIGION",
+    9,
+    15,
+    "muslim",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "RELIGION:Islam",
+  "matches": [
+   [
+    "RELIGION",
+    9,
+    14,
+    "Islam",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "RELIGION:nonmuslim",
+  "matches": [
+   [
+    "RELIGION",
+    9,
+    18,
+    "nonmuslim",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "umat Hindu di desa itu, pendidikan agama-Islam",
+  "matches": []
+ },
+ {
+  "text": "RELIGION",
   "matches": []
  },
  {
@@ -62042,8 +62535,8 @@
    [
     "NAME",
     100,
-    124,
-    "Dewi Lestari INSERT INTO",
+    112,
+    "Dewi Lestari",
     "high"
    ],
    [
@@ -65746,8 +66239,8 @@
    [
     "NAME",
     7,
-    33,
-    "I Made Wirawan INSERT INTO",
+    21,
+    "I Made Wirawan",
     "medium"
    ],
    [
@@ -76085,13 +76578,6 @@
   "matches": [
    [
     "NAME",
-    307,
-    313,
-    "VALUES",
-    "medium"
-   ],
-   [
-    "NAME",
     318,
     330,
     "Budi Santoso",
@@ -76120,13 +76606,6 @@
    ],
    [
     "NAME",
-    415,
-    421,
-    "VALUES",
-    "medium"
-   ],
-   [
-    "NAME",
     426,
     437,
     "Siti Aminah",
@@ -76138,13 +76617,6 @@
     460,
     "3201014408960002",
     "high"
-   ],
-   [
-    "NAME",
-    497,
-    503,
-    "VALUES",
-    "medium"
    ],
    [
     "NAME",
@@ -76324,13 +76796,6 @@
   "matches": [
    [
     "NAME",
-    308,
-    314,
-    "VALUES",
-    "medium"
-   ],
-   [
-    "NAME",
     319,
     331,
     "Budi Santoso",
@@ -76359,13 +76824,6 @@
    ],
    [
     "NAME",
-    417,
-    423,
-    "VALUES",
-    "medium"
-   ],
-   [
-    "NAME",
     428,
     439,
     "Siti Aminah",
@@ -76377,13 +76835,6 @@
     462,
     "3201014408960002",
     "high"
-   ],
-   [
-    "NAME",
-    500,
-    506,
-    "VALUES",
-    "medium"
    ],
    [
     "NAME",
