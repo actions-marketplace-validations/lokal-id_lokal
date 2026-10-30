@@ -90,11 +90,13 @@ The file tools can only access `LOKAL_ROOT`, which defaults to `CLAUDE_PROJECT_D
 
 ## Policy and audit
 
-`.samaran.json` can also set an action per type: `"policy": { "HEALTH": "block", "FINANCIAL": "allow", "PASSPORT": "route" }`. `block` makes `read_file_masked` refuse a file and the proxy refuse a request; `allow` leaves a type unmasked; `route` sends proxied requests to a local model (`"route": { "openai": "http://127.0.0.1:11434/v1", "model": "llama3.2" }`). `"audit": true` writes one JSON line per decision, with counts and never values, to `.lokal/audit.jsonl`; `lokal-mcp audit` summarizes it. `"vaultTtlMinutes": 60` makes the server forget the real values after an hour without use. See the [Lokal README](https://github.com/lokal-id/lokal#policy-local-routing-and-the-audit-log).
+`.samaran.json` can also set an action per type: `"policy": { "HEALTH": "block", "FINANCIAL": "allow", "PASSPORT": "route" }`. `block` makes `read_file_masked` refuse a file and the proxy refuse a request; `allow` leaves a type unmasked; `route` sends proxied requests to a local model (`"route": { "openai": "http://127.0.0.1:11434/v1", "model": "llama3.2" }`). `"audit": true` writes one JSON line per decision, with counts and never values, to `.lokal/audit.jsonl`; `lokal-mcp audit` summarizes it. `"vaultTtlMinutes": 60` makes the server forget the real values after an hour without use. `"guard": "strict"` turns on the strict guard for everyone in the repository. See the [Lokal README](https://github.com/lokal-id/lokal#policy-local-routing-and-the-audit-log).
+
+`lokal-mcp init --profile personal|team|strict [--dry-run]` writes `.samaran.json`, `.samaranignore`, and for teams a GitHub workflow; `lokal-mcp check` validates the configuration and explains what it does.
 
 ## Kembaran
 
-`lokal-mcp kembaran prod.sql export.csv -o staging/ [--secret <text>] [--keep FINANCIAL] [--keep-birth-date]` copies text files with every person replaced by a realistic stand-in, consistent across the files. See the [Lokal README](https://github.com/lokal-id/lokal#kembaran-production-data-for-staging-without-real-people).
+`lokal-mcp kembaran prod.sql export.csv -o staging/ [--secret <text>] [--keep FINANCIAL] [--keep-birth-date] [--dry-run]` copies text files with every person replaced by a realistic stand-in, consistent across the files. See the [Lokal README](https://github.com/lokal-id/lokal#kembaran-production-data-for-staging-without-real-people).
 
 ## Lokal Scan
 

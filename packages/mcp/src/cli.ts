@@ -5,6 +5,8 @@
 // lokal-mcp proxy            → Samaran Proxy: masks personal data in OpenAI and Anthropic API calls
 // lokal-mcp kembaran         → replaces personal data in dumps and exports with realistic stand-ins
 // lokal-mcp scan             → finds personal data in files before they are committed (pre-commit hooks, CI)
+// lokal-mcp init             → sets a project up from a profile (personal, team, strict)
+// lokal-mcp check            → validates .samaran.json and shows what it does
 // lokal-mcp audit            → summarizes the audit log (.lokal/audit.jsonl)
 const [command, ...args] = process.argv.slice(2);
 const option = (name: string) => {
@@ -21,6 +23,12 @@ if (command === 'guard') {
 } else if (command === 'scan') {
   const { runScan } = await import('./scan.ts');
   runScan(args);
+} else if (command === 'init') {
+  const { runInit } = await import('./init.ts');
+  runInit(args);
+} else if (command === 'check') {
+  const { runCheck } = await import('./init.ts');
+  runCheck(args);
 } else if (command === 'audit') {
   const { runAudit } = await import('./audit.ts');
   runAudit(args);
@@ -37,6 +45,6 @@ if (command === 'guard') {
   const { runServer } = await import('./server.ts');
   await runServer();
 } else {
-  process.stderr.write('Usage: lokal-mcp [serve [--http [--port 3000] [--host 127.0.0.1]] | guard | proxy [--help] | kembaran [--help] | scan [--help] | audit [--help]]\n');
+  process.stderr.write('Usage: lokal-mcp [serve [--http [--port 3000] [--host 127.0.0.1]] | guard | proxy [--help] | kembaran [--help] | scan [--help] | init [--help] | check | audit [--help]]\n');
   process.exitCode = 1;
 }

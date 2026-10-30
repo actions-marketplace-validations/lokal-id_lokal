@@ -1,0 +1,4 @@
+2026-10-28 09:14:02 INFO  ticket#5531 dibuka oleh Kenanga Purbasari (NIK 3201011508950001), HP 0812-3456-7890
+2026-10-28 09:20:45 WARN  ticket#5531 pembayaran gagal, VA 8808 0812 3456 7890
+2026-10-28 10:02:11 INFO  ticket#5532 dari laras.w@example.com: mohon ubah alamat pengiriman
+2026-10-28 10:05:37 ERROR ticket#5532 gagal verifikasi, NIK tidak cocok: 3171034203880003

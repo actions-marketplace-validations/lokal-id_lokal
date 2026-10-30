@@ -3529,10 +3529,10 @@ function loadConfig(root) {
     throw new Error(`.samaran.json: ${why}`);
   };
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) fail('expected an object with "custom" and "allow"');
-  const { custom: custom2 = [], allow = [], policy, route, audit, vaultTtlMinutes, ...rest } = raw;
+  const { custom: custom2 = [], allow = [], policy, route, audit, vaultTtlMinutes, guard, ...rest } = raw;
   const unknownKeys = Object.keys(rest).filter((k) => !k.startsWith("$"));
   if (unknownKeys.length) {
-    fail(`unknown key ${unknownKeys.map((k) => `"${k}"`).join(", ")} (expected "custom", "allow", "policy", "route", "audit", or "vaultTtlMinutes")`);
+    fail(`unknown key ${unknownKeys.map((k) => `"${k}"`).join(", ")} (expected "custom", "allow", "policy", "route", "audit", "vaultTtlMinutes", or "guard")`);
   }
   if (!Array.isArray(custom2)) fail('"custom" must be a list of rules');
   if (!Array.isArray(allow) || !allow.every((a) => typeof a === "string")) fail('"allow" must be a list of strings');
@@ -3590,6 +3590,10 @@ function loadConfig(root) {
   if (vaultTtlMinutes !== void 0) {
     if (typeof vaultTtlMinutes !== "number" || !(vaultTtlMinutes > 0)) fail('"vaultTtlMinutes" must be a positive number');
     config2.vaultTtlMinutes = vaultTtlMinutes;
+  }
+  if (guard !== void 0) {
+    if (guard !== "strict") fail('"guard" can only be "strict" (SAMARAN_GUARD=off on your own machine turns the guard off)');
+    config2.guard = "strict";
   }
   return config2;
 }
@@ -4236,14 +4240,15 @@ function shownPii(full, shown, file) {
   return inFile.length >= direct.length ? inFile : direct;
 }
 var PROCESS_HINT = "To process the data, run a script that reads the file and writes its results to a file (or prints only counts), or use `write_file_unmasked`.";
-var strictMode = () => process.env.SAMARAN_GUARD === "strict";
+var strictMode = () => process.env.SAMARAN_GUARD === "strict" || !process.env.SAMARAN_GUARD && config.guard === "strict";
+var strictBy = () => process.env.SAMARAN_GUARD === "strict" ? "SAMARAN_GUARD=strict" : '"guard": "strict" in .samaran.json';
 var config = { custom: [], allow: [] };
 var deadline = Infinity;
 var outOfTime = () => strictMode() && Date.now() > deadline;
 var block = (message, found) => ({ action: "block", message, ...found ? { counts: countMatches(found) } : {} });
 function uncheckedBlock(what, why) {
   return block([
-    `Samaran blocked ${what}: ${why.join("; ")}, so it could not be checked for personal data, and SAMARAN_GUARD=strict blocks what it cannot check.`,
+    `Samaran blocked ${what}: ${why.join("; ")}, so it could not be checked for personal data, and ${strictBy()} blocks what it cannot check.`,
     "Use the `read_file_masked` tool from the lokal MCP server, or narrow the command to what you need (`head -n 50`).",
     "If the user confirms the file holds no real personal data, they can add it to .samaranignore."
   ].join(" "));
@@ -4522,7 +4527,7 @@ async function runGuard() {
   } catch (e) {
     process.stderr.write(`samaran-guard: ${e.message}
 `);
-    const failed2 = strictMode() ? block(`Samaran guard failed (${e.message}), and SAMARAN_GUARD=strict blocks what it cannot check.`) : void 0;
+    const failed2 = strictMode() ? block(`Samaran guard failed (${e.message}), and ${strictBy()} blocks what it cannot check.`) : void 0;
     const out = respond(agent, event, failed2);
     if (out.stdout) process.stdout.write(`${out.stdout}
 `);

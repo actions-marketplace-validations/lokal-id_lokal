@@ -88,6 +88,8 @@ When the agent needs to look at customer data, it calls `read_file_masked` and s
 
 ## Quick start
 
+New to Lokal? The [5-minute quickstart](docs/quickstart.md) walks through scanning, Kembaran, the agent tools, and the proxy with made-up sample data.
+
 ### Claude Code
 
 Installs the skills, the MCP server, and Samaran Guard in one step:
@@ -306,6 +308,8 @@ claude = Anthropic(base_url='http://127.0.0.1:8787')   # Messages
 
 Tested end to end with Claude Code itself running through it: the model only ever saw placeholders, and the files it wrote with its tools had the real values.
 
+To run it with a local model next to it, see the [Docker Compose example with Ollama](examples/proxy-ollama); to put it in front of LiteLLM, see [examples/litellm](examples/litellm).
+
 ### Policy, local routing, and the audit log
 
 Masking is the default for every type. In `.samaran.json` a team can choose another action per type, or per custom rule label:
@@ -329,7 +333,29 @@ Masking is the default for every type. In `.samaran.json` a team can choose anot
 - **Routing** keeps sensitive requests on your own hardware: with `route.openai` pointing at Ollama, a request with a passport number goes there unmasked, with `route.model` in place of the model the app asked for. It never reaches the cloud, and the cloud API key is not sent with it (`LOKAL_ROUTE_API_KEY` is, if set). A request to an API with no local endpoint in `route` is refused rather than sent to the cloud.
 - **Audit log**: `"audit": true` appends one JSON line per decision to `.lokal/audit.jsonl` (or a path you give): the source (proxy, MCP, guard), the action (masked, blocked, routed, refused, restored, anonymized, forgot), the file or API path, and counts per type, never a value. Lokal creates `.lokal/` with a `.gitignore`. `lokal-mcp audit [--since 7d] [--json]` summarizes it.
 - **Vault**: the MCP server forgets every real value behind its placeholders after `vaultTtlMinutes` without use (or `LOKAL_VAULT_TTL_MINUTES`), and on the `clear_vault` tool.
+- **Strict guard for everyone**: `"guard": "strict"` makes the guard block what it cannot check for whoever works in the repository, as `SAMARAN_GUARD=strict` does on one machine. A repository can only make the guard stricter; `SAMARAN_GUARD=off` on your own machine still turns it off.
 - `lokal-mcp scan` ignores the policy: what may reach a model and what may enter the repository are different questions.
+
+**Set it up from a profile**, and check what a configuration does:
+
+```console
+$ npx @lokal-id/mcp init --profile team      # personal, team, or strict; --dry-run shows the files first
+$ npx @lokal-id/mcp check
+guard           default (asks about what it cannot check)
+policy          everything is masked
+audit log       .lokal/audit.jsonl
+vault           forgotten after 60 min without use
+```
+
+| Profile | `.samaran.json` | Also writes |
+|---|---|---|
+| `personal` | vault forgotten after 2 hours | `.samaranignore` |
+| `team` | audit log, 1-hour vault | `.samaranignore`, a GitHub workflow that fails pull requests with personal data |
+| `strict` | strict guard, health, criminal, and biometric data blocked, audit log, 30-minute vault | the same, with the workflow's `strict` input on |
+
+`init` never replaces a file that is there, except `.samaran.json` with `--force`. `check` validates the file and warns about settings worth a second look: an identity number the model may see, a `route` endpoint that is not on this machine or a private network, an audit log inside the project, or a `.samaranignore` pattern that skips every CSV.
+
+[What stays on your machine, and what can reach the network](docs/network.md) lists every connection each part makes.
 
 ### Samaran for the Vercel AI SDK: masking inside the app
 
@@ -689,6 +715,8 @@ Have an idea? [Open an issue](https://github.com/lokal-id/lokal/issues).
 packages/core       @lokal-id/core: logic and bundled data
 packages/mcp        @lokal-id/mcp: MCP server and Samaran Guard
 packages/extension  browser extension for ChatGPT, Claude, Gemini, and other AI chats
+docs/               quickstart, network page, and images
+examples/           sample data, Docker Compose with Ollama, LiteLLM
 python/             lokal-id: the Python port, with parity tests against TypeScript
 skills/             SKILL.md files for Claude, Codex, and other agents
 hooks/              Claude Code hook (bundled, no dependencies)

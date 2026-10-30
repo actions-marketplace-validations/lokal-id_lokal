@@ -106,6 +106,8 @@ export interface SamaranConfig {
   audit?: string;
   /** The MCP server forgets its placeholders after this many minutes without use. */
   vaultTtlMinutes?: number;
+  /** "strict": the guard blocks what it cannot check, for everyone who works in the repository. */
+  guard?: 'strict';
 }
 
 /** Built-in types whose policy is `allow`: the model may see them. */
@@ -155,10 +157,10 @@ export function loadConfig(root: string): SamaranConfig {
     throw new Error(`.samaran.json: ${why}`);
   };
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) fail('expected an object with "custom" and "allow"');
-  const { custom = [], allow = [], policy, route, audit, vaultTtlMinutes, ...rest } = raw as Record<string, unknown>;
+  const { custom = [], allow = [], policy, route, audit, vaultTtlMinutes, guard, ...rest } = raw as Record<string, unknown>;
   const unknownKeys = Object.keys(rest).filter((k) => !k.startsWith('$'));
   if (unknownKeys.length) {
-    fail(`unknown key ${unknownKeys.map((k) => `"${k}"`).join(', ')} (expected "custom", "allow", "policy", "route", "audit", or "vaultTtlMinutes")`);
+    fail(`unknown key ${unknownKeys.map((k) => `"${k}"`).join(', ')} (expected "custom", "allow", "policy", "route", "audit", "vaultTtlMinutes", or "guard")`);
   }
   if (!Array.isArray(custom)) fail('"custom" must be a list of rules');
   if (!Array.isArray(allow) || !allow.every((a) => typeof a === 'string')) fail('"allow" must be a list of strings');
@@ -220,6 +222,11 @@ export function loadConfig(root: string): SamaranConfig {
   if (vaultTtlMinutes !== undefined) {
     if (typeof vaultTtlMinutes !== 'number' || !(vaultTtlMinutes > 0)) fail('"vaultTtlMinutes" must be a positive number');
     config.vaultTtlMinutes = vaultTtlMinutes as number;
+  }
+  if (guard !== undefined) {
+    // Only stricter: a repository must not be able to turn the guard off for whoever clones it.
+    if (guard !== 'strict') fail('"guard" can only be "strict" (SAMARAN_GUARD=off on your own machine turns the guard off)');
+    config.guard = 'strict';
   }
   return config;
 }

@@ -88,6 +88,8 @@ Saat agent perlu melihat data pelanggan, ia memanggil `read_file_masked` dan mel
 
 ## Mulai cepat
 
+Baru kenal Lokal? [Quickstart 5 menit](docs/quickstart.id.md) memandu scan, Kembaran, tool untuk agent, dan proxy dengan data contoh karangan.
+
 ### Claude Code
 
 Memasang skill, MCP server, dan Samaran Guard sekaligus:
@@ -306,6 +308,8 @@ claude = Anthropic(base_url='http://127.0.0.1:8787')   # Messages
 
 Sudah diuji end-to-end dengan Claude Code sendiri yang dijalankan lewat proxy: model hanya pernah melihat placeholder, dan file yang ditulisnya lewat tool berisi nilai asli.
 
+Untuk menjalankannya bersama model lokal, lihat [contoh Docker Compose dengan Ollama](examples/proxy-ollama); untuk memasangnya di depan LiteLLM, lihat [examples/litellm](examples/litellm).
+
 ### Policy, routing lokal, dan audit log
 
 Bawaannya, semua jenis data disamarkan. Di `.samaran.json` tim bisa memilih aksi lain per jenis, atau per label aturan custom:
@@ -329,7 +333,29 @@ Bawaannya, semua jenis data disamarkan. Di `.samaran.json` tim bisa memilih aksi
 - **Routing** menjaga request sensitif tetap di perangkat Anda sendiri: dengan `route.openai` mengarah ke Ollama, request berisi nomor paspor dikirim ke sana tanpa disamarkan, dengan `route.model` menggantikan model yang diminta aplikasi. Request itu tidak pernah sampai ke cloud, dan API key cloud tidak ikut terkirim (yang dikirim `LOKAL_ROUTE_API_KEY`, kalau diisi). Request ke API yang tidak punya endpoint lokal di `route` ditolak, tidak dikirim ke cloud.
 - **Audit log**: `"audit": true` menambahkan satu baris JSON per keputusan ke `.lokal/audit.jsonl` (atau path yang Anda tentukan): sumbernya (proxy, MCP, guard), aksinya (masked, blocked, routed, refused, restored, anonymized, forgot), file atau path API, dan jumlah per jenis, tidak pernah nilainya. Lokal membuat `.lokal/` beserta `.gitignore`. `lokal-mcp audit [--since 7d] [--json]` meringkasnya.
 - **Vault**: server MCP melupakan semua nilai asli di balik placeholder setelah `vaultTtlMinutes` tidak dipakai (atau `LOKAL_VAULT_TTL_MINUTES`), dan saat tool `clear_vault` dipanggil.
+- **Guard strict untuk semua orang**: `"guard": "strict"` membuat guard menahan apa yang tidak bisa diperiksanya untuk siapa pun yang bekerja di repository itu, sama seperti `SAMARAN_GUARD=strict` di satu perangkat. Repository hanya bisa membuat guard lebih ketat; `SAMARAN_GUARD=off` di perangkat Anda sendiri tetap mematikannya.
 - `lokal-mcp scan` tidak memakai policy: apa yang boleh sampai ke model dan apa yang boleh masuk repository adalah dua hal berbeda.
+
+**Siapkan dari profil**, lalu cek apa yang dilakukan konfigurasinya:
+
+```console
+$ npx @lokal-id/mcp init --profile team      # personal, team, atau strict; --dry-run menampilkan file-nya dulu
+$ npx @lokal-id/mcp check
+guard           default (asks about what it cannot check)
+policy          everything is masked
+audit log       .lokal/audit.jsonl
+vault           forgotten after 60 min without use
+```
+
+| Profil | `.samaran.json` | Juga menulis |
+|---|---|---|
+| `personal` | vault dilupakan setelah 2 jam | `.samaranignore` |
+| `team` | audit log, vault 1 jam | `.samaranignore`, workflow GitHub yang menggagalkan pull request berisi data pribadi |
+| `strict` | guard strict, data kesehatan, kriminal, dan biometrik diblokir, audit log, vault 30 menit | sama, dengan input `strict` di workflow menyala |
+
+`init` tidak pernah mengganti file yang sudah ada, kecuali `.samaran.json` dengan `--force`. `check` memvalidasi file dan memberi peringatan untuk pengaturan yang perlu dicek ulang: nomor identitas yang boleh dilihat model, endpoint `route` yang bukan di perangkat ini atau jaringan privat, audit log di dalam project, atau pola `.samaranignore` yang melewatkan semua CSV.
+
+[Apa yang tetap di perangkat Anda, dan apa yang bisa mengakses jaringan](docs/network.id.md) mencatat setiap koneksi yang dibuat tiap bagian.
 
 ### Samaran untuk Vercel AI SDK: penyamaran di dalam aplikasi
 
@@ -689,6 +715,8 @@ Punya ide? [Buka issue](https://github.com/lokal-id/lokal/issues).
 packages/core       @lokal-id/core: logika dan data
 packages/mcp        @lokal-id/mcp: MCP server dan Samaran Guard
 packages/extension  ekstensi browser untuk ChatGPT, Claude, Gemini, dan chat AI lain
+docs/               quickstart, halaman jaringan, dan gambar
+examples/           data contoh, Docker Compose dengan Ollama, LiteLLM
 python/             lokal-id: port Python, dengan tes paritas terhadap TypeScript
 skills/             SKILL.md untuk Claude, Codex, dan agent lain
 hooks/              hook Claude Code (hasil bundle, tanpa dependency)

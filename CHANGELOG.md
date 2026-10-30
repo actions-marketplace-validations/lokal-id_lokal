@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+### Added
+
+- `lokal-mcp init --profile personal|team|strict` sets a project up: `.samaran.json`, `.samaranignore`, and for teams a GitHub workflow pinned to the same release. `--dry-run` shows the files without writing them. A file that is there is kept, except `.samaran.json` with `--force`.
+- `lokal-mcp check` validates `.samaran.json` and `.samaranignore`, shows what they do, and warns about an identity number the model may see, a `route` endpoint that is not on this machine or a private network, an audit log inside the project, and a `.samaranignore` pattern that skips every data file.
+- `"guard": "strict"` in `.samaran.json` turns on the strict guard for everyone in the repository. It can only make the guard stricter: any other value is an error, and `SAMARAN_GUARD` on a machine still wins.
+- `lokal-mcp kembaran --dry-run` and `anonymize_file` with `dry_run` count what would be replaced and write nothing.
+- A Docker Compose example with Samaran Proxy and Ollama, with images pinned by digest and the proxy published on 127.0.0.1 only (`examples/proxy-ollama`), and a guide to putting the proxy in front of LiteLLM (`examples/litellm`).
+- A 5-minute quickstart with made-up sample data (`docs/quickstart.md`), a page listing every network connection each part makes (`docs/network.md`), both in English and Indonesian, and the Chrome Web Store listing and privacy answers (`packages/extension/STORE.md`).
+
 ## [0.10.0] - 2026-10-30
 
 ### Added

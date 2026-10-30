@@ -1,0 +1,6 @@
+{
+  "$comment": "Health data and criminal records stay on this machine; everything else is masked and sent to the cloud.",
+  "policy": { "HEALTH": "route", "CRIMINAL_RECORD": "route" },
+  "route": { "openai": "http://ollama:11434/v1", "model": "llama3.2" },
+  "audit": true
+}

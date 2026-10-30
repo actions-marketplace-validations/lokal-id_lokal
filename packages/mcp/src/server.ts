@@ -44,8 +44,8 @@ import {
   type Document, type SamaranConfig,
 } from './files.ts';
 import { anonymizeFiles, KEMBARAN_NOTE } from './kembaran-files.ts';
+import { VERSION } from './version.ts';
 
-const VERSION = '0.10.0';
 const FILE_LIMIT = 5000;
 
 const INSTRUCTIONS = `Lokal makes you Indonesia-ready.
@@ -672,17 +672,24 @@ export function createServer(
         keep_birth_date: z.boolean().default(false).describe('Keep whole birth dates instead of only the year'),
         secret: z.string().optional().describe('The same secret gives the same stand-ins on every run'),
         overwrite: z.boolean().default(false),
+        dry_run: z.boolean().default(false).describe('Only count what would be replaced, and write nothing'),
       },
       annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
     },
-    async ({ paths, output, keep, keep_birth_date, secret, overwrite }) => {
+    async ({ paths, output, keep, keep_birth_date, secret, overwrite, dry_run }) => {
       let inputs: string[];
       let out: string;
       if (configError) return fail(configError);
       try {
         inputs = paths.map(inRoot);
         out = inRoot(output);
-        const files = anonymizeFiles(inputs, out, { keep, keepBirthDate: keep_birth_date, secret, overwrite, custom: config.custom });
+        const files = anonymizeFiles(inputs, out, { keep, keepBirthDate: keep_birth_date, secret, overwrite, dryRun: dry_run, custom: config.custom });
+        if (dry_run) {
+          return json({
+            dry_run: true,
+            files: files.map((f) => ({ from: toPosix(path.relative(root, f.from)), would_write: toPosix(path.relative(root, f.to)), would_replace: f.replaced })),
+          });
+        }
         for (const f of files) {
           audit('anonymized', 'anonymize_file', { file: toPosix(path.relative(root, f.from)), counts: f.replaced as Record<string, number> });
         }

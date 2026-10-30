@@ -175,7 +175,9 @@ const PROCESS_HINT =
  * and code run from the command line (python -c, node -e, a heredoc fed to python) that names a data file with
  * personal data is blocked like `cat`. It narrows what gets through; it is still not a sandbox.
  */
-export const strictMode = () => process.env.SAMARAN_GUARD === 'strict';
+export const strictMode = () => process.env.SAMARAN_GUARD === 'strict' || (!process.env.SAMARAN_GUARD && config.guard === 'strict');
+/** Where strict mode came from, for the message. */
+const strictBy = () => (process.env.SAMARAN_GUARD === 'strict' ? 'SAMARAN_GUARD=strict' : '"guard": "strict" in .samaran.json');
 
 /** The project's .samaran.json, loaded by `evaluate`. */
 let config: SamaranConfig = { custom: [], allow: [] };
@@ -190,7 +192,7 @@ const block = (message: string, found?: PiiMatch[]): Verdict => ({ action: 'bloc
 /** Strict mode's answer to a tool call the guard could not check in full. */
 function uncheckedBlock(what: string, why: string[]): Verdict {
   return block([
-    `Samaran blocked ${what}: ${why.join('; ')}, so it could not be checked for personal data, and SAMARAN_GUARD=strict blocks what it cannot check.`,
+    `Samaran blocked ${what}: ${why.join('; ')}, so it could not be checked for personal data, and ${strictBy()} blocks what it cannot check.`,
     'Use the `read_file_masked` tool from the lokal MCP server, or narrow the command to what you need (`head -n 50`).',
     'If the user confirms the file holds no real personal data, they can add it to .samaranignore.',
   ].join(' '));
@@ -531,7 +533,7 @@ export async function runGuard(): Promise<void> {
     process.stderr.write(`samaran-guard: ${(e as Error).message}\n`);
     // By default a broken guard must never break the session: allow, in the agent's format. Strict mode blocks.
     const failed = strictMode()
-      ? block(`Samaran guard failed (${(e as Error).message}), and SAMARAN_GUARD=strict blocks what it cannot check.`)
+      ? block(`Samaran guard failed (${(e as Error).message}), and ${strictBy()} blocks what it cannot check.`)
       : undefined;
     const out = respond(agent, event, failed);
     if (out.stdout) process.stdout.write(`${out.stdout}\n`);

@@ -144,6 +144,7 @@ def test_samaran_json_policy_keys_load_as_the_mcp_server_checks_them(tmp_path: P
         'route': {'openai': 'http://127.0.0.1:11434/v1', 'model': 'llama3.2'},
         'audit': True,
         'vaultTtlMinutes': 30,
+        'guard': 'strict',
     }
     (tmp_path / '.samaran.json').write_text(json.dumps(config), encoding='utf-8')
     rules, _ = load_config(tmp_path)
@@ -159,6 +160,7 @@ def test_samaran_json_policy_keys_load_as_the_mcp_server_checks_them(tmp_path: P
         ({'route': {'openai': 'ftp://x'}}, 'http\\(s\\) URL'),
         ({'audit': 3}, '"audit" must be'),
         ({'vaultTtlMinutes': 0}, 'positive number'),
+        ({'guard': 'off'}, 'can only be "strict"'),
     ]:
         (tmp_path / '.samaran.json').write_text(json.dumps(bad), encoding='utf-8')
         with pytest.raises(ValueError, match=message):
