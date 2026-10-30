@@ -404,6 +404,7 @@ Slamet Matondang,3201012409953895,24-09-1995,0812-8655-8077,rini.pertiwi10@examp
 | Card, bank account | Length; a card keeps its issuer prefix and passes Luhn |
 
 - The same value gets the same stand-in in every file of one run, so joins and foreign keys hold. `0812-3456-7890` and `+62 812 3456 7890` are one person. An individual's NPWP stays equal to their NIK.
+- The files of one run are read together first. A value found in one, such as a phone number in the `pelanggan` table, is replaced wherever else it appears, even where nothing labels it: a foreign key in `pesanan`, or a name in a notes column of a CSV export. No stand-in is the real value of anyone else in the data. The output is then checked for the real identity numbers, phone numbers, e-mail addresses, and full names, and the command warns if any is left.
 - Stand-ins come from HMAC-SHA256 under a secret. Without `--secret` it is random for each run; with one, a weekly staging refresh gives the same people. NIKs, phone numbers, and account numbers never collide.
 - Gender, religion, marital status, and nationality are kept by default; `--keep FINANCIAL` keeps more. `--keep-birth-date` keeps whole birth dates.
 - In an agent, the `anonymize_file` tool does it on your machine and returns only counts. TypeScript: `new Kembaran({ secret }).text(text)` from `@lokal-id/core/kembaran`; Python: `Kembaran(secret=…).text(text)` from `lokal.kembaran`, with the same output for the same secret.

@@ -34,6 +34,19 @@ def test_matches_typescript(variant: dict[str, Any]) -> None:
         assert k.text(text).to_dict() == want, text
 
 
+@pytest.mark.parametrize('variant', load('kembaran_texts.json'), ids=lambda v: v['options']['secret'])
+def test_texts_matches_typescript(variant: dict[str, Any]) -> None:
+    options = variant['options']
+    k = Kembaran(
+        secret=options['secret'],
+        keep=options.get('keep'),
+        keep_birth_date=options.get('keepBirthDate', False),
+        min_confidence=options.get('minConfidence', 'medium'),
+    )
+    for group in variant['groups']:
+        assert k.texts(group['texts']).to_dict() == group['result'], group['texts']
+
+
 def test_default_mysqldump_and_pg_dump() -> None:
     k = Kembaran(secret='uji')
     my = k.text(

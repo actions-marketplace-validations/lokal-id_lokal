@@ -121,3 +121,44 @@ function luhn(digits: string): boolean {
   }
   return sum % 10 === 0;
 }
+
+test('Kembaran.texts: satu database dalam beberapa file, nilai yang lolos di satu file tetap terganti lewat file lain', () => {
+  const dump = [
+    'CREATE TABLE pelanggan (id int, nama varchar(100), nik char(16), hp varchar(20), email varchar(80));',
+    "INSERT INTO pelanggan VALUES (1,'Kenanga Purbasari','3201014508950001','081377881290','kenanga.p@example.com');",
+    'CREATE TABLE pesanan (id int, ref varchar(20), memo text);',
+    // The phone number as a foreign key and the name in a notes column: no column name says what they are.
+    "INSERT INTO pesanan VALUES (77,'081377881290','kenanga purbasari minta kirim sore, cc KENANGA.P@EXAMPLE.COM');",
+  ].join('\n');
+  const csv = 'kontak,catatan\n6281377881290,refund ke Kenanga Purbasari\n';
+  const alone = new Kembaran({ secret: 'uji' }).text(csv).text;
+  assert.match(alone, /Kenanga Purbasari/, 'one file alone misses the name in the notes');
+
+  const k = new Kembaran({ secret: 'uji' });
+  const { files, leaked } = k.texts([dump, csv]);
+  assert.equal(leaked, 0);
+  for (const f of files) {
+    for (const real of ['Kenanga', 'kenanga', 'KENANGA', '3201014508950001', '81377881290']) assert.ok(!f.text.includes(real), `${real} in ${f.text}`);
+  }
+  // SQL keywords are not names.
+  assert.equal(files[0]!.text.match(/INSERT INTO \w+ VALUES/g)!.length, 2);
+  // The foreign key still joins, and the CSV holds the same stand-in in its own format.
+  const phone = /VALUES \(1,'[^']+','\d+','(\d+)'/.exec(files[0]!.text)![1]!;
+  assert.ok(files[0]!.text.includes(`VALUES (77,'${phone}'`));
+  assert.ok(files[1]!.text.startsWith(`kontak,catatan\n62${phone.slice(1)},refund ke `));
+  assert.deepEqual(files[1]!.crossed, { NAME: 1 });
+  assert.equal(files[0]!.crossed.NAME, 1);
+  // The same secret gives the same result, and `text` on one file gives what `texts` gives it before the cross pass.
+  assert.deepEqual(new Kembaran({ secret: 'uji' }).texts([dump, csv]), { files, leaked });
+});
+
+test('Kembaran.texts: tidak ada pengganti yang sama dengan nilai asli orang lain di data yang sama', () => {
+  // Many people from one district, born the same year: stand-ins are drawn from the same space as the real NIKs.
+  const lines = ['nama,nik'];
+  for (let i = 1; i <= 400; i++) lines.push(`Warga ${i},${'32010115089' + String(50000 + i).slice(-5)}`);
+  const csv = lines.join('\n');
+  const k = new Kembaran({ secret: 'tabrakan' });
+  const out = k.texts([csv]).files[0]!.text;
+  const real = new Set(csv.match(/\d{16}/g));
+  for (const nik of out.match(/\d{16}/g)!) assert.ok(!real.has(nik), nik);
+});

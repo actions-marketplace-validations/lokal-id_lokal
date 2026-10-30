@@ -430,6 +430,18 @@ emit('samaran_partial.json', core.PII_TYPES.flatMap((type) =>
     const k = new Kembaran(options);
     return { options, results: docs.slice(0, 500).map((text) => plain(k.text(text))) };
   }));
+  // Several texts as one database: values found in one are looked up in the others, and stand-ins avoid real values.
+  const dump = [
+    'CREATE TABLE pelanggan (id int, nama varchar(100), nik char(16), hp varchar(20), email varchar(80));',
+    "INSERT INTO pelanggan VALUES (1,'Kenanga Purbasari','3201014508950001','081377881290','kenanga.p@example.com');",
+    "INSERT INTO pesanan VALUES (77,'081377881290','kenanga purbasari minta kirim sore, cc KENANGA.P@EXAMPLE.COM');",
+  ].join('\n');
+  const groups = [[dump, 'kontak,catatan\n6281377881290,refund ke Kenanga Purbasari\n']];
+  for (let i = 0; i < 400; i += 8) groups.push(docs.slice(i, i + 8));
+  emit('kembaran_texts.json', variants.map((options) => {
+    const k = new Kembaran(options);
+    return { options, groups: groups.map((texts) => ({ texts, result: plain(k.texts(texts)) })) };
+  }));
 }
 
 // ---------------------------------------------------------------- QRIS

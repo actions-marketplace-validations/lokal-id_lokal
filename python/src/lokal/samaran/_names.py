@@ -41,7 +41,7 @@ AMBIGUOUS_GIVEN_NAMES = frozenset((
     'kartika permata bunga suci wulan melati puspa lestari surya eka dwi tri catur imam hari kurnia nur '
     'bintang rizqi rezeki mulia setia cinta kasih bagus santi sinar rahayu dian ratu asih mawar mutiara '
     'panca bima satria pandu panji puji tari gita okta octa vino yoga angel grace nana ana ida ina '
-    'sudirman rejeki'
+    'sudirman rejeki wati'
 ).split())
 
 # Family names and clan names, including Batak, Karo, Minahasa, and Maluku.

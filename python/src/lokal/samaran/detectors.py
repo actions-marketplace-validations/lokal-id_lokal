@@ -623,7 +623,7 @@ _RELIGION = rx(
 
 # An adjective of a person: "saya muslim", "suami saya kristen protestan". Not "umat Muslim" or "Gereja Kristen".
 _RELIGION_ADJECTIVE = rx(
-    r'\b(?:saya|aku|gue|gw|dia|beliau|kami|keluarga\s+(?:saya|kami)|(?:suami|istri|ayah|bapak|ibu|mama|papa|ortu|orang\s+tua|anak|adik|kakak|pacar|calon)(?:\s+(?:saya|aku|gue|dia)|nya|ku)?)\s+(?:(?:seorang|itu|adalah|sudah|udah|baru|jadi)\s+)?(muslim(?:ah)?|islam|nasrani|kristiani?|kristen(?:\s+protestan)?|protestan|katolik|katholik|hindu|buddhis|buddha|budha|konghucu|khonghucu|mualaf|muallaf|ateis|atheis|agnostik|non[- ]?muslim)\b',  # noqa: E501
+    r'\b(?:saya|aku|gue|gw|dia|ia|beliau|ybs|kami|keluarga\s+(?:saya|kami)|(?:suami|istri|ayah|bapak|ibu|mama|papa|ortu|orang\s+tua|anak|adik|kakak|pacar|calon)(?:\s+(?:saya|aku|gue|dia)|nya|ku)?)\s+(?:(?:seorang|itu|adalah|sudah|udah|baru|jadi)\s+)?(muslim(?:ah)?|islam|nasrani|kristiani?|kristen(?:\s+protestan)?|protestan|katolik|katholik|hindu|buddhis|buddha|budha|konghucu|khonghucu|mualaf|muallaf|ateis|atheis|agnostik|non[- ]?muslim)\b',  # noqa: E501
     'gi',
 )
 # A conversion: "baru pindah agama, sekarang Kristen", "masuk Islam tahun lalu".
@@ -636,7 +636,7 @@ _CONVERSION = rx(
 # "(agama Hindu)", "religion Islam" said of someone. Not religious education, institutions, or holidays:
 # "pendidikan agama Islam", "Pengadilan Agama", "hari raya agama Hindu".
 _RELIGION_BARE = rx(
-    r'\b(?:agama|religion)\s*:?\s+(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Catholic|Christian|Muslim|Hindu|Buddha|Budha|Buddhist|Konghucu|Khonghucu)\b',  # noqa: E501
+    r'\b(?:agama|religion)(?:\s*[:–-]\s*|\s+)(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Catholic|Christian|Muslim|Hindu|Buddha|Budha|Buddhist|Konghucu|Khonghucu)\b',  # noqa: E501
     'gi',
 )
 _RELIGION_INSTITUTION = rx(
@@ -712,6 +712,8 @@ _NOT_NAME = set((
     'pembeli penjual member anggota warga mahasiswa siswa karyawan pegawai seller buyer user pengguna manajemen '
     'management direksi pimpinan tim team seluruh keluarga pribadi rt rw satpam ojol cs domain file folder tabel '
     'table kolom column variabel fungsi function class akun aplikasi app server database program manfaat '
+    # SQL keywords: "INSERT INTO pelanggan VALUES (…)".
+    'values select insert into update delete where set null default primary key references '
     # Institutions: "atas nama Pengendali Data", "atas nama Menteri Keuangan".
     'pengendali prosesor pemerintah kementerian keuangan negeri daerah republik indonesia rakyat dewan lembaga '
     'badan dinas direktorat komisi mahkamah pengadilan kepolisian polri tni sekretariat umum nasional pusat '
@@ -1017,7 +1019,11 @@ def _detect_known_names(text: str) -> list[PiiMatch]:
             # ("Permata Intan").
             elif (bare in GIVEN_NAMES and _nameish(words, i + 1)) or (
                 bare in AMBIGUOUS_GIVEN_NAMES and _nameish(words, i + 1)
-                and (nxt in GIVEN_NAMES or nxt in FAMILY_NAMES or nxt in SECOND_NAMES)
+                and (
+                    nxt in GIVEN_NAMES or nxt in FAMILY_NAMES or nxt in SECOND_NAMES
+                    # A Chinese-Indonesian family name at the end: "Dewi Lim", "Ayu Tan".
+                    or (nxt in CHINESE_FAMILY_NAMES and not _nameish(words, i + 2))
+                )
             ):
                 length = _extend_name(words, i)
             else:
@@ -1433,6 +1439,53 @@ def _detect_glued_ids(text: str) -> list[PiiMatch]:
         assert label_m is not None
         if label_m.group(0).lower() in _PHONE_LABELS and parse_phone(m.group(0)).valid:
             out.append(_match('PHONE', m.start(), m.group(0), 'high'))
+    return out
+
+
+# A NIK or KK that OCR read from a card, with letters for the digits they look like: "NIK : 33O521 6805000l43".
+_OCR_ID = rx(
+    r'\b(nik|no\.?\s*ktp|ktp|no\.?\s*kk|kk|nomor\s+induk\s+kependudukan)\b[ \t]*[:.=]?[ \t]*'
+    r'([0-9oil|](?:[ ]?[0-9oil|]){15})(?![0-9a-z|])',
+    'gi',
+)
+_OCR_LETTER = rx('[oil|]', 'i')
+
+
+def _detect_ocr_ids(text: str) -> list[PiiMatch]:
+    out: list[PiiMatch] = []
+    for m in _OCR_ID.finditer(text):
+        raw = m.group(2)
+        # Digits only are the digit-run detector's.
+        if not _OCR_LETTER.search(raw):
+            continue
+        digits = _OCR_LETTER.sub(lambda c: '0' if c.group(0).lower() == 'o' else '1', raw.replace(' ', ''))
+        kk = 'kk' in m.group(1).lower()
+        confidence: Confidence = 'high' if not kk and parse_nik(digits).valid else 'medium'
+        out.append(_match('KK' if kk else 'NIK', m.start(2), raw, confidence))
+    return out
+
+
+# A record that puts the birth date right after the name: "Sinta Wibowo, 12-03-1960, Jl. Cempaka …".
+_RECORD_BIRTH = rx(
+    r"^[ \t]*([A-Z][A-Za-z'’-]+(?:[ \t]+[A-Z][A-Za-z'’-]+){1,3})[ \t]*[,;|\t][ \t]*"
+    r'(\d{1,2})([-/.])(\d{1,2})\3((?:19|20)\d{2})[ \t]*[,;|\t]',
+    'gm',
+)
+
+
+def _detect_record_birth_dates(text: str) -> list[PiiMatch]:
+    out: list[PiiMatch] = []
+    this_year = _dt.datetime.now(_dt.timezone.utc).year
+    for m in _RECORD_BIRTH.finditer(text):
+        # "Jakarta Selatan, 12-03-2026, …" dates a letter.
+        words = re.split(r'[ \t]+', m.group(1).lower())
+        if any(w in _PLACE_WORDS or w in _PLACE_SUFFIX or w in _ORGANIZATION for w in words):
+            continue
+        year = int(m.group(5))
+        if year > this_year or not _is_real_date(year, int(m.group(4)), int(m.group(2))):
+            continue
+        value = f'{m.group(2)}{m.group(3)}{m.group(4)}{m.group(3)}{m.group(5)}'
+        out.append(_match('BIRTH_DATE', m.start(2), value, 'medium'))
     return out
 
 
@@ -2392,6 +2445,8 @@ _DETECTORS: tuple[Callable[[str], list[PiiMatch]], ...] = (
     _detect_akta,
     _detect_criminal,
     _detect_glued_ids,
+    _detect_ocr_ids,
+    _detect_record_birth_dates,
     _detect_card_codes,
     _detect_spoken_phones,
     _detect_lone_given_names,

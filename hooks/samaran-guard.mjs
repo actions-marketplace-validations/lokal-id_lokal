@@ -448,7 +448,7 @@ var GIVEN_NAMES = new Set(
   // Male
   "agus ahmad akhmad achmad abdul abdur firman adi aditya adit andi andika anton ari arief arif aris bambang benny budiman cahyo dedi deni denny dimas dodi doni edi edy eko erwin fajri fauzi fauzan ferry fikri gilang hadi hafiz haris hasan hendra hendro heru ibnu ilham indra iqbal irfan irwan iwan joko jefri kevin krisna lukman lutfi mahmud muhammad mohammad mochammad muhamad mohamad moh mukhlis nanang oki rahmat rachmat reza ridwan rizal rizky rizki rudi rudy ryan sandi setyo sigit slamet sugeng suryadi syahrul taufik teguh toni tono totok wawan yanto yogi yusuf zainal arya bayu rangga dendi galih hanif hilman habibi jamal kholil nurdin roni rony sahrul samsul sapto sofyan sukarno supardi suparman sutrisno syaiful saiful tatang ujang usman wahyudi yudi yuda zaki antonius yohanes johannes petrus paulus stefanus fransiskus agustinus yosef daniel samuel michael siti rina rini ratna ratih yuni yulia yuliana nurul nining ani anisa annisa aisyah aminah fitri fitria lina lia maya mira nia novi novita nanda nadia nabila rahma ria rika risa rosa sinta shinta susi susan tuti umi widya yanti yati eva evi erna endah diah dyah desi devi dina dini fatimah hana ika irma lilis linda lusi marlina mariam maryam nina nisa novia rosita salsabila tika titin winda yeni zahra farah dewanti ernawati kartini juwita yohana theresia veronika elisabeth kristina maria agnes ningsih sumarni suminah sulastri sundari suparmi tumini warsini asep dadang cecep encep iis euis yayan aep jajang ayi engkos entis odah otong ruslan nunung yeyen yuyun dedeh enok popon dede paijo parman paimin sumarno sukirman sukinah tukiman tukinem wagiman wagiyem painem ngatini ngadimin sutarno sutini sriyati suyatno suyanti subagyo sugiono supriyadi supriyanto susilowati sutopo sutejo jaka danang endang moch abdurrahman husein husin hasanudin hamzah ibrahim ismail yunus musa harun ikhsan ihsan faisal fahmi farhan farid husni ilyas jamil karim khoirul luqman malik mansur munir mustofa nasrul nurhayati nuraini nurlela khadijah zainab halimah hafsah salma syifa naila najwa aulia azizah khairunnisa laila latifah yoseph markus lukas matius benediktus kristian christina christine magdalena natalia natalie clarissa claudia cindy jessica jesica michelle stella vania angelina felicia patricia monica gabriella evelyn vivian steven stevan david jonathan nathan william felix ivan albert alvin andreas hendrik robert richard vincent edwin edward jeffry ricky rico hengky hendry rani riska rizka rifki rafi rafa puspita candra arie dani dicky dony erik fadil johan rendra rian riyan septian tomi wisnu yadi yudha anita bella della dita elsa ema fani fenny fira henny lisa reni resti rita siska sofi tiwi vera vina wina yani yuli tina ira cantika".split(" ")
 );
-var AMBIGUOUS_GIVEN_NAMES = new Set("budi sri sekar laras murni indah putri putra ayu fajar agung mega intan sari dewi wahyu citra cahya kartika permata bunga suci wulan melati puspa lestari surya eka dwi tri catur imam hari kurnia nur bintang rizqi rezeki mulia setia cinta kasih bagus santi sinar rahayu dian ratu asih mawar mutiara panca bima satria pandu panji puji tari gita okta octa vino yoga angel grace nana ana ida ina sudirman rejeki".split(" "));
+var AMBIGUOUS_GIVEN_NAMES = new Set("budi sri sekar laras murni indah putri putra ayu fajar agung mega intan sari dewi wahyu citra cahya kartika permata bunga suci wulan melati puspa lestari surya eka dwi tri catur imam hari kurnia nur bintang rizqi rezeki mulia setia cinta kasih bagus santi sinar rahayu dian ratu asih mawar mutiara panca bima satria pandu panji puji tari gita okta octa vino yoga angel grace nana ana ida ina sudirman rejeki wati".split(" "));
 var FAMILY_NAMES = new Set("utomo widodo santoso susanto wijaya widjaja saputra saputri pratama pratiwi hidayat hidayah setiawan setiadi kurniawan kurniawati gunawan hartono sutanto suharto susilo wibowo prasetyo prasetya nugraha nugroho purnomo permana ramadhan ramadhani firmansyah hakim rahman rahmawati wahyudi wahyuni handayani kusumawati maharani safitri anggraini puspitasari novitasari wulandari sulistyowati sukmawati suryani haryanto budiman irawan sanjaya tanoto salim suryadi siswanto effendi effendy syahputra sutrisno mulyadi mulyani haryadi sudarsono suryanto purwanto sugiarto sugianto kristanto tjandra chandra hermawan hendrawan darmawan dharmawan ardiansyah pangestu yulianti fitriani oktaviani septiani ramadani hidayatullah abdullah rosadi sopian sofyan iskandar sitorus nasution harahap lubis siregar simanjuntak simatupang sitompul hutapea pardede panjaitan situmorang sinaga tambunan manurung sihombing simbolon hutagalung napitupulu silalahi pasaribu sembiring ginting tarigan purba saragih damanik hasibuan batubara daulay pohan rangkuti ritonga matondang gultom sianturi simamora marpaung aritonang hutabarat pakpahan sibarani sirait samosir sidabutar munthe sinambela nainggolan manullang siahaan simanungkalit rajagukguk lumbantobing butarbutar sinurat girsang perangin-angin peranginangin sumampouw pangemanan wenas lumentut rondonuwu mandagi tumbelaka tuhumury latuconsina pattinama wattimena pattiasina lewerissa".split(" "));
 var SECOND_NAMES = new Set("sari rahayu lestari wati yanti ningsih ningrum astuti utami kusuma halim aminah kartika".split(" "));
 var CHINESE_FAMILY_NAMES = new Set("lim liem tan tjan ong oei wong kwee gouw khoe tjoa thio tio liauw chen ng yap teo kho sie tjia lauw liong".split(" "));
@@ -1000,13 +1000,13 @@ function detectMaritalStatus(text) {
 function detectReligion(text) {
   const re = /\b(?:beragama|agamanya|agama\s+(?:saya|aku|dia|beliau|kami|mereka))\s+(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Hindu|Buddha|Budha|Konghucu|Khonghucu|Kong Hu Cu)\b/gi;
   const out = [...text.matchAll(re)].map((m) => match("RELIGION", m.index + m[0].length - m[1].length, m[1], "high"));
-  const bare = /\b(?:agama|religion)\s*:?\s+(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Catholic|Christian|Muslim|Hindu|Buddha|Budha|Buddhist|Konghucu|Khonghucu)\b/gi;
+  const bare = /\b(?:agama|religion)(?:\s*[:–-]\s*|\s+)(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Catholic|Christian|Muslim|Hindu|Buddha|Budha|Buddhist|Konghucu|Khonghucu)\b/gi;
   for (const m of text.matchAll(bare)) {
     if (/\b(?:pendidikan|pelajaran|mata\s+pelajaran|guru|umat|hari(?:\s+raya)?|tokoh|kementerian|pengadilan|universitas|institut|sekolah|ajaran|nilai|organisasi|lembaga|majelis|studi|fakultas|ilmu|perayaan|kitab|rumah\s+ibadah|penyuluh|pemuka)\s+$/i.test(before(text, m.index, 30)))
       continue;
     out.push(match("RELIGION", m.index + m[0].length - m[1].length, m[1], "medium"));
   }
-  const adjective = /\b(?:saya|aku|gue|gw|dia|beliau|kami|keluarga\s+(?:saya|kami)|(?:suami|istri|ayah|bapak|ibu|mama|papa|ortu|orang\s+tua|anak|adik|kakak|pacar|calon)(?:\s+(?:saya|aku|gue|dia)|nya|ku)?)\s+(?:(?:seorang|itu|adalah|sudah|udah|baru|jadi)\s+)?(muslim(?:ah)?|islam|nasrani|kristiani?|kristen(?:\s+protestan)?|protestan|katolik|katholik|hindu|buddhis|buddha|budha|konghucu|khonghucu|mualaf|muallaf|ateis|atheis|agnostik|non[- ]?muslim)\b/gi;
+  const adjective = /\b(?:saya|aku|gue|gw|dia|ia|beliau|ybs|kami|keluarga\s+(?:saya|kami)|(?:suami|istri|ayah|bapak|ibu|mama|papa|ortu|orang\s+tua|anak|adik|kakak|pacar|calon)(?:\s+(?:saya|aku|gue|dia)|nya|ku)?)\s+(?:(?:seorang|itu|adalah|sudah|udah|baru|jadi)\s+)?(muslim(?:ah)?|islam|nasrani|kristiani?|kristen(?:\s+protestan)?|protestan|katolik|katholik|hindu|buddhis|buddha|budha|konghucu|khonghucu|mualaf|muallaf|ateis|atheis|agnostik|non[- ]?muslim)\b/gi;
   for (const m of text.matchAll(adjective))
     out.push(match("RELIGION", m.index + m[0].length - m[1].length, m[1], "medium"));
   const conversion = /\b(?:pindah\s+agama|murtad|convert|mualaf)\b[^\n.]{0,30}?\b(?:jadi|menjadi|ke|sekarang|kini)\s+(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Hindu|Buddha|Budha|Konghucu|Khonghucu)\b|\bmasuk\s+(Islam|Kristen|Katolik|Hindu|Buddha)\b/gi;
@@ -1109,7 +1109,7 @@ var TITLE_WORDS = /* @__PURE__ */ new Set([
   "kh",
   "dear"
 ]);
-var NOT_NAME = new Set("yang dan atau dengan dgn di ke dari dr untuk utk pada dalam ini itu tsb tersebut saya sy aku aq kamu km anda dia beliau kami kita mereka gue gw gua lu nya ya iya yaa ok oke kak sih dong deh nih tuh kok lah kah pun juga aja saja sudah udah sdh belum blm mau ingin pengen pingin minta mohon tolong bisa bisakah boleh akan sedang lagi masih baru tadi kemarin besok nanti sekarang hari sekali sekalian semua para terima kasih makasih selamat pagi siang sore malam halo hai permisi maaf refund transfer tf pesanan pesan order barang paket produk nomor no nik hp wa alamat email rekening rek umur usia lahir tinggal asal sebagai adalah ialah tidak tak gak ga nggak bukan jadi kalau kalo karena krn tapi namun perusahaan kantor toko pt cv ud yayasan koperasi instansi bank kota negara pertiwi jari hamil menyusui rumah tiri mertua kandung terdaftar sendiri ada punya kirim dikirim cek dicek tanya nanya bertanya sama bersama tentang soal mengenai sini situ sana apa siapa gimana bagaimana kenapa mana kapan berapa harap segera langsung dulu lalu kemudian terus menyatakan bahwa yg sekalian islam kristen katolik hindu buddha konghucu jl jln jalan gg gang the and i am is a an of to for want my senin selasa rabu kamis jumat sabtu minggu januari februari maret april mei juni juli agustus september oktober november desember cuma hanya pernah sering selalu benar betul yakin setuju kecewa senang puas bingung orang customer pelanggan pembeli penjual member anggota warga mahasiswa siswa karyawan pegawai seller buyer user pengguna manajemen management direksi pimpinan tim team seluruh keluarga pribadi rt rw satpam ojol cs domain file folder tabel table kolom column variabel fungsi function class akun aplikasi app server database program manfaat pengendali prosesor pemerintah kementerian keuangan negeri daerah republik indonesia rakyat dewan lembaga badan dinas direktorat komisi mahkamah pengadilan kepolisian polri tni sekretariat umum nasional pusat setia prioritas vip tetap kontrak berprestasi terbaik terhormat yth tercinta terkasih kesayangan aktif harian magang honorer swasta asing lokal premium reguler perorangan individu lama kakak adik semuanya sir madam all everyone there world guys team folks friends bro sis gan min bos boss say sayang beb dek service support masukkan isi ketik pilih enter your sobat jakarta bandung surabaya medan semarang makassar palembang bogor depok tangerang bekasi yogyakarta jogja solo malang denpasar bali batam pekanbaru padang manado balikpapan samarinda pontianak banjarmasin ambon jayapura kupang mataram lampung aceh cirebon tasikmalaya sukabumi serang cilegon purwokerto kediri jember madiun magelang salatiga".split(" "));
+var NOT_NAME = new Set("yang dan atau dengan dgn di ke dari dr untuk utk pada dalam ini itu tsb tersebut saya sy aku aq kamu km anda dia beliau kami kita mereka gue gw gua lu nya ya iya yaa ok oke kak sih dong deh nih tuh kok lah kah pun juga aja saja sudah udah sdh belum blm mau ingin pengen pingin minta mohon tolong bisa bisakah boleh akan sedang lagi masih baru tadi kemarin besok nanti sekarang hari sekali sekalian semua para terima kasih makasih selamat pagi siang sore malam halo hai permisi maaf refund transfer tf pesanan pesan order barang paket produk nomor no nik hp wa alamat email rekening rek umur usia lahir tinggal asal sebagai adalah ialah tidak tak gak ga nggak bukan jadi kalau kalo karena krn tapi namun perusahaan kantor toko pt cv ud yayasan koperasi instansi bank kota negara pertiwi jari hamil menyusui rumah tiri mertua kandung terdaftar sendiri ada punya kirim dikirim cek dicek tanya nanya bertanya sama bersama tentang soal mengenai sini situ sana apa siapa gimana bagaimana kenapa mana kapan berapa harap segera langsung dulu lalu kemudian terus menyatakan bahwa yg sekalian islam kristen katolik hindu buddha konghucu jl jln jalan gg gang the and i am is a an of to for want my senin selasa rabu kamis jumat sabtu minggu januari februari maret april mei juni juli agustus september oktober november desember cuma hanya pernah sering selalu benar betul yakin setuju kecewa senang puas bingung orang customer pelanggan pembeli penjual member anggota warga mahasiswa siswa karyawan pegawai seller buyer user pengguna manajemen management direksi pimpinan tim team seluruh keluarga pribadi rt rw satpam ojol cs domain file folder tabel table kolom column variabel fungsi function class akun aplikasi app server database program manfaat values select insert into update delete where set null default primary key references pengendali prosesor pemerintah kementerian keuangan negeri daerah republik indonesia rakyat dewan lembaga badan dinas direktorat komisi mahkamah pengadilan kepolisian polri tni sekretariat umum nasional pusat setia prioritas vip tetap kontrak berprestasi terbaik terhormat yth tercinta terkasih kesayangan aktif harian magang honorer swasta asing lokal premium reguler perorangan individu lama kakak adik semuanya sir madam all everyone there world guys team folks friends bro sis gan min bos boss say sayang beb dek service support masukkan isi ketik pilih enter your sobat jakarta bandung surabaya medan semarang makassar palembang bogor depok tangerang bekasi yogyakarta jogja solo malang denpasar bali batam pekanbaru padang manado balikpapan samarinda pontianak banjarmasin ambon jayapura kupang mataram lampung aceh cirebon tasikmalaya sukabumi serang cilegon purwokerto kediri jember madiun magelang salatiga".split(" "));
 var NAME_PARTICLES = /* @__PURE__ */ new Set(["bin", "binti", "van", "der", "de", "al", "el", "da", "dos"]);
 var ORGANIZATION = /* @__PURE__ */ new Set(["pt", "cv", "ud", "toko", "yayasan", "koperasi", "perusahaan", "bank"]);
 var NAME_TOKEN = /[ \t]*([A-Za-z][A-Za-z'’-]*\.?)/y;
@@ -1271,7 +1271,8 @@ function detectKnownNames(text) {
         len = 3;
       else if (GIVEN_NAMES.has(w.bare) && nameish(i + 1))
         len = extend(i);
-      else if (AMBIGUOUS_GIVEN_NAMES.has(w.bare) && nameish(i + 1) && (GIVEN_NAMES.has(next) || FAMILY_NAMES.has(next) || SECOND_NAMES.has(next))) {
+      else if (AMBIGUOUS_GIVEN_NAMES.has(w.bare) && nameish(i + 1) && (GIVEN_NAMES.has(next) || FAMILY_NAMES.has(next) || SECOND_NAMES.has(next) || // A Chinese-Indonesian family name at the end: "Dewi Lim", "Ayu Tan".
+      CHINESE_FAMILY_NAMES.has(next) && !nameish(i + 2))) {
         len = extend(i);
       } else {
         for (let j = i + 1; j <= i + 3 && nameish(j); j++) {
@@ -1548,6 +1549,35 @@ function detectGluedIds(text) {
   return out;
 }
 var DIGIT_WORD = "(?:nol|kosong|satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan)";
+var OCR_ID = /\b(nik|no\.?\s*ktp|ktp|no\.?\s*kk|kk|nomor\s+induk\s+kependudukan)\b[ \t]*[:.=]?[ \t]*([0-9oil|](?:[ ]?[0-9oil|]){15})(?![0-9a-z|])/gi;
+function detectOcrIds(text) {
+  const out = [];
+  for (const m of text.matchAll(OCR_ID)) {
+    const raw = m[2];
+    if (!/[oil|]/i.test(raw))
+      continue;
+    const digits = raw.replace(/ /g, "").replace(/[oil|]/gi, (c) => c.toLowerCase() === "o" ? "0" : "1");
+    const kk = /kk/i.test(m[1]);
+    const confidence = !kk && parseNik(digits).valid ? "high" : "medium";
+    out.push(match(kk ? "KK" : "NIK", m.index + m[0].length - raw.length, raw, confidence));
+  }
+  return out;
+}
+var RECORD_BIRTH = /^[ \t]*([A-Z][A-Za-z'’-]+(?:[ \t]+[A-Z][A-Za-z'’-]+){1,3})[ \t]*[,;|\t][ \t]*(\d{1,2})([-/.])(\d{1,2})\3((?:19|20)\d{2})[ \t]*[,;|\t]/gm;
+function detectRecordBirthDates(text) {
+  const out = [];
+  for (const m of text.matchAll(RECORD_BIRTH)) {
+    const words = m[1].toLowerCase().split(/[ \t]+/);
+    if (words.some((w) => PLACE_WORDS.has(w) || PLACE_SUFFIX.has(w) || ORGANIZATION.has(w)))
+      continue;
+    const year = Number(m[5]);
+    if (year > (/* @__PURE__ */ new Date()).getUTCFullYear() || !isRealDate(year, Number(m[4]), Number(m[2])))
+      continue;
+    const value = `${m[2]}${m[3]}${m[4]}${m[3]}${m[5]}`;
+    out.push(match("BIRTH_DATE", m.index + m[0].search(/\d/), value, "medium"));
+  }
+  return out;
+}
 function detectSpokenPhones(text) {
   const re = new RegExp(`\\b(?:nol|kosong)[\\s,.-]+delapan(?:[\\s,.-]+${DIGIT_WORD}){8,11}\\b`, "gi");
   return [...text.matchAll(re)].map((m) => match("PHONE", m.index, m[0], "medium"));
@@ -2152,6 +2182,8 @@ var DETECTORS = [
   detectAkta,
   detectCriminal,
   detectGluedIds,
+  detectOcrIds,
+  detectRecordBirthDates,
   detectCardCodes,
   detectSpokenPhones,
   detectLoneGivenNames,

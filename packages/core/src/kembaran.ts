@@ -8,6 +8,9 @@
 // - Within one line (a CSV row, an SQL tuple), a birth date follows the stand-in NIK, so the row stays consistent.
 // - Stand-ins come from HMAC-SHA256 under a secret: random for each run unless one is given, and never reversible
 //   without it. Unique values (NIK, phone, account numbers) never collide.
+// - `texts` takes the files of one database together: a value found in one is replaced wherever it appears in the
+//   others, where the detector alone would miss it (a phone number as a foreign key, a name in a notes column), no
+//   stand-in is a real value of the input, and what is left of the real values is counted.
 //
 // Node only (node:crypto), like @lokal-id/core/wilayah. python/src/lokal/kembaran.py gives identical output for the
 // same secret.
@@ -37,7 +40,25 @@ export interface KembaranResult {
   replaced: Partial<Record<PiiType, number>>;
 }
 
+export interface KembaranTextsResult {
+  files: Array<KembaranResult & {
+    /** Values replaced because they were found in this or another input, where the detector missed them here. */
+    crossed: Partial<Record<PiiType, number>>;
+  }>;
+  /**
+   * Real identity numbers, phone numbers, e-mail addresses, and full names of the input still in the output. 0 unless
+   * one is glued to other text ("ID3201…"); a check, not a guarantee for what the detector never found.
+   */
+  leaked: number;
+}
+
 export const KEEP_BY_DEFAULT: readonly PiiType[] = ['GENDER', 'RELIGION', 'MARITAL_STATUS', 'NATIONALITY'];
+
+// Numbers looked up across inputs. Shorter or other numbers (amounts, IDs) are too common to look up.
+const CROSS_DIGITS: ReadonlySet<PiiType> = new Set(['NIK', 'KK', 'NPWP', 'PHONE', 'BANK_ACCOUNT', 'CARD', 'BPJS', 'SIM', 'NIP', 'NISN']);
+const DIGIT_RUN = /(?<![A-Za-z0-9_+])\+?\d(?:[ .-]?\d){7,18}(?![A-Za-z0-9_])/g;
+const EMAIL_RUN = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g;
+const NAME_WORD = /^[A-Za-z'’-]{2,}$/;
 
 // Values that must stay unique: two people must not end up with one stand-in.
 const UNIQUE: ReadonlySet<PiiType> = new Set([
@@ -117,6 +138,15 @@ class Stream {
 const pad = (n: number, width = 2) => String(n).padStart(width, '0');
 const onlyDigits = (s: string) => s.replace(/\D/g, '');
 
+/** How `texts` looks a number up: a phone number in its national form, so 0812… and 62812… are one. */
+function digitKey(type: PiiType, digits: string): string {
+  return type === 'PHONE' && digits.startsWith('62') ? `0${digits.slice(2)}` : digits;
+}
+
+function escapeRe(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 /** Writes `digits` into the digit positions of `template`, keeping its separators: "0812-3456-7890". */
 function putDigits(template: string, digits: string): string {
   if (onlyDigits(template).length !== digits.length) return digits;
@@ -182,6 +212,8 @@ export class Kembaran {
   private readonly fakes = new Map<string, string>();
   private readonly used = new Map<PiiType, Set<string>>();
   private readonly nikDays = new Map<string, Day>();
+  /** Canonical real values of the inputs given to `texts`: no stand-in may be one of them. */
+  private readonly originals = new Map<PiiType, Set<string>>();
 
   constructor(options: KembaranOptions = {}) {
     for (const t of options.keep ?? []) {
@@ -197,7 +229,82 @@ export class Kembaran {
 
   /** Replaces every piece of personal data in a text: a CSV, an SQL dump, JSON, a log, or prose. */
   text(input: string): KembaranResult {
-    const matches = detectPii(input, { minConfidence: this.minConfidence, exclude: [...this.keep], custom: this.custom });
+    return this.replaceMatches(input, this.detect(input));
+  }
+
+  /**
+   * The files of one database or export, with one set of stand-ins: an SQL dump and the CSV files made from it. On
+   * top of what `text` does for each, a real value found in any of them is replaced wherever it appears, no stand-in
+   * is a real value of the input, and `leaked` counts the real values left.
+   */
+  texts(inputs: readonly string[]): KembaranTextsResult {
+    const found = inputs.map((t) => this.detect(t));
+    const digits = new Map<string, PiiType>();
+    const emails = new Set<string>();
+    const names = new Set<string>();
+    for (const matches of found) {
+      for (const m of matches) {
+        if (this.keep.has(m.type)) continue;
+        if (CROSS_DIGITS.has(m.type) || m.type === 'NAME') {
+          const set = this.originals.get(m.type) ?? new Set<string>();
+          this.originals.set(m.type, set);
+          set.add(this.canon(m.type, m.value));
+        }
+        if (CROSS_DIGITS.has(m.type)) {
+          const d = onlyDigits(m.value);
+          if (d.length >= 8 && !digits.has(digitKey(m.type, d))) digits.set(digitKey(m.type, d), m.type);
+        } else if (m.type === 'EMAIL') emails.add(m.value.toLowerCase());
+        else if (m.type === 'NAME') {
+          const core = this.nameCore(m.value);
+          if (core.length >= 2 && core.every((w) => NAME_WORD.test(w))) names.add(core.map((w) => w.toLowerCase()).join(' '));
+        }
+      }
+    }
+    // Longest first, so "Budi Santoso Wijaya" is replaced whole before "Budi Santoso".
+    const nameRe = names.size
+      ? new RegExp(
+        `(?<![A-Za-z0-9])(?:${[...names].sort((a, b) => b.length - a.length || (a < b ? -1 : 1)).map((n) => n.split(' ').map(escapeRe).join('[ \\t]+')).join('|')})(?![A-Za-z0-9])`,
+        'gi',
+      )
+      : undefined;
+    // What in a text is a real value of the inputs: its type and where it is.
+    const realValues = (text: string) => {
+      const hits: Array<{ type: PiiType; start: number; end: number; value: string }> = [];
+      for (const m of text.matchAll(DIGIT_RUN)) {
+        const d = onlyDigits(m[0]);
+        let type = digits.get(d);
+        if (type === undefined && d.startsWith('62') && digits.get(`0${d.slice(2)}`) === 'PHONE') type = 'PHONE';
+        if (type !== undefined) hits.push({ type, start: m.index, end: m.index + m[0].length, value: m[0] });
+      }
+      for (const m of text.matchAll(EMAIL_RUN)) {
+        if (emails.has(m[0].toLowerCase())) hits.push({ type: 'EMAIL', start: m.index, end: m.index + m[0].length, value: m[0] });
+      }
+      if (nameRe) for (const m of text.matchAll(nameRe)) hits.push({ type: 'NAME', start: m.index, end: m.index + m[0].length, value: m[0] });
+      hits.sort((a, b) => a.start - b.start || b.end - a.end);
+      const kept: typeof hits = [];
+      for (const h of hits) if (!kept.length || h.start >= kept.at(-1)!.end) kept.push(h);
+      return kept;
+    };
+    const files = inputs.map((input, i) => {
+      const first = this.replaceMatches(input, found[i]!);
+      const crossed: Partial<Record<PiiType, number>> = {};
+      let text = '';
+      let cursor = 0;
+      for (const h of realValues(first.text)) {
+        text += first.text.slice(cursor, h.start) + this.value(h.type, h.value);
+        cursor = h.end;
+        crossed[h.type] = (crossed[h.type] ?? 0) + 1;
+      }
+      return { text: text + first.text.slice(cursor), replaced: first.replaced, crossed };
+    });
+    return { files, leaked: files.reduce((n, f) => n + realValues(f.text).length, 0) };
+  }
+
+  private detect(input: string) {
+    return detectPii(input, { minConfidence: this.minConfidence, exclude: [...this.keep], custom: this.custom });
+  }
+
+  private replaceMatches(input: string, matches: ReturnType<typeof detectPii>): KembaranResult {
     const lineStarts = [0];
     for (let i = input.indexOf('\n'); i >= 0; i = input.indexOf('\n', i + 1)) lineStarts.push(i + 1);
     const lineOf = (pos: number) => {
@@ -237,7 +344,7 @@ export class Kembaran {
   /** The stand-in for one value of a known type. */
   value(type: PiiType, original: string, rowDay?: Day): string {
     if (this.keep.has(type)) return original;
-    const canon = type === 'NAME' ? this.nameCore(original).map((t) => t.toLowerCase()).join(' ') : canonical(type, original);
+    const canon = this.canon(type, original);
     if (type === 'BIRTH_DATE' && rowDay && !this.keepBirthDate) return this.birthDate(original, new Stream(this.key, 'BIRTH_DATE|row'), rowDay);
     const cacheKey = `${type}|${canon}`;
     const cached = this.fakes.get(cacheKey);
@@ -245,6 +352,8 @@ export class Kembaran {
     let fake = '';
     for (let attempt = 0; attempt < 100; attempt++) {
       fake = this.make(type, original, canon, new Stream(this.key, `${type}|${canon}|${attempt}`));
+      // A stand-in that is someone's real value in the same data would put a real person back in it.
+      if (this.originals.get(type)?.has(type === 'NAME' ? fake.toLowerCase() : canonical(type, fake))) continue;
       if (!UNIQUE.has(type)) break;
       const used = this.used.get(type) ?? new Set<string>();
       this.used.set(type, used);
@@ -255,6 +364,10 @@ export class Kembaran {
     }
     this.fakes.set(cacheKey, fake);
     return this.render(type, original, fake);
+  }
+
+  private canon(type: PiiType, value: string): string {
+    return type === 'NAME' ? this.nameCore(value).map((t) => t.toLowerCase()).join(' ') : canonical(type, value);
   }
 
   /** The words of a name that identify the person: not honorifics, titles, or "bin". */
