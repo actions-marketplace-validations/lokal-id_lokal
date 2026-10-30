@@ -15,6 +15,7 @@
     "typecheck": "tsc -p packages/core --noEmit && tsc -p packages/mcp --noEmit && tsc -p packages/extension",
     "eval:pii": "node evals/hard/pii-bench.mjs",
     "bench": "node evals/bench/run.mjs",
+    "stress": "node --expose-gc evals/stress/run.mjs",
     "eval:alamat": "node evals/alamat-bench.mjs",
     "eval:alamat:osm": "node evals/alamat-osm.mjs",
     "build:extension": "node scripts/build-extension.mjs",

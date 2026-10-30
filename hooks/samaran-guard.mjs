@@ -653,10 +653,15 @@ function previousLine(text, index) {
   return text.slice(text.lastIndexOf("\n", lineStart - 2) + 1, lineStart - 1).toLowerCase();
 }
 function lineAbove(text, index, length) {
-  const lineStart = text.lastIndexOf("\n", index - 1) + 1;
-  const lineEnd = text.indexOf("\n", index + length);
-  if (text.slice(lineStart, index).trim() || text.slice(index + length, lineEnd === -1 ? text.length : lineEnd).trim())
-    return "";
+  let lineStart = index;
+  while (lineStart > 0 && text[lineStart - 1] !== "\n") {
+    if (/\S/.test(text[lineStart - 1]))
+      return "";
+    lineStart--;
+  }
+  for (let i = index + length; i < text.length && text[i] !== "\n"; i++)
+    if (/\S/.test(text[i]))
+      return "";
   if (lineStart === 0)
     return "";
   return text.slice(text.lastIndexOf("\n", lineStart - 2) + 1, lineStart - 1).toLowerCase();
@@ -1952,6 +1957,7 @@ function closingQuote(text, start, end) {
   }
   return end;
 }
+var MAX_VALUE = 1e3;
 function detectLabeledFields(text) {
   const out = [];
   let lineStart = 0;
@@ -1980,7 +1986,7 @@ function detectLabeledFields(text) {
     if (!type)
       continue;
     const valueStart = m.index + m[0].length;
-    const rawEnd = lineEnd > valueStart && text[lineEnd - 1] === "\r" ? lineEnd - 1 : lineEnd;
+    const rawEnd = Math.min(lineEnd > valueStart && text[lineEnd - 1] === "\r" ? lineEnd - 1 : lineEnd, valueStart + MAX_VALUE);
     let value;
     let start = valueStart;
     const quote = text[valueStart];

@@ -33,6 +33,21 @@ if (option('export')) {
   writeFileSync(path.join(dir, `${split}.jsonl`), docs.map((d) => JSON.stringify(d)).join('\n') + '\n');
 }
 
+// --extra FILE adds another tool's detections (JSON Lines of { id, matches: [{ type, start, end }] }, UTF-16
+// offsets) to Samaran's, to measure what an optional detector such as a NER model would add.
+const extra = new Map();
+if (option('extra') && (flag('update-baseline') || flag('save'))) {
+  console.error('--extra measures another detector; it cannot become the baseline or a saved result.');
+  process.exit(2);
+}
+if (option('extra')) {
+  for (const line of readFileSync(path.resolve(option('extra')), 'utf8').split('\n')) {
+    if (!line.trim()) continue;
+    const { id, matches } = JSON.parse(line);
+    extra.set(id, matches);
+  }
+}
+
 const overlaps = (a, b) => a.start < b.end && b.start < a.end;
 const stats = new Map();
 const of = (type) => {
@@ -46,6 +61,7 @@ const started = performance.now();
 
 for (const doc of docs) {
   const found = detectPii(doc.text);
+  for (const m of extra.get(doc.id) ?? []) found.push({ ...m, value: doc.text.slice(m.start, m.end) });
   const fmt = formats.get(doc.format) ?? { gold: 0, protected: 0, docs: 0, falsePositives: 0 };
   formats.set(doc.format, fmt);
   fmt.docs++;

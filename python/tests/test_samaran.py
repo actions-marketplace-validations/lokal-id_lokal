@@ -454,3 +454,13 @@ def test_placeholder_like_text_in_the_input_keeps_its_number() -> None:
     assert r.mask('Pelanggan: Joko Susilo').text == 'Pelanggan: [NAME_5]'
     assert mask_pii('[NIK_3] 3201011508950001', mode='partial').text == '[NIK_3] 3201********0001'
     assert Samaran().mask('[NIK_99999999999] NIK 3201011508950001').text == '[NIK_99999999999] NIK [NIK_1]'
+
+
+def test_hostile_one_line_input_stays_linear() -> None:
+    # 400 KB of "Nama: " was quadratic when each label scanned the rest of the line.
+    import time
+
+    for unit in ('Nama: ', '1234-5678-', 'NIK: 3201 '):
+        started = time.perf_counter()
+        detect_pii(unit * (400_000 // len(unit)))
+        assert time.perf_counter() - started < 15, unit

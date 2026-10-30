@@ -4,6 +4,26 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-10-30
+
+### Added
+
+- An optional NER model for names that Samaran's rules do not know, in Python: `pip install "lokal-id[ner]"`, then `Samaran(ner=NerNames())` or `detect_pii(text, ner=...)` from `lokal.samaran.ner`.
+  - It uses [cahya/bert-base-indonesian-NER](https://huggingface.co/cahya/bert-base-indonesian-NER) (MIT), read from safetensors at a pinned revision, never from a pickle file. It keeps person names only, after filters for chat words, field names, abbreviations, and place names.
+  - Settings were chosen on development data only.
+  - On the held-out benchmark it raised names protected from 93.6% to 98.1% and all values from 97.2% to 98.7%, with no false positive.
+  - On real news it raised the people found from 21.6% to 91.3%, at 98.3% precision, in the idner-news-2k test set. On 2,250 speakers in 2,277 articles from 14 news sites in October 2026, it raised them from 18.5% to 90.6%. In a sample of 300 of its detections there, 95% were people.
+  - It reads text line by line, in passages of about 600 characters, where it finds names best.
+  - It costs about 20 to 50 ms per short document on CPU.
+  - A name the model cuts inside a word is masked whole, and police or military ranks in front of a name are left out.
+  - It is off by default, and the TypeScript package, the guard, and the proxy do not use it.
+- `npm run stress`: a stress test of detection, Samaran, Kembaran, the proxy under 64 concurrent requests, the guard hook, the MCP server, and `lokal-mcp scan`, on large and hostile made-up input, with [results](evals/stress/README.md).
+- `npm run bench -- --extra FILE` scores another detector's matches together with Samaran's.
+
+### Fixed
+
+- Detection was quadratic on one long line holding many labels or numbers. 400 KB of `Nama: ` took 35 seconds, past the guard's time limit, so a crafted file could have slowed the guard into letting a read through. A value is now read at most 1,000 characters after its label, and the check for a number alone on its line no longer copies the line. 2 MB of the same input now takes 1.8 seconds, in both TypeScript and Python.
+
 ## [0.12.0] - 2026-10-30
 
 ### Added
@@ -301,7 +321,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.12.0...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.13.0...HEAD
+[0.13.0]: https://github.com/lokal-id/lokal/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/lokal-id/lokal/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/lokal-id/lokal/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/lokal-id/lokal/compare/v0.9.0...v0.10.0
