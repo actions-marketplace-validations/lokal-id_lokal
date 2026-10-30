@@ -4,7 +4,7 @@
 # provenance. Nothing is sent anywhere: the scan runs on the runner, and findings show partially masked values only.
 #
 #   - uses: actions/checkout@v5
-#   - uses: lokal-id/lokal@v0.11.0
+#   - uses: lokal-id/lokal@v0.12.0
 name: Lokal PII Scan
 description: Stop Indonesian personal data (NIK, phone numbers, bank accounts, health data, UU PDP) from being committed.
 author: lokal-id
@@ -43,7 +43,7 @@ runs:
     - name: Scan for Indonesian personal data
       shell: bash
       env:
-        LOKAL_VERSION: 0.11.0
+        LOKAL_VERSION: 0.12.0
         INPUT_SCOPE: ${{ inputs.scope }}
         INPUT_PATH: ${{ inputs.path }}
         INPUT_BASE: ${{ inputs.base }}
