@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-10-30
+
 ### Added
 
 - A chat corpus, `npm run bench:chat`: made-up chat messages, tickets, and WhatsApp exports in which names have no label or cue, mostly in lower case, with held-out dev and test splits. Half of its names are made up, so a detector cannot pass by knowing a list of names. See [evals/chat](evals/chat/README.md).
@@ -339,7 +341,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.13.0...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.14.0...HEAD
+[0.14.0]: https://github.com/lokal-id/lokal/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/lokal-id/lokal/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/lokal-id/lokal/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/lokal-id/lokal/compare/v0.10.0...v0.11.0
