@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-10-30
+
 ### Added
 
 - A policy per type of personal data in `.samaran.json`: `mask` (the default), `allow`, `block`, or `route`, per built-in type or custom rule label. The proxy refuses a request with a `block` type (HTTP 403); `read_file_masked` refuses such a file; the guard holds back a single value of a `block` or `route` type, as it does an identity number; `allow` leaves a type unmasked. `lokal-mcp scan` ignores the policy.
@@ -275,7 +277,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.9.0...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.10.0...HEAD
+[0.10.0]: https://github.com/lokal-id/lokal/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/lokal-id/lokal/compare/v0.8.3...v0.9.0
 [0.8.3]: https://github.com/lokal-id/lokal/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/lokal-id/lokal/compare/v0.8.1...v0.8.2
