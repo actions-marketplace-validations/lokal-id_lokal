@@ -11,6 +11,7 @@ import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { CANARY_FORMATS, CANARY_NEEDLES } from '../packages/core/test/canary.ts';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const EXT = path.join(ROOT, 'packages/extension/dist-test');
@@ -88,8 +89,10 @@ function cdp(url) {
   const ws = new WebSocket(url);
   let id = 0;
   const pending = new Map();
+  const listeners = new Map();
   ws.addEventListener('message', (e) => {
     const msg = JSON.parse(e.data);
+    if (msg.method) for (const fn of listeners.get(msg.method) ?? []) fn(msg.params, msg.sessionId);
     const p = pending.get(msg.id);
     if (!p) return;
     pending.delete(msg.id);
@@ -104,7 +107,8 @@ function cdp(url) {
       pending.set(++id, { resolve, reject });
       ws.send(JSON.stringify({ id, method, params, sessionId }));
     });
-  return { ready, send, close: () => ws.close() };
+  const on = (method, fn) => listeners.set(method, [...(listeners.get(method) ?? []), fn]);
+  return { ready, send, on, close: () => ws.close() };
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -169,6 +173,11 @@ try {
   const { sessionId } = await send('Target.attachToTarget', { targetId, flatten: true });
   const page = (method, params) => send(method, params, sessionId);
   await page('Page.enable');
+  // The page's JavaScript worlds, the content script's among them.
+  const contexts = [];
+  client.on('Runtime.executionContextCreated', (params, sid) => {
+    if (sid === sessionId) contexts.push(params.context);
+  });
   await page('Runtime.enable');
   await send('Browser.grantPermissions', { origin: pageUrl.slice(0, -1), permissions: ['clipboardReadWrite', 'clipboardSanitizedWrite'] });
   await page('Page.navigate', { url: pageUrl });
@@ -322,6 +331,62 @@ try {
     assert.match(got.text, /\[(?:NAME|NIK)_\d+\]/);
   });
 
+  // Files Lokal cannot check are asked about with the browser's own dialog; the answer is set per check.
+  const dialogs = [];
+  let answer = false;
+  client.on('Page.javascriptDialogOpening', (params, sid) => {
+    dialogs.push(params.message);
+    send('Page.handleJavaScriptDialog', { accept: answer }, sid);
+  });
+  const idPhoto = onDisk('ktp-budi.png', Buffer.from('89504e470d0a1a0a0000000d49484452', 'hex'));
+  const broken = onDisk('rusak.pdf', '%PDF-1.7\n');
+
+  await check('files Lokal cannot check are left out unless the user says yes', async () => {
+    await evaluate('window.uploads = []');
+    dialogs.length = 0;
+    answer = false;
+    await page('DOM.setFileInputFiles', { objectId: await fileInput(), files: [idPhoto, broken, clean] });
+    const got = await uploads(1);
+    await sleep(500);
+    assert.deepEqual((await evaluate('window.uploads')).map((u) => u.name), ['catatan.txt'], 'only the checked file went out');
+    assert.equal(got[0].via, 'picker');
+    assert.equal(dialogs.length, 1, 'one question for both files');
+    assert.match(dialogs[0], /ktp-budi\.png/);
+    assert.match(dialogs[0], /rusak\.pdf/);
+  });
+
+  await check('a photo of a document goes out when the user says yes', async () => {
+    await evaluate('window.uploads = []');
+    dialogs.length = 0;
+    answer = true;
+    const at = await evaluate('(() => { const b = drop.getBoundingClientRect(); return { x: b.left + 20, y: b.top + 20 }; })()');
+    const data = { items: [], files: [idPhoto], dragOperationsMask: 1 };
+    for (const type of ['dragEnter', 'dragOver', 'drop']) await page('Input.dispatchDragEvent', { type, ...at, data });
+    const [got] = await uploads(1);
+    assert.equal(got.name, 'ktp-budi.png');
+    assert.equal(dialogs.length, 1);
+  });
+
+  await check('a photo with an ordinary name is not asked about', async () => {
+    await evaluate('window.uploads = []');
+    dialogs.length = 0;
+    await page('DOM.setFileInputFiles', { objectId: await fileInput(), files: [png] });
+    await uploads(1);
+    assert.equal(dialogs.length, 0);
+  });
+
+  await check('the canary person, pasted as a form, JSON, a log line, and CSV, never reaches the site', async () => {
+    for (const [format, doc] of Object.entries(CANARY_FORMATS)) {
+      await evaluate('editor.textContent = ""; window.pastes = []');
+      await pasteInto('#editor', `tolong cek:
+${doc}`);
+      await until(() => evaluate('window.pastes.length > 0'), `the ${format} paste`);
+      const seen = JSON.stringify(await evaluate('[window.pastes, editor.innerText]'));
+      const leaked = CANARY_NEEDLES.filter((n) => seen.includes(n));
+      assert.deepEqual(leaked, [], `${format} leaked ${leaked.join(', ')}`);
+    }
+  });
+
   await check('the same value gets the same placeholder in another tab', async () => {
     const second = await send('Target.createTarget', { url: pageUrl });
     const s2 = (await send('Target.attachToTarget', { targetId: second.targetId, flatten: true })).sessionId;
@@ -337,6 +402,29 @@ try {
     // The attachments above added more phone numbers to the vault; the NIK is the same one.
     assert.match(text, /^NIK \[NIK_1\] dan HP \[PHONE_\d+\]$/);
     assert.notEqual(text, 'NIK [NIK_1] dan HP [PHONE_1]', 'a new number gets a new placeholder');
+  });
+
+  // Last, since it breaks the content script. When the extension is updated or reloaded while a page stays open, the
+  // old script's sendMessage throws "Extension context invalidated." Reloading here does not cut the script off in
+  // every browser build, so the check makes sendMessage throw the same way in the script's own world.
+  await check('after the extension is updated under an open page, personal data is still held, without an error', async () => {
+    const errors = [];
+    client.on('Runtime.exceptionThrown', (params, sid) => {
+      if (sid === sessionId) errors.push(params.exceptionDetails.exception?.description ?? params.exceptionDetails.text);
+    });
+    // By name: the browser may run extensions of its own, so the first service worker is not always Lokal's.
+    const world = contexts.find((c) => c.auxData?.type === 'isolated' && c.name.startsWith('Lokal'));
+    assert.ok(world, `the content script's world in ${JSON.stringify(contexts.map((c) => [c.id, c.origin, c.name, c.auxData?.type]))}`);
+    await page('Runtime.evaluate', {
+      contextId: world.id,
+      expression: `chrome.runtime.sendMessage = () => { throw new Error('Extension context invalidated.'); }`,
+    });
+    await evaluate('editor.textContent = ""; window.pastes = []');
+    await pasteInto('#editor', `NIK ${NIK}`);
+    await sleep(500);
+    assert.deepEqual(await evaluate('window.pastes'), [], 'the paste was held back');
+    assert.ok(!(await evaluate('editor.innerText')).includes(NIK), 'the real NIK is not in the editor');
+    assert.deepEqual(errors, [], 'no uncaught error');
   });
 } finally {
   client?.close();

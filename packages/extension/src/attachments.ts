@@ -1,11 +1,12 @@
 // Reading attached files for masking: text files as they are, spreadsheets as CSV per sheet, Word documents and PDFs
 // as text. No DOM or extension APIs, so node:test can cover it. In the extension, `Buffer` and node:zlib are the shims
 // in ./shims, so the readers from packages/mcp run unchanged in the browser.
+import type { ScanStatus } from '../../core/src/samaran/types.ts';
 import { readDocx } from '../../mcp/src/docx.ts';
 import { readPdf } from '../../mcp/src/pdf.ts';
 import { readXlsx, type Sheet } from '../../mcp/src/xlsx.ts';
 
-/** Files above this are sent as they are, with a notice: masking them would hang the tab. */
+/** Files above this are not read, since masking them would hang the tab; the user decides whether to send them. */
 export const MAX_ATTACHMENT_BYTES = 20 * 1024 * 1024;
 
 const TEXT_EXTENSIONS = new Set(
@@ -32,38 +33,59 @@ export function attachmentKind(name: string, type = ''): AttachmentKind | undefi
   return undefined;
 }
 
+const IMAGE_FILE = /\.(?:jpe?g|png|heic|heif|webp|gif|bmp|tiff?)$/i;
+// Words in a file name that point at a photo or scan of someone's document. The guard uses a longer list that also
+// names whose files they are; in a chat, "pelanggan.png" is as likely a chart as a KTP.
+const ID_DOCUMENT =
+  /(?:^|[^a-z])(?:e?ktp|kk|kartu[ _-]?keluarga|npwp|sim|paspor|passport|selfie|swafoto|identitas|id[ _-]?card|akta|ijazah|slip[ _-]?gaji|rekening|tabungan|bpjs|kyc)(?:[^a-z]|$)/i;
+
+/** An image whose name says it is a photo of an ID document, a selfie for verification, or a bank book. */
+export function looksLikeIdPhoto(name: string, type = ''): boolean {
+  return (IMAGE_FILE.test(name) || type.startsWith('image/')) && ID_DOCUMENT.test(name.replace(/\.[^.]+$/, ''));
+}
+
 /** A readable file, split into the parts that are masked one by one. */
 export interface Readable {
   kind: AttachmentKind;
+  /** partial: some pages have no text layer. */
+  status: Extract<ScanStatus, 'scanned' | 'partial'>;
   parts: Sheet[];
   /** Pages with no text layer, which a masked copy leaves out. */
   scannedPages?: number[];
 }
 
-/** Why a file could not be read; it is then sent as it is. */
+/** Why a file could not be read; it is sent as it is only if the user says so. */
 export interface Unreadable {
   kind: AttachmentKind;
+  /** unsupported: too large, or a scanned PDF that needs OCR. failed: encrypted or damaged. */
+  status: Extract<ScanStatus, 'unsupported' | 'failed'>;
   reason: 'too-large' | 'scanned' | 'encrypted' | 'damaged';
 }
+
+const unreadable = (kind: AttachmentKind, reason: Unreadable['reason']): Unreadable => ({
+  kind,
+  status: reason === 'too-large' || reason === 'scanned' ? 'unsupported' : 'failed',
+  reason,
+});
 
 export function readAttachment(name: string, bytes: Uint8Array, type = ''): Readable | Unreadable | undefined {
   const kind = attachmentKind(name, type);
   if (!kind) return undefined;
-  if (bytes.length > MAX_ATTACHMENT_BYTES) return { kind, reason: 'too-large' };
+  if (bytes.length > MAX_ATTACHMENT_BYTES) return unreadable(kind, 'too-large');
   const buf = Buffer.from(bytes);
   if (kind === 'text') {
     // A file that holds NUL bytes is not text, whatever its name says.
     if (buf.subarray(0, 8000).includes(0)) return undefined;
-    return { kind, parts: [{ name, csv: buf.toString('utf8') }] };
+    return { kind, status: 'scanned', parts: [{ name, csv: buf.toString('utf8') }] };
   }
   try {
-    if (kind === 'sheets') return { kind, parts: readXlsx(buf) };
-    if (kind === 'docx') return { kind, parts: readDocx(buf) };
+    if (kind === 'sheets') return { kind, status: 'scanned', parts: readXlsx(buf) };
+    if (kind === 'docx') return { kind, status: 'scanned', parts: readDocx(buf) };
     const { pages, scanned, damaged } = readPdf(buf);
-    if (!pages.length) return { kind, reason: damaged.length ? 'damaged' : 'scanned' };
-    return { kind, parts: pages, scannedPages: scanned.length ? scanned : undefined };
+    if (!pages.length) return unreadable(kind, damaged.length ? 'damaged' : 'scanned');
+    return scanned.length ? { kind, status: 'partial', parts: pages, scannedPages: scanned } : { kind, status: 'scanned', parts: pages };
   } catch (e) {
-    return { kind, reason: /encrypted/i.test((e as Error).message) ? 'encrypted' : 'damaged' };
+    return unreadable(kind, /encrypted/i.test((e as Error).message) ? 'encrypted' : 'damaged');
   }
 }
 

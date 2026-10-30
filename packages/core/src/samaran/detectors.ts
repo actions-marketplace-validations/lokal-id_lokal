@@ -9,6 +9,7 @@ import {
   GIVEN_NAMES,
   SECOND_NAMES,
 } from './names.ts';
+import { checkCustomRules, detectCustom, type CustomRule } from './custom.ts';
 import { PII_TYPES, type Confidence, type PiiMatch, type PiiType } from './types.ts';
 
 export { PII_TYPES, UU_PDP_CATEGORY, type Confidence, type PiiMatch, type PiiType } from './types.ts';
@@ -18,6 +19,22 @@ function before(text: string, index: number, window = 40): string {
   const slice = text.slice(Math.max(0, index - window), index);
   const nl = slice.lastIndexOf('\n');
   return (nl >= 0 ? slice.slice(nl + 1) : slice).toLowerCase();
+}
+
+/**
+ * A company's call center, not a person: six digits starting with 500 after the area code, as Telkom hands out for
+ * hotlines ("(021) 500-888", "021 500 123").
+ */
+function isCallCenter(value: string): boolean {
+  const local = value.replace(/^\s*(?:\(\s*)?(?:\+62|0)\s?\d{2,3}\)?[\s.-]?/, '').replace(/\D/g, '');
+  return local.length === 6 && local.startsWith('500');
+}
+
+/** The line above the one `index` is on, lowercased; empty on the first line. */
+function previousLine(text: string, index: number): string {
+  const lineStart = text.lastIndexOf('\n', index - 1) + 1;
+  if (lineStart === 0) return '';
+  return text.slice(text.lastIndexOf('\n', lineStart - 2) + 1, lineStart - 1).toLowerCase();
 }
 
 /** The line above a value that stands alone on its own line, lowercased; empty when the value shares its line. */
@@ -73,7 +90,10 @@ const TEST_CARDS = new Set([
   '3530111333300000', '3566002020360505', '4811111111111114', '5211111111111117', '4911111111111113',
 ]);
 
-const KK_KEYWORD = /\b(kk|kartu keluarga)\b[^\d]*$/;
+// After a word or a key's underscore: "No. KK", "no_kk", "family_card".
+const KK_KEYWORD = /(?:\b|_)(kk|kartu[ _]?keluarga|family[ _]?card)\b[^\d]*$/;
+// A card's title on the line above, with only "No." in front of the number: "KARTU KELUARGA\nNo. 3201…".
+const NUMBER_ONLY_LABEL = /^\W*(?:no|nomor|no\.\s*kartu|nomor\s+kartu)?\W*$/;
 const SIM_KEYWORD = /\b(sim|surat izin mengemudi|driving licen[cs]e)\b[^\d]*$/;
 const NIK_KEYWORD = /\b(nik|ktp|nomor induk kependudukan)\b/;
 const NPWP_KEYWORD = /\bnpwp\b/;
@@ -98,8 +118,11 @@ function detectDigitRuns(text: string): PiiMatch[] {
 
     // Mobile numbers (also used as e-wallet accounts) are left to the phone detector.
     if (/^(08|628)/.test(digits) && parsePhone(digits).valid) continue;
+    // A date and time ("2026-12-03 04:15"), not a number.
+    if (/^(?:19|20)\d{2}-\d{2}-\d{2}(?: \d{2})?$|^\d{2}-\d{2}-(?:19|20)\d{2}(?: \d{2})?$/.test(value)) continue;
+    const title = NUMBER_ONLY_LABEL.test(label) ? previousLine(text, m.index) : '';
 
-    if (digits.length === 16 && KK_KEYWORD.test(label)) push('KK', 'high');
+    if (digits.length === 16 && (KK_KEYWORD.test(label) || /\bkartu keluarga\b/.test(title))) push('KK', 'high');
     else if (digits.length >= 12 && digits.length <= 16 && SIM_KEYWORD.test(label)) push('SIM', 'high');
     else if (digits.length === 16 && parseNik(digits).valid) push('NIK', 'high');
     else if (isNip(digits)) push('NIP', 'high');
@@ -109,7 +132,7 @@ function detectDigitRuns(text: string): PiiMatch[] {
     else if ((digits.length === 15 || digits.length === 16) && NPWP_KEYWORD.test(ctx)) push('NPWP', 'high');
     else if (digits.length === 16 && NIK_KEYWORD.test(ctx)) push('NIK', 'medium');
     else if (digits.length === 10 && NISN_KEYWORD.test(label)) push('NISN', 'high');
-    else if ((digits.length === 13 || digits.length === 11) && BPJS_KEYWORD.test(ctx)) push('BPJS', 'high');
+    else if ((digits.length === 13 || digits.length === 11) && (BPJS_KEYWORD.test(ctx) || BPJS_KEYWORD.test(title))) push('BPJS', 'high');
     else if (digits.length >= 8 && digits.length <= 18 && BANK_KEYWORD.test(ctx)) push('BANK_ACCOUNT', 'high');
     else if (digits.length >= 8 && digits.length <= 18 && BANK_KEYWORD.test(lineAbove(text, m.index, m[0].length))) {
       // A transfer receipt stacks the bank and the account: "Bank BNI\n0123456789".
@@ -177,7 +200,7 @@ function detectPhones(text: string): PiiMatch[] {
     if (parsePhone(m[0].replace(/^00/, '+')).valid && !gluedToCode(text, m.index)) out.push(match('PHONE', m.index, m[0], 'high'));
   }
   const landline = /\((?:\+62[ \t]?|0)\d{2,3}\)[ \t]?\d{3,4}[ \t-]?\d{3,4}(?!\d)|(?<![\d\w])\+62[ \t]?[2-79]\d{1,2}[ \t-]?\d{3,4}[ \t-]?\d{3,4}(?!\d)/g;
-  for (const m of text.matchAll(landline)) out.push(match('PHONE', m.index, m[0], 'medium'));
+  for (const m of text.matchAll(landline)) if (!isCallCenter(m[0])) out.push(match('PHONE', m.index, m[0], 'medium'));
   // "+62 (812) 3456-7890", "(0812) 3456 7890".
   const bracketed = /(?<![\d\w])(?:\+?62[ \t]?\(8\d{1,2}\)|\(08\d{1,2}\))[ \t]?\d{3,4}[ \t.-]?\d{3,4}(?!\d)/g;
   for (const m of text.matchAll(bracketed)) if (parsePhone(m[0]).valid) out.push(match('PHONE', m.index, m[0], 'high'));
@@ -199,7 +222,7 @@ function detectPhones(text: string): PiiMatch[] {
   for (const m of text.matchAll(areaCode)) {
     if (!PHONE_WORD.test(before(text, m.index, 30))) continue;
     const info = parsePhone(m[0]);
-    if (info.valid && info.type === 'landline') out.push(match('PHONE', m.index, m[0], 'medium'));
+    if (info.valid && info.type === 'landline' && !isCallCenter(m[0])) out.push(match('PHONE', m.index, m[0], 'medium'));
   }
   return out;
 }
@@ -291,16 +314,16 @@ function detectHealth(text: string): PiiMatch[] {
   const out: PiiMatch[] = [];
   // Strong medical verbs: whatever follows is the condition.
   const strong =
-    /\b(?:didiagnosis|didiagnosa|terdiagnosis|terdiagnosa|mengidap|terinfeksi|riwayat penyakit|divonis)\s+(?:menderita\s+|mengidap\s+|penyakit\s+)?(?!(?:yang|dan|atau|di|ke|dari|untuk|ini|itu|tersebut|adalah|dapat|bisa|tidak|belum|anda|kamu|pasien|seseorang)\b)([^\n\r,.;:()]{2,60}?)(?=\s+(?:sejak|selama|dan sudah|dan sedang|tapi|namun|sehingga|jadi)\b|[\n\r,.;:()]|$)/gi;
-  // "Dx: TB paru" in a medical note; capitalized, so "dx" in code is not one.
-  const dx = /\b(?:Dx|DX|Diagnosis|Diagnosa|Diag)\s*:\s*([^\n\r,;()]{2,60}?)(?=\s*(?:[\n\r,;()]|\.(?:\s|$)|$))/g;
+    /\b(?:didiagnosis|didiagnosa|terdiagnosis|terdiagnosa|mengidap|terinfeksi|riwayat penyakit|divonis)\s+(?:menderita\s+|mengidap\s+|penyakit\s+)?(?!(?:yang|dan|atau|di|ke|dari|untuk|ini|itu|tersebut|adalah|dapat|bisa|tidak|belum|anda|kamu|pasien|seseorang)\b)([^\n\r,.;:()"]{2,60}?)(?=\s+(?:sejak|selama|dan sudah|dan sedang|tapi|namun|sehingga|jadi)\b|[\n\r,.;:()"]|$)/gi;
+  // "Dx: TB paru" in a medical note; capitalized, so "dx" in code is not one. A quote ends a JSON string.
+  const dx = /\b(?:Dx|DX|Diagnosis|Diagnosa|Diag)\s*:\s*([^\n\r,;()"]{2,60}?)(?=\s*(?:[\n\r,;()"]|\.(?:\s|$)|$))/g;
   for (const m of [...text.matchAll(strong), ...text.matchAll(dx)]) {
     out.push(match('HEALTH', m.index + m[0].length - m[1]!.length, m[1]!, 'high'));
   }
   // Everyday words ("positif", "karena", "saya") only count before a known condition: "saya diabetes",
   // "riwayat hipertensi dan diabetes melitus".
   const gated = new RegExp(
-    `\\b(?:(?:dokter|dok|dr)\\.?\\s+(?:bilang|bilangnya|menyatakan|mendiagnosis)(?:\\s+(?:ada|kena|positif))?|positif|menderita|terkena|kena|sakit|pasien|komplikasi|kambuh|kumat|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|riwayat|diagnosa|diagnosis|didiagnosa|pembawa\\s+sifat|carrier|saya|aku|gue|gw|gua|dia|beliau|ayah|bapak|ibu|mama|mamah|papa|papah|suami|istri|anak|anaknya|adik|adek|kakak|nenek|kakek|mertua|pacar|teman|temen)` +
+    `\\b(?:(?:dokter|dok|dr)\\.?\\s+(?:bilang|bilangnya|menyatakan|mendiagnosis)(?:\\s+(?:ada|kena|positif))?|perawatan|pengobatan|dirawat\\s+karena|kontrol|has|have|had|with|suffers\\s+from|suffering\\s+from|diagnosed\\s+with|history\\s+of|positif|menderita|terkena|kena|sakit|pasien|komplikasi|kambuh|kumat|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|riwayat|diagnosa|diagnosis|didiagnosa|pembawa\\s+sifat|carrier|saya|aku|gue|gw|gua|dia|beliau|ayah|bapak|ibu|mama|mamah|papa|papah|suami|istri|anak|anaknya|adik|adek|kakak|nenek|kakek|mertua|pacar|teman|temen)` +
       `\\s+(?:(?:saya|aku|gue|dia|lagi|sedang|sdg|sudah|udah|sdh|sempat|pernah|baru|kena|terkena)\\s+){0,2}` +
       `((?:penyakit\\s+)?(?:${CONDITIONS})(?:\\s*(?:,|dan|serta)\\s+(?:${CONDITIONS}))*)\\b`,
     'gi',
@@ -413,6 +436,14 @@ function detectReligion(text: string): PiiMatch[] {
   const re =
     /\b(?:beragama|agamanya|agama\s+(?:saya|aku|dia|beliau|kami|mereka))\s+(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Hindu|Buddha|Budha|Konghucu|Khonghucu|Kong Hu Cu)\b/gi;
   const out = [...text.matchAll(re)].map((m) => match('RELIGION', m.index + m[0].length - m[1]!.length, m[1]!, 'high'));
+  // "(agama Hindu)", "religion Islam" said of someone. Not religious education, institutions, or holidays:
+  // "pendidikan agama Islam", "Pengadilan Agama", "hari raya agama Hindu".
+  const bare =
+    /\b(?:agama|religion)\s*:?\s+(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Catholic|Christian|Muslim|Hindu|Buddha|Budha|Buddhist|Konghucu|Khonghucu)\b/gi;
+  for (const m of text.matchAll(bare)) {
+    if (/\b(?:pendidikan|pelajaran|mata\s+pelajaran|guru|umat|hari(?:\s+raya)?|tokoh|kementerian|pengadilan|universitas|institut|sekolah|ajaran|nilai|organisasi|lembaga|majelis|studi|fakultas|ilmu|perayaan|kitab|rumah\s+ibadah|penyuluh|pemuka)\s+$/i.test(before(text, m.index, 30))) continue;
+    out.push(match('RELIGION', m.index + m[0].length - m[1]!.length, m[1]!, 'medium'));
+  }
   // An adjective of a person: "saya muslim", "suami saya kristen protestan". Not "umat Muslim" or "Gereja Kristen".
   const adjective =
     /\b(?:saya|aku|gue|gw|dia|beliau|kami|keluarga\s+(?:saya|kami)|(?:suami|istri|ayah|bapak|ibu|mama|papa|ortu|orang\s+tua|anak|adik|kakak|pacar|calon)(?:\s+(?:saya|aku|gue|dia)|nya|ku)?)\s+(?:(?:seorang|itu|adalah|sudah|udah|baru|jadi)\s+)?(muslim(?:ah)?|islam|nasrani|kristiani?|kristen(?:\s+protestan)?|protestan|katolik|katholik|hindu|buddhis|buddha|budha|konghucu|khonghucu|mualaf|muallaf|ateis|atheis|agnostik|non[- ]?muslim)\b/gi;
@@ -1277,7 +1308,9 @@ function detectSqlInserts(text: string): PiiMatch[] {
 
 const STREET =
   'Jl|Jln|Jalan|Gg|Gang|Komp|Kompl|Komplek|Kompleks|Perum|Perumahan|Cluster|Klaster|Apartemen|Apartment|Apt|Rusun|' +
-  'Rusunawa|Tower|Ruko|Wisma|Asrama|Dusun|Dsn|Dukuh|Kampung|Kp|Lingkungan|Ling';
+  'Rusunawa|Tower|Ruko|Wisma|Asrama|Dusun|Dsn|Dukuh|Kampung|Kp|Lingkungan|Ling|' +
+  // A KTP or NPWP card prints the address in capitals.
+  'JL|JLN|JALAN|GG|GANG|KOMP|KOMPLEK|KOMPLEKS|PERUM|PERUMAHAN|DUSUN|DSN|KAMPUNG|KP';
 // What pins a street to one house: No., Blok, Kav., or an apartment's floor and unit. Chat writes "blok b no 9".
 const PIN = '[Nn][Oo]|[Nn]omor|[Bb]lok|[Kk]av|[Uu]nit|[Ll]t|[Ll]antai|[Kk]amar|[Kk]mr|NO|BLOK';
 const RT_RW = 'RT\\.?\\s*0*\\d{1,3}\\s*[/,]?\\s*RW\\.?\\s*0*\\d{1,3}';
@@ -1448,6 +1481,20 @@ function valueExtent(text: string, start: number, end: number): number {
   return end;
 }
 
+/**
+ * Where a value inside a JSON string ends: at a double quote that is not escaped and closes the string, followed by
+ * a comma, a bracket, or the end of the line. {"note":"Agama: Islam"} ends before its quote; "kata dia "ok" lalu" does not.
+ */
+function closingQuote(text: string, start: number, end: number): number {
+  for (let i = start; i < end; i++) {
+    if (text[i] !== '"' || text[i - 1] === '\\') continue;
+    let j = i + 1;
+    while (j < end && (text[j] === ' ' || text[j] === '\t')) j++;
+    if (j >= end || text[j] === ',' || text[j] === '}' || text[j] === ']') return i;
+  }
+  return end;
+}
+
 function detectLabeledFields(text: string): PiiMatch[] {
   const out: PiiMatch[] = [];
   let lineStart = 0;
@@ -1480,14 +1527,17 @@ function detectLabeledFields(text: string): PiiMatch[] {
     const quote = text[valueStart];
     if (valueStart < rawEnd && isQuote(quote)) {
       let close = valueStart + 1;
-      while (close < rawEnd && text[close] !== quote) close++;
+      // "Budi \"Bob\" Santoso" in JSON: an escaped quote does not close the value.
+      while (close < rawEnd && (text[close] !== quote || text[close - 1] === '\\')) close++;
       if (close >= rawEnd) continue;
       value = text.slice(valueStart + 1, close);
       // 'labels like "Nama:" and "a.n."': the quote closes a quoted label; it does not open a value.
       if (/^\s/.test(value)) continue;
       start += 1;
     } else {
-      const raw = text.slice(valueStart, valueExtent(text, valueStart, rawEnd));
+      // {"note":"Agama: Islam"}: the value ends where the string does, not with its closing quote.
+      const end = closingQuote(text, valueStart, rawEnd);
+      const raw = text.slice(valueStart, valueExtent(text, valueStart, end));
       value = cutValue(type, raw);
       // cutValue trims; "nama: Budi" starts after the no-break space, not at it.
       if (value) start += raw.indexOf(value);
@@ -1536,38 +1586,75 @@ function blankLineNumbers(text: string): string {
   return text.replace(NUMBERED_LINES, (prefix) => ' '.repeat(prefix.length));
 }
 
+/** How many lines into a text a table's header is looked for when the text does not start with one. */
+const CSV_HEADER_LINES = 20;
+
 function detectCsvColumns(text: string): PiiMatch[] {
   text = blankLineNumbers(text);
-  const firstBreak = text.indexOf('\n');
-  if (firstBreak === -1) return [];
-  const header = text.slice(0, firstBreak).replace(/\r$/, '');
+  const table = csvTableAt(text, 0, true);
+  if (table) return table;
+  // A chat message or a prompt often has a sentence before the table: "Tolong cek data ini:" and then the CSV.
+  let lineStart = 0;
+  for (let n = 1; n < CSV_HEADER_LINES; n++) {
+    const lineBreak = text.indexOf('\n', lineStart);
+    if (lineBreak === -1) break;
+    lineStart = lineBreak + 1;
+    const later = csvTableAt(text, lineStart, false);
+    if (later) return later;
+  }
+  return [];
+}
+
+/**
+ * The cells of a table whose header row starts at `at`, or undefined when there is no header there. A table at the
+ * start of a text runs to its end (a CSV file); one after a sentence ends at the first line that is not one of its rows,
+ * such as a blank line or "makasih".
+ */
+const CSV_HEADER_PREFIX = /^[^,;|\t:]{1,60}:[ \t]+/;
+
+function csvTableAt(text: string, at: number, toEnd: boolean, header?: string): PiiMatch[] | undefined {
+  const firstBreak = text.indexOf('\n', at);
+  if (firstBreak === -1) return undefined;
+  if (header === undefined) {
+    const line = text.slice(at, firstBreak).replace(/\r$/, '');
+    // A log line or a sentence that ends in the header: "checkout csv: nama,nik,hp". A field name has no ": ".
+    const prefix = CSV_HEADER_PREFIX.exec(line);
+    return (prefix && csvTableAt(text, at, false, line.slice(prefix[0].length))) || csvTableAt(text, at, toEnd, line);
+  }
   const delimiter = [',', ';', '\t', '|'].find((d) => header.includes(d));
-  if (!delimiter) return [];
+  // Tab tables in the middle of a text are detectTabTables' job, with rules of their own.
+  if (!delimiter || (!toEnd && delimiter === '\t')) return undefined;
   const headerFields = csvFields(header, delimiter).map((f) => header.slice(f.start, f.end).trim());
   // A header is short labels, and the next row has as many fields — not a sentence with commas.
   const secondLine = text.slice(firstBreak + 1).split('\n', 1)[0]!.replace(/\r$/, '');
   if (
     headerFields.length < 2 ||
     headerFields.some((h) => h.length > 40 || /[.!?]$/.test(h)) ||
-    csvFields(secondLine, delimiter).length !== headerFields.length
+    csvFields(secondLine, delimiter).length !== headerFields.length ||
+    // In the middle of a text, a header is labels only: not a data row such as "n01687978<TAB>agama".
+    (!toEnd && headerFields.some((h) => !/[A-Za-z]/.test(h) || /\d{3}/.test(h)))
   ) {
-    return [];
+    return undefined;
   }
   const columns = headerFields.map((h) => fieldType(h));
-  if (!columns.some(Boolean)) return [];
+  if (!columns.some(Boolean)) return undefined;
   // "Nama<TAB>Budi Santoso" then "NIK<TAB>3201…" is a list of labels and values, not a table with a header.
   const second = csvFields(secondLine, delimiter);
-  if (columns.some((t, i) => t && fieldType(secondLine.slice(second[i]!.start, second[i]!.end).trim()))) return [];
+  if (columns.some((t, i) => t && fieldType(secondLine.slice(second[i]!.start, second[i]!.end).trim()))) return undefined;
 
   const out: PiiMatch[] = [];
   let offset = firstBreak + 1;
   for (const rawLine of text.slice(offset).split('\n')) {
     const line = rawLine.replace(/\r$/, '');
-    csvFields(line, delimiter).forEach((f, idx) => {
+    const fields = csvFields(line, delimiter);
+    if (!toEnd && fields.length !== headerFields.length) break;
+    fields.forEach((f, idx) => {
       const type = columns[idx];
       const cell = line.slice(f.start, f.end);
       const value = cell.trim();
       if (!type || !isPlausibleValue(type, value, headerFields[idx]!)) return;
+      // After a sentence the text may go on in the same line: a number column then holds the number and nothing else.
+      if (!toEnd && NUMBER_TYPES.has(type) && !/^[+\d\s().\/-]+$/.test(value)) return;
       const start = offset + f.start + cell.indexOf(value);
       // A plain "name" column can hold product names as easily as people.
       out.push(match(type, start, value, isGenericNameKey(headerFields[idx]!) ? 'medium' : 'high'));
@@ -1679,6 +1766,86 @@ const DETECTORS: Array<(text: string) => PiiMatch[]> = [
   detectTabTables,
 ];
 
+/**
+ * A JSON string with escapes in it, read unescaped: JSON inside JSON, as a log writes a request body and a tool call
+ * its arguments ("{\"nama\":\"Budi Santoso\"}"), or a CSV export in a field ("nama,nik\n\"Budi\",…"). The
+ * detectors, this one included, read the unescaped text; the matches are mapped back onto the escaped text.
+ */
+const JSON_STRING = /"((?:[^"\\]|\\[\s\S])*)"/g;
+const UNESCAPED: Record<string, string> = { n: '\n', r: '\r', t: '\t', b: '\b', f: '\f' };
+
+/**
+ * Only what the escapes hide: JSON (its field names are escaped) and a quoted CSV. Line breaks alone are read through
+ * escapesAsBreaks already, and unescaping every log message would make detection many times slower.
+ */
+const JSON_BODY = /^[ \t\r\n]*[{[]/;
+
+function worthUnescaping(body: string): boolean {
+  if (!body.includes('\\"')) return false;
+  return JSON_BODY.test(body) || (body.includes('\\n') && /[,;|]/.test(body));
+}
+
+function detectEscapedStrings(text: string): PiiMatch[] {
+  if (!text.includes('\\')) return [];
+  const out: PiiMatch[] = [];
+  // JSON strings go into one text, a blank line apart, for one pass of the detectors: a log with a JSON body on every
+  // line would otherwise run them once per line. A CSV is read on its own, since a table runs to the end of its text.
+  let joined = '';
+  let joinedAt: number[] = [];
+  let joinedPart: number[] = [];
+  let part = 0;
+  const flush = () => {
+    if (!joined) return;
+    joinedAt.push(joinedAt.at(-1)!);
+    joinedPart.push(-1);
+    for (const f of [...DETECTORS.flatMap((d) => d(joined)), ...detectEscapedStrings(joined)]) {
+      // Never across two strings: the text between them is JSON, not data.
+      if (joinedPart[f.start] !== joinedPart[f.end - 1]) continue;
+      const start = joinedAt[f.start]!;
+      const end = joinedAt[f.end]!;
+      out.push({ ...f, start, end, value: text.slice(start, end) });
+    }
+    joined = '';
+    joinedAt = [];
+    joinedPart = [];
+  };
+  for (const m of text.matchAll(JSON_STRING)) {
+    const body = m[1]!;
+    if (!worthUnescaping(body)) continue;
+    const json = JSON_BODY.test(body);
+    if (!json) flush();
+    if (joined) {
+      // The blank line maps to the end of the string before it.
+      joined += '\n\n';
+      joinedAt.push(joinedAt.at(-1)!, joinedAt.at(-1)!);
+      joinedPart.push(-1, -1);
+    }
+    const base = m.index + 1;
+    part++;
+    for (let i = 0; i < body.length; ) {
+      joinedAt.push(base + i);
+      joinedPart.push(part);
+      if (body[i] !== '\\') {
+        joined += body[i++];
+      } else if (body[i + 1] === 'u' && /^[0-9a-fA-F]{4}$/.test(body.slice(i + 2, i + 6))) {
+        joined += String.fromCharCode(parseInt(body.slice(i + 2, i + 6), 16));
+        i += 6;
+      } else {
+        const e = body[i + 1] ?? '';
+        joined += UNESCAPED[e] ?? e;
+        i += 2;
+      }
+    }
+    // Where the string ends, for a match that runs to its last character.
+    joinedAt.push(base + body.length);
+    joinedPart.push(part);
+    joined += ' ';
+    if (!json) flush();
+  }
+  flush();
+  return out;
+}
+
 export interface DetectOptions {
   /** Only look for these types. Default: all of PII_TYPES. */
   types?: readonly PiiType[];
@@ -1689,6 +1856,22 @@ export interface DetectOptions {
   exclude?: readonly PiiType[];
   /** "high" only keeps validated or keyword-anchored matches. Default "medium". */
   minConfidence?: Confidence;
+  /** A team's own rules: ID formats and field names Samaran does not know. Matches are CUSTOM, with the rule's label. */
+  custom?: readonly CustomRule[];
+}
+
+/**
+ * Text that went through JSON or a log formatter keeps its line breaks as escapes: "Paspor: C7788120\nAgama: Islam",
+ * or "\\n" when it went through twice (a tool call's arguments). The detectors read spaces and a real line break in
+ * place of each escape, same length so offsets stay put, and find the label on the next line. Values come from the
+ * text itself.
+ */
+const ESCAPED_BREAK = /\\+[nrt]/g;
+const BREAK_FOR: Record<string, string> = { n: '\n', r: '\r', t: '\t' };
+
+function escapesAsBreaks(text: string): string {
+  if (!text.includes('\\')) return text;
+  return text.replace(ESCAPED_BREAK, (e) => ' '.repeat(e.length - 1) + BREAK_FOR[e[e.length - 1]!]);
 }
 
 /** All personal data in the text, non-overlapping, in reading order. */
@@ -1701,11 +1884,16 @@ export function detectPii(text: string, options: DetectOptions = {}): PiiMatch[]
   const minRank = options.minConfidence === 'high' ? 2 : 1;
   const rank = (m: PiiMatch) => (m.confidence === 'high' ? 2 : 1);
 
-  const candidates = DETECTORS.flatMap((d) => d(text)).filter(
-    (m) => m.end > m.start && types.has(m.type) && rank(m) >= minRank,
+  if (options.custom?.length) checkCustomRules(options.custom);
+  const view = escapesAsBreaks(text);
+  const found = [...DETECTORS.flatMap((d) => d(view)), ...detectEscapedStrings(text)];
+  if (options.custom?.length) found.push(...detectCustom(view, options.custom));
+  const candidates = found.filter((m) => m.end > m.start && types.has(m.type) && rank(m) >= minRank);
+  // Prefer confident, then longer matches, then a team's own rule; drop anything overlapping an accepted match.
+  const own = (m: PiiMatch) => (m.type === 'CUSTOM' ? 1 : 0);
+  candidates.sort(
+    (a, b) => rank(b) - rank(a) || b.end - b.start - (a.end - a.start) || own(b) - own(a) || a.start - b.start,
   );
-  // Prefer confident, then longer matches; drop anything overlapping an accepted match.
-  candidates.sort((a, b) => rank(b) - rank(a) || b.end - b.start - (a.end - a.start) || a.start - b.start);
   // One flag per character: checking a candidate costs its own length, not the number of matches so far.
   const taken = new Uint8Array(text.length + 1);
   const accepted: PiiMatch[] = [];
@@ -1716,5 +1904,18 @@ export function detectPii(text: string, options: DetectOptions = {}): PiiMatch[]
     taken.fill(1, c.start, c.end);
     accepted.push(c);
   }
-  return accepted.sort((a, b) => a.start - b.start);
+  accepted.sort((a, b) => a.start - b.start);
+  // A match stops before an escape it ran into: a line break read from "\n", or a quote written "\"" in JSON that
+  // went through twice. Its value is the text as it is.
+  return accepted.flatMap((m) => {
+    let end = m.end;
+    for (;;) {
+      if (end > m.start && view[end - 1] !== text[end - 1]) end--;
+      else if (end > m.start && text[end - 1] === '\\') end--;
+      else if (end - 1 > m.start && text[end - 1] === '"' && text[end - 2] === '\\') end -= 2;
+      else break;
+    }
+    if (end === m.end) return [m];
+    return end > m.start ? [{ ...m, end, value: text.slice(m.start, end) }] : [];
+  });
 }

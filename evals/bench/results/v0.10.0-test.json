@@ -1,0 +1,283 @@
+{
+  "version": "0.10.0",
+  "corpus": 2,
+  "split": "test",
+  "documents": 2800,
+  "labelled": 6160,
+  "overall": {
+    "precision": 0.9979716024340771,
+    "recall": 0.9584415584415584,
+    "protected": 0.9662337662337662,
+    "protectedCI": [
+      0.9614244968181704,
+      0.9704618774196101
+    ],
+    "falsePositives": 0,
+    "f1": 0.9778072209340841
+  },
+  "types": [
+    {
+      "type": "NAME",
+      "gold": 1960,
+      "detected": 1834,
+      "precision": 1,
+      "recall": 0.9357142857142857,
+      "f1": 0.966789667896679,
+      "protected": 0.9357142857142857,
+      "protectedCI": [
+        0.9239809713290071,
+        0.9457429412309469
+      ]
+    },
+    {
+      "type": "PHONE",
+      "gold": 560,
+      "detected": 561,
+      "precision": 0.9982174688057041,
+      "recall": 1,
+      "f1": 0.9991079393398752,
+      "protected": 1,
+      "protectedCI": [
+        0.9931867389706612,
+        1
+      ]
+    },
+    {
+      "type": "EMAIL",
+      "gold": 360,
+      "detected": 360,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "protected": 1,
+      "protectedCI": [
+        0.9894415591839967,
+        1
+      ]
+    },
+    {
+      "type": "NPWP",
+      "gold": 360,
+      "detected": 360,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "protected": 1,
+      "protectedCI": [
+        0.9894415591839967,
+        1
+      ]
+    },
+    {
+      "type": "NIK",
+      "gold": 320,
+      "detected": 286,
+      "precision": 0.986013986013986,
+      "recall": 0.88125,
+      "f1": 0.9306930693069307,
+      "protected": 0.88125,
+      "protectedCI": [
+        0.8412047823797018,
+        0.9122499930413683
+      ]
+    },
+    {
+      "type": "PLATE",
+      "gold": 320,
+      "detected": 320,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "protected": 1,
+      "protectedCI": [
+        0.9881374103882884,
+        0.9999999999999999
+      ]
+    },
+    {
+      "type": "ADDRESS",
+      "gold": 280,
+      "detected": 280,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "protected": 1,
+      "protectedCI": [
+        0.9864656907232768,
+        1
+      ]
+    },
+    {
+      "type": "BANK_ACCOUNT",
+      "gold": 280,
+      "detected": 272,
+      "precision": 1,
+      "recall": 0.9714285714285714,
+      "f1": 0.9855072463768115,
+      "protected": 1,
+      "protectedCI": [
+        0.9864656907232768,
+        1
+      ]
+    },
+    {
+      "type": "BIRTH_DATE",
+      "gold": 280,
+      "detected": 280,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "protected": 1,
+      "protectedCI": [
+        0.9864656907232768,
+        1
+      ]
+    },
+    {
+      "type": "RELIGION",
+      "gold": 280,
+      "detected": 240,
+      "precision": 1,
+      "recall": 0.8571428571428571,
+      "f1": 0.923076923076923,
+      "protected": 0.8571428571428571,
+      "protectedCI": [
+        0.8113137262306944,
+        0.8933046242859317
+      ]
+    },
+    {
+      "type": "BPJS",
+      "gold": 240,
+      "detected": 240,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "protected": 1,
+      "protectedCI": [
+        0.9842455102000642,
+        1
+      ]
+    },
+    {
+      "type": "CARD",
+      "gold": 240,
+      "detected": 243,
+      "precision": 0.9711934156378601,
+      "recall": 0.9833333333333333,
+      "f1": 0.9772256728778467,
+      "protected": 1,
+      "protectedCI": [
+        0.9842455102000642,
+        1
+      ]
+    },
+    {
+      "type": "HEALTH",
+      "gold": 240,
+      "detected": 200,
+      "precision": 1,
+      "recall": 0.8333333333333334,
+      "f1": 0.9090909090909091,
+      "protected": 0.9833333333333333,
+      "protectedCI": [
+        0.9579371621145085,
+        0.9935001644122201
+      ]
+    },
+    {
+      "type": "KK",
+      "gold": 240,
+      "detected": 240,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "protected": 1,
+      "protectedCI": [
+        0.9842455102000642,
+        1
+      ]
+    },
+    {
+      "type": "PASSPORT",
+      "gold": 200,
+      "detected": 200,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "protected": 1,
+      "protectedCI": [
+        0.9811539940816791,
+        1
+      ]
+    }
+  ],
+  "formats": {
+    "form": {
+      "documents": 320,
+      "labelled": 1160,
+      "protected": 0.9896551724137931,
+      "falsePositives": 0
+    },
+    "chat": {
+      "documents": 360,
+      "labelled": 600,
+      "protected": 0.97,
+      "falsePositives": 0
+    },
+    "mixed": {
+      "documents": 240,
+      "labelled": 600,
+      "protected": 0.9716666666666667,
+      "falsePositives": 0
+    },
+    "typo": {
+      "documents": 200,
+      "labelled": 320,
+      "protected": 1,
+      "falsePositives": 0
+    },
+    "unlabelled": {
+      "documents": 160,
+      "labelled": 400,
+      "protected": 0.9125,
+      "falsePositives": 0
+    },
+    "json": {
+      "documents": 200,
+      "labelled": 720,
+      "protected": 0.9916666666666667,
+      "falsePositives": 0
+    },
+    "csv": {
+      "documents": 200,
+      "labelled": 560,
+      "protected": 0.9928571428571429,
+      "falsePositives": 0
+    },
+    "log": {
+      "documents": 200,
+      "labelled": 360,
+      "protected": 0.975,
+      "falsePositives": 0
+    },
+    "ocr": {
+      "documents": 240,
+      "labelled": 760,
+      "protected": 0.8789473684210526,
+      "falsePositives": 0
+    },
+    "letter": {
+      "documents": 280,
+      "labelled": 680,
+      "protected": 0.9779411764705882,
+      "falsePositives": 0
+    },
+    "trap": {
+      "documents": 400,
+      "labelled": 0,
+      "protected": null,
+      "falsePositives": 0
+    }
+  }
+}

@@ -54,6 +54,17 @@ Masalah kedua jarang disadari. Saat debugging, developer menempel log produksi a
 
 Lokal menangani keduanya: mengajari agent konvensi Indonesia, memberinya data acuan yang akurat, dan menempatkan **Samaran** di antara data kamu dan model.
 
+### Apa yang *bukan* Lokal
+
+Samaran adalah jaring pengaman, bukan batas keamanan.
+
+- **Masih ada data yang lolos.** Deteksi memakai pola, label, dan daftar nama. Di teks bebas yang belum pernah dilihat, sekitar 12 sampai 18% nilai pribadi masih lolos (lihat [Batasan](#batasan)).
+- **Tidak bisa membaca gambar.** Foto KTP dan PDF hasil scan dilaporkan atau ditanyakan, tidak pernah disamarkan.
+- **Hanya melindungi jalur yang melewatinya.** File yang dikirim editor ke model atas inisiatifnya sendiri, atau skrip buatan agent yang mencetak data pelanggan, tidak disamarkan.
+- **Tidak otomatis membuat sistem patuh UU PDP.** Lokal menurunkan peluang kebocoran yang tidak disengaja; kontrol akses, minimisasi data, dan perjanjian dengan penyedia model tetap perlu kamu atur.
+
+Untuk data yang sama sekali tidak boleh sampai ke penyedia model, tambahkan kontrol di [Pertahanan berlapis](#pertahanan-berlapis).
+
 ## Fitur
 
 - **Konvensi Indonesia untuk agent.** Uang, nomor telepon, NIK/NPWP, alamat berjenjang, WIB/WITA/WIT, metode pembayaran lokal, teks UI, dan UU PDP, dikemas sebagai [Agent Skills](https://agentskills.io).
@@ -65,7 +76,7 @@ Lokal menangani keduanya: mengajari agent konvensi Indonesia, memberinya data ac
 - **Lokal Scan.** GitHub Action dan pre-commit hook yang mencegah data pribadi ter-commit. Hanya baris yang ditambahkan pull request yang diperiksa, dan setiap nilai ditandai di baris yang berubah.
 - **Ekstensi browser.** Menyamarkan data pribadi yang ditempel atau diketik ke ChatGPT, Claude, Gemini, dan chat AI lain, lalu memulihkannya saat jawaban disalin.
 - **Jalan di agent mana pun.** Plugin Claude Code, MCP server stdio untuk Cursor, Claude Desktop, VS Code, Windsurf, dan Codex, server HTTP untuk konektor ChatGPT dan Claude.ai, plus library TypeScript dan Python yang hasilnya identik.
-- **Lokal dan offline.** Data ikut di dalam paket. Tidak ada panggilan jaringan, tidak ada telemetri, dan pemulihan data terjadi di komputer kamu.
+- **Lokal dan offline.** Data ikut di dalam paket. Tidak ada panggilan jaringan, tidak ada telemetri, dan pemulihan data terjadi di komputer kamu. Ada test yang menjalankan semua tool MCP, guard, pemindai, dan library Python dengan akses jaringan diblokir, dan gagal pada satu percobaan pun.
 
 ## Cara kerja
 
@@ -76,6 +87,8 @@ Lokal menangani keduanya: mengajari agent konvensi Indonesia, memberinya data ac
 Saat agent perlu melihat data pelanggan, ia memanggil `read_file_masked` dan melihat `[NAME_1], [NIK_1], [PHONE_1]`, bukan data aslinya. Agent tetap bisa deduplikasi, join, dan debugging, karena nilai yang sama selalu mendapat placeholder yang sama. Saat hasilnya ditulis lewat `write_file_unmasked`, Samaran mengembalikan data aslinya, di komputer kamu.
 
 ## Mulai cepat
+
+Baru kenal Lokal? [Quickstart 5 menit](docs/quickstart.id.md) memandu scan, Kembaran, tool untuk agent, dan proxy dengan data contoh karangan.
 
 ### Claude Code
 
@@ -244,6 +257,19 @@ samaran.unmask(reply);           // placeholder diganti lagi dengan data asli
 - Nilai yang sama selalu mendapat placeholder yang sama, termasuk beda format: `0812-…` dan `+62 812…` sama-sama `[PHONE_1]`.
 - `exclude` membiarkan tipe yang memang perlu dibaca aplikasi. Simulasi kredit di dealer butuh penghasilan dan cicilan, jadi `new Samaran({ exclude: ['FINANCIAL'] })` membiarkan "gaji saya 8 juta, cicilan 3 juta" tetap utuh, sementara NIK dan nomor HP tetap disamarkan. Salah ketik nama tipe menghasilkan error, bukan diam-diam menyamarkan lebih sedikit.
 - `mode: 'partial'` untuk log dan layar admin: `3201********0001`, `0812****7890`, `b***@gmail.com`.
+- **Tipe data milik sendiri.** Untuk format yang tidak mungkin diketahui Samaran, seperti ID karyawan atau kolom nomor member, tambahkan aturan di `.samaran.json` di root proyek. Server MCP, guard, `lokal-mcp scan`, proxy, dan `lokal.files.scan_path` membacanya; file yang rusak menghentikan tool file, bukan diam-diam menyamarkan lebih sedikit:
+
+  ```json
+  {
+    "custom": [
+      { "label": "EMPLOYEE_ID", "pattern": "\\bEMP-\\d{6}\\b" },
+      { "label": "MEMBER", "fields": ["no_member", "Kode Member"] }
+    ],
+    "allow": ["0800-1-500-500"]
+  }
+  ```
+
+  `pattern` berupa regular expression; `fields` adalah key JSON, label `key: value`, dan kolom CSV. Hasilnya `[EMPLOYEE_ID_1]` dan `[MEMBER_1]`, dipulihkan seperti placeholder lain. `allow` berisi nilai yang tidak pernah disamarkan, misalnya nomor hotline sendiri. Di kode, berikan aturan yang sama: `new Samaran({ custom: [...] })`, atau `Samaran(custom=[...])` di Python.
 - Deteksi memakai label (`Agama: Islam`, `NAMA : BUDI`), header CSV dan Excel (`agama`, `diagnosa`, `gaji`, …), key JSON/YAML dan query string (termasuk `first_name` / `last_name` yang terpisah), dump SQL (`INSERT` dengan atau tanpa nama kolom seperti keluaran mysqldump, dan blok `COPY` dari pg_dump), export chat WhatsApp, serta frasa umum di teks bebas (`nama saya budi`, `didiagnosis TBC`, `obat insulin`, `gaji saya 8 juta`).
 
 <details>
@@ -278,9 +304,58 @@ claude = Anthropic(base_url='http://127.0.0.1:8787')   # Messages
 - Jawaban kembali dengan nilai asli, baik streaming maupun tidak, termasuk argumen tool call, sehingga tool yang dijalankan aplikasi menerima data asli.
 - Setiap request punya vault sendiri. Karena seluruh percakapan disamarkan berurutan, orang yang sama selalu mendapat placeholder yang sama di setiap giliran.
 - API lain yang kompatibel dengan OpenAI juga bisa: `--openai https://openrouter.ai/api/v1`, Groq, DeepSeek, Ollama, atau endpoint OpenAI milik Gemini. `--exclude FINANCIAL` membiarkan model melihat angka penghasilan untuk simulasi kredit.
-- Hanya mendengarkan di 127.0.0.1, meneruskan API key tanpa menyimpannya, dan mencatat satu baris per request berisi jumlah, bukan nilai. Setiap respons punya header `x-samaran-masked: NIK=1,NAME=2`. Unggahan file tidak bisa disamarkan sehingga ditolak, kecuali proxy dijalankan dengan `--allow-unmasked`.
+- Hanya mendengarkan di 127.0.0.1, meneruskan API key tanpa menyimpannya, dan mencatat satu baris per request berisi jumlah, bukan nilai. Setiap respons punya header `x-samaran-masked: NIK=1,NAME=2`. Unggahan file tidak bisa disamarkan sehingga ditolak, kecuali proxy dijalankan dengan `--allow-unmasked`. Gambar, audio, dan file di dalam request JSON (foto KTP untuk model vision) juga tidak bisa dicek: request tetap diteruskan, responsnya membawa `x-samaran-status: partial` dengan jumlahnya di `x-samaran-unchecked`, dan baris log mencatatnya. Jalankan proxy dengan `--strict` untuk menolak request seperti itu.
 
 Sudah diuji end-to-end dengan Claude Code sendiri yang dijalankan lewat proxy: model hanya pernah melihat placeholder, dan file yang ditulisnya lewat tool berisi nilai asli.
+
+Untuk menjalankannya bersama model lokal, lihat [contoh Docker Compose dengan Ollama](examples/proxy-ollama); untuk memasangnya di depan LiteLLM, lihat [examples/litellm](examples/litellm).
+
+### Policy, routing lokal, dan audit log
+
+Bawaannya, semua jenis data disamarkan. Di `.samaran.json` tim bisa memilih aksi lain per jenis, atau per label aturan custom:
+
+```json
+{
+  "policy": { "HEALTH": "block", "FINANCIAL": "allow", "PASSPORT": "route" },
+  "route": { "openai": "http://127.0.0.1:11434/v1", "model": "llama3.2" },
+  "audit": true,
+  "vaultTtlMinutes": 60
+}
+```
+
+| Aksi | Proxy | Tool file MCP | Guard |
+|---|---|---|---|
+| `mask` (bawaan) | disamarkan, dipulihkan di jawaban | placeholder | menahan nomor identitas, data kesehatan, kriminal, dan biometrik, atau 3+ nilai |
+| `allow` | model melihatnya | tidak disamarkan | tidak dihitung |
+| `block` | request ditolak (HTTP 403) | `read_file_masked` menolak file itu | satu nilai sudah cukup untuk menahan |
+| `route` | dikirim apa adanya ke model lokal di `route`, bukan ke cloud | disamarkan | satu nilai sudah cukup untuk menahan |
+
+- **Routing** menjaga request sensitif tetap di perangkat Anda sendiri: dengan `route.openai` mengarah ke Ollama, request berisi nomor paspor dikirim ke sana tanpa disamarkan, dengan `route.model` menggantikan model yang diminta aplikasi. Request itu tidak pernah sampai ke cloud, dan API key cloud tidak ikut terkirim (yang dikirim `LOKAL_ROUTE_API_KEY`, kalau diisi). Request ke API yang tidak punya endpoint lokal di `route` ditolak, tidak dikirim ke cloud.
+- **Audit log**: `"audit": true` menambahkan satu baris JSON per keputusan ke `.lokal/audit.jsonl` (atau path yang Anda tentukan): sumbernya (proxy, MCP, guard), aksinya (masked, blocked, routed, refused, restored, anonymized, forgot), file atau path API, dan jumlah per jenis, tidak pernah nilainya. Lokal membuat `.lokal/` beserta `.gitignore`. `lokal-mcp audit [--since 7d] [--json]` meringkasnya.
+- **Vault**: server MCP melupakan semua nilai asli di balik placeholder setelah `vaultTtlMinutes` tidak dipakai (atau `LOKAL_VAULT_TTL_MINUTES`), dan saat tool `clear_vault` dipanggil.
+- **Guard strict untuk semua orang**: `"guard": "strict"` membuat guard menahan apa yang tidak bisa diperiksanya untuk siapa pun yang bekerja di repository itu, sama seperti `SAMARAN_GUARD=strict` di satu perangkat. Repository hanya bisa membuat guard lebih ketat; `SAMARAN_GUARD=off` di perangkat Anda sendiri tetap mematikannya.
+- `lokal-mcp scan` tidak memakai policy: apa yang boleh sampai ke model dan apa yang boleh masuk repository adalah dua hal berbeda.
+
+**Siapkan dari profil**, lalu cek apa yang dilakukan konfigurasinya:
+
+```console
+$ npx @lokal-id/mcp init --profile team      # personal, team, atau strict; --dry-run menampilkan file-nya dulu
+$ npx @lokal-id/mcp check
+guard           default (asks about what it cannot check)
+policy          everything is masked
+audit log       .lokal/audit.jsonl
+vault           forgotten after 60 min without use
+```
+
+| Profil | `.samaran.json` | Juga menulis |
+|---|---|---|
+| `personal` | vault dilupakan setelah 2 jam | `.samaranignore` |
+| `team` | audit log, vault 1 jam | `.samaranignore`, workflow GitHub yang menggagalkan pull request berisi data pribadi |
+| `strict` | guard strict, data kesehatan, kriminal, dan biometrik diblokir, audit log, vault 30 menit | sama, dengan input `strict` di workflow menyala |
+
+`init` tidak pernah mengganti file yang sudah ada, kecuali `.samaran.json` dengan `--force`. `check` memvalidasi file dan memberi peringatan untuk pengaturan yang perlu dicek ulang: nomor identitas yang boleh dilihat model, endpoint `route` yang bukan di perangkat ini atau jaringan privat, audit log di dalam project, atau pola `.samaranignore` yang melewatkan semua CSV.
+
+[Apa yang tetap di perangkat Anda, dan apa yang bisa mengakses jaringan](docs/network.id.md) mencatat setiap koneksi yang dibuat tiap bagian.
 
 ### Samaran untuk Vercel AI SDK: penyamaran di dalam aplikasi
 
@@ -345,7 +420,7 @@ Tidak semua orang menempel data pelanggan lewat agent. Tim CS, HR, dan finance m
 - Menyalin jawaban, dengan Ctrl+C atau tombol salin milik situs, mengembalikan nilai asli.
 - Nilai asli tidak pernah ditulis ke halaman situs, tempat skrip situs bisa membacanya, dan dilupakan saat browser ditutup. Tanpa server, tanpa request jaringan.
 
-Berjalan di ChatGPT, Claude, Gemini, Copilot, Perplexity, DeepSeek, Grok, dan Le Chat, di Chrome, Edge, dan browser Chromium lain. Belum ada di Chrome Web Store: unduh `lokal-extension-<versi>.zip` dari [rilis terbaru](https://github.com/lokal-id/lokal/releases/latest), ekstrak, lalu muat foldernya lewat **Load unpacked** (lihat [packages/extension](packages/extension/README.md), termasuk batasannya). Lampiran CSV, Excel, Word, dan PDF berteks ikut disamarkan; foto dan PDF hasil scan tidak.
+Berjalan di ChatGPT, Claude, Gemini, Copilot, Perplexity, DeepSeek, Grok, dan Le Chat, di Chrome, Edge, dan browser Chromium lain. Belum ada di Chrome Web Store: unduh `lokal-extension-<versi>.zip` dari [rilis terbaru](https://github.com/lokal-id/lokal/releases/latest), ekstrak, lalu muat foldernya lewat **Load unpacked** (lihat [packages/extension](packages/extension/README.md), termasuk batasannya). Lampiran CSV, Excel, Word, dan PDF berteks ikut disamarkan. Yang tidak bisa diperiksa (foto bernama seperti KTP atau selfie, PDF hasil scan atau berkata sandi, file di atas 20 MB) ditahan, dan baru diunggah kalau kamu mengizinkan.
 
 ### Lokal Scan: data pribadi tidak masuk repository
 
@@ -367,7 +442,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: lokal-id/lokal@v0.7.2
+      - uses: lokal-id/lokal@v0.11.0
         # with:
         #   scope: all              # semua file yang dilacak git, bukan hanya perubahan
         #   min-confidence: medium  # termasuk nilai tanpa label atau nama kolom
@@ -386,7 +461,7 @@ repos:
         name: Data pribadi Indonesia
         entry: lokal-mcp scan --staged
         language: node
-        additional_dependencies: ['@lokal-id/mcp@0.7.2']
+        additional_dependencies: ['@lokal-id/mcp@0.11.0']
         pass_filenames: false
 ```
 
@@ -428,6 +503,7 @@ Found 2 personal data value(s) in 1 file(s).
 | `read_file_masked` | Baca file, termasuk sheet `.xlsx`, dokumen `.docx` (teks dan tabel), dan PDF (teks halaman, tabel, dan isian formulir), dengan data pribadi diganti placeholder yang stabil |
 | `write_file_unmasked` | Tulis hasil kerja dengan placeholder dipulihkan, di komputer kamu |
 | `anonymize_file` | Salin dump dan ekspor dengan kembaran realistis untuk setiap orang (Kembaran), hanya mengembalikan jumlah |
+| `clear_vault` | Lupakan semua nilai asli di balik placeholder sesi ini |
 
 Tool data juga bekerja pada data tersamar. `parse_alamat`, `parse_nik`, `parse_phone`, dan `validate_npwp` menerima placeholder dari `read_file_masked`, seperti `[ADDRESS_3]` atau `[NIK_1]`, lalu membaca nilai aslinya di komputer kamu. Model menerima kelurahan, kecamatan, kota, dan kodenya, atau apakah NIK atau nomornya valid; nama jalan, RT/RW, dan tanggal lahir kembali sebagai placeholder baru yang dipulihkan oleh `write_file_unmasked`. Agent bisa merapikan kolom alamat pelanggan tanpa melihat satu alamat pun.
 
@@ -449,6 +525,15 @@ Otomatis aktif lewat plugin Claude Code.
   ```
 
 - `SAMARAN_GUARD=off` mematikan guard.
+- `SAMARAN_GUARD=strict` untuk tim yang ingin guard gagal dalam keadaan tertutup: apa pun yang tidak bisa diperiksa guard diblokir, tidak diloloskan atau ditanyakan. Ini mencakup:
+  - error di guard, misalnya `.samaran.json` yang rusak;
+  - file yang tidak bisa dibaca, misalnya PDF hasil scan, terenkripsi, atau rusak, dan spreadsheet yang rusak;
+  - foto dan PDF yang biasanya ditanyakan dulu;
+  - output dari bagian setelah 5 MB pertama sebuah file besar, misalnya `cat`, `tail`, `grep`, atau `Read` dengan offset melewati batas itu (`head -n 50` tetap jalan);
+  - `Grep` atas lebih dari 300 file data;
+  - pemeriksaan yang lebih lama dari 7 detik, sebelum batas hook 10 detik meloloskan perintahnya.
+
+  Kode yang dijalankan langsung dari command line dan menyebut file data berisi data pribadi diblokir seperti `cat`: `python -c "…open('data.csv')…"`, `node -e`, heredoc ke `python3 -`, dan `[IO.File]::ReadAllText` di PowerShell. Skrip yang disimpan di file tetap jalan.
 
 #### Di Codex CLI, Cursor, dan Gemini CLI
 
@@ -508,6 +593,45 @@ Hook di Gemini CLI masih eksperimental; aktifkan sesuai dokumentasi Gemini CLI u
 
 </details>
 
+### Cakupan tiap integrasi
+
+Tiap integrasi hanya melihat apa yang lewat di dalamnya. Pilih sesuai jalur data Anda, dan gabungkan kalau datanya lewat lebih dari satu jalur.
+
+| Integrasi | Memeriksa | Tidak melihat | Yang tidak bisa diperiksa |
+|---|---|---|---|
+| **Claude Code** (plugin: MCP, skill, guard) | Prompt, `Read`, `Grep` mode content, pembaca file di Bash dan PowerShell | Tool lain yang mengembalikan isi file, misalnya MCP server lain; skrip yang mencetak data | Ditanyakan dulu; diblokir dengan `strict` |
+| **Codex CLI** (MCP, skill, hook guard) | Prompt, perintah shell | Tool selain shell | Diloloskan; diblokir dengan `strict` |
+| **Cursor** (MCP, hook guard) | Prompt, baca file, perintah shell | Tool tanpa hook, misalnya pencarian codebase | Ditahan, karena Cursor tidak bisa bertanya |
+| **Gemini CLI** (MCP, hook guard, eksperimental) | Prompt, `read_file`, `run_shell_command` | Tool lainnya, misalnya baca banyak file sekaligus atau cari isi file | Ditahan, karena Gemini CLI tidak bisa bertanya |
+| **Claude Desktop, Windsurf, VS Code, client MCP lain** | File yang dibaca lewat `read_file_masked` dan `scan_pii` | Prompt dan pembacaan file oleh client itu sendiri: client ini tidak punya hook | Ditolak `read_file_masked` |
+| **Connector ChatGPT dan Claude.ai** (mode HTTP) | Tool data saja; tidak ada tool file | Yang diketik atau diunggah di chat: pakai ekstensi | n/a |
+| **Ekstensi browser** | Teks yang di-paste dan diketik, lampiran CSV, Excel, Word, dan PDF berlapis teks | Teks yang di-drag and drop, aturan `.samaran.json` | Ditahan sampai Anda izinkan; foto lain terkirim apa adanya |
+| **Samaran Proxy** | Semua teks di request gaya OpenAI dan Anthropic, termasuk tool call dan JSON di dalam string | Upload file, yang ditolak kecuali `--allow-unmasked` | Diteruskan dengan `x-samaran-status: partial`; ditolak dengan `--strict` |
+| **Middleware AI SDK** | System prompt, pesan, tool call dan hasilnya | Gambar dan file | Dikirim apa adanya |
+| **Lokal Scan** (CLI, pre-commit, GitHub Action) | Perubahan yang di-stage, diff, file dan folder | Data yang tidak pernah masuk repository | Dilaporkan tidak terpindai; gagal dengan `--strict` |
+
+Guard menahan satu nomor identitas saja (NIK, KK, NPWP, paspor, rekening, kartu, BPJS, …), data kesehatan, catatan kriminal, atau biometrik yang berlabel, dan aturan `.samaran.json`. Satu nilai biasa diloloskan, misalnya satu nomor HP atau alamat e-mail di hasil `grep`, dan tiga nilai atau lebih diblokir. `strict` tidak mengubah aturan itu; yang diubah adalah apa yang terjadi kalau guard tidak bisa memeriksa.
+
+### Pertahanan berlapis
+
+Guard menangkap cara-cara umum agent melihat data. Guard bukan sandbox: agent yang bisa menjalankan kode apa pun bisa menemukan cara mencetak isi file. Kalau data pelanggan asli ada di komputer developer, tambahkan kontrol yang tidak bergantung pada tertangkap atau tidaknya:
+
+1. **Jauhkan data produksi dari workspace.** Beri agent salinan Kembaran (`anonymize_file` atau `lokal-mcp kembaran`), bukan dump aslinya.
+2. **Tolak folder berisi data asli** di izin milik agent itu sendiri, misalnya di `.claude/settings.json` Claude Code:
+
+   ```json
+   {
+     "permissions": {
+       "deny": ["Read(./data/production/**)", "Read(./storage/uploads/**)", "Bash(cat:./data/production/*)"]
+     },
+     "env": { "SAMARAN_GUARD": "strict" }
+   }
+   ```
+
+3. **Jalankan agent di container atau sandbox** tanpa kredensial dan data produksi, dengan lalu lintas keluar hanya ke penyedia model.
+4. **Hentikan data di repository** dengan [Lokal Scan](#lokal-scan-data-pribadi-tidak-masuk-repository) di CI dan pre-commit.
+5. **Untuk aplikasi yang memanggil LLM**, lewatkan setiap panggilan melalui [proxy](#samaran-proxy-lindungi-panggilan-llm-di-aplikasi) atau SDK, dan jangan simpan prompt mentah di log maupun error tracker.
+
 ## Hasil eval
 
 Tugas vibe coding yang sama dijalankan di sesi Claude Code sungguhan di folder kosong, tanpa dan dengan plugin Lokal, masing-masing 3 kali (`npm run eval`, kasus di [`evals/cases.mjs`](evals/cases.mjs)):
@@ -534,6 +658,26 @@ Tiga tugas yang lebih sulit memakai kunci jawaban yang dicocokkan dengan sumber 
 
 Run pertama tugas-tugas ini menemukan satu bug dan empat celah deteksi, semuanya sudah diperbaiki di 0.2.1: nomor HP di akhir baris bocor kalau baris berikutnya diawali angka, serta nama yang dipecah jadi `first_name` / `last_name`, pengirim chat WhatsApp, obat, dan rawat inap belum terdeteksi. Daftar kode pos Depok di id.wikipedia ternyata keliru untuk 32 kelurahan; data Lokal cocok dengan [en.wikipedia](https://en.wikipedia.org/wiki/Cinere) dan sumber lain.
 
+### Test kebocoran
+
+Satu orang karangan dengan semua jenis data pribadi yang dikenal Samaran ([`canary.json`](packages/core/test/canary.json)) dikirim, sebagai formulir, JSON, baris log, CSV, dan JSON di dalam JSON, lewat semua jalur Lokal meneruskan teks: library TypeScript dan Python, middleware AI SDK, hasil setiap tool MCP, pesan guard, setiap bentuk API proxy (Chat Completions, streaming, tool call, Responses, Messages), `lokal-mcp scan` di semua format output, Kembaran, filter logging Python, dan tempelan di ekstensi browser. Test gagal kalau ada satu nilai, atau sebagian nama atau nama jalannya, yang keluar. Saat menulis test ini ditemukan empat celah, semuanya diperbaiki di rilis ini: CSV yang ditempel setelah sebuah kalimat, label setelah baris baru yang di-escape (`\n` di JSON), JSON di dalam string JSON (body request di log, argumen tool call), dan header CSV setelah awalan log.
+
+Guard sengaja meloloskan satu nilai biasa, misalnya satu nomor HP di hasil `grep`, dan memblokir nomor identitas, data kesehatan, serta tiga nilai atau lebih. `SAMARAN_GUARD=strict` tidak mengubah aturan itu; yang diubah adalah apa yang terjadi kalau guard tidak bisa memeriksa.
+
+### Benchmark held-out
+
+`npm run bench` menilai detektor per jenis data pada 2.800 dokumen karangan yang tidak dipakai untuk menyetelnya: 70 template dan kumpulan nama yang terpisah dari set pengembangan, dalam sebelas format mulai dari formulir dan chat sampai JSON, log, dan hasil OCR, dengan minimal 200 nilai berlabel untuk setiap jenis ([metode](evals/bench/README.md)). Korpus 2, sebelum dan sesudah perbaikan yang dipicunya (dibuat hanya dengan set pengembangan):
+
+| | Precision | Recall | Terlindungi | Interval 95% |
+|---|---|---|---|---|
+| 0.8.3: semua 6.160 nilai | 96,7% | 91,3% | 94,0% | 93,4–94,6% |
+| **0.9.0: semua 6.160 nilai** | **99,8%** | **95,8%** | **96,6%** | 96,1–97,0% |
+| 0.9.0, terlemah: agama | | | 85,7% | 81,1–89,3% |
+| 0.9.0, terlemah: NIK | | | 88,1% | 84,1–91,2% |
+| 0.9.0, terlemah: nama | | | 93,6% | 92,4–94,6% |
+
+*Terlindungi* artinya setiap huruf dan angka dari nilai itu tersamar, oleh deteksi jenis apa pun. Celah yang tersisa: hasil OCR yang salah baca (NIK terbaca "3674O2 53097l0l22", "AGAMA. ISLAM" tanpa titik dua) dan nama tanpa label di depannya. Tidak ada false positive di 400 dokumen jebakan. CI gagal kalau sebuah rilis mendapat skor di bawah baseline terakhir.
+
 `npm run eval:pii` menjalankan benchmark formatnya saja: 618 dari 618 data pribadi tersamar di 418 format, dan 338 dari 338 nilai yang mirip tetap utuh, dan setiap temuan dicek berada tepat di posisinya. Formatnya mulai dari KTP hasil OCR, export WhatsApp, JSON Midtrans, log Laravel, pesan HL7, dan dump SQL sampai teks tanpa label sama sekali: tiket CS, tanda tangan email, mutasi rekening, bukti transfer, form HTML, URL, nama file, chat berbahasa Sunda dan Jawa, dan chat santai soal kesehatan, genetika, utang, agama, pernikahan, dan catatan kriminal. Nilai yang mirip meliputi nomor resi, ID invoice, timestamp, nama lembaga, nama produk bank, tempat yang memakai nama orang, dan kata yang juga nama orang. **Angka 100% itu diukur pada kasus yang sudah dipakai untuk menyetel aturan.** Delapan kelompok kasus masing-masing ditulis setelah aturan saat itu jadi dan dijalankan sekali sebelum ada perbaikan: hasilnya 40 dari 49, 21 dari 24, 59 dari 90, 57 dari 65, 48 dari 57, 55 dari 67, 46 dari 55, dan 51 dari 61. Pada teks bebas yang belum pernah dilihat, perkirakan sekitar 82 sampai 88% data pribadi tertangkap. Dijalankan pada teks resmi UU 27/2022 (64.000 karakter), yang tersamar hanya nama Presiden di bagian tanda tangan.
 
 Ini sampel kecil yang disusun dari keseharian developer Indonesia. Jangan dibaca sebagai benchmark umum.
@@ -542,10 +686,10 @@ Ini sampel kecil yang disusun dari keseharian developer Indonesia. Jangan dibaca
 
 - **Deteksi berbasis pola dan mengutamakan presisi.** Nama dikenali dari label, header kolom dan key JSON, pengirim di export chat, frasa pengantar ("nama saya budi", "a.n.", "nami abdi"), sapaan dan gelar ("Pak Joko", "Dr. Ir. H. Bambang"), peran ("Pelanggan Budi Santoso", "Tergugat Joko Susilo"), salam pembuka dan penutup, nama tampilan email, handle media sosial, umur dalam kurung ("Kevin (19)"), daftar hadir dan kontak, serta daftar sekitar 680 nama depan dan nama keluarga Indonesia yang umum, marga Batak, dan pola nama Bali, Tionghoa-Indonesia, dan Jawa. Pada teks bebas yang belum pernah dilihat, sekitar 82 sampai 88% data pribadi tertangkap: nama yang juga kata sehari-hari tanpa penanda ("pesanan budi belum sampai"), nama yang tidak ada di daftar tanpa penanda apa pun, data sensitif dengan kalimat yang baru, dan data anak yang tidak ditandai sebagai data anak masih bisa lolos. Anggap Samaran sebagai jaring pengaman yang kuat, bukan jaminan.
 - **Diuji terhadap salah deteksi** di 22,5 MB kode dan dokumentasi open source: aturan nama tidak menambah satu pun salah deteksi di sana, dan setiap temuan baru adalah nama asli penulis package. Pada teks lengkap UU 27/2022, yang tersamar hanya nama penanda tangan. Dari 91.599 nama kecamatan dan desa di data Kemendagri, sendiri maupun dalam kalimat alamat, 0,15% masih terbaca sebagai nama orang, kebanyakan desa yang memakai nama marga Batak ("Pintu Pohan") atau nama orang ("Jati Utomo"). Deteksi nama di chat menangkap 29 dari 29 kalimat uji berisi nama dan tidak salah tangkap di 26 kalimat chat biasa. Kalimatnya disusun untuk tes, jadi akurasi di data asli bisa lebih rendah.
-- **Tidak semua format terbaca.** PDF terbaca kalau punya lapisan teks, seperti invoice, surat, rekening koran, dan formulir dari browser, Word, atau library PDF. Halaman hasil scan, PDF terenkripsi, `.xls` dan `.doc` lama, gambar (foto KTP, selfie), dan arsip tidak dipindai. `scan_pii` melaporkannya sebagai *tidak terpindai*, bukan *bersih*, termasuk halaman scan di dalam PDF yang selebihnya terbaca. Guard bertanya dulu sebelum `Read` mengirim PDF seperti itu, atau foto yang tampak seperti dokumen orang, ke model; guard tidak bisa membedakan foto KTP dari gambar lain, jadi foto dinilai dari nama dan foldernya. File di atas 100 MB juga dilaporkan. Untuk file data di atas 5 MB, guard memeriksa 5 MB pertamanya, dan spreadsheet, dokumen Word, serta PDF di atas 20 MB dilaporkan alih-alih diurai, supaya tetap di bawah batas waktu hook 10 detik.
+- **Tidak semua format terbaca.** PDF terbaca kalau punya lapisan teks, seperti invoice, surat, rekening koran, dan formulir dari browser, Word, atau library PDF. Halaman hasil scan, PDF terenkripsi, `.xls` dan `.doc` lama, gambar (foto KTP, selfie), dan arsip tidak dipindai. `scan_pii` melaporkannya sebagai *tidak terpindai*, bukan *bersih*, termasuk halaman scan di dalam PDF yang selebihnya terbaca. Semua integrasi memakai empat status yang sama untuk apa yang terlihat: `scanned`, `partial` (halaman scan di PDF, gambar di request lewat proxy), `unsupported` (jenis input yang tidak dibaca Lokal), dan `failed` (jenis yang didukung tetapi gagal dibaca, misalnya PDF terenkripsi). Guard bertanya dulu sebelum `Read` mengirim PDF seperti itu, atau foto yang tampak seperti dokumen orang, ke model; guard tidak bisa membedakan foto KTP dari gambar lain, jadi foto dinilai dari nama dan foldernya. File di atas 100 MB juga dilaporkan. Untuk file data di atas 5 MB, guard memeriksa 5 MB pertamanya dan bertanya dulu sebelum `Read` menampilkan baris setelahnya. Spreadsheet, dokumen Word, serta PDF di atas 20 MB dilaporkan alih-alih diurai, supaya tetap di bawah batas waktu hook 10 detik.
 - **Validasi NIK dan NPWP hanya struktur.** Tidak bisa memastikan nomornya terdaftar di Dukcapil atau DJP.
 - **Deteksi operator memakai prefix nomor**, yang cocok dengan daftar alokasi publik, termasuk merger XLSmart 2025. Indonesia belum punya *number portability* (gugatannya masih di MK, perkara 319/PUU-XXIV/2026), jadi prefix masih bisa diandalkan. Kode area telepon rumah baru mencakup 19 kota besar.
-- **Guard mencegat prompt, `Read`, `Grep`, dan perintah shell umum.** Skrip yang sengaja mencetak isi file data, atau perintah seperti `python -c "print(open(...).read())"`, tidak bisa dicegat 100%. Untuk itu skill `samaran` yang mengarahkan agent.
+- **Guard mencegat prompt, `Read`, `Grep`, dan perintah shell umum.** Skrip yang sengaja mencetak isi file data, atau perintah seperti `python -c "print(open(...).read())"`, tidak bisa dicegat 100%. Untuk itu skill `samaran` mengarahkan agent, `SAMARAN_GUARD=strict` memblokir one-liner semacam itu, dan [Pertahanan berlapis](#pertahanan-berlapis) menutup sisanya.
 - **Hari libur** hanya tersedia untuk tahun yang SKB-nya sudah terbit (2026, 2027). Tahun lain menghasilkan error, bukan tebakan.
 
 ## Roadmap
@@ -571,6 +715,8 @@ Punya ide? [Buka issue](https://github.com/lokal-id/lokal/issues).
 packages/core       @lokal-id/core: logika dan data
 packages/mcp        @lokal-id/mcp: MCP server dan Samaran Guard
 packages/extension  ekstensi browser untuk ChatGPT, Claude, Gemini, dan chat AI lain
+docs/               quickstart, halaman jaringan, dan gambar
+examples/           data contoh, Docker Compose dengan Ollama, LiteLLM
 python/             lokal-id: port Python, dengan tes paritas terhadap TypeScript
 skills/             SKILL.md untuk Claude, Codex, dan agent lain
 hooks/              hook Claude Code (hasil bundle, tanpa dependency)

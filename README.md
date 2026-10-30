@@ -54,6 +54,17 @@ The second problem is easy to miss. While debugging, developers paste production
 
 Lokal fixes both: it teaches agents Indonesian conventions, gives them accurate reference data, and puts **Samaran** (Indonesian for *disguise*) between your data and the model.
 
+### What Lokal is not
+
+Samaran is a safety net, not a security boundary.
+
+- **It misses some data.** Detection uses patterns, labels, and name lists. On free text it has never seen, about 12 to 18% of personal values slip through (see [Limitations](#limitations)).
+- **It cannot read images.** Photos of ID cards and scanned PDFs are reported or asked about, never masked.
+- **It protects only the paths that go through it.** A file your editor sends to the model on its own, or a script an agent writes that prints customer data, is not masked.
+- **It does not make a system UU PDP compliant by itself.** It lowers the chance of an accidental leak; access control, data minimization, and agreements with model providers are still yours to arrange.
+
+For data that must never reach a model provider, add the controls in [Defense in depth](#defense-in-depth).
+
 ## Features
 
 - **Indonesian conventions for agents.** Money, phone numbers, NIK/NPWP, tiered addresses, WIB/WITA/WIT, local payment methods, UI copy, and UU PDP, packaged as [Agent Skills](https://agentskills.io).
@@ -65,7 +76,7 @@ Lokal fixes both: it teaches agents Indonesian conventions, gives them accurate 
 - **Lokal Scan.** A GitHub Action and pre-commit hook that stop personal data from being committed. It checks only the lines a pull request adds and marks each value on the changed line.
 - **Browser extension.** Masks personal data pasted or typed into ChatGPT, Claude, Gemini, and other AI chats, and restores it when you copy the answer.
 - **Works with any agent.** Claude Code plugin, stdio MCP server for Cursor, Claude Desktop, VS Code, Windsurf, and Codex, an HTTP server for ChatGPT and Claude.ai connectors, plus TypeScript and Python libraries with identical results.
-- **Local and offline.** Data ships with the package. No network calls, no telemetry, and unmasking happens on your machine.
+- **Local and offline.** Data ships with the package. No network calls, no telemetry, and unmasking happens on your machine. A test runs every MCP tool, the guard, the scanner, and the Python library with network access blocked, and fails on any attempt.
 
 ## How it works
 
@@ -76,6 +87,8 @@ Lokal fixes both: it teaches agents Indonesian conventions, gives them accurate 
 When the agent needs to look at customer data, it calls `read_file_masked` and sees `[NAME_1], [NIK_1], [PHONE_1]` instead of the real values. It can still deduplicate, join, and debug, because the same value always gets the same placeholder. When it writes results with `write_file_unmasked`, Samaran puts the real values back, on your machine.
 
 ## Quick start
+
+New to Lokal? The [5-minute quickstart](docs/quickstart.md) walks through scanning, Kembaran, the agent tools, and the proxy with made-up sample data.
 
 ### Claude Code
 
@@ -244,6 +257,19 @@ samaran.unmask(reply);           // placeholders are replaced with the original 
 - The same value always maps to the same placeholder, across formats: `0812-…` and `+62 812…` are both `[PHONE_1]`.
 - `mode: 'partial'` is meant for logs and admin screens: `3201********0001`, `0812****7890`, `b***@gmail.com`.
 - `exclude` keeps types your app has to read. A car dealer's credit simulation needs income and installments, so `new Samaran({ exclude: ['FINANCIAL'] })` leaves "gaji saya 8 juta, cicilan 3 juta" intact while NIK and phone numbers are still masked. A misspelled type name throws instead of silently masking less.
+- **Your own data types.** For formats Samaran cannot know, such as an employee ID or a member-number column, add rules to `.samaran.json` at the project root. The MCP server, the guard, `lokal-mcp scan`, the proxy, and `lokal.files.scan_path` read it; a broken file stops the file tools instead of masking less:
+
+  ```json
+  {
+    "custom": [
+      { "label": "EMPLOYEE_ID", "pattern": "\\bEMP-\\d{6}\\b" },
+      { "label": "MEMBER", "fields": ["no_member", "Kode Member"] }
+    ],
+    "allow": ["0800-1-500-500"]
+  }
+  ```
+
+  `pattern` is a regular expression; `fields` are JSON keys, `key: value` labels, and CSV columns. Matches become `[EMPLOYEE_ID_1]` and `[MEMBER_1]` and are restored like any placeholder. `allow` lists values that are never masked, such as your own hotline. In code, pass the same rules: `new Samaran({ custom: [...] })`, or `Samaran(custom=[...])` in Python.
 - Detection uses labels (`Agama: Islam`, `NAMA : BUDI`), CSV and Excel headers (`agama`, `diagnosa`, `gaji`, …), JSON/YAML keys and query strings (including split `first_name` / `last_name`), SQL dumps (`INSERT` with or without column names, as mysqldump writes them, and pg_dump's `COPY` blocks), WhatsApp chat exports, and common phrases in free text (`nama saya budi`, `didiagnosis TBC`, `obat insulin`, `gaji saya 8 juta`).
 
 <details>
@@ -278,9 +304,58 @@ claude = Anthropic(base_url='http://127.0.0.1:8787')   # Messages
 - Responses come back with the real values, streamed or not, including tool call arguments, so the tools your app runs get real data.
 - Each request gets its own vault. Masking the whole conversation in order gives the same person the same placeholder on every turn.
 - Other OpenAI-compatible APIs work too: `--openai https://openrouter.ai/api/v1`, Groq, DeepSeek, Ollama, or Gemini's OpenAI endpoint. `--exclude FINANCIAL` lets the model see income figures for a credit simulation.
-- It listens on 127.0.0.1 only, passes API keys through without storing them, and logs one line per request with counts, never values. Each response has an `x-samaran-masked: NIK=1,NAME=2` header. File uploads cannot be masked and are refused unless you start it with `--allow-unmasked`.
+- It listens on 127.0.0.1 only, passes API keys through without storing them, and logs one line per request with counts, never values. Each response has an `x-samaran-masked: NIK=1,NAME=2` header. File uploads cannot be masked and are refused unless you start it with `--allow-unmasked`. Images, audio, and files inside a JSON request (a KTP photo for a vision model) cannot be checked either: they are forwarded, the response says `x-samaran-status: partial` with the count in `x-samaran-unchecked`, and the log line says so. Start the proxy with `--strict` to refuse such requests instead.
 
 Tested end to end with Claude Code itself running through it: the model only ever saw placeholders, and the files it wrote with its tools had the real values.
+
+To run it with a local model next to it, see the [Docker Compose example with Ollama](examples/proxy-ollama); to put it in front of LiteLLM, see [examples/litellm](examples/litellm).
+
+### Policy, local routing, and the audit log
+
+Masking is the default for every type. In `.samaran.json` a team can choose another action per type, or per custom rule label:
+
+```json
+{
+  "policy": { "HEALTH": "block", "FINANCIAL": "allow", "PASSPORT": "route" },
+  "route": { "openai": "http://127.0.0.1:11434/v1", "model": "llama3.2" },
+  "audit": true,
+  "vaultTtlMinutes": 60
+}
+```
+
+| Action | Proxy | MCP file tools | Guard |
+|---|---|---|---|
+| `mask` (default) | masked, restored in the answer | placeholders | blocks identifiers, health, criminal, and biometric data, or 3+ values |
+| `allow` | the model sees it | not masked | not counted |
+| `block` | the request is refused (HTTP 403) | `read_file_masked` refuses the file | one value is enough to block |
+| `route` | sent as it is to the local model in `route` instead of the cloud | masked | one value is enough to block |
+
+- **Routing** keeps sensitive requests on your own hardware: with `route.openai` pointing at Ollama, a request with a passport number goes there unmasked, with `route.model` in place of the model the app asked for. It never reaches the cloud, and the cloud API key is not sent with it (`LOKAL_ROUTE_API_KEY` is, if set). A request to an API with no local endpoint in `route` is refused rather than sent to the cloud.
+- **Audit log**: `"audit": true` appends one JSON line per decision to `.lokal/audit.jsonl` (or a path you give): the source (proxy, MCP, guard), the action (masked, blocked, routed, refused, restored, anonymized, forgot), the file or API path, and counts per type, never a value. Lokal creates `.lokal/` with a `.gitignore`. `lokal-mcp audit [--since 7d] [--json]` summarizes it.
+- **Vault**: the MCP server forgets every real value behind its placeholders after `vaultTtlMinutes` without use (or `LOKAL_VAULT_TTL_MINUTES`), and on the `clear_vault` tool.
+- **Strict guard for everyone**: `"guard": "strict"` makes the guard block what it cannot check for whoever works in the repository, as `SAMARAN_GUARD=strict` does on one machine. A repository can only make the guard stricter; `SAMARAN_GUARD=off` on your own machine still turns it off.
+- `lokal-mcp scan` ignores the policy: what may reach a model and what may enter the repository are different questions.
+
+**Set it up from a profile**, and check what a configuration does:
+
+```console
+$ npx @lokal-id/mcp init --profile team      # personal, team, or strict; --dry-run shows the files first
+$ npx @lokal-id/mcp check
+guard           default (asks about what it cannot check)
+policy          everything is masked
+audit log       .lokal/audit.jsonl
+vault           forgotten after 60 min without use
+```
+
+| Profile | `.samaran.json` | Also writes |
+|---|---|---|
+| `personal` | vault forgotten after 2 hours | `.samaranignore` |
+| `team` | audit log, 1-hour vault | `.samaranignore`, a GitHub workflow that fails pull requests with personal data |
+| `strict` | strict guard, health, criminal, and biometric data blocked, audit log, 30-minute vault | the same, with the workflow's `strict` input on |
+
+`init` never replaces a file that is there, except `.samaran.json` with `--force`. `check` validates the file and warns about settings worth a second look: an identity number the model may see, a `route` endpoint that is not on this machine or a private network, an audit log inside the project, or a `.samaranignore` pattern that skips every CSV.
+
+[What stays on your machine, and what can reach the network](docs/network.md) lists every connection each part makes.
 
 ### Samaran for the Vercel AI SDK: masking inside the app
 
@@ -345,7 +420,7 @@ Not everyone pastes customer data through an agent. Customer service, HR, and fi
 - Copying the answer, with Ctrl+C or the site's copy button, puts the real values back.
 - Real values are never written into the site's page, where its scripts could read them, and are forgotten when the browser closes. No server, no network requests.
 
-It runs on ChatGPT, Claude, Gemini, Copilot, Perplexity, DeepSeek, Grok, and Le Chat, in Chrome, Edge, and other Chromium browsers. It is not in the Chrome Web Store yet: download `lokal-extension-<version>.zip` from the [latest release](https://github.com/lokal-id/lokal/releases/latest), unzip it, and load the folder with **Load unpacked** (see [packages/extension](packages/extension/README.md), which also lists its limitations). Attached CSV, Excel, Word, and text-based PDF files are masked too; photos and scanned PDFs are not.
+It runs on ChatGPT, Claude, Gemini, Copilot, Perplexity, DeepSeek, Grok, and Le Chat, in Chrome, Edge, and other Chromium browsers. It is not in the Chrome Web Store yet: download `lokal-extension-<version>.zip` from the [latest release](https://github.com/lokal-id/lokal/releases/latest), unzip it, and load the folder with **Load unpacked** (see [packages/extension](packages/extension/README.md), which also lists its limitations). Attached CSV, Excel, Word, and text-based PDF files are masked too. What it cannot check (a photo named like a KTP or selfie, a scanned or password-protected PDF, a file over 20 MB) is held, and goes out only if you say so.
 
 ### Lokal Scan: keep personal data out of the repository
 
@@ -367,7 +442,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: lokal-id/lokal@v0.7.2
+      - uses: lokal-id/lokal@v0.11.0
         # with:
         #   scope: all              # every tracked file, not only the changes
         #   min-confidence: medium  # also values without a label or column name
@@ -386,7 +461,7 @@ repos:
         name: Indonesian personal data
         entry: lokal-mcp scan --staged
         language: node
-        additional_dependencies: ['@lokal-id/mcp@0.7.2']
+        additional_dependencies: ['@lokal-id/mcp@0.11.0']
         pass_filenames: false
 ```
 
@@ -428,6 +503,7 @@ Found 2 personal data value(s) in 1 file(s).
 | `read_file_masked` | Read a file, including `.xlsx` sheets, `.docx` documents (text and tables), and PDFs (page text, tables, and filled-in form fields), with personal data replaced by stable placeholders |
 | `write_file_unmasked` | Write results with placeholders restored, on your machine |
 | `anonymize_file` | Copy dumps and exports with realistic stand-ins for every person (Kembaran), returning only counts |
+| `clear_vault` | Forget every real value behind this session's placeholders |
 
 The data tools also work on masked data. `parse_alamat`, `parse_nik`, `parse_phone`, and `validate_npwp` take a placeholder from `read_file_masked`, such as `[ADDRESS_3]` or `[NIK_1]`, and read the real value on your machine. The model gets the kelurahan, kecamatan, kota, and their codes, or whether a NIK or number is valid; the street, RT/RW, and birth date come back as new placeholders, which `write_file_unmasked` restores. An agent can clean a customer address column without seeing any address.
 
@@ -449,6 +525,15 @@ Enabled automatically by the Claude Code plugin.
   ```
 
 - Set `SAMARAN_GUARD=off` to disable the guard.
+- Set `SAMARAN_GUARD=strict` for teams that want it to fail closed: what the guard cannot check is blocked instead of let through or asked about. That covers:
+  - a guard error, such as a broken `.samaran.json`;
+  - a file it cannot read, such as a scanned, encrypted, or damaged PDF or a damaged spreadsheet;
+  - the photos and PDFs it would otherwise ask about;
+  - output from beyond the first 5 MB of a big file, such as `cat`, `tail`, `grep`, or `Read` with an offset past that point (`head -n 50` still runs);
+  - a `Grep` over more than 300 data files;
+  - a check that runs longer than 7 seconds, before the hook's 10-second limit would let the call through.
+
+  Code run from the command line that names a data file with personal data is blocked like `cat`: `python -c "…open('data.csv')…"`, `node -e`, a heredoc fed to `python3 -`, and `[IO.File]::ReadAllText` in PowerShell. Scripts saved in files still run.
 
 #### In Codex CLI, Cursor, and Gemini CLI
 
@@ -508,6 +593,45 @@ Hooks are experimental in Gemini CLI; turn them on as its documentation describe
 
 </details>
 
+### What each integration covers
+
+Each integration sees only what passes through it. Choose by where the data goes, and combine them where it goes more than one way.
+
+| Integration | Checks | Does not see | What it cannot check |
+|---|---|---|---|
+| **Claude Code** (plugin: MCP, skills, guard) | Prompts, `Read`, `Grep` in content mode, file readers in Bash and PowerShell | Other tools that return file contents, such as another MCP server; scripts that print data | Asked about; blocked with `strict` |
+| **Codex CLI** (MCP, skills, guard hook) | Prompts, shell commands | Tools other than the shell | Let through; blocked with `strict` |
+| **Cursor** (MCP, guard hooks) | Prompts, file reads, shell commands | Tools without a hook, such as its codebase search | Held back, since Cursor cannot ask |
+| **Gemini CLI** (MCP, guard hooks, experimental) | Prompts, `read_file`, `run_shell_command` | Its other tools, such as reading several files at once or searching file contents | Held back, since Gemini CLI cannot ask |
+| **Claude Desktop, Windsurf, VS Code, other MCP clients** | Files read through `read_file_masked` and `scan_pii` | Prompts and the client's own file reads: these clients have no hook | `read_file_masked` refuses it |
+| **ChatGPT and Claude.ai connectors** (HTTP mode) | The data tools only; no file tools | What is typed or uploaded in the chat: use the extension | n/a |
+| **Browser extension** | Pasted and typed text, attached CSV, Excel, Word, and text-based PDF files | Text dropped by drag and drop, `.samaran.json` rules | Held until you allow it; other photos go as they are |
+| **Samaran Proxy** | Every text in OpenAI- and Anthropic-style requests, including tool calls and JSON inside strings | File uploads, which are refused unless `--allow-unmasked` | Forwarded with `x-samaran-status: partial`; refused with `--strict` |
+| **AI SDK middleware** | System prompt, messages, tool calls and results | Images and files | Sent as they are |
+| **Lokal Scan** (CLI, pre-commit, GitHub Action) | Staged changes, diffs, files and folders | Data that never reaches the repository | Reported as not scanned; fails with `--strict` |
+
+The guard holds back any one identifier (NIK, KK, NPWP, passport, bank account, card, BPJS, …), labeled health, criminal-record, or biometric data, and a `.samaran.json` rule. It lets one ordinary value through, such as a single phone number or e-mail address in a `grep` result, and blocks three or more. `strict` does not change that rule; it changes what happens when the guard cannot check.
+
+### Defense in depth
+
+The guard catches the common ways an agent looks at data. It is not a sandbox: an agent that can run arbitrary code can find a way to print a file. When real customer data sits on a developer's machine, add controls that do not depend on catching it:
+
+1. **Keep production data out of the workspace.** Give the agent a Kembaran copy (`anonymize_file` or `lokal-mcp kembaran`) instead of the real dump.
+2. **Deny the folders that hold real data** in the agent's own permissions, for example in Claude Code's `.claude/settings.json`:
+
+   ```json
+   {
+     "permissions": {
+       "deny": ["Read(./data/production/**)", "Read(./storage/uploads/**)", "Bash(cat:./data/production/*)"]
+     },
+     "env": { "SAMARAN_GUARD": "strict" }
+   }
+   ```
+
+3. **Run the agent in a container or sandbox** where production credentials and data are not mounted and outbound traffic goes only to the model provider.
+4. **Stop data at the repository** with [Lokal Scan](#lokal-scan-keep-personal-data-out-of-the-repository) in CI and pre-commit.
+5. **For apps that call an LLM**, send every call through the [proxy](#samaran-proxy-protect-an-apps-llm-calls) or the SDK, and keep raw prompts out of logs and error trackers.
+
 ## Evaluation
 
 The same vibe-coding tasks were run in real Claude Code sessions in an empty folder, with and without the Lokal plugin, three times each (`npm run eval`, cases in [`evals/cases.mjs`](evals/cases.mjs)):
@@ -534,6 +658,26 @@ Three harder tasks use answers checked against official sources rather than Loka
 
 The first runs of these tasks found a bug and four detection gaps, all fixed in 0.2.1: a phone number at the end of a line leaked when the next line began with a digit, and names split into `first_name` / `last_name`, WhatsApp senders, medicines and hospital stays were missed. The id.wikipedia list of Depok postal codes turned out to be wrong for 32 kelurahan; Lokal matches [en.wikipedia](https://en.wikipedia.org/wiki/Cinere) and other sources.
 
+### Leak tests
+
+One made-up person with every kind of personal data Samaran knows ([`canary.json`](packages/core/test/canary.json)) is sent, as a form, JSON, a log line, CSV, and JSON inside JSON, through every way Lokal hands text on: the TypeScript and Python libraries, the AI SDK middleware, every MCP tool's result, the guard's messages, every API shape of the proxy (Chat Completions, streaming, tool calls, Responses, Messages), `lokal-mcp scan` in every output format, Kembaran, the Python logging filter, and a paste in the browser extension. A test fails if any value, or any part of the name or street, comes out. Writing these tests found four gaps, all fixed in this release: a CSV pasted after a sentence, labels after an escaped line break (`\n` in JSON), JSON inside a JSON string (a logged request body, a tool call's arguments), and a CSV header after a log prefix.
+
+The guard lets one ordinary value through on purpose, such as a single phone number in a `grep` result, and blocks identifiers, health data, and three or more values. `SAMARAN_GUARD=strict` does not change that rule; it changes what happens when the guard cannot check.
+
+### Held-out benchmark
+
+`npm run bench` scores the detectors per type on 2,800 made-up documents that they were not tuned on: 70 templates and a pool of names apart from the development set, in eleven formats from forms and chat to JSON, logs, and OCR output, with at least 200 labelled values of every type ([method](evals/bench/README.md)). Corpus 2, before and after the fixes it led to (made on the development set only):
+
+| | Precision | Recall | Protected | 95% interval |
+|---|---|---|---|---|
+| 0.8.3: all 6,160 values | 96.7% | 91.3% | 94.0% | 93.4–94.6% |
+| **0.9.0: all 6,160 values** | **99.8%** | **95.8%** | **96.6%** | 96.1–97.0% |
+| 0.9.0, weakest: religion | | | 85.7% | 81.1–89.3% |
+| 0.9.0, weakest: NIK | | | 88.1% | 84.1–91.2% |
+| 0.9.0, weakest: names | | | 93.6% | 92.4–94.6% |
+
+*Protected* means every letter and digit of the value was masked, by a detection of any type. The gaps left are OCR output with misread characters (a NIK read as "3674O2 53097l0l22", "AGAMA. ISLAM" without a colon) and names with no label in front of them. None of the 400 trap documents has a false positive. CI fails when a release scores lower than the last baseline.
+
 `npm run eval:pii` runs the format benchmark on its own: 618 of 618 personal values masked across 418 formats, and 338 of 338 look-alikes left intact, with every match checked to sit exactly at its offsets. The formats range from KTP OCR, WhatsApp exports, Midtrans JSON, Laravel logs, HL7 messages, and SQL dumps to text with no labels at all: support tickets, e-mail signatures, bank statements, receipts, HTML forms, URLs, file names, chat in Sundanese and Javanese, and casual chat about health, genetics, debt, religion, marriage, and criminal records. The look-alikes include resi numbers, invoice IDs, timestamps, institutions, bank product names, places named after people, and words that are also given names. **The 100% is measured on cases the rules were tuned on.** Eight batches of cases were each written after the rules of the day and run once before any fix: they caught 40 of 49, 21 of 24, 59 of 90, 57 of 65, 48 of 57, 55 of 67, 46 of 55, and 51 of 61 values. On free text it has not seen, expect it to catch about 82 to 88% of personal values. Run over the official text of UU 27/2022 (64,000 characters), it masks only the President's name in the signature block.
 
 This is a small sample built around everyday tasks for Indonesian developers. Do not read it as a general benchmark.
@@ -542,10 +686,10 @@ This is a small sample built around everyday tasks for Indonesian developers. Do
 
 - **Detection is pattern-based and favors precision.** Names are found through labels, column headers and JSON keys, chat export senders, introductions ("nama saya budi", "a.n.", "nami abdi"), honorifics and titles ("Pak Joko", "Dr. Ir. H. Bambang"), roles ("Pelanggan Budi Santoso", "Tergugat Joko Susilo"), greetings and sign-offs, e-mail display names, social media handles, an age in brackets ("Kevin (19)"), attendance and contact lists, and a list of about 680 common Indonesian given and family names, Batak clan names, and Balinese, Chinese-Indonesian, and Javanese name patterns. On free text it has not seen it catches about 82 to 88% of personal values: a name that is also an everyday word and has no cue ("pesanan budi belum sampai"), a name the list does not know with nothing around it, sensitive data phrased in a new way, and children's data that is not marked as such can still slip through. Treat Samaran as a strong safety net, not a guarantee.
 - **Tested for false positives** on 22.5 MB of open-source code and documentation: the name rules added no false detections there, and every new hit was a package author's real name. On the full text of UU 27/2022 only the signatory's name is masked. Of 91,599 kecamatan and desa names in the Kemendagri data, alone and in an address sentence, 0.15% still read as a person's name, mostly villages named after a Batak clan ("Pintu Pohan") or a person ("Jati Utomo"). Chat name detection catches 29 of 29 test sentences with names and flags 0 of 26 ordinary ones. The test sentences were written for the suite, so accuracy on real data may be lower.
-- **Not every format is read.** PDFs are read when they have a text layer, as invoices, letters, statements, and forms from a browser, Word, or a PDF library do. Scanned pages, encrypted PDFs, legacy `.xls` and `.doc`, images (ID card photos, selfies), and archives are not scanned. `scan_pii` reports them as *not scanned*, never as clean, including scanned pages inside an otherwise readable PDF. The guard asks before `Read` sends such a PDF, or a photo that looks like someone's document, to the model; it cannot tell a KTP photo from any other picture, so it judges photos by name and folder. Files over 100 MB are reported too. For data files over 5 MB the guard checks the first 5 MB, and it reports spreadsheets, Word documents, and PDFs over 20 MB instead of parsing them, to stay within the hook's 10-second limit.
+- **Not every format is read.** PDFs are read when they have a text layer, as invoices, letters, statements, and forms from a browser, Word, or a PDF library do. Scanned pages, encrypted PDFs, legacy `.xls` and `.doc`, images (ID card photos, selfies), and archives are not scanned. `scan_pii` reports them as *not scanned*, never as clean, including scanned pages inside an otherwise readable PDF. Every integration uses the same four states for what it saw: `scanned`, `partial` (scanned pages in a PDF, an image in a proxied request), `unsupported` (a kind of input Lokal does not read), and `failed` (a supported kind that could not be read, such as an encrypted PDF). The guard asks before `Read` sends such a PDF, or a photo that looks like someone's document, to the model; it cannot tell a KTP photo from any other picture, so it judges photos by name and folder. Files over 100 MB are reported too. For data files over 5 MB the guard checks the first 5 MB, and asks before `Read` shows lines past them. It reports spreadsheets, Word documents, and PDFs over 20 MB instead of parsing them, to stay within the hook's 10-second limit.
 - **NIK and NPWP checks are structural.** They cannot confirm that a number is registered with Dukcapil or the tax office.
 - **Carrier detection uses number prefixes,** which match the public allocation list, including the 2025 XLSmart merger. Indonesia has no mobile number portability yet (a case is pending at the Constitutional Court, 319/PUU-XXIV/2026), so prefixes are still reliable. Landline area codes cover 19 major cities.
-- **The guard intercepts prompts, `Read`, `Grep`, and common shell readers.** A script that deliberately prints a data file, or something like `python -c "print(open(...).read())"`, cannot be caught every time. The `samaran` skill steers the agent away from that.
+- **The guard intercepts prompts, `Read`, `Grep`, and common shell readers.** A script that deliberately prints a data file, or something like `python -c "print(open(...).read())"`, cannot be caught every time. The `samaran` skill steers the agent away from that, `SAMARAN_GUARD=strict` blocks such one-liners, and [Defense in depth](#defense-in-depth) covers the rest.
 - **Holidays** exist only for years whose SKB has been published (2026, 2027). Other years return an error, not a guess.
 
 ## Roadmap
@@ -571,6 +715,8 @@ Have an idea? [Open an issue](https://github.com/lokal-id/lokal/issues).
 packages/core       @lokal-id/core: logic and bundled data
 packages/mcp        @lokal-id/mcp: MCP server and Samaran Guard
 packages/extension  browser extension for ChatGPT, Claude, Gemini, and other AI chats
+docs/               quickstart, network page, and images
+examples/           sample data, Docker Compose with Ollama, LiteLLM
 python/             lokal-id: the Python port, with parity tests against TypeScript
 skills/             SKILL.md files for Claude, Codex, and other agents
 hooks/              Claude Code hook (bundled, no dependencies)

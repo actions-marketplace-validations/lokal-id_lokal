@@ -832,7 +832,7 @@
     "replaced": {}
    },
    {
-    "text": "KP. RAWA BADAK RT 02 RW 06 DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+    "text": "KP. RAWA BADAK RT 00 RW 03 DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
     "replaced": {
      "ADDRESS": 1
     }
@@ -1167,6 +1167,442 @@
    },
    {
     "text": "18.71.15",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "node:fs",
+    "replaced": {}
+   },
+   {
+    "text": "node:path",
+    "replaced": {}
+   },
+   {
+    "text": "canary.json",
+    "replaced": {}
+   },
+   {
+    "text": "utf8",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": " ",
+    "replaced": {}
+   },
+   {
+    "text": ",",
+    "replaced": {}
+   },
+   {
+    "text": ",",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "NAME",
+    "replaced": {}
+   },
+   {
+    "text": " ",
+    "replaced": {}
+   },
+   {
+    "text": "ADDRESS",
+    "replaced": {}
+   },
+   {
+    "text": "Kanari Raya",
+    "replaced": {}
+   },
+   {
+    "text": ", ",
+    "replaced": {}
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "../src/kembaran.ts",
+    "replaced": {}
+   },
+   {
+    "text": "EMPLOYEE_ID",
+    "replaced": {}
+   },
+   {
+    "text": "MEMBER",
+    "replaced": {}
+   },
+   {
+    "text": "no_member",
+    "replaced": {}
+   },
+   {
+    "text": "Kode Member",
+    "replaced": {}
+   },
+   {
+    "text": "custom patterns mask under their own label and restore",
+    "replaced": {}
+   },
+   {
+    "text": "Tiket dari EMP-004211 soal EMP-000317, lalu EMP-004211 lagi. emp-004211 huruf kecil tidak cocok.",
+    "replaced": {}
+   },
+   {
+    "text": "Tiket dari [EMPLOYEE_ID_1] soal [EMPLOYEE_ID_2], lalu [EMPLOYEE_ID_1] lagi. emp-004211 huruf kecil tidak cocok.",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "EMPLOYEE_ID",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "EMPLOYEE_ID",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "EMPLOYEE_ID",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "custom fields: labels, JSON keys, and CSV columns",
+    "replaced": {}
+   },
+   {
+    "text": "member no_member=M-0042 minta reset.",
+    "replaced": {}
+   },
+   {
+    "text": "{\"no_member\": \"M-0099\", \"nik\": \"3201011503953074\"}",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "kode member: M-1234",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "nama,Kode Member,kota",
+    "replaced": {}
+   },
+   {
+    "text": "Dian Puspita,\"M, 77\",Bogor",
+    "replaced": {
+     "NAME": 1
+    }
+   },
+   {
+    "text": "Fajar Halim,M-0042,Depok",
+    "replaced": {
+     "NAME": 1
+    }
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "kota,catatan",
+    "replaced": {}
+   },
+   {
+    "text": "Depok,M-5555 bukan kolom member",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": "member no_member=[MEMBER_1] minta reset.",
+    "replaced": {}
+   },
+   {
+    "text": "{\"no_member\": \"[MEMBER_2]\", \"nik\": \"[NIK_1]\"}",
+    "replaced": {}
+   },
+   {
+    "text": "kode member: [MEMBER_3]",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "nama,Kode Member,kota",
+    "replaced": {}
+   },
+   {
+    "text": "[NAME_1],\"[MEMBER_4]\",Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "[NAME_2],[MEMBER_1],Depok",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "kota,catatan",
+    "replaced": {}
+   },
+   {
+    "text": "Depok,M-5555 bukan kolom member",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": "a custom rule does not cut a built-in match short",
+    "replaced": {}
+   },
+   {
+    "text": "HP 0812-1827-5350",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "SHORT_CODE",
+    "replaced": {}
+   },
+   {
+    "text": "PHONE",
+    "replaced": {}
+   },
+   {
+    "text": "no_member: 3201011503953074",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "MEMBER",
+    "replaced": {}
+   },
+   {
+    "text": "no_member",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "MEMBER",
+    "replaced": {}
+   },
+   {
+    "text": "custom placeholders survive export and import of the vault",
+    "replaced": {}
+   },
+   {
+    "text": "EMP-004211 dan EMP-000317",
+    "replaced": {}
+   },
+   {
+    "text": "EMP-000317, EMP-123456",
+    "replaced": {}
+   },
+   {
+    "text": "[EMPLOYEE_ID_2], [EMPLOYEE_ID_3]",
+    "replaced": {}
+   },
+   {
+    "text": "[EMPLOYEE_ID_1]",
+    "replaced": {}
+   },
+   {
+    "text": "EMP-004211",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "EMP-004211",
+    "replaced": {}
+   },
+   {
+    "text": "EMPLOYEE_ID",
+    "replaced": {}
+   },
+   {
+    "text": "[EMPLOYEE_ID_1]",
+    "replaced": {}
+   },
+   {
+    "text": "partial masks and stand-ins for custom values",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "EMP-004211",
+    "replaced": {}
+   },
+   {
+    "text": "********11",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "M-42",
+    "replaced": {}
+   },
+   {
+    "text": "***",
+    "replaced": {}
+   },
+   {
+    "text": "partial",
+    "replaced": {}
+   },
+   {
+    "text": "id EMP-004211",
+    "replaced": {}
+   },
+   {
+    "text": "id ********11",
+    "replaced": {}
+   },
+   {
+    "text": "uji",
+    "replaced": {}
+   },
+   {
+    "text": "id EMP-004211, no_member: M-0042",
+    "replaced": {}
+   },
+   {
+    "text": "EMP-004211",
+    "replaced": {}
+   },
+   {
+    "text": "M-0042",
+    "replaced": {}
+   },
+   {
+    "text": "rules that cannot work are refused",
+    "replaced": {}
+   },
+   {
+    "text": "employee",
+    "replaced": {}
+   },
+   {
+    "text": "x",
+    "replaced": {}
+   },
+   {
+    "text": "NIK",
+    "replaced": {}
+   },
+   {
+    "text": "x",
+    "replaced": {}
+   },
+   {
+    "text": "EMP_",
+    "replaced": {}
+   },
+   {
+    "text": "x",
+    "replaced": {}
+   },
+   {
+    "text": "EMP",
+    "replaced": {}
+   },
+   {
+    "text": "(",
+    "replaced": {}
+   },
+   {
+    "text": "EMP",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "x",
+    "replaced": {}
+   },
+   {
+    "text": "NIK",
+    "replaced": {}
+   },
+   {
+    "text": "3201011503953074",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "EMP",
     "replaced": {}
    },
    {
@@ -1687,474 +2123,6 @@
    },
    {
     "text": "2026-03-25",
-    "replaced": {}
-   },
-   {
-    "text": "2026-03-17",
-    "replaced": {}
-   },
-   {
-    "text": "2026-03-16",
-    "replaced": {}
-   },
-   {
-    "text": "2026-03-27",
-    "replaced": {}
-   },
-   {
-    "text": "tahun tanpa data resmi gagal dengan jelas, bukan diam-diam",
-    "replaced": {}
-   },
-   {
-    "text": "2028-01-03",
-    "replaced": {}
-   },
-   {
-    "text": "tanggal yang tidak ada ditolak, bukan digeser ke bulan berikutnya",
-    "replaced": {}
-   },
-   {
-    "text": "2026-02-30",
-    "replaced": {}
-   },
-   {
-    "text": "2026-13-01",
-    "replaced": {}
-   },
-   {
-    "text": "17-08-2026",
-    "replaced": {}
-   },
-   {
-    "text": "node:test",
-    "replaced": {}
-   },
-   {
-    "text": "node:assert/strict",
-    "replaced": {}
-   },
-   {
-    "text": "../src/index.ts",
-    "replaced": {}
-   },
-   {
-    "text": "../src/wilayah.ts",
-    "replaced": {}
-   },
-   {
-    "text": "2026-10-15",
-    "replaced": {}
-   },
-   {
-    "text": "NIK: laki-laki, wilayah dari data Kemendagri",
-    "replaced": {}
-   },
-   {
-    "text": "3201011503953074",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "L",
-    "replaced": {}
-   },
-   {
-    "text": "1995-08-15",
-    "replaced": {}
-   },
-   {
-    "text": "Jawa Barat",
-    "replaced": {}
-   },
-   {
-    "text": "Kabupaten Bogor",
-    "replaced": {}
-   },
-   {
-    "text": "Cibinong",
-    "replaced": {}
-   },
-   {
-    "text": "0001",
-    "replaced": {}
-   },
-   {
-    "text": "NIK: perempuan (tanggal + 40), tahun 2000-an, spasi diabaikan",
-    "replaced": {}
-   },
-   {
-    "text": "3276 01 520803 2515",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "P",
-    "replaced": {}
-   },
-   {
-    "text": "2003-08-15",
-    "replaced": {}
-   },
-   {
-    "text": "NIK: struktur salah ditolak dengan alasan yang jelas",
-    "replaced": {}
-   },
-   {
-    "text": "12345",
-    "replaced": {}
-   },
-   {
-    "text": "format",
-    "replaced": {}
-   },
-   {
-    "text": "9901011508950001",
-    "replaced": {}
-   },
-   {
-    "text": "province",
-    "replaced": {}
-   },
-   {
-    "text": "3201011812953580",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "3201013102950001",
-    "replaced": {}
-   },
-   {
-    "text": "birth_date",
-    "replaced": {}
-   },
-   {
-    "text": "3201017508950001",
-    "replaced": {}
-   },
-   {
-    "text": "birth_date",
-    "replaced": {}
-   },
-   {
-    "text": "3201011508950000",
-    "replaced": {}
-   },
-   {
-    "text": "serial",
-    "replaced": {}
-   },
-   {
-    "text": "NIK: kode wilayah lama memberi peringatan, bukan error",
-    "replaced": {}
-   },
-   {
-    "text": "3201992011958778",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "wilayah_unknown",
-    "replaced": {}
-   },
-   {
-    "text": "NPWP: format 15 digit lama",
-    "replaced": {}
-   },
-   {
-    "text": "05.374.811.8-167.706",
-    "replaced": {
-     "NPWP": 1
-    }
-   },
-   {
-    "text": "npwp15",
-    "replaced": {}
-   },
-   {
-    "text": "0012345678901000",
-    "replaced": {}
-   },
-   {
-    "text": "05.374.811.8-167.706",
-    "replaced": {
-     "NPWP": 1
-    }
-   },
-   {
-    "text": "NPWP: 16 digit diawali 0 dan NIK sebagai NPWP",
-    "replaced": {}
-   },
-   {
-    "text": "0012345678901000",
-    "replaced": {}
-   },
-   {
-    "text": "npwp16",
-    "replaced": {}
-   },
-   {
-    "text": "3201011503953074",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "nik",
-    "replaced": {}
-   },
-   {
-    "text": "3201011508950000",
-    "replaced": {}
-   },
-   {
-    "text": "123",
-    "replaced": {}
-   },
-   {
-    "text": "HP: berbagai cara menulis, operator, dan format",
-    "replaced": {}
-   },
-   {
-    "text": "0812-1827-5350",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "+6281218275350",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "0812-1827-5350",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "6281218275350",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "Telkomsel",
-    "replaced": {}
-   },
-   {
-    "text": "+62 857 1211 9396",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "Indosat",
-    "replaced": {}
-   },
-   {
-    "text": "6289688626367",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "Tri",
-    "replaced": {}
-   },
-   {
-    "text": "6289688626367",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "Indosat Ooredoo Hutchison",
-    "replaced": {}
-   },
-   {
-    "text": "0881-2723-2826",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "XLSmart",
-    "replaced": {}
-   },
-   {
-    "text": "+62 (0) 812 3456 7890",
-    "replaced": {}
-   },
-   {
-    "text": "+6281218275350",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "Telepon rumah dan nomor tidak valid",
-    "replaced": {}
-   },
-   {
-    "text": "(021) 589-6692",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "landline",
-    "replaced": {}
-   },
-   {
-    "text": "Jakarta",
-    "replaced": {}
-   },
-   {
-    "text": "+62215896692",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "12345",
-    "replaced": {}
-   },
-   {
-    "text": "0812",
-    "replaced": {}
-   },
-   {
-    "text": "node:test",
-    "replaced": {}
-   },
-   {
-    "text": "node:assert/strict",
-    "replaced": {}
-   },
-   {
-    "text": "../src/index.ts",
-    "replaced": {}
-   },
-   {
-    "text": "../src/kembaran.ts",
-    "replaced": {}
-   },
-   {
-    "text": "Fajar Halim",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "DIAN PUSPITA",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "3201011503953074",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "3276015208032515",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "3456-7890",
-    "replaced": {}
-   },
-   {
-    "text": "3456 7890",
-    "replaced": {}
-   },
-   {
-    "text": "1111",
-    "replaced": {}
-   },
-   {
-    "text": "gmail.com",
-    "replaced": {}
-   },
-   {
-    "text": "yahoo",
-    "replaced": {}
-   },
-   {
-    "text": "Mawar",
-    "replaced": {}
-   },
-   {
-    "text": "Kenanga",
-    "replaced": {}
-   },
-   {
-    "text": "\n",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: CSV pelanggan tanpa satu pun nilai asli, tetap konsisten dan valid",
-    "replaced": {}
-   },
-   {
-    "text": "uji",
-    "replaced": {}
-   },
-   {
-    "text": "the same person gets the same stand-in",
-    "replaced": {}
-   },
-   {
-    "text": "Bogor",
-    "replaced": {}
-   },
-   {
-    "text": "the city stays",
-    "replaced": {}
-   },
-   {
-    "text": "casing follows the original",
-    "replaced": {}
-   },
-   {
-    "text": "320101",
-    "replaced": {}
-   },
-   {
-    "text": "L",
-    "replaced": {}
-   },
-   {
-    "text": "1995",
-    "replaced": {}
-   },
-   {
-    "text": "P",
-    "replaced": {}
-   },
-   {
-    "text": "-",
-    "replaced": {}
-   },
-   {
-    "text": "Telkomsel",
-    "replaced": {}
-   },
-   {
-    "text": "0812-… and 0812… are one person",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
     "replaced": {}
    }
   ]
@@ -2993,7 +2961,7 @@
     "replaced": {}
    },
    {
-    "text": "KP. RAWA BADAK RT 02 RW 01 DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+    "text": "KP. RAWA BADAK RT 07 RW 00 DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
     "replaced": {
      "ADDRESS": 1
     }
@@ -3328,6 +3296,442 @@
    },
    {
     "text": "18.71.15",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "node:fs",
+    "replaced": {}
+   },
+   {
+    "text": "node:path",
+    "replaced": {}
+   },
+   {
+    "text": "canary.json",
+    "replaced": {}
+   },
+   {
+    "text": "utf8",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": " ",
+    "replaced": {}
+   },
+   {
+    "text": ",",
+    "replaced": {}
+   },
+   {
+    "text": ",",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "NAME",
+    "replaced": {}
+   },
+   {
+    "text": " ",
+    "replaced": {}
+   },
+   {
+    "text": "ADDRESS",
+    "replaced": {}
+   },
+   {
+    "text": "Kanari Raya",
+    "replaced": {}
+   },
+   {
+    "text": ", ",
+    "replaced": {}
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "../src/kembaran.ts",
+    "replaced": {}
+   },
+   {
+    "text": "EMPLOYEE_ID",
+    "replaced": {}
+   },
+   {
+    "text": "MEMBER",
+    "replaced": {}
+   },
+   {
+    "text": "no_member",
+    "replaced": {}
+   },
+   {
+    "text": "Kode Member",
+    "replaced": {}
+   },
+   {
+    "text": "custom patterns mask under their own label and restore",
+    "replaced": {}
+   },
+   {
+    "text": "Tiket dari EMP-004211 soal EMP-000317, lalu EMP-004211 lagi. emp-004211 huruf kecil tidak cocok.",
+    "replaced": {}
+   },
+   {
+    "text": "Tiket dari [EMPLOYEE_ID_1] soal [EMPLOYEE_ID_2], lalu [EMPLOYEE_ID_1] lagi. emp-004211 huruf kecil tidak cocok.",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "EMPLOYEE_ID",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "EMPLOYEE_ID",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "EMPLOYEE_ID",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "custom fields: labels, JSON keys, and CSV columns",
+    "replaced": {}
+   },
+   {
+    "text": "member no_member=M-0042 minta reset.",
+    "replaced": {}
+   },
+   {
+    "text": "{\"no_member\": \"M-0099\", \"nik\": \"3201011508955680\"}",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "kode member: M-1234",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "nama,Kode Member,kota",
+    "replaced": {}
+   },
+   {
+    "text": "Santi Lestari,\"M, 77\",Bogor",
+    "replaced": {
+     "NAME": 1
+    }
+   },
+   {
+    "text": "Arif Matondang,M-0042,Depok",
+    "replaced": {
+     "NAME": 1
+    }
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "kota,catatan",
+    "replaced": {}
+   },
+   {
+    "text": "Depok,M-5555 bukan kolom member",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": "member no_member=[MEMBER_1] minta reset.",
+    "replaced": {}
+   },
+   {
+    "text": "{\"no_member\": \"[MEMBER_2]\", \"nik\": \"[NIK_1]\"}",
+    "replaced": {}
+   },
+   {
+    "text": "kode member: [MEMBER_3]",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "nama,Kode Member,kota",
+    "replaced": {}
+   },
+   {
+    "text": "[NAME_1],\"[MEMBER_4]\",Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "[NAME_2],[MEMBER_1],Depok",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "kota,catatan",
+    "replaced": {}
+   },
+   {
+    "text": "Depok,M-5555 bukan kolom member",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": "a custom rule does not cut a built-in match short",
+    "replaced": {}
+   },
+   {
+    "text": "HP 0812-7002-3934",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "SHORT_CODE",
+    "replaced": {}
+   },
+   {
+    "text": "PHONE",
+    "replaced": {}
+   },
+   {
+    "text": "no_member: 3201011508955680",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "MEMBER",
+    "replaced": {}
+   },
+   {
+    "text": "no_member",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "MEMBER",
+    "replaced": {}
+   },
+   {
+    "text": "custom placeholders survive export and import of the vault",
+    "replaced": {}
+   },
+   {
+    "text": "EMP-004211 dan EMP-000317",
+    "replaced": {}
+   },
+   {
+    "text": "EMP-000317, EMP-123456",
+    "replaced": {}
+   },
+   {
+    "text": "[EMPLOYEE_ID_2], [EMPLOYEE_ID_3]",
+    "replaced": {}
+   },
+   {
+    "text": "[EMPLOYEE_ID_1]",
+    "replaced": {}
+   },
+   {
+    "text": "EMP-004211",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "EMP-004211",
+    "replaced": {}
+   },
+   {
+    "text": "EMPLOYEE_ID",
+    "replaced": {}
+   },
+   {
+    "text": "[EMPLOYEE_ID_1]",
+    "replaced": {}
+   },
+   {
+    "text": "partial masks and stand-ins for custom values",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "EMP-004211",
+    "replaced": {}
+   },
+   {
+    "text": "********11",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "M-42",
+    "replaced": {}
+   },
+   {
+    "text": "***",
+    "replaced": {}
+   },
+   {
+    "text": "partial",
+    "replaced": {}
+   },
+   {
+    "text": "id EMP-004211",
+    "replaced": {}
+   },
+   {
+    "text": "id ********11",
+    "replaced": {}
+   },
+   {
+    "text": "uji",
+    "replaced": {}
+   },
+   {
+    "text": "id EMP-004211, no_member: M-0042",
+    "replaced": {}
+   },
+   {
+    "text": "EMP-004211",
+    "replaced": {}
+   },
+   {
+    "text": "M-0042",
+    "replaced": {}
+   },
+   {
+    "text": "rules that cannot work are refused",
+    "replaced": {}
+   },
+   {
+    "text": "employee",
+    "replaced": {}
+   },
+   {
+    "text": "x",
+    "replaced": {}
+   },
+   {
+    "text": "NIK",
+    "replaced": {}
+   },
+   {
+    "text": "x",
+    "replaced": {}
+   },
+   {
+    "text": "EMP_",
+    "replaced": {}
+   },
+   {
+    "text": "x",
+    "replaced": {}
+   },
+   {
+    "text": "EMP",
+    "replaced": {}
+   },
+   {
+    "text": "(",
+    "replaced": {}
+   },
+   {
+    "text": "EMP",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "x",
+    "replaced": {}
+   },
+   {
+    "text": "NIK",
+    "replaced": {}
+   },
+   {
+    "text": "3201011508955680",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "EMP",
     "replaced": {}
    },
    {
@@ -3848,474 +4252,6 @@
    },
    {
     "text": "2026-03-25",
-    "replaced": {}
-   },
-   {
-    "text": "2026-03-17",
-    "replaced": {}
-   },
-   {
-    "text": "2026-03-16",
-    "replaced": {}
-   },
-   {
-    "text": "2026-03-27",
-    "replaced": {}
-   },
-   {
-    "text": "tahun tanpa data resmi gagal dengan jelas, bukan diam-diam",
-    "replaced": {}
-   },
-   {
-    "text": "2028-01-03",
-    "replaced": {}
-   },
-   {
-    "text": "tanggal yang tidak ada ditolak, bukan digeser ke bulan berikutnya",
-    "replaced": {}
-   },
-   {
-    "text": "2026-02-30",
-    "replaced": {}
-   },
-   {
-    "text": "2026-13-01",
-    "replaced": {}
-   },
-   {
-    "text": "17-08-2026",
-    "replaced": {}
-   },
-   {
-    "text": "node:test",
-    "replaced": {}
-   },
-   {
-    "text": "node:assert/strict",
-    "replaced": {}
-   },
-   {
-    "text": "../src/index.ts",
-    "replaced": {}
-   },
-   {
-    "text": "../src/wilayah.ts",
-    "replaced": {}
-   },
-   {
-    "text": "2026-10-15",
-    "replaced": {}
-   },
-   {
-    "text": "NIK: laki-laki, wilayah dari data Kemendagri",
-    "replaced": {}
-   },
-   {
-    "text": "3201011508955680",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "L",
-    "replaced": {}
-   },
-   {
-    "text": "1995-08-15",
-    "replaced": {}
-   },
-   {
-    "text": "Jawa Barat",
-    "replaced": {}
-   },
-   {
-    "text": "Kabupaten Bogor",
-    "replaced": {}
-   },
-   {
-    "text": "Cibinong",
-    "replaced": {}
-   },
-   {
-    "text": "0001",
-    "replaced": {}
-   },
-   {
-    "text": "NIK: perempuan (tanggal + 40), tahun 2000-an, spasi diabaikan",
-    "replaced": {}
-   },
-   {
-    "text": "3276 01 550803 8540",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "P",
-    "replaced": {}
-   },
-   {
-    "text": "2003-08-15",
-    "replaced": {}
-   },
-   {
-    "text": "NIK: struktur salah ditolak dengan alasan yang jelas",
-    "replaced": {}
-   },
-   {
-    "text": "12345",
-    "replaced": {}
-   },
-   {
-    "text": "format",
-    "replaced": {}
-   },
-   {
-    "text": "9901011508950001",
-    "replaced": {}
-   },
-   {
-    "text": "province",
-    "replaced": {}
-   },
-   {
-    "text": "3201013108955410",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "3201013102950001",
-    "replaced": {}
-   },
-   {
-    "text": "birth_date",
-    "replaced": {}
-   },
-   {
-    "text": "3201017508950001",
-    "replaced": {}
-   },
-   {
-    "text": "birth_date",
-    "replaced": {}
-   },
-   {
-    "text": "3201011508950000",
-    "replaced": {}
-   },
-   {
-    "text": "serial",
-    "replaced": {}
-   },
-   {
-    "text": "NIK: kode wilayah lama memberi peringatan, bukan error",
-    "replaced": {}
-   },
-   {
-    "text": "3201991508953713",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "wilayah_unknown",
-    "replaced": {}
-   },
-   {
-    "text": "NPWP: format 15 digit lama",
-    "replaced": {}
-   },
-   {
-    "text": "01.946.582.0-271.666",
-    "replaced": {
-     "NPWP": 1
-    }
-   },
-   {
-    "text": "npwp15",
-    "replaced": {}
-   },
-   {
-    "text": "0012345678901000",
-    "replaced": {}
-   },
-   {
-    "text": "01.946.582.0-271.666",
-    "replaced": {
-     "NPWP": 1
-    }
-   },
-   {
-    "text": "NPWP: 16 digit diawali 0 dan NIK sebagai NPWP",
-    "replaced": {}
-   },
-   {
-    "text": "0012345678901000",
-    "replaced": {}
-   },
-   {
-    "text": "npwp16",
-    "replaced": {}
-   },
-   {
-    "text": "3201011508955680",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "nik",
-    "replaced": {}
-   },
-   {
-    "text": "3201011508950000",
-    "replaced": {}
-   },
-   {
-    "text": "123",
-    "replaced": {}
-   },
-   {
-    "text": "HP: berbagai cara menulis, operator, dan format",
-    "replaced": {}
-   },
-   {
-    "text": "0812-7002-3934",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "+6281270023934",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "0812-7002-3934",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "6281270023934",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "Telkomsel",
-    "replaced": {}
-   },
-   {
-    "text": "+62 857 9327 7500",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "Indosat",
-    "replaced": {}
-   },
-   {
-    "text": "6289695504787",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "Tri",
-    "replaced": {}
-   },
-   {
-    "text": "6289695504787",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "Indosat Ooredoo Hutchison",
-    "replaced": {}
-   },
-   {
-    "text": "0881-9330-5427",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "XLSmart",
-    "replaced": {}
-   },
-   {
-    "text": "+62 (0) 812 3456 7890",
-    "replaced": {}
-   },
-   {
-    "text": "+6281270023934",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "Telepon rumah dan nomor tidak valid",
-    "replaced": {}
-   },
-   {
-    "text": "(021) 593-4317",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "landline",
-    "replaced": {}
-   },
-   {
-    "text": "Jakarta",
-    "replaced": {}
-   },
-   {
-    "text": "+62215934317",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "12345",
-    "replaced": {}
-   },
-   {
-    "text": "0812",
-    "replaced": {}
-   },
-   {
-    "text": "node:test",
-    "replaced": {}
-   },
-   {
-    "text": "node:assert/strict",
-    "replaced": {}
-   },
-   {
-    "text": "../src/index.ts",
-    "replaced": {}
-   },
-   {
-    "text": "../src/kembaran.ts",
-    "replaced": {}
-   },
-   {
-    "text": "Arif Matondang",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "SANTI LESTARI",
-    "replaced": {
-     "NAME": 1
-    }
-   },
-   {
-    "text": "3201011508955680",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "3276015508038540",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "3456-7890",
-    "replaced": {}
-   },
-   {
-    "text": "3456 7890",
-    "replaced": {}
-   },
-   {
-    "text": "1111",
-    "replaced": {}
-   },
-   {
-    "text": "gmail.com",
-    "replaced": {}
-   },
-   {
-    "text": "yahoo",
-    "replaced": {}
-   },
-   {
-    "text": "Mawar",
-    "replaced": {}
-   },
-   {
-    "text": "Kenanga",
-    "replaced": {}
-   },
-   {
-    "text": "\n",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: CSV pelanggan tanpa satu pun nilai asli, tetap konsisten dan valid",
-    "replaced": {}
-   },
-   {
-    "text": "uji",
-    "replaced": {}
-   },
-   {
-    "text": "the same person gets the same stand-in",
-    "replaced": {}
-   },
-   {
-    "text": "Bogor",
-    "replaced": {}
-   },
-   {
-    "text": "the city stays",
-    "replaced": {}
-   },
-   {
-    "text": "casing follows the original",
-    "replaced": {}
-   },
-   {
-    "text": "320101",
-    "replaced": {}
-   },
-   {
-    "text": "L",
-    "replaced": {}
-   },
-   {
-    "text": "1995",
-    "replaced": {}
-   },
-   {
-    "text": "P",
-    "replaced": {}
-   },
-   {
-    "text": "-",
-    "replaced": {}
-   },
-   {
-    "text": "Telkomsel",
-    "replaced": {}
-   },
-   {
-    "text": "0812-… and 0812… are one person",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
     "replaced": {}
    }
   ]
@@ -5131,8 +5067,10 @@
     "replaced": {}
    },
    {
-    "text": "KP. RAWA BADAK RT 01 RW 02 DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
-    "replaced": {}
+    "text": "KP. RAWA BADAK RT 04 RW 03 DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+    "replaced": {
+     "ADDRESS": 1
+    }
    },
    {
     "text": "32.15.30",
@@ -5448,6 +5386,438 @@
    },
    {
     "text": "18.71.15",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "node:fs",
+    "replaced": {}
+   },
+   {
+    "text": "node:path",
+    "replaced": {}
+   },
+   {
+    "text": "canary.json",
+    "replaced": {}
+   },
+   {
+    "text": "utf8",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": " ",
+    "replaced": {}
+   },
+   {
+    "text": ",",
+    "replaced": {}
+   },
+   {
+    "text": ",",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "NAME",
+    "replaced": {}
+   },
+   {
+    "text": " ",
+    "replaced": {}
+   },
+   {
+    "text": "ADDRESS",
+    "replaced": {}
+   },
+   {
+    "text": "Kanari Raya",
+    "replaced": {}
+   },
+   {
+    "text": ", ",
+    "replaced": {}
+   },
+   {
+    "text": "node:test",
+    "replaced": {}
+   },
+   {
+    "text": "node:assert/strict",
+    "replaced": {}
+   },
+   {
+    "text": "../src/index.ts",
+    "replaced": {}
+   },
+   {
+    "text": "../src/kembaran.ts",
+    "replaced": {}
+   },
+   {
+    "text": "EMPLOYEE_ID",
+    "replaced": {}
+   },
+   {
+    "text": "MEMBER",
+    "replaced": {}
+   },
+   {
+    "text": "no_member",
+    "replaced": {}
+   },
+   {
+    "text": "Kode Member",
+    "replaced": {}
+   },
+   {
+    "text": "custom patterns mask under their own label and restore",
+    "replaced": {}
+   },
+   {
+    "text": "Tiket dari EMP-004211 soal EMP-000317, lalu EMP-004211 lagi. emp-004211 huruf kecil tidak cocok.",
+    "replaced": {}
+   },
+   {
+    "text": "Tiket dari [EMPLOYEE_ID_1] soal [EMPLOYEE_ID_2], lalu [EMPLOYEE_ID_1] lagi. emp-004211 huruf kecil tidak cocok.",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "EMPLOYEE_ID",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "EMPLOYEE_ID",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "EMPLOYEE_ID",
+    "replaced": {}
+   },
+   {
+    "text": "high",
+    "replaced": {}
+   },
+   {
+    "text": "custom fields: labels, JSON keys, and CSV columns",
+    "replaced": {}
+   },
+   {
+    "text": "member no_member=M-0042 minta reset.",
+    "replaced": {}
+   },
+   {
+    "text": "{\"no_member\": \"M-0099\", \"nik\": \"3201010607955083\"}",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "kode member: M-1234",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "nama,Kode Member,kota",
+    "replaced": {}
+   },
+   {
+    "text": "Siti Aminah,\"M, 77\",Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "Budi Santoso,M-0042,Depok",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "kota,catatan",
+    "replaced": {}
+   },
+   {
+    "text": "Depok,M-5555 bukan kolom member",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": "member no_member=[MEMBER_1] minta reset.",
+    "replaced": {}
+   },
+   {
+    "text": "{\"no_member\": \"[MEMBER_2]\", \"nik\": \"[NIK_1]\"}",
+    "replaced": {}
+   },
+   {
+    "text": "kode member: [MEMBER_3]",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "nama,Kode Member,kota",
+    "replaced": {}
+   },
+   {
+    "text": "[NAME_1],\"[MEMBER_4]\",Bogor",
+    "replaced": {}
+   },
+   {
+    "text": "[NAME_2],[MEMBER_1],Depok",
+    "replaced": {}
+   },
+   {
+    "text": "",
+    "replaced": {}
+   },
+   {
+    "text": "kota,catatan",
+    "replaced": {}
+   },
+   {
+    "text": "Depok,M-5555 bukan kolom member",
+    "replaced": {}
+   },
+   {
+    "text": "\n",
+    "replaced": {}
+   },
+   {
+    "text": "a custom rule does not cut a built-in match short",
+    "replaced": {}
+   },
+   {
+    "text": "HP 0812-5024-6610",
+    "replaced": {
+     "PHONE": 1
+    }
+   },
+   {
+    "text": "SHORT_CODE",
+    "replaced": {}
+   },
+   {
+    "text": "PHONE",
+    "replaced": {}
+   },
+   {
+    "text": "no_member: 3201010607955083",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "MEMBER",
+    "replaced": {}
+   },
+   {
+    "text": "no_member",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "MEMBER",
+    "replaced": {}
+   },
+   {
+    "text": "custom placeholders survive export and import of the vault",
+    "replaced": {}
+   },
+   {
+    "text": "EMP-004211 dan EMP-000317",
+    "replaced": {}
+   },
+   {
+    "text": "EMP-000317, EMP-123456",
+    "replaced": {}
+   },
+   {
+    "text": "[EMPLOYEE_ID_2], [EMPLOYEE_ID_3]",
+    "replaced": {}
+   },
+   {
+    "text": "[EMPLOYEE_ID_1]",
+    "replaced": {}
+   },
+   {
+    "text": "EMP-004211",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "EMP-004211",
+    "replaced": {}
+   },
+   {
+    "text": "EMPLOYEE_ID",
+    "replaced": {}
+   },
+   {
+    "text": "[EMPLOYEE_ID_1]",
+    "replaced": {}
+   },
+   {
+    "text": "partial masks and stand-ins for custom values",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "EMP-004211",
+    "replaced": {}
+   },
+   {
+    "text": "********11",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "M-42",
+    "replaced": {}
+   },
+   {
+    "text": "***",
+    "replaced": {}
+   },
+   {
+    "text": "partial",
+    "replaced": {}
+   },
+   {
+    "text": "id EMP-004211",
+    "replaced": {}
+   },
+   {
+    "text": "id ********11",
+    "replaced": {}
+   },
+   {
+    "text": "uji",
+    "replaced": {}
+   },
+   {
+    "text": "id EMP-004211, no_member: M-0042",
+    "replaced": {}
+   },
+   {
+    "text": "EMP-004211",
+    "replaced": {}
+   },
+   {
+    "text": "M-0042",
+    "replaced": {}
+   },
+   {
+    "text": "rules that cannot work are refused",
+    "replaced": {}
+   },
+   {
+    "text": "employee",
+    "replaced": {}
+   },
+   {
+    "text": "x",
+    "replaced": {}
+   },
+   {
+    "text": "NIK",
+    "replaced": {}
+   },
+   {
+    "text": "x",
+    "replaced": {}
+   },
+   {
+    "text": "EMP_",
+    "replaced": {}
+   },
+   {
+    "text": "x",
+    "replaced": {}
+   },
+   {
+    "text": "EMP",
+    "replaced": {}
+   },
+   {
+    "text": "(",
+    "replaced": {}
+   },
+   {
+    "text": "EMP",
+    "replaced": {}
+   },
+   {
+    "text": "CUSTOM",
+    "replaced": {}
+   },
+   {
+    "text": "x",
+    "replaced": {}
+   },
+   {
+    "text": "NIK",
+    "replaced": {}
+   },
+   {
+    "text": "3201010607955083",
+    "replaced": {
+     "NIK": 1
+    }
+   },
+   {
+    "text": "EMP",
     "replaced": {}
    },
    {
@@ -5968,466 +6338,6 @@
    },
    {
     "text": "2026-03-25",
-    "replaced": {}
-   },
-   {
-    "text": "2026-03-17",
-    "replaced": {}
-   },
-   {
-    "text": "2026-03-16",
-    "replaced": {}
-   },
-   {
-    "text": "2026-03-27",
-    "replaced": {}
-   },
-   {
-    "text": "tahun tanpa data resmi gagal dengan jelas, bukan diam-diam",
-    "replaced": {}
-   },
-   {
-    "text": "2028-01-03",
-    "replaced": {}
-   },
-   {
-    "text": "tanggal yang tidak ada ditolak, bukan digeser ke bulan berikutnya",
-    "replaced": {}
-   },
-   {
-    "text": "2026-02-30",
-    "replaced": {}
-   },
-   {
-    "text": "2026-13-01",
-    "replaced": {}
-   },
-   {
-    "text": "17-08-2026",
-    "replaced": {}
-   },
-   {
-    "text": "node:test",
-    "replaced": {}
-   },
-   {
-    "text": "node:assert/strict",
-    "replaced": {}
-   },
-   {
-    "text": "../src/index.ts",
-    "replaced": {}
-   },
-   {
-    "text": "../src/wilayah.ts",
-    "replaced": {}
-   },
-   {
-    "text": "2026-10-15",
-    "replaced": {}
-   },
-   {
-    "text": "NIK: laki-laki, wilayah dari data Kemendagri",
-    "replaced": {}
-   },
-   {
-    "text": "3201010607955083",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "L",
-    "replaced": {}
-   },
-   {
-    "text": "1995-08-15",
-    "replaced": {}
-   },
-   {
-    "text": "Jawa Barat",
-    "replaced": {}
-   },
-   {
-    "text": "Kabupaten Bogor",
-    "replaced": {}
-   },
-   {
-    "text": "Cibinong",
-    "replaced": {}
-   },
-   {
-    "text": "0001",
-    "replaced": {}
-   },
-   {
-    "text": "NIK: perempuan (tanggal + 40), tahun 2000-an, spasi diabaikan",
-    "replaced": {}
-   },
-   {
-    "text": "3276 01 470703 3411",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "P",
-    "replaced": {}
-   },
-   {
-    "text": "2003-08-15",
-    "replaced": {}
-   },
-   {
-    "text": "NIK: struktur salah ditolak dengan alasan yang jelas",
-    "replaced": {}
-   },
-   {
-    "text": "12345",
-    "replaced": {}
-   },
-   {
-    "text": "format",
-    "replaced": {}
-   },
-   {
-    "text": "9901011508950001",
-    "replaced": {}
-   },
-   {
-    "text": "province",
-    "replaced": {}
-   },
-   {
-    "text": "3201011312955361",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "3201013102950001",
-    "replaced": {}
-   },
-   {
-    "text": "birth_date",
-    "replaced": {}
-   },
-   {
-    "text": "3201017508950001",
-    "replaced": {}
-   },
-   {
-    "text": "birth_date",
-    "replaced": {}
-   },
-   {
-    "text": "3201011508950000",
-    "replaced": {}
-   },
-   {
-    "text": "serial",
-    "replaced": {}
-   },
-   {
-    "text": "NIK: kode wilayah lama memberi peringatan, bukan error",
-    "replaced": {}
-   },
-   {
-    "text": "3201992609952143",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "wilayah_unknown",
-    "replaced": {}
-   },
-   {
-    "text": "NPWP: format 15 digit lama",
-    "replaced": {}
-   },
-   {
-    "text": "05.682.577.4-701.119",
-    "replaced": {
-     "NPWP": 1
-    }
-   },
-   {
-    "text": "npwp15",
-    "replaced": {}
-   },
-   {
-    "text": "0012345678901000",
-    "replaced": {}
-   },
-   {
-    "text": "05.682.577.4-701.119",
-    "replaced": {
-     "NPWP": 1
-    }
-   },
-   {
-    "text": "NPWP: 16 digit diawali 0 dan NIK sebagai NPWP",
-    "replaced": {}
-   },
-   {
-    "text": "0012345678901000",
-    "replaced": {}
-   },
-   {
-    "text": "npwp16",
-    "replaced": {}
-   },
-   {
-    "text": "3201010607955083",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "nik",
-    "replaced": {}
-   },
-   {
-    "text": "3201011508950000",
-    "replaced": {}
-   },
-   {
-    "text": "123",
-    "replaced": {}
-   },
-   {
-    "text": "HP: berbagai cara menulis, operator, dan format",
-    "replaced": {}
-   },
-   {
-    "text": "0812-5024-6610",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "+6281250246610",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "0812-5024-6610",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "6281250246610",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "Telkomsel",
-    "replaced": {}
-   },
-   {
-    "text": "+62 857 2571 6901",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "Indosat",
-    "replaced": {}
-   },
-   {
-    "text": "6289642187723",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "Tri",
-    "replaced": {}
-   },
-   {
-    "text": "6289642187723",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "Indosat Ooredoo Hutchison",
-    "replaced": {}
-   },
-   {
-    "text": "0881-7024-8971",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "XLSmart",
-    "replaced": {}
-   },
-   {
-    "text": "+62 (0) 812 3456 7890",
-    "replaced": {}
-   },
-   {
-    "text": "+6281250246610",
-    "replaced": {
-     "PHONE": 1
-    }
-   },
-   {
-    "text": "Telepon rumah dan nomor tidak valid",
-    "replaced": {}
-   },
-   {
-    "text": "(021) 555-1234",
-    "replaced": {}
-   },
-   {
-    "text": "landline",
-    "replaced": {}
-   },
-   {
-    "text": "Jakarta",
-    "replaced": {}
-   },
-   {
-    "text": "+62215551234",
-    "replaced": {}
-   },
-   {
-    "text": "12345",
-    "replaced": {}
-   },
-   {
-    "text": "0812",
-    "replaced": {}
-   },
-   {
-    "text": "node:test",
-    "replaced": {}
-   },
-   {
-    "text": "node:assert/strict",
-    "replaced": {}
-   },
-   {
-    "text": "../src/index.ts",
-    "replaced": {}
-   },
-   {
-    "text": "../src/kembaran.ts",
-    "replaced": {}
-   },
-   {
-    "text": "Budi Santoso",
-    "replaced": {}
-   },
-   {
-    "text": "SITI AMINAH",
-    "replaced": {}
-   },
-   {
-    "text": "3201010607955083",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "3276014707033411",
-    "replaced": {
-     "NIK": 1
-    }
-   },
-   {
-    "text": "3456-7890",
-    "replaced": {}
-   },
-   {
-    "text": "3456 7890",
-    "replaced": {}
-   },
-   {
-    "text": "1111",
-    "replaced": {}
-   },
-   {
-    "text": "gmail.com",
-    "replaced": {}
-   },
-   {
-    "text": "yahoo",
-    "replaced": {}
-   },
-   {
-    "text": "Mawar",
-    "replaced": {}
-   },
-   {
-    "text": "Kenanga",
-    "replaced": {}
-   },
-   {
-    "text": "\n",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: CSV pelanggan tanpa satu pun nilai asli, tetap konsisten dan valid",
-    "replaced": {}
-   },
-   {
-    "text": "uji",
-    "replaced": {}
-   },
-   {
-    "text": "the same person gets the same stand-in",
-    "replaced": {}
-   },
-   {
-    "text": "Bogor",
-    "replaced": {}
-   },
-   {
-    "text": "the city stays",
-    "replaced": {}
-   },
-   {
-    "text": "casing follows the original",
-    "replaced": {}
-   },
-   {
-    "text": "320101",
-    "replaced": {}
-   },
-   {
-    "text": "L",
-    "replaced": {}
-   },
-   {
-    "text": "1995",
-    "replaced": {}
-   },
-   {
-    "text": "P",
-    "replaced": {}
-   },
-   {
-    "text": "-",
-    "replaced": {}
-   },
-   {
-    "text": "Telkomsel",
-    "replaced": {}
-   },
-   {
-    "text": "0812-… and 0812… are one person",
-    "replaced": {}
-   },
-   {
-    "text": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
     "replaced": {}
    }
   ]

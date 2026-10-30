@@ -13,9 +13,10 @@ from pathlib import Path
 from typing import Literal, Optional
 
 from .._result import Result
-from ..samaran import UU_PDP_CATEGORY, Confidence, PiiType, detect_pii, partial_mask
+from ..samaran import UU_PDP_CATEGORY, Confidence, PiiType, ScanStatus, detect_pii, partial_mask
+from ..samaran.custom import RuleLike, to_rules
 from ..samaran.detectors import check_types
-from ._load import Document, StrPath, load_document, load_ignore, walk_files
+from ._load import Document, StrPath, load_config, load_document, load_ignore, walk_files
 
 
 @dataclass(slots=True, frozen=True)
@@ -32,12 +33,16 @@ class Finding(Result):
     uu_pdp: Literal['umum', 'spesifik']
     #: The value partially masked, such as "3201********0001".
     preview: str
+    #: For CUSTOM: the label of the rule that found it.
+    label: Optional[str] = None
 
 
 @dataclass(slots=True, frozen=True)
 class NotScanned(Result):
     file: str
     reason: str
+    #: ``partial``, ``unsupported``, or ``failed``.
+    status: ScanStatus = 'unsupported'
 
 
 @dataclass(slots=True)
@@ -68,11 +73,13 @@ def scan_path(
     min_confidence: Confidence = 'high',
     ignore_file: bool = True,
     file_limit: int = 5000,
+    custom: Optional[Iterable[RuleLike]] = None,
 ) -> ScanReport:
     """Scans a file or a folder (text, CSV, JSON, logs, SQL, .xlsx, .docx, text-based PDF) for personal data.
 
     Folders skip dependency, build, and VCS directories, and files listed in ``.samaranignore`` at the folder root
-    (``ignore_file=False`` scans them too). Files that may hold personal data but cannot be read, such as images,
+    (``ignore_file=False`` scans them too). The rules and allowed values in ``.samaran.json`` there apply too, unless
+    ``custom`` gives the rules instead. Files that may hold personal data but cannot be read, such as images,
     scanned or encrypted PDFs, and archives, are listed in ``not_scanned``.
 
     >>> report = scan_path('var/media')                                      # doctest: +SKIP
@@ -82,6 +89,7 @@ def scan_path(
     is_dir = target.is_dir()
     root = target if is_dir else target.parent
     ignored = load_ignore(root) if ignore_file else None
+    rules, allow = (list(to_rules(custom)), []) if custom is not None else load_config(root)
     report = ScanReport()
     files = list(walk_files(target, file_limit + 1)) if is_dir else [target]
     if len(files) > file_limit:
@@ -98,21 +106,28 @@ def scan_path(
         rel = Path(os.path.relpath(file, root)).as_posix() if is_dir else file.name
         try:
             doc: Document = load_document(file)
-        except OSError:
-            continue  # removed or unreadable while scanning
+        except OSError as e:
+            # Not silently: a file that could not even be opened may hold anything.
+            report.not_scanned.append(NotScanned(rel, f'unreadable: {e}', 'failed'))
+            continue
         if doc.kind == 'skipped':
             if doc.data_bearing:
-                report.not_scanned.append(NotScanned(rel, doc.reason or ''))
+                report.not_scanned.append(NotScanned(rel, doc.reason or '', doc.scan_status))
             continue
         report.files_scanned += 1
         if doc.unscanned:
-            report.not_scanned.append(NotScanned(rel, f'partly scanned: {doc.unscanned}'))
+            report.not_scanned.append(NotScanned(rel, doc.unscanned, 'partial'))
         has_pii = False
         for part in doc.parts:
-            matches = detect_pii(part.text, types=types_list, exclude=exclude_list, min_confidence=min_confidence)
+            matches = detect_pii(
+                part.text, types=types_list, exclude=exclude_list, min_confidence=min_confidence, custom=rules
+            )
             for m in matches:
+                if m.value in allow:
+                    continue
                 has_pii = True
-                report.totals[m.type] = report.totals.get(m.type, 0) + 1
+                name = m.label or m.type
+                report.totals[name] = report.totals.get(name, 0) + 1
                 report.findings.append(Finding(
                     file=rel,
                     part=part.name,
@@ -121,6 +136,7 @@ def scan_path(
                     confidence=m.confidence,
                     uu_pdp=UU_PDP_CATEGORY[m.type],
                     preview=partial_mask(m.type, m.value),
+                    label=m.label,
                 ))
         if has_pii:
             report.files_with_pii += 1

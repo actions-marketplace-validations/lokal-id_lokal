@@ -1,0 +1,218 @@
+{
+  "version": "0.8.3",
+  "split": "test",
+  "documents": 1200,
+  "labelled": 2800,
+  "overall": {
+    "precision": 0.9946848899012908,
+    "recall": 0.9357142857142857,
+    "protected": 0.95,
+    "falsePositives": 10,
+    "f1": 0.9642988590357012
+  },
+  "types": [
+    {
+      "type": "NAME",
+      "gold": 920,
+      "detected": 862,
+      "precision": 1,
+      "recall": 0.9369565217391305,
+      "f1": 0.9674523007856342,
+      "protected": 0.9369565217391305
+    },
+    {
+      "type": "PHONE",
+      "gold": 480,
+      "detected": 491,
+      "precision": 0.9775967413441955,
+      "recall": 1,
+      "f1": 0.9886714727085478,
+      "protected": 1
+    },
+    {
+      "type": "NIK",
+      "gold": 280,
+      "detected": 242,
+      "precision": 1,
+      "recall": 0.8642857142857143,
+      "f1": 0.9272030651340997,
+      "protected": 0.8642857142857143
+    },
+    {
+      "type": "EMAIL",
+      "gold": 200,
+      "detected": 200,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "protected": 1
+    },
+    {
+      "type": "BANK_ACCOUNT",
+      "gold": 160,
+      "detected": 156,
+      "precision": 1,
+      "recall": 0.975,
+      "f1": 0.9873417721518987,
+      "protected": 1
+    },
+    {
+      "type": "ADDRESS",
+      "gold": 120,
+      "detected": 120,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "protected": 1
+    },
+    {
+      "type": "BIRTH_DATE",
+      "gold": 120,
+      "detected": 120,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "protected": 1
+    },
+    {
+      "type": "HEALTH",
+      "gold": 120,
+      "detected": 80,
+      "precision": 1,
+      "recall": 0.6666666666666666,
+      "f1": 0.8,
+      "protected": 0.9666666666666667
+    },
+    {
+      "type": "RELIGION",
+      "gold": 120,
+      "detected": 80,
+      "precision": 1,
+      "recall": 0.6666666666666666,
+      "f1": 0.8,
+      "protected": 0.6666666666666666
+    },
+    {
+      "type": "NPWP",
+      "gold": 80,
+      "detected": 80,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "protected": 1
+    },
+    {
+      "type": "BPJS",
+      "gold": 40,
+      "detected": 40,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "protected": 1
+    },
+    {
+      "type": "CARD",
+      "gold": 40,
+      "detected": 43,
+      "precision": 0.9302325581395349,
+      "recall": 1,
+      "f1": 0.963855421686747,
+      "protected": 1
+    },
+    {
+      "type": "KK",
+      "gold": 40,
+      "detected": 40,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "protected": 1
+    },
+    {
+      "type": "PASSPORT",
+      "gold": 40,
+      "detected": 40,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "protected": 1
+    },
+    {
+      "type": "PLATE",
+      "gold": 40,
+      "detected": 40,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "protected": 1
+    }
+  ],
+  "formats": {
+    "form": {
+      "documents": 120,
+      "labelled": 480,
+      "protected": 0.9916666666666667,
+      "falsePositives": 0
+    },
+    "chat": {
+      "documents": 160,
+      "labelled": 320,
+      "protected": 0.9375,
+      "falsePositives": 0
+    },
+    "mixed": {
+      "documents": 80,
+      "labelled": 200,
+      "protected": 0.97,
+      "falsePositives": 0
+    },
+    "typo": {
+      "documents": 80,
+      "labelled": 200,
+      "protected": 1,
+      "falsePositives": 0
+    },
+    "unlabelled": {
+      "documents": 80,
+      "labelled": 200,
+      "protected": 0.93,
+      "falsePositives": 0
+    },
+    "json": {
+      "documents": 80,
+      "labelled": 320,
+      "protected": 1,
+      "falsePositives": 0
+    },
+    "csv": {
+      "documents": 80,
+      "labelled": 200,
+      "protected": 1,
+      "falsePositives": 0
+    },
+    "log": {
+      "documents": 80,
+      "labelled": 160,
+      "protected": 1,
+      "falsePositives": 0
+    },
+    "ocr": {
+      "documents": 120,
+      "labelled": 400,
+      "protected": 0.77,
+      "falsePositives": 0
+    },
+    "letter": {
+      "documents": 120,
+      "labelled": 320,
+      "protected": 0.9875,
+      "falsePositives": 0
+    },
+    "trap": {
+      "documents": 200,
+      "labelled": 0,
+      "protected": null,
+      "falsePositives": 10
+    }
+  }
+}

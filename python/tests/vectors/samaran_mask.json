@@ -2392,16 +2392,18 @@
  },
  {
   "text": "KP. RAWA BADAK RT 01 RW 02 DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
-  "placeholder": "KP. RAWA BADAK [ADDRESS_1] DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+  "placeholder": "[ADDRESS_1] DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
   "vault": [
    [
     "[ADDRESS_1]",
-    "RT 01 RW 02"
+    "KP. RAWA BADAK RT 01 RW 02"
    ]
   ],
-  "partial": "KP. RAWA BADAK RT *** DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
-  "noFinanceNoName": "KP. RAWA BADAK [ADDRESS_1] DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
-  "high": []
+  "partial": "KP. *** DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+  "noFinanceNoName": "[ADDRESS_1] DESA SUKAMAJU KEC. CILEBAR KAB. KARAWANG",
+  "high": [
+   "KP. RAWA BADAK RT 01 RW 02"
+  ]
  },
  {
   "text": "32.15.30",
@@ -3097,6 +3099,892 @@
   "vault": [],
   "partial": "18.71.15",
   "noFinanceNoName": "18.71.15",
+  "high": []
+ },
+ {
+  "text": "node:assert/strict",
+  "placeholder": "node:assert/strict",
+  "vault": [],
+  "partial": "node:assert/strict",
+  "noFinanceNoName": "node:assert/strict",
+  "high": []
+ },
+ {
+  "text": "node:fs",
+  "placeholder": "node:fs",
+  "vault": [],
+  "partial": "node:fs",
+  "noFinanceNoName": "node:fs",
+  "high": []
+ },
+ {
+  "text": "node:path",
+  "placeholder": "node:path",
+  "vault": [],
+  "partial": "node:path",
+  "noFinanceNoName": "node:path",
+  "high": []
+ },
+ {
+  "text": "canary.json",
+  "placeholder": "canary.json",
+  "vault": [],
+  "partial": "canary.json",
+  "noFinanceNoName": "canary.json",
+  "high": []
+ },
+ {
+  "text": "utf8",
+  "placeholder": "utf8",
+  "vault": [],
+  "partial": "utf8",
+  "noFinanceNoName": "utf8",
+  "high": []
+ },
+ {
+  "text": "\n",
+  "placeholder": "\n",
+  "vault": [],
+  "partial": "\n",
+  "noFinanceNoName": "\n",
+  "high": []
+ },
+ {
+  "text": " ",
+  "placeholder": " ",
+  "vault": [],
+  "partial": " ",
+  "noFinanceNoName": " ",
+  "high": []
+ },
+ {
+  "text": ",",
+  "placeholder": ",",
+  "vault": [],
+  "partial": ",",
+  "noFinanceNoName": ",",
+  "high": []
+ },
+ {
+  "text": ",",
+  "placeholder": ",",
+  "vault": [],
+  "partial": ",",
+  "noFinanceNoName": ",",
+  "high": []
+ },
+ {
+  "text": "",
+  "placeholder": "",
+  "vault": [],
+  "partial": "",
+  "noFinanceNoName": "",
+  "high": []
+ },
+ {
+  "text": "NAME",
+  "placeholder": "NAME",
+  "vault": [],
+  "partial": "NAME",
+  "noFinanceNoName": "NAME",
+  "high": []
+ },
+ {
+  "text": " ",
+  "placeholder": " ",
+  "vault": [],
+  "partial": " ",
+  "noFinanceNoName": " ",
+  "high": []
+ },
+ {
+  "text": "ADDRESS",
+  "placeholder": "ADDRESS",
+  "vault": [],
+  "partial": "ADDRESS",
+  "noFinanceNoName": "ADDRESS",
+  "high": []
+ },
+ {
+  "text": "Kanari Raya",
+  "placeholder": "Kanari Raya",
+  "vault": [],
+  "partial": "Kanari Raya",
+  "noFinanceNoName": "Kanari Raya",
+  "high": []
+ },
+ {
+  "text": ", ",
+  "placeholder": ", ",
+  "vault": [],
+  "partial": ", ",
+  "noFinanceNoName": ", ",
+  "high": []
+ },
+ {
+  "text": "node:test",
+  "placeholder": "node:test",
+  "vault": [],
+  "partial": "node:test",
+  "noFinanceNoName": "node:test",
+  "high": []
+ },
+ {
+  "text": "node:assert/strict",
+  "placeholder": "node:assert/strict",
+  "vault": [],
+  "partial": "node:assert/strict",
+  "noFinanceNoName": "node:assert/strict",
+  "high": []
+ },
+ {
+  "text": "../src/index.ts",
+  "placeholder": "../src/index.ts",
+  "vault": [],
+  "partial": "../src/index.ts",
+  "noFinanceNoName": "../src/index.ts",
+  "high": []
+ },
+ {
+  "text": "../src/kembaran.ts",
+  "placeholder": "../src/kembaran.ts",
+  "vault": [],
+  "partial": "../src/kembaran.ts",
+  "noFinanceNoName": "../src/kembaran.ts",
+  "high": []
+ },
+ {
+  "text": "EMPLOYEE_ID",
+  "placeholder": "EMPLOYEE_ID",
+  "vault": [],
+  "partial": "EMPLOYEE_ID",
+  "noFinanceNoName": "EMPLOYEE_ID",
+  "high": []
+ },
+ {
+  "text": "MEMBER",
+  "placeholder": "MEMBER",
+  "vault": [],
+  "partial": "MEMBER",
+  "noFinanceNoName": "MEMBER",
+  "high": []
+ },
+ {
+  "text": "no_member",
+  "placeholder": "no_member",
+  "vault": [],
+  "partial": "no_member",
+  "noFinanceNoName": "no_member",
+  "high": []
+ },
+ {
+  "text": "Kode Member",
+  "placeholder": "Kode Member",
+  "vault": [],
+  "partial": "Kode Member",
+  "noFinanceNoName": "Kode Member",
+  "high": []
+ },
+ {
+  "text": "custom patterns mask under their own label and restore",
+  "placeholder": "custom patterns mask under their own label and restore",
+  "vault": [],
+  "partial": "custom patterns mask under their own label and restore",
+  "noFinanceNoName": "custom patterns mask under their own label and restore",
+  "high": []
+ },
+ {
+  "text": "Tiket dari EMP-004211 soal EMP-000317, lalu EMP-004211 lagi. emp-004211 huruf kecil tidak cocok.",
+  "placeholder": "Tiket dari EMP-004211 soal EMP-000317, lalu EMP-004211 lagi. emp-004211 huruf kecil tidak cocok.",
+  "vault": [],
+  "partial": "Tiket dari EMP-004211 soal EMP-000317, lalu EMP-004211 lagi. emp-004211 huruf kecil tidak cocok.",
+  "noFinanceNoName": "Tiket dari EMP-004211 soal EMP-000317, lalu EMP-004211 lagi. emp-004211 huruf kecil tidak cocok.",
+  "high": []
+ },
+ {
+  "text": "Tiket dari [EMPLOYEE_ID_1] soal [EMPLOYEE_ID_2], lalu [EMPLOYEE_ID_1] lagi. emp-004211 huruf kecil tidak cocok.",
+  "placeholder": "Tiket dari [EMPLOYEE_ID_1] soal [EMPLOYEE_ID_2], lalu [EMPLOYEE_ID_1] lagi. emp-004211 huruf kecil tidak cocok.",
+  "vault": [],
+  "partial": "Tiket dari [EMPLOYEE_ID_1] soal [EMPLOYEE_ID_2], lalu [EMPLOYEE_ID_1] lagi. emp-004211 huruf kecil tidak cocok.",
+  "noFinanceNoName": "Tiket dari [EMPLOYEE_ID_1] soal [EMPLOYEE_ID_2], lalu [EMPLOYEE_ID_1] lagi. emp-004211 huruf kecil tidak cocok.",
+  "high": []
+ },
+ {
+  "text": "CUSTOM",
+  "placeholder": "CUSTOM",
+  "vault": [],
+  "partial": "CUSTOM",
+  "noFinanceNoName": "CUSTOM",
+  "high": []
+ },
+ {
+  "text": "EMPLOYEE_ID",
+  "placeholder": "EMPLOYEE_ID",
+  "vault": [],
+  "partial": "EMPLOYEE_ID",
+  "noFinanceNoName": "EMPLOYEE_ID",
+  "high": []
+ },
+ {
+  "text": "high",
+  "placeholder": "high",
+  "vault": [],
+  "partial": "high",
+  "noFinanceNoName": "high",
+  "high": []
+ },
+ {
+  "text": "CUSTOM",
+  "placeholder": "CUSTOM",
+  "vault": [],
+  "partial": "CUSTOM",
+  "noFinanceNoName": "CUSTOM",
+  "high": []
+ },
+ {
+  "text": "EMPLOYEE_ID",
+  "placeholder": "EMPLOYEE_ID",
+  "vault": [],
+  "partial": "EMPLOYEE_ID",
+  "noFinanceNoName": "EMPLOYEE_ID",
+  "high": []
+ },
+ {
+  "text": "high",
+  "placeholder": "high",
+  "vault": [],
+  "partial": "high",
+  "noFinanceNoName": "high",
+  "high": []
+ },
+ {
+  "text": "CUSTOM",
+  "placeholder": "CUSTOM",
+  "vault": [],
+  "partial": "CUSTOM",
+  "noFinanceNoName": "CUSTOM",
+  "high": []
+ },
+ {
+  "text": "EMPLOYEE_ID",
+  "placeholder": "EMPLOYEE_ID",
+  "vault": [],
+  "partial": "EMPLOYEE_ID",
+  "noFinanceNoName": "EMPLOYEE_ID",
+  "high": []
+ },
+ {
+  "text": "high",
+  "placeholder": "high",
+  "vault": [],
+  "partial": "high",
+  "noFinanceNoName": "high",
+  "high": []
+ },
+ {
+  "text": "custom fields: labels, JSON keys, and CSV columns",
+  "placeholder": "custom fields: labels, JSON keys, and CSV columns",
+  "vault": [],
+  "partial": "custom fields: labels, JSON keys, and CSV columns",
+  "noFinanceNoName": "custom fields: labels, JSON keys, and CSV columns",
+  "high": []
+ },
+ {
+  "text": "member no_member=M-0042 minta reset.",
+  "placeholder": "member no_member=M-0042 minta reset.",
+  "vault": [],
+  "partial": "member no_member=M-0042 minta reset.",
+  "noFinanceNoName": "member no_member=M-0042 minta reset.",
+  "high": []
+ },
+ {
+  "text": "{\"no_member\": \"M-0099\", \"nik\": \"3201011508950001\"}",
+  "placeholder": "{\"no_member\": \"M-0099\", \"nik\": \"[NIK_1]\"}",
+  "vault": [
+   [
+    "[NIK_1]",
+    "3201011508950001"
+   ]
+  ],
+  "partial": "{\"no_member\": \"M-0099\", \"nik\": \"3201********0001\"}",
+  "noFinanceNoName": "{\"no_member\": \"M-0099\", \"nik\": \"[NIK_1]\"}",
+  "high": [
+   "3201011508950001"
+  ]
+ },
+ {
+  "text": "kode member: M-1234",
+  "placeholder": "kode member: M-1234",
+  "vault": [],
+  "partial": "kode member: M-1234",
+  "noFinanceNoName": "kode member: M-1234",
+  "high": []
+ },
+ {
+  "text": "",
+  "placeholder": "",
+  "vault": [],
+  "partial": "",
+  "noFinanceNoName": "",
+  "high": []
+ },
+ {
+  "text": "nama,Kode Member,kota",
+  "placeholder": "nama,Kode Member,kota",
+  "vault": [],
+  "partial": "nama,Kode Member,kota",
+  "noFinanceNoName": "nama,Kode Member,kota",
+  "high": []
+ },
+ {
+  "text": "Siti Aminah,\"M, 77\",Bogor",
+  "placeholder": "[NAME_1],\"M, 77\",Bogor",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Siti Aminah"
+   ]
+  ],
+  "partial": "S*** A***,\"M, 77\",Bogor",
+  "noFinanceNoName": "Siti Aminah,\"M, 77\",Bogor",
+  "high": []
+ },
+ {
+  "text": "Budi Santoso,M-0042,Depok",
+  "placeholder": "[NAME_1],M-0042,Depok",
+  "vault": [
+   [
+    "[NAME_1]",
+    "Budi Santoso"
+   ]
+  ],
+  "partial": "B*** S***,M-0042,Depok",
+  "noFinanceNoName": "Budi Santoso,M-0042,Depok",
+  "high": []
+ },
+ {
+  "text": "",
+  "placeholder": "",
+  "vault": [],
+  "partial": "",
+  "noFinanceNoName": "",
+  "high": []
+ },
+ {
+  "text": "kota,catatan",
+  "placeholder": "kota,catatan",
+  "vault": [],
+  "partial": "kota,catatan",
+  "noFinanceNoName": "kota,catatan",
+  "high": []
+ },
+ {
+  "text": "Depok,M-5555 bukan kolom member",
+  "placeholder": "Depok,M-5555 bukan kolom member",
+  "vault": [],
+  "partial": "Depok,M-5555 bukan kolom member",
+  "noFinanceNoName": "Depok,M-5555 bukan kolom member",
+  "high": []
+ },
+ {
+  "text": "\n",
+  "placeholder": "\n",
+  "vault": [],
+  "partial": "\n",
+  "noFinanceNoName": "\n",
+  "high": []
+ },
+ {
+  "text": "member no_member=[MEMBER_1] minta reset.",
+  "placeholder": "member no_member=[MEMBER_1] minta reset.",
+  "vault": [],
+  "partial": "member no_member=[MEMBER_1] minta reset.",
+  "noFinanceNoName": "member no_member=[MEMBER_1] minta reset.",
+  "high": []
+ },
+ {
+  "text": "{\"no_member\": \"[MEMBER_2]\", \"nik\": \"[NIK_1]\"}",
+  "placeholder": "{\"no_member\": \"[MEMBER_2]\", \"nik\": \"[NIK_1]\"}",
+  "vault": [],
+  "partial": "{\"no_member\": \"[MEMBER_2]\", \"nik\": \"[NIK_1]\"}",
+  "noFinanceNoName": "{\"no_member\": \"[MEMBER_2]\", \"nik\": \"[NIK_1]\"}",
+  "high": []
+ },
+ {
+  "text": "kode member: [MEMBER_3]",
+  "placeholder": "kode member: [MEMBER_3]",
+  "vault": [],
+  "partial": "kode member: [MEMBER_3]",
+  "noFinanceNoName": "kode member: [MEMBER_3]",
+  "high": []
+ },
+ {
+  "text": "",
+  "placeholder": "",
+  "vault": [],
+  "partial": "",
+  "noFinanceNoName": "",
+  "high": []
+ },
+ {
+  "text": "nama,Kode Member,kota",
+  "placeholder": "nama,Kode Member,kota",
+  "vault": [],
+  "partial": "nama,Kode Member,kota",
+  "noFinanceNoName": "nama,Kode Member,kota",
+  "high": []
+ },
+ {
+  "text": "[NAME_1],\"[MEMBER_4]\",Bogor",
+  "placeholder": "[NAME_1],\"[MEMBER_4]\",Bogor",
+  "vault": [],
+  "partial": "[NAME_1],\"[MEMBER_4]\",Bogor",
+  "noFinanceNoName": "[NAME_1],\"[MEMBER_4]\",Bogor",
+  "high": []
+ },
+ {
+  "text": "[NAME_2],[MEMBER_1],Depok",
+  "placeholder": "[NAME_2],[MEMBER_1],Depok",
+  "vault": [],
+  "partial": "[NAME_2],[MEMBER_1],Depok",
+  "noFinanceNoName": "[NAME_2],[MEMBER_1],Depok",
+  "high": []
+ },
+ {
+  "text": "",
+  "placeholder": "",
+  "vault": [],
+  "partial": "",
+  "noFinanceNoName": "",
+  "high": []
+ },
+ {
+  "text": "kota,catatan",
+  "placeholder": "kota,catatan",
+  "vault": [],
+  "partial": "kota,catatan",
+  "noFinanceNoName": "kota,catatan",
+  "high": []
+ },
+ {
+  "text": "Depok,M-5555 bukan kolom member",
+  "placeholder": "Depok,M-5555 bukan kolom member",
+  "vault": [],
+  "partial": "Depok,M-5555 bukan kolom member",
+  "noFinanceNoName": "Depok,M-5555 bukan kolom member",
+  "high": []
+ },
+ {
+  "text": "\n",
+  "placeholder": "\n",
+  "vault": [],
+  "partial": "\n",
+  "noFinanceNoName": "\n",
+  "high": []
+ },
+ {
+  "text": "a custom rule does not cut a built-in match short",
+  "placeholder": "a custom rule does not cut a built-in match short",
+  "vault": [],
+  "partial": "a custom rule does not cut a built-in match short",
+  "noFinanceNoName": "a custom rule does not cut a built-in match short",
+  "high": []
+ },
+ {
+  "text": "HP 0812-3456-7890",
+  "placeholder": "HP [PHONE_1]",
+  "vault": [
+   [
+    "[PHONE_1]",
+    "0812-3456-7890"
+   ]
+  ],
+  "partial": "HP 0812****7890",
+  "noFinanceNoName": "HP [PHONE_1]",
+  "high": [
+   "0812-3456-7890"
+  ]
+ },
+ {
+  "text": "SHORT_CODE",
+  "placeholder": "SHORT_CODE",
+  "vault": [],
+  "partial": "SHORT_CODE",
+  "noFinanceNoName": "SHORT_CODE",
+  "high": []
+ },
+ {
+  "text": "PHONE",
+  "placeholder": "PHONE",
+  "vault": [],
+  "partial": "PHONE",
+  "noFinanceNoName": "PHONE",
+  "high": []
+ },
+ {
+  "text": "no_member: 3201011508950001",
+  "placeholder": "no_member: [NIK_1]",
+  "vault": [
+   [
+    "[NIK_1]",
+    "3201011508950001"
+   ]
+  ],
+  "partial": "no_member: 3201********0001",
+  "noFinanceNoName": "no_member: [NIK_1]",
+  "high": [
+   "3201011508950001"
+  ]
+ },
+ {
+  "text": "MEMBER",
+  "placeholder": "MEMBER",
+  "vault": [],
+  "partial": "MEMBER",
+  "noFinanceNoName": "MEMBER",
+  "high": []
+ },
+ {
+  "text": "no_member",
+  "placeholder": "no_member",
+  "vault": [],
+  "partial": "no_member",
+  "noFinanceNoName": "no_member",
+  "high": []
+ },
+ {
+  "text": "CUSTOM",
+  "placeholder": "CUSTOM",
+  "vault": [],
+  "partial": "CUSTOM",
+  "noFinanceNoName": "CUSTOM",
+  "high": []
+ },
+ {
+  "text": "MEMBER",
+  "placeholder": "MEMBER",
+  "vault": [],
+  "partial": "MEMBER",
+  "noFinanceNoName": "MEMBER",
+  "high": []
+ },
+ {
+  "text": "custom placeholders survive export and import of the vault",
+  "placeholder": "custom placeholders survive export and import of the vault",
+  "vault": [],
+  "partial": "custom placeholders survive export and import of the vault",
+  "noFinanceNoName": "custom placeholders survive export and import of the vault",
+  "high": []
+ },
+ {
+  "text": "EMP-004211 dan EMP-000317",
+  "placeholder": "EMP-004211 dan EMP-000317",
+  "vault": [],
+  "partial": "EMP-004211 dan EMP-000317",
+  "noFinanceNoName": "EMP-004211 dan EMP-000317",
+  "high": []
+ },
+ {
+  "text": "EMP-000317, EMP-123456",
+  "placeholder": "EMP-000317, EMP-123456",
+  "vault": [],
+  "partial": "EMP-000317, EMP-123456",
+  "noFinanceNoName": "EMP-000317, EMP-123456",
+  "high": []
+ },
+ {
+  "text": "[EMPLOYEE_ID_2], [EMPLOYEE_ID_3]",
+  "placeholder": "[EMPLOYEE_ID_2], [EMPLOYEE_ID_3]",
+  "vault": [],
+  "partial": "[EMPLOYEE_ID_2], [EMPLOYEE_ID_3]",
+  "noFinanceNoName": "[EMPLOYEE_ID_2], [EMPLOYEE_ID_3]",
+  "high": []
+ },
+ {
+  "text": "[EMPLOYEE_ID_1]",
+  "placeholder": "[EMPLOYEE_ID_1]",
+  "vault": [],
+  "partial": "[EMPLOYEE_ID_1]",
+  "noFinanceNoName": "[EMPLOYEE_ID_1]",
+  "high": []
+ },
+ {
+  "text": "EMP-004211",
+  "placeholder": "EMP-004211",
+  "vault": [],
+  "partial": "EMP-004211",
+  "noFinanceNoName": "EMP-004211",
+  "high": []
+ },
+ {
+  "text": "CUSTOM",
+  "placeholder": "CUSTOM",
+  "vault": [],
+  "partial": "CUSTOM",
+  "noFinanceNoName": "CUSTOM",
+  "high": []
+ },
+ {
+  "text": "EMP-004211",
+  "placeholder": "EMP-004211",
+  "vault": [],
+  "partial": "EMP-004211",
+  "noFinanceNoName": "EMP-004211",
+  "high": []
+ },
+ {
+  "text": "EMPLOYEE_ID",
+  "placeholder": "EMPLOYEE_ID",
+  "vault": [],
+  "partial": "EMPLOYEE_ID",
+  "noFinanceNoName": "EMPLOYEE_ID",
+  "high": []
+ },
+ {
+  "text": "[EMPLOYEE_ID_1]",
+  "placeholder": "[EMPLOYEE_ID_1]",
+  "vault": [],
+  "partial": "[EMPLOYEE_ID_1]",
+  "noFinanceNoName": "[EMPLOYEE_ID_1]",
+  "high": []
+ },
+ {
+  "text": "partial masks and stand-ins for custom values",
+  "placeholder": "partial masks and stand-ins for custom values",
+  "vault": [],
+  "partial": "partial masks and stand-ins for custom values",
+  "noFinanceNoName": "partial masks and stand-ins for custom values",
+  "high": []
+ },
+ {
+  "text": "CUSTOM",
+  "placeholder": "CUSTOM",
+  "vault": [],
+  "partial": "CUSTOM",
+  "noFinanceNoName": "CUSTOM",
+  "high": []
+ },
+ {
+  "text": "EMP-004211",
+  "placeholder": "EMP-004211",
+  "vault": [],
+  "partial": "EMP-004211",
+  "noFinanceNoName": "EMP-004211",
+  "high": []
+ },
+ {
+  "text": "********11",
+  "placeholder": "********11",
+  "vault": [],
+  "partial": "********11",
+  "noFinanceNoName": "********11",
+  "high": []
+ },
+ {
+  "text": "CUSTOM",
+  "placeholder": "CUSTOM",
+  "vault": [],
+  "partial": "CUSTOM",
+  "noFinanceNoName": "CUSTOM",
+  "high": []
+ },
+ {
+  "text": "M-42",
+  "placeholder": "M-42",
+  "vault": [],
+  "partial": "M-42",
+  "noFinanceNoName": "M-42",
+  "high": []
+ },
+ {
+  "text": "***",
+  "placeholder": "***",
+  "vault": [],
+  "partial": "***",
+  "noFinanceNoName": "***",
+  "high": []
+ },
+ {
+  "text": "partial",
+  "placeholder": "partial",
+  "vault": [],
+  "partial": "partial",
+  "noFinanceNoName": "partial",
+  "high": []
+ },
+ {
+  "text": "id EMP-004211",
+  "placeholder": "id EMP-004211",
+  "vault": [],
+  "partial": "id EMP-004211",
+  "noFinanceNoName": "id EMP-004211",
+  "high": []
+ },
+ {
+  "text": "id ********11",
+  "placeholder": "id ********11",
+  "vault": [],
+  "partial": "id ********11",
+  "noFinanceNoName": "id ********11",
+  "high": []
+ },
+ {
+  "text": "uji",
+  "placeholder": "uji",
+  "vault": [],
+  "partial": "uji",
+  "noFinanceNoName": "uji",
+  "high": []
+ },
+ {
+  "text": "id EMP-004211, no_member: M-0042",
+  "placeholder": "id EMP-004211, no_member: M-0042",
+  "vault": [],
+  "partial": "id EMP-004211, no_member: M-0042",
+  "noFinanceNoName": "id EMP-004211, no_member: M-0042",
+  "high": []
+ },
+ {
+  "text": "EMP-004211",
+  "placeholder": "EMP-004211",
+  "vault": [],
+  "partial": "EMP-004211",
+  "noFinanceNoName": "EMP-004211",
+  "high": []
+ },
+ {
+  "text": "M-0042",
+  "placeholder": "M-0042",
+  "vault": [],
+  "partial": "M-0042",
+  "noFinanceNoName": "M-0042",
+  "high": []
+ },
+ {
+  "text": "rules that cannot work are refused",
+  "placeholder": "rules that cannot work are refused",
+  "vault": [],
+  "partial": "rules that cannot work are refused",
+  "noFinanceNoName": "rules that cannot work are refused",
+  "high": []
+ },
+ {
+  "text": "employee",
+  "placeholder": "employee",
+  "vault": [],
+  "partial": "employee",
+  "noFinanceNoName": "employee",
+  "high": []
+ },
+ {
+  "text": "x",
+  "placeholder": "x",
+  "vault": [],
+  "partial": "x",
+  "noFinanceNoName": "x",
+  "high": []
+ },
+ {
+  "text": "NIK",
+  "placeholder": "NIK",
+  "vault": [],
+  "partial": "NIK",
+  "noFinanceNoName": "NIK",
+  "high": []
+ },
+ {
+  "text": "x",
+  "placeholder": "x",
+  "vault": [],
+  "partial": "x",
+  "noFinanceNoName": "x",
+  "high": []
+ },
+ {
+  "text": "EMP_",
+  "placeholder": "EMP_",
+  "vault": [],
+  "partial": "EMP_",
+  "noFinanceNoName": "EMP_",
+  "high": []
+ },
+ {
+  "text": "x",
+  "placeholder": "x",
+  "vault": [],
+  "partial": "x",
+  "noFinanceNoName": "x",
+  "high": []
+ },
+ {
+  "text": "EMP",
+  "placeholder": "EMP",
+  "vault": [],
+  "partial": "EMP",
+  "noFinanceNoName": "EMP",
+  "high": []
+ },
+ {
+  "text": "(",
+  "placeholder": "(",
+  "vault": [],
+  "partial": "(",
+  "noFinanceNoName": "(",
+  "high": []
+ },
+ {
+  "text": "EMP",
+  "placeholder": "EMP",
+  "vault": [],
+  "partial": "EMP",
+  "noFinanceNoName": "EMP",
+  "high": []
+ },
+ {
+  "text": "CUSTOM",
+  "placeholder": "CUSTOM",
+  "vault": [],
+  "partial": "CUSTOM",
+  "noFinanceNoName": "CUSTOM",
+  "high": []
+ },
+ {
+  "text": "x",
+  "placeholder": "x",
+  "vault": [],
+  "partial": "x",
+  "noFinanceNoName": "x",
+  "high": []
+ },
+ {
+  "text": "NIK",
+  "placeholder": "NIK",
+  "vault": [],
+  "partial": "NIK",
+  "noFinanceNoName": "NIK",
+  "high": []
+ },
+ {
+  "text": "3201011508950001",
+  "placeholder": "[NIK_1]",
+  "vault": [
+   [
+    "[NIK_1]",
+    "3201011508950001"
+   ]
+  ],
+  "partial": "3201********0001",
+  "noFinanceNoName": "[NIK_1]",
+  "high": [
+   "3201011508950001"
+  ]
+ },
+ {
+  "text": "EMP",
+  "placeholder": "EMP",
+  "vault": [],
+  "partial": "EMP",
+  "noFinanceNoName": "EMP",
   "high": []
  },
  {
@@ -5083,978 +5971,6 @@
   "vault": [],
   "partial": "L",
   "noFinanceNoName": "L",
-  "high": []
- },
- {
-  "text": "1995",
-  "placeholder": "1995",
-  "vault": [],
-  "partial": "1995",
-  "noFinanceNoName": "1995",
-  "high": []
- },
- {
-  "text": "P",
-  "placeholder": "P",
-  "vault": [],
-  "partial": "P",
-  "noFinanceNoName": "P",
-  "high": []
- },
- {
-  "text": "-",
-  "placeholder": "-",
-  "vault": [],
-  "partial": "-",
-  "noFinanceNoName": "-",
-  "high": []
- },
- {
-  "text": "Telkomsel",
-  "placeholder": "Telkomsel",
-  "vault": [],
-  "partial": "Telkomsel",
-  "noFinanceNoName": "Telkomsel",
-  "high": []
- },
- {
-  "text": "0812-… and 0812… are one person",
-  "placeholder": "0812-… and 0812… are one person",
-  "vault": [],
-  "partial": "0812-… and 0812… are one person",
-  "noFinanceNoName": "0812-… and 0812… are one person",
-  "high": []
- },
- {
-  "text": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
-  "placeholder": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
-  "vault": [],
-  "partial": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
-  "noFinanceNoName": "Kembaran: dump mysqldump dan pg_dump bawaan, tanpa nama kolom di baris",
-  "high": []
- },
- {
-  "text": "uji",
-  "placeholder": "uji",
-  "vault": [],
-  "partial": "uji",
-  "noFinanceNoName": "uji",
-  "high": []
- },
- {
-  "text": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
-  "placeholder": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
-  "vault": [],
-  "partial": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
-  "noFinanceNoName": "CREATE TABLE `pelanggan` (\n  `id` int,\n  `nama` varchar(100),\n  `nik` char(16)\n);\n",
-  "high": []
- },
- {
-  "text": "Budi Santoso",
-  "placeholder": "[NAME_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Budi Santoso"
-   ]
-  ],
-  "partial": "B*** S***",
-  "noFinanceNoName": "Budi Santoso",
-  "high": []
- },
- {
-  "text": "3201011508950001",
-  "placeholder": "[NIK_1]",
-  "vault": [
-   [
-    "[NIK_1]",
-    "3201011508950001"
-   ]
-  ],
-  "partial": "3201********0001",
-  "noFinanceNoName": "[NIK_1]",
-  "high": [
-   "3201011508950001"
-  ]
- },
- {
-  "text": "Siti Aminah",
-  "placeholder": "[NAME_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Siti Aminah"
-   ]
-  ],
-  "partial": "S*** A***",
-  "noFinanceNoName": "Siti Aminah",
-  "high": []
- },
- {
-  "text": "3201014408960002",
-  "placeholder": "[NIK_1]",
-  "vault": [
-   [
-    "[NIK_1]",
-    "3201014408960002"
-   ]
-  ],
-  "partial": "3201********0002",
-  "noFinanceNoName": "[NIK_1]",
-  "high": [
-   "3201014408960002"
-  ]
- },
- {
-  "text": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tBudi Santoso\t3201011508950001\n\\.\n",
-  "placeholder": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\t[NAME_1]\t[NIK_1]\n\\.\n",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Budi Santoso"
-   ],
-   [
-    "[NIK_1]",
-    "3201011508950001"
-   ]
-  ],
-  "partial": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tB*** S***\t3201********0001\n\\.\n",
-  "noFinanceNoName": "COPY public.pelanggan (id, nama, nik) FROM stdin;\n1\tBudi Santoso\t[NIK_1]\n\\.\n",
-  "high": [
-   "Budi Santoso",
-   "3201011508950001"
-  ]
- },
- {
-  "text": "([^",
-  "placeholder": "([^",
-  "vault": [],
-  "partial": "([^",
-  "noFinanceNoName": "([^",
-  "high": []
- },
- {
-  "text": "\n",
-  "placeholder": "\n",
-  "vault": [],
-  "partial": "\n",
-  "noFinanceNoName": "\n",
-  "high": []
- },
- {
-  "text": "\t",
-  "placeholder": "\t",
-  "vault": [],
-  "partial": "\t",
-  "noFinanceNoName": "\t",
-  "high": []
- },
- {
-  "text": "Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK",
-  "placeholder": "Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK",
-  "vault": [],
-  "partial": "Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK",
-  "noFinanceNoName": "Kembaran: nilai yang sama konsisten antartabel, NPWP orang pribadi mengikuti NIK",
-  "high": []
- },
- {
-  "text": "uji",
-  "placeholder": "uji",
-  "vault": [],
-  "partial": "uji",
-  "noFinanceNoName": "uji",
-  "high": []
- },
- {
-  "text": "Budi Santoso",
-  "placeholder": "[NAME_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Budi Santoso"
-   ]
-  ],
-  "partial": "B*** S***",
-  "noFinanceNoName": "Budi Santoso",
-  "high": []
- },
- {
-  "text": "3201011508950001",
-  "placeholder": "[NIK_1]",
-  "vault": [
-   [
-    "[NIK_1]",
-    "3201011508950001"
-   ]
-  ],
-  "partial": "3201********0001",
-  "noFinanceNoName": "[NIK_1]",
-  "high": [
-   "3201011508950001"
-  ]
- },
- {
-  "text": "1234567890",
-  "placeholder": "1234567890",
-  "vault": [],
-  "partial": "1234567890",
-  "noFinanceNoName": "1234567890",
-  "high": []
- },
- {
-  "text": "pelanggan_nik,npwp,gaji\n3201011508950001,3201011508950001,8500000",
-  "placeholder": "pelanggan_nik,npwp,gaji\n[NIK_1],[NIK_1],[FINANCIAL_1]",
-  "vault": [
-   [
-    "[NIK_1]",
-    "3201011508950001"
-   ],
-   [
-    "[FINANCIAL_1]",
-    "8500000"
-   ]
-  ],
-  "partial": "pelanggan_nik,npwp,gaji\n3201********0001,3201********0001,***",
-  "noFinanceNoName": "pelanggan_nik,npwp,gaji\n[NIK_1],[NIK_1],8500000",
-  "high": [
-   "3201011508950001",
-   "3201011508950001",
-   "8500000"
-  ]
- },
- {
-  "text": "(\\d{16})",
-  "placeholder": "(\\d{16})",
-  "vault": [],
-  "partial": "(\\d{16})",
-  "noFinanceNoName": "(\\d{16})",
-  "high": []
- },
- {
-  "text": "\n",
-  "placeholder": "\n",
-  "vault": [],
-  "partial": "\n",
-  "noFinanceNoName": "\n",
-  "high": []
- },
- {
-  "text": ",",
-  "placeholder": ",",
-  "vault": [],
-  "partial": ",",
-  "noFinanceNoName": ",",
-  "high": []
- },
- {
-  "text": "the same NIK in another file",
-  "placeholder": "the same NIK in another file",
-  "vault": [],
-  "partial": "the same NIK in another file",
-  "noFinanceNoName": "the same NIK in another file",
-  "high": []
- },
- {
-  "text": "an individual NPWP is their NIK",
-  "placeholder": "an individual NPWP is their NIK",
-  "vault": [],
-  "partial": "an individual NPWP is their NIK",
-  "noFinanceNoName": "an individual NPWP is their NIK",
-  "high": []
- },
- {
-  "text": "Kembaran: kunci yang sama memberi hasil yang sama, kunci lain berbeda, tanpa kunci acak",
-  "placeholder": "Kembaran: kunci yang sama memberi hasil yang sama, kunci lain berbeda, tanpa kunci acak",
-  "vault": [],
-  "partial": "Kembaran: kunci yang sama memberi hasil yang sama, kunci lain berbeda, tanpa kunci acak",
-  "noFinanceNoName": "Kembaran: kunci yang sama memberi hasil yang sama, kunci lain berbeda, tanpa kunci acak",
-  "high": []
- },
- {
-  "text": "staging",
-  "placeholder": "staging",
-  "vault": [],
-  "partial": "staging",
-  "noFinanceNoName": "staging",
-  "high": []
- },
- {
-  "text": "staging",
-  "placeholder": "staging",
-  "vault": [],
-  "partial": "staging",
-  "noFinanceNoName": "staging",
-  "high": []
- },
- {
-  "text": "lain",
-  "placeholder": "lain",
-  "vault": [],
-  "partial": "lain",
-  "noFinanceNoName": "lain",
-  "high": []
- },
- {
-  "text": "Kembaran: 5.000 NIK dari kecamatan, tahun, dan jenis kelamin yang sama tidak pernah bertabrakan",
-  "placeholder": "Kembaran: 5.000 NIK dari kecamatan, tahun, dan jenis kelamin yang sama tidak pernah bertabrakan",
-  "vault": [],
-  "partial": "Kembaran: 5.000 NIK dari kecamatan, tahun, dan jenis kelamin yang sama tidak pernah bertabrakan",
-  "noFinanceNoName": "Kembaran: 5.000 NIK dari kecamatan, tahun, dan jenis kelamin yang sama tidak pernah bertabrakan",
-  "high": []
- },
- {
-  "text": "tabrakan",
-  "placeholder": "tabrakan",
-  "vault": [],
-  "partial": "tabrakan",
-  "noFinanceNoName": "tabrakan",
-  "high": []
- },
- {
-  "text": "0",
-  "placeholder": "0",
-  "vault": [],
-  "partial": "0",
-  "noFinanceNoName": "0",
-  "high": []
- },
- {
-  "text": "NIK",
-  "placeholder": "NIK",
-  "vault": [],
-  "partial": "NIK",
-  "noFinanceNoName": "NIK",
-  "high": []
- },
- {
-  "text": "Kembaran: opsi keep, tanggal lahir utuh, dan teks bebas",
-  "placeholder": "Kembaran: opsi keep, tanggal lahir utuh, dan teks bebas",
-  "vault": [],
-  "partial": "Kembaran: opsi keep, tanggal lahir utuh, dan teks bebas",
-  "noFinanceNoName": "Kembaran: opsi keep, tanggal lahir utuh, dan teks bebas",
-  "high": []
- },
- {
-  "text": "k",
-  "placeholder": "k",
-  "vault": [],
-  "partial": "k",
-  "noFinanceNoName": "k",
-  "high": []
- },
- {
-  "text": "NAME",
-  "placeholder": "NAME",
-  "vault": [],
-  "partial": "NAME",
-  "noFinanceNoName": "NAME",
-  "high": []
- },
- {
-  "text": "GENDER",
-  "placeholder": "GENDER",
-  "vault": [],
-  "partial": "GENDER",
-  "noFinanceNoName": "GENDER",
-  "high": []
- },
- {
-  "text": "Budi Santoso",
-  "placeholder": "[NAME_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Budi Santoso"
-   ]
-  ],
-  "partial": "B*** S***",
-  "noFinanceNoName": "Budi Santoso",
-  "high": []
- },
- {
-  "text": "15-08-1995",
-  "placeholder": "15-08-1995",
-  "vault": [],
-  "partial": "15-08-1995",
-  "noFinanceNoName": "15-08-1995",
-  "high": []
- },
- {
-  "text": "15 Agustus 2003",
-  "placeholder": "15 Agustus 2003",
-  "vault": [],
-  "partial": "15 Agustus 2003",
-  "noFinanceNoName": "15 Agustus 2003",
-  "high": []
- },
- {
-  "text": "3201011508950001",
-  "placeholder": "[NIK_1]",
-  "vault": [
-   [
-    "[NIK_1]",
-    "3201011508950001"
-   ]
-  ],
-  "partial": "3201********0001",
-  "noFinanceNoName": "[NIK_1]",
-  "high": [
-   "3201011508950001"
-  ]
- },
- {
-  "text": "150895",
-  "placeholder": "150895",
-  "vault": [],
-  "partial": "150895",
-  "noFinanceNoName": "150895",
-  "high": []
- },
- {
-  "text": "the NIK keeps the whole birth date too",
-  "placeholder": "the NIK keeps the whole birth date too",
-  "vault": [],
-  "partial": "the NIK keeps the whole birth date too",
-  "noFinanceNoName": "the NIK keeps the whole birth date too",
-  "high": []
- },
- {
-  "text": "NAMA",
-  "placeholder": "NAMA",
-  "vault": [],
-  "partial": "NAMA",
-  "noFinanceNoName": "NAMA",
-  "high": []
- },
- {
-  "text": "p",
-  "placeholder": "p",
-  "vault": [],
-  "partial": "p",
-  "noFinanceNoName": "p",
-  "high": []
- },
- {
-  "text": "Pasien: Siti Aminah, diagnosa: Diabetes tipe 2. Plat B 1234 XYZ, login dari 182.253.10.15, kartu 4539 1488 0343 6467. Agama: Islam",
-  "placeholder": "Pasien: [NAME_1], diagnosa: [HEALTH_1]. Plat [PLATE_1], login dari [IP_1], kartu [CARD_1]. Agama: [RELIGION_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Siti Aminah"
-   ],
-   [
-    "[HEALTH_1]",
-    "Diabetes tipe 2"
-   ],
-   [
-    "[PLATE_1]",
-    "B 1234 XYZ"
-   ],
-   [
-    "[IP_1]",
-    "182.253.10.15"
-   ],
-   [
-    "[CARD_1]",
-    "4539 1488 0343 6467"
-   ],
-   [
-    "[RELIGION_1]",
-    "Islam"
-   ]
-  ],
-  "partial": "Pasien: S*** A***, diagnosa: ***. Plat B ****, login dari 182.253.*.*, kartu ************6467. Agama: ***",
-  "noFinanceNoName": "Pasien: Siti Aminah, diagnosa: [HEALTH_1]. Plat [PLATE_1], login dari [IP_1], kartu [CARD_1]. Agama: [RELIGION_1]",
-  "high": [
-   "Siti Aminah",
-   "Diabetes tipe 2",
-   "B 1234 XYZ",
-   "182.253.10.15",
-   "4539 1488 0343 6467",
-   "Islam"
-  ]
- },
- {
-  "text": "Siti Aminah",
-  "placeholder": "[NAME_1]",
-  "vault": [
-   [
-    "[NAME_1]",
-    "Siti Aminah"
-   ]
-  ],
-  "partial": "S*** A***",
-  "noFinanceNoName": "Siti Aminah",
-  "high": []
- },
- {
-  "text": "Diabetes",
-  "placeholder": "Diabetes",
-  "vault": [],
-  "partial": "Diabetes",
-  "noFinanceNoName": "Diabetes",
-  "high": []
- },
- {
-  "text": "1234 XYZ",
-  "placeholder": "1234 XYZ",
-  "vault": [],
-  "partial": "1234 XYZ",
-  "noFinanceNoName": "1234 XYZ",
-  "high": []
- },
- {
-  "text": "182.253.10.15",
-  "placeholder": "[IP_1]",
-  "vault": [
-   [
-    "[IP_1]",
-    "182.253.10.15"
-   ]
-  ],
-  "partial": "182.253.*.*",
-  "noFinanceNoName": "[IP_1]",
-  "high": [
-   "182.253.10.15"
-  ]
- },
- {
-  "text": "4539 1488 0343 6467",
-  "placeholder": "[CARD_1]",
-  "vault": [
-   [
-    "[CARD_1]",
-    "4539 1488 0343 6467"
-   ]
-  ],
-  "partial": "************6467",
-  "noFinanceNoName": "[CARD_1]",
-  "high": [
-   "4539 1488 0343 6467"
-  ]
- },
- {
-  "text": "",
-  "placeholder": "",
-  "vault": [],
-  "partial": "",
-  "noFinanceNoName": "",
-  "high": []
- },
- {
-  "text": "453914",
-  "placeholder": "453914",
-  "vault": [],
-  "partial": "453914",
-  "noFinanceNoName": "453914",
-  "high": []
- },
- {
-  "text": "the card keeps its issuer prefix",
-  "placeholder": "the card keeps its issuer prefix",
-  "vault": [],
-  "partial": "the card keeps its issuer prefix",
-  "noFinanceNoName": "the card keeps its issuer prefix",
-  "high": []
- },
- {
-  "text": "and passes Luhn",
-  "placeholder": "and passes Luhn",
-  "vault": [],
-  "partial": "and passes Luhn",
-  "noFinanceNoName": "and passes Luhn",
-  "high": []
- },
- {
-  "text": "religion is kept by default",
-  "placeholder": "religion is kept by default",
-  "vault": [],
-  "partial": "religion is kept by default",
-  "noFinanceNoName": "religion is kept by default",
-  "high": []
- },
- {
-  "text": "node:test",
-  "placeholder": "node:test",
-  "vault": [],
-  "partial": "node:test",
-  "noFinanceNoName": "node:test",
-  "high": []
- },
- {
-  "text": "node:assert/strict",
-  "placeholder": "node:assert/strict",
-  "vault": [],
-  "partial": "node:assert/strict",
-  "noFinanceNoName": "node:assert/strict",
-  "high": []
- },
- {
-  "text": "../src/index.ts",
-  "placeholder": "../src/index.ts",
-  "vault": [],
-  "partial": "../src/index.ts",
-  "noFinanceNoName": "../src/index.ts",
-  "high": []
- },
- {
-  "text": "0",
-  "placeholder": "0",
-  "vault": [],
-  "partial": "0",
-  "noFinanceNoName": "0",
-  "high": []
- },
- {
-  "text": "26",
-  "placeholder": "26",
-  "vault": [],
-  "partial": "26",
-  "noFinanceNoName": "26",
-  "high": []
- },
- {
-  "text": "00",
-  "placeholder": "00",
-  "vault": [],
-  "partial": "00",
-  "noFinanceNoName": "00",
-  "high": []
- },
- {
-  "text": "COM.CONTOH.WWW",
-  "placeholder": "COM.CONTOH.WWW",
-  "vault": [],
-  "partial": "COM.CONTOH.WWW",
-  "noFinanceNoName": "COM.CONTOH.WWW",
-  "high": []
- },
- {
-  "text": "01",
-  "placeholder": "01",
-  "vault": [],
-  "partial": "01",
-  "noFinanceNoName": "01",
-  "high": []
- },
- {
-  "text": "936000000000000001",
-  "placeholder": "936000000000000001",
-  "vault": [],
-  "partial": "936000000000000001",
-  "noFinanceNoName": "936000000000000001",
-  "high": []
- },
- {
-  "text": "02",
-  "placeholder": "02",
-  "vault": [],
-  "partial": "02",
-  "noFinanceNoName": "02",
-  "high": []
- },
- {
-  "text": "000000000000001",
-  "placeholder": "000000000000001",
-  "vault": [],
-  "partial": "000000000000001",
-  "noFinanceNoName": "000000000000001",
-  "high": []
- },
- {
-  "text": "03",
-  "placeholder": "03",
-  "vault": [],
-  "partial": "03",
-  "noFinanceNoName": "03",
-  "high": []
- },
- {
-  "text": "UMI",
-  "placeholder": "UMI",
-  "vault": [],
-  "partial": "UMI",
-  "noFinanceNoName": "UMI",
-  "high": []
- },
- {
-  "text": "51",
-  "placeholder": "51",
-  "vault": [],
-  "partial": "51",
-  "noFinanceNoName": "51",
-  "high": []
- },
- {
-  "text": "00",
-  "placeholder": "00",
-  "vault": [],
-  "partial": "00",
-  "noFinanceNoName": "00",
-  "high": []
- },
- {
-  "text": "ID.CO.QRIS.WWW",
-  "placeholder": "ID.CO.QRIS.WWW",
-  "vault": [],
-  "partial": "ID.CO.QRIS.WWW",
-  "noFinanceNoName": "ID.CO.QRIS.WWW",
-  "high": []
- },
- {
-  "text": "02",
-  "placeholder": "02",
-  "vault": [],
-  "partial": "02",
-  "noFinanceNoName": "02",
-  "high": []
- },
- {
-  "text": "ID1026000000001",
-  "placeholder": "ID1026000000001",
-  "vault": [],
-  "partial": "ID1026000000001",
-  "noFinanceNoName": "ID1026000000001",
-  "high": []
- },
- {
-  "text": "03",
-  "placeholder": "03",
-  "vault": [],
-  "partial": "03",
-  "noFinanceNoName": "03",
-  "high": []
- },
- {
-  "text": "UMI",
-  "placeholder": "UMI",
-  "vault": [],
-  "partial": "UMI",
-  "noFinanceNoName": "UMI",
-  "high": []
- },
- {
-  "text": "52",
-  "placeholder": "52",
-  "vault": [],
-  "partial": "52",
-  "noFinanceNoName": "52",
-  "high": []
- },
- {
-  "text": "5812",
-  "placeholder": "5812",
-  "vault": [],
-  "partial": "5812",
-  "noFinanceNoName": "5812",
-  "high": []
- },
- {
-  "text": "53",
-  "placeholder": "53",
-  "vault": [],
-  "partial": "53",
-  "noFinanceNoName": "53",
-  "high": []
- },
- {
-  "text": "360",
-  "placeholder": "360",
-  "vault": [],
-  "partial": "360",
-  "noFinanceNoName": "360",
-  "high": []
- },
- {
-  "text": "58",
-  "placeholder": "58",
-  "vault": [],
-  "partial": "58",
-  "noFinanceNoName": "58",
-  "high": []
- },
- {
-  "text": "ID",
-  "placeholder": "ID",
-  "vault": [],
-  "partial": "ID",
-  "noFinanceNoName": "ID",
-  "high": []
- },
- {
-  "text": "59",
-  "placeholder": "59",
-  "vault": [],
-  "partial": "59",
-  "noFinanceNoName": "59",
-  "high": []
- },
- {
-  "text": "KOPI CONTOH",
-  "placeholder": "KOPI CONTOH",
-  "vault": [],
-  "partial": "KOPI CONTOH",
-  "noFinanceNoName": "KOPI CONTOH",
-  "high": []
- },
- {
-  "text": "60",
-  "placeholder": "60",
-  "vault": [],
-  "partial": "60",
-  "noFinanceNoName": "60",
-  "high": []
- },
- {
-  "text": "BOGOR",
-  "placeholder": "BOGOR",
-  "vault": [],
-  "partial": "BOGOR",
-  "noFinanceNoName": "BOGOR",
-  "high": []
- },
- {
-  "text": "61",
-  "placeholder": "61",
-  "vault": [],
-  "partial": "61",
-  "noFinanceNoName": "61",
-  "high": []
- },
- {
-  "text": "16914",
-  "placeholder": "16914",
-  "vault": [],
-  "partial": "16914",
-  "noFinanceNoName": "16914",
-  "high": []
- },
- {
-  "text": "00",
-  "placeholder": "00",
-  "vault": [],
-  "partial": "00",
-  "noFinanceNoName": "00",
-  "high": []
- },
- {
-  "text": "01",
-  "placeholder": "01",
-  "vault": [],
-  "partial": "01",
-  "noFinanceNoName": "01",
-  "high": []
- },
- {
-  "text": "01",
-  "placeholder": "01",
-  "vault": [],
-  "partial": "01",
-  "noFinanceNoName": "01",
-  "high": []
- },
- {
-  "text": "11",
-  "placeholder": "11",
-  "vault": [],
-  "partial": "11",
-  "noFinanceNoName": "11",
-  "high": []
- },
- {
-  "text": "62",
-  "placeholder": "62",
-  "vault": [],
-  "partial": "62",
-  "noFinanceNoName": "62",
-  "high": []
- },
- {
-  "text": "01",
-  "placeholder": "01",
-  "vault": [],
-  "partial": "01",
-  "noFinanceNoName": "01",
-  "high": []
- },
- {
-  "text": "INV-77",
-  "placeholder": "INV-77",
-  "vault": [],
-  "partial": "INV-77",
-  "noFinanceNoName": "INV-77",
-  "high": []
- },
- {
-  "text": "07",
-  "placeholder": "07",
-  "vault": [],
-  "partial": "07",
-  "noFinanceNoName": "07",
-  "high": []
- },
- {
-  "text": "A01",
-  "placeholder": "A01",
-  "vault": [],
-  "partial": "A01",
-  "noFinanceNoName": "A01",
-  "high": []
- },
- {
-  "text": "CRC-16/CCITT-FALSE",
-  "placeholder": "CRC-16/CCITT-FALSE",
-  "vault": [],
-  "partial": "CRC-16/CCITT-FALSE",
-  "noFinanceNoName": "CRC-16/CCITT-FALSE",
-  "high": []
- },
- {
-  "text": "123456789",
-  "placeholder": "123456789",
-  "vault": [],
-  "partial": "123456789",
-  "noFinanceNoName": "123456789",
-  "high": []
- },
- {
-  "text": "29B1",
-  "placeholder": "29B1",
-  "vault": [],
-  "partial": "29B1",
-  "noFinanceNoName": "29B1",
-  "high": []
- },
- {
-  "text": "",
-  "placeholder": "",
-  "vault": [],
-  "partial": "",
-  "noFinanceNoName": "",
-  "high": []
- },
- {
-  "text": "FFFF",
-  "placeholder": "FFFF",
-  "vault": [],
-  "partial": "FFFF",
-  "noFinanceNoName": "FFFF",
-  "high": []
- },
- {
-  "text": "QRIS statis dibaca lengkap",
-  "placeholder": "QRIS statis dibaca lengkap",
-  "vault": [],
-  "partial": "QRIS statis dibaca lengkap",
-  "noFinanceNoName": "QRIS statis dibaca lengkap",
-  "high": []
- },
- {
-  "text": "static",
-  "placeholder": "static",
-  "vault": [],
-  "partial": "static",
-  "noFinanceNoName": "static",
   "high": []
  }
 ]

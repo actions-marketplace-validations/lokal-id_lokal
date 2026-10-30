@@ -5,8 +5,10 @@
 import { execFileSync } from 'node:child_process';
 import { appendFileSync, existsSync, statSync } from 'node:fs';
 import path from 'node:path';
-import { detectPii, partialMask, PII_TYPES, UU_PDP_CATEGORY, type PiiType } from '@lokal-id/core';
-import { loadBuffer, loadDocument, loadIgnore, toPosix, walkFiles, type Document } from './files.ts';
+import { partialMask, PII_TYPES, UU_PDP_CATEGORY, type PiiType, type ScanStatus } from '@lokal-id/core';
+import {
+  detectConfigured, loadBuffer, loadConfig, loadDocument, loadIgnore, toPosix, walkFiles, type Document, type SamaranConfig,
+} from './files.ts';
 
 /** A line containing this is never reported, like `// samaran-ignore` after a made-up NIK in a test. */
 export const IGNORE_MARKER = 'samaran-ignore';
@@ -17,6 +19,8 @@ export interface Finding {
   line?: number;
   sheet?: string;
   type: PiiType;
+  /** For CUSTOM: the label of the rule in .samaran.json that found it. */
+  label?: string;
   uuPdp: 'umum' | 'spesifik';
   confidence: 'high' | 'medium';
   preview: string;
@@ -26,8 +30,11 @@ export interface ScanReport {
   filesScanned: number;
   filesIgnored: number;
   findings: Finding[];
-  /** Files that may hold personal data but could not be read: encrypted PDFs, .xls, archives, … */
-  notScanned: Array<{ file: string; reason: string }>;
+  /**
+   * Files that may hold personal data and were not read in full: `partial` (scanned pages in a PDF), `unsupported`
+   * (.xls, archives), or `failed` (an encrypted or damaged file). A partial file is also counted in filesScanned.
+   */
+  notScanned: Array<{ file: string; status: Exclude<ScanStatus, 'scanned'>; reason: string }>;
 }
 
 /** A file to check, and which of its lines count: `all`, or the lines a change adds. */
@@ -41,6 +48,8 @@ export interface ScanOptions {
   types?: PiiType[];
   minConfidence?: 'high' | 'medium';
   isIgnored?: (file: string) => boolean;
+  /** The project's .samaran.json. */
+  config?: SamaranConfig;
 }
 
 function lineStarts(text: string): number[] {
@@ -72,29 +81,30 @@ export function scanTargets(targets: Target[], options: ScanOptions = {}): ScanR
     try {
       doc = target.load();
     } catch (e) {
-      report.notScanned.push({ file: target.file, reason: `unreadable: ${(e as Error).message}` });
+      report.notScanned.push({ file: target.file, status: 'failed', reason: `unreadable: ${(e as Error).message}` });
       continue;
     }
     if (doc.kind === 'skipped') {
-      if (doc.dataBearing && !doc.reason.startsWith('image')) report.notScanned.push({ file: target.file, reason: doc.reason });
+      if (doc.dataBearing && !doc.reason.startsWith('image')) report.notScanned.push({ file: target.file, status: doc.status, reason: doc.reason });
       continue;
     }
     report.filesScanned++;
     const detect = { types: options.types, minConfidence: options.minConfidence ?? 'high' } as const;
+    const config = options.config ?? { custom: [], allow: [] };
     if (doc.kind === 'text') {
       const starts = lineStarts(doc.text);
-      for (const m of detectPii(doc.text, detect)) {
+      for (const m of detectConfigured(doc.text, detect, config)) {
         const line = lineAt(starts, m.start);
         if (target.lines !== 'all' && !target.lines.has(line)) continue;
         const end = starts[line] ?? doc.text.length;
         if (doc.text.slice(starts[line - 1], end).includes(IGNORE_MARKER)) continue;
-        report.findings.push({ file: target.file, line, type: m.type, uuPdp: UU_PDP_CATEGORY[m.type], confidence: m.confidence, preview: partialMask(m.type, m.value) });
+        report.findings.push({ file: target.file, line, type: m.type, ...(m.label ? { label: m.label } : {}), uuPdp: UU_PDP_CATEGORY[m.type], confidence: m.confidence, preview: partialMask(m.type, m.value) });
       }
     } else {
-      if (doc.unscanned) report.notScanned.push({ file: target.file, reason: `partly scanned: ${doc.unscanned}` });
+      if (doc.unscanned) report.notScanned.push({ file: target.file, status: 'partial', reason: doc.unscanned });
       for (const sheet of doc.sheets) {
-        for (const m of detectPii(sheet.csv, detect)) {
-          report.findings.push({ file: target.file, sheet: sheet.name, type: m.type, uuPdp: UU_PDP_CATEGORY[m.type], confidence: m.confidence, preview: partialMask(m.type, m.value) });
+        for (const m of detectConfigured(sheet.csv, detect, config)) {
+          report.findings.push({ file: target.file, sheet: sheet.name, type: m.type, ...(m.label ? { label: m.label } : {}), uuPdp: UU_PDP_CATEGORY[m.type], confidence: m.confidence, preview: partialMask(m.type, m.value) });
         }
       }
     }
@@ -219,15 +229,21 @@ const ADVICE = [
 
 const PER_FILE = 10;
 
+const NOT_SCANNED: Record<Exclude<ScanStatus, 'scanned'>, string> = {
+  partial: 'was only partly scanned',
+  unsupported: 'was not scanned: unsupported',
+  failed: 'was not scanned: could not be read',
+};
+
 export function formatText(report: ScanReport): string {
   const out: string[] = [];
   const byFile = new Map<string, Finding[]>();
   for (const f of report.findings) byFile.set(f.file, [...(byFile.get(f.file) ?? []), f]);
   for (const findings of byFile.values()) {
-    for (const f of findings.slice(0, PER_FILE)) out.push(`${where(f)}: ${f.type} ${f.preview}${f.uuPdp === 'spesifik' ? ' (UU PDP: spesifik)' : ''}`);
+    for (const f of findings.slice(0, PER_FILE)) out.push(`${where(f)}: ${f.label ?? f.type} ${f.preview}${f.uuPdp === 'spesifik' ? ' (UU PDP: spesifik)' : ''}`);
     if (findings.length > PER_FILE) out.push(`${findings[0]!.file}: … and ${findings.length - PER_FILE} more`);
   }
-  for (const s of report.notScanned) out.push(`warning: ${s.file} was not scanned (${s.reason})`);
+  for (const s of report.notScanned) out.push(`warning: ${s.file} ${NOT_SCANNED[s.status]} (${s.reason})`);
   if (report.findings.length) {
     out.push('', `Found ${report.findings.length} personal data value(s) in ${byFile.size} file(s).`, ...ADVICE);
   } else {
@@ -243,10 +259,10 @@ const escapeProperty = (s: string) => escapeData(s).replace(/:/g, '%3A').replace
 export function formatGithub(report: ScanReport): string {
   const out: string[] = [];
   for (const f of report.findings.slice(0, 500)) {
-    const props = [`file=${escapeProperty(f.file)}`, f.line ? `line=${f.line}` : '', `title=${escapeProperty(`Personal data: ${f.type}`)}`].filter(Boolean).join(',');
-    out.push(`::error ${props}::${escapeData(`${f.type} ${f.preview}${f.sheet ? ` in ${f.sheet}` : ''}. ${ADVICE[0]}`)}`);
+    const props = [`file=${escapeProperty(f.file)}`, f.line ? `line=${f.line}` : '', `title=${escapeProperty(`Personal data: ${f.label ?? f.type}`)}`].filter(Boolean).join(',');
+    out.push(`::error ${props}::${escapeData(`${f.label ?? f.type} ${f.preview}${f.sheet ? ` in ${f.sheet}` : ''}. ${ADVICE[0]}`)}`);
   }
-  for (const s of report.notScanned) out.push(`::warning file=${escapeProperty(s.file)},title=Not scanned::${escapeData(s.reason)}`);
+  for (const s of report.notScanned) out.push(`::warning file=${escapeProperty(s.file)},title=${s.status === 'partial' ? 'Partly scanned' : 'Not scanned'}::${escapeData(s.reason)}`);
   return `${out.join('\n')}${out.length ? '\n' : ''}${formatText(report)}`;
 }
 
@@ -255,7 +271,7 @@ export function formatSummary(report: ScanReport): string {
     return `### Lokal scan\n\nNo personal data found in ${report.filesScanned} file(s).\n`;
   }
   const cell = (s: string) => s.replace(/\|/g, '\\|');
-  const rows = report.findings.slice(0, 200).map((f) => `| \`${cell(where(f))}\` | ${f.type} | \`${cell(f.preview)}\` | ${f.uuPdp} |`);
+  const rows = report.findings.slice(0, 200).map((f) => `| \`${cell(where(f))}\` | ${f.label ?? f.type} | \`${cell(f.preview)}\` | ${f.uuPdp} |`);
   const lines = [
     '### Lokal scan',
     '',
@@ -264,7 +280,7 @@ export function formatSummary(report: ScanReport): string {
   ];
   if (rows.length) lines.push('| Location | Type | Value (masked) | UU PDP |', '|---|---|---|---|', ...rows, '');
   if (report.findings.length > rows.length) lines.push(`… and ${report.findings.length - rows.length} more.`, '');
-  if (report.notScanned.length) lines.push('**Not scanned:**', '', ...report.notScanned.map((s) => `- \`${s.file}\`: ${s.reason}`), '');
+  if (report.notScanned.length) lines.push('**Not scanned in full:**', '', ...report.notScanned.map((s) => `- \`${s.file}\` (${s.status}): ${s.reason}`), '');
   if (report.findings.length) lines.push(...ADVICE.map((a) => `- ${a}`), '');
   return lines.join('\n');
 }
@@ -338,10 +354,21 @@ export function runScan(args: string[]): void {
 
   const ignoreRoot = root ?? process.cwd();
   const isIgnoredAbs = loadIgnore(ignoreRoot);
+  let config: SamaranConfig;
+  try {
+    // The policy says what may reach a model; what may enter the repository does not change with it.
+    const { custom, allow } = loadConfig(ignoreRoot);
+    config = { custom, allow };
+  } catch (e) {
+    process.stderr.write(`${(e as Error).message}\n`);
+    process.exitCode = 2;
+    return;
+  }
   const report = scanTargets(targets, {
     types: types.length ? (types as PiiType[]) : undefined,
     minConfidence,
     isIgnored: (file) => isIgnoredAbs(path.resolve(ignoreRoot, file)),
+    config,
   });
 
   if (format === 'json') process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);

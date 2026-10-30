@@ -12,22 +12,30 @@
 //   it. Running a script on a data file is allowed: that is how data gets processed without being
 //   shown. Files in .samaranignore are allowed.
 // - PreToolUse, Read of what Samaran cannot check: asks the user first. That is a photo filed or named
-//   like someone's document (ktp/, selfie_budi.jpg, media/uploads/…; not the app's own assets), and a
-//   PDF that is scanned, encrypted, damaged, or read only in part.
+//   like someone's document (ktp/, selfie_budi.jpg, media/uploads/…; not the app's own assets), a
+//   PDF that is scanned, encrypted, damaged, or read only in part, and lines past the part of a big file it read.
 //
 // Exit code 2 blocks; stderr is shown to the user (prompts) or to Claude (tool calls). Asking prints
 // a permissionDecision of "ask" on stdout, whose reason Claude Code shows in its permission prompt.
-// Anything unexpected exits 0: a broken guard must never break the session.
+// Anything unexpected exits 0: a broken guard must never break the session. SAMARAN_GUARD=strict blocks instead,
+// and blocks whatever the guard could not check: a file it cannot read, the part of a big file past what it read,
+// more files than a search checks, and a check that runs too long.
 import { existsSync, statSync } from 'node:fs';
 import path from 'node:path';
-import { detectPii, partialMask, type PiiMatch, type PiiType } from '@lokal-id/core';
-import { GUARD_MAX_ZIP_BYTES, GUARD_SAMPLE_BYTES, globToRegExp, loadDocument, loadIgnore, walkFiles, type Document } from './files.ts';
-import { dataReadsInCommand, SHELL_DATA_FILE } from './shell-reads.ts';
+import { partialMask, PII_TYPES, type PiiMatch, type PiiType } from '@lokal-id/core';
+import {
+  detectConfigured, GUARD_MAX_ZIP_BYTES, GUARD_SAMPLE_BYTES, globToRegExp, loadConfig, loadDocument, loadIgnore, policyFor,
+  walkFiles, type Document, type SamaranConfig,
+} from './files.ts';
+import { countMatches, writeAudit } from './audit.ts';
+import { dataReadsInCommand, inlineCodeReads, SHELL_DATA_FILE } from './shell-reads.ts';
 
 // One of these is enough to hold a prompt or a file back: identity numbers, and labeled sensitive data.
 const STRICT: PiiType[] = [
   'NIK', 'KK', 'NPWP', 'PASSPORT', 'SIM', 'NIP', 'NISN', 'AKTA', 'BANK_ACCOUNT', 'BPJS', 'CARD', 'HEALTH',
   'CRIMINAL_RECORD', 'BIOMETRIC',
+  // A team's own rules in .samaran.json: they wrote them because those values must not leave.
+  'CUSTOM',
 ];
 // Common on their own (a support email, a sample phone number); a file with several is a data export.
 const BULK_THRESHOLD = 3;
@@ -35,6 +43,10 @@ const BYPASS = /#izinkan-pii\b/i;
 // Claude Code's Read sends a PDF to the model as is, pages and all.
 const DATA_FILE = /\.(csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out|xlsx|xlsm|docx|pdf)(\.\d+)?$/i;
 const GREP_MAX_FILES = 300;
+// Claude Code's Read shows this many lines when no limit is given.
+const READ_LINES = 2000;
+// The hook is stopped after 10 s, and a stopped hook lets the call through: strict mode blocks well before that.
+const STRICT_BUDGET_MS = 7000;
 // Read sends images to the model too, and nothing in them can be checked without OCR.
 const IMAGE_FILE = /\.(jpe?g|png|heic|heif|webp|gif|bmp|tiff?)$/i;
 // Words in a path that point at someone's documents: the kind of document, or whose it is.
@@ -62,6 +74,8 @@ interface HookInput {
     glob?: string;
     type?: string;
     output_mode?: string;
+    offset?: number;
+    limit?: number;
     '-i'?: boolean;
     '-A'?: number;
     '-B'?: number;
@@ -72,25 +86,46 @@ interface HookInput {
 }
 
 function summarize(matches: PiiMatch[], examples = true): string {
-  const counts = new Map<PiiType, number>();
-  for (const m of matches) counts.set(m.type, (counts.get(m.type) ?? 0) + 1);
+  // Custom matches are counted under their own label: EMPLOYEE_ID×2.
+  const name = (m: PiiMatch) => m.label ?? m.type;
+  const counts = new Map<string, number>();
+  for (const m of matches) counts.set(name(m), (counts.get(name(m)) ?? 0) + 1);
   return [...counts.entries()]
-    .map(([type, n]) => {
-      const sample = examples ? ` (${partialMask(type, matches.find((m) => m.type === type)!.value)})` : '';
-      return `${type}×${n}${sample}`;
+    .map(([label, n]) => {
+      const first = matches.find((m) => name(m) === label)!;
+      const sample = examples ? ` (${partialMask(first.type, first.value)})` : '';
+      return `${label}×${n}${sample}`;
     })
     .join(', ');
 }
 
-function fileTexts(file: string): string[] | undefined {
+/**
+ * A data file's text for the shell and Grep checks. `unchecked` says why some or all of it could not be checked;
+ * `sampled` that only the first part was read.
+ */
+function fileTexts(file: string): { texts: string[]; sampled?: boolean; unchecked?: string } {
+  let doc: Document;
   try {
     // A big export is checked from its first rows instead of being skipped: skipping once let a 6 MB CSV through.
-    const doc = loadDocument(file, { sampleBytes: GUARD_SAMPLE_BYTES, maxZipBytes: GUARD_MAX_ZIP_BYTES });
-    if (doc.kind === 'skipped') return undefined;
-    return doc.kind === 'text' ? [doc.text] : doc.sheets.map((s) => s.csv);
-  } catch {
-    return undefined;
+    doc = loadDocument(file, { sampleBytes: GUARD_SAMPLE_BYTES, maxZipBytes: GUARD_MAX_ZIP_BYTES });
+  } catch (e) {
+    // A missing file fails the command on its own; one that exists but will not load would be printed unchecked.
+    return { texts: [], unchecked: existsSync(file) ? `could not be read: ${(e as Error).message}` : undefined };
   }
+  if (doc.kind === 'skipped') return { texts: [], unchecked: doc.dataBearing ? doc.reason : undefined };
+  if (doc.kind === 'text') return { texts: [doc.text], sampled: doc.sampled };
+  return { texts: doc.sheets.map((s) => s.csv), unchecked: doc.unscanned };
+}
+
+/**
+ * Whether a command's output from a file depends only on the part the guard read: with more lines after that part
+ * (the part again, or one new line), it prints the same. `head -n 20` and `grep -m 1` with a hit do; `cat`, `tail`,
+ * and a plain `grep` may print the rest.
+ */
+function withinSample(select: (text: string) => string, sample: string, shown: string): boolean {
+  if (!shown.trim()) return false;
+  const first = sample.slice(0, sample.indexOf('\n') + 1 || sample.length).trimEnd();
+  return select(`${sample}\n${sample}`) === shown && select(`${sample}\n${first}~`) === shown;
 }
 
 /** The part of a CSV the model would see, plus its header row so columns like "nama" still count. */
@@ -102,11 +137,12 @@ function withHeader(full: string, shown: string, file: string): string {
 
 /** Personal data worth blocking for, or undefined. */
 function verdict(texts: string[]): PiiMatch[] | undefined {
-  return verdictOf(texts.flatMap((t) => detectPii(t, { minConfidence: 'high' })));
+  return verdictOf(texts.flatMap((t) => detectConfigured(t, { minConfidence: 'high' }, config)));
 }
 
 function verdictOf(found: PiiMatch[]): PiiMatch[] | undefined {
-  const strict = found.some((m) => STRICT.includes(m.type));
+  // What the project's policy blocks or keeps local is held back like an identity number: one is enough.
+  const strict = found.some((m) => STRICT.includes(m.type) || ['block', 'route'].includes(policyFor(config, m)));
   return strict || found.length >= BULK_THRESHOLD ? found : undefined;
 }
 
@@ -115,7 +151,7 @@ function verdictOf(found: PiiMatch[]): PiiMatch[] | undefined {
  * and labels give context (`cut -d, -f2` prints a bare column of names), and counts what reaches the output.
  */
 function shownPii(full: string, shown: string, file: string): PiiMatch[] {
-  const all = detectPii(full, { minConfidence: 'high' });
+  const all = detectConfigured(full, { minConfidence: 'high' }, config);
   let inFile: PiiMatch[];
   if (shown.length >= full.length) {
     inFile = all; // `cat`: everything is shown
@@ -127,16 +163,40 @@ function shownPii(full: string, shown: string, file: string): PiiMatch[] {
     const fields = new Set(shown.split(/[\t\n\r,;|]+/).map((f) => f.trim().replace(/^"|"$/g, '')));
     inFile = all.filter((m) => fields.has(m.value));
   }
-  const direct = detectPii(withHeader(full, shown, file), { minConfidence: 'high' });
+  const direct = detectConfigured(withHeader(full, shown, file), { minConfidence: 'high' }, config);
   return inFile.length >= direct.length ? inFile : direct;
 }
 
 const PROCESS_HINT =
   'To process the data, run a script that reads the file and writes its results to a file (or prints only counts), or use `write_file_unmasked`.';
 
+/**
+ * SAMARAN_GUARD=strict, for teams that want the guard to fail closed: an error in the guard blocks instead of allowing,
+ * and code run from the command line (python -c, node -e, a heredoc fed to python) that names a data file with
+ * personal data is blocked like `cat`. It narrows what gets through; it is still not a sandbox.
+ */
+export const strictMode = () => process.env.SAMARAN_GUARD === 'strict' || (!process.env.SAMARAN_GUARD && config.guard === 'strict');
+/** Where strict mode came from, for the message. */
+const strictBy = () => (process.env.SAMARAN_GUARD === 'strict' ? 'SAMARAN_GUARD=strict' : '"guard": "strict" in .samaran.json');
+
+/** The project's .samaran.json, loaded by `evaluate`. */
+let config: SamaranConfig = { custom: [], allow: [] };
+/** When strict mode stops checking, set by `evaluate`. */
+let deadline = Infinity;
+const outOfTime = () => strictMode() && Date.now() > deadline;
+
 /** What the guard does with a prompt or tool call: block it (the message goes to Claude), or ask the user. */
-export type Verdict = { action: 'block' | 'ask'; message: string };
-const block = (message: string): Verdict => ({ action: 'block', message });
+export type Verdict = { action: 'block' | 'ask'; message: string; counts?: Record<string, number> };
+const block = (message: string, found?: PiiMatch[]): Verdict => ({ action: 'block', message, ...(found ? { counts: countMatches(found) } : {}) });
+
+/** Strict mode's answer to a tool call the guard could not check in full. */
+function uncheckedBlock(what: string, why: string[]): Verdict {
+  return block([
+    `Samaran blocked ${what}: ${why.join('; ')}, so it could not be checked for personal data, and ${strictBy()} blocks what it cannot check.`,
+    'Use the `read_file_masked` tool from the lokal MCP server, or narrow the command to what you need (`head -n 50`).',
+    'If the user confirms the file holds no real personal data, they can add it to .samaranignore.',
+  ].join(' '));
+}
 
 /** Asks before Read sends what Samaran cannot check, in the user's language: the user answers the prompt. */
 function ask(shownAs: string, what: string): Verdict {
@@ -157,22 +217,32 @@ function personalImage(file: string, root: string): boolean {
   return PERSONAL_PATH.test(where) || (UPLOAD_PATH.test(path.dirname(where)) && !ASSET_PATH.test(path.dirname(where)));
 }
 
-function readTool(file: string, shownAs: string, root: string, ignored: (f: string) => boolean): Verdict | undefined {
+/** What Read would send unchecked: the user is asked, and strict mode blocks. */
+function uncheckedRead(shownAs: string, what: string, why: string): Verdict {
+  return strictMode() ? uncheckedBlock(`reading ${shownAs}`, [why]) : ask(shownAs, what);
+}
+
+function readTool(
+  file: string, shownAs: string, root: string, ignored: (f: string) => boolean, lines: { offset?: number; limit?: number },
+): Verdict | undefined {
   if (ignored(file)) return undefined;
   if (IMAGE_FILE.test(file)) {
-    return personalImage(file, root) && existsSync(file) ? ask(shownAs, 'mungkin foto KTP atau dokumen pribadi') : undefined;
+    return personalImage(file, root) && existsSync(file)
+      ? uncheckedRead(shownAs, 'mungkin foto KTP atau dokumen pribadi', 'it is an image that may be a photo of an ID card or document')
+      : undefined;
   }
   if (!DATA_FILE.test(file)) return undefined;
   let doc: Document;
   try {
     // A big export is checked from its first rows instead of being skipped: skipping once let a 6 MB CSV through.
     doc = loadDocument(file, { sampleBytes: GUARD_SAMPLE_BYTES, maxZipBytes: GUARD_MAX_ZIP_BYTES });
-  } catch {
-    return undefined; // missing or unreadable: Read fails on its own
+  } catch (e) {
+    // Missing: Read fails on its own. A file that exists but Samaran cannot load is sent unchecked.
+    return strictMode() && existsSync(file) ? uncheckedBlock(`reading ${shownAs}`, [`it could not be read (${(e as Error).message})`]) : undefined;
   }
   if (doc.kind === 'skipped') {
     // What Samaran could not read (a scanned or encrypted PDF, a damaged spreadsheet) would reach the model unchecked.
-    return doc.dataBearing ? ask(shownAs, `tidak bisa dibaca Samaran (${doc.reason})`) : undefined;
+    return doc.dataBearing ? uncheckedRead(shownAs, `tidak bisa dibaca Samaran (${doc.reason})`, doc.reason) : undefined;
   }
   const found = verdict(doc.kind === 'text' ? [doc.text] : doc.sheets.map((s) => s.csv));
   if (found) {
@@ -183,19 +253,41 @@ function readTool(file: string, shownAs: string, root: string, ignored: (f: stri
         'Write results that need the real values with `write_file_unmasked`.',
         'If the user confirms the file only holds fake data, they can add it to .samaranignore.',
       ].join(' '),
+      found,
     );
   }
-  if (doc.kind === 'sheets' && doc.unscanned) return ask(shownAs, `hanya terbaca sebagian (${doc.unscanned})`);
+  if (doc.kind === 'sheets' && doc.unscanned) return uncheckedRead(shownAs, `hanya terbaca sebagian (${doc.unscanned})`, doc.unscanned);
+  if (doc.kind === 'text' && doc.sampled) {
+    // Only the first part of a big file was checked; Read with an offset can show lines past it.
+    const checked = doc.text.split('\n').length;
+    const last = Math.max(0, (lines.offset ?? 1) - 1) + (lines.limit ?? READ_LINES);
+    if (last > checked) {
+      const mb = `${GUARD_SAMPLE_BYTES / 1024 / 1024} MB`;
+      return uncheckedRead(shownAs, `hanya ${mb} pertama yang diperiksa Samaran`, `only its first ${mb} (${checked} lines) were checked`);
+    }
+  }
   return undefined;
 }
 
 function shellTool(command: string, cwd: string, powershell: boolean, ignored: (f: string) => boolean): Verdict | undefined {
-  const reads = dataReadsInCommand(command, cwd, powershell).filter((r) => !ignored(r.file));
+  const reads = [...dataReadsInCommand(command, cwd, powershell), ...(strictMode() ? inlineCodeReads(command, cwd, powershell) : [])]
+    .filter((r) => !ignored(r.file));
   const matches: PiiMatch[] = [];
   const files = new Set<string>();
+  const unchecked: string[] = [];
+  const nameOf = (f: string) => path.relative(cwd, f) || f;
   for (const r of reads) {
-    for (const full of fileTexts(r.file) ?? []) {
+    if (outOfTime()) {
+      unchecked.push(`checking ${nameOf(r.file)} took too long`);
+      break;
+    }
+    const loaded = fileTexts(r.file);
+    if (loaded.unchecked) unchecked.push(`${nameOf(r.file)}: ${loaded.unchecked}`);
+    for (const full of loaded.texts) {
       const shown = r.select(full);
+      if (loaded.sampled && !withinSample(r.select, full, shown)) {
+        unchecked.push(`${nameOf(r.file)}: only its first ${GUARD_SAMPLE_BYTES / 1024 / 1024} MB were checked`);
+      }
       if (!shown.trim()) continue;
       const here = shownPii(full, shown, r.file);
       for (const m of here) matches.push(m);
@@ -203,14 +295,14 @@ function shellTool(command: string, cwd: string, powershell: boolean, ignored: (
     }
   }
   const found = verdictOf(matches);
-  if (!found) return undefined;
-  const names = [...(files.size ? files : new Set(reads.map((r) => r.file)))].map((f) => path.relative(cwd, f) || f);
+  if (!found) return strictMode() && unchecked.length ? uncheckedBlock('this command', unchecked) : undefined;
+  const names = [...(files.size ? files : new Set(reads.map((r) => r.file)))].map(nameOf);
   return block([
     `Samaran blocked this command: it would print personal data from ${names.join(', ')} into the conversation (${summarize(found, false)}).`,
     'To look at the data, use the `read_file_masked` tool from the lokal MCP server (personal data replaced by stable placeholders).',
     PROCESS_HINT,
     'If the user confirms the file only holds fake data, they can add it to .samaranignore.',
-  ].join(' '));
+  ].join(' '), found);
 }
 
 function grepTool(input: NonNullable<HookInput['tool_input']>, cwd: string, ignored: (f: string) => boolean): Verdict | undefined {
@@ -228,8 +320,13 @@ function grepTool(input: NonNullable<HookInput['tool_input']>, cwd: string, igno
   candidates = candidates
     .filter((f) => SHELL_DATA_FILE.test(f) && !ignored(f))
     .filter((f) => !glob || glob.test(path.relative(target, f).split(path.sep).join('/')) || glob.test(path.basename(f)))
-    .filter((f) => !typeFilter || typeFilter.test(f))
-    .slice(0, GREP_MAX_FILES);
+    .filter((f) => !typeFilter || typeFilter.test(f));
+  const unchecked: string[] = [];
+  if (candidates.length > GREP_MAX_FILES) {
+    unchecked.push(`only ${GREP_MAX_FILES} of the ${candidates.length} data files it searches were checked`);
+    candidates = candidates.slice(0, GREP_MAX_FILES);
+  }
+  const nameOf = (f: string) => path.relative(cwd, f) || f;
 
   let re: RegExp | undefined;
   try {
@@ -242,7 +339,15 @@ function grepTool(input: NonNullable<HookInput['tool_input']>, cwd: string, igno
   const matches: PiiMatch[] = [];
   const files: string[] = [];
   for (const file of candidates) {
-    for (const full of fileTexts(file) ?? []) {
+    if (outOfTime()) {
+      unchecked.push(`checking the files took too long (stopped at ${nameOf(file)})`);
+      break;
+    }
+    const loaded = fileTexts(file);
+    if (loaded.unchecked) unchecked.push(`${nameOf(file)}: ${loaded.unchecked}`);
+    // Grep searches the whole file; past the part that was read, any line can match.
+    if (loaded.sampled) unchecked.push(`${nameOf(file)}: only its first ${GUARD_SAMPLE_BYTES / 1024 / 1024} MB were checked`);
+    for (const full of loaded.texts) {
       const lines = full.split('\n');
       const keep = new Set<number>();
       lines.forEach((line, i) => {
@@ -257,32 +362,41 @@ function grepTool(input: NonNullable<HookInput['tool_input']>, cwd: string, igno
     }
   }
   const found = verdictOf(matches);
-  if (!found) return undefined;
-  const names = (files.length ? files : candidates).slice(0, 5).map((f) => path.relative(cwd, f) || f);
+  if (!found) return strictMode() && unchecked.length ? uncheckedBlock('this search', unchecked) : undefined;
+  const names = (files.length ? files : candidates).slice(0, 5).map(nameOf);
   return block([
     `Samaran blocked this search: the matching lines in ${names.join(', ')} contain personal data (${summarize(found, false)}).`,
     'Search with output_mode "files_with_matches" or "count", or read the file with `read_file_masked` from the lokal MCP server.',
     'Add a glob or type that leaves data files out if you meant to search code.',
-  ].join(' '));
+  ].join(' '), found);
 }
 
 /** Whether to block or ask, with the message; undefined to allow. */
 export function evaluate(input: HookInput, projectRoot?: string): Verdict | undefined {
   if (process.env.SAMARAN_GUARD === 'off') return undefined;
+  const root = projectRoot ?? process.env.CLAUDE_PROJECT_DIR ?? input.cwd ?? process.cwd();
+  // SAMARAN_GUARD_BUDGET_MS can only shorten the budget, which blocks more: tests use it.
+  const budget = Math.min(Number(process.env.SAMARAN_GUARD_BUDGET_MS) || STRICT_BUDGET_MS, STRICT_BUDGET_MS);
+  deadline = Date.now() + budget;
+  // One hook call is one process: the project's rules apply to every check below.
+  config = loadConfig(root);
 
   if (input.hook_event_name === 'UserPromptSubmit' && input.prompt) {
     if (BYPASS.test(input.prompt)) return undefined;
-    const found = detectPii(input.prompt, { types: STRICT, minConfidence: 'high' });
+    // Identity numbers, and whatever the project's policy blocks or keeps local.
+    const held = Object.entries(config.policy ?? {})
+      .filter(([type, action]) => (action === 'block' || action === 'route') && PII_TYPES.includes(type as PiiType))
+      .map(([type]) => type as PiiType);
+    const found = detectConfigured(input.prompt, { types: [...new Set([...STRICT, ...held])], minConfidence: 'high' }, config);
     if (!found.length) return undefined;
     return block([
       `🛡️  Samaran menahan prompt ini: ada data pribadi ${summarize(found)}.`,
       'Prompt akan terkirim ke server model AI. Ganti dengan data contoh atau samarkan dulu,',
       'atau kirim ulang dengan menambahkan #izinkan-pii jika memang disengaja.',
-    ].join('\n'));
+    ].join('\n'), found);
   }
 
   if (input.hook_event_name !== 'PreToolUse' || !input.tool_input) return undefined;
-  const root = projectRoot ?? process.env.CLAUDE_PROJECT_DIR ?? input.cwd ?? process.cwd();
   const cwd = input.cwd ?? root;
   const ignored = loadIgnore(root);
   const tool = input.tool_input;
@@ -293,7 +407,7 @@ export function evaluate(input: HookInput, projectRoot?: string): Verdict | unde
         const file = path.resolve(root, tool.file_path);
         const rel = path.relative(root, file);
         const shownAs = rel && !rel.startsWith('..') && !path.isAbsolute(rel) ? rel.split(path.sep).join('/') : tool.file_path;
-        return readTool(file, shownAs, root, ignored);
+        return readTool(file, shownAs, root, ignored, tool);
       }
     case 'Grep':
       return grepTool(tool, cwd, ignored);
@@ -401,16 +515,30 @@ export async function runGuard(): Promise<void> {
     const translated = translate(parsed);
     agent = translated.agent;
     event = parsed.hook_event_name ?? '';
-    const out = respond(agent, event, evaluate(translated.input, translated.root));
+    const verdict = evaluate(translated.input, translated.root);
+    if (verdict) {
+      const tool = translated.input.tool_name;
+      writeAudit(config.audit, {
+        source: 'guard',
+        action: verdict.action === 'block' ? 'blocked' : 'asked',
+        what: `${translated.input.hook_event_name ?? event}${tool ? ` ${tool}` : ''}`,
+        ...(verdict.counts ? { counts: verdict.counts } : { reason: 'could not be checked' }),
+      });
+    }
+    const out = respond(agent, event, verdict);
     if (out.stdout) process.stdout.write(`${out.stdout}\n`);
     if (out.stderr) process.stderr.write(`${out.stderr}\n`);
     process.exitCode = out.exitCode;
   } catch (e) {
     process.stderr.write(`samaran-guard: ${(e as Error).message}\n`);
-    // A broken guard must never break the session: allow, in the agent's format.
-    const out = respond(agent, event, undefined);
+    // By default a broken guard must never break the session: allow, in the agent's format. Strict mode blocks.
+    const failed = strictMode()
+      ? block(`Samaran guard failed (${(e as Error).message}), and ${strictBy()} blocks what it cannot check.`)
+      : undefined;
+    const out = respond(agent, event, failed);
     if (out.stdout) process.stdout.write(`${out.stdout}\n`);
-    process.exitCode = 0;
+    if (out.stderr) process.stderr.write(`${out.stderr}\n`);
+    process.exitCode = out.exitCode;
   }
 }
 

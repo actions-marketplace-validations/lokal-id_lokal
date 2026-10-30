@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { constants as zc, deflateRawSync, deflateSync } from 'node:zlib';
 import { Samaran } from '../../core/src/samaran/index.ts';
-import { attachmentKind, maskedFiles, MAX_ATTACHMENT_BYTES, readAttachment, type Readable } from '../src/attachments.ts';
+import { attachmentKind, looksLikeIdPhoto, maskedFiles, MAX_ATTACHMENT_BYTES, readAttachment, type Readable } from '../src/attachments.ts';
 import { Buffer as BufferShim } from '../src/shims/buffer.ts';
 import { constants, inflateRawSync, inflateSync } from '../src/shims/zlib.ts';
 
@@ -72,9 +72,17 @@ test('a PDF becomes one masked text file with a heading per page', () => {
 });
 
 test('unreadable and oversized documents say why', () => {
-  assert.deepEqual(readAttachment('rusak.xlsx', new TextEncoder().encode('bukan zip')), { kind: 'sheets', reason: 'damaged' });
-  assert.deepEqual(readAttachment('rusak.pdf', new TextEncoder().encode('%PDF-1.7\n')), { kind: 'pdf', reason: 'damaged' });
-  assert.deepEqual(readAttachment('besar.csv', new Uint8Array(MAX_ATTACHMENT_BYTES + 1)), { kind: 'text', reason: 'too-large' });
+  assert.deepEqual(readAttachment('rusak.xlsx', new TextEncoder().encode('bukan zip')), { kind: 'sheets', status: 'failed', reason: 'damaged' });
+  assert.deepEqual(readAttachment('rusak.pdf', new TextEncoder().encode('%PDF-1.7\n')), { kind: 'pdf', status: 'failed', reason: 'damaged' });
+  assert.deepEqual(readAttachment('besar.csv', new Uint8Array(MAX_ATTACHMENT_BYTES + 1)), { kind: 'text', status: 'unsupported', reason: 'too-large' });
+});
+
+test('photos named like ID documents are recognised; other images are not', () => {
+  for (const name of ['ktp-budi.jpg', 'KTP.png', 'e-ktp_scan.jpeg', 'selfie_siti.heic', 'foto npwp.webp', 'kartu-keluarga.png', 'buku_tabungan.jpg', 'IMG_kyc_01.png'])
+    assert.equal(looksLikeIdPhoto(name), true, name);
+  for (const name of ['grafik-penjualan.png', 'logo.svg', 'screenshot.png', 'simulasi.png', 'ktp.pdf', 'pelanggan.png'])
+    assert.equal(looksLikeIdPhoto(name), false, name);
+  assert.equal(looksLikeIdPhoto('ktp', 'image/jpeg'), true, 'a pasted image with no extension');
 });
 
 // --- the browser shims, against Node's own zlib and Buffer -----------------------------------------------------

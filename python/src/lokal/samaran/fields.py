@@ -24,7 +24,7 @@ _FIELDS: list[tuple[PiiType, str]] = [
     ('NIP', 'nip|nip_?baru|nrp|nomor_?induk_?pegawai'),
     ('NISN', 'nisn|no_?nisn|nomor_?nisn|nomor_?induk_?siswa_?nasional'),
     ('AKTA', 'akta|no_?akta|nomor_?akta|(?:no_?|nomor_?)?akta_?(?:kelahiran|lahir|nikah|perkawinan|kawin|cerai|perceraian|kematian)|birth_?certificate(?:_?(?:no|number))?|marriage_?certificate(?:_?(?:no|number))?'),  # noqa: E501
-    ('BPJS', 'bpjs|no_?bpjs|nomor_?bpjs|bpjs_?kesehatan|bpjs_?ketenagakerjaan|kis|no_?kis|jkn|kpj'),
+    ('BPJS', 'bpjs|no_?bpjs|nomor_?bpjs|bpjs_?kesehatan|bpjs_?ketenagakerjaan|kis|no_?kis|jkn|kpj|(?:no_?|nomor_?)?(?:kartu_?)?(?:jkn|kis|jkn_?kis)|(?:no_?|nomor_?)kartu_?(?:bpjs|jkn|kis)'),  # noqa: E501
     ('PHONE', 'hp|no_?hp|nomor_?hp|nohp|telp|tlp|telepon|telpon|no_?telp|no_?telepon|nomor_?telepon|phone|phone_?number|mobile|mobile_?phone|handphone|whatsapp|wa|no_?wa|nomor_?wa|msisdn'),  # noqa: E501
     ('EMAIL', 'email|e_?mail|surel|alamat_?email|email_?address'),
     ('BANK_ACCOUNT', 'rekening|no_?rek|no_?rekening|nomor_?rekening|norek|rek|account_?number|bank_?account|account_?no|va|virtual_?account|no_?va'),  # noqa: E501
@@ -33,7 +33,8 @@ _FIELDS: list[tuple[PiiType, str]] = [
     ('GEO', 'lat|lng|lon|latitude|longitude|koordinat|coordinates|coords|geo|geolocation|latlng|lat_?long'),
     ('BIRTH_DATE', 'tanggal_?lahir|tgl_?lahir|tgl_?lhr|tanggal_?kelahiran|tempat_?lahir|ttl|tempat_?tanggal_?lahir|tempat_?tgl_?lahir|tempat_?tgl_?lhr|date_?of_?birth|dob|birth_?date|birthdate|birthday|birth_?place|place_?of_?birth'),  # noqa: E501
     ('GENDER', 'jenis_?kelamin|jns_?kelamin|kelamin|gender|sex|jk|l_?p'),
-    ('RELIGION', 'agama|religion|kepercayaan'),
+    # "Agama/Kepercayaan", as Dukcapil forms print it.
+    ('RELIGION', 'agama|religion|kepercayaan|agama_(?:dan_|atau_)?kepercayaan|kepercayaan_(?:dan_|atau_)?agama'),
     ('MARITAL_STATUS', 'status_?perkawinan|status_?kawin|status_?pernikahan|status_?nikah|perkawinan|marital_?status|status_?marital'),  # noqa: E501
     ('NATIONALITY', 'kewarganegaraan|warga_?negara|wn|nationality|citizenship'),
     ('HEALTH', 'diagnosa|diagnosis|diagnose|penyakit|riwayat_?penyakit|riwayat_?medis|rekam_?medis|kondisi_?medis|kondisi_?kesehatan|keluhan|gejala|alergi|allergy|allergies|golongan_?darah|gol_?darah|blood_?type|hasil_?lab|lab_?result|obat|medication|medications|resep|prescription|icd|icd_?10|medical_?history|medical_?record|disabilitas|disability|kehamilan|pregnancy|status_?vaksin|vaccination_?status|tindakan_?medis'),  # noqa: E501
@@ -188,6 +189,9 @@ def is_plausible_value(pii_type: PiiType, value: str, key: str) -> bool:
         return False
     digit_count = sum(1 for ch in v if '0' <= ch <= '9')
     if pii_type in _DIGIT_TYPES and digit_count < 6:
+        return False
+    # "No. Kartu" on a BPJS card is not a payment card: card numbers never start with 0.
+    if pii_type == 'CARD' and next((ch for ch in v if '0' <= ch <= '9'), '') == '0':
         return False
     if pii_type in ('GEO', 'IP') and digit_count < 2:
         return False

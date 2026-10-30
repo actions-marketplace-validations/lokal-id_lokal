@@ -15,13 +15,16 @@ Anything you read is sent to the model provider. When a file may contain real pe
 2. Read with `read_file_masked` — never with a plain file read, and never with `cat`, `head`, `tail`, `type`, `Get-Content`, `less`, `grep` or a script that prints the rows. Personal data comes back as stable placeholders: `[NIK_1]`, `[PHONE_3]`, `[RELIGION_1]`, `[HEALTH_2]`. The same value always gets the same placeholder in a session, so you can still deduplicate, join, group, count, and debug. `.xlsx` files come back as CSV, one block per sheet; PDFs as text, one block per page.
 3. Do the work on placeholders. Do not try to guess the real values, and do not ask the user to paste them. `parse_alamat`, `parse_nik`, `parse_phone`, and `validate_npwp` take the placeholders themselves: `parse_alamat("[ADDRESS_3]")` returns the kelurahan, kecamatan, kota, and their codes, with the street and RT/RW as new placeholders, so an address column can be cleaned without seeing it.
 4. When output must contain the real values (a cleaned CSV, a fixed migration, a report), write it with `write_file_unmasked`: it restores the placeholders on the user's machine.
-5. If the user pastes real personal data into the chat, finish the task without repeating it back, and suggest masking or test data next time.
+5. When the task with real data is done, call `clear_vault` so the session forgets the values. If `read_file_masked` refuses a file because the project's policy blocks a type in it, tell the user; do not read the file another way.
+6. If the user pastes real personal data into the chat, finish the task without repeating it back, and suggest masking or test data next time.
 
 Counting and aggregating without reading rows is fine: `wc -l`, `grep -c ERROR app.log`, `grep -o 'err="[A-Za-z]*' app.log | sort | uniq -c`, `cut -d, -f5 data.csv | sort | uniq -c` on a non-personal column. So is running a script that reads the real file and writes its results to a file. The Samaran guard hook (Claude Code) blocks commands whose output would contain personal data; when it does, switch to `read_file_masked` instead of looking for another way to print the file. Photos of documents (KTP, selfies) and scanned PDFs cannot be masked: do not open them unless the task needs it and the user agrees, and if the guard's permission prompt is declined, do not try another way to view the file.
 
 **Databases.** There is no masked database tool. Do not run queries that return personal columns. Prefer queries that return counts, aggregates, IDs, or non-personal columns; when rows with personal data are truly needed, ask the user to export them to CSV/XLSX and read that file with `read_file_masked`.
 
 Files that only hold fake data (fixtures, seeders) can be listed in `.samaranignore` at the project root.
+
+**The team's own identifiers.** Employee IDs, member numbers, internal account codes, and other formats Samaran cannot know go in `.samaran.json` at the project root, as rules with a label (`{"custom": [{"label": "EMPLOYEE_ID", "pattern": "..."}, {"label": "MEMBER", "fields": ["no_member"]}]}`); they come back as `[EMPLOYEE_ID_1]`. When the user mentions such an ID, offer to add a rule, and tell them to restart the MCP server afterwards. Values that must never be masked, like the company's own hotline, go in its `"allow"` list. If a file tool reports that `.samaran.json` is broken, show the user the error; do not read the data another way.
 
 If the `lokal` MCP server is not connected, say so and ask the user for a masked or synthetic sample instead of the raw file.
 

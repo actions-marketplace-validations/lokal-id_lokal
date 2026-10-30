@@ -1,6 +1,6 @@
 // packages/mcp/src/guard.ts
-import { existsSync as existsSync3, statSync as statSync3 } from "node:fs";
-import path3 from "node:path";
+import { existsSync as existsSync4, statSync as statSync3 } from "node:fs";
+import path4 from "node:path";
 
 // packages/core/dist/provinces.js
 var PROVINCES = {
@@ -273,6 +273,176 @@ var DATA = {
 };
 var HOLIDAY_YEARS = Object.keys(DATA).map(Number);
 
+// packages/core/dist/samaran/types.js
+var PII_TYPES = [
+  "NIK",
+  "KK",
+  "NPWP",
+  "PASSPORT",
+  "SIM",
+  "NIP",
+  "BPJS",
+  "NISN",
+  "AKTA",
+  "PHONE",
+  "EMAIL",
+  "BANK_ACCOUNT",
+  "CARD",
+  "PLATE",
+  "IP",
+  "GEO",
+  "NAME",
+  "ADDRESS",
+  "BIRTH_DATE",
+  "GENDER",
+  "RELIGION",
+  "MARITAL_STATUS",
+  "NATIONALITY",
+  "HEALTH",
+  "FINANCIAL",
+  "CRIMINAL_RECORD",
+  "BIOMETRIC",
+  "CUSTOM"
+];
+var UU_PDP_CATEGORY = Object.fromEntries(PII_TYPES.map((t) => [
+  t,
+  ["HEALTH", "BIOMETRIC", "CRIMINAL_RECORD", "FINANCIAL", "BANK_ACCOUNT", "CARD", "NISN"].includes(t) ? "spesifik" : "umum"
+]));
+
+// packages/core/dist/samaran/custom.js
+var LABEL = /^[A-Z][A-Z_]*[A-Z]$|^[A-Z]$/;
+function checkCustomRules(rules) {
+  for (const rule of rules) {
+    if (!LABEL.test(rule.label ?? "")) {
+      throw new RangeError(`Custom rule label "${rule.label}" must be capital letters and underscores, like EMPLOYEE_ID.`);
+    }
+    if (PII_TYPES.includes(rule.label)) {
+      throw new RangeError(`Custom rule label "${rule.label}" is a built-in type; choose another name.`);
+    }
+    if (rule.pattern === void 0 && !rule.fields?.length) {
+      throw new RangeError(`Custom rule ${rule.label} needs a pattern or fields.`);
+    }
+    if (typeof rule.pattern === "string") {
+      try {
+        new RegExp(rule.pattern);
+      } catch (e) {
+        throw new RangeError(`Custom rule ${rule.label}: pattern does not compile (${e.message}).`);
+      }
+    }
+  }
+}
+var escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function custom(label, start, value) {
+  return { type: "CUSTOM", label, start, end: start + value.length, value, confidence: "high" };
+}
+function byPattern(text, rule) {
+  const source = typeof rule.pattern === "string" ? rule.pattern : rule.pattern.source;
+  const flags = typeof rule.pattern === "string" ? "" : rule.pattern.flags.replace(/[gy]/g, "");
+  const out = [];
+  for (const m of text.matchAll(new RegExp(source, `${flags}g`))) {
+    if (m[0])
+      out.push(custom(rule.label, m.index, m[0]));
+  }
+  return out;
+}
+function byLabel(text, rule, names) {
+  const re = new RegExp(`(?:^|[^A-Za-z0-9_])(["']?)(?:${names})\\1[ \\t]*[:=][ \\t]*(?:"([^"\\r\\n]*)"|'([^'\\r\\n]*)'|([^\\s,;}\\]"'][^,;}\\]\\r\\n]*))`, "gi");
+  const out = [];
+  for (const m of text.matchAll(re)) {
+    const quoted = m[2] ?? m[3];
+    if (quoted !== void 0) {
+      if (quoted.trim())
+        out.push(custom(rule.label, m.index + m[0].length - 1 - quoted.length, quoted));
+      continue;
+    }
+    const raw = m[4];
+    const words = raw.split(/(\s+)/);
+    let value = words[0];
+    for (let i = 1; i + 1 < words.length && i < 12 && /^[A-Z0-9]/.test(words[i + 1]); i += 2)
+      value += words[i] + words[i + 1];
+    out.push(custom(rule.label, m.index + m[0].length - raw.length, value));
+  }
+  return out;
+}
+function cells(line, delimiter) {
+  const out = [];
+  let i = 0;
+  for (; ; ) {
+    let start = i;
+    let end;
+    if (line[i] === '"') {
+      let j = i + 1;
+      while (j < line.length && !(line[j] === '"' && line[j + 1] !== '"'))
+        j += line[j] === '"' ? 2 : 1;
+      start = i + 1;
+      end = j;
+      i = j + 1;
+      while (i < line.length && line[i] !== delimiter)
+        i++;
+    } else {
+      end = line.indexOf(delimiter, i);
+      if (end === -1)
+        end = line.length;
+      i = end;
+    }
+    out.push({ start, text: line.slice(start, end) });
+    if (i >= line.length)
+      return out;
+    i++;
+  }
+}
+function byColumn(text, rule, wanted) {
+  const out = [];
+  let columns;
+  let delimiter = ",";
+  let width = 0;
+  for (let pos = 0; pos <= text.length; ) {
+    let end = text.indexOf("\n", pos);
+    if (end === -1)
+      end = text.length;
+    const line = text.slice(pos, end).replace(/\r$/, "");
+    if (!line.trim()) {
+      columns = void 0;
+    } else if (columns) {
+      const row = cells(line, delimiter);
+      if (row.length === width) {
+        for (const c of columns) {
+          const value = row[c].text.trim();
+          if (value)
+            out.push(custom(rule.label, pos + row[c].start + row[c].text.indexOf(value), value));
+        }
+      }
+    } else {
+      for (const d of [",", "	", ";", "|"]) {
+        const header = cells(line, d);
+        if (header.length < 2)
+          continue;
+        const hit = header.flatMap((c, i) => wanted.has(c.text.trim().toLowerCase()) ? [i] : []);
+        if (hit.length) {
+          columns = hit;
+          delimiter = d;
+          width = header.length;
+          break;
+        }
+      }
+    }
+    pos = end + 1;
+  }
+  return out;
+}
+function detectCustom(text, rules) {
+  const out = [];
+  for (const rule of rules) {
+    if (rule.pattern !== void 0)
+      out.push(...byPattern(text, rule));
+    if (rule.fields?.length) {
+      out.push(...byLabel(text, rule, rule.fields.map(escape).join("|")));
+      out.push(...byColumn(text, rule, new Set(rule.fields.map((f) => f.toLowerCase()))));
+    }
+  }
+  return out;
+}
+
 // packages/core/dist/samaran/names.js
 var GIVEN_NAMES = new Set(
   // Male
@@ -297,7 +467,7 @@ var FIELDS = [
   ["NIP", "nip|nip_?baru|nrp|nomor_?induk_?pegawai"],
   ["NISN", "nisn|no_?nisn|nomor_?nisn|nomor_?induk_?siswa_?nasional"],
   ["AKTA", "akta|no_?akta|nomor_?akta|(?:no_?|nomor_?)?akta_?(?:kelahiran|lahir|nikah|perkawinan|kawin|cerai|perceraian|kematian)|birth_?certificate(?:_?(?:no|number))?|marriage_?certificate(?:_?(?:no|number))?"],
-  ["BPJS", "bpjs|no_?bpjs|nomor_?bpjs|bpjs_?kesehatan|bpjs_?ketenagakerjaan|kis|no_?kis|jkn|kpj"],
+  ["BPJS", "bpjs|no_?bpjs|nomor_?bpjs|bpjs_?kesehatan|bpjs_?ketenagakerjaan|kis|no_?kis|jkn|kpj|(?:no_?|nomor_?)?(?:kartu_?)?(?:jkn|kis|jkn_?kis)|(?:no_?|nomor_?)kartu_?(?:bpjs|jkn|kis)"],
   ["PHONE", "hp|no_?hp|nomor_?hp|nohp|telp|tlp|telepon|telpon|no_?telp|no_?telepon|nomor_?telepon|phone|phone_?number|mobile|mobile_?phone|handphone|whatsapp|wa|no_?wa|nomor_?wa|msisdn"],
   ["EMAIL", "email|e_?mail|surel|alamat_?email|email_?address"],
   ["BANK_ACCOUNT", "rekening|no_?rek|no_?rekening|nomor_?rekening|norek|rek|account_?number|bank_?account|account_?no|va|virtual_?account|no_?va"],
@@ -306,7 +476,8 @@ var FIELDS = [
   ["GEO", "lat|lng|lon|latitude|longitude|koordinat|coordinates|coords|geo|geolocation|latlng|lat_?long"],
   ["BIRTH_DATE", "tanggal_?lahir|tgl_?lahir|tgl_?lhr|tanggal_?kelahiran|tempat_?lahir|ttl|tempat_?tanggal_?lahir|tempat_?tgl_?lahir|tempat_?tgl_?lhr|date_?of_?birth|dob|birth_?date|birthdate|birthday|birth_?place|place_?of_?birth"],
   ["GENDER", "jenis_?kelamin|jns_?kelamin|kelamin|gender|sex|jk|l_?p"],
-  ["RELIGION", "agama|religion|kepercayaan"],
+  // "Agama/Kepercayaan", as Dukcapil forms print it.
+  ["RELIGION", "agama|religion|kepercayaan|agama_(?:dan_|atau_)?kepercayaan|kepercayaan_(?:dan_|atau_)?agama"],
   ["MARITAL_STATUS", "status_?perkawinan|status_?kawin|status_?pernikahan|status_?nikah|perkawinan|marital_?status|status_?marital"],
   ["NATIONALITY", "kewarganegaraan|warga_?negara|wn|nationality|citizenship"],
   ["HEALTH", "diagnosa|diagnosis|diagnose|penyakit|riwayat_?penyakit|riwayat_?medis|rekam_?medis|kondisi_?medis|kondisi_?kesehatan|keluhan|gejala|alergi|allergy|allergies|golongan_?darah|gol_?darah|blood_?type|hasil_?lab|lab_?result|obat|medication|medications|resep|prescription|icd|icd_?10|medical_?history|medical_?record|disabilitas|disability|kehamilan|pregnancy|status_?vaksin|vaccination_?status|tindakan_?medis"],
@@ -429,6 +600,8 @@ function isPlausibleValue(type, value, key) {
   const digitCount = v.replace(/\D/g, "").length;
   if (DIGIT_TYPES.has(type) && digitCount < 6)
     return false;
+  if (type === "CARD" && /^0/.test(v.replace(/\D/g, "")))
+    return false;
   if ((type === "GEO" || type === "IP") && digitCount < 2)
     return false;
   if (type === "IP" && !/^(?:\d{1,3}\.){3}\d{1,3}/.test(v) && !v.includes(":"))
@@ -463,46 +636,21 @@ function isPlausibleValue(type, value, key) {
   return true;
 }
 
-// packages/core/dist/samaran/types.js
-var PII_TYPES = [
-  "NIK",
-  "KK",
-  "NPWP",
-  "PASSPORT",
-  "SIM",
-  "NIP",
-  "BPJS",
-  "NISN",
-  "AKTA",
-  "PHONE",
-  "EMAIL",
-  "BANK_ACCOUNT",
-  "CARD",
-  "PLATE",
-  "IP",
-  "GEO",
-  "NAME",
-  "ADDRESS",
-  "BIRTH_DATE",
-  "GENDER",
-  "RELIGION",
-  "MARITAL_STATUS",
-  "NATIONALITY",
-  "HEALTH",
-  "FINANCIAL",
-  "CRIMINAL_RECORD",
-  "BIOMETRIC"
-];
-var UU_PDP_CATEGORY = Object.fromEntries(PII_TYPES.map((t) => [
-  t,
-  ["HEALTH", "BIOMETRIC", "CRIMINAL_RECORD", "FINANCIAL", "BANK_ACCOUNT", "CARD", "NISN"].includes(t) ? "spesifik" : "umum"
-]));
-
 // packages/core/dist/samaran/detectors.js
 function before(text, index, window = 40) {
   const slice = text.slice(Math.max(0, index - window), index);
   const nl = slice.lastIndexOf("\n");
   return (nl >= 0 ? slice.slice(nl + 1) : slice).toLowerCase();
+}
+function isCallCenter(value) {
+  const local = value.replace(/^\s*(?:\(\s*)?(?:\+62|0)\s?\d{2,3}\)?[\s.-]?/, "").replace(/\D/g, "");
+  return local.length === 6 && local.startsWith("500");
+}
+function previousLine(text, index) {
+  const lineStart = text.lastIndexOf("\n", index - 1) + 1;
+  if (lineStart === 0)
+    return "";
+  return text.slice(text.lastIndexOf("\n", lineStart - 2) + 1, lineStart - 1).toLowerCase();
 }
 function lineAbove(text, index, length) {
   const lineStart = text.lastIndexOf("\n", index - 1) + 1;
@@ -565,7 +713,8 @@ var TEST_CARDS = /* @__PURE__ */ new Set([
   "5211111111111117",
   "4911111111111113"
 ]);
-var KK_KEYWORD = /\b(kk|kartu keluarga)\b[^\d]*$/;
+var KK_KEYWORD = /(?:\b|_)(kk|kartu[ _]?keluarga|family[ _]?card)\b[^\d]*$/;
+var NUMBER_ONLY_LABEL = /^\W*(?:no|nomor|no\.\s*kartu|nomor\s+kartu)?\W*$/;
 var SIM_KEYWORD = /\b(sim|surat izin mengemudi|driving licen[cs]e)\b[^\d]*$/;
 var NIK_KEYWORD = /\b(nik|ktp|nomor induk kependudukan)\b/;
 var NPWP_KEYWORD = /\bnpwp\b/;
@@ -583,7 +732,10 @@ function detectDigitRuns(text) {
     const push = (type, confidence) => out.push(match(type, m.index, value, confidence));
     if (/^(08|628)/.test(digits) && parsePhone(digits).valid)
       continue;
-    if (digits.length === 16 && KK_KEYWORD.test(label))
+    if (/^(?:19|20)\d{2}-\d{2}-\d{2}(?: \d{2})?$|^\d{2}-\d{2}-(?:19|20)\d{2}(?: \d{2})?$/.test(value))
+      continue;
+    const title = NUMBER_ONLY_LABEL.test(label) ? previousLine(text, m.index) : "";
+    if (digits.length === 16 && (KK_KEYWORD.test(label) || /\bkartu keluarga\b/.test(title)))
       push("KK", "high");
     else if (digits.length >= 12 && digits.length <= 16 && SIM_KEYWORD.test(label))
       push("SIM", "high");
@@ -600,7 +752,7 @@ function detectDigitRuns(text) {
       push("NIK", "medium");
     else if (digits.length === 10 && NISN_KEYWORD.test(label))
       push("NISN", "high");
-    else if ((digits.length === 13 || digits.length === 11) && BPJS_KEYWORD.test(ctx))
+    else if ((digits.length === 13 || digits.length === 11) && (BPJS_KEYWORD.test(ctx) || BPJS_KEYWORD.test(title)))
       push("BPJS", "high");
     else if (digits.length >= 8 && digits.length <= 18 && BANK_KEYWORD.test(ctx))
       push("BANK_ACCOUNT", "high");
@@ -676,7 +828,8 @@ function detectPhones(text) {
   }
   const landline = /\((?:\+62[ \t]?|0)\d{2,3}\)[ \t]?\d{3,4}[ \t-]?\d{3,4}(?!\d)|(?<![\d\w])\+62[ \t]?[2-79]\d{1,2}[ \t-]?\d{3,4}[ \t-]?\d{3,4}(?!\d)/g;
   for (const m of text.matchAll(landline))
-    out.push(match("PHONE", m.index, m[0], "medium"));
+    if (!isCallCenter(m[0]))
+      out.push(match("PHONE", m.index, m[0], "medium"));
   const bracketed = /(?<![\d\w])(?:\+?62[ \t]?\(8\d{1,2}\)|\(08\d{1,2}\))[ \t]?\d{3,4}[ \t.-]?\d{3,4}(?!\d)/g;
   for (const m of text.matchAll(bracketed))
     if (parsePhone(m[0]).valid)
@@ -697,7 +850,7 @@ function detectPhones(text) {
     if (!PHONE_WORD.test(before(text, m.index, 30)))
       continue;
     const info = parsePhone(m[0]);
-    if (info.valid && info.type === "landline")
+    if (info.valid && info.type === "landline" && !isCallCenter(m[0]))
       out.push(match("PHONE", m.index, m[0], "medium"));
   }
   return out;
@@ -758,12 +911,12 @@ var SYMPTOMS = "(?:demam(?:\\s+tinggi)?|batuk(?:\\s+berdahak)?|pilek|flu|sesak(?
 var MEDICATIONS = "insulin|metformin|glibenclamide|arv|antiretroviral|obat tbc|rifampisin|isoniazid|kemoterapi|kemo|antidepresan|antipsikotik|fluoxetine|sertraline|risperidone|haloperidol|lithium|metadon|methadone|warfarin|amlodipine|captopril|levothyroxine|tamoxifen|hormon|kb|pil kb";
 function detectHealth(text) {
   const out = [];
-  const strong = /\b(?:didiagnosis|didiagnosa|terdiagnosis|terdiagnosa|mengidap|terinfeksi|riwayat penyakit|divonis)\s+(?:menderita\s+|mengidap\s+|penyakit\s+)?(?!(?:yang|dan|atau|di|ke|dari|untuk|ini|itu|tersebut|adalah|dapat|bisa|tidak|belum|anda|kamu|pasien|seseorang)\b)([^\n\r,.;:()]{2,60}?)(?=\s+(?:sejak|selama|dan sudah|dan sedang|tapi|namun|sehingga|jadi)\b|[\n\r,.;:()]|$)/gi;
-  const dx = /\b(?:Dx|DX|Diagnosis|Diagnosa|Diag)\s*:\s*([^\n\r,;()]{2,60}?)(?=\s*(?:[\n\r,;()]|\.(?:\s|$)|$))/g;
+  const strong = /\b(?:didiagnosis|didiagnosa|terdiagnosis|terdiagnosa|mengidap|terinfeksi|riwayat penyakit|divonis)\s+(?:menderita\s+|mengidap\s+|penyakit\s+)?(?!(?:yang|dan|atau|di|ke|dari|untuk|ini|itu|tersebut|adalah|dapat|bisa|tidak|belum|anda|kamu|pasien|seseorang)\b)([^\n\r,.;:()"]{2,60}?)(?=\s+(?:sejak|selama|dan sudah|dan sedang|tapi|namun|sehingga|jadi)\b|[\n\r,.;:()"]|$)/gi;
+  const dx = /\b(?:Dx|DX|Diagnosis|Diagnosa|Diag)\s*:\s*([^\n\r,;()"]{2,60}?)(?=\s*(?:[\n\r,;()"]|\.(?:\s|$)|$))/g;
   for (const m of [...text.matchAll(strong), ...text.matchAll(dx)]) {
     out.push(match("HEALTH", m.index + m[0].length - m[1].length, m[1], "high"));
   }
-  const gated = new RegExp(`\\b(?:(?:dokter|dok|dr)\\.?\\s+(?:bilang|bilangnya|menyatakan|mendiagnosis)(?:\\s+(?:ada|kena|positif))?|positif|menderita|terkena|kena|sakit|pasien|komplikasi|kambuh|kumat|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|riwayat|diagnosa|diagnosis|didiagnosa|pembawa\\s+sifat|carrier|saya|aku|gue|gw|gua|dia|beliau|ayah|bapak|ibu|mama|mamah|papa|papah|suami|istri|anak|anaknya|adik|adek|kakak|nenek|kakek|mertua|pacar|teman|temen)\\s+(?:(?:saya|aku|gue|dia|lagi|sedang|sdg|sudah|udah|sdh|sempat|pernah|baru|kena|terkena)\\s+){0,2}((?:penyakit\\s+)?(?:${CONDITIONS})(?:\\s*(?:,|dan|serta)\\s+(?:${CONDITIONS}))*)\\b`, "gi");
+  const gated = new RegExp(`\\b(?:(?:dokter|dok|dr)\\.?\\s+(?:bilang|bilangnya|menyatakan|mendiagnosis)(?:\\s+(?:ada|kena|positif))?|perawatan|pengobatan|dirawat\\s+karena|kontrol|has|have|had|with|suffers\\s+from|suffering\\s+from|diagnosed\\s+with|history\\s+of|positif|menderita|terkena|kena|sakit|pasien|komplikasi|kambuh|kumat|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|riwayat|diagnosa|diagnosis|didiagnosa|pembawa\\s+sifat|carrier|saya|aku|gue|gw|gua|dia|beliau|ayah|bapak|ibu|mama|mamah|papa|papah|suami|istri|anak|anaknya|adik|adek|kakak|nenek|kakek|mertua|pacar|teman|temen)\\s+(?:(?:saya|aku|gue|dia|lagi|sedang|sdg|sudah|udah|sdh|sempat|pernah|baru|kena|terkena)\\s+){0,2}((?:penyakit\\s+)?(?:${CONDITIONS})(?:\\s*(?:,|dan|serta)\\s+(?:${CONDITIONS}))*)\\b`, "gi");
   for (const m of text.matchAll(gated)) {
     out.push(match("HEALTH", m.index + m[0].length - m[1].length, m[1], "medium"));
   }
@@ -847,6 +1000,12 @@ function detectMaritalStatus(text) {
 function detectReligion(text) {
   const re = /\b(?:beragama|agamanya|agama\s+(?:saya|aku|dia|beliau|kami|mereka))\s+(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Hindu|Buddha|Budha|Konghucu|Khonghucu|Kong Hu Cu)\b/gi;
   const out = [...text.matchAll(re)].map((m) => match("RELIGION", m.index + m[0].length - m[1].length, m[1], "high"));
+  const bare = /\b(?:agama|religion)\s*:?\s+(Islam|Kristen(?:\s+Protestan)?|Protestan|Katolik|Katholik|Catholic|Christian|Muslim|Hindu|Buddha|Budha|Buddhist|Konghucu|Khonghucu)\b/gi;
+  for (const m of text.matchAll(bare)) {
+    if (/\b(?:pendidikan|pelajaran|mata\s+pelajaran|guru|umat|hari(?:\s+raya)?|tokoh|kementerian|pengadilan|universitas|institut|sekolah|ajaran|nilai|organisasi|lembaga|majelis|studi|fakultas|ilmu|perayaan|kitab|rumah\s+ibadah|penyuluh|pemuka)\s+$/i.test(before(text, m.index, 30)))
+      continue;
+    out.push(match("RELIGION", m.index + m[0].length - m[1].length, m[1], "medium"));
+  }
   const adjective = /\b(?:saya|aku|gue|gw|dia|beliau|kami|keluarga\s+(?:saya|kami)|(?:suami|istri|ayah|bapak|ibu|mama|papa|ortu|orang\s+tua|anak|adik|kakak|pacar|calon)(?:\s+(?:saya|aku|gue|dia)|nya|ku)?)\s+(?:(?:seorang|itu|adalah|sudah|udah|baru|jadi)\s+)?(muslim(?:ah)?|islam|nasrani|kristiani?|kristen(?:\s+protestan)?|protestan|katolik|katholik|hindu|buddhis|buddha|budha|konghucu|khonghucu|mualaf|muallaf|ateis|atheis|agnostik|non[- ]?muslim)\b/gi;
   for (const m of text.matchAll(adjective))
     out.push(match("RELIGION", m.index + m[0].length - m[1].length, m[1], "medium"));
@@ -1313,30 +1472,30 @@ function detectHtml(text) {
   let columns;
   let headers = [];
   for (const row of text.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)) {
-    const cells = [...row[1].matchAll(/<(t[hd])\b[^>]*>([^<]*)<\/t[hd]>/gi)].map((c) => ({
+    const cells2 = [...row[1].matchAll(/<(t[hd])\b[^>]*>([^<]*)<\/t[hd]>/gi)].map((c) => ({
       header: c[1].toLowerCase() === "th",
       text: decodeEntities(c[2]).trim(),
       start: row.index + row[0].indexOf(row[1]) + c.index + c[0].indexOf(">") + 1,
       raw: c[2]
     }));
-    if (!cells.length)
+    if (!cells2.length)
       continue;
-    const types = cells.map((c) => c.text.length <= 40 ? fieldType(c.text) : void 0);
-    if (cells.length === 2 && types[0] && !types[1]) {
-      const [label, cell] = cells;
+    const types = cells2.map((c) => c.text.length <= 40 ? fieldType(c.text) : void 0);
+    if (cells2.length === 2 && types[0] && !types[1]) {
+      const [label, cell] = cells2;
       if (cell.text && isPlausibleValue(types[0], cell.text, label.text)) {
         out.push(match(types[0], cell.start + cell.raw.indexOf(cell.text.slice(0, 1)), cell.raw.trim(), "high"));
       }
       continue;
     }
-    if (cells.every((c) => c.header) || !columns && types.some(Boolean) && cells.every((c) => !/\d{3}/.test(c.text))) {
+    if (cells2.every((c) => c.header) || !columns && types.some(Boolean) && cells2.every((c) => !/\d{3}/.test(c.text))) {
       columns = types;
-      headers = cells.map((c) => c.text);
+      headers = cells2.map((c) => c.text);
       continue;
     }
     if (!columns)
       continue;
-    cells.forEach((c, i) => {
+    cells2.forEach((c, i) => {
       const type = columns[i];
       if (!type || !c.text || !isPlausibleValue(type, c.text, headers[i]))
         return;
@@ -1608,7 +1767,7 @@ function detectSqlInserts(text) {
   }
   return out;
 }
-var STREET = "Jl|Jln|Jalan|Gg|Gang|Komp|Kompl|Komplek|Kompleks|Perum|Perumahan|Cluster|Klaster|Apartemen|Apartment|Apt|Rusun|Rusunawa|Tower|Ruko|Wisma|Asrama|Dusun|Dsn|Dukuh|Kampung|Kp|Lingkungan|Ling";
+var STREET = "Jl|Jln|Jalan|Gg|Gang|Komp|Kompl|Komplek|Kompleks|Perum|Perumahan|Cluster|Klaster|Apartemen|Apartment|Apt|Rusun|Rusunawa|Tower|Ruko|Wisma|Asrama|Dusun|Dsn|Dukuh|Kampung|Kp|Lingkungan|Ling|JL|JLN|JALAN|GG|GANG|KOMP|KOMPLEK|KOMPLEKS|PERUM|PERUMAHAN|DUSUN|DSN|KAMPUNG|KP";
 var PIN = "[Nn][Oo]|[Nn]omor|[Bb]lok|[Kk]av|[Uu]nit|[Ll]t|[Ll]antai|[Kk]amar|[Kk]mr|NO|BLOK";
 var RT_RW = "RT\\.?\\s*0*\\d{1,3}\\s*[/,]?\\s*RW\\.?\\s*0*\\d{1,3}";
 function detectStreetAddresses(text) {
@@ -1751,6 +1910,18 @@ function valueExtent(text, start, end) {
   }
   return end;
 }
+function closingQuote(text, start, end) {
+  for (let i = start; i < end; i++) {
+    if (text[i] !== '"' || text[i - 1] === "\\")
+      continue;
+    let j = i + 1;
+    while (j < end && (text[j] === " " || text[j] === "	"))
+      j++;
+    if (j >= end || text[j] === "," || text[j] === "}" || text[j] === "]")
+      return i;
+  }
+  return end;
+}
 function detectLabeledFields(text) {
   const out = [];
   let lineStart = 0;
@@ -1785,7 +1956,7 @@ function detectLabeledFields(text) {
     const quote = text[valueStart];
     if (valueStart < rawEnd && isQuote(quote)) {
       let close = valueStart + 1;
-      while (close < rawEnd && text[close] !== quote)
+      while (close < rawEnd && (text[close] !== quote || text[close - 1] === "\\"))
         close++;
       if (close >= rawEnd)
         continue;
@@ -1794,7 +1965,8 @@ function detectLabeledFields(text) {
         continue;
       start += 1;
     } else {
-      const raw = text.slice(valueStart, valueExtent(text, valueStart, rawEnd));
+      const end = closingQuote(text, valueStart, rawEnd);
+      const raw = text.slice(valueStart, valueExtent(text, valueStart, end));
       value = cutValue(type, raw);
       if (value)
         start += raw.indexOf(value);
@@ -1836,35 +2008,63 @@ function blankLineNumbers(text) {
     return text;
   return text.replace(NUMBERED_LINES, (prefix) => " ".repeat(prefix.length));
 }
+var CSV_HEADER_LINES = 20;
 function detectCsvColumns(text) {
   text = blankLineNumbers(text);
-  const firstBreak = text.indexOf("\n");
+  const table = csvTableAt(text, 0, true);
+  if (table)
+    return table;
+  let lineStart = 0;
+  for (let n = 1; n < CSV_HEADER_LINES; n++) {
+    const lineBreak = text.indexOf("\n", lineStart);
+    if (lineBreak === -1)
+      break;
+    lineStart = lineBreak + 1;
+    const later = csvTableAt(text, lineStart, false);
+    if (later)
+      return later;
+  }
+  return [];
+}
+var CSV_HEADER_PREFIX = /^[^,;|\t:]{1,60}:[ \t]+/;
+function csvTableAt(text, at, toEnd, header) {
+  const firstBreak = text.indexOf("\n", at);
   if (firstBreak === -1)
-    return [];
-  const header = text.slice(0, firstBreak).replace(/\r$/, "");
+    return void 0;
+  if (header === void 0) {
+    const line = text.slice(at, firstBreak).replace(/\r$/, "");
+    const prefix = CSV_HEADER_PREFIX.exec(line);
+    return prefix && csvTableAt(text, at, false, line.slice(prefix[0].length)) || csvTableAt(text, at, toEnd, line);
+  }
   const delimiter = [",", ";", "	", "|"].find((d) => header.includes(d));
-  if (!delimiter)
-    return [];
+  if (!delimiter || !toEnd && delimiter === "	")
+    return void 0;
   const headerFields = csvFields(header, delimiter).map((f) => header.slice(f.start, f.end).trim());
   const secondLine = text.slice(firstBreak + 1).split("\n", 1)[0].replace(/\r$/, "");
-  if (headerFields.length < 2 || headerFields.some((h) => h.length > 40 || /[.!?]$/.test(h)) || csvFields(secondLine, delimiter).length !== headerFields.length) {
-    return [];
+  if (headerFields.length < 2 || headerFields.some((h) => h.length > 40 || /[.!?]$/.test(h)) || csvFields(secondLine, delimiter).length !== headerFields.length || // In the middle of a text, a header is labels only: not a data row such as "n01687978<TAB>agama".
+  !toEnd && headerFields.some((h) => !/[A-Za-z]/.test(h) || /\d{3}/.test(h))) {
+    return void 0;
   }
   const columns = headerFields.map((h) => fieldType(h));
   if (!columns.some(Boolean))
-    return [];
+    return void 0;
   const second = csvFields(secondLine, delimiter);
   if (columns.some((t, i) => t && fieldType(secondLine.slice(second[i].start, second[i].end).trim())))
-    return [];
+    return void 0;
   const out = [];
   let offset = firstBreak + 1;
   for (const rawLine of text.slice(offset).split("\n")) {
     const line = rawLine.replace(/\r$/, "");
-    csvFields(line, delimiter).forEach((f, idx) => {
+    const fields2 = csvFields(line, delimiter);
+    if (!toEnd && fields2.length !== headerFields.length)
+      break;
+    fields2.forEach((f, idx) => {
       const type = columns[idx];
       const cell = line.slice(f.start, f.end);
       const value = cell.trim();
       if (!type || !isPlausibleValue(type, value, headerFields[idx]))
+        return;
+      if (!toEnd && NUMBER_TYPES.has(type) && !/^[+\d\s().\/-]+$/.test(value))
         return;
       const start = offset + f.start + cell.indexOf(value);
       out.push(match(type, start, value, isGenericNameKey(headerFields[idx]) ? "medium" : "high"));
@@ -1886,18 +2086,18 @@ function detectTabTables(text) {
     if (end === -1)
       end = text.length;
     const line = text.slice(pos, end > pos && text[end - 1] === "\r" ? end - 1 : end);
-    const cells = [];
+    const cells2 = [];
     if (line.includes("	")) {
       let at = 0;
       for (const part of line.split("	")) {
         const value = part.trim();
-        cells.push({ start: pos + at + (value ? part.indexOf(value) : 0), value });
+        cells2.push({ start: pos + at + (value ? part.indexOf(value) : 0), value });
         at += part.length + 1;
       }
     }
-    const filled = cells.filter((c) => c.value);
-    if (header && filled.length >= 2 && cells.length <= header.length) {
-      cells.forEach((c, i) => {
+    const filled = cells2.filter((c) => c.value);
+    if (header && filled.length >= 2 && cells2.length <= header.length) {
+      cells2.forEach((c, i) => {
         const type = columns[i];
         if (!type || !c.value || !isPlausibleValue(type, c.value, header[i]))
           return;
@@ -1905,7 +2105,7 @@ function detectTabTables(text) {
       });
     } else {
       header = void 0;
-      const types = cells.map((c) => c.value ? fieldType(c.value) : void 0);
+      const types = cells2.map((c) => c.value ? fieldType(c.value) : void 0);
       const [label, value] = filled;
       if (filled.length === 2 && /^[A-Z]/.test(label.value) && fieldType(label.value) && !fieldType(value.value)) {
         const type = fieldType(label.value);
@@ -1914,7 +2114,7 @@ function detectTabTables(text) {
         }
       } else if (filled.length >= 2 && filled.every((c) => c.value.length <= 40 && /[A-Za-z]/.test(c.value) && !/[.!?]$|\d{3}/.test(c.value)) && // Data files have tabs too ("n01687978<TAB>agama"): a document table's header is capitalized, or names two fields.
       (types.filter(Boolean).length >= 2 || types.some(Boolean) && filled.every((c) => /^[A-Z]/.test(c.value)))) {
-        header = cells.map((c) => c.value);
+        header = cells2.map((c) => c.value);
         columns = types;
       }
     }
@@ -1966,6 +2166,82 @@ var DETECTORS = [
   detectCsvColumns,
   detectTabTables
 ];
+var JSON_STRING = /"((?:[^"\\]|\\[\s\S])*)"/g;
+var UNESCAPED = { n: "\n", r: "\r", t: "	", b: "\b", f: "\f" };
+var JSON_BODY = /^[ \t\r\n]*[{[]/;
+function worthUnescaping(body) {
+  if (!body.includes('\\"'))
+    return false;
+  return JSON_BODY.test(body) || body.includes("\\n") && /[,;|]/.test(body);
+}
+function detectEscapedStrings(text) {
+  if (!text.includes("\\"))
+    return [];
+  const out = [];
+  let joined = "";
+  let joinedAt = [];
+  let joinedPart = [];
+  let part = 0;
+  const flush = () => {
+    if (!joined)
+      return;
+    joinedAt.push(joinedAt.at(-1));
+    joinedPart.push(-1);
+    for (const f of [...DETECTORS.flatMap((d) => d(joined)), ...detectEscapedStrings(joined)]) {
+      if (joinedPart[f.start] !== joinedPart[f.end - 1])
+        continue;
+      const start = joinedAt[f.start];
+      const end = joinedAt[f.end];
+      out.push({ ...f, start, end, value: text.slice(start, end) });
+    }
+    joined = "";
+    joinedAt = [];
+    joinedPart = [];
+  };
+  for (const m of text.matchAll(JSON_STRING)) {
+    const body = m[1];
+    if (!worthUnescaping(body))
+      continue;
+    const json = JSON_BODY.test(body);
+    if (!json)
+      flush();
+    if (joined) {
+      joined += "\n\n";
+      joinedAt.push(joinedAt.at(-1), joinedAt.at(-1));
+      joinedPart.push(-1, -1);
+    }
+    const base = m.index + 1;
+    part++;
+    for (let i = 0; i < body.length; ) {
+      joinedAt.push(base + i);
+      joinedPart.push(part);
+      if (body[i] !== "\\") {
+        joined += body[i++];
+      } else if (body[i + 1] === "u" && /^[0-9a-fA-F]{4}$/.test(body.slice(i + 2, i + 6))) {
+        joined += String.fromCharCode(parseInt(body.slice(i + 2, i + 6), 16));
+        i += 6;
+      } else {
+        const e = body[i + 1] ?? "";
+        joined += UNESCAPED[e] ?? e;
+        i += 2;
+      }
+    }
+    joinedAt.push(base + body.length);
+    joinedPart.push(part);
+    joined += " ";
+    if (!json)
+      flush();
+  }
+  flush();
+  return out;
+}
+var ESCAPED_BREAK = /\\+[nrt]/g;
+var BREAK_FOR = { n: "\n", r: "\r", t: "	" };
+function escapesAsBreaks(text) {
+  if (!text.includes("\\"))
+    return text;
+  return text.replace(ESCAPED_BREAK, (e) => " ".repeat(e.length - 1) + BREAK_FOR[e[e.length - 1]]);
+}
 function detectPii(text, options = {}) {
   for (const t of [...options.types ?? [], ...options.exclude ?? []]) {
     if (!PII_TYPES.includes(t))
@@ -1976,8 +2252,15 @@ function detectPii(text, options = {}) {
     types.delete(t);
   const minRank = options.minConfidence === "high" ? 2 : 1;
   const rank = (m) => m.confidence === "high" ? 2 : 1;
-  const candidates = DETECTORS.flatMap((d) => d(text)).filter((m) => m.end > m.start && types.has(m.type) && rank(m) >= minRank);
-  candidates.sort((a, b) => rank(b) - rank(a) || b.end - b.start - (a.end - a.start) || a.start - b.start);
+  if (options.custom?.length)
+    checkCustomRules(options.custom);
+  const view = escapesAsBreaks(text);
+  const found = [...DETECTORS.flatMap((d) => d(view)), ...detectEscapedStrings(text)];
+  if (options.custom?.length)
+    found.push(...detectCustom(view, options.custom));
+  const candidates = found.filter((m) => m.end > m.start && types.has(m.type) && rank(m) >= minRank);
+  const own = (m) => m.type === "CUSTOM" ? 1 : 0;
+  candidates.sort((a, b) => rank(b) - rank(a) || b.end - b.start - (a.end - a.start) || own(b) - own(a) || a.start - b.start);
   const taken = new Uint8Array(text.length + 1);
   const accepted = [];
   for (const c of candidates) {
@@ -1989,7 +2272,23 @@ function detectPii(text, options = {}) {
     taken.fill(1, c.start, c.end);
     accepted.push(c);
   }
-  return accepted.sort((a, b) => a.start - b.start);
+  accepted.sort((a, b) => a.start - b.start);
+  return accepted.flatMap((m) => {
+    let end = m.end;
+    for (; ; ) {
+      if (end > m.start && view[end - 1] !== text[end - 1])
+        end--;
+      else if (end > m.start && text[end - 1] === "\\")
+        end--;
+      else if (end - 1 > m.start && text[end - 1] === '"' && text[end - 2] === "\\")
+        end -= 2;
+      else
+        break;
+    }
+    if (end === m.end)
+      return [m];
+    return end > m.start ? [{ ...m, end, value: text.slice(m.start, end) }] : [];
+  });
 }
 
 // packages/core/dist/samaran/index.js
@@ -2044,6 +2343,8 @@ function partialMask(type, value) {
       return value.split(/\s+/).map((w) => `${[...w][0] ?? ""}${stars(3)}`).join(" ");
     case "ADDRESS":
       return `${value.split(/\s+/)[0]} ${stars(3)}`;
+    case "CUSTOM":
+      return `${stars(value.length - 2)}${value.length > 6 ? value.slice(-2) : ""}`;
   }
 }
 
@@ -2136,7 +2437,7 @@ function readXlsx(buf) {
     if (!xml) continue;
     const rows = [];
     for (const row of xml.matchAll(/<row\b[^>]*>([\s\S]*?)<\/row>/g)) {
-      const cells = [];
+      const cells2 = [];
       for (const c of row[1].matchAll(/<c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g)) {
         const attrs = c[1];
         const body = c[2] ?? "";
@@ -2147,11 +2448,11 @@ function readXlsx(buf) {
         if (type === "s" && v !== void 0) value = shared[Number(v)] ?? "";
         else if (type === "inlineStr") value = textOf(body);
         else if (v !== void 0) value = decodeXml(v);
-        const idx = ref ? columnIndex(ref) : cells.length;
-        while (cells.length < idx) cells.push("");
-        cells[idx] = value;
+        const idx = ref ? columnIndex(ref) : cells2.length;
+        while (cells2.length < idx) cells2.push("");
+        cells2[idx] = value;
       }
-      rows.push(cells);
+      rows.push(cells2);
     }
     const width = rows.reduce((w, r) => Math.max(w, r.length), 0);
     const csv = rows.map((r) => [...r, ...Array(width - r.length).fill("")].map(csvCell).join(",")).join("\n");
@@ -3207,6 +3508,101 @@ function globToRegExp(glob) {
   }
   return new RegExp(`^${re}$`);
 }
+var POLICY_ACTIONS = ["mask", "allow", "block", "route"];
+function allowedTypes(config2) {
+  return Object.entries(config2.policy ?? {}).filter(([key, action]) => action === "allow" && PII_TYPES.includes(key)).map(([key]) => key);
+}
+function policyFor(config2, m) {
+  const policy = config2.policy ?? {};
+  return (m.label !== void 0 ? policy[m.label] : void 0) ?? policy[m.type] ?? "mask";
+}
+function loadConfig(root) {
+  const file = path.join(root, ".samaran.json");
+  if (!existsSync(file)) return { custom: [], allow: [] };
+  let raw;
+  try {
+    raw = JSON.parse(readFileSync(file, "utf8"));
+  } catch (e) {
+    throw new Error(`.samaran.json is not valid JSON: ${e.message}`);
+  }
+  const fail = (why) => {
+    throw new Error(`.samaran.json: ${why}`);
+  };
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) fail('expected an object with "custom" and "allow"');
+  const { custom: custom2 = [], allow = [], policy, route, audit, vaultTtlMinutes, guard, ...rest } = raw;
+  const unknownKeys = Object.keys(rest).filter((k) => !k.startsWith("$"));
+  if (unknownKeys.length) {
+    fail(`unknown key ${unknownKeys.map((k) => `"${k}"`).join(", ")} (expected "custom", "allow", "policy", "route", "audit", "vaultTtlMinutes", or "guard")`);
+  }
+  if (!Array.isArray(custom2)) fail('"custom" must be a list of rules');
+  if (!Array.isArray(allow) || !allow.every((a) => typeof a === "string")) fail('"allow" must be a list of strings');
+  const rules = custom2.map((r, i) => {
+    if (!r || typeof r !== "object") fail(`custom[${i}] must be an object`);
+    const { label, pattern, fields: fields2, ...extra } = r;
+    if (Object.keys(extra).length) fail(`custom[${i}]: unknown key ${Object.keys(extra).map((k) => `"${k}"`).join(", ")}`);
+    if (typeof label !== "string") fail(`custom[${i}] needs a "label"`);
+    if (pattern !== void 0 && typeof pattern !== "string") fail(`custom[${i}].pattern must be a string`);
+    if (fields2 !== void 0 && (!Array.isArray(fields2) || !fields2.every((f) => typeof f === "string" && f.trim()))) {
+      fail(`custom[${i}].fields must be a list of field names`);
+    }
+    return {
+      label,
+      ...pattern !== void 0 ? { pattern } : {},
+      ...fields2 !== void 0 ? { fields: fields2 } : {}
+    };
+  });
+  try {
+    checkCustomRules(rules);
+  } catch (e) {
+    fail(e.message);
+  }
+  const config2 = { custom: rules, allow };
+  if (policy !== void 0) {
+    if (!policy || typeof policy !== "object" || Array.isArray(policy)) fail('"policy" must be an object such as { "HEALTH": "block" }');
+    const labels = new Set(rules.map((r) => r.label));
+    for (const [key, action] of Object.entries(policy)) {
+      if (!PII_TYPES.includes(key) && !labels.has(key)) {
+        fail(`policy: "${key}" is neither a type (${PII_TYPES.join(", ")}) nor a label in "custom"`);
+      }
+      if (!POLICY_ACTIONS.includes(action)) fail(`policy.${key} must be one of ${POLICY_ACTIONS.map((a) => `"${a}"`).join(", ")}`);
+      if (action === "allow" && labels.has(key)) fail(`policy.${key}: "allow" for a custom rule; remove the rule from "custom" instead`);
+    }
+    config2.policy = policy;
+  }
+  if (route !== void 0) {
+    if (!route || typeof route !== "object" || Array.isArray(route)) fail('"route" must be an object such as { "openai": "http://127.0.0.1:11434/v1" }');
+    const { openai, anthropic, model, ...extra } = route;
+    if (Object.keys(extra).length) fail(`route: unknown key ${Object.keys(extra).map((k) => `"${k}"`).join(", ")}`);
+    for (const [k, v] of Object.entries({ openai, anthropic })) {
+      if (v === void 0) continue;
+      if (typeof v !== "string" || !/^https?:\/\//.test(v)) fail(`route.${k} must be an http(s) URL`);
+    }
+    if (model !== void 0 && typeof model !== "string") fail("route.model must be a string");
+    config2.route = { openai, anthropic, model };
+  }
+  if (Object.values(config2.policy ?? {}).includes("route") && !config2.route?.openai && !config2.route?.anthropic) {
+    fail('"route" in policy needs a local endpoint: add "route": { "openai": "http://127.0.0.1:11434/v1" }');
+  }
+  if (audit !== void 0 && audit !== false) {
+    if (audit !== true && (typeof audit !== "string" || !audit.trim())) fail('"audit" must be true or a file path');
+    config2.audit = path.resolve(root, audit === true ? ".lokal/audit.jsonl" : audit);
+  }
+  if (vaultTtlMinutes !== void 0) {
+    if (typeof vaultTtlMinutes !== "number" || !(vaultTtlMinutes > 0)) fail('"vaultTtlMinutes" must be a positive number');
+    config2.vaultTtlMinutes = vaultTtlMinutes;
+  }
+  if (guard !== void 0) {
+    if (guard !== "strict") fail('"guard" can only be "strict" (SAMARAN_GUARD=off on your own machine turns the guard off)');
+    config2.guard = "strict";
+  }
+  return config2;
+}
+function detectConfigured(text, options, config2) {
+  const allowed = allowedTypes(config2);
+  const exclude = allowed.length ? [...options.exclude ?? [], ...allowed] : options.exclude;
+  const found = detectPii(text, { ...options, custom: config2.custom, ...exclude ? { exclude } : {} });
+  return config2.allow.length ? found.filter((m) => !config2.allow.includes(m.value)) : found;
+}
 function loadIgnore(root) {
   const file = path.join(root, ".samaranignore");
   if (!existsSync(file)) return () => false;
@@ -3232,6 +3628,8 @@ function loadIgnore(root) {
     });
   };
 }
+var unsupported = (reason, dataBearing = true) => ({ kind: "skipped", status: "unsupported", reason, dataBearing });
+var failed = (reason) => ({ kind: "skipped", status: "failed", reason, dataBearing: true });
 function readHead(file, bytes) {
   const fd = openSync(file, "r");
   try {
@@ -3278,21 +3676,20 @@ function parseWhole(ext, buf) {
     try {
       return { kind: "sheets", sheets: readXlsx(buf) };
     } catch (e) {
-      return { kind: "skipped", reason: `unreadable spreadsheet: ${e.message}`, dataBearing: true };
+      return failed(`unreadable spreadsheet: ${e.message}`);
     }
   }
   if (ext === ".docx") {
     try {
       return { kind: "sheets", sheets: readDocx(buf), unit: "part" };
     } catch (e) {
-      return { kind: "skipped", reason: `unreadable Word document: ${e.message}`, dataBearing: true };
+      return failed(`unreadable Word document: ${e.message}`);
     }
   }
   try {
     const { pages, scanned, damaged, total } = readPdf(buf);
     if (!pages.length && (scanned.length || damaged.length)) {
-      const reason = damaged.length ? "damaged PDF: no readable text" : "PDF without a text layer (scanned); needs OCR";
-      return { kind: "skipped", reason, dataBearing: true };
+      return damaged.length ? failed("damaged PDF: no readable text") : unsupported("PDF without a text layer (scanned); needs OCR");
     }
     const notes = [];
     if (scanned.length) {
@@ -3306,32 +3703,55 @@ function parseWhole(ext, buf) {
     return { kind: "sheets", sheets: pages, unit: "page", unscanned: notes.join("; ") || void 0 };
   } catch (e) {
     const message = e.message;
-    const reason = /encrypted/.test(message) ? "encrypted PDF (password-protected)" : `unreadable PDF: ${message.replace(/\.$/, "")}`;
-    return { kind: "skipped", reason, dataBearing: true };
+    return failed(/encrypted/.test(message) ? "encrypted PDF (password-protected)" : `unreadable PDF: ${message.replace(/\.$/, "")}`);
   }
 }
 function loadDocument(file, options = {}) {
   const ext = path.extname(file).toLowerCase();
   const st = statSync(file);
-  if (st.size > MAX_FILE_BYTES) return { kind: "skipped", reason: `larger than ${mb(MAX_FILE_BYTES)}`, dataBearing: true };
+  if (st.size > MAX_FILE_BYTES) return unsupported(`larger than ${mb(MAX_FILE_BYTES)}`);
   if (PARSED_WHOLE.has(ext)) {
     if (options.maxZipBytes !== void 0 && st.size > options.maxZipBytes) {
-      return { kind: "skipped", reason: `larger than ${mb(options.maxZipBytes)}`, dataBearing: true };
+      return unsupported(`larger than ${mb(options.maxZipBytes)}`);
     }
     return parseWhole(ext, readFileSync(file));
   }
-  const unsupported = UNSUPPORTED_DATA[ext];
-  if (unsupported) return { kind: "skipped", reason: unsupported, dataBearing: true };
-  if (!isTextFile(file)) return { kind: "skipped", reason: "binary file", dataBearing: false };
+  const why = UNSUPPORTED_DATA[ext];
+  if (why) return unsupported(why);
+  if (!isTextFile(file)) return unsupported("binary file", false);
   if (options.sampleBytes !== void 0 && st.size > options.sampleBytes) {
     return { kind: "text", text: readHead(file, options.sampleBytes), sampled: true };
   }
   return { kind: "text", text: readFileSync(file, "utf8") };
 }
 
-// packages/mcp/src/shell-reads.ts
-import { existsSync as existsSync2, readdirSync as readdirSync2, statSync as statSync2 } from "node:fs";
+// packages/mcp/src/audit.ts
+import { appendFileSync, existsSync as existsSync2, mkdirSync, readFileSync as readFileSync2, writeFileSync } from "node:fs";
 import path2 from "node:path";
+function writeAudit(file, event) {
+  if (!file) return;
+  try {
+    const dir = path2.dirname(file);
+    if (!existsSync2(dir)) {
+      mkdirSync(dir, { recursive: true });
+      if (path2.basename(dir) === ".lokal") writeFileSync(path2.join(dir, ".gitignore"), "*\n");
+    }
+    appendFileSync(file, `${JSON.stringify({ ts: (/* @__PURE__ */ new Date()).toISOString(), ...event })}
+`);
+  } catch (e) {
+    process.stderr.write(`lokal audit: could not write ${file}: ${e.message}
+`);
+  }
+}
+function countMatches(matches) {
+  const out = {};
+  for (const m of matches) out[m.label ?? m.type] = (out[m.label ?? m.type] ?? 0) + 1;
+  return out;
+}
+
+// packages/mcp/src/shell-reads.ts
+import { existsSync as existsSync3, readdirSync as readdirSync2, statSync as statSync2 } from "node:fs";
+import path3 from "node:path";
 var SHELL_DATA_FILE = /\.(csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out|pdf)(\.\d+)?$/i;
 var all = (t) => t;
 var READERS = /* @__PURE__ */ new Set([
@@ -3405,7 +3825,7 @@ function stripHeredocs(command) {
   return command.replace(/(<<-?[ \t]*(['"]?)(\w+)\2)[^\n]*\n[\s\S]*?\n[ \t]*\3[ \t]*(?=\r?\n|$)/g, "$1").replace(/@(['"])\r?\n[\s\S]*?\r?\n\1@/g, "''");
 }
 function parse(command, powershell) {
-  const escape = powershell ? "`" : "\\";
+  const escape2 = powershell ? "`" : "\\";
   const pipelines = [];
   let segments = [];
   let words = [];
@@ -3436,7 +3856,7 @@ function parse(command, powershell) {
       cur += command.slice(i + 1, end);
       quoted = started = true;
       i = end;
-    } else if (c === escape && i + 1 < command.length && command[i + 1] !== "\n") {
+    } else if (c === escape2 && i + 1 < command.length && command[i + 1] !== "\n") {
       cur += command[++i];
       started = true;
     } else if (c === "\n" || c === ";" || c === "&" && command[i + 1] === "&" || c === "|" && command[i + 1] === "|") {
@@ -3465,7 +3885,7 @@ function parse(command, powershell) {
   return pipelines;
 }
 function programName(word) {
-  return path2.basename(word).toLowerCase().replace(/\.(exe|cmd|bat)$/, "");
+  return path3.basename(word).toLowerCase().replace(/\.(exe|cmd|bat)$/, "");
 }
 function firstLines(n) {
   return (t) => t.split("\n").slice(0, Math.max(0, n)).join("\n");
@@ -3642,13 +4062,13 @@ function expand(raw, cwd, powershell) {
   if (process.platform === "win32") word = word.replace(/^\/([a-zA-Z])(?=\/|$)/, "$1:");
   else if (powershell) word = word.replace(/\\/g, "/");
   if (!/[*?]/.test(word)) {
-    const file = path2.resolve(cwd, word);
-    return SHELL_DATA_FILE.test(file) && existsSync2(file) && statSync2(file).isFile() ? [file] : [];
+    const file = path3.resolve(cwd, word);
+    return SHELL_DATA_FILE.test(file) && existsSync3(file) && statSync2(file).isFile() ? [file] : [];
   }
-  const dir = path2.resolve(cwd, path2.dirname(word));
-  const re = globToRegExp(path2.basename(word));
+  const dir = path3.resolve(cwd, path3.dirname(word));
+  const re = globToRegExp(path3.basename(word));
   try {
-    return readdirSync2(dir).filter((name) => re.test(name) && SHELL_DATA_FILE.test(name)).map((name) => path2.join(dir, name)).filter((f) => statSync2(f).isFile());
+    return readdirSync2(dir).filter((name) => re.test(name) && SHELL_DATA_FILE.test(name)).map((name) => path3.join(dir, name)).filter((f) => statSync2(f).isFile());
   } catch {
     return [];
   }
@@ -3681,6 +4101,48 @@ function dataReadsInCommand(command, cwd, powershell = false) {
   }
   return out;
 }
+var INLINE_CODE = {
+  python: ["-c"],
+  python3: ["-c"],
+  py: ["-c"],
+  node: ["-e", "--eval", "-p", "--print"],
+  bun: ["-e", "--eval", "-p", "--print"],
+  deno: ["eval"],
+  ruby: ["-e"],
+  perl: ["-e", "-E"],
+  php: ["-r"],
+  rscript: ["-e"],
+  pwsh: ["-c", "-command"],
+  powershell: ["-c", "-command"]
+};
+var NAMED_FILE = /[\w.~:\\/-]+\.(?:csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out)(?:\.\d+)?(?![\w.])/gi;
+var DOTNET_READ = /\[(?:system\.)?io\.file\]::\s*read/i;
+var HEREDOC = /(?:^|\n)[ \t]*(\S+)[^\n]*?<<-?[ \t]*(['"]?)(\w+)\2[^\n]*\n([\s\S]*?)\n[ \t]*\3[ \t]*(?=\r?\n|$)/g;
+var HERE_STRING = /@(['"])\r?\n([\s\S]*?)\r?\n\1@[ \t]*\|[ \t]*(\S+)/g;
+function namedFiles(code, cwd, powershell) {
+  return [...code.matchAll(NAMED_FILE)].flatMap((m) => expand(m[0].replace(/^[(]+/, ""), cwd, powershell));
+}
+function inlineCodeReads(command, cwd, powershell = false) {
+  const files = /* @__PURE__ */ new Set();
+  for (const m of command.matchAll(HEREDOC)) {
+    if (programName(m[1]) in INLINE_CODE) for (const f of namedFiles(m[4], cwd, powershell)) files.add(f);
+  }
+  for (const m of command.matchAll(HERE_STRING)) {
+    if (programName(m[3]) in INLINE_CODE) for (const f of namedFiles(m[2], cwd, powershell)) files.add(f);
+  }
+  for (const pipeline of parse(stripHeredocs(command), powershell)) {
+    for (const words of pipeline) {
+      const seg = toSegment(words);
+      if (!seg || seg.writesToFile) continue;
+      const flags = INLINE_CODE[seg.program];
+      const at = flags ? seg.args.findIndex((a) => flags.includes(a.toLowerCase())) : -1;
+      const joined = words.map((w) => w.text).join(" ");
+      const code = at >= 0 ? seg.args.slice(at + 1).join(" ") : powershell && DOTNET_READ.test(joined) ? joined : void 0;
+      if (code !== void 0) for (const f of namedFiles(code, cwd, powershell)) files.add(f);
+    }
+  }
+  return [...files].map((file) => ({ file, select: all }));
+}
 
 // packages/mcp/src/guard.ts
 var STRICT = [
@@ -3697,12 +4159,16 @@ var STRICT = [
   "CARD",
   "HEALTH",
   "CRIMINAL_RECORD",
-  "BIOMETRIC"
+  "BIOMETRIC",
+  // A team's own rules in .samaran.json: they wrote them because those values must not leave.
+  "CUSTOM"
 ];
 var BULK_THRESHOLD = 3;
 var BYPASS = /#izinkan-pii\b/i;
 var DATA_FILE = /\.(csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out|xlsx|xlsm|docx|pdf)(\.\d+)?$/i;
 var GREP_MAX_FILES = 300;
+var READ_LINES = 2e3;
+var STRICT_BUDGET_MS = 7e3;
 var IMAGE_FILE = /\.(jpe?g|png|heic|heif|webp|gif|bmp|tiff?)$/i;
 var PERSONAL_PATH = /(?:^|[^a-z])(?:e?ktp|kk|kartu[ _-]?keluarga|npwp|sim|paspor|passport|selfie|swafoto|identitas|identity|id[ _-]?card|akta|ijazah|slip[ _-]?gaji|rekening|tabungan|bpjs|kyc|verifikasi|verification|pelanggan|customers?|nasabah|pasien|patients?|karyawan|employees?|pegawai|pemohon|applicants?|debitur|peserta|siswa|students?)(?:[^a-z]|$)/i;
 var UPLOAD_PATH = /(?:^|[\\/])(?:media|uploads?|storage|attachments?|lampiran|berkas|dokumen|documents?|scans?|private|var)(?:[\\/]|$)/i;
@@ -3719,21 +4185,32 @@ var GREP_TYPES = {
   log: /\.log$/i
 };
 function summarize(matches, examples = true) {
+  const name = (m) => m.label ?? m.type;
   const counts = /* @__PURE__ */ new Map();
-  for (const m of matches) counts.set(m.type, (counts.get(m.type) ?? 0) + 1);
-  return [...counts.entries()].map(([type, n]) => {
-    const sample = examples ? ` (${partialMask(type, matches.find((m) => m.type === type).value)})` : "";
-    return `${type}\xD7${n}${sample}`;
+  for (const m of matches) counts.set(name(m), (counts.get(name(m)) ?? 0) + 1);
+  return [...counts.entries()].map(([label, n]) => {
+    const first = matches.find((m) => name(m) === label);
+    const sample = examples ? ` (${partialMask(first.type, first.value)})` : "";
+    return `${label}\xD7${n}${sample}`;
   }).join(", ");
 }
 function fileTexts(file) {
+  let doc;
   try {
-    const doc = loadDocument(file, { sampleBytes: GUARD_SAMPLE_BYTES, maxZipBytes: GUARD_MAX_ZIP_BYTES });
-    if (doc.kind === "skipped") return void 0;
-    return doc.kind === "text" ? [doc.text] : doc.sheets.map((s) => s.csv);
-  } catch {
-    return void 0;
+    doc = loadDocument(file, { sampleBytes: GUARD_SAMPLE_BYTES, maxZipBytes: GUARD_MAX_ZIP_BYTES });
+  } catch (e) {
+    return { texts: [], unchecked: existsSync4(file) ? `could not be read: ${e.message}` : void 0 };
   }
+  if (doc.kind === "skipped") return { texts: [], unchecked: doc.dataBearing ? doc.reason : void 0 };
+  if (doc.kind === "text") return { texts: [doc.text], sampled: doc.sampled };
+  return { texts: doc.sheets.map((s) => s.csv), unchecked: doc.unscanned };
+}
+function withinSample(select, sample, shown) {
+  if (!shown.trim()) return false;
+  const first = sample.slice(0, sample.indexOf("\n") + 1 || sample.length).trimEnd();
+  return select(`${sample}
+${sample}`) === shown && select(`${sample}
+${first}~`) === shown;
 }
 function withHeader(full, shown, file) {
   if (!/\.(csv|tsv)$/i.test(file)) return shown;
@@ -3742,14 +4219,14 @@ function withHeader(full, shown, file) {
 ${shown}`;
 }
 function verdict(texts) {
-  return verdictOf(texts.flatMap((t) => detectPii(t, { minConfidence: "high" })));
+  return verdictOf(texts.flatMap((t) => detectConfigured(t, { minConfidence: "high" }, config)));
 }
 function verdictOf(found) {
-  const strict = found.some((m) => STRICT.includes(m.type));
+  const strict = found.some((m) => STRICT.includes(m.type) || ["block", "route"].includes(policyFor(config, m)));
   return strict || found.length >= BULK_THRESHOLD ? found : void 0;
 }
 function shownPii(full, shown, file) {
-  const all2 = detectPii(full, { minConfidence: "high" });
+  const all2 = detectConfigured(full, { minConfidence: "high" }, config);
   let inFile;
   if (shown.length >= full.length) {
     inFile = all2;
@@ -3759,11 +4236,23 @@ function shownPii(full, shown, file) {
     const fields2 = new Set(shown.split(/[\t\n\r,;|]+/).map((f) => f.trim().replace(/^"|"$/g, "")));
     inFile = all2.filter((m) => fields2.has(m.value));
   }
-  const direct = detectPii(withHeader(full, shown, file), { minConfidence: "high" });
+  const direct = detectConfigured(withHeader(full, shown, file), { minConfidence: "high" }, config);
   return inFile.length >= direct.length ? inFile : direct;
 }
 var PROCESS_HINT = "To process the data, run a script that reads the file and writes its results to a file (or prints only counts), or use `write_file_unmasked`.";
-var block = (message) => ({ action: "block", message });
+var strictMode = () => process.env.SAMARAN_GUARD === "strict" || !process.env.SAMARAN_GUARD && config.guard === "strict";
+var strictBy = () => process.env.SAMARAN_GUARD === "strict" ? "SAMARAN_GUARD=strict" : '"guard": "strict" in .samaran.json';
+var config = { custom: [], allow: [] };
+var deadline = Infinity;
+var outOfTime = () => strictMode() && Date.now() > deadline;
+var block = (message, found) => ({ action: "block", message, ...found ? { counts: countMatches(found) } : {} });
+function uncheckedBlock(what, why) {
+  return block([
+    `Samaran blocked ${what}: ${why.join("; ")}, so it could not be checked for personal data, and ${strictBy()} blocks what it cannot check.`,
+    "Use the `read_file_masked` tool from the lokal MCP server, or narrow the command to what you need (`head -n 50`).",
+    "If the user confirms the file holds no real personal data, they can add it to .samaranignore."
+  ].join(" "));
+}
 function ask(shownAs, what) {
   return {
     action: "ask",
@@ -3775,24 +4264,27 @@ function ask(shownAs, what) {
   };
 }
 function personalImage(file, root) {
-  const rel = path3.relative(root, file);
-  const where = rel.startsWith("..") || path3.isAbsolute(rel) ? file : rel;
-  return PERSONAL_PATH.test(where) || UPLOAD_PATH.test(path3.dirname(where)) && !ASSET_PATH.test(path3.dirname(where));
+  const rel = path4.relative(root, file);
+  const where = rel.startsWith("..") || path4.isAbsolute(rel) ? file : rel;
+  return PERSONAL_PATH.test(where) || UPLOAD_PATH.test(path4.dirname(where)) && !ASSET_PATH.test(path4.dirname(where));
 }
-function readTool(file, shownAs, root, ignored) {
+function uncheckedRead(shownAs, what, why) {
+  return strictMode() ? uncheckedBlock(`reading ${shownAs}`, [why]) : ask(shownAs, what);
+}
+function readTool(file, shownAs, root, ignored, lines) {
   if (ignored(file)) return void 0;
   if (IMAGE_FILE.test(file)) {
-    return personalImage(file, root) && existsSync3(file) ? ask(shownAs, "mungkin foto KTP atau dokumen pribadi") : void 0;
+    return personalImage(file, root) && existsSync4(file) ? uncheckedRead(shownAs, "mungkin foto KTP atau dokumen pribadi", "it is an image that may be a photo of an ID card or document") : void 0;
   }
   if (!DATA_FILE.test(file)) return void 0;
   let doc;
   try {
     doc = loadDocument(file, { sampleBytes: GUARD_SAMPLE_BYTES, maxZipBytes: GUARD_MAX_ZIP_BYTES });
-  } catch {
-    return void 0;
+  } catch (e) {
+    return strictMode() && existsSync4(file) ? uncheckedBlock(`reading ${shownAs}`, [`it could not be read (${e.message})`]) : void 0;
   }
   if (doc.kind === "skipped") {
-    return doc.dataBearing ? ask(shownAs, `tidak bisa dibaca Samaran (${doc.reason})`) : void 0;
+    return doc.dataBearing ? uncheckedRead(shownAs, `tidak bisa dibaca Samaran (${doc.reason})`, doc.reason) : void 0;
   }
   const found = verdict(doc.kind === "text" ? [doc.text] : doc.sheets.map((s) => s.csv));
   if (found) {
@@ -3802,19 +4294,39 @@ function readTool(file, shownAs, root, ignored) {
         "Use the `read_file_masked` tool from the lokal MCP server instead: same content, with personal data replaced by stable placeholders.",
         "Write results that need the real values with `write_file_unmasked`.",
         "If the user confirms the file only holds fake data, they can add it to .samaranignore."
-      ].join(" ")
+      ].join(" "),
+      found
     );
   }
-  if (doc.kind === "sheets" && doc.unscanned) return ask(shownAs, `hanya terbaca sebagian (${doc.unscanned})`);
+  if (doc.kind === "sheets" && doc.unscanned) return uncheckedRead(shownAs, `hanya terbaca sebagian (${doc.unscanned})`, doc.unscanned);
+  if (doc.kind === "text" && doc.sampled) {
+    const checked = doc.text.split("\n").length;
+    const last = Math.max(0, (lines.offset ?? 1) - 1) + (lines.limit ?? READ_LINES);
+    if (last > checked) {
+      const mb2 = `${GUARD_SAMPLE_BYTES / 1024 / 1024} MB`;
+      return uncheckedRead(shownAs, `hanya ${mb2} pertama yang diperiksa Samaran`, `only its first ${mb2} (${checked} lines) were checked`);
+    }
+  }
   return void 0;
 }
 function shellTool(command, cwd, powershell, ignored) {
-  const reads = dataReadsInCommand(command, cwd, powershell).filter((r) => !ignored(r.file));
+  const reads = [...dataReadsInCommand(command, cwd, powershell), ...strictMode() ? inlineCodeReads(command, cwd, powershell) : []].filter((r) => !ignored(r.file));
   const matches = [];
   const files = /* @__PURE__ */ new Set();
+  const unchecked = [];
+  const nameOf = (f) => path4.relative(cwd, f) || f;
   for (const r of reads) {
-    for (const full of fileTexts(r.file) ?? []) {
+    if (outOfTime()) {
+      unchecked.push(`checking ${nameOf(r.file)} took too long`);
+      break;
+    }
+    const loaded = fileTexts(r.file);
+    if (loaded.unchecked) unchecked.push(`${nameOf(r.file)}: ${loaded.unchecked}`);
+    for (const full of loaded.texts) {
       const shown = r.select(full);
+      if (loaded.sampled && !withinSample(r.select, full, shown)) {
+        unchecked.push(`${nameOf(r.file)}: only its first ${GUARD_SAMPLE_BYTES / 1024 / 1024} MB were checked`);
+      }
       if (!shown.trim()) continue;
       const here = shownPii(full, shown, r.file);
       for (const m of here) matches.push(m);
@@ -3822,18 +4334,18 @@ function shellTool(command, cwd, powershell, ignored) {
     }
   }
   const found = verdictOf(matches);
-  if (!found) return void 0;
-  const names = [...files.size ? files : new Set(reads.map((r) => r.file))].map((f) => path3.relative(cwd, f) || f);
+  if (!found) return strictMode() && unchecked.length ? uncheckedBlock("this command", unchecked) : void 0;
+  const names = [...files.size ? files : new Set(reads.map((r) => r.file))].map(nameOf);
   return block([
     `Samaran blocked this command: it would print personal data from ${names.join(", ")} into the conversation (${summarize(found, false)}).`,
     "To look at the data, use the `read_file_masked` tool from the lokal MCP server (personal data replaced by stable placeholders).",
     PROCESS_HINT,
     "If the user confirms the file only holds fake data, they can add it to .samaranignore."
-  ].join(" "));
+  ].join(" "), found);
 }
 function grepTool(input, cwd, ignored) {
   if (input.output_mode !== "content" || !input.pattern) return void 0;
-  const target = path3.resolve(cwd, input.path ?? ".");
+  const target = path4.resolve(cwd, input.path ?? ".");
   let candidates;
   try {
     candidates = statSync3(target).isDirectory() ? [...walkFiles(target)] : [target];
@@ -3843,7 +4355,13 @@ function grepTool(input, cwd, ignored) {
   const glob = input.glob ? globToRegExp(input.glob.includes("/") ? input.glob : `**/${input.glob}`) : void 0;
   const typeFilter = input.type ? GREP_TYPES[input.type.toLowerCase()] : void 0;
   if (input.type && !typeFilter) return void 0;
-  candidates = candidates.filter((f) => SHELL_DATA_FILE.test(f) && !ignored(f)).filter((f) => !glob || glob.test(path3.relative(target, f).split(path3.sep).join("/")) || glob.test(path3.basename(f))).filter((f) => !typeFilter || typeFilter.test(f)).slice(0, GREP_MAX_FILES);
+  candidates = candidates.filter((f) => SHELL_DATA_FILE.test(f) && !ignored(f)).filter((f) => !glob || glob.test(path4.relative(target, f).split(path4.sep).join("/")) || glob.test(path4.basename(f))).filter((f) => !typeFilter || typeFilter.test(f));
+  const unchecked = [];
+  if (candidates.length > GREP_MAX_FILES) {
+    unchecked.push(`only ${GREP_MAX_FILES} of the ${candidates.length} data files it searches were checked`);
+    candidates = candidates.slice(0, GREP_MAX_FILES);
+  }
+  const nameOf = (f) => path4.relative(cwd, f) || f;
   let re;
   try {
     re = new RegExp(input.pattern, input["-i"] ? "i" : "");
@@ -3855,7 +4373,14 @@ function grepTool(input, cwd, ignored) {
   const matches = [];
   const files = [];
   for (const file of candidates) {
-    for (const full of fileTexts(file) ?? []) {
+    if (outOfTime()) {
+      unchecked.push(`checking the files took too long (stopped at ${nameOf(file)})`);
+      break;
+    }
+    const loaded = fileTexts(file);
+    if (loaded.unchecked) unchecked.push(`${nameOf(file)}: ${loaded.unchecked}`);
+    if (loaded.sampled) unchecked.push(`${nameOf(file)}: only its first ${GUARD_SAMPLE_BYTES / 1024 / 1024} MB were checked`);
+    for (const full of loaded.texts) {
       const lines = full.split("\n");
       const keep = /* @__PURE__ */ new Set();
       lines.forEach((line, i) => {
@@ -3870,28 +4395,32 @@ function grepTool(input, cwd, ignored) {
     }
   }
   const found = verdictOf(matches);
-  if (!found) return void 0;
-  const names = (files.length ? files : candidates).slice(0, 5).map((f) => path3.relative(cwd, f) || f);
+  if (!found) return strictMode() && unchecked.length ? uncheckedBlock("this search", unchecked) : void 0;
+  const names = (files.length ? files : candidates).slice(0, 5).map(nameOf);
   return block([
     `Samaran blocked this search: the matching lines in ${names.join(", ")} contain personal data (${summarize(found, false)}).`,
     'Search with output_mode "files_with_matches" or "count", or read the file with `read_file_masked` from the lokal MCP server.',
     "Add a glob or type that leaves data files out if you meant to search code."
-  ].join(" "));
+  ].join(" "), found);
 }
 function evaluate(input, projectRoot) {
   if (process.env.SAMARAN_GUARD === "off") return void 0;
+  const root = projectRoot ?? process.env.CLAUDE_PROJECT_DIR ?? input.cwd ?? process.cwd();
+  const budget = Math.min(Number(process.env.SAMARAN_GUARD_BUDGET_MS) || STRICT_BUDGET_MS, STRICT_BUDGET_MS);
+  deadline = Date.now() + budget;
+  config = loadConfig(root);
   if (input.hook_event_name === "UserPromptSubmit" && input.prompt) {
     if (BYPASS.test(input.prompt)) return void 0;
-    const found = detectPii(input.prompt, { types: STRICT, minConfidence: "high" });
+    const held = Object.entries(config.policy ?? {}).filter(([type, action]) => (action === "block" || action === "route") && PII_TYPES.includes(type)).map(([type]) => type);
+    const found = detectConfigured(input.prompt, { types: [.../* @__PURE__ */ new Set([...STRICT, ...held])], minConfidence: "high" }, config);
     if (!found.length) return void 0;
     return block([
       `\u{1F6E1}\uFE0F  Samaran menahan prompt ini: ada data pribadi ${summarize(found)}.`,
       "Prompt akan terkirim ke server model AI. Ganti dengan data contoh atau samarkan dulu,",
       "atau kirim ulang dengan menambahkan #izinkan-pii jika memang disengaja."
-    ].join("\n"));
+    ].join("\n"), found);
   }
   if (input.hook_event_name !== "PreToolUse" || !input.tool_input) return void 0;
-  const root = projectRoot ?? process.env.CLAUDE_PROJECT_DIR ?? input.cwd ?? process.cwd();
   const cwd = input.cwd ?? root;
   const ignored = loadIgnore(root);
   const tool = input.tool_input;
@@ -3899,10 +4428,10 @@ function evaluate(input, projectRoot) {
     case "Read":
       if (!tool.file_path) return void 0;
       {
-        const file = path3.resolve(root, tool.file_path);
-        const rel = path3.relative(root, file);
-        const shownAs = rel && !rel.startsWith("..") && !path3.isAbsolute(rel) ? rel.split(path3.sep).join("/") : tool.file_path;
-        return readTool(file, shownAs, root, ignored);
+        const file = path4.resolve(root, tool.file_path);
+        const rel = path4.relative(root, file);
+        const shownAs = rel && !rel.startsWith("..") && !path4.isAbsolute(rel) ? rel.split(path4.sep).join("/") : tool.file_path;
+        return readTool(file, shownAs, root, ignored, tool);
       }
     case "Grep":
       return grepTool(tool, cwd, ignored);
@@ -3979,7 +4508,17 @@ async function runGuard() {
     const translated = translate(parsed);
     agent = translated.agent;
     event = parsed.hook_event_name ?? "";
-    const out = respond(agent, event, evaluate(translated.input, translated.root));
+    const verdict2 = evaluate(translated.input, translated.root);
+    if (verdict2) {
+      const tool = translated.input.tool_name;
+      writeAudit(config.audit, {
+        source: "guard",
+        action: verdict2.action === "block" ? "blocked" : "asked",
+        what: `${translated.input.hook_event_name ?? event}${tool ? ` ${tool}` : ""}`,
+        ...verdict2.counts ? { counts: verdict2.counts } : { reason: "could not be checked" }
+      });
+    }
+    const out = respond(agent, event, verdict2);
     if (out.stdout) process.stdout.write(`${out.stdout}
 `);
     if (out.stderr) process.stderr.write(`${out.stderr}
@@ -3988,10 +4527,13 @@ async function runGuard() {
   } catch (e) {
     process.stderr.write(`samaran-guard: ${e.message}
 `);
-    const out = respond(agent, event, void 0);
+    const failed2 = strictMode() ? block(`Samaran guard failed (${e.message}), and ${strictBy()} blocks what it cannot check.`) : void 0;
+    const out = respond(agent, event, failed2);
     if (out.stdout) process.stdout.write(`${out.stdout}
 `);
-    process.exitCode = 0;
+    if (out.stderr) process.stderr.write(`${out.stderr}
+`);
+    process.exitCode = out.exitCode;
   }
 }
 if (process.argv[1] && /samaran-guard\.m?js$/.test(process.argv[1])) {
@@ -4001,5 +4543,6 @@ export {
   evaluate,
   respond,
   runGuard,
+  strictMode,
   translate
 };

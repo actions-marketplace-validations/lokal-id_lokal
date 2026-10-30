@@ -65,7 +65,7 @@ async function call(name: string, args: Record<string, unknown> = {}) {
 test('server mengiklankan semua tool beserta instruksinya', async () => {
   const { tools } = await client.listTools();
   assert.deepEqual(tools.map((t) => t.name).sort(), [
-    'anonymize_file', 'format_rupiah', 'list_holidays', 'list_wilayah', 'lookup_kode_pos', 'parse_alamat', 'parse_nik', 'parse_phone', 'parse_qris',
+    'anonymize_file', 'clear_vault', 'format_rupiah', 'list_holidays', 'list_wilayah', 'lookup_kode_pos', 'parse_alamat', 'parse_nik', 'parse_phone', 'parse_qris',
     'parse_rupiah', 'read_file_masked', 'scan_pii', 'search_wilayah', 'set_qris_amount', 'validate_npwp',
     'working_days', 'write_file_unmasked',
   ]);
@@ -156,7 +156,8 @@ test('scan_pii melapor tanpa membocorkan nilai, menghormati .samaranignore', asy
 test('scan_pii tidak pernah diam soal file yang tidak bisa dipindai', async () => {
   const { data } = await call('scan_pii', { path: 'ekspor' });
   assert.equal(data.notScanned.count, 2);
-  assert.deepEqual(data.notScanned.files, ['ekspor/laporan.pdf (unreadable PDF: No pages found)']);
+  assert.deepEqual(data.notScanned.files, ['ekspor/laporan.pdf (failed: unreadable PDF: No pages found)']);
+  assert.deepEqual(data.notScanned.byStatus, { failed: 1, unsupported: 1 });
   assert.match(data.warning, /NOT scanned/);
 });
 
@@ -193,6 +194,20 @@ test('read_file_masked → olah → write_file_unmasked (round trip)', async () 
 
   const again = await call('write_file_unmasked', { path: 'out/unik.csv', content: 'x' });
   assert.equal(again.isError, true, 'refuses to overwrite without overwrite: true');
+
+  // A placeholder the model made up is written as it is, and said so.
+  const madeUp = await call('write_file_unmasked', { path: 'out/karangan.csv', content: '[NAME_1],[NIK_77]' });
+  assert.deepEqual(madeUp.data.unknownPlaceholders, ['[NIK_77]']);
+  assert.match(madeUp.data.warning, /1 placeholder\(s\) were not made in this session/);
+  assert.equal(readFileSync(path.join(dir, 'out', 'karangan.csv'), 'utf8'), 'Budi Santoso,[NIK_77]');
+});
+
+test('read_file_masked: text in a file that looks like a placeholder', async () => {
+  // A template that uses a number this session already gave out to a real person.
+  writeFileSync(path.join(dir, 'template.txt'), 'Halo [NAME_1], tagihan kamu jatuh tempo.\nHalo [NAME_99], ini lain.\n');
+  const read = await call('read_file_masked', { path: 'template.txt' });
+  assert.match(read.text, /Note: the file itself contains \[NAME_1\], which this session also uses as placeholders/);
+  assert.ok(!read.text.includes('[NAME_99], which'), 'a number nobody has yet is no clash');
 });
 
 test('tool data membaca placeholder dari read_file_masked tanpa membuka nilainya', async () => {
@@ -425,6 +440,106 @@ test('guard: input rusak tidak pernah memblokir', () => {
   assert.equal(res.status, 0);
 });
 
+test('guard SAMARAN_GUARD=strict: input rusak memblokir, kode inline yang membaca file data ditahan', () => {
+  const strict = { SAMARAN_GUARD: 'strict' };
+  const broken = spawnSync(process.execPath, [CLI, 'guard'], { input: 'bukan json', encoding: 'utf8', env: { ...process.env, ...strict } });
+  assert.equal(broken.status, 2);
+  assert.match(broken.stderr, /SAMARAN_GUARD=strict/);
+
+  const sh = (command: string, env: Record<string, string>, tool = 'Bash') =>
+    guard({ hook_event_name: 'PreToolUse', tool_name: tool, tool_input: { command }, cwd: dir }, env).status;
+  const inline = [
+    `python3 -c "print(open('pelanggan.csv').read())"`,
+    `node -e "console.log(require('fs').readFileSync('./pelanggan.csv', 'utf8'))"`,
+    `python3 - <<'EOF'\nimport csv\nfor row in csv.reader(open("pelanggan.csv")): print(row)\nEOF`,
+  ];
+  for (const command of inline) {
+    assert.equal(sh(command, {}), 0, `default: ${command}`);
+    assert.equal(sh(command, strict), 2, `strict: ${command}`);
+  }
+  assert.equal(sh(`[IO.File]::ReadAllText('pelanggan.csv')`, strict, 'PowerShell'), 2);
+  assert.equal(sh(`@'\nprint(open('pelanggan.csv').read())\n'@ | python -`, strict, 'PowerShell'), 2);
+  // Still allowed in strict mode: scripts in files, output written to a file, code that names no data file.
+  for (const command of [
+    'node dedupe.js pelanggan.csv',
+    `python3 -c "print(open('pelanggan.csv').read())" > salinan.csv`,
+    `python3 -c "print(1 + 1)"`,
+    `python3 -c "print(open('kode.ts').read())"`,
+    "cat > dedupe.js <<'EOF'\nconst rows = require('fs').readFileSync('pelanggan.csv', 'utf8');\nEOF",
+  ]) {
+    assert.equal(sh(command, strict), 0, command);
+  }
+  assert.equal(sh('cat pelanggan.csv', strict), 2);
+});
+
+test('guard SAMARAN_GUARD=strict: yang tidak bisa diperiksa ditahan, mode biasa tetap meloloskan atau bertanya', () => {
+  const strict = { SAMARAN_GUARD: 'strict' };
+  const base = path.join(dir, 'ketat');
+  mkdirSync(path.join(base, 'banyak'), { recursive: true });
+  mkdirSync(path.join(base, 'folder.csv'), { recursive: true }); // exists, but will not load
+  mkdirSync(path.join(base, 'ktp'), { recursive: true });
+  writeFileSync(path.join(base, 'ktp', 'budi.jpg'), Buffer.from([0xff, 0xd8, 0xff, 0x00]));
+  writeFileSync(path.join(base, 'rusak.pdf'), 'bukan pdf');
+  writeFileSync(path.join(base, 'lampiran.pdf'), samples().scanned!);
+  writeFileSync(path.join(base, 'rusak.xlsx'), 'bukan zip');
+  writeFileSync(path.join(base, 'bersih.csv'), 'id,kota\n1,Bandung\n2,Medan\n');
+  // Bigger than the 5 MB the guard reads: the rows with NIKs come after it.
+  const filler = `1,${'-'.repeat(200)}\n`.repeat(28_000);
+  writeFileSync(path.join(base, 'besar.csv'), `id,nik\n${filler}2,3174015507880099\n3,3174012201150077\n`);
+  for (let i = 0; i < 301; i++) writeFileSync(path.join(base, 'banyak', `f${i}.csv`), 'id,kota\n1,Bandung\n');
+
+  const sh = (command: string, env: Record<string, string> = {}) =>
+    guard({ hook_event_name: 'PreToolUse', tool_name: 'Bash', tool_input: { command }, cwd: base }, env);
+  const read = (file: string, env: Record<string, string> = {}, extra: object = {}) =>
+    guard({ hook_event_name: 'PreToolUse', tool_name: 'Read', tool_input: { file_path: path.join(base, file), ...extra } }, env);
+  const asks = (r: ReturnType<typeof guard>) => r.status === 0 && /"permissionDecision":"ask"/.test(r.stdout);
+
+  // Shell reads the guard cannot check: allowed by default, blocked in strict mode, with the reason.
+  for (const [command, why] of [
+    ['cat rusak.pdf', /rusak\.pdf: unreadable PDF/],
+    ['cat lampiran.pdf', /no text layer/],
+    ['cat besar.csv', /only its first 5 MB were checked/],
+    ['tail -n 2 besar.csv', /only its first 5 MB/],
+    ['grep 3174 besar.csv', /only its first 5 MB/],
+  ] as const) {
+    assert.equal(sh(command).status, 0, `default: ${command}`);
+    const r = sh(command, strict);
+    assert.equal(r.status, 2, `strict: ${command}`);
+    assert.match(r.stderr, why, command);
+    assert.match(r.stderr, /SAMARAN_GUARD=strict blocks what it cannot check/);
+  }
+  // What the guard did check still passes in strict mode: the start of a big file, and a clean file.
+  for (const command of ['head -n 20 besar.csv', 'cat bersih.csv', 'wc -l besar.csv', 'cat tidak-ada.csv']) {
+    assert.equal(sh(command, strict).status, 0, command);
+  }
+
+  // Read: what is asked about by default is blocked in strict mode.
+  for (const file of ['ktp/budi.jpg', 'rusak.pdf', 'lampiran.pdf', 'rusak.xlsx']) {
+    assert.ok(asks(read(file)), `default asks: ${file}`);
+    assert.equal(read(file, strict).status, 2, `strict: ${file}`);
+  }
+  assert.equal(read('folder.csv').status, 0, 'default: Read fails on its own');
+  assert.equal(read('folder.csv', strict).status, 2);
+  // Past the part that was checked: the first lines of a big file pass, lines further on are asked about.
+  assert.equal(read('besar.csv').stdout, '');
+  assert.equal(read('besar.csv', strict).status, 0);
+  assert.ok(asks(read('besar.csv', {}, { offset: 28_000, limit: 10 })));
+  assert.match(read('besar.csv', strict, { offset: 28_000, limit: 10 }).stderr, /only its first 5 MB/);
+
+  // Grep over more data files than it checks.
+  const grep = (env: Record<string, string> = {}) =>
+    guard({ hook_event_name: 'PreToolUse', tool_name: 'Grep', tool_input: { pattern: 'Bandung', path: 'banyak', output_mode: 'content' }, cwd: base }, env);
+  assert.equal(grep().status, 0);
+  assert.match(grep(strict).stderr, /only 300 of the 301 data files/);
+
+  // A check that runs out of time is blocked in strict mode; the budget can only be shortened.
+  assert.equal(sh('cat bersih.csv', { ...strict, SAMARAN_GUARD_BUDGET_MS: '-1' }).status, 2);
+  assert.match(sh('cat bersih.csv', { ...strict, SAMARAN_GUARD_BUDGET_MS: '-1' }).stderr, /took too long/);
+  assert.equal(sh('cat bersih.csv', { SAMARAN_GUARD_BUDGET_MS: '-1' }).status, 0, 'default mode has no budget');
+  assert.equal(sh('cat bersih.csv', { ...strict, SAMARAN_GUARD_BUDGET_MS: '999999999' }).status, 0);
+  rmSync(base, { recursive: true, force: true });
+});
+
 test('Word: teks, header, dan tabel dipindai dan disamarkan', async () => {
   mkdirSync(path.join(dir, 'dokumen'), { recursive: true });
   copyFileSync(path.join(import.meta.dirname, 'fixtures', 'surat.docx'), path.join(dir, 'dokumen', 'surat.docx'));
@@ -481,7 +596,7 @@ test('PDF: teks dipindai dan disamarkan, halaman hasil scan dilaporkan, guard me
   assert.equal(scan.data.totals.NIK, 4);
   assert.ok(scan.data.findings.some((f: any) => f.file === 'pdf/invoice.pdf' && f.sheet === 'Halaman 1' && f.type === 'NAME'));
   assert.deepEqual(scan.data.notScanned.files, [
-    'pdf/surat-keterangan.pdf (partly scanned: page 2 of 3 has no text layer (scanned) and needs OCR)',
+    'pdf/surat-keterangan.pdf (partial: page 2 of 3 has no text layer (scanned) and needs OCR)',
   ]);
   for (const secret of ['3201011508950001', 'Budi Santoso', 'Rina Wati', '0812-3456-7890']) assert.ok(!scan.text.includes(secret), secret);
 

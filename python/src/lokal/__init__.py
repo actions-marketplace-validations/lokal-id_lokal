@@ -26,13 +26,16 @@ from .qris import QrisInfo, parse_qris, qris_crc, set_qris_amount
 from .rupiah import ParsedRupiah, format_rupiah, format_rupiah_short, parse_rupiah
 from .samaran import (
     PII_TYPES,
+    SCAN_STATUSES,
     UU_PDP_CATEGORY,
     Confidence,
+    CustomRule,
     MaskedMatch,
     MaskResult,
     PiiMatch,
     PiiType,
     Samaran,
+    ScanStatus,
     detect_pii,
     field_type,
     mask_pii,
@@ -40,14 +43,16 @@ from .samaran import (
 )
 from .terbilang import terbilang
 
-__version__ = '0.7.2'
+__version__ = '0.11.0'
 
 __all__ = [
     'HOLIDAY_YEARS',
     'PII_TYPES',
     'PROVINCES',
+    'SCAN_STATUSES',
     'UU_PDP_CATEGORY',
     'Confidence',
+    'CustomRule',
     'Gender',
     'Holiday',
     'HolidayType',
@@ -65,6 +70,7 @@ __all__ = [
     'PiiMatch',
     'PiiType',
     'Samaran',
+    'ScanStatus',
     '__version__',
     'add_working_days',
     'count_working_days',

@@ -41,6 +41,8 @@ export {
   fieldType,
   PII_TYPES,
   UU_PDP_CATEGORY,
+  SCAN_STATUSES,
+  type ScanStatus,
   type PiiType,
   type PiiMatch,
   type MaskedMatch,
@@ -48,4 +50,6 @@ export {
   type SamaranOptions,
   type DetectOptions,
   type Confidence,
+  checkCustomRules,
+  type CustomRule,
 } from './samaran/index.ts';

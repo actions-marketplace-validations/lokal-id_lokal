@@ -27,12 +27,14 @@ export type PiiType =
   | 'HEALTH'
   | 'FINANCIAL'
   | 'CRIMINAL_RECORD'
-  | 'BIOMETRIC';
+  | 'BIOMETRIC'
+  // A team's own rules (CustomRule), masked under their own label: [EMPLOYEE_ID_1]
+  | 'CUSTOM';
 
 export const PII_TYPES: readonly PiiType[] = [
   'NIK', 'KK', 'NPWP', 'PASSPORT', 'SIM', 'NIP', 'BPJS', 'NISN', 'AKTA', 'PHONE', 'EMAIL', 'BANK_ACCOUNT', 'CARD', 'PLATE', 'IP',
   'GEO', 'NAME', 'ADDRESS', 'BIRTH_DATE', 'GENDER', 'RELIGION', 'MARITAL_STATUS', 'NATIONALITY', 'HEALTH',
-  'FINANCIAL', 'CRIMINAL_RECORD', 'BIOMETRIC',
+  'FINANCIAL', 'CRIMINAL_RECORD', 'BIOMETRIC', 'CUSTOM',
 ];
 
 /**
@@ -55,4 +57,18 @@ export interface PiiMatch {
   end: number;
   value: string;
   confidence: Confidence;
+  /** For CUSTOM matches: the rule's label, which names the placeholder. */
+  label?: string;
 }
+
+/**
+ * How much of an input a check could see. Every Lokal integration reports one of these, so "no personal data found"
+ * is never confused with "never looked":
+ * - `scanned`: all of it.
+ * - `partial`: some of it, such as a PDF with scanned pages, or a request with an image in it.
+ * - `unsupported`: none of it, because Lokal does not read this kind of input (.xls, archives, images, too large).
+ * - `failed`: none of it, because this input could not be read although its kind is supported (damaged, encrypted).
+ */
+export type ScanStatus = 'scanned' | 'partial' | 'unsupported' | 'failed';
+
+export const SCAN_STATUSES: readonly ScanStatus[] = ['scanned', 'partial', 'unsupported', 'failed'];

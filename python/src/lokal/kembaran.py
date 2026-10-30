@@ -46,6 +46,7 @@ from ._kembaran_data import (
 )
 from ._result import Result
 from .samaran.core import _canonical
+from .samaran.custom import CustomRule, RuleLike, to_rules
 from .samaran.detectors import check_types, detect_pii
 from .samaran.types import Confidence, PiiType
 
@@ -226,7 +227,8 @@ class Kembaran:
     """Stand-ins for personal data, consistent for the life of the instance (or across runs with the same secret).
 
     ``keep`` lists types left as they are (default: gender, religion, marital status, nationality, which identify no
-    one). ``keep_birth_date`` keeps whole birth dates instead of only the year.
+    one). ``keep_birth_date`` keeps whole birth dates instead of only the year. ``custom`` takes a team's own rules,
+    as for ``Samaran``: their values get stand-ins of the same shape.
     """
 
     def __init__(
@@ -236,18 +238,22 @@ class Kembaran:
         keep: Optional[Iterable[str]] = None,
         keep_birth_date: bool = False,
         min_confidence: Confidence = 'medium',
+        custom: Iterable[RuleLike] = (),
     ) -> None:
         self._key = _Hmac(secret.encode('utf-8') if secret is not None else secrets.token_bytes(32))
         self._keep: frozenset[str] = frozenset(check_types(keep) if keep is not None else KEEP_BY_DEFAULT)
         self._keep_birth_date = keep_birth_date
         self._min_confidence: Confidence = min_confidence
+        self._custom: tuple[CustomRule, ...] = to_rules(custom)
         self._fakes: dict[str, str] = {}
         self._used: dict[str, set[str]] = {}
         self._nik_days: dict[str, _Day] = {}
 
     def text(self, text: str) -> KembaranResult:
         """Replaces every piece of personal data in a text: a CSV, an SQL dump, JSON, a log, or prose."""
-        matches = detect_pii(text, min_confidence=self._min_confidence, exclude=sorted(self._keep))  # type: ignore[arg-type]
+        matches = detect_pii(
+            text, min_confidence=self._min_confidence, exclude=sorted(self._keep), custom=self._custom  # type: ignore[arg-type]
+        )
         line_starts = [0]
         i = text.find('\n')
         while i >= 0:

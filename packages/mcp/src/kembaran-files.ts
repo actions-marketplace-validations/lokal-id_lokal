@@ -3,9 +3,9 @@
 // runs it, an agent included, never sees the data.
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { PII_TYPES, type PiiType } from '@lokal-id/core';
+import { PII_TYPES, type CustomRule, type PiiType } from '@lokal-id/core';
 import { KEEP_BY_DEFAULT, Kembaran } from '@lokal-id/core/kembaran';
-import { isTextFile, MAX_FILE_BYTES } from './files.ts';
+import { isTextFile, loadConfig, MAX_FILE_BYTES } from './files.ts';
 
 export interface AnonymizeOptions {
   secret?: string;
@@ -13,6 +13,10 @@ export interface AnonymizeOptions {
   keep?: PiiType[];
   keepBirthDate?: boolean;
   overwrite?: boolean;
+  /** Count what would be replaced, and write nothing. */
+  dryRun?: boolean;
+  /** The project's own rules from .samaran.json. */
+  custom?: CustomRule[];
 }
 
 export interface AnonymizedFile {
@@ -38,15 +42,17 @@ export function anonymizeFiles(inputs: string[], output: string, options: Anonym
     if (statSync(file).size > MAX_FILE_BYTES) throw new Error(`${file} is larger than ${MAX_FILE_BYTES / 1024 / 1024} MB.`);
     if (!isTextFile(file)) throw new Error(`${file} is not a text file. Kembaran reads SQL dumps, CSV, JSON, and logs.`);
     if (path.resolve(targets[i]!) === path.resolve(file)) throw new Error(`${file}: the output must be a different file.`);
-    if (existsSync(targets[i]!) && !options.overwrite) throw new Error(`${targets[i]} already exists. Pass overwrite to replace it.`);
+    if (!options.dryRun && existsSync(targets[i]!) && !options.overwrite) throw new Error(`${targets[i]} already exists. Pass overwrite to replace it.`);
   });
   const kembaran = new Kembaran({
     secret: options.secret,
     keep: [...KEEP_BY_DEFAULT, ...(options.keep ?? [])],
     keepBirthDate: options.keepBirthDate,
+    custom: options.custom,
   });
   return inputs.map((file, i) => {
     const { text, replaced } = kembaran.text(readFileSync(file, 'utf8'));
+    if (options.dryRun) return { from: file, to: targets[i]!, replaced };
     mkdirSync(path.dirname(targets[i]!), { recursive: true });
     writeFileSync(targets[i]!, text, 'utf8');
     return { from: file, to: targets[i]!, replaced };
@@ -62,7 +68,8 @@ district, phone numbers on the same operator, names with the same casing. Severa
   --secret <text>       The same secret gives the same stand-ins on every run (default: random each run)
   --keep <types>        Types to leave as they are, e.g. FINANCIAL,NAME
   --keep-birth-date     Keep whole birth dates, not only the year
-  --overwrite           Replace existing output files`;
+  --overwrite           Replace existing output files
+  --dry-run             Count what would be replaced, and write nothing (-o is optional)`;
 
 export function runKembaran(args: string[]): void {
   const opt = (...names: string[]) => {
@@ -76,7 +83,8 @@ export function runKembaran(args: string[]): void {
   const valued = new Set(['-o', '--output', '--secret', '--keep']);
   const inputs = args.filter((a, i) => !a.startsWith('-') && !valued.has(args[i - 1] ?? ''));
   const output = opt('-o', '--output');
-  if (!inputs.length || !output) {
+  const dryRun = args.includes('--dry-run');
+  if (!inputs.length || (!output && !dryRun)) {
     process.stderr.write(`${USAGE}\n`);
     process.exitCode = 1;
     return;
@@ -89,17 +97,19 @@ export function runKembaran(args: string[]): void {
     return;
   }
   try {
-    const files = anonymizeFiles(inputs, output, {
+    const files = anonymizeFiles(inputs, output ?? '(dry run)', {
       secret: opt('--secret'),
       keep: keep as PiiType[],
       keepBirthDate: args.includes('--keep-birth-date'),
       overwrite: args.includes('--overwrite'),
+      dryRun,
+      custom: loadConfig(process.cwd()).custom,
     });
     for (const f of files) {
       const counts = Object.entries(f.replaced).map(([t, n]) => `${t}=${n}`).join(', ') || 'nothing found';
-      process.stderr.write(`${f.from} -> ${f.to}: ${counts}\n`);
+      process.stderr.write(dryRun ? `${f.from}: would replace ${counts}\n` : `${f.from} -> ${f.to}: ${counts}\n`);
     }
-    process.stderr.write(`${KEMBARAN_NOTE}\n`);
+    process.stderr.write(dryRun ? 'Dry run: nothing was written.\n' : `${KEMBARAN_NOTE}\n`);
   } catch (e) {
     process.stderr.write(`${(e as Error).message}\n`);
     process.exitCode = 1;

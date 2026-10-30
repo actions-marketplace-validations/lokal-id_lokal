@@ -1,0 +1,6 @@
+id,nama,nik,no_hp,email,alamat,catatan
+1,Kenanga Purbasari,3201011508950001,0812-3456-7890,kenanga.purbasari@example.com,"Jl. Melati No. 12 RT 03/RW 05, Cibinong",pelanggan sejak 2021
+2,Bayu Nugroho Saputra,3276015508030002,0857-1122-3344,bayu.saputra@example.com,"Perum Griya Asri Blok C-7, Depok",komplain pengiriman
+3,Laras Wulandari,3171034203880003,0813-9988-7766,laras.w@example.com,"Jl. Kenari Raya No. 4, Jakarta Pusat",pernah dirawat karena asma
+4,Dimas Arya Pratama,3578062711900004,0821-5566-7788,dimas.pratama@example.com,"Jl. Diponegoro No. 88, Surabaya",
+5,Sekar Ayu Lestari,6471054409920005,0852-4433-2211,sekar.lestari@example.com,"Jl. Jenderal Sudirman No. 21, Balikpapan",refund ke rekening BCA 1234567890

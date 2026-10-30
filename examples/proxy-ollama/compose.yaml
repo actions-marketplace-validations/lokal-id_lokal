@@ -1,0 +1,37 @@
+# Samaran Proxy with a local model: requests are masked before they reach the cloud, and requests with the types
+# that .samaran.json routes (health and criminal records here) go to Ollama on this machine instead.
+#
+#   docker compose up -d
+#   docker compose exec ollama ollama pull llama3.2
+#   OpenAI(base_url="http://127.0.0.1:8787/v1")
+services:
+  lokal-proxy:
+    build: .
+    # Only this machine can reach the proxy: it sees real personal data.
+    ports:
+      - 127.0.0.1:8787:8787
+    volumes:
+      - ./.samaran.json:/app/.samaran.json:ro
+      - audit:/app/.lokal  # read it with: docker compose exec lokal-proxy lokal-mcp audit
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:0.40.4@sha256:926d40fd6eeeebd346b5c358a63de2a10ec995371cd93dd22f1843200694b1a6
+    # No published port: only the proxy talks to it, over the compose network.
+    volumes:
+      - ollama:/root/.ollama
+    restart: unless-stopped
+    # With an NVIDIA GPU and the NVIDIA Container Toolkit:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+volumes:
+  ollama:
+  audit:

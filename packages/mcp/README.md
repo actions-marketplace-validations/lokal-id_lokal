@@ -64,6 +64,7 @@ The file tools can only access `LOKAL_ROOT`, which defaults to `CLAUDE_PROJECT_D
 | `read_file_masked` | Read a file (text, CSV, JSON, logs, `.xlsx`, `.docx`, text-based PDF) with personal data replaced by placeholders |
 | `write_file_unmasked` | Write results with placeholders restored, on your machine |
 | `anonymize_file` | Copy dumps and exports with realistic stand-ins for every person (Kembaran), returning only counts |
+| `clear_vault` | Forget every real value behind this session's placeholders |
 
 `parse_alamat`, `parse_nik`, `parse_phone`, and `validate_npwp` also take placeholders from `read_file_masked` (`[ADDRESS_3]`, `[NIK_1]`): the real value is read on your machine, and the street, RT/RW, and birth date come back as placeholders.
 
@@ -71,13 +72,35 @@ The file tools can only access `LOKAL_ROOT`, which defaults to `CLAUDE_PROJECT_D
 
 `lokal-mcp guard` is a hook for Claude Code (`UserPromptSubmit`, and `PreToolUse` for `Read|Grep|Bash|PowerShell`), Codex CLI, Cursor, and Gemini CLI. It holds prompts that contain NIK, bank account, or health data, blocks commands that would print a personal data file into the conversation, pointing the agent to `read_file_masked` instead, and asks before photos of documents and scanned PDFs are read. The Lokal plugin sets it up for Claude Code; see the [Lokal README](https://github.com/lokal-id/lokal#in-codex-cli-cursor-and-gemini-cli) for the other agents.
 
+`SAMARAN_GUARD=strict` makes it fail closed: what it cannot check is blocked, including a guard error, a file it cannot read, output from beyond the first 5 MB of a big file, a `Grep` over more than 300 data files, and a check that runs longer than 7 seconds. One-liners such as `python -c` and `node -e` that name a data file with personal data are blocked like `cat`. It is still not a sandbox; see [Defense in depth](https://github.com/lokal-id/lokal#defense-in-depth).
+
+## Your own data types
+
+`.samaran.json` at the project root adds rules for formats Samaran cannot know, and values it must never mask. The file tools, the guard, `lokal-mcp scan`, and the proxy read it; restart the server after changing it. A broken file makes the file tools fail rather than mask less.
+
+```json
+{
+  "custom": [
+    { "label": "EMPLOYEE_ID", "pattern": "\\bEMP-\\d{6}\\b" },
+    { "label": "MEMBER", "fields": ["no_member"] }
+  ],
+  "allow": ["0800-1-500-500"]
+}
+```
+
+## Policy and audit
+
+`.samaran.json` can also set an action per type: `"policy": { "HEALTH": "block", "FINANCIAL": "allow", "PASSPORT": "route" }`. `block` makes `read_file_masked` refuse a file and the proxy refuse a request; `allow` leaves a type unmasked; `route` sends proxied requests to a local model (`"route": { "openai": "http://127.0.0.1:11434/v1", "model": "llama3.2" }`). `"audit": true` writes one JSON line per decision, with counts and never values, to `.lokal/audit.jsonl`; `lokal-mcp audit` summarizes it. `"vaultTtlMinutes": 60` makes the server forget the real values after an hour without use. `"guard": "strict"` turns on the strict guard for everyone in the repository. See the [Lokal README](https://github.com/lokal-id/lokal#policy-local-routing-and-the-audit-log).
+
+`lokal-mcp init --profile personal|team|strict [--dry-run]` writes `.samaran.json`, `.samaranignore`, and for teams a GitHub workflow; `lokal-mcp check` validates the configuration and explains what it does.
+
 ## Kembaran
 
-`lokal-mcp kembaran prod.sql export.csv -o staging/ [--secret <text>] [--keep FINANCIAL] [--keep-birth-date]` copies text files with every person replaced by a realistic stand-in, consistent across the files. See the [Lokal README](https://github.com/lokal-id/lokal#kembaran-production-data-for-staging-without-real-people).
+`lokal-mcp kembaran prod.sql export.csv -o staging/ [--secret <text>] [--keep FINANCIAL] [--keep-birth-date] [--dry-run]` copies text files with every person replaced by a realistic stand-in, consistent across the files. See the [Lokal README](https://github.com/lokal-id/lokal#kembaran-production-data-for-staging-without-real-people).
 
 ## Lokal Scan
 
-`lokal-mcp scan --staged` (pre-commit) or `lokal-mcp scan --diff origin/main` (CI) fails when a commit or pull request adds Indonesian personal data, and shows each value partially masked. `lokal-mcp scan [path…]` checks whole files. There is a GitHub Action too: `uses: lokal-id/lokal@v0.7.2`. See the [Lokal README](https://github.com/lokal-id/lokal#lokal-scan-keep-personal-data-out-of-the-repository).
+`lokal-mcp scan --staged` (pre-commit) or `lokal-mcp scan --diff origin/main` (CI) fails when a commit or pull request adds Indonesian personal data, and shows each value partially masked. `lokal-mcp scan [path…]` checks whole files. There is a GitHub Action too: `uses: lokal-id/lokal@v0.11.0`. See the [Lokal README](https://github.com/lokal-id/lokal#lokal-scan-keep-personal-data-out-of-the-repository).
 
 ## Remote (HTTP) mode
 
@@ -91,7 +114,7 @@ The file tools can only access `LOKAL_ROOT`, which defaults to `CLAUDE_PROJECT_D
 npx @lokal-id/mcp proxy --port 8787 [--openai <url>] [--anthropic <url>] [--exclude FINANCIAL]
 ```
 
-Then use `OpenAI(base_url="http://127.0.0.1:8787/v1")` or `Anthropic(base_url="http://127.0.0.1:8787")`. See the [Lokal README](https://github.com/lokal-id/lokal#samaran-proxy-protect-an-apps-llm-calls).
+Then use `OpenAI(base_url="http://127.0.0.1:8787/v1")` or `Anthropic(base_url="http://127.0.0.1:8787")`. Requests with images or files inside are forwarded with `x-samaran-status: partial`, since they cannot be checked; `--strict` refuses them. See the [Lokal README](https://github.com/lokal-id/lokal#samaran-proxy-protect-an-apps-llm-calls).
 
 ## License
 

@@ -43,7 +43,8 @@ Then load `packages/extension/dist` the same way.
 
 ## Limitations
 
-- **Images, scanned PDFs, and some files are not masked.** A photo of a KTP, a scanned PDF, a password-protected PDF, an old `.xls` or `.doc`, an archive, or a file over 20 MB is uploaded as it is, with a notice for the documents it could not read. Formatting and formulas of an Excel file with personal data are lost in the masked CSV.
+- **Images, scanned PDFs, and some files are not masked.** A scanned or password-protected PDF, a damaged document, a file over 20 MB, and a photo whose name says it is an ID document (`ktp-budi.jpg`, `selfie_kyc.png`, `npwp.png`) are held: the browser asks whether to upload them as they are, and Cancel leaves them out. Other photos, an old `.xls` or `.doc`, and archives are uploaded as they are, since the extension cannot tell a KTP photo from a screenshot except by its name. Formatting and formulas of an Excel file with personal data are lost in the masked CSV.
+- **Rules in `.samaran.json` do not apply here.** The extension has no access to your project files; it uses the built-in types only.
 - A site that opens its own file picker without a file input on the page, or reads files inside a shadow root, is not covered. It works with the file inputs, drop zones, and paste handlers these sites use today, tested on a page that behaves like them.
 - Text dropped by drag and drop is not masked.
 - Detection is pattern-based (see [Limitations](https://github.com/lokal-id/lokal#limitations)). A name with no label or cue around it can slip through.

@@ -4,6 +4,102 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-10-30
+
+### Added
+
+- `lokal-mcp init --profile personal|team|strict` sets a project up: `.samaran.json`, `.samaranignore`, and for teams a GitHub workflow pinned to the same release. `--dry-run` shows the files without writing them. A file that is there is kept, except `.samaran.json` with `--force`.
+- `lokal-mcp check` validates `.samaran.json` and `.samaranignore`, shows what they do, and warns about an identity number the model may see, a `route` endpoint that is not on this machine or a private network, an audit log inside the project, and a `.samaranignore` pattern that skips every data file.
+- `"guard": "strict"` in `.samaran.json` turns on the strict guard for everyone in the repository. It can only make the guard stricter: any other value is an error, and `SAMARAN_GUARD` on a machine still wins.
+- `lokal-mcp kembaran --dry-run` and `anonymize_file` with `dry_run` count what would be replaced and write nothing.
+- A Docker Compose example with Samaran Proxy and Ollama, with images pinned by digest and the proxy published on 127.0.0.1 only (`examples/proxy-ollama`), and a guide to putting the proxy in front of LiteLLM (`examples/litellm`).
+- A 5-minute quickstart with made-up sample data (`docs/quickstart.md`), a page listing every network connection each part makes (`docs/network.md`), both in English and Indonesian, and the Chrome Web Store listing and privacy answers (`packages/extension/STORE.md`).
+
+## [0.10.0] - 2026-10-30
+
+### Added
+
+- A policy per type of personal data in `.samaran.json`: `mask` (the default), `allow`, `block`, or `route`, per built-in type or custom rule label. The proxy refuses a request with a `block` type (HTTP 403); `read_file_masked` refuses such a file; the guard holds back a single value of a `block` or `route` type, as it does an identity number; `allow` leaves a type unmasked. `lokal-mcp scan` ignores the policy.
+- Routing to a local model: with `"route": { "openai": "http://127.0.0.1:11434/v1", "model": "llama3.2" }`, the proxy sends a request with a `route` type as it is to that endpoint (Ollama, or any OpenAI- or Anthropic-compatible server), never to the cloud, and without the cloud API key. Responses say `x-samaran-routed`. A request to an API with no local endpoint is refused.
+- An audit log: `"audit": true` appends one JSON line per decision of the proxy, the MCP file tools, and the guard to `.lokal/audit.jsonl` (with a `.gitignore`), holding counts per type and never values. `lokal-mcp audit [file] [--since 7d] [--json]` summarizes it.
+- The `clear_vault` MCP tool forgets every real value behind the session's placeholders, and `"vaultTtlMinutes"` (or `LOKAL_VAULT_TTL_MINUTES`) forgets them after that long without use.
+
+## [0.9.0] - 2026-10-30
+
+### Added
+
+- The held-out benchmark is now corpus 2: 70 templates instead of 30 and twice as many names in each split, 2,800 documents and 6,160 labelled values in the test split, with at least 200 of every type. It reports a 95% interval for each number and will not compare numbers across corpus versions. The new test templates were written before measuring and found gaps that corpus 1 could not show: religion after "Agama/Kepercayaan" or in a sentence (57.1% protected), health data in English text (81.7%), BPJS under a "nomor_jkn" column (83.3%), and a timestamp read as a bank account number. On 0.8.3, 94.0% of values are fully masked (93.4–94.6%), with 96.7% precision; with the fixes below, made against new development templates only, 96.6% (96.1–97.0%) with 99.8% precision, and no false positive in the 400 trap documents.
+- A table in the README of what each integration checks, what it does not see, and what it does with what it cannot check: Claude Code, Codex CLI, Cursor, Gemini CLI, other MCP clients, the connectors, the browser extension, the proxy, the AI SDK middleware, and Lokal Scan.
+
+### Changed
+
+- `SAMARAN_GUARD=strict` now blocks whatever the guard could not check, instead of only guard errors and one-liners: a file it cannot read (a scanned, encrypted, or damaged PDF, a damaged spreadsheet), the photos and PDFs it would otherwise ask about, output from beyond the first 5 MB of a big file (`cat`, `tail`, `grep`, or `Read` with an offset past it; `head` still runs), a `Grep` over more than 300 data files, and a check that runs longer than 7 seconds, which the hook's 10-second limit would otherwise let through. Each message says what could not be checked.
+
+### Fixed
+
+- `Read` with an offset past the first 5 MB of a big file showed lines the guard had not checked. It now asks first.
+- Samaran, in both libraries:
+  - Religion after "Agama/Kepercayaan" or "Agama atau kepercayaan", and in a sentence ("(agama Hindu)", "religion: Islam"), is found; religious education, courts, and holidays ("pendidikan agama Islam", "Pengadilan Agama") are not.
+  - A known disease after English words ("has asma", "suffers from", "diagnosed with") or after "perawatan", "pengobatan", and "kontrol" is found.
+  - A BPJS number under "nomor_jkn", "no_kartu_jkn", or "No. Kartu" on a KIS card is BPJS, not a payment card: card numbers never start with 0.
+  - A KK number under "no_kk" or "family_card", or after "No." below a "KARTU KELUARGA" title, is a KK, not a NIK.
+  - A street in capitals ("JL. MERDEKA NO. 95", "KP. RAWA BADAK RT 01 RW 02"), as KTP and NPWP cards print it, is masked whole.
+  - A date and time ("2026-12-03 04:15") is no longer read as a bank account number, and a call center number ("(021) 500-888") no longer as a phone number.
+
+## [0.8.3] - 2026-10-29
+
+### Added
+
+- A held-out benchmark, `npm run bench`: precision, recall, F1, and the share of values fully masked, per type of personal data, on 1,200 made-up documents in eleven formats (forms, chat, mixed Indonesian and English, informal spelling, unlabelled text, JSON, CSV, logs, OCR output, letters, and traps with no personal data). The test split uses different templates and names from the dev split, and CI fails when a change scores below the baseline. On 0.8.3 it masks 95.0% of values fully, with 99.5% precision; its weakest spots are OCR text with misread characters and names without a label. Method and limits are in `evals/bench/README.md`.
+- One set of states for what a check saw, so "no personal data found" is never confused with "never looked": `scanned`, `partial`, `unsupported`, and `failed` (`ScanStatus` and `SCAN_STATUSES` in both libraries). `lokal-mcp scan`, `scan_pii` (with a `byStatus` count), `read_file_masked`, the Python `scan_path`, and the browser extension's attachment reader all report them.
+- Samaran Proxy: images, audio, and files inside a JSON request cannot be checked for personal data. They are still forwarded, but the response now says `x-samaran-status: partial` with the count in `x-samaran-unchecked`, and the log line says so. Every response carries `x-samaran-status`. `--strict` refuses such requests with HTTP 422, and also refuses file uploads even with `--allow-unmasked`.
+- Leak tests: one made-up person with every kind of personal data (`packages/core/test/canary.json`) goes through both libraries, the AI SDK middleware, every MCP tool, the guard, every API shape of the proxy, `lokal-mcp scan`, Kembaran, the Python logging filter, and the browser extension, as a form, JSON, a log line, CSV, and JSON inside JSON. A test fails if any value, or part of the name or street, comes out.
+
+### Fixed
+
+Found by the leak tests. Each one let some values through unmasked:
+
+- A CSV after a sentence ("Tolong cek data ini:" and then the table) was only read by its columns when the header was the first line, so names, bank accounts, BPJS and passport numbers, birth dates, religion, and diagnoses in it went through. Now a header in the first 20 lines is found, and a table that starts after a sentence ends at its last row. A header after a log prefix ("import csv: nama,nik") is found too.
+- Text from JSON or a log formatter keeps its line breaks as `\n`. A label after one ("...\nAgama: Islam") was not found, and a name before one was cut short. Escaped line breaks now count as line breaks, also after two rounds of JSON.
+- JSON inside a JSON string, as logs write a request body and tool calls their arguments, had its field names escaped, so names, birth dates, religion, and diagnoses in it were not found. Such strings are now read unescaped, in one pass for a whole log.
+- The proxy now masks a tool call's arguments and other JSON in a string field by field, with each field's name as context, including fields such as `name` and `id` that it leaves alone in the request itself.
+- A labelled value inside a JSON string took the closing quote with it (`{"note":"Agama: Islam"}`), so masking a JSON file broke it. A quoted value with an escaped quote in it (`"Budi \"Bob\" Santoso"`) stopped at that quote and left the surname.
+- `scan_pii` and the Python `scan_path` skipped a file silently when it could not even be opened (permissions, a file removed while scanning). It is now reported as `failed`, not left out.
+
+## [0.8.2] - 2026-10-29
+
+### Fixed
+
+- Browser extension: after the extension was updated or reloaded while a chat stayed open, pasting or sending personal data in that tab showed "Uncaught Error: Extension context invalidated." on the extension's page and no message in the chat. The data was already held back and never sent; now the tab also says that Lokal was updated and the page needs a reload.
+
+## [0.8.1] - 2026-10-29
+
+### Fixed
+
+- Text that already looked like a placeholder could be restored with a real person's data. With an e-mail template such as "Halo [NAME_1]" in the input, the real name was masked as [NAME_1] too, the model could not tell them apart, and restoring filled the template with the real name. Now numbers already used in the input are skipped: the real name becomes [NAME_2], and [NAME_1] stays as it was. This applies to the libraries (TypeScript and Python), the MCP server, the browser extension, and the proxy, which reserves the numbers across every message of a request first. `Samaran.reserve(text)` does the same for code that masks a request in parts. A placeholder that the session made itself, quoted back by the user, still means that person.
+
+### Added
+
+- The proxy counts placeholders in an answer that the request never made (made up by the model, or copied from a template): a log line says how many, without naming them, and a non-streamed answer carries an `x-samaran-unrestored` header.
+- `write_file_unmasked` adds a `warning` when the content has placeholders that the session did not make, next to the existing `unknownPlaceholders` list, so the agent can fix a mistyped placeholder instead of writing it into the file.
+- `read_file_masked` notes when the file itself contains text that is also a placeholder from this session, which `write_file_unmasked` would restore.
+
+## [0.8.0] - 2026-10-29
+
+npm (`@lokal-id/core`, `@lokal-id/mcp`), PyPI (`lokal-id`), the GitHub Action, and the browser extension.
+
+### Added
+
+- `.samaran.json` at the project root adds a team's own data types: rules with a `label` and a regular expression `pattern` (an employee ID like `EMP-004211`) or `fields` (JSON keys, `key: value` labels, and CSV columns such as `no_member`). Matches are masked as `[EMPLOYEE_ID_1]` and restored like any placeholder; `allow` lists values that are never masked. The MCP server, the guard, `lokal-mcp scan` and the GitHub Action, the proxy, `lokal-mcp kembaran`, and `lokal.files.scan_path` read it. A broken file makes the file tools and `lokal-mcp scan` fail with the reason, instead of masking less than the team expects. In the libraries, pass the rules as `custom`: `new Samaran({ custom })`, `detectPii(text, { custom })`, `new Kembaran({ custom })`, and the same keyword in Python. Matches have type `CUSTOM` and the rule's `label`; a rule whose label is a built-in type, or whose pattern does not compile, is refused. Both ports match the same text, checked by 309 shared vectors.
+- `SAMARAN_GUARD=strict` makes the guard fail closed. An error in the guard, such as a broken `.samaran.json` or malformed hook input, blocks instead of allowing. Code run from the command line that names a data file with personal data is blocked like `cat`: `python -c`, `node -e`, `ruby -e`, `perl -e`, `php -r`, a heredoc or PowerShell here-string fed to an interpreter, and `[IO.File]::ReadAllText`. Scripts saved in files still run. The default is unchanged.
+- A test proves the "no network calls" claim. The MCP server runs every one of its 17 tools, then the guard, `lokal-mcp scan`, and `lokal-mcp kembaran` run, all with every Node network API (sockets, TLS, HTTP, DNS, UDP, `fetch`) replaced by one that throws and logs. The Python library does the same with sockets and name lookups. A new MCP tool without a call in the test fails it.
+- README: "What Lokal is not" near the top, and "Defense in depth", with Claude Code permission rules and strict mode for data that must never reach a model provider.
+
+### Changed
+
+- The browser extension no longer uploads files it cannot check without asking. A scanned or password-protected PDF, a damaged document, a file over 20 MB, and a photo whose name says it is an ID document (`ktp-budi.jpg`, `selfie_kyc.png`, `npwp.png`) are held, and the browser asks whether to upload them as they are. Cancel, Esc, and a site that blocks dialogs leave them out. Before, they were uploaded with a notice afterwards.
+- A team's own rules count as identity numbers in the guard: one match is enough to hold a prompt or a file.
+
 ## [0.7.2] - 2026-10-27
 
 The browser extension. npm, PyPI, and the GitHub Action are released with the same version and no other changes.
@@ -192,7 +288,14 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.7.2...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/lokal-id/lokal/compare/v0.10.0...v0.11.0
+[0.10.0]: https://github.com/lokal-id/lokal/compare/v0.9.0...v0.10.0
+[0.9.0]: https://github.com/lokal-id/lokal/compare/v0.8.3...v0.9.0
+[0.8.3]: https://github.com/lokal-id/lokal/compare/v0.8.2...v0.8.3
+[0.8.2]: https://github.com/lokal-id/lokal/compare/v0.8.1...v0.8.2
+[0.8.1]: https://github.com/lokal-id/lokal/compare/v0.8.0...v0.8.1
+[0.8.0]: https://github.com/lokal-id/lokal/compare/v0.7.2...v0.8.0
 [0.7.2]: https://github.com/lokal-id/lokal/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/lokal-id/lokal/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/lokal-id/lokal/compare/v0.6.0...v0.7.0
