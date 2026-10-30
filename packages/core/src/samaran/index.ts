@@ -141,7 +141,8 @@ export class Samaran {
   scan(text: string): PiiMatch[] {
     const allow = this.options.allow ?? [];
     return detectPii(text, this.options).filter(
-      (m) => !allow.some((a) => (typeof a === 'string' ? a === m.value : a.test(m.value))),
+      // search(), not test(): a RegExp with the g or y flag keeps its lastIndex between calls, and would skip a value.
+      (m) => !allow.some((a) => (typeof a === 'string' ? a === m.value : m.value.search(a) !== -1)),
     );
   }
 

@@ -161,6 +161,14 @@ test('allow-list dan filter jenis', () => {
   assert.equal(text, 'Hubungi cs@toko.id, bukan [EMAIL_1], HP 081234567890');
 });
 
+test('allow-list dengan RegExp global berlaku untuk setiap kemunculan', () => {
+  // A /g or /y RegExp keeps lastIndex between test() calls; the second value used to be masked.
+  for (const re of [/0812-3456-7890/g, /0812-3456-7890/y, /0812-3456-7890/]) {
+    const { text } = new Samaran({ allow: [re] }).mask('HP utama 0812-3456-7890; HP cadangan 0812-3456-7890');
+    assert.equal(text, 'HP utama 0812-3456-7890; HP cadangan 0812-3456-7890', String(re));
+  }
+});
+
 test('kolom nama dan alamat di CSV dikenali dari header-nya', () => {
   const csv = 'id;nama_lengkap;alamat;kota\n1;Siti Aminah;Jl. Melati 3;Depok\n2;"Rahmat, S.T.";Gg. Kenari 9;Bogor\n';
   const found = detectPii(csv).map((m) => `${m.type}:${m.value}`);

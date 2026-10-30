@@ -34,8 +34,27 @@ def test_filters_drop_labels_chat_words_places_and_low_scores() -> None:
     assert keep_name('Raditya Wiraguna', 0.95)
     assert keep_name('Kirana', 0.9)
     assert not keep_name('Raditya Wiraguna', 0.6), 'below min_score'
-    for value in ['kak', 'Hi', 'NIK', 'SD', 'nopol', 'Pati', 'Kota Bogor', 'Sleman', 'Ny', 'raditya']:
+    for value in ['kak', 'Hi', 'NIK', 'SD', 'Pati', 'Kota Bogor', 'Sleman', 'Ny']:
         assert not keep_name(value, 0.99), value
+
+
+def test_names_in_lower_case_chat_are_kept_but_chat_words_and_verbs_are_not() -> None:
+    # The model reads lower case; a name in chat is kept on the model's score.
+    assert keep_name('raditya wiraguna', 0.9)
+    assert not keep_name('raditya', 0.6), 'below the lower-case threshold'
+    for value in ['otw', 'btw', 'woy', 'kakk', 'nungguin', 'ngeliat', 'dibeliin', 'Nitip', 'TITIP']:
+        assert not keep_name(value, 0.99), value
+    # Names that look like those forms only when capitalized are kept.
+    for value in ['Ngesti', 'Arifin', 'Nyoman', 'NGURAH RAI']:
+        assert keep_name(value, 0.95), value
+
+
+def test_lower_case_names_count_in_sentences_only() -> None:
+    ner = fake({'retry': 0.95, 'nopol': 0.95, 'raditya': 0.95, 'arief': 0.95})
+    assert [m.value for m in ner('saya di chat sama raditya tadi pagi')] == ['raditya']
+    assert ner('WARN payment failed retry=1') == []
+    assert ner('nopol,pemilik,no_hp') == []
+    assert ner('kirim ke arief.santoso@contoh.id ya') == []
 
 
 def test_ner_matches_join_samaran_and_rules_win_where_they_overlap() -> None:
@@ -107,3 +126,8 @@ def test_a_name_cut_inside_a_word_is_masked_whole_and_ranks_in_front_stay() -> N
     ner = NerNames._with_pipeline(pipeline)
     text = 'Syarat pendidikan Gibran dipersoalkan, ujar Kombes Pol. Raditya Wiraguna.'
     assert [m.value for m in ner(text)] == ['Gibran', 'Raditya Wiraguna']
+
+
+def test_an_unknown_model_is_refused_before_anything_is_downloaded() -> None:
+    with pytest.raises(ValueError, match="'gold'"):
+        NerNames(model='besar')

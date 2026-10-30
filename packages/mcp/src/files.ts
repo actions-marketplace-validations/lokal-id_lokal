@@ -1,4 +1,4 @@
-import { closeSync, existsSync, openSync, readdirSync, readFileSync, readSync, statSync } from 'node:fs';
+import { closeSync, existsSync, openSync, readdirSync, readFileSync, readSync, realpathSync, statSync } from 'node:fs';
 import path from 'node:path';
 import {
   checkCustomRules, detectPii, PII_TYPES, type CustomRule, type DetectOptions, type PiiMatch, type PiiType, type ScanStatus,
@@ -19,11 +19,31 @@ const SKIP_DIRS = new Set([
   '__pycache__', '.venv', 'venv', '.turbo', '.cache', 'target',
 ]);
 
-/** Resolves `p` against `root` and refuses paths that escape it. */
+const outside = (root: string, abs: string): boolean => {
+  const rel = path.relative(root, abs);
+  return rel === '..' || rel.startsWith(`..${path.sep}`) || path.isAbsolute(rel);
+};
+
+/** Where `abs` really leads: the real path of its deepest existing part, with the rest (a file to be written) added. */
+function realTarget(abs: string): string {
+  let existing = abs;
+  const rest: string[] = [];
+  while (!existsSync(existing)) {
+    const parent = path.dirname(existing);
+    if (parent === existing) return abs;
+    rest.unshift(path.basename(existing));
+    existing = parent;
+  }
+  return path.join(realpathSync.native(existing), ...rest);
+}
+
+/**
+ * Resolves `p` against `root` and refuses paths that escape it: by `..`, by an absolute path, or through a symbolic
+ * link or junction inside the root that points outside it.
+ */
 export function resolveInRoot(root: string, p: string): string {
   const abs = path.resolve(root, p);
-  const rel = path.relative(root, abs);
-  if (rel.startsWith('..') || path.isAbsolute(rel)) {
+  if (outside(root, abs) || outside(realTarget(root), realTarget(abs))) {
     throw new Error(`Path is outside the allowed root (${root}): ${p}`);
   }
   return abs;

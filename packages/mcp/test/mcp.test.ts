@@ -1,6 +1,6 @@
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { copyFileSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -249,6 +249,27 @@ test('path di luar root ditolak', async () => {
   const res = await call('read_file_masked', { path: '../../etc/passwd' });
   assert.equal(res.isError, true);
   assert.match(res.text, /outside the allowed root/);
+});
+
+test('symlink di dalam root yang menunjuk ke luar root ditolak, untuk dibaca maupun ditulis', async () => {
+  const outside = mkdtempSync(path.join(tmpdir(), 'lokal-luar-'));
+  try {
+    writeFileSync(path.join(outside, 'rahasia.txt'), 'OUTSIDE_CANARY_NOT_PII_7F31');
+    symlinkSync(outside, path.join(dir, 'tautan'), 'junction');
+    for (const res of [
+      await call('read_file_masked', { path: 'tautan/rahasia.txt' }),
+      await call('scan_pii', { path: 'tautan/rahasia.txt' }),
+      await call('write_file_unmasked', { path: 'tautan/baru.txt', content: 'x' }),
+    ]) {
+      assert.equal(res.isError, true, res.text);
+      assert.match(res.text, /outside the allowed root/);
+      assert.ok(!res.text.includes('OUTSIDE_CANARY'), res.text);
+    }
+    assert.ok(!existsSync(path.join(outside, 'baru.txt')));
+  } finally {
+    rmSync(path.join(dir, 'tautan'), { recursive: true, force: true });
+    rmSync(outside, { recursive: true, force: true });
+  }
 });
 
 function guard(event: object, env: Record<string, string> = {}) {

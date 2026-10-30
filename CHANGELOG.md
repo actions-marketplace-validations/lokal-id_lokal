@@ -4,6 +4,26 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-10-30
+
+### Added
+
+- A chat corpus, `npm run bench:chat`: made-up chat messages, tickets, and WhatsApp exports in which names have no label or cue, mostly in lower case, with held-out dev and test splits. Half of its names are made up, so a detector cannot pass by knowing a list of names. See [evals/chat](evals/chat/README.md).
+- `NerNames(model=...)` chooses between two NER models: `'gold'` ([treamyracle/indobert-ner-gold](https://huggingface.co/treamyracle/indobert-ner-gold), IndoBERT-large, MIT) and `'fast'` (the model of 0.13.0).
+
+### Changed
+
+- The optional NER model now finds names in lower-case chat. The models read lower case, but 0.13.0 kept only capitalized names. A lower-case name now counts in a sentence, but not in a CSV header, a `key=value`, or an e-mail address, and not when it is chat slang or an informal verb ("otw", "nungguin", "dibeliin"). With the `fast` model, names protected on the held-out chat corpus went from 30.2% to 62.2%, with no false positive added in either benchmark.
+- `NerNames()` now loads `'gold'`, the more accurate model. On the held-out chat corpus it protects 89.3% of the names, against 62.2% for `'fast'` and 19.5% for the rules alone. In the idner-news-2k test set it finds 96.1% of the people at 99.0% precision, against 91.5% for `'fast'`. In Samaran's held-out benchmark it protects 99.6% of the names and 99.2% of all values, with no false positive. It is 1.3 GB and takes about 100 ms per short document on CPU. Pass `model='fast'` for the smaller and three times faster model.
+
+### Fixed
+
+- `new Samaran({ allow: [/…/g] })`: a RegExp with the `g` or `y` flag kept its position between values, so a value it allowed was masked the second time it appeared. Found by an independent evaluation.
+
+### Security
+
+- The MCP server's file tools (`read_file_masked`, `scan_pii`, `write_file_unmasked`, `anonymize_file`) checked that a path stayed inside the project root by its text only. A symbolic link or junction inside the root that pointed outside it was followed, so a file outside the root could be read or written through it. Paths are now checked where they really lead, and a link out of the root is refused. Directory scans already skipped links.
+
 ## [0.13.0] - 2026-10-30
 
 ### Added
@@ -321,7 +341,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.13.0...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.14.0...HEAD
+[0.14.0]: https://github.com/lokal-id/lokal/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/lokal-id/lokal/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/lokal-id/lokal/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/lokal-id/lokal/compare/v0.10.0...v0.11.0
