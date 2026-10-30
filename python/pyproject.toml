@@ -34,6 +34,10 @@ classifiers = [
 ]
 dependencies = []
 
+[project.optional-dependencies]
+# lokal.samaran.ner: a local NER model for names the rules do not know. Large (PyTorch); not needed for anything else.
+ner = ["transformers>=4.46", "torch>=2.4", "safetensors>=0.4.5", "huggingface-hub>=0.26"]
+
 [project.urls]
 Homepage = "https://github.com/lokal-id/lokal"
 Documentation = "https://github.com/lokal-id/lokal/tree/main/python#readme"

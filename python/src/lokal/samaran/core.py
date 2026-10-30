@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from collections.abc import Iterable, Sequence
+from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass, field
 from typing import Literal, Optional, Union
 
@@ -115,11 +115,12 @@ class Samaran:
     ``allow`` lists values that are never masked (strings, or compiled patterns), e.g. your own support hotline.
     ``types``, ``exclude``, ``min_confidence`` and ``custom`` (a team's own rules) are passed to ``detect_pii``.
     ``Samaran(exclude=['FINANCIAL', 'NAME'])`` keeps income, installments and names readable while still masking NIK,
-    phone numbers, and accounts.
+    phone numbers, and accounts. ``ner`` adds an optional detector, such as ``lokal.samaran.ner.NerNames()`` for
+    names the rules do not know (``pip install "lokal-id[ner]"``).
     """
 
     __slots__ = (
-        'mode', 'allow', 'types', 'exclude', 'min_confidence', 'custom',
+        'mode', 'allow', 'types', 'exclude', 'min_confidence', 'custom', 'ner',
         '_by_canonical', '_by_placeholder', '_counters',
     )
 
@@ -132,6 +133,7 @@ class Samaran:
         exclude: Optional[Iterable[PiiType]] = None,
         min_confidence: Optional[Confidence] = None,
         custom: Iterable[RuleLike] = (),
+        ner: Optional[Callable[[str], Iterable[PiiMatch]]] = None,
     ) -> None:
         if mode not in ('placeholder', 'partial'):
             raise ValueError(f'mode must be "placeholder" or "partial", not {mode!r}')
@@ -141,6 +143,7 @@ class Samaran:
         self.exclude: tuple[PiiType, ...] = check_types(exclude or ())
         self.min_confidence = min_confidence
         self.custom: tuple[CustomRule, ...] = to_rules(custom)
+        self.ner = ner
         self._by_canonical: dict[str, str] = {}
         self._by_placeholder: dict[str, str] = {}
         self._counters: dict[str, int] = {}
@@ -157,7 +160,8 @@ class Samaran:
     def scan(self, text: str) -> list[PiiMatch]:
         """Personal data in ``text``, minus allowed values. Does not touch the vault."""
         matches = detect_pii(
-            text, types=self.types, exclude=self.exclude, min_confidence=self.min_confidence, custom=self.custom
+            text, types=self.types, exclude=self.exclude, min_confidence=self.min_confidence, custom=self.custom,
+            ner=self.ner,
         )
         return [m for m in matches if not self._allowed(m.value)]
 

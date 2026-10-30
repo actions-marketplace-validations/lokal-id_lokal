@@ -39,9 +39,14 @@ function previousLine(text: string, index: number): string {
 
 /** The line above a value that stands alone on its own line, lowercased; empty when the value shares its line. */
 function lineAbove(text: string, index: number, length: number): string {
-  const lineStart = text.lastIndexOf('\n', index - 1) + 1;
-  const lineEnd = text.indexOf('\n', index + length);
-  if (text.slice(lineStart, index).trim() || text.slice(index + length, lineEnd === -1 ? text.length : lineEnd).trim()) return '';
+  // Alone on its line: walk out from the value to the line's ends, and stop at the first other character, so a long
+  // line costs no more than a short one.
+  let lineStart = index;
+  while (lineStart > 0 && text[lineStart - 1] !== '\n') {
+    if (/\S/.test(text[lineStart - 1]!)) return '';
+    lineStart--;
+  }
+  for (let i = index + length; i < text.length && text[i] !== '\n'; i++) if (/\S/.test(text[i]!)) return '';
   if (lineStart === 0) return '';
   return text.slice(text.lastIndexOf('\n', lineStart - 2) + 1, lineStart - 1).toLowerCase();
 }
@@ -1534,6 +1539,10 @@ function closingQuote(text: string, start: number, end: number): number {
   return end;
 }
 
+// The longest value read after a label. Scanning the rest of a huge one-line file for each of its labels made
+// detection quadratic: 400 KB of "Nama: " took 35 seconds, past the guard's time limit.
+const MAX_VALUE = 1000;
+
 function detectLabeledFields(text: string): PiiMatch[] {
   const out: PiiMatch[] = [];
   let lineStart = 0;
@@ -1560,7 +1569,7 @@ function detectLabeledFields(text: string): PiiMatch[] {
     if (!type) continue;
 
     const valueStart = m.index + m[0].length;
-    const rawEnd = lineEnd > valueStart && text[lineEnd - 1] === '\r' ? lineEnd - 1 : lineEnd;
+    const rawEnd = Math.min(lineEnd > valueStart && text[lineEnd - 1] === '\r' ? lineEnd - 1 : lineEnd, valueStart + MAX_VALUE);
     let value: string;
     let start = valueStart;
     const quote = text[valueStart];

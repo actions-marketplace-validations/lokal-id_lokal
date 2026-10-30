@@ -92,6 +92,36 @@ def balas_pelanggan(pesan: str) -> str:
 
 To cover every LLM call of an app without calling `mask()` and `unmask()` at each one, run the Samaran Proxy (`npx @lokal-id/mcp proxy`) next to the backend and point the SDK at it: `OpenAI(base_url='http://127.0.0.1:8787/v1')` or `Anthropic(base_url='http://127.0.0.1:8787')`. It masks requests and restores responses, streaming and tool calls included. See the [Lokal README](https://github.com/lokal-id/lokal#samaran-proxy-protect-an-apps-llm-calls).
 
+### Names the rules do not know: an optional NER model
+
+Samaran finds a name from its label, its column, a cue ("Pelanggan …", "a.n. …"), or a known Indonesian given or family name. A name with none of these in a sentence slips through. For batch jobs where that matters, add a local NER model:
+
+```sh
+pip install "lokal-id[ner]"     # transformers and PyTorch: large
+```
+
+```python
+from lokal.samaran import Samaran
+from lokal.samaran.ner import NerNames
+
+ner = NerNames()                          # downloads the model once; NerNames(model_path=...) loads an approved copy
+samaran = Samaran(ner=ner)
+samaran.mask('Tadi sore Raditya Wiraguna datang ke kantor cabang.').text
+# 'Tadi sore [NAME_1] datang ke kantor cabang.'
+```
+
+- **The model.** [cahya/bert-base-indonesian-NER](https://huggingface.co/cahya/bert-base-indonesian-NER) (MIT), an IndoBERT fine-tuned for Indonesian NER. Only its person names are used, and only those that pass filters for chat words, field names, abbreviations, and place names. It is read from Hugging Face's safetensors conversion at a pinned revision, never from a pickle file.
+- **Privacy.** It runs on your machine, and the text never leaves it. The only network access is downloading the model, once.
+- **Benchmark.** Settings were chosen on development data only, and each result below is on data that played no part in choosing them:
+  - On Samaran's held-out benchmark, names protected went from 93.6% to 98.1% and all values from 97.2% to 98.7%, with no false positive in 2,800 documents.
+  - On real news, names are a different problem: most are public figures in sentences with no cue the rules know. In the test set of [idner-news-2k](https://github.com/khairunnisaor/idner-news-2k) (509 annotated news sentences, 515 people), the rules alone found 21.6% of the people; with the model they found 91.3%, at 98.3% precision.
+  - In 2,277 articles from 14 Indonesian news sites, published in October 2026 after the model was trained, the 2,250 speakers named after "kata", "ujar", or "sebut" were found 18.5% of the time by the rules and 90.6% with the model. By section, that ranges from 83.7% (technology) to 97.2% (entertainment). The speakers were labelled automatically, and in a sample of the ones missed, more than half were job titles or organizations rather than people, so 90.6% is a lower bound.
+  - In a random sample of 300 of the model's own detections in those articles, 285 (95%) were people. The other 15 were organizations, media, and clubs (8), brands (3), a place, and names of things that are not people.
+  - The news texts were processed on one machine for the test, and only these numbers were kept.
+- **Merging.** The model's matches merge with the rules' matches, and the rules win where they overlap. A name the model cut inside a word is masked whole, and a rank in front of it ("Kombes Pol.") is left out.
+- **Long text.** The model reads each line, and a long line in passages of about 600 characters cut at sentence ends. In one long passage it starts to miss names it finds when they stand alone, and past 512 tokens it could not read the text at all.
+- **Cost.** About 20 to 50 ms per short document on a laptop CPU, against 0.2 ms for the rules, plus 440 MB of model and 8 seconds to load. Use it for exports, batch masking, and data for vendors, not per keystroke. The TypeScript package, the guard, and the proxy do not use it.
+
 ### Logging
 
 ```python
@@ -208,7 +238,7 @@ Where Python offers more, it uses it:
 
 ## Performance
 
-Pure Python, no regex compilation at call time: masking a chat message takes about 0.2 ms, a 4 KB prompt about 5 ms, and a log record through `SamaranFilter` about 0.1 ms. Large inputs run at roughly 1 MB per second, linear in size, including single-line JSON. `import lokal` takes about 0.1 s; region data loads on first use in about 0.25 s and 20 MB.
+Pure Python, no regex compilation at call time: masking a chat message takes about 0.2 ms, a 4 KB prompt about 5 ms, and a log record through `SamaranFilter` about 0.1 ms. Large inputs run at roughly 0.3 to 1 MB per second, depending on how much personal data they hold, linear in size, including single-line JSON and hostile input such as a megabyte of labels on one line ([stress test](https://github.com/lokal-id/lokal/tree/main/evals/stress)). `import lokal` takes about 0.1 s; region data loads on first use in about 0.25 s and 20 MB.
 
 ## Limitations
 

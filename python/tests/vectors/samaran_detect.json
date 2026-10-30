@@ -11809,6 +11809,22 @@
   "matches": []
  },
  {
+  "text": "teks bermusuhan tetap linear: satu baris raksasa berisi label atau angka tidak melewati batas waktu guard",
+  "matches": []
+ },
+ {
+  "text": "Nama: ",
+  "matches": []
+ },
+ {
+  "text": "1234-5678-",
+  "matches": []
+ },
+ {
+  "text": "NIK: 3201 ",
+  "matches": []
+ },
+ {
   "text": "node:test",
   "matches": []
  },

@@ -637,3 +637,12 @@ test('kata konteks: NIK hasil OCR, tanggal lahir di baris data, marga Tionghoa d
   // About a group, not a person.
   assert.deepEqual(values('umat Hindu di desa itu, pendidikan agama-Islam', ['RELIGION']), []);
 });
+
+test('teks bermusuhan tetap linear: satu baris raksasa berisi label atau angka tidak melewati batas waktu guard', () => {
+  // 400 KB of "Nama: " took 35 seconds when each label scanned the rest of the line.
+  for (const unit of ['Nama: ', '1234-5678-', 'NIK: 3201 ']) {
+    const started = Date.now();
+    detectPii(unit.repeat(Math.ceil(400_000 / unit.length)));
+    assert.ok(Date.now() - started < 3000, `${unit}: ${Date.now() - started} ms`);
+  }
+});

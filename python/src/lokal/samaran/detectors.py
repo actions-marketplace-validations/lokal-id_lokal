@@ -81,10 +81,18 @@ def _previous_line(text: str, index: int) -> str:
 
 def _line_above(text: str, index: int, length: int) -> str:
     """The line above a value that stands alone on its own line, lowercased; empty when the value shares its line."""
-    line_start = text.rfind('\n', 0, max(0, index)) + 1 if index > 0 else 0
-    line_end = text.find('\n', index + length)
-    if _js.trim(text[line_start:index]) or _js.trim(text[index + length : len(text) if line_end == -1 else line_end]):
-        return ''
+    # Alone on its line: walk out from the value to the line's ends, and stop at the first other character, so a long
+    # line costs no more than a short one.
+    line_start = index
+    while line_start > 0 and text[line_start - 1] != '\n':
+        if text[line_start - 1] not in _js.WS_SET:
+            return ''
+        line_start -= 1
+    i = index + length
+    while i < len(text) and text[i] != '\n':
+        if text[i] not in _js.WS_SET:
+            return ''
+        i += 1
     if line_start == 0:
         return ''
     above_start = text.rfind('\n', 0, max(0, line_start - 1)) + 1 if line_start >= 2 else 0
@@ -2011,6 +2019,9 @@ def _label_before(text: str, line_start: int, end: int) -> Optional[str]:
     return None if start < 0 else text[start:end]
 
 
+_MAX_VALUE = 1000
+
+
 def _closing_quote(text: str, start: int, end: int) -> int:
     """Where a value inside a JSON string ends: at an unescaped double quote that closes the string.
 
@@ -2084,7 +2095,9 @@ def _detect_labeled_fields(text: str) -> list[PiiMatch]:
             continue
 
         value_start = m.end()
-        raw_end = line_end - 1 if line_end > value_start and text[line_end - 1] == '\r' else line_end
+        # The longest value read after a label: scanning the rest of a huge one-line file for each of its labels made
+        # detection quadratic.
+        raw_end = min(line_end - 1 if line_end > value_start and text[line_end - 1] == '\r' else line_end, value_start + _MAX_VALUE)
         start = value_start
         quote = text[value_start] if value_start < raw_end else ''
         if quote in _QUOTES:
@@ -2474,6 +2487,17 @@ def check_types(types: Iterable[str]) -> tuple[PiiType, ...]:
     return out  # type: ignore[return-value]
 
 
+def _in_units(matches: list[PiiMatch], text: str) -> list[PiiMatch]:
+    """Matches with Python offsets moved to UTF-16 ones, which detect_pii works in."""
+    before = [0] * (len(text) + 1)
+    for i, ch in enumerate(text):
+        before[i + 1] = before[i] + (1 if ord(ch) > 0xFFFF else 0)
+    return [
+        PiiMatch(m.type, m.start + before[m.start], m.end + before[m.end], m.value, m.confidence, m.label)
+        for m in matches
+    ]
+
+
 def detect_pii(
     text: str,
     *,
@@ -2481,6 +2505,7 @@ def detect_pii(
     exclude: Optional[Iterable[PiiType]] = None,
     min_confidence: Optional[Confidence] = None,
     custom: Iterable[RuleLike] = (),
+    ner: Optional[Callable[[str], Iterable[PiiMatch]]] = None,
 ) -> list[PiiMatch]:
     """All personal data in the text, non-overlapping, in reading order.
 
@@ -2489,7 +2514,8 @@ def detect_pii(
     ``exclude=['NAME']`` when names are not sensitive in that flow. ``min_confidence="high"`` keeps only validated or
     keyword-anchored matches (default "medium"). An unknown type name raises ``ValueError``. ``custom`` takes a team's
     own rules (``CustomRule`` or dicts): ID formats and field names Samaran does not know, found as CUSTOM with the
-    rule's label.
+    rule's label. ``ner`` adds an optional detector's matches, such as ``lokal.samaran.ner.NerNames()``, with
+    offsets into ``text``; Samaran's own matches win where they overlap and are as long.
     """
     rules = to_rules(custom)
     wanted = set(check_types(types) if types is not None else PII_TYPES)
@@ -2506,6 +2532,8 @@ def detect_pii(
     found = [m for detector in _DETECTORS for m in detector(view)] + _detect_escaped_strings(units)
     if rules:
         found.extend(detect_custom(view, rules))
+    if ner is not None:
+        found.extend(_in_units(list(ner(text)), text) if astral else ner(text))
     candidates = [m for m in found if m.end > m.start and m.type in wanted and rank(m) >= min_rank]
     # Prefer confident, then longer matches, then a team's own rule; drop anything overlapping an accepted match.
     candidates.sort(key=lambda m: (-rank(m), -(m.end - m.start), -(m.type == 'CUSTOM'), m.start))
