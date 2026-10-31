@@ -249,6 +249,9 @@ test('nama tanpa label di chat, termasuk huruf kecil', () => {
     ['NAMA SAYA ANDI WIJAYA MAU KOMPLAIN', ['ANDI WIJAYA']],
     ['kak barangnya buat mbak yuni ya', ['yuni']],
     ['sudah transfer a.n. M. Iqbal Ramadhan', ['M. Iqbal Ramadhan']],
+    ['Pasien a.n. Rudi Hartono kontrol rutin tiap bulan', ['Rudi Hartono']],
+    ['SAYA RINA WULANDARI DARI BEKASI', ['RINA WULANDARI']],
+    ['a.n. Dewi lestari ya', ['Dewi lestari']],
   ];
   for (const [text, expected] of cases) assert.deepEqual(names(text), expected, text);
 });
@@ -271,6 +274,8 @@ test('kalimat chat biasa tidak dianggap nama', () => {
     'namanya juga usaha kak',
     'saya Customer lama di sini',
     'const fullName = new codegen_1.Name("x")',
+    'AKU TITIP BARANG KE TETANGGA SOALNYA LAGI PERGI',
+    'SEMALEM AKU PAPASAN SAMA TEMEN LAMA',
   ]) {
     assert.deepEqual(detectPii(text, { types: ['NAME'] }), [], text);
   }
@@ -318,6 +323,7 @@ test('data kesehatan di teks bebas: obat, rawat inap, penyakit dalam kurung', ()
   for (const benign of ['minum oat tiap pagi', 'beli obat batuk', 'mobilnya dirawat di bengkel', 'karena macet']) {
     assert.deepEqual(values(benign, ['HEALTH']), [], benign);
   }
+  assert.deepEqual(values('kontrol rutin hipertensi, lalu terapi asma', ['HEALTH']), ['HEALTH:hipertensi', 'HEALTH:asma']);
 });
 
 test('dump SQL: nilai dicocokkan dengan kolomnya', () => {

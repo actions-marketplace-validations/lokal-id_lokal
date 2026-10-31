@@ -4,6 +4,19 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+### Added
+
+- `@lokal-id/ner`: Lokal's own NER model for people's names that nothing announces ("saya di chat sama rianto surya"), for Node. IndoBERT-base fine-tuned by Lokal on public Indonesian NER corpora (MIT), synthetic chat, and news sentences with every name replaced; 125 MB in int8, about 20 ms per chat message on a CPU, in WebAssembly (onnxruntime-web: no native binaries, no install scripts). The model is downloaded once from the GitHub release and checked against its SHA-256. On the held-out chat corpus, rules and model protect 98.9% of the names (rules alone: 19.4%), and 98.8% in Samaran's held-out benchmark, with no false positive in either. See [MODEL.md](packages/ner/MODEL.md).
+- `"ner": true` in `.samaran.json` adds the model's names to `read_file_masked`, `scan_pii` (at `min_confidence: "medium"`), and Samaran Proxy. The package is optional: install it next to the server. The guard stays rules-only.
+- `detectPii(text, { extra })`, `samaran.mask(text, extra)`, and `samaran.scan(text, extra)` take another detector's matches, such as `await ner.find(text)`.
+- `@lokal-id/core/ner`: the filters applied to the model's spans, shared with Python (`lokal.samaran.ner.names_from_spans` and `ner_chunks`) and checked by parity vectors.
+
+### Fixed
+
+- A name after "a.n." no longer runs into the lower-case words after it: "Pasien a.n. Ilham Simatupang kontrol rutin gagal ginjal" masked "Ilham Simatupang kontrol rutin gagal" and left "ginjal".
+- A health condition after "kontrol rutin" or "terapi" is masked ("kontrol rutin hipertensi", "terapi asma").
+- "AKU TITIP BARANG" in capitals is no longer a name: after "aku" or "saya", a run of capitals counts only when it starts with a known name.
+
 ## [0.14.0] - 2026-10-30
 
 ### Added

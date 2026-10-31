@@ -223,3 +223,16 @@ def test_parse_alamat_matches() -> None:
         got = wilayah.parse_alamat(case['input']).to_dict(camel=True)
         got['inferred'] = [_CAMEL_LEVEL.get(level, level) for level in got['inferred']]
         assert got == case['out'], case['input']
+
+
+NER = load('samaran_ner.json')
+
+
+def test_ner_filters() -> None:
+    from lokal.samaran.ner import names_from_spans, ner_chunks
+
+    for case in NER:
+        text = case['text']
+        assert [list(c) for c in ner_chunks(text)] == case['chunks'], text[:200]
+        got = [[m.start, m.end, m.value] for m in names_from_spans(text, [tuple(s) for s in case['spans']])]
+        assert got == case['names'], text[:200]

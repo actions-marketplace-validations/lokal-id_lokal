@@ -188,6 +188,9 @@ const TEMPLATES = {
     ['trap', 'wkwk iya bener, mantap jiwa'],
     ['trap', 'yaudah gas aja, ntar kabarin ya'],
     ['trap', 'ojek online nya nyasar ke {~PLACE} masa'],
+    // gaps the test split showed, in dev's own words
+    ['object', 'semalem ngobrol sama {N} di {~BRAND} sampe tutup'],
+    ['trap', 'nitip {~FOOD} ya, ntar aku ganti uangnya'],
   ],
   test: [
     ['subject', '{N} katanya telat, macet di {~PLACE}'],

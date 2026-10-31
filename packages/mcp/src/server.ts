@@ -44,6 +44,7 @@ import {
   type Document, type SamaranConfig,
 } from './files.ts';
 import { anonymizeFiles, KEMBARAN_NOTE } from './kembaran-files.ts';
+import { NerNames } from './ner.ts';
 import { VERSION } from './version.ts';
 
 const FILE_LIMIT = 5000;
@@ -123,6 +124,9 @@ export function createServer(
     lastUse = Date.now();
     return samaran;
   };
+  // Names without a label or cue, from the NER model, when .samaran.json turns it on.
+  const ner = new NerNames();
+  const namesIn = (text: string) => (config.ner ? ner.find(text) : Promise.resolve(undefined));
   const isIgnored = loadIgnore(root);
   const readOnly = { readOnlyHint: true, openWorldHint: false } as const;
   const inRoot = (p: string) => resolveInRoot(root, p);
@@ -471,7 +475,9 @@ export function createServer(
         if (doc.kind === 'sheets' && doc.unscanned) skipped.push({ file: rel, status: 'partial', reason: doc.unscanned, dataBearing: true });
         let fileHasPii = false;
         for (const part of parts(doc)) {
-          const matches = detectConfigured(part.text, { types, minConfidence: min_confidence }, config);
+          // The model's names are of medium confidence: worth reading the text for only when those count.
+          const extra = min_confidence === 'high' || (types && !types.includes('NAME')) ? undefined : await namesIn(part.text);
+          const matches = detectConfigured(part.text, { types, minConfidence: min_confidence, extra }, config);
           if (matches.length) fileHasPii = true;
           for (const m of matches) {
             totals.push(m.label ?? m.type);
@@ -571,7 +577,7 @@ export function createServer(
         const withHeader = tabular && start_line > 1;
         if (withHeader) slice = `${lines[0]}\n${slice}`;
         for (const t of slice.match(/\[[A-Z_]+_\d+\]/g) ?? []) if (vault().unmask(t) !== t) clashes.add(t);
-        let { text: masked, matches } = vault().mask(slice);
+        let { text: masked, matches } = vault().mask(slice, await namesIn(slice));
         if (withHeader) masked = masked.slice(masked.indexOf('\n') + 1);
         for (const m of matches) all.push(m);
         const end = Math.min(lines.length, start_line - 1 + max_lines);
@@ -609,6 +615,7 @@ export function createServer(
         ...(clashes.size
           ? [`Note: the file itself contains ${[...clashes].slice(0, 5).join(', ')}, which this session also uses as placeholders. write_file_unmasked would restore them; do not copy that text into output.`]
           : []),
+        ...(config.ner && ner.problem ? [`Note: ${ner.problem}. Names without a label or a cue may be unmasked; tell the user.`] : []),
         '---',
       ];
       return { content: [{ type: 'text' as const, text: `${header.join('\n')}\n${blocks.join('\n\n')}` }] };

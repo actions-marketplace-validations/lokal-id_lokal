@@ -147,6 +147,9 @@ def test_unlabeled_names_in_chat() -> None:
         ('atas nama budi santoso ya kak', 'budi santoso'),
         ('nama saya rina', 'rina'),
         ('a.n. Dewi Lestari', 'Dewi Lestari'),
+        ('Pasien a.n. Rudi Hartono kontrol rutin tiap bulan', 'Rudi Hartono'),
+        ('a.n. Dewi lestari ya', 'Dewi lestari'),
+        ('SAYA RINA WULANDARI DARI BEKASI', 'RINA WULANDARI'),
         ('bapak ahmad mau ambil', 'ahmad'),
     ]:
         assert [m.value for m in detect_pii(text, types=['NAME'])] == [name], text
@@ -177,6 +180,7 @@ def test_health_in_free_text() -> None:
     ]
     for benign in ['minum oat tiap pagi', 'beli obat batuk', 'mobilnya dirawat di bengkel', 'karena macet']:
         assert values(benign, ['HEALTH']) == [], benign
+    assert values('kontrol rutin hipertensi, lalu terapi asma', ['HEALTH']) == ['HEALTH:hipertensi', 'HEALTH:asma']
 
 
 def test_sql_dump_values_by_column() -> None:
@@ -464,3 +468,8 @@ def test_hostile_one_line_input_stays_linear() -> None:
         started = time.perf_counter()
         detect_pii(unit * (400_000 // len(unit)))
         assert time.perf_counter() - started < 15, unit
+
+
+def test_capitals_after_a_weak_cue() -> None:
+    for text in ['AKU TITIP BARANG KE TETANGGA SOALNYA LAGI PERGI', 'SEMALEM AKU PAPASAN SAMA TEMEN LAMA']:
+        assert detect_pii(text, types=['NAME']) == [], text

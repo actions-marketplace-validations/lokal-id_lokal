@@ -367,6 +367,9 @@ const TEMPLATES = {
     ['csv', 'nama,no_kartu_jkn,faskes\n{NAME},{BPJS},Puskesmas {~CITY}'],
     ['unlabelled', 'Setoran tunai {~BANK} {BANK_ACCOUNT} oleh {NAME}, dicatat {~TIME}.'],
     ['json', '{"member":{"family_card":"{KK}","religion":"{RELIGION}"}}'],
+    ['letter', 'Rujukan a.n. {NAME} untuk terapi {HEALTH} di klinik paru.'],
+    ['log', '[{~TIME}] WARN login check from={EMAIL} owner="{NAME}"'],
+    ['log', '{~TIME} ERROR refund rejected account={BANK_ACCOUNT} customer="{NAME}"'],
   ],
   test: [
     ['form', 'NAMA : {NAME}\nNOMOR INDUK KEPENDUDUKAN : {NIK}\nTELEPON : {PHONE}\nALAMAT : {ADDRESS}'],

@@ -921,7 +921,7 @@ function detectHealth(text) {
   for (const m of [...text.matchAll(strong), ...text.matchAll(dx)]) {
     out.push(match("HEALTH", m.index + m[0].length - m[1].length, m[1], "high"));
   }
-  const gated = new RegExp(`\\b(?:(?:dokter|dok|dr)\\.?\\s+(?:bilang|bilangnya|menyatakan|mendiagnosis)(?:\\s+(?:ada|kena|positif))?|perawatan|pengobatan|dirawat\\s+karena|kontrol|has|have|had|with|suffers\\s+from|suffering\\s+from|diagnosed\\s+with|history\\s+of|positif|menderita|terkena|kena|sakit|pasien|komplikasi|kambuh|kumat|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|riwayat|diagnosa|diagnosis|didiagnosa|pembawa\\s+sifat|carrier|saya|aku|gue|gw|gua|dia|beliau|ayah|bapak|ibu|mama|mamah|papa|papah|suami|istri|anak|anaknya|adik|adek|kakak|nenek|kakek|mertua|pacar|teman|temen)\\s+(?:(?:saya|aku|gue|dia|lagi|sedang|sdg|sudah|udah|sdh|sempat|pernah|baru|kena|terkena)\\s+){0,2}((?:penyakit\\s+)?(?:${CONDITIONS})(?:\\s*(?:,|dan|serta)\\s+(?:${CONDITIONS}))*)\\b`, "gi");
+  const gated = new RegExp(`\\b(?:(?:dokter|dok|dr)\\.?\\s+(?:bilang|bilangnya|menyatakan|mendiagnosis)(?:\\s+(?:ada|kena|positif))?|perawatan|pengobatan|terapi|dirawat\\s+karena|kontrol|has|have|had|with|suffers\\s+from|suffering\\s+from|diagnosed\\s+with|history\\s+of|positif|menderita|terkena|kena|sakit|pasien|komplikasi|kambuh|kumat|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|riwayat|diagnosa|diagnosis|didiagnosa|pembawa\\s+sifat|carrier|saya|aku|gue|gw|gua|dia|beliau|ayah|bapak|ibu|mama|mamah|papa|papah|suami|istri|anak|anaknya|adik|adek|kakak|nenek|kakek|mertua|pacar|teman|temen)\\s+(?:(?:saya|aku|gue|dia|lagi|sedang|sdg|sudah|udah|sdh|sempat|pernah|baru|rutin|kena|terkena)\\s+){0,2}((?:penyakit\\s+)?(?:${CONDITIONS})(?:\\s*(?:,|dan|serta)\\s+(?:${CONDITIONS}))*)\\b`, "gi");
   for (const m of text.matchAll(gated)) {
     out.push(match("HEALTH", m.index + m[0].length - m[1].length, m[1], "medium"));
   }
@@ -1142,6 +1142,9 @@ function nameAt(text, start, confidence, capitalized = false) {
         break;
       if (!words.length && AMBIGUOUS_GIVEN_NAMES.has(bare))
         lowercaseAmbiguous = true;
+    } else if (words.length && /^[A-Z]/.test(text[words[0].start]) && !/^[A-Z]/.test(word)) {
+      if (!NAME_PARTICLES.has(bare) && !isKnownName(bare))
+        break;
     }
     words.push({ start: wordStart, end: wordStart + word.length, bare });
     if (word.endsWith(".") && bare.length > 1)
@@ -1174,8 +1177,12 @@ function detectNames(text) {
   const add = (found) => found && out.push(found);
   for (const m of text.matchAll(NAME_INTRO))
     add(nameAt(text, m.index + m[0].length, "high"));
-  for (const m of text.matchAll(NAME_CUE))
-    add(nameAt(text, m.index + m[0].length, "medium", true));
+  for (const m of text.matchAll(NAME_CUE)) {
+    const found = nameAt(text, m.index + m[0].length, "medium", true);
+    if (found && !/[a-z]/.test(found.value) && !isKnownName(found.value.split(/\s+/)[0].toLowerCase()))
+      continue;
+    add(found);
+  }
   for (const m of text.matchAll(HONORIFIC)) {
     const lowercaseOk = /^(?:bapak|ibu|mbak)\b/.test(m[0]);
     add(nameAt(text, m.index + m[0].length, "medium", !lowercaseOk));
@@ -2296,6 +2303,8 @@ function detectPii(text, options = {}) {
   const found = [...DETECTORS.flatMap((d) => d(view)), ...detectEscapedStrings(text)];
   if (options.custom?.length)
     found.push(...detectCustom(view, options.custom));
+  if (options.extra)
+    found.push(...options.extra.filter((m) => m.start >= 0 && m.end <= text.length));
   const candidates = found.filter((m) => m.end > m.start && types.has(m.type) && rank(m) >= minRank);
   const own = (m) => m.type === "CUSTOM" ? 1 : 0;
   candidates.sort((a, b) => rank(b) - rank(a) || b.end - b.start - (a.end - a.start) || own(b) - own(a) || a.start - b.start);
@@ -3567,10 +3576,10 @@ function loadConfig(root) {
     throw new Error(`.samaran.json: ${why}`);
   };
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) fail('expected an object with "custom" and "allow"');
-  const { custom: custom2 = [], allow = [], policy, route, audit, vaultTtlMinutes, guard, ...rest } = raw;
+  const { custom: custom2 = [], allow = [], policy, route, audit, vaultTtlMinutes, guard, ner, ...rest } = raw;
   const unknownKeys = Object.keys(rest).filter((k) => !k.startsWith("$"));
   if (unknownKeys.length) {
-    fail(`unknown key ${unknownKeys.map((k) => `"${k}"`).join(", ")} (expected "custom", "allow", "policy", "route", "audit", "vaultTtlMinutes", or "guard")`);
+    fail(`unknown key ${unknownKeys.map((k) => `"${k}"`).join(", ")} (expected "custom", "allow", "policy", "route", "audit", "vaultTtlMinutes", "guard", or "ner")`);
   }
   if (!Array.isArray(custom2)) fail('"custom" must be a list of rules');
   if (!Array.isArray(allow) || !allow.every((a) => typeof a === "string")) fail('"allow" must be a list of strings');
@@ -3632,6 +3641,10 @@ function loadConfig(root) {
   if (guard !== void 0) {
     if (guard !== "strict") fail('"guard" can only be "strict" (SAMARAN_GUARD=off on your own machine turns the guard off)');
     config2.guard = "strict";
+  }
+  if (ner !== void 0) {
+    if (typeof ner !== "boolean") fail('"ner" must be true or false');
+    if (ner) config2.ner = true;
   }
   return config2;
 }

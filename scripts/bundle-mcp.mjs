@@ -22,7 +22,8 @@ const result = await build({
   platform: 'node',
   format: 'esm',
   target: 'node20',
-  external: ['@lokal-id/core', '@lokal-id/core/*'],
+  // @lokal-id/ner is optional and installed on its own (with its model runtime): loaded only when .samaran.json asks.
+  external: ['@lokal-id/core', '@lokal-id/core/*', '@lokal-id/ner'],
   // Some bundled packages are CommonJS and call require() for Node built-ins.
   banner: { js: "import { createRequire as __lokalCreateRequire } from 'node:module';\nconst require = __lokalCreateRequire(import.meta.url);" },
   legalComments: 'eof',

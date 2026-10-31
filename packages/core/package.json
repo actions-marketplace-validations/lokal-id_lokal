@@ -19,6 +19,10 @@
     "./ai-sdk": {
       "types": "./dist/ai-sdk.d.ts",
       "default": "./dist/ai-sdk.js"
+    },
+    "./ner": {
+      "types": "./dist/ner.d.ts",
+      "default": "./dist/ner.js"
     }
   },
   "files": [

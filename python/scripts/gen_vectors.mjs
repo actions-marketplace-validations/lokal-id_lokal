@@ -355,6 +355,54 @@ const detected = docs.map((text) => ({
   matches: core.detectPii(text).map((m) => [m.type, toCodePoint(text, m.start), toCodePoint(text, m.end), m.value, m.confidence]),
 }));
 emit('samaran_detect.json', detected);
+
+// ---------------------------------------------------------------- NER filters (no model: spans stand in for its output)
+const ner = await import(path.join(ROOT, 'packages/core/dist/ner.js').replace(/^/, 'file:///').replace(/\\/g, '/'));
+const nerTexts = [
+  'saya di chat sama rianto surya tadi pagi', 'ada yang ngeliat minan minanto ga ya', 'Nitip ya kak, makasihh',
+  'nopol,pemilik,warna\nB 1234 XYZ,budi santoso,hitam', 'retry=1 user=budi status=ok', 'kirim ke budi.susanto@contoh.id',
+  'Kombes Pol. Ronni Hartono menyatakan bahwa kasus ditutup.', 'Rina Pratama, born 9 Agustus, married', 'warga Pati dan Kudus',
+  'SBY dan NIK hadir', '"nama": "dewi lestari", "kota": "bandung"', 'mama rina udah dateng blm', 'ci lina nitip ini ya',
+  'Pak Ngesti Rahayu bilang besok libur.', 'tadi dibeliin kopi sama andi', 'Halo kakk ini sari ya',
+  '[10:02:11] WARN login check from=ops owner="Vina Siregar"', 'Patient Rina Wati suffers from asthma',
+  `${'Kalimat panjang tentang rapat anggaran daerah. '.repeat(20)}Lalu Budi Hartono datang. ${'Lainnya lagi. '.repeat(60)}`,
+];
+const astral = /[\u{10000}-\u{10FFFF}]/u;
+const nerDocs = [...nerTexts, ...docs.filter((t) => !astral.test(t) && t.length < 3000).filter((_, i) => i % 7 === 0)];
+// Its own random numbers, so these vectors leave the ones generated after them as they were.
+let nerSeed = 0x4e45;
+const nerRand = () => {
+  nerSeed = (nerSeed * 1103515245 + 12345) % 2147483648;
+  return nerSeed / 2147483648;
+};
+const nerInt = (lo, hi) => lo + Math.floor(nerRand() * (hi - lo + 1));
+const nerPick = (xs) => xs[Math.floor(nerRand() * xs.length)];
+const nerVectors = nerDocs.map((text, n) => {
+  const words = [...text.matchAll(/\p{L}[\p{L}'.]*/gu)].map((m) => [m.index, m.index + m[0].length]);
+  const spans = [];
+  // The hand-written texts: every word and pair of words, sure and unsure.
+  if (n < nerTexts.length) {
+    words.forEach(([s, e], i) => {
+      spans.push([s, e, i % 2 ? 0.95 : 0.69]);
+      if (words[i + 1]) spans.push([s, words[i + 1][1], 0.95]);
+    });
+  }
+  for (let k = 0; k < Math.min(8, words.length); k++) {
+    const i = nerInt(0, words.length - 1);
+    const j = Math.min(words.length - 1, i + nerInt(0, 2));
+    // Model spans can stop inside a word or take a space or a mark with them.
+    const start = Math.max(0, words[i][0] + nerPick([0, 0, 1, -1]));
+    const end = Math.min(text.length, words[j][1] + nerPick([0, 0, -1, 1]));
+    if (end > start) spans.push([start, end, nerPick([0.6, 0.69, 0.71, 0.85, 0.95])]);
+  }
+  return {
+    text,
+    chunks: ner.nerChunks(text),
+    spans,
+    names: ner.namesFromSpans(text, spans.map(([start, end, score]) => ({ start, end, score }))).map((m) => [m.start, m.end, m.value]),
+  };
+});
+emit('samaran_ner.json', nerVectors);
 const masked = docs.slice(0, 600).map((text) => {
   const s = new core.Samaran();
   const placeholder = s.mask(text).text;

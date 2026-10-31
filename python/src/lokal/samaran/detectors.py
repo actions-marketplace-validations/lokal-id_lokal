@@ -462,8 +462,8 @@ _HEALTH_DX = rx(r'\b(?:Dx|DX|Diagnosis|Diagnosa|Diag)\s*:\s*([^\n\r,;()"]{2,60}?
 # Everyday words ("positif", "karena", "saya") only count before a known condition: "saya diabetes",
 # "riwayat hipertensi dan diabetes melitus".
 _HEALTH_GATED = rx(
-    r'\b(?:(?:dokter|dok|dr)\.?\s+(?:bilang|bilangnya|menyatakan|mendiagnosis)(?:\s+(?:ada|kena|positif))?|perawatan|pengobatan|dirawat\s+karena|kontrol|has|have|had|with|suffers\s+from|suffering\s+from|diagnosed\s+with|history\s+of|positif|menderita|terkena|kena|sakit|pasien|komplikasi|kambuh|kumat|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|riwayat|diagnosa|diagnosis|didiagnosa|pembawa\s+sifat|carrier|saya|aku|gue|gw|gua|dia|beliau|ayah|bapak|ibu|mama|mamah|papa|papah|suami|istri|anak|anaknya|adik|adek|kakak|nenek|kakek|mertua|pacar|teman|temen)'  # noqa: E501
-    r'\s+(?:(?:saya|aku|gue|dia|lagi|sedang|sdg|sudah|udah|sdh|sempat|pernah|baru|kena|terkena)\s+){0,2}'
+    r'\b(?:(?:dokter|dok|dr)\.?\s+(?:bilang|bilangnya|menyatakan|mendiagnosis)(?:\s+(?:ada|kena|positif))?|perawatan|pengobatan|terapi|dirawat\s+karena|kontrol|has|have|had|with|suffers\s+from|suffering\s+from|diagnosed\s+with|history\s+of|positif|menderita|terkena|kena|sakit|pasien|komplikasi|kambuh|kumat|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|riwayat|diagnosa|diagnosis|didiagnosa|pembawa\s+sifat|carrier|saya|aku|gue|gw|gua|dia|beliau|ayah|bapak|ibu|mama|mamah|papa|papah|suami|istri|anak|anaknya|adik|adek|kakak|nenek|kakek|mertua|pacar|teman|temen)'  # noqa: E501
+    r'\s+(?:(?:saya|aku|gue|dia|lagi|sedang|sdg|sudah|udah|sdh|sempat|pernah|baru|rutin|kena|terkena)\s+){0,2}'
     rf'((?:penyakit\s+)?(?:{_CONDITIONS})(?:\s*(?:,|dan|serta)\s+(?:{_CONDITIONS}))*)\b',
     'gi',
 )
@@ -773,6 +773,10 @@ def _name_at(text: str, start: int, confidence: Confidence, capitalized: bool = 
                 break
             if not words and bare in AMBIGUOUS_GIVEN_NAMES:
                 lowercase_ambiguous = True
+        elif words and _UPPER_START.match(text[words[0][0]]) and not _UPPER_START.match(word):
+            # "a.n. Ilham Simatupang kontrol rutin …": a capitalized name ends at a lowercase word that is no name.
+            if bare not in _NAME_PARTICLES and not _is_known_name(bare):
+                break
         words.append((word_start, word_start + len(word), bare))
         if word.endswith('.') and len(bare) > 1:
             break  # "… Budi." ends the sentence; "M. Rizky" goes on
@@ -859,7 +863,11 @@ def _detect_names(text: str) -> list[PiiMatch]:
     for m in _NAME_INTRO.finditer(text):
         add(_name_at(text, m.end(), 'high'))
     for m in _NAME_CUE.finditer(text):
-        add(_name_at(text, m.end(), 'medium', True))
+        found = _name_at(text, m.end(), 'medium', True)
+        # In capitals a capital is no sign of a name: "AKU TITIP BARANG" is a verb, "SAYA RINA" a name the lists know.
+        if found and not re.search('[a-z]', found.value) and not _is_known_name(found.value.split()[0].lower()):
+            continue
+        add(found)
     for m in _HONORIFIC.finditer(text):
         # "Ibu Sari Dewi di Depok" stops at "di". After "bapak/ibu/mbak" a lowercase name is common in chat
         # ("bapak ahmad"); the short ones ("kak", "pak", "bu") too often just address the reader.

@@ -16,6 +16,14 @@
   "dependencies": {
     "@lokal-id/core": "0.14.0"
   },
+  "peerDependencies": {
+    "@lokal-id/ner": "0.14.0"
+  },
+  "peerDependenciesMeta": {
+    "@lokal-id/ner": {
+      "optional": true
+    }
+  },
   "keywords": [
     "mcp",
     "model-context-protocol",

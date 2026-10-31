@@ -53,10 +53,10 @@ jobs:
         run: node python/scripts/gen_vectors.mjs --check
       - name: The bundled MCP server works
         run: node scripts/smoke-mcp.mjs
-      - name: Pack @lokal-id/core and @lokal-id/mcp
+      - name: Pack @lokal-id/core, @lokal-id/ner, and @lokal-id/mcp
         run: |
           mkdir tarballs
-          npm pack --ignore-scripts --workspace @lokal-id/core --workspace @lokal-id/mcp --pack-destination tarballs
+          npm pack --ignore-scripts --workspace @lokal-id/core --workspace @lokal-id/ner --workspace @lokal-id/mcp --pack-destination tarballs
           ls -l tarballs
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -97,9 +97,9 @@ jobs:
         with:
           name: npm-tarballs
           path: tarballs
-      - name: Publish @lokal-id/core, then @lokal-id/mcp
+      - name: Publish @lokal-id/core, then @lokal-id/ner and @lokal-id/mcp
         run: |
-          for prefix in lokal-id-core lokal-id-mcp; do
+          for prefix in lokal-id-core lokal-id-ner lokal-id-mcp; do
             # ./ matters: npm reads tarballs/x.tgz as the GitHub repository tarballs/x.tgz.
             tarball=$(ls ./tarballs/$prefix-[0-9]*.tgz)
             name=$(tar -xOzf "$tarball" package/package.json | node -p "JSON.parse(require('fs').readFileSync(0)).name")
