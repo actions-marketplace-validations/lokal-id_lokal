@@ -30,7 +30,21 @@ const chunk = (delta: unknown, finish: string | null = null) => ({ id: 'c1', obj
 function answer(req: IncomingMessage, res: ServerResponse, body: string): void {
   const path = req.url ?? '';
   const json = body ? JSON.parse(body) : {};
-  if (path.endsWith('/chat/completions') && !json.stream) {
+  if (path.endsWith('/chat/completions') && json.model === 'gpt-json') {
+    // An answer in JSON, as response_format asks (or as the prompt asks, without it).
+    const content = '{"nama":"[NAME_1]","catatan":"pelanggan lama"}';
+    if (json.stream) {
+      sse(res, [
+        { data: chunk({ role: 'assistant', content: '{"nama":"[NA' }) },
+        { data: chunk({ content: 'ME_1]","catatan":"pelanggan lama"}' }) },
+        { data: chunk({}, 'stop') },
+        { data: '[DONE]' },
+      ]);
+    } else {
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ id: 'c2', object: 'chat.completion', choices: [{ index: 0, finish_reason: 'stop', message: { role: 'assistant', content } }] }));
+    }
+  } else if (path.endsWith('/chat/completions') && !json.stream) {
     res.writeHead(200, { 'content-type': 'application/json', 'x-request-id': 'req_1' });
     res.end(JSON.stringify({
       id: 'chatcmpl_1',
@@ -155,6 +169,20 @@ test('proxy: Chat Completions dikirim tersamar, jawaban dan argumen tool kembali
   assert.equal(res.headers.get('x-samaran-unrestored'), '1', '[UNKNOWN_9] came from nowhere');
   assert.ok(!logs.join('\n').includes('3201011508950001'), 'the log has no values');
   assert.ok(!logs.join('\n').includes('UNKNOWN_9'), 'nor the placeholders');
+});
+
+test('proxy: jawaban JSON (response_format) tetap JSON valid saat nilai berisi tanda kutip', async () => {
+  const prompt = 'Nama: Budi "Ucok" Santoso, minta data dalam JSON';
+  for (const extra of [{ response_format: { type: 'json_object' } }, { response_format: { type: 'json_object' }, stream: true }, {}]) {
+    const res = await post('/v1/chat/completions', { model: 'gpt-json', messages: [{ role: 'user', content: prompt }], ...extra });
+    const text = 'stream' in extra
+      ? (await streamText(res)).slice(0, -1).map((e) => JSON.parse(e.data).choices[0].delta.content ?? '').join('')
+      : (await res.json()).choices[0].message.content;
+    assert.deepEqual(JSON.parse(text), { nama: 'Budi "Ucok" Santoso', catatan: 'pelanggan lama' }, JSON.stringify(extra));
+  }
+  // Prose stays prose: no backslash is added to a value restored outside JSON.
+  const prose = await post('/v1/chat/completions', { model: 'gpt-test', messages: [{ role: 'user', content: prompt }] });
+  assert.match((await prose.json()).choices[0].message.content, /data Budi "Ucok" Santoso dengan/);
 });
 
 test('proxy: parallel requests from different users never get each other\'s data', async () => {

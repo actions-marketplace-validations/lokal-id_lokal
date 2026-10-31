@@ -1,8 +1,24 @@
-import { closeSync, existsSync, openSync, readdirSync, readFileSync, readSync, realpathSync, statSync } from 'node:fs';
+import { randomBytes } from 'node:crypto';
+import { gunzipSync } from 'node:zlib';
+import {
+  closeSync, existsSync, fstatSync, lstatSync, mkdirSync, openSync, readdirSync, readFileSync, readlinkSync, readSync, realpathSync,
+  renameSync, rmSync, statSync, writeFileSync, writeSync, type BigIntStats,
+} from 'node:fs';
 import path from 'node:path';
 import {
-  checkCustomRules, detectPii, PII_TYPES, type CustomRule, type DetectOptions, type PiiMatch, type PiiType, type ScanStatus,
+  checkCustomRules, detectPii, partialMask, PII_TYPES, type CustomRule, type DetectOptions, type PiiMatch, type PiiType,
+  type ScanStatus,
 } from '@lokal-id/core';
+
+/**
+ * A value as the model may see it in a finding or a guard message. A NIK or KK shows only its last four digits
+ * (************0001): partialMask's first four are the region, and with them eight of sixteen digits would reach the
+ * model. Logs and admin screens keep partialMask, for people.
+ */
+export function previewForModel(type: PiiType, value: string): string {
+  if (type === 'NIK' || type === 'KK') return `${'*'.repeat(12)}${value.replace(/\D/g, '').slice(-4)}`;
+  return partialMask(type, value);
+}
 import { readDocx } from './docx.ts';
 import { readPdf } from './pdf.ts';
 import { readXlsx, type Sheet } from './xlsx.ts';
@@ -37,14 +53,141 @@ function realTarget(abs: string): string {
   return path.join(realpathSync.native(existing), ...rest);
 }
 
+// The root's real path, taken once per root (the server takes it when it starts): a root swapped for a link later
+// does not move the boundary with it.
+const realRoots = new Map<string, string>();
+
+/** The real path of `root`, as it was the first time it was asked for. */
+export function realRoot(root: string): string {
+  let real = realRoots.get(root);
+  if (real === undefined) {
+    real = realTarget(root);
+    realRoots.set(root, real);
+  }
+  return real;
+}
+
 /**
  * Resolves `p` against `root` and refuses paths that escape it: by `..`, by an absolute path, or through a symbolic
  * link or junction inside the root that points outside it.
  */
 export function resolveInRoot(root: string, p: string): string {
   const abs = path.resolve(root, p);
-  if (outside(root, abs) || outside(realTarget(root), realTarget(abs))) {
+  if (outside(root, abs) || outside(realRoot(root), realTarget(abs))) {
     throw new Error(`Path is outside the allowed root (${root}): ${p}`);
+  }
+  return abs;
+}
+
+// The path checked above can change before it is used: a folder in it swapped for a junction or a symbolic link that
+// leads out of the root (by another process, or by an agent running commands while it calls a tool). So a file is
+// opened first, and then the file that was opened is checked: it must be the very file (same device and file ID) that
+// the path leads to now, inside the root. A swap before the open, after it, or in between fails that check.
+
+const sameFile = (a: BigIntStats, b: BigIntStats): boolean => a.dev === b.dev && a.ino === b.ino;
+
+/** Where the open file `fd` is, from the kernel (Linux), without following any path again; undefined elsewhere. */
+function openedPath(fd: number): string | undefined {
+  if (process.platform !== 'linux') return undefined;
+  try {
+    return readlinkSync(`/proc/self/fd/${fd}`);
+  } catch {
+    return undefined;
+  }
+}
+
+/** No part of `real` below `rootReal` is a link right now (a junction counts as one). */
+function linkFree(rootReal: string, real: string): boolean {
+  let at = rootReal;
+  for (const part of path.relative(rootReal, real).split(path.sep).filter(Boolean)) {
+    at = path.join(at, part);
+    if (lstatSync(at).isSymbolicLink()) return false;
+  }
+  return true;
+}
+
+/** Removes the file with the identity `created` at the first of `paths` that still leads to it. */
+function removeCreated(created: BigIntStats, paths: string[]): void {
+  for (const candidate of paths) {
+    try {
+      const real = realpathSync.native(candidate);
+      if (sameFile(created, statSync(real, { bigint: true }))) {
+        rmSync(real);
+        return;
+      }
+    } catch {
+      // gone or swapped again: try the next path
+    }
+  }
+}
+
+/** Opens `p` inside `root` and returns its descriptor, after checking that the open file is the one inside the root. */
+function openChecked(root: string, p: string, abs: string, flags: string): number {
+  const fd = openSync(abs, flags);
+  const opened = fstatSync(fd, { bigint: true });
+  try {
+    const rootReal = realRoot(root);
+    // Linux tells where the open file is. Elsewhere its path is resolved again, and stat follows that path once more:
+    // a second swap in between could lead it back to the outside file, so the path must also hold no link afterwards.
+    const viaFd = openedPath(fd);
+    let real: string;
+    let inside: boolean;
+    if (viaFd !== undefined) {
+      real = viaFd;
+      inside = !outside(rootReal, real);
+    } else {
+      real = realpathSync.native(abs);
+      inside = !outside(rootReal, real) && sameFile(opened, statSync(real, { bigint: true })) && linkFree(rootReal, real);
+    }
+    if (!inside) {
+      // A file this call created (flag x) where a swap led it: remove it again, found by its identity, so not even an
+      // empty file is left outside the root. Never a file this call did not create.
+      if (flags.includes('x')) removeCreated(opened, [real, abs]);
+      throw new Error(`Path is outside the allowed root (${root}): ${p}`);
+    }
+    // A hard link is the same file under a second name, and nothing in its path shows where the other name is.
+    if (opened.isFile() && opened.nlink > 1n) {
+      throw new Error(`${p} has more than one hard link, so it may be a file outside the root under a second name; it is not read or written.`);
+    }
+    return fd;
+  } catch (e) {
+    closeSync(fd);
+    throw e;
+  }
+}
+
+/** Reads a whole file inside `root`, as a Document, from the descriptor that was checked (never by its path again). */
+export function loadInRoot(root: string, p: string): { abs: string; doc: Document } {
+  const abs = resolveInRoot(root, p);
+  const fd = openChecked(root, p, abs, 'r');
+  try {
+    const size = Number(fstatSync(fd, { bigint: true }).size);
+    if (size > MAX_FILE_BYTES) return { abs, doc: unsupported(`larger than ${mb(MAX_FILE_BYTES)}`) };
+    return { abs, doc: loadBuffer(abs, readFileSync(fd)) };
+  } finally {
+    closeSync(fd);
+  }
+}
+
+/**
+ * Writes `data` to `p` inside `root`: into a new file with a random name next to it, checked like a read, then renamed
+ * into place. A swap after the check can only move the new file, whose name nobody knows, and the rename then fails.
+ */
+export function writeInRoot(root: string, p: string, data: string): string {
+  const abs = resolveInRoot(root, p);
+  mkdirSync(path.dirname(abs), { recursive: true });
+  const tmp = path.join(path.dirname(abs), `.${path.basename(abs)}.${randomBytes(8).toString('hex')}.tmp`);
+  const fd = openChecked(root, p, tmp, 'wx');
+  let written = false;
+  try {
+    writeSync(fd, data, 0, 'utf8');
+    closeSync(fd);
+    written = true;
+    renameSync(tmp, abs);
+  } catch (e) {
+    if (!written) closeSync(fd);
+    rmSync(tmp, { force: true });
+    throw e;
   }
   return abs;
 }
@@ -265,6 +408,38 @@ export function detectConfigured(text: string, options: DetectOptions, config: S
   return config.allow.length ? found.filter((m) => !config.allow.includes(m.value)) : found;
 }
 
+// The files write_file_unmasked wrote with real values, relative to the root: the guard checks them like data files
+// whatever their extension, so real data written to docs/notes.md or src/fixtures.ts cannot be read back by `Read`.
+// Only paths, never contents; in .lokal/, which is kept out of git.
+const UNMASKED_LIST = path.join('.lokal', 'unmasked.json');
+
+/** The files write_file_unmasked wrote in this project, as absolute paths. */
+export function loadUnmasked(root: string): string[] {
+  try {
+    const list = JSON.parse(readFileSync(path.join(root, UNMASKED_LIST), 'utf8')) as { files?: unknown };
+    return Array.isArray(list.files) ? list.files.filter((f): f is string => typeof f === 'string').map((f) => path.resolve(root, f)) : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Adds a file write_file_unmasked wrote to the list. Never throws: the write itself already happened. */
+export function recordUnmasked(root: string, file: string): void {
+  try {
+    const rel = toPosix(path.relative(root, file));
+    const known = loadUnmasked(root).map((f) => toPosix(path.relative(root, f)));
+    if (known.includes(rel)) return;
+    const dir = path.join(root, '.lokal');
+    if (!existsSync(dir)) {
+      mkdirSync(dir, { recursive: true });
+      writeFileSync(path.join(dir, '.gitignore'), '*\n');
+    }
+    writeInRoot(root, UNMASKED_LIST, `${JSON.stringify({ files: [...known, rel] }, null, 2)}\n`);
+  } catch (e) {
+    process.stderr.write(`lokal: could not record ${file} as holding real data: ${(e as Error).message}\n`);
+  }
+}
+
 /**
  * `.samaranignore` at the project root: gitignore-like patterns for files known to hold
  * only fake data (test fixtures, seeders). Patterns without "/" match the file name anywhere.
@@ -415,10 +590,31 @@ function parseWhole(ext: string, buf: Buffer): Document {
 }
 
 /** Loads a file for scanning: as text, as spreadsheet sheets, or as an explicit skip with a reason. */
+/**
+ * A gzipped text file ("export.csv.gz", what `zcat` prints): its text, unpacked up to MAX_FILE_BYTES so a small file
+ * that unpacks to gigabytes stops there. Archives of several files (.tar.gz) stay unsupported.
+ */
+function gunzipText(buf: Buffer, sampleBytes?: number): Document {
+  let text: Buffer;
+  try {
+    text = gunzipSync(buf, { maxOutputLength: MAX_FILE_BYTES });
+  } catch (e) {
+    return unsupported(/maxOutputLength|buffer length/i.test((e as Error).message) ? `unpacks to more than ${mb(MAX_FILE_BYTES)}` : 'damaged gzip file');
+  }
+  if (text.subarray(0, 8000).includes(0)) return unsupported('archive');
+  if (sampleBytes !== undefined && text.length > sampleBytes) {
+    return { kind: 'text', text: text.subarray(0, sampleBytes).toString('utf8').replace(/\n[^\n]*$/, '\n'), sampled: true };
+  }
+  return { kind: 'text', text: text.toString('utf8') };
+}
+const GZIPPED_TEXT = /\.gz$/i;
+const isGzippedText = (file: string) => GZIPPED_TEXT.test(file) && !/\.tar\.gz$/i.test(file);
+
 export function loadDocument(file: string, options: LoadOptions = {}): Document {
   const ext = path.extname(file).toLowerCase();
   const st = statSync(file);
   if (st.size > MAX_FILE_BYTES) return unsupported(`larger than ${mb(MAX_FILE_BYTES)}`);
+  if (isGzippedText(file)) return gunzipText(readFileSync(file), options.sampleBytes);
   if (PARSED_WHOLE.has(ext)) {
     if (options.maxZipBytes !== undefined && st.size > options.maxZipBytes) {
       return unsupported(`larger than ${mb(options.maxZipBytes)}`);
@@ -438,6 +634,7 @@ export function loadDocument(file: string, options: LoadOptions = {}): Document 
 export function loadBuffer(name: string, buf: Buffer): Document {
   const ext = path.extname(name).toLowerCase();
   if (buf.length > MAX_FILE_BYTES) return unsupported(`larger than ${mb(MAX_FILE_BYTES)}`);
+  if (isGzippedText(name)) return gunzipText(buf);
   if (PARSED_WHOLE.has(ext)) return parseWhole(ext, buf);
   const why = UNSUPPORTED_DATA[ext];
   if (why) return unsupported(why);

@@ -13,7 +13,7 @@
  * binaries, no install scripts). The text never leaves the machine.
  */
 
-import { createHash } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 import { createReadStream, existsSync } from 'node:fs';
 import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import { cpus, homedir } from 'node:os';
@@ -21,8 +21,10 @@ import path from 'node:path';
 import type { PiiMatch } from '@lokal-id/core';
 import { namesFromSpans, nerChunks, type NerSpan } from '@lokal-id/core/ner';
 import * as ort from 'onnxruntime-web';
+import { aggregateWords } from './aggregate.ts';
 import { WordPiece, type Token } from './wordpiece.ts';
 
+export { aggregateWords, WORD_THRESHOLD, type PersonSpan, type PieceToken } from './aggregate.ts';
 export { WordPiece, type Token } from './wordpiece.ts';
 
 interface ModelFile {
@@ -98,9 +100,10 @@ export async function downloadModel(dir = modelDir()): Promise<string> {
     if (existsSync(file) && (await sha256(file)) === want.sha256) continue;
     const res = await fetch(MODEL.url + name, { redirect: 'follow' });
     if (!res.ok || !res.body) throw new Error(`Downloading ${MODEL.url + name} failed: HTTP ${res.status}`);
-    const tmp = `${file}.${process.pid}.part`;
+    // A name nobody can guess, created only if it is not there: a link planted in the folder is never written through.
+    const tmp = `${file}.${randomBytes(8).toString('hex')}.part`;
     try {
-      await writeFile(tmp, res.body as unknown as AsyncIterable<Uint8Array>);
+      await writeFile(tmp, res.body as unknown as AsyncIterable<Uint8Array>, { flag: 'wx' });
       const got = await sha256(tmp);
       if (got !== want.sha256) throw new Error(`${name} from ${MODEL.url} does not match its SHA-256 (got ${got})`);
       await rename(tmp, file);
@@ -111,12 +114,23 @@ export async function downloadModel(dir = modelDir()): Promise<string> {
   return dir;
 }
 
-async function verified(dir: string): Promise<boolean> {
+/**
+ * The model's files from `dir`, read once and checked in memory: what is used is exactly what was hashed, so a file
+ * replaced after the check is never loaded. Undefined when one is missing or does not match.
+ */
+async function readVerified(dir: string): Promise<Record<string, Buffer> | undefined> {
+  const out: Record<string, Buffer> = {};
   for (const [name, want] of Object.entries(MODEL.files)) {
-    const file = path.join(dir, name);
-    if (!existsSync(file) || (await sha256(file)) !== want.sha256) return false;
+    let buf: Buffer;
+    try {
+      buf = await readFile(path.join(dir, name));
+    } catch {
+      return undefined;
+    }
+    if (createHash('sha256').update(buf).digest('hex') !== want.sha256) return undefined;
+    out[name] = buf;
   }
-  return true;
+  return out;
 }
 
 function softmax(row: Float32Array): Float32Array {
@@ -145,21 +159,30 @@ export class NerNames {
 
   /** Loads the model: from `modelPath`, or from the cache folder, downloading it there first if needed. */
   static async load(options: NerOptions = {}): Promise<NerNames> {
-    let dir = options.modelPath;
-    if (!dir) {
-      dir = modelDir();
-      if (!(await verified(dir))) {
+    let files: Record<string, Buffer> | undefined;
+    if (options.modelPath) {
+      // A folder the caller chose (an approved copy, or another model): read as it is.
+      const dir = options.modelPath;
+      files = Object.fromEntries(
+        await Promise.all(Object.keys(MODEL.files).map(async (name) => [name, await readFile(path.join(dir, name))] as const)),
+      );
+    } else {
+      const dir = modelDir();
+      files = await readVerified(dir);
+      if (!files) {
         if (options.download === false) throw new Error(`The NER model is not in ${dir}; run downloadModel() first`);
         await downloadModel(dir);
+        files = await readVerified(dir);
+        if (!files) throw new Error(`The NER model in ${dir} changed after it was downloaded and checked`);
       }
     }
-    const config = JSON.parse(await readFile(path.join(dir, 'config.json'), 'utf8')) as { id2label: Record<string, string> };
+    const config = JSON.parse(files['config.json']!.toString('utf8')) as { id2label: Record<string, string> };
     const labels = Object.entries(config.id2label)
       .sort(([a], [b]) => Number(a) - Number(b))
       .map(([, label]) => label);
-    const tokenizer = WordPiece.fromTokenizerJson(await readFile(path.join(dir, 'tokenizer.json'), 'utf8'));
+    const tokenizer = WordPiece.fromTokenizerJson(files['tokenizer.json']!.toString('utf8'));
     ort.env.wasm.numThreads = options.threads ?? Math.max(1, Math.min(4, Math.floor(cpus().length / 2)));
-    const session = await ort.InferenceSession.create(await readFile(path.join(dir, 'model.onnx')), {
+    const session = await ort.InferenceSession.create(files['model.onnx']!, {
       executionProviders: ['wasm'],
     });
     return new NerNames(session, tokenizer, labels, options.minScore ?? 0.7);
@@ -208,30 +231,10 @@ export class NerNames {
     return best;
   }
 
-  // transformers' 'simple' aggregation: each token takes its best label; a token joins the group before it when it
-  // has the same type and is not tagged B-; groups of O are dropped; a group's score is the mean of its tokens'.
+  // Person spans by word: each word takes the highest person probability of its pieces (see aggregate.ts).
   private async persons(text: string): Promise<NerSpan[]> {
     const tokens: Token[] = this.tokenizer.encode(text);
     if (!tokens.length) return [];
-    const probs = await this.probabilities(tokens.map((t) => t.id));
-    const groups: Array<{ type: string; start: number; end: number; scores: number[] }> = [];
-    tokens.forEach((token, i) => {
-      const p = probs[i]!;
-      let k = 0;
-      for (let j = 1; j < p.length; j++) if (p[j]! > p[k]!) k = j;
-      const label = this.labels[k] ?? 'O';
-      const bi = /^[BI]-/.test(label) ? label[0] : 'I';
-      const type = /^[BI]-/.test(label) ? label.slice(2) : label;
-      const last = groups[groups.length - 1];
-      if (last && last.type === type && bi !== 'B') {
-        last.end = token.end;
-        last.scores.push(p[k]!);
-      } else {
-        groups.push({ type, start: token.start, end: token.end, scores: [p[k]!] });
-      }
-    });
-    return groups
-      .filter((g) => g.type === 'PER' || g.type === 'PERSON')
-      .map((g) => ({ start: g.start, end: g.end, score: g.scores.reduce((a, b) => a + b, 0) / g.scores.length }));
+    return aggregateWords(tokens, await this.probabilities(tokens.map((t) => t.id)), this.labels);
   }
 }

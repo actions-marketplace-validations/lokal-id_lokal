@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, statSync } from 'node:fs';
 import { createServer as createHttpServer, type Server as HttpServer } from 'node:http';
 import path from 'node:path';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
@@ -22,7 +22,6 @@ import {
   parsePhone,
   parseQris,
   parseRupiah,
-  partialMask,
   setQrisAmount,
   terbilang,
   type PiiMatch,
@@ -40,10 +39,12 @@ import {
 } from '@lokal-id/core/wilayah';
 import { countMatches, writeAudit } from './audit.ts';
 import {
-  allowedTypes, detectConfigured, loadConfig, loadDocument, loadIgnore, resolveInRoot, toPosix, underPolicy, walkFiles,
+  allowedTypes, detectConfigured, loadConfig, loadIgnore, loadInRoot, previewForModel, realRoot, recordUnmasked, resolveInRoot,
+  toPosix, underPolicy,
+  walkFiles, writeInRoot,
   type Document, type SamaranConfig,
 } from './files.ts';
-import { anonymizeFiles, KEMBARAN_NOTE } from './kembaran-files.ts';
+import { anonymizeFiles, KEMBARAN_NOTE, NOTHING_REPLACED } from './kembaran-files.ts';
 import { NerNames } from './ner.ts';
 import { VERSION } from './version.ts';
 
@@ -115,20 +116,23 @@ export function createServer(
   // A session that runs for days should not keep real values that long: forgotten after this many minutes unused.
   const ttlMinutes = Number(process.env.LOKAL_VAULT_TTL_MINUTES) || config.vaultTtlMinutes;
   let lastUse = Date.now();
+  // Names without a label or cue, from the NER model, when .samaran.json turns it on. Its memory of texts already read
+  // is forgotten with the vault.
+  const ner = new NerNames();
   /** The session's vault; a new, empty one once the old one went unused for longer than the TTL. */
   const vault = (): Samaran => {
-    if (ttlMinutes && samaran.size && Date.now() - lastUse > ttlMinutes * 60_000) {
+    if (ttlMinutes && (samaran.size || ner.size) && Date.now() - lastUse > ttlMinutes * 60_000) {
       audit('forgot', 'vault', { reason: `unused for more than ${ttlMinutes} minutes`, values: samaran.size });
       samaran = newVault();
+      ner.clear();
     }
     lastUse = Date.now();
     return samaran;
   };
-  // Names without a label or cue, from the NER model, when .samaran.json turns it on.
-  const ner = new NerNames();
   const namesIn = (text: string) => (config.ner ? ner.find(text) : Promise.resolve(undefined));
   const isIgnored = loadIgnore(root);
   const readOnly = { readOnlyHint: true, openWorldHint: false } as const;
+  realRoot(root); // the boundary, fixed now
   const inRoot = (p: string) => resolveInRoot(root, p);
   // A placeholder from read_file_masked stands for a value only this server knows. The data tools below work on the
   // real value, and what they say about the person comes back as placeholders too, so the model still sees none of it.
@@ -461,7 +465,7 @@ export function createServer(
         const rel = toPosix(path.relative(root, file)) || path.basename(file);
         let doc: Document;
         try {
-          doc = loadDocument(file);
+          ({ doc } = loadInRoot(root, file));
         } catch (e) {
           // Not silently: a file that could not even be opened may hold anything.
           skipped.push({ file: rel, status: 'failed', reason: `unreadable: ${(e as Error).message}`, dataBearing: true });
@@ -490,7 +494,7 @@ export function createServer(
                 label: m.label,
                 uuPdp: UU_PDP_CATEGORY[m.type],
                 confidence: m.confidence,
-                preview: partialMask(m.type, m.value),
+                preview: previewForModel(m.type, m.value),
               });
             }
           }
@@ -551,15 +555,16 @@ export function createServer(
       annotations: readOnly,
     },
     async ({ path: target, start_line, max_lines }) => {
+      if (configError) return fail(configError);
       let abs: string;
+      let doc: Document;
       try {
-        abs = inRoot(target);
+        // Opened once and checked as opened: the content read is the file inside the root, even if its path changes.
+        ({ abs, doc } = loadInRoot(root, target));
       } catch (e) {
+        if ((e as NodeJS.ErrnoException).code === 'ENOENT') return fail(`Not found: ${target}`);
         return fail((e as Error).message);
       }
-      if (configError) return fail(configError);
-      if (!existsSync(abs)) return fail(`Not found: ${target}`);
-      const doc = loadDocument(abs);
       if (doc.kind === 'skipped') {
         return fail(`Cannot read ${target} (${doc.status}): ${doc.reason}. It was not checked for personal data, so do not read it another way.`);
       }
@@ -611,7 +616,7 @@ export function createServer(
       const header = [
         `File: ${rel} (${what})`,
         ...(doc.kind === 'sheets' && doc.unscanned ? [`Not read: ${doc.unscanned}. They may hold personal data, such as an ID card photo.`] : []),
-        `Masked: ${all.length ? JSON.stringify(countByType(all.map((m) => m.label ?? m.type))) : 'nothing found'}`,
+        `Masked: ${all.length ? JSON.stringify(countByType(all.map((m) => m.label ?? m.type))) : 'nothing recognized'}`,
         ...(clashes.size
           ? [`Note: the file itself contains ${[...clashes].slice(0, 5).join(', ')}, which this session also uses as placeholders. write_file_unmasked would restore them; do not copy that text into output.`]
           : []),
@@ -647,9 +652,15 @@ export function createServer(
       const placeholders = content.match(/\[[A-Z_]+_\d+\]/g) ?? [];
       const unknown = [...new Set(placeholders.filter((p) => vault().unmask(p) === p))];
       const restoredText = vault().unmask(content);
-      mkdirSync(path.dirname(abs), { recursive: true });
-      writeFileSync(abs, restoredText, 'utf8');
+      try {
+        // Into a new file checked inside the root, then renamed: real values never land outside it.
+        writeInRoot(root, target, restoredText);
+      } catch (e) {
+        return fail((e as Error).message);
+      }
       const restored = placeholders.filter((p) => !unknown.includes(p));
+      // Real values are in it now: the guard checks it from here on like a data file, whatever its extension.
+      if (restored.length) recordUnmasked(root, abs);
       audit('restored', 'write_file_unmasked', {
         file: toPosix(path.relative(root, abs)),
         counts: countMatches(restored.map((p) => ({ type: p.slice(1, p.lastIndexOf('_')) }))),
@@ -690,7 +701,7 @@ export function createServer(
       try {
         inputs = paths.map(inRoot);
         out = inRoot(output);
-        const { files, leaked } = anonymizeFiles(inputs, out, { keep, keepBirthDate: keep_birth_date, secret, overwrite, dryRun: dry_run, custom: config.custom });
+        const { files, leaked } = anonymizeFiles(inputs, out, { keep, keepBirthDate: keep_birth_date, secret, overwrite, dryRun: dry_run, custom: config.custom, root });
         if (dry_run) {
           return json({
             dry_run: true,
@@ -703,11 +714,23 @@ export function createServer(
           for (const [t, n] of Object.entries(f.crossed)) counts[t] = (counts[t] ?? 0) + n;
           audit('anonymized', 'anonymize_file', { file: toPosix(path.relative(root, f.from)), counts });
         }
+        const empty = files.filter((f) => !Object.keys(f.replaced).length && !Object.keys(f.crossed).length);
+        const warnings = [
+          ...(leaked ? [`${leaked} real value(s) are still in the output, glued to other text: tell the user not to share it as it is.`] : []),
+          ...(empty.length ? [`In ${empty.map((f) => toPosix(path.relative(root, f.from))).join(', ')}: ${NOTHING_REPLACED}. Tell the user; do not call it anonymized.`] : []),
+        ];
         return json({
-          files: files.map((f) => ({ from: toPosix(path.relative(root, f.from)), to: toPosix(path.relative(root, f.to)), replaced: f.replaced, also_found: f.crossed })),
-          // Real values of the input still in the output: 0 unless one is glued to other text.
+          files: files.map((f) => ({
+            from: toPosix(path.relative(root, f.from)),
+            to: toPosix(path.relative(root, f.to)),
+            replaced: f.replaced,
+            also_found: f.crossed,
+            ...(empty.includes(f) ? { nothing_replaced: true } : {}),
+          })),
+          // Real values Kembaran recognized in the input and still finds in the output: 0 unless one is glued to other
+          // text. It cannot count what it never recognized.
           real_values_left: leaked,
-          note: leaked ? `${leaked} real value(s) are still in the output, glued to other text: tell the user to check it before sharing. ${KEMBARAN_NOTE}` : KEMBARAN_NOTE,
+          note: [...warnings, KEMBARAN_NOTE].join(' '),
         });
       } catch (e) {
         return fail((e as Error).message);
@@ -727,6 +750,7 @@ export function createServer(
     async () => {
       const forgot = samaran.size;
       samaran = newVault();
+      ner.clear();
       audit('forgot', 'clear_vault', { values: forgot });
       return json({ forgot, note: 'Placeholders from earlier in this session no longer stand for anything; read the files again if you need them.' });
     },

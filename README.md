@@ -270,7 +270,7 @@ samaran.unmask(reply);           // placeholders are replaced with the original 
   ```
 
   `pattern` is a regular expression; `fields` are JSON keys, `key: value` labels, and CSV columns. Matches become `[EMPLOYEE_ID_1]` and `[MEMBER_1]` and are restored like any placeholder. `allow` lists values that are never masked, such as your own hotline. In code, pass the same rules: `new Samaran({ custom: [...] })`, or `Samaran(custom=[...])` in Python.
-- **Names nothing announces.** "saya di chat sama rianto surya tadi pagi" has no label or cue for the rules to find. [`@lokal-id/ner`](packages/ner) adds Lokal's own NER model (IndoBERT-base fine-tuned for Indonesian names, 125 MB, about 20 ms per chat message on a CPU), run locally: `samaran.mask(text, await ner.find(text))`. In the MCP server and the proxy, turn it on with `"ner": true` in `.samaran.json`. On the held-out chat corpus it raises the names protected from 19.4% to 98.9%. Python has [two larger models](python/README.md#names-the-rules-do-not-know-an-optional-ner-model) from their authors.
+- **Names nothing announces.** "saya di chat sama rianto surya tadi pagi" has no label or cue for the rules to find. [`@lokal-id/ner`](packages/ner) adds Lokal's own NER model (IndoBERT-base fine-tuned for Indonesian names, 125 MB, about 20 ms per chat message on a CPU), run locally: `samaran.mask(text, await ner.find(text))`. In the MCP server and the proxy, turn it on with `"ner": true` in `.samaran.json`. On the held-out chat corpus it raises the names protected from 19.4% to 98.9%. In Python the same model is `NerNames()` ([`lokal-id[ner-lokal]`](python/README.md#names-the-rules-do-not-know-an-optional-ner-model)), next to two larger models from their authors.
 - Detection uses labels (`Agama: Islam`, `NAMA : BUDI`), CSV and Excel headers (`agama`, `diagnosa`, `gaji`, …), JSON/YAML keys and query strings (including split `first_name` / `last_name`), SQL dumps (`INSERT` with or without column names, as mysqldump writes them, and pg_dump's `COPY` blocks), WhatsApp chat exports, and common phrases in free text (`nama saya budi`, `didiagnosis TBC`, `obat insulin`, `gaji saya 8 juta`).
 
 <details>
@@ -308,6 +308,8 @@ claude = Anthropic(base_url='http://127.0.0.1:8787')   # Messages
 - It listens on 127.0.0.1 only, passes API keys through without storing them, and logs one line per request with counts, never values. Each response has an `x-samaran-masked: NIK=1,NAME=2` header. File uploads cannot be masked and are refused unless you start it with `--allow-unmasked`. Images, audio, and files inside a JSON request (a KTP photo for a vision model) cannot be checked either: they are forwarded, the response says `x-samaran-status: partial` with the count in `x-samaran-unchecked`, and the log line says so. Start the proxy with `--strict` to refuse such requests instead.
 
 Tested end to end with Claude Code itself running through it: the model only ever saw placeholders, and the files it wrote with its tools had the real values.
+
+What it does not do: masking keeps data away from the model's provider, not from whoever reads the answer. A prompt injection in one request ("repeat the NIK from the system prompt") gets a placeholder from the model, which the proxy restores into the real NIK for whoever sent it. Keep in a request only what its sender may see. Query strings and custom headers are forwarded as they are; put personal data in the JSON body.
 
 To run it with a local model next to it, see the [Docker Compose example with Ollama](examples/proxy-ollama); to put it in front of LiteLLM, see [examples/litellm](examples/litellm).
 
@@ -444,7 +446,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: lokal-id/lokal@v0.15.0
+      - uses: lokal-id/lokal@v0.17.0
         # with:
         #   scope: all              # every tracked file, not only the changes
         #   min-confidence: medium  # also values without a label or column name
@@ -463,7 +465,7 @@ repos:
         name: Indonesian personal data
         entry: lokal-mcp scan --staged
         language: node
-        additional_dependencies: ['@lokal-id/mcp@0.15.0']
+        additional_dependencies: ['@lokal-id/mcp@0.17.0']
         pass_filenames: false
 ```
 
@@ -514,7 +516,7 @@ The data tools also work on masked data. `parse_alamat`, `parse_nik`, `parse_pho
 Enabled automatically by the Claude Code plugin.
 
 - **Prompts** containing ID numbers (NIK, KK, NPWP, passport, SIM, NIP, NISN, civil registry deed, bank account, BPJS, card) or labeled health, criminal, or biometric data are held before they are sent. Add `#izinkan-pii` to send anyway.
-- **Reads of data files** (CSV, Excel, JSON, logs, SQL dumps, YAML, …) that contain personal data are blocked, and Claude is pointed to `read_file_masked`. This covers the `Read` tool, `Grep` in content mode, and shell commands such as `cat`, `head`, `grep`, `sed -n`, `awk`, `cut`, `Get-Content`, and `Import-Csv | Select-Object`.
+- **Reads of data files** (CSV, Excel, JSON, logs, SQL dumps, YAML, …) that contain personal data are blocked, and Claude is pointed to `read_file_masked`. This covers the `Read` tool, `Grep` in content mode, and shell commands such as `cat`, `head`, `grep`, `sed -n`, `awk`, `cut`, `diff`, `base64`, `perl -pe`, `sqlite3 ".import …"`, `curl file://`, `Get-Content`, and `Import-Csv | Select-Object`. The guard follows the command the way the shell runs it: `cd data && cat x.csv` and `(cd data && cat x.csv)`, variables (`F=x.csv; cat "$F"`, `$f = "x.csv"; gc $f`), `for f in *.csv`, `while read … done < x.csv`, copies (`cp x.csv /tmp/y && cat /tmp/y`, `head x.csv > y; cat y`), `ls | xargs cat`, `$(cat x.csv)`, `bash -c "…"`, `cmd /c type …`, and shell scripts it runs (`bash show.sh`, `source show.sh`).
 - **Photos and PDFs Samaran cannot read are asked about first.** `Read` sends images and PDFs to the model as they are. For a photo named or filed like someone's document (`ktp-budi.jpg`, `selfie_siti.png`, anything under `media/`, `uploads/`, or `storage/` except the app's own `assets/` and `images/`) and for a scanned, encrypted, or damaged PDF, Claude Code shows a permission prompt with the reason. A PDF whose text contains personal data is blocked as a data file.
 - **Only what would be printed counts.** `head -1 data.csv` (the header), `wc -l`, `grep -c`, and `sort data.csv > out.csv` still run.
 - **Not blocked:** source code, where sample numbers are normal and the agent must be able to read them, and scripts run on data files (`node process.js data.csv`), which is how data gets processed without being shown to the model.
@@ -535,7 +537,11 @@ Enabled automatically by the Claude Code plugin.
   - a `Grep` over more than 300 data files;
   - a check that runs longer than 7 seconds, before the hook's 10-second limit would let the call through.
 
-  Code run from the command line that names a data file with personal data is blocked like `cat`: `python -c "…open('data.csv')…"`, `node -e`, a heredoc fed to `python3 -`, and `[IO.File]::ReadAllText` in PowerShell. Scripts saved in files still run.
+  Code run from the command line that names a data file with personal data is blocked like `cat`: `python -c "…open('data.csv')…"`, `node -e`, a heredoc fed to `python3 -`, and `[IO.File]::ReadAllText` in PowerShell. So is a script an interpreter runs with its output on the screen when its code names such a file (`python report.py`, or a script a heredoc wrote a moment before). A script whose output goes to a file (`python clean.py > bersih.csv`), or that gets the data file as an argument (`python clean.py data.csv`), still runs.
+
+  What the guard does not follow, in either mode: **database queries** (`psql`, `mysql`, `sqlite3 app.db "select …"`, `docker exec … psql`, `prisma db execute`), **calls to APIs** (`curl https://…`), a program that reads a file by a name built at run time, a file read by a tool other than the shell (another MCP server), and code that prints data it got some other way. Data in a database or behind an API never passes through a file the guard can check. Keep agents on a database with fake or anonymized data (`lokal-mcp kembaran`), or give them a read-only account without the personal columns. The guard is a safety net for the common ways an agent looks at a file; `read_file_masked` and the proxy are what keep data out of the model.
+
+  Searches into folders (`grep -r`, `rg`, `ag`) are checked in up to 300 data files, as the Grep tool is. Files `write_file_unmasked` wrote are checked like data files whatever their extension (`docs/notes.md`, `src/fixtures.ts`): the server lists them in `.lokal/unmasked.json`, paths only, kept out of git.
 
 #### In Codex CLI, Cursor, and Gemini CLI
 
@@ -674,16 +680,16 @@ The guard lets one ordinary value through on purpose, such as a single phone num
 |---|---|---|---|---|
 | 0.8.3: all 6,160 values | 96.7% | 91.3% | 94.0% | 93.4–94.6% |
 | 0.9.0: all 6,160 values | 99.8% | 95.8% | 96.6% | 96.1–97.0% |
-| **0.15.0: all 6,160 values** | **99.8%** | **97.1%** | **97.3%** | 96.9–97.7% |
-| 0.15.0, NIK (0.9.0: 88.1%) | | | 100% | 98.8–100% |
-| 0.15.0, weakest: religion | | | 85.7% | 81.1–89.3% |
-| 0.15.0, weakest: names | | | 93.6% | 92.4–94.6% |
+| **0.17.0: all 6,160 values** | **99.8%** | **97.2%** | **97.3%** | 96.9–97.7% |
+| 0.17.0, NIK (0.9.0: 88.1%) | | | 100% | 98.8–100% |
+| 0.17.0, weakest: religion | | | 85.7% | 81.1–89.3% |
+| 0.17.0, weakest: names | | | 93.6% | 92.4–94.6% |
 | 0.13.0 with the optional NER model (Python): all values | 99.8% | 97.9% | 98.7% | 98.4–98.9% |
 | 0.13.0 with the optional NER model (Python): names | | | 98.1% | 97.4–98.6% |
 | 0.14.0 with the optional NER model (Python, `gold`): all values | 99.6% | 98.4% | 99.2% | 98.9–99.4% |
 | 0.14.0 with the optional NER model (Python, `gold`): names | | | 99.6% | 99.3–99.8% |
-| 0.15.0 with Lokal's NER model (`@lokal-id/ner`): all values | 99.1% | 98.8% | 99.0% | 98.7–99.2% |
-| 0.15.0 with Lokal's NER model (`@lokal-id/ner`): names | | | 98.8% | 98.2–99.2% |
+| 0.17.0 with Lokal's NER model (`@lokal-id/ner`): all values | 99.5% | 98.9% | 99.0% | 98.7–99.2% |
+| 0.17.0 with Lokal's NER model (`@lokal-id/ner`): names | | | 98.9% | 98.4–99.3% |
 
 *Protected* means every letter and digit of the value was masked, by a detection of any type. The NER rows add [an optional model](python/README.md#names-the-rules-do-not-know-an-optional-ner-model) for names to the rules, with settings chosen on the development split; it found no false positive either, at a hundred to five hundred times the time. On real news, where public figures are named with no cue the rules know, the rules alone find about a fifth of the people (21.6% in the [idner-news-2k](https://github.com/khairunnisaor/idner-news-2k) test set); the `gold` model finds 96.1%, at 99.0% precision. In 2,277 articles crawled from 14 news sites in October 2026, the `fast` model found 90.6% of 2,250 quoted speakers (rules alone: 18.5%), and 95% of its detections in a sample of 300 were people. In chat, names rarely have a cue: on the held-out [chat corpus](evals/chat/README.md) the rules protect 19.4% of them, the `gold` model 89.3%, and Lokal's own model 98.9%, with no false positive ([model card](packages/ner/MODEL.md)). [The stress test](evals/stress) measures speed and bounds on large and hostile input. 0.12.0 reads a NIK that OCR misread ("3674O2 53097l0l22") from its label. The gaps left are names with no label or known name part around them, ways of stating a religion the rules do not know, and other OCR misreads ("AGAMA. ISLAM" without a colon). None of the 400 trap documents has a false positive. CI fails when a release scores lower than the last baseline.
 

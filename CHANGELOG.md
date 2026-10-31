@@ -4,6 +4,67 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.17.0] - 2026-10-31
+
+Fixes for what two rounds of an independent evaluation of 0.16.1 found. Each gap has tests in this repository's own words, with the look-alikes that must stay clean; the evaluation's cases were not copied.
+
+### Security
+
+- Kembaran could write an "anonymized" file that still held real NIKs and report it clean. A NIK written with dots (`3276.0101.0180.0001`) in a file on its own was not found, so `kembaran kyc.sql -o kyc.anon.sql` copied it, printed "nothing found", and suggested `.samaranignore`; the API's `leaked` counted 0, since it only counts values the detector found. Dotted NIKs are found now (below), and Kembaran no longer depends on the detector for them: any run of 16 digits, however separated, that is a valid NIK by its structure is replaced and counted if left. A file with nothing replaced is reported as "nothing replaced: Kembaran recognized no personal data, which does not mean there is none", with a warning, and `.samaranignore` is suggested only after the output has been looked through. `anonymize_file` says the same and marks the file `nothing_replaced`. The command exits with 1 when real values are left.
+- Files `write_file_unmasked` writes with real values are listed in `.lokal/unmasked.json` (paths only, kept out of git), and the guard checks them like data files whatever their extension: real data written to `docs/notes.md` or `src/fixtures.ts` could be read back with `Read` or `cat`, since the guard took them for source code.
+- The guard checks searches into folders: `grep -r`/`-R`, `rg`, and `ag` (folders by default), with or without a path, in up to 300 data files; `find … -exec head {} \;`; `zcat`, `gunzip -c`, `gzip -dc`, and `zgrep` on gzipped text (`export.csv.gz`, unpacked up to 100 MB, also by `read_file_masked` and `scan_pii`); files with no extension (an export called `customers`); and dotenv files (`.env.local`).
+- A prompt with three or more phone numbers, e-mail addresses, addresses, or birth dates is held like one with a NIK: ten pasted rows of names, phones, and e-mails went through, since the prompt check only looked for identity numbers. One number in a prompt still goes.
+
+- Samaran Guard followed every path from the folder a command started in, so `cd data && cat pelanggan.csv` and `(cd data && cat pelanggan.csv)` printed the file while `cat data/pelanggan.csv` was blocked. The guard now walks a command the way the shell runs it: folders entered with `cd`, `pushd`, and `Set-Location`; shell and PowerShell variables and `for` loops; files a command copies, moves, or writes from a data file (`cp`, `mv`, `Copy-Item`, `>`, `tee`) and prints later; `ls … | xargs cat` and `find … | xargs cat`; `while read … done < file` and `cat file | while read`; `$(…)` and backticks; `bash -c`, `sh -c`, `cmd /c`, `pwsh -c`; and shell scripts it runs (`bash x.sh`, `source x.sh`, `./x.sh`). Readers it did not know are added: `diff`, `comm`, `join`, `base64`, `hexdump`, `iconv`, `rev`, `shuf`, `pr`, `perl -pe`/`-ne`, `ruby -pe`/`-ne`, `python -m json.tool`, `curl file://`, and query tools that load a CSV named in their arguments (`sqlite3`, `duckdb`, `csvsql`, `q`).
+- Strict mode also blocks a script an interpreter runs with its output on the screen when its code names a data file with personal data (`python report.py`, or a script a heredoc wrote in the same command). Its output reaches the conversation as `cat` would. Output redirected to a file, or a data file passed as an argument, still runs.
+- `scan_pii` findings and guard messages show the model a NIK or KK as `************0001`: the first four digits too made eight of sixteen. `mode: 'partial'` for logs and admin screens keeps `3201********0001`.
+
+### Fixed
+
+- Samaran Proxy broke JSON answers: with `response_format` `json_object` or `json_schema` (or `text.format` in the Responses API, `format` in Ollama), a value with a quote restored into the answer (`Budi "Ucok" Santoso`) made `{"nama":"Budi "Ucok" Santoso"}`. Values restored into an answer that is JSON are now escaped as in tool call arguments, streamed or not; an answer that is JSON without `response_format` is recognized when it is not streamed. Prose keeps the value as it is.
+- A NIK or KK written with dots was found only after a label and a colon (`NIK: 3175.0912.0390.0002`); in brackets, after "No. KTP", or with no label it was missed, also by the prompt guard. Dotted groups of a NIK or KK (4.4.4.4, 2.2.2.6.4, 6.6.4) are now read as one number; amounts and versions with dots are not.
+- Addresses without "Jl.": an estate and a house number (`Komp. Griya Kenanga 6`, `Perumahan Taman Sari 12`) and a block and house number (`Blok C2 No. 5`). Not "Perum", which also names state companies. Shipping keys hold addresses: `ship_to`, `deliver_to`, `delivery_address`, `alamat_kirim`, `kirim_ke`, `alamat_penerima`, and others.
+- A CSV whose header says nothing (`c1,c2,…`): a column where at least half of the cells, and at least three, hold a name Samaran knows, and nearly all look like names, is a column of names, so its names no list knows are masked too. Columns of products and cities stay clean.
+- A technical ID in a payment service's log (`trace_id=7340958123094857` next to "transfer" or "BCA") was taken for a bank account, and a duration starting with 08 (`duration=0856123456`, `0812345678 ms`) for a phone number. A number right after a trace, span, request, order, invoice, or reference label is not an account, and one after a duration or timestamp label or before a time unit is not a phone, unless a phone label comes right before it.
+- Names: `Budi_Santoso` (OpenAI's `name` field allows no spaces) when a part is a name the lists know, not `build_and_test`; `Fatimah binti Abdullah` and `AHMAD BIN HASAN` with no cue, the father's name included; a title or initials before a known name (`R. Ayu Kusumawardhani`). A name in capitals ends before a word that says when or an active verb (`SUPRIYADI ALIAS UDIN` in "… TELAH MENGAMBIL motor", which was masked whole).
+- An IMEI (15 digits with a Luhn check) was taken for a card number. The only 15-digit cards are Amex (34…, 37…); a number labeled IMEI is not a card.
+- The short RT/RW form `RT 04/09`, as in `Kp. Rawa Bebek RT 04/09`.
+- Kembaran: a short name in a note (`Bu Siti`) takes the first name of the full name's stand-in when the data holds one full name that starts with it (`Siti Aminah`); with two, it gets its own.
+- `read_file_masked` says "nothing recognized", not "nothing found", when it masks nothing.
+- A name written both ways ("Paijo", later "paijo") keeps one placeholder, and `unmask` restores the lower-case form where the words around the placeholder are in lower case, instead of always the first form seen.
+
+## [0.16.1] - 2026-10-31
+
+0.16.0 was published to PyPI only: its npm release stopped when CI on Linux found the gap below. The Python package of 0.16.1 is the same as 0.16.0's.
+
+### Security
+
+- The MCP server's file tools in 0.16.0 checked the file they had opened by resolving its path again and taking the identity of the file there. A second swap between those two steps could lead that check itself to the outside file: in 30-second races on Linux, while another process swapped a folder in the root for a link to an outside folder and back, `read_file_masked` read the outside file 56 times in 938,000 reads. On Linux the check now asks the kernel where the open file is (`/proc/self/fd`), without following a path; elsewhere the path must also hold no link after the check. Now 0 in 1.74 million reads on Linux, and 0 on Windows, where the swaps are slower and neither version read the outside file.
+
+## [0.16.0] - 2026-10-31
+
+### Added
+
+- Lokal's own NER model in Python: `NerNames(model='lokal')`, the same `lokal-ner-base-v1` as `@lokal-id/ner`, run with onnxruntime and a WordPiece tokenizer of Lokal's own (checked against Hugging Face's on 5,689 texts and against the Node one by parity vectors). `pip install "lokal-id[ner-lokal]"` installs only onnxruntime, without transformers or PyTorch; the model (125 MB) is downloaded once from the GitHub release, checked against its SHA-256, and cached in the folder the Node package uses. About 5 ms per short document on a laptop CPU. `download_model()` fetches it ahead of time.
+
+### Changed
+
+- `NerNames()` loads `'lokal'` by default (it was `'gold'`). On the held-out chat corpus it protects 98.9% of the names (`gold`: 89.3%), at a tenth of the size; `gold` stays the better choice for news (96.1% of the people in idner-news-2k, against 93.4%). Pass `model='gold'` for the earlier default.
+- The NER extras need Python 3.11 or later, as onnxruntime and PyTorch do. The rest of `lokal-id` still runs on 3.10.
+- Python dependencies are locked only once they are two weeks old (`exclude-newer = "2 weeks"` in `pyproject.toml`). The lock had picked up newer releases of PyTorch, transformers, and huggingface-hub; they are back to the last ones that are two weeks old.
+
+### Fixed
+
+- Lokal's NER model could leave part of a name unmasked: "[NAME_2] kirapuspa". The model labels word pieces, and when one piece of a word leaned the other way ("kira" of "kirapuspa", next to "##pus" and "##pa" that lean to a person), the word was split and dropped. Names are now grouped by word, each word taking the highest person probability of its pieces, in Node (`aggregateWords`) and Python (`aggregate_words`), checked against each other by parity vectors. On the development sets, recall in idner-news-2k went from 95.5% to 96.8% and name precision in Samaran's benchmark from 98.9% to 99.4%, with no false positive added. Found by the independent evaluation of 0.15.0; a name the model does not take for a person at all ("ada yang ngeliat zelvanya kirapuspa ga ya", 0.06) is still missed.
+
+### Security
+
+- The MCP server's file tools no longer check a path and then open it again (TOCTOU). `read_file_masked`, `scan_pii`, `write_file_unmasked`, and `anonymize_file` open a file first and then check the file that was opened: the same file (device and file ID) as the one its path leads to inside the root, read and written through that descriptor. A write goes to a new file with a random name, checked, then renamed into place. While another process swapped a folder in the root for a junction to an outside folder and back, 0.15.0 read the outside file 23 to 36 times in about 1,400 reads and wrote real data outside the root; now 0. A rare double swap can still leave an empty file with a random name outside the root: Node cannot create a file relative to a folder handle.
+- The MCP server takes the root's real path once, when it starts: a root swapped for a link later no longer moves the boundary. Files with more than one hard link are refused, since the other name may be outside the root.
+- The NER cache of the MCP server and Samaran Proxy (0.15.0) held the texts it had read, personal data included, and `clear_vault` and the vault's expiry did not empty it. It now holds a keyed hash of each text (HMAC-SHA256 with a random key) and where the names are, never the text or a name, and is emptied, with a new key, when the vault is cleared or expires.
+- `@lokal-id/ner` and Python's `'lokal'` model load the model from the bytes they checked against the SHA-256, not from the file again; `@lokal-id/ner` downloads into a temporary file with a random name, created only if it is not there.
+- The NER extras lock `filelock` 4.2.1, which fixes 17 advisories about other local users' lock files (GHSA-v4x8-3wr5-3wq8 and others). The lock held 4.1.0 for Python 3.10, which the fixed release no longer supports.
+
 ## [0.15.0] - 2026-10-31
 
 ### Added
@@ -356,7 +417,10 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.15.0...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.17.0...HEAD
+[0.17.0]: https://github.com/lokal-id/lokal/compare/v0.16.1...v0.17.0
+[0.16.1]: https://github.com/lokal-id/lokal/compare/v0.16.0...v0.16.1
+[0.16.0]: https://github.com/lokal-id/lokal/compare/v0.15.0...v0.16.0
 [0.15.0]: https://github.com/lokal-id/lokal/compare/v0.14.0...v0.15.0
 [0.14.0]: https://github.com/lokal-id/lokal/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/lokal-id/lokal/compare/v0.12.0...v0.13.0

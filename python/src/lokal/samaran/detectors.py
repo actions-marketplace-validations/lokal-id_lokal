@@ -24,7 +24,7 @@ from ._names import (
     SECOND_NAMES,
 )
 from .custom import RuleLike, detect_custom, to_rules
-from .fields import field_type, is_generic_name_key, is_plausible_value
+from .fields import field_type, is_generic_name_key, is_known_name_part, is_plausible_value
 from .types import PII_TYPES, Confidence, PiiMatch, PiiType
 
 # The detectors run on a UTF-16 view of the text, where a character outside the BMP (an emoji) is two surrogate
@@ -165,18 +165,30 @@ _BPJS_KEYWORD = rx(r'\b(bpjs|jkn|kis|kartu indonesia sehat|kpj|jamsostek)\b')
 _BANK_KEYWORD = rx(
     r'\b(no\.?\s*rek(ening)?|norek|rekening|rek|account|acc|a\/c|virtual account|va|transfer|tf|bca|bri|bni|mandiri|bsi|cimb|niaga|permata|danamon|btn|jago|seabank|blu|ocbc|panin|maybank|mega|muamalat)\b'  # noqa: E501
 )
-_DIGIT_RUN = rx(r'(?<![\d\w.])\d(?:[ -]?\d){7,18}(?![\d\w])')
+# A technical or order ID right before the number: "trace_id=7340…", "request 7340…", "id transaksi 7340…". In a
+# payment service's log the words around it ("transfer", "va", "bca") would otherwise make every ID an account.
+_TECH_ID_LABEL = rx(
+    r'(?:\b|_)(?:trace|span|request|req|correlation|corr|session|sess|message|msg|event|job|task|order|pesanan|invoice|inv|txn|trx|transaction|transaksi|ref|reference|referensi|idempotency|booking|resi|tracking|uuid|nonce|seq|sequence)(?:[_ -]?(?:id|no|number|nomor|key))?\s*[:=#]?\s*["\']?$'  # noqa: E501
+)
+# A NIK or KK written with dots, the way a form or a letter groups it: "3175.0912.0390.0002", "32.01.01.150895.0001",
+# "320101.150895.0001". Other dotted numbers are amounts ("12.500.000.000") and versions, never read as an ID.
+_DOTTED_ID = rx(r'^(?:\d{4}\.\d{4}\.\d{4}\.\d{4}|\d{2}\.\d{2}\.\d{2}\.\d{6}\.\d{4}|\d{6}\.\d{6}\.\d{4})$')
+_DIGIT_RUN = rx(r'(?<![\d\w.])\d(?:[ .-]?\d){7,18}(?![\d\w]|\.\d)')
 _MOBILE_START = re.compile(r'(08|628)')
+_IMEI = rx(r'\bimei\b')
 
 
 def _detect_digit_runs(text: str) -> list[PiiMatch]:
-    """Runs of 8–19 digits, optionally separated by single spaces or dashes ("1234 5678 9012").
+    """Runs of 8–19 digits, optionally separated by single spaces or dashes ("1234 5678 9012"), or by dots in the
+    groups of a NIK or KK.
 
     Classified by length, structure, checksum, and nearby keywords.
     """
     out: list[PiiMatch] = []
     for m in _DIGIT_RUN.finditer(text):
         value = m.group(0)
+        if '.' in value and not _DOTTED_ID.search(value):
+            continue
         digits = _digits(value)
         ctx = _before(text, m.start())
         label = _last_units(ctx, 25)  # the words right before the number
@@ -199,7 +211,11 @@ def _detect_digit_runs(text: str) -> list[PiiMatch]:
             push('NIK', 'high')
         elif _is_nip(digits):
             push('NIP', 'high')
-        elif 13 <= n <= 19 and digits[0] in '3456' and _luhn(digits):
+        elif (
+            13 <= n <= 19 and digits[0] in '3456' and _luhn(digits)
+            # An IMEI has 15 digits and a Luhn check too; the only cards with 15 digits are Amex, 34… and 37….
+            and not (n == 15 and digits[:2] not in ('34', '37')) and not _IMEI.search(label)
+        ):
             if digits not in _TEST_CARDS:
                 push('CARD', 'high')
         elif n in (15, 16) and _NPWP_KEYWORD.search(ctx):
@@ -210,6 +226,8 @@ def _detect_digit_runs(text: str) -> list[PiiMatch]:
             push('NISN', 'high')
         elif n in (13, 11) and (_BPJS_KEYWORD.search(ctx) or _BPJS_KEYWORD.search(title)):
             push('BPJS', 'high')
+        elif _TECH_ID_LABEL.search(label):
+            continue
         elif 8 <= n <= 18 and _BANK_KEYWORD.search(ctx):
             push('BANK_ACCOUNT', 'high')
         elif 8 <= n <= 18 and _BANK_KEYWORD.search(_line_above(text, m.start(), len(value))):
@@ -301,11 +319,27 @@ _SPACED_ZERO = rx(r'^0[ \t.-]')
 _AREA_CODE = rx(r'(?<![\d\w+])0(?:2[1-9]|[3-79]\d)\d{0,2}[ \t.-]?\d{3,4}[ \t.-]?\d{3,4}(?![\d\w])')
 
 
+# A measurement in a log, not a phone: "duration=0856123456", "waktu proses 0812345678 ms", "ts=0812…".
+_METRIC_LABEL = rx(
+    r'(?:\b|_)(?:duration|durasi|elapsed|latency|took|waktu(?:\s+proses)?|time|dur|ttl|timeout|uptime|bytes|size|count|offset|epoch|timestamp|ts|nanos?|millis?)(?:[_ -]?(?:ms|ns|us|s|sec|secs))?\s*[:=]?\s*["\']?$'  # noqa: E501
+)
+_METRIC_UNIT = rx(r'^\s*(?:ms|ns|us|µs|s|sec|secs|seconds|detik|milidetik|mikrodetik|bytes?|kb|mb|b)\b', 'i')
+_PHONE_LABEL_BEFORE = rx(r'\b(?:hp|nohp|wa|whatsapp|sms|telp|telepon|telpon|tlp|tel|phone|mobile|kontak|contact|hubungi|call|cp)\b[^\d]*$')
+
+
+def _is_measurement(text: str, index: int, end: int) -> bool:
+    label = _before(text, index, 30)
+    if _PHONE_LABEL_BEFORE.search(label):
+        return False
+    return bool(_METRIC_UNIT.search(text[end : end + 12]) or _METRIC_LABEL.search(label))
+
+
 def _detect_phones(text: str) -> list[PiiMatch]:
     out = [
         _match('PHONE', m.start(), m.group(0), 'high')
         for m in _MOBILE.finditer(text)
-        if parse_phone('+' + m.group(0)[2:] if m.group(0).startswith('00') else m.group(0)).valid
+        if not _is_measurement(text, m.start(), m.end())
+        and parse_phone('+' + m.group(0)[2:] if m.group(0).startswith('00') else m.group(0)).valid
         and not _glued_to_code(text, m.start())
     ]
     out += [
@@ -326,6 +360,8 @@ def _detect_phones(text: str) -> list[PiiMatch]:
             continue
         # "0 8 1 2 3 …", one digit at a time, only next to a phone word: otherwise it is any list of digits.
         if _SPACED_ZERO.search(m.group(0)) and not named:
+            continue
+        if not named and _is_measurement(text, m.start(), m.end()):
             continue
         if parse_phone(m.group(0)).valid and not _glued_to_code(text, m.start()):
             out.append(_match('PHONE', m.start(), m.group(0), 'high'))
@@ -1616,6 +1652,39 @@ def _pair_word_ok(w: str) -> bool:
     return bare not in _NOT_NAME and bare not in _PLACE_WORDS and bare not in _TITLE_WORDS
 
 
+# "Fatimah binti Abdullah", "AHMAD BIN HASAN": a name, then bin or binti and the father's name. Nothing else is written
+# that way, so no cue is needed.
+_PATRONYMIC = rx(
+    r"\b[A-Z][A-Za-z'-]+(?:\s+[A-Z][A-Za-z'-]+){0,2}\s+(?:bin|binti|bt|bte|BIN|BINTI|Bin|Binti)\s+[A-Z][A-Za-z'-]+(?:\s+[A-Z][A-Za-z'-]+){0,2}"  # noqa: E501
+)
+_PATRONYMIC_LEAD = rx(r'^(\S+)\s+(?=\S+\s+\S+\s+\S)')
+# "R. Ayu Kusumawardhani", "R.A. Siti Rahma": a Javanese title or initials before a name the lists know.
+_INITIALED = rx(r"(?<![\w.])(?:[A-Z]\.\s?){1,3}[A-Z][a-z'-]+(?:\s+[A-Z][a-z'-]+){0,3}")
+_INITIALS = rx(r'^(?:[A-Z]\.\s?)+')
+_NAME_TAIL = rx(
+    r'\s+(?:telah|sudah|akan|sedang|pernah|masih|tidak|tak|belum|lalu|kemudian|segera|sempat|(?:meng|meny|memb|memp)[a-z]{3,})\b',
+    'i',
+)
+
+
+def _detect_patronymics_and_initials(text: str) -> list[PiiMatch]:
+    out: list[PiiMatch] = []
+    for m in _PATRONYMIC.finditer(text):
+        # A sentence may start with a word that is not part of the name: "Kemudian Fatimah binti Abdullah".
+        offset = 0
+        while True:
+            lead = _PATRONYMIC_LEAD.search(m.group(0)[offset:])
+            if not lead or lead.group(1).lower() not in _NOT_NAME:
+                break
+            offset += len(lead.group(0))
+        out.append(_match('NAME', m.start() + offset, m.group(0)[offset:], 'high'))
+    for m in _INITIALED.finditer(text):
+        words = _INITIALS.sub('', m.group(0)).split()
+        if any(is_known_name_part(w) for w in words) and not all(w.lower() in _NOT_NAME for w in words):
+            out.append(_match('NAME', m.start(), m.group(0), 'medium'))
+    return out
+
+
 def _detect_name_pairs(text: str) -> list[PiiMatch]:
     """Two names joined by "&" or "dan" where one is a known given name: "Dimas & Anggun", "Rina dan Kelvin".
 
@@ -1833,7 +1902,8 @@ _STREET_WORDS = (
 )
 # What pins a street to one house: No., Blok, Kav., or an apartment's floor and unit. Chat writes "blok b no 9".
 _PIN = '[Nn][Oo]|[Nn]omor|[Bb]lok|[Kk]av|[Uu]nit|[Ll]t|[Ll]antai|[Kk]amar|[Kk]mr|NO|BLOK'
-_RT_RW = r'RT\.?\s*0*\d{1,3}\s*[/,]?\s*RW\.?\s*0*\d{1,3}'
+# "RT 04 RW 09", "RT.04/RW.09", and the short "RT 04/09".
+_RT_RW = r'RT\.?\s*0*\d{1,3}\s*(?:[/,]?\s*RW\.?\s*|/\s*)0*\d{1,3}'
 # A street only counts as personal data when it is pinned to a house: No., Blok, Kav., a unit, or RT/RW.
 _STREET = rx(
     rf'\b(?:{_STREET_WORDS})\.?\s+[A-Za-z0-9][^\n;]{{1,80}}?(?:\b(?:{_PIN})\.?\s*[A-Za-z]?\d+[A-Za-z]?(?:\/\d+)?(?:,?\s*(?:{_PIN})\.?\s*[A-Za-z]?\d+[A-Za-z]?(?:\/\d+)?)*(?:,?\s*{_RT_RW})?|\b{_RT_RW})',  # noqa: E501
@@ -1857,7 +1927,18 @@ def _detect_street_addresses(text: str) -> list[PiiMatch]:
     out += [_match('ADDRESS', m.start(), m.group(0), 'medium') for m in _LOWER_STREET.finditer(text)]
     out += [_match('ADDRESS', m.start(), m.group(0), 'medium') for m in _RTRW.finditer(text)]
     out += [_match('ADDRESS', m.start(), m.group(0), 'medium') for m in _BARE_STREET.finditer(text)]
+    out += [_match('ADDRESS', m.start(), m.group(0), 'medium') for m in _ESTATE.finditer(text)]
+    out += [_match('ADDRESS', m.start(), m.group(0), 'medium') for m in _PINNED.finditer(text)]
     return out
+
+
+# "Komp. Griya Kenanga 6", "Perumahan Taman Sari 12": an estate and a house number, no "No.". Not "Perum", which is
+# also a state company ("Perum Bulog 2").
+_ESTATE = rx(
+    r"\b(?:Komp|Kompl|Komplek|Kompleks|Perumahan|Cluster|Klaster|komp|komplek|kompleks|perumahan|cluster)\.?\s+[A-Za-z][A-Za-z'-]*(?:\s+[A-Za-z][A-Za-z'-]*){0,3}?\s+\d{1,4}[A-Za-z]?\b(?!\s*(?:jam|menit|detik|km|meter|m\b|kali|hari|minggu|bulan|tahun|orang|unit|rumah|kk|%|x\b))"  # noqa: E501
+)
+# "Blok C2 No. 5" pins a house without a street before it: "Kenanga Residence Blok C2 No. 5".
+_PINNED = rx(r'\b[Bb]lok\.?\s*[A-Za-z]{0,2}-?\d{0,3}[A-Za-z]?\s*[,/]?\s*(?:[Nn]o|[Nn]omor|NO)\.?\s*\d{1,4}[A-Za-z]?\b')
 
 
 _NAME_STOP = rx(
@@ -2203,7 +2284,47 @@ def _detect_csv_columns(text: str) -> list[PiiMatch]:
         later = _csv_table_at(text, line_start, to_end=False)
         if later is not None:
             return later
-    return []
+    return _name_columns(text)
+
+
+# A cell that could be a person's name: one to five words of letters, as "Budi Santoso" or "ni luh putu ayu".
+_NAME_CELL = rx(r"^[A-Za-z][A-Za-z'.-]*(?:\s+[A-Za-z][A-Za-z'.-]*){0,4}$")
+_NAME_CELL_PARTS = rx(r"[\s.'-]+")
+_QUOTED_CELL = re.compile(r'^"(.*)"$', re.S)
+
+
+def _name_columns(text: str) -> list[PiiMatch]:
+    """A CSV whose header says nothing ("c1,c2,c3", or no header at all): a column is a column of names when at least
+    half of its cells, and at least three, hold a given or family name Samaran knows, and nearly all of them look like
+    names. Then every name-like cell in it is a name, including the ones no list knows ("Kaleandra Wirasena")."""
+    raws = text.split('\n')
+    lines = [line[:-1] if line.endswith('\r') else line for line in raws]
+    while lines and not lines[-1].strip():
+        lines.pop()
+    delimiter = next((d for d in (',', ';', '\t', '|') if lines and d in lines[0]), None)
+    if delimiter is None or len(lines) < 4:
+        return []
+    rows = [_csv_fields(line, delimiter) for line in lines]
+    width = len(rows[0])
+    if width < 2 or any(len(r) != width for r in rows):
+        return []
+    out: list[PiiMatch] = []
+    for col in range(width):
+        cells: list[tuple[int, str]] = []
+        offset = 0
+        for i, r in enumerate(rows):
+            start, end = r[col]
+            raw = lines[i][start:end]
+            value = _QUOTED_CELL.sub(r'\1', raw.strip())
+            if value:
+                cells.append((offset + start + raw.find(value), value))
+            offset += len(raws[i]) + 1
+        name_like = [c for c in cells if _NAME_CELL.search(c[1]) and len(c[1]) <= 60]
+        known = [c for c in name_like if any(w and is_known_name_part(w) for w in _NAME_CELL_PARTS.split(c[1]))]
+        if len(known) < 3 or len(known) < len(cells) / 2 or len(name_like) < len(cells) * 0.8:
+            continue
+        out += [_match('NAME', at, value, 'medium') for at, value in name_like]
+    return out
 
 
 _CSV_HEADER_PREFIX = re.compile(r'[^,;|\t:]{1,60}:[ \t]+')
@@ -2473,6 +2594,7 @@ _DETECTORS: tuple[Callable[[str], list[PiiMatch]], ...] = (
     _detect_lone_given_names,
     _detect_names_with_age,
     _detect_name_pairs,
+    _detect_patronymics_and_initials,
     _detect_attendance,
     _detect_sentence_subjects,
     _detect_bracket_handles,
@@ -2553,6 +2675,14 @@ def detect_pii(
         taken[c.start : c.end] = b'\x01' * (c.end - c.start)
         accepted.append(c)
     accepted.sort(key=lambda m: m.start)
+    for i, m in enumerate(accepted):
+        if m.type != 'NAME':
+            continue
+        # "SUPRIYADI ALIAS UDIN TELAH MENGAMBIL": in capitals nothing marks where a name ends, so it ends at a word that
+        # says when, or an active verb (meng-, meny-, memb-, memp-; not men-, as "Mentari" is a name).
+        tail = _NAME_TAIL.search(m.value)
+        if tail and tail.start() > 0:
+            accepted[i] = PiiMatch(m.type, m.start, m.start + tail.start(), m.value[: tail.start()], m.confidence, m.label)
     # A match stops before an escape it ran into: a line break read from "\\n", or a quote written '\\"' in JSON that
     # went through twice. Its value is the text as it is.
     trimmed: list[PiiMatch] = []

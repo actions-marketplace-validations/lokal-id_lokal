@@ -7,6 +7,8 @@ export interface Token {
   id: number;
   start: number;
   end: number;
+  /** A "##" piece: it continues the word of the token before it. */
+  sub: boolean;
 }
 
 interface Char {
@@ -113,7 +115,7 @@ export class WordPiece {
   // Greedy longest match first; a word with a piece the vocabulary lacks is one [UNK].
   private wordPieces(word: Char[], out: Token[]): void {
     const unknown = () => {
-      out.push({ id: this.unk, start: word[0]!.start, end: word[word.length - 1]!.end });
+      out.push({ id: this.unk, start: word[0]!.start, end: word[word.length - 1]!.end, sub: false });
     };
     if (word.length > this.maxCharsPerWord) return unknown();
     const pieces: Token[] = [];
@@ -130,7 +132,7 @@ export class WordPiece {
         end--;
       }
       if (found === undefined) return unknown();
-      pieces.push({ id: found, start: word[start]!.start, end: word[end - 1]!.end });
+      pieces.push({ id: found, start: word[start]!.start, end: word[end - 1]!.end, sub: start > 0 });
       start = end;
     }
     out.push(...pieces);

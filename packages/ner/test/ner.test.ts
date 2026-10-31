@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
 import { Samaran } from '@lokal-id/core';
 import { WordPiece } from '../src/wordpiece.ts';
-import { MODEL, NerNames, modelDir } from '../src/index.ts';
+import { MODEL, NerNames, aggregateWords, modelDir } from '../src/index.ts';
 
 const vocab = new Map(
   ['[PAD]', '[UNK]', '[CLS]', '[SEP]', 'saya', 'sama', 'ri', '##anto', 'surya', ',', '.', 'cafe', '王', '##s'].map(
@@ -30,6 +30,22 @@ test('WordPiece: offset dalam satuan UTF-16 setelah emoji', () => {
   const [unk, saya] = wp.encode(text);
   assert.equal(text.slice(unk!.start, unk!.end), '😀');
   assert.equal(text.slice(saya!.start, saya!.end), 'saya');
+});
+
+test('aggregateWords: kata yang terbelah tetap utuh, dan nama tidak putus di tengah', () => {
+  // "zelvanya kirapuspa": "kira" leans to O, "##pus" and "##pa" to a person; the word counts as a person by its best piece.
+  const tokens = [
+    { start: 0, end: 8, sub: false }, // zelvanya
+    { start: 9, end: 13, sub: false }, { start: 13, end: 16, sub: true }, { start: 16, end: 18, sub: true }, // kira ##pus ##pa
+    { start: 19, end: 25, sub: false }, // dateng
+  ];
+  const p = (o: number, b: number, i: number) => [o, b, i];
+  const probs = [p(0, 0.98, 0.02), p(0.99, 0, 0.01), p(0.47, 0.03, 0.5), p(0.14, 0.01, 0.85), p(1, 0, 0)];
+  const [span, ...rest] = aggregateWords(tokens, probs, ['O', 'B-PER', 'I-PER']);
+  assert.deepEqual([span!.start, span!.end, rest.length], [0, 18, 0]);
+  // A word that leans to B- starts a new name: "Putri Agung" as two people stays two.
+  const two = aggregateWords([tokens[0]!, tokens[4]!], [p(0, 0.9, 0.1), p(0, 0.9, 0.1)], ['O', 'B-PER', 'I-PER']);
+  assert.equal(two.length, 2);
 });
 
 test('MODEL: setiap file punya SHA-256 dan ukuran', () => {

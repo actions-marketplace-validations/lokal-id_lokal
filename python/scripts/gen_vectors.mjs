@@ -403,6 +403,59 @@ const nerVectors = nerDocs.map((text, n) => {
   };
 });
 emit('samaran_ner.json', nerVectors);
+
+// ---------------------------------------------------------------- WordPiece (@lokal-id/ner's tokenizer)
+// A small made-up vocabulary: the model's own is in its release, not in the repository. Letters, a few words and
+// pieces, so text splits into words, pieces, and [UNK] alike.
+const { WordPiece } = await import(path.join(ROOT, 'packages/ner/dist/wordpiece.js').replace(/^/, 'file:///').replace(/\\/g, '/'));
+const pieces = [
+  '[PAD]', '[UNK]', '[CLS]', '[SEP]', ...'abcdefghijklmnopqrstuvwxyz0123456789'.split(''),
+  ...'abcdefghijklmnopqrstuvwxyz0123456789'.split('').map((c) => `##${c}`),
+  ...'.,:;!?()[]{}"\'-/@#$%&*+=<>_~`^|\\'.split(''), '王', '中', '文',
+  'saya', 'sama', 'chat', 'tadi', 'pagi', 'nama', 'budi', 'santoso', 'rina', 'wati', 'nik', 'jl', 'rt', 'rw', 'kak',
+  'ri', '##anto', 'sur', '##ya', 'pe', '##lang', '##gan', 'transfer', 'ke', 'rek', 'bca', 'cafe', '##an', '##nya',
+];
+const vocab = Object.fromEntries(pieces.map((p, i) => [p, i]));
+const wp = new WordPiece(new Map(Object.entries(vocab)), 40);
+const wordpieceTexts = [
+  ...nerTexts, 'Café Résumé naïve ÉCOLE', 'emoji 😀👍🏽 sama rianto 🙏', '中文名字 王小明 dan Budi',
+  'tab\there\vvt\fff\u0085x y z​q﻿w', `${'x'.repeat(45)} ok`, 'İstanbul ß ﬁ Ǆ', 'a\u0000b�c',
+  '$100+5^2`q~', 'Ünal Ğürsel Şahin', 'ﾊﾝｶｸ ＡＢＣ', '𝐁𝐮𝐝𝐢 bold', '‘kutip’ “ganda” — dash …',
+  ...docs.filter((_, i) => i % 23 === 0),
+];
+emit('ner_wordpiece.json', {
+  vocab,
+  maxCharsPerWord: 40,
+  cases: wordpieceTexts.map((text) => ({
+    text,
+    tokens: wp.encode(text).map((t) => [t.id, toCodePoint(text, t.start), toCodePoint(text, t.end), t.sub]),
+  })),
+});
+
+// ---------------------------------------------------------------- NER word grouping (@lokal-id/ner's aggregateWords)
+// Made-up token probabilities, as the model would give them: words of one to four pieces, labels O, B-PER, I-PER.
+const { aggregateWords } = await import(path.join(ROOT, 'packages/ner/dist/aggregate.js').replace(/^/, 'file:///').replace(/\\/g, '/'));
+const groupCases = [];
+for (let n = 0; n < 300; n++) {
+  const tokens = [];
+  const probs = [];
+  let pos = 0;
+  for (let w = nerInt(1, 12); w > 0; w--) {
+    for (let k = nerInt(1, 4) - 1, first = true; k >= 0; k--, first = false) {
+      const len = nerInt(1, 5);
+      tokens.push({ start: pos, end: pos + len, sub: !first });
+      pos += len;
+      // Mostly clear-cut, sometimes torn between the labels, as on the hard cases.
+      const pick = nerRand();
+      const per = pick < 0.5 ? nerRand() * 0.1 : pick < 0.8 ? 0.9 + nerRand() * 0.1 : nerRand();
+      const bShare = nerRand();
+      probs.push([1 - per, per * bShare, per * (1 - bShare)].map((x) => Math.round(x * 1e6) / 1e6));
+    }
+    pos += 1; // the space between words
+  }
+  groupCases.push({ tokens: tokens.map((t) => [t.start, t.end, t.sub]), probs, spans: aggregateWords(tokens, probs, ['O', 'B-PER', 'I-PER']).map((s) => [s.start, s.end, s.score]) });
+}
+emit('ner_aggregate.json', groupCases);
 const masked = docs.slice(0, 600).map((text) => {
   const s = new core.Samaran();
   const placeholder = s.mask(text).text;

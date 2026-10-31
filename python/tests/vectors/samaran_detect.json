@@ -602,6 +602,13 @@
    ],
    [
     "NAME",
+    506,
+    512,
+    "budi_s",
+    "high"
+   ],
+   [
+    "NAME",
     513,
     525,
     "Budi Santoso",
@@ -714,6 +721,13 @@
    ],
    [
     "NAME",
+    1326,
+    1338,
+    "rina_kartika",
+    "high"
+   ],
+   [
+    "NAME",
     1339,
     1356,
     "Rina Kartika Sari",
@@ -780,6 +794,13 @@
     1843,
     1854,
     "12345678901",
+    "high"
+   ],
+   [
+    "NAME",
+    1916,
+    1923,
+    "fitri_h",
     "high"
    ],
    [
@@ -858,6 +879,13 @@
     2417,
     "diabetes",
     "medium"
+   ],
+   [
+    "NAME",
+    2485,
+    2491,
+    "agus_p",
+    "high"
    ],
    [
     "NAME",
@@ -2074,6 +2102,13 @@
     23,
     "jl margonda raya no 100",
     "medium"
+   ],
+   [
+    "ADDRESS",
+    24,
+    30,
+    "rt 3/5",
+    "medium"
    ]
   ]
  },
@@ -3227,6 +3262,954 @@
  },
  {
   "text": "EMP",
+  "matches": []
+ },
+ {
+  "text": "s own words: the evaluation",
+  "matches": []
+ },
+ {
+  "text": "node:test",
+  "matches": []
+ },
+ {
+  "text": "node:assert/strict",
+  "matches": []
+ },
+ {
+  "text": "../src/index.ts",
+  "matches": []
+ },
+ {
+  "text": "NIK dan KK bertitik tertangkap tanpa label titik dua; nominal dan versi bertitik tidak",
+  "matches": []
+ },
+ {
+  "text": "pemohon (NIK 3175.0912.0390.0002) sudah datang",
+  "matches": [
+   [
+    "NIK",
+    13,
+    32,
+    "3175.0912.0390.0002",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "NIK:3175.0912.0390.0002",
+  "matches": [
+   [
+    "NIK",
+    4,
+    23,
+    "3175.0912.0390.0002",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "No. KTP 3175.0912.0390.0002",
+  "matches": [
+   [
+    "NIK",
+    8,
+    27,
+    "3175.0912.0390.0002",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "NIK:3175.0912.0390.0002",
+  "matches": [
+   [
+    "NIK",
+    4,
+    23,
+    "3175.0912.0390.0002",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "tolong cek 3175.0912.0390.0002 ya",
+  "matches": [
+   [
+    "NIK",
+    11,
+    30,
+    "3175.0912.0390.0002",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "NIK:3175.0912.0390.0002",
+  "matches": [
+   [
+    "NIK",
+    4,
+    23,
+    "3175.0912.0390.0002",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "KK 32.01.01.150895.0001",
+  "matches": [
+   [
+    "KK",
+    3,
+    23,
+    "32.01.01.150895.0001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "KK:32.01.01.150895.0001",
+  "matches": [
+   [
+    "KK",
+    3,
+    23,
+    "32.01.01.150895.0001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "ktp 320101.150895.0001",
+  "matches": [
+   [
+    "NIK",
+    4,
+    22,
+    "320101.150895.0001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "NIK:320101.150895.0001",
+  "matches": [
+   [
+    "NIK",
+    4,
+    22,
+    "320101.150895.0001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "transfer Rp 12.500.000.000 ke kas",
+  "matches": []
+ },
+ {
+  "text": "build 2026.10.31.1200 rilis",
+  "matches": []
+ },
+ {
+  "text": "versi 1.2.3.4",
+  "matches": []
+ },
+ {
+  "text": "populasi 1.250.000.000.000 bintang",
+  "matches": []
+ },
+ {
+  "text": "alamat perumahan tanpa \"Jl.\" dan kunci pengiriman",
+  "matches": []
+ },
+ {
+  "text": "{\"ship_to\": \"Komp. Griya Kenanga 6\"}",
+  "matches": [
+   [
+    "ADDRESS",
+    13,
+    34,
+    "Komp. Griya Kenanga 6",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "ADDRESS:Komp. Griya Kenanga 6",
+  "matches": [
+   [
+    "ADDRESS",
+    8,
+    29,
+    "Komp. Griya Kenanga 6",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "{\"alamat_kirim\": \"Taman Sari Indah C3\"}",
+  "matches": [
+   [
+    "ADDRESS",
+    18,
+    37,
+    "Taman Sari Indah C3",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "ADDRESS:Taman Sari Indah C3",
+  "matches": [
+   [
+    "ADDRESS",
+    8,
+    27,
+    "Taman Sari Indah C3",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "kirim ke Komp. Griya Kenanga 6 ya kak",
+  "matches": [
+   [
+    "ADDRESS",
+    9,
+    30,
+    "Komp. Griya Kenanga 6",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "ADDRESS:Komp. Griya Kenanga 6",
+  "matches": [
+   [
+    "ADDRESS",
+    8,
+    29,
+    "Komp. Griya Kenanga 6",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Kenanga Residence Blok C2 No. 5, Bekasi",
+  "matches": [
+   [
+    "ADDRESS",
+    18,
+    31,
+    "Blok C2 No. 5",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "ADDRESS:Blok C2 No. 5",
+  "matches": [
+   [
+    "ADDRESS",
+    8,
+    21,
+    "Blok C2 No. 5",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Perum Bulog 2 gudang penuh",
+  "matches": []
+ },
+ {
+  "text": "komplek 3 orang",
+  "matches": []
+ },
+ {
+  "text": "cluster 2 unit tersisa",
+  "matches": []
+ },
+ {
+  "text": "perumahan 45 rumah",
+  "matches": []
+ },
+ {
+  "text": "blok A dan blok B rapat jam 2",
+  "matches": []
+ },
+ {
+  "text": "kolom nama di CSV tanpa header bermakna, termasuk nama yang tidak ada di daftar",
+  "matches": []
+ },
+ {
+  "text": "c1,c2,c3\nBudi Santoso,Bogor,120000\nKaleandra Wirasena,Depok,50000\nSiti Aminah,Bekasi,75000\nYohanes Tumbelaka,Bandung,9000\n",
+  "matches": [
+   [
+    "NAME",
+    9,
+    21,
+    "Budi Santoso",
+    "medium"
+   ],
+   [
+    "NAME",
+    35,
+    53,
+    "Kaleandra Wirasena",
+    "medium"
+   ],
+   [
+    "NAME",
+    66,
+    77,
+    "Siti Aminah",
+    "medium"
+   ],
+   [
+    "NAME",
+    91,
+    108,
+    "Yohanes Tumbelaka",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "NAME",
+  "matches": []
+ },
+ {
+  "text": "Budi Santoso",
+  "matches": [
+   [
+    "NAME",
+    0,
+    12,
+    "Budi Santoso",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "Kaleandra Wirasena",
+  "matches": []
+ },
+ {
+  "text": "Siti Aminah",
+  "matches": [
+   [
+    "NAME",
+    0,
+    11,
+    "Siti Aminah",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "Yohanes Tumbelaka",
+  "matches": [
+   [
+    "NAME",
+    0,
+    17,
+    "Yohanes Tumbelaka",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "\r\n",
+  "matches": []
+ },
+ {
+  "text": "c1,c2\nIndomie Goreng,3500\nAqua Botol,4000\nTeh Pucuk,3000\nKopi Kapal Api,2000\n",
+  "matches": []
+ },
+ {
+  "text": "a;b\nBogor;1\nDepok;2\nBekasi;3\nTangerang;4\n",
+  "matches": []
+ },
+ {
+  "text": "ID teknis di log pembayaran bukan rekening, durasi bukan nomor HP",
+  "matches": []
+ },
+ {
+  "text": "2026-10-31 10:00:01 INFO payment-svc transfer trace_id=7340958123094857",
+  "matches": []
+ },
+ {
+  "text": "INFO bca-callback trace_id=7340958123094857 status=OK",
+  "matches": []
+ },
+ {
+  "text": "[va-service] traceId=7340958123094857",
+  "matches": []
+ },
+ {
+  "text": "tf berhasil, ref 7340958123094857",
+  "matches": []
+ },
+ {
+  "text": "id transaksi 7340958123094857 via BCA",
+  "matches": []
+ },
+ {
+  "text": "waktu proses 0812345678 ms",
+  "matches": []
+ },
+ {
+  "text": "duration=0856123456",
+  "matches": []
+ },
+ {
+  "text": "transfer ke rek 7340958123094857",
+  "matches": [
+   [
+    "BANK_ACCOUNT",
+    16,
+    32,
+    "7340958123094857",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "BANK_ACCOUNT:7340958123094857",
+  "matches": [
+   [
+    "BANK_ACCOUNT",
+    13,
+    29,
+    "7340958123094857",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "no rek BCA 7340958123094857",
+  "matches": [
+   [
+    "BANK_ACCOUNT",
+    11,
+    27,
+    "7340958123094857",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "BANK_ACCOUNT:7340958123094857",
+  "matches": [
+   [
+    "BANK_ACCOUNT",
+    13,
+    29,
+    "7340958123094857",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "hp 0812345678 ms dulu",
+  "matches": [
+   [
+    "PHONE",
+    3,
+    13,
+    "0812345678",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "PHONE:0812345678",
+  "matches": [
+   [
+    "PHONE",
+    6,
+    16,
+    "0812345678",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "durasi telp: 0812-3456-7890",
+  "matches": [
+   [
+    "PHONE",
+    13,
+    27,
+    "0812-3456-7890",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "PHONE:0812-3456-7890",
+  "matches": [
+   [
+    "PHONE",
+    6,
+    20,
+    "0812-3456-7890",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "nama yang juga ditulis huruf kecil dipulihkan sesuai huruf di sekitarnya",
+  "matches": []
+ },
+ {
+  "text": "nama: Paijo",
+  "matches": [
+   [
+    "NAME",
+    6,
+    11,
+    "Paijo",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "aku paijo yg td chat",
+  "matches": [
+   [
+    "NAME",
+    4,
+    9,
+    "paijo",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "aku [NAME_1] yg td chat",
+  "matches": []
+ },
+ {
+  "text": "one person, one placeholder",
+  "matches": []
+ },
+ {
+  "text": "aku paijo yg td chat",
+  "matches": [
+   [
+    "NAME",
+    4,
+    9,
+    "paijo",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "Halo [NAME_1], pesanan dikirim",
+  "matches": []
+ },
+ {
+  "text": "Halo Paijo, pesanan dikirim",
+  "matches": [
+   [
+    "NAME",
+    5,
+    10,
+    "Paijo",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "[NAME_1]",
+  "matches": []
+ },
+ {
+  "text": "Paijo",
+  "matches": []
+ },
+ {
+  "text": "nama: paijo",
+  "matches": [
+   [
+    "NAME",
+    6,
+    11,
+    "paijo",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Halo [NAME_1]",
+  "matches": []
+ },
+ {
+  "text": "Halo paijo",
+  "matches": [
+   [
+    "NAME",
+    5,
+    10,
+    "paijo",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "a name only ever written in lower case stays so",
+  "matches": []
+ },
+ {
+  "text": "putaran 2: nama bergaris bawah, bin/binti, inisial di depan, dan nama huruf besar yang berhenti di kata kerja",
+  "matches": []
+ },
+ {
+  "text": "{\"role\":\"user\",\"name\":\"Budi_Santoso\",\"content\":\"halo\"}",
+  "matches": [
+   [
+    "NAME",
+    23,
+    35,
+    "Budi_Santoso",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "NAME:Budi_Santoso",
+  "matches": [
+   [
+    "NAME",
+    5,
+    17,
+    "Budi_Santoso",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "name: build_and_test",
+  "matches": []
+ },
+ {
+  "text": "Kemudian Fatimah binti Abdullah datang",
+  "matches": [
+   [
+    "NAME",
+    9,
+    31,
+    "Fatimah binti Abdullah",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "NAME:Fatimah binti Abdullah",
+  "matches": [
+   [
+    "NAME",
+    5,
+    27,
+    "Fatimah binti Abdullah",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "AHMAD BIN HASAN",
+  "matches": [
+   [
+    "NAME",
+    0,
+    15,
+    "AHMAD BIN HASAN",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "NAME:AHMAD BIN HASAN",
+  "matches": [
+   [
+    "NAME",
+    5,
+    20,
+    "AHMAD BIN HASAN",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "yang hadir R. Ayu Kusumawardhani dan Budi",
+  "matches": [
+   [
+    "NAME",
+    11,
+    32,
+    "R. Ayu Kusumawardhani",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "NAME:R. Ayu Kusumawardhani",
+  "matches": [
+   [
+    "NAME",
+    5,
+    26,
+    "R. Ayu Kusumawardhani",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "Saksi melihat SUPRIYADI ALIAS UDIN TELAH MENGAMBIL motor",
+  "matches": [
+   [
+    "NAME",
+    14,
+    34,
+    "SUPRIYADI ALIAS UDIN",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "NAME:SUPRIYADI ALIAS UDIN",
+  "matches": [
+   [
+    "NAME",
+    5,
+    25,
+    "SUPRIYADI ALIAS UDIN",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "Pasal 5 ayat 2 UU No. 27",
+  "matches": []
+ },
+ {
+  "text": "J. P. Morgan Chase",
+  "matches": []
+ },
+ {
+  "text": "sesuai P.T. Bank Mandiri",
+  "matches": []
+ },
+ {
+  "text": "IMEI: 356938035643809",
+  "matches": []
+ },
+ {
+  "text": "nama: Siti Menik",
+  "matches": [
+   [
+    "NAME",
+    6,
+    16,
+    "Siti Menik",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "NAME:Siti Menik",
+  "matches": [
+   [
+    "NAME",
+    5,
+    15,
+    "Siti Menik",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "men- is not cut: Menik, Mentari are names",
+  "matches": []
+ },
+ {
+  "text": "kirim ke Kp. Rawa Bebek RT 04/09, Bekasi",
+  "matches": [
+   [
+    "ADDRESS",
+    9,
+    32,
+    "Kp. Rawa Bebek RT 04/09",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "ADDRESS:Kp. Rawa Bebek RT 04/09",
+  "matches": [
+   [
+    "ADDRESS",
+    8,
+    31,
+    "Kp. Rawa Bebek RT 04/09",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Kembaran: NIK yang tidak dikenali detektor tetap diganti lewat strukturnya, dan panggilan ikut nama lengkap",
+  "matches": []
+ },
+ {
+  "text": "../src/kembaran.ts",
+  "matches": []
+ },
+ {
+  "text": "3276-0101.0180 0001",
+  "matches": []
+ },
+ {
+  "text": "x",
+  "matches": []
+ },
+ {
+  "text": "32760101.01800002",
+  "matches": []
+ },
+ {
+  "text": "y",
+  "matches": []
+ },
+ {
+  "text": "the detector misses both",
+  "matches": []
+ },
+ {
+  "text": "s",
+  "matches": []
+ },
+ {
+  "text": "",
+  "matches": []
+ },
+ {
+  "text": "3276010101800001",
+  "matches": [
+   [
+    "NIK",
+    0,
+    16,
+    "3276010101800001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "",
+  "matches": []
+ },
+ {
+  "text": "3276010101800002",
+  "matches": [
+   [
+    "NIK",
+    0,
+    16,
+    "3276010101800002",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "nama,catatan\nSiti Aminah,Bu Siti minta dikirim pagi\nBudi Santoso,Pak Budi sudah bayar\nBudi Hartono,-\n",
+  "matches": [
+   [
+    "NAME",
+    13,
+    24,
+    "Siti Aminah",
+    "high"
+   ],
+   [
+    "NAME",
+    28,
+    32,
+    "Siti",
+    "medium"
+   ],
+   [
+    "NAME",
+    52,
+    64,
+    "Budi Santoso",
+    "high"
+   ],
+   [
+    "NAME",
+    69,
+    73,
+    "Budi",
+    "medium"
+   ],
+   [
+    "NAME",
+    86,
+    98,
+    "Budi Hartono",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "s",
+  "matches": []
+ },
+ {
+  "text": "\n",
+  "matches": []
+ },
+ {
+  "text": ",",
+  "matches": []
+ },
+ {
+  "text": " ",
+  "matches": []
+ },
+ {
+  "text": "Bu Siti follows Siti Aminah",
+  "matches": [
+   [
+    "NAME",
+    3,
+    7,
+    "Siti",
+    "medium"
+   ],
+   [
+    "NAME",
+    16,
+    27,
+    "Siti Aminah",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": ",",
+  "matches": []
+ },
+ {
+  "text": " ",
+  "matches": []
+ },
+ {
+  "text": "two Budis: no guess",
   "matches": []
  },
  {
@@ -7592,16 +8575,9 @@
    [
     "NAME",
     0,
-    10,
-    "Nur Aisyah",
-    "medium"
-   ],
-   [
-    "NAME",
-    17,
     22,
-    "Ahmad",
-    "medium"
+    "Nur Aisyah binti Ahmad",
+    "high"
    ]
   ]
  },
@@ -7662,9 +8638,9 @@
   "matches": [
    [
     "NAME",
-    3,
+    0,
     17,
-    "Iqbal Ramadhan",
+    "M. Iqbal Ramadhan",
     "medium"
    ]
   ]
@@ -8968,9 +9944,9 @@
   "matches": [
    [
     "NAME",
-    3,
+    0,
     17,
-    "Rizki Ramadhan",
+    "M. Rizki Ramadhan",
     "medium"
    ]
   ]
@@ -8992,9 +9968,9 @@
   "matches": [
    [
     "NAME",
-    11,
+    8,
     22,
-    "Ahmad Fauzi",
+    "H. Ahmad Fauzi",
     "medium"
    ]
   ]
@@ -9035,7 +10011,7 @@
     0,
     18,
     "Ahmad bin Abdullah",
-    "medium"
+    "high"
    ]
   ]
  },
@@ -11338,7 +12314,15 @@
  },
  {
   "text": "NAME:rizky_pratama",
-  "matches": []
+  "matches": [
+   [
+    "NAME",
+    5,
+    18,
+    "rizky_pratama",
+    "medium"
+   ]
+  ]
  },
  {
   "text": "Punten, nami abdi Asep Saepudin",
@@ -14118,6 +15102,13 @@
     23,
     "jl margonda raya no 100",
     "medium"
+   ],
+   [
+    "ADDRESS",
+    24,
+    30,
+    "rt 3/5",
+    "medium"
    ]
   ]
  },
@@ -14223,6 +15214,10 @@
  },
  {
   "text": "Asma",
+  "matches": []
+ },
+ {
+  "text": "NIK",
   "matches": []
  },
  {
@@ -14672,6 +15667,10 @@
     "high"
    ]
   ]
+ },
+ {
+  "text": "only the last four digits of a NIK",
+  "matches": []
  },
  {
   "text": "3201011508950001",
@@ -16565,6 +17564,228 @@
   "matches": []
  },
  {
+  "text": "guard: file yang ditulis write_file_unmasked diperiksa seperti file data, apa pun ekstensinya",
+  "matches": []
+ },
+ {
+  "text": "read_file_masked",
+  "matches": []
+ },
+ {
+  "text": "pelanggan.csv",
+  "matches": []
+ },
+ {
+  "text": "docs",
+  "matches": []
+ },
+ {
+  "text": "catatan.md",
+  "matches": []
+ },
+ {
+  "text": "write_file_unmasked",
+  "matches": []
+ },
+ {
+  "text": "docs/catatan.md",
+  "matches": []
+ },
+ {
+  "text": ".lokal",
+  "matches": []
+ },
+ {
+  "text": "unmasked.json",
+  "matches": []
+ },
+ {
+  "text": "utf8",
+  "matches": []
+ },
+ {
+  "text": ".lokal",
+  "matches": []
+ },
+ {
+  "text": "unmasked.json",
+  "matches": []
+ },
+ {
+  "text": "utf8",
+  "matches": []
+ },
+ {
+  "text": "3201011508950001",
+  "matches": [
+   [
+    "NIK",
+    0,
+    16,
+    "3201011508950001",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "only paths",
+  "matches": []
+ },
+ {
+  "text": "PreToolUse",
+  "matches": []
+ },
+ {
+  "text": "Read",
+  "matches": []
+ },
+ {
+  "text": "PreToolUse",
+  "matches": []
+ },
+ {
+  "text": "Bash",
+  "matches": []
+ },
+ {
+  "text": "cat docs/catatan.md",
+  "matches": []
+ },
+ {
+  "text": "PreToolUse",
+  "matches": []
+ },
+ {
+  "text": "Read",
+  "matches": []
+ },
+ {
+  "text": "README.md",
+  "matches": []
+ },
+ {
+  "text": ".lokal",
+  "matches": []
+ },
+ {
+  "text": "guard: prompt berisi daftar kontak ditahan, satu nomor tidak",
+  "matches": []
+ },
+ {
+  "text": "Rina Kartika, 0812-3456-7801, rina.k@contoh.co.id",
+  "matches": [
+   [
+    "NAME",
+    0,
+    12,
+    "Rina Kartika",
+    "medium"
+   ],
+   [
+    "PHONE",
+    14,
+    28,
+    "0812-3456-7801",
+    "high"
+   ],
+   [
+    "EMAIL",
+    30,
+    49,
+    "rina.k@contoh.co.id",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Doni Prasetyo, 0813-2222-1902, doni.p@contoh.co.id",
+  "matches": [
+   [
+    "NAME",
+    0,
+    13,
+    "Doni Prasetyo",
+    "medium"
+   ],
+   [
+    "PHONE",
+    15,
+    29,
+    "0813-2222-1902",
+    "high"
+   ],
+   [
+    "EMAIL",
+    31,
+    50,
+    "doni.p@contoh.co.id",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Wulan Sari, 0857-1111-2203, wulan.s@contoh.co.id",
+  "matches": [
+   [
+    "NAME",
+    0,
+    10,
+    "Wulan Sari",
+    "medium"
+   ],
+   [
+    "PHONE",
+    12,
+    26,
+    "0857-1111-2203",
+    "high"
+   ],
+   [
+    "EMAIL",
+    28,
+    48,
+    "wulan.s@contoh.co.id",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "\n",
+  "matches": []
+ },
+ {
+  "text": "UserPromptSubmit",
+  "matches": []
+ },
+ {
+  "text": "3456-7801",
+  "matches": []
+ },
+ {
+  "text": "the message carries no value",
+  "matches": []
+ },
+ {
+  "text": "UserPromptSubmit",
+  "matches": []
+ },
+ {
+  "text": "nomor CS kami 0812-3456-7801, tolong buat template balasan",
+  "matches": [
+   [
+    "PHONE",
+    14,
+    28,
+    "0812-3456-7801",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "UserPromptSubmit",
+  "matches": []
+ },
+ {
   "text": "../../packages/core/dist/index.js",
   "matches": []
  },
@@ -17178,7 +18399,15 @@
  },
  {
   "text": "3276.0101.0101.0005",
-  "matches": []
+  "matches": [
+   [
+    "NIK",
+    0,
+    19,
+    "3276.0101.0101.0005",
+    "high"
+   ]
+  ]
  },
  {
   "text": "Email disamarkan manual",
@@ -17921,9 +19150,9 @@
   "matches": [
    [
     "NAME",
-    37,
+    34,
     51,
-    "Bambang Wijaya",
+    "H. Bambang Wijaya",
     "medium"
    ]
   ]
@@ -18097,7 +19326,7 @@
     13,
     49,
     "Muhammad Rizky Al-Fatih bin Abdullah",
-    "medium"
+    "high"
    ]
   ]
  },
@@ -19271,7 +20500,15 @@
  },
  {
   "text": "Griya Asri Blok C2 No. 15",
-  "matches": []
+  "matches": [
+   [
+    "ADDRESS",
+    11,
+    25,
+    "Blok C2 No. 15",
+    "medium"
+   ]
+  ]
  },
  {
   "text": "Gang & RT/RW",
@@ -19319,7 +20556,15 @@
  },
  {
   "text": "Taman Asri blok B no 9",
-  "matches": []
+  "matches": [
+   [
+    "ADDRESS",
+    11,
+    22,
+    "blok B no 9",
+    "medium"
+   ]
+  ]
  },
  {
   "text": "Apartemen",
@@ -20688,17 +21933,10 @@
   "text": "Dikirim ke: Lia Amelia (6285712345678)\nPerumahan Bumi Indah Blok F7/12, Kel. Sukamaju, Kec. Cilodong, Depok 16413",
   "matches": [
    [
-    "NAME",
+    "ADDRESS",
     12,
-    22,
-    "Lia Amelia",
-    "medium"
-   ],
-   [
-    "PHONE",
-    24,
-    37,
-    "6285712345678",
+    38,
+    "Lia Amelia (6285712345678)",
     "high"
    ],
    [
@@ -23034,7 +24272,15 @@
  },
  {
   "text": "Blok C3 No. 12",
-  "matches": []
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    14,
+    "Blok C3 No. 12",
+    "medium"
+   ]
+  ]
  },
  {
   "text": "Sidoarjo",
@@ -23058,7 +24304,15 @@
  },
  {
   "text": "blok c3 no 12",
-  "matches": []
+  "matches": [
+   [
+    "ADDRESS",
+    0,
+    13,
+    "blok c3 no 12",
+    "medium"
+   ]
+  ]
  },
  {
   "text": "Driver ojol",
@@ -26141,23 +27395,31 @@
   "matches": [
    [
     "NAME",
-    10,
+    0,
     32,
-    "Sri Rejeki binti Karso",
-    "medium"
+    "Penggugat Sri Rejeki binti Karso",
+    "high"
    ],
    [
     "NAME",
-    76,
+    67,
     97,
-    "Joko Susilo bin Darmo",
-    "medium"
+    "Tergugat Joko Susilo bin Darmo",
+    "high"
    ]
   ]
  },
  {
   "text": "Sri Rejeki binti Karso",
-  "matches": []
+  "matches": [
+   [
+    "NAME",
+    0,
+    22,
+    "Sri Rejeki binti Karso",
+    "high"
+   ]
+  ]
  },
  {
   "text": "Joko Susilo bin Darmo",
@@ -26167,7 +27429,7 @@
     0,
     21,
     "Joko Susilo bin Darmo",
-    "medium"
+    "high"
    ]
   ]
  },
@@ -27400,10 +28662,10 @@
   "matches": [
    [
     "NAME",
-    22,
+    16,
     41,
-    "Suhendar bin Rasidi",
-    "medium"
+    "Bapak Suhendar bin Rasidi",
+    "high"
    ],
    [
     "ADDRESS",
@@ -27416,7 +28678,15 @@
  },
  {
   "text": "Suhendar bin Rasidi",
-  "matches": []
+  "matches": [
+   [
+    "NAME",
+    0,
+    19,
+    "Suhendar bin Rasidi",
+    "high"
+   ]
+  ]
  },
  {
   "text": "Mangga No. 4",

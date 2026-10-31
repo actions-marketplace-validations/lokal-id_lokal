@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "lokal-id"
-version = "0.15.0"
+version = "0.17.0"
 description = "Indonesian data primitives for apps and AI agents: NIK, NPWP, phone numbers, Rupiah, terbilang, holidays, Kemendagri regions with postal codes, and Samaran PII masking (UU PDP)."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -35,8 +35,17 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-# lokal.samaran.ner: a local NER model for names the rules do not know. Large (PyTorch); not needed for anything else.
-ner = ["transformers>=4.46", "torch>=2.4", "safetensors>=0.4.5", "huggingface-hub>=0.26"]
+# lokal.samaran.ner: local NER models for names the rules do not know; not needed for anything else. Python 3.11 or
+# later, as onnxruntime and PyTorch are. ner-lokal: Lokal's own model only (onnxruntime). ner: all three models,
+# with transformers and PyTorch for "gold" and "fast".
+ner-lokal = ["onnxruntime>=1.30; python_version >= '3.11'"]
+ner = [
+    "onnxruntime>=1.30; python_version >= '3.11'",
+    "transformers>=4.46; python_version >= '3.11'",
+    "torch>=2.4; python_version >= '3.11'",
+    "safetensors>=0.4.5; python_version >= '3.11'",
+    "huggingface-hub>=0.26; python_version >= '3.11'",
+]
 
 [project.urls]
 Homepage = "https://github.com/lokal-id/lokal"
@@ -80,3 +89,11 @@ ignore = ["UP007", "UP045", "SIM108", "SIM905"]
 
 [tool.ruff.format]
 quote-style = "single"
+
+[tool.uv]
+# Packages must be two weeks old before they are locked, so a compromised release has time to be caught.
+exclude-newer = "2 weeks"
+# filelock below 4.2.1 has local-user lock-file attacks (GHSA-v4x8-3wr5-3wq8 and others); 4.2.1 needs Python 3.11, as
+# the NER extras that bring it in do. It was a few hours short of two weeks old when it was locked.
+exclude-newer-package = { filelock = "2026-10-17T17:00:00Z" }
+constraint-dependencies = ["filelock>=4.2.1; python_version >= '3.11'"]

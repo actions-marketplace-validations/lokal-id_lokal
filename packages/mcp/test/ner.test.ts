@@ -39,6 +39,23 @@ test('NerNames: hasil disimpan per teks, model dimuat sekali', async () => {
   assert.equal(ner.problem, undefined);
 });
 
+test('NerNames: cache tidak menyimpan teks atau nama, dan clear() melupakan semuanya', async () => {
+  const ner = new NerNames(async () => fake);
+  calls = 0;
+  const text = 'NIK 3201011508950001, saya di chat sama rianto surya tadi pagi';
+  const first = await ner.find(text);
+  const again = await ner.find(text);
+  assert.deepEqual(again, first, 'from the cache, the same matches');
+  assert.equal(calls, 1);
+  // What the cache holds, keys and values: no part of the text, no name.
+  const held = JSON.stringify([...(ner as unknown as { cache: Map<string, unknown> }).cache]);
+  for (const secret of ['rianto', 'surya', '3201011508950001', 'saya di chat']) assert.ok(!held.includes(secret), `${secret} held`);
+  ner.clear();
+  assert.equal(ner.size, 0);
+  await ner.find(text);
+  assert.equal(calls, 2, 'after clear() the text is read again');
+});
+
 test('NerNames: tanpa paket @lokal-id/ner, aturan tetap jalan dan masalahnya dilaporkan', async () => {
   const ner = new NerNames(async () => {
     throw new Error("Cannot find package '@lokal-id/ner' imported from cli.js");

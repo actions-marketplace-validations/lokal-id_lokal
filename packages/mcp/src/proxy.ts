@@ -157,14 +157,31 @@ function maskJson(
   return value;
 }
 
+/** The request asks for an answer in JSON: Chat Completions `response_format`, Responses `text.format`, Ollama `format`. */
+function asksForJson(body: Json): boolean {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) return false;
+  const formatType = (v: Json | undefined) => (v && typeof v === 'object' && !Array.isArray(v) ? v.type : undefined);
+  const chat = formatType(body.response_format);
+  const text = body.text && typeof body.text === 'object' && !Array.isArray(body.text) ? formatType(body.text.format) : undefined;
+  return chat === 'json_object' || chat === 'json_schema' || text === 'json_object' || text === 'json_schema'
+    || body.format === 'json' || (!!body.format && typeof body.format === 'object');
+}
+
 class Unmasker {
   private readonly vault: Map<string, string>;
   private readonly held = new Map<string, string>();
+  /** The answer's text is JSON (the request asked for it). */
+  readonly jsonText: boolean;
   /** Placeholders in the answer that this request never made: the model made them up, or copied a template. */
   readonly unknown = new Set<string>();
 
-  constructor(samaran: Samaran) {
+  /**
+   * `jsonAnswers`: the request asked for JSON (`response_format`, `text.format`), so the answer's text is JSON and a
+   * value restored into it is escaped like one in tool call arguments: `"Jl. \"Melati\""`, never a broken string.
+   */
+  constructor(samaran: Samaran, jsonAnswers = false) {
     this.vault = new Map(samaran.exportVault());
+    this.jsonText = jsonAnswers;
   }
 
   /** Restores placeholders; `json` escapes the values for text inside a JSON string (tool call arguments). */
@@ -198,7 +215,11 @@ class Unmasker {
 
   /** Unmasks a whole response object, leaving thinking and reasoning as the model wrote them. */
   json(value: Json, key?: string): Json {
-    if (typeof value === 'string') return this.text(value, key === 'arguments' || key === 'partial_json');
+    if (typeof value === 'string') {
+      // A whole answer is JSON when the request asked for it, or when it parses as JSON (asked for in the prompt).
+      const answer = key === 'content' || key === 'text';
+      return this.text(value, key === 'arguments' || key === 'partial_json' || (answer && (this.jsonText || parseJsonText(value) !== undefined)));
+    }
     if (Array.isArray(value)) return value.map((v) => this.json(v));
     if (value && typeof value === 'object') {
       if (typeof value.type === 'string' && OPAQUE_TYPES.has(value.type)) return value;
@@ -231,7 +252,7 @@ function rewriteEvent(ev: Event, un: Unmasker): Event[] {
   if (type === 'content_block_delta') {
     const index = data.index as number;
     const delta = data.delta as { type: string; text?: string; partial_json?: string };
-    if (delta.type === 'text_delta' && typeof delta.text === 'string') delta.text = un.delta(`a${index}`, delta.text);
+    if (delta.type === 'text_delta' && typeof delta.text === 'string') delta.text = un.delta(`a${index}`, delta.text, un.jsonText);
     else if (delta.type === 'input_json_delta' && typeof delta.partial_json === 'string') {
       delta.partial_json = un.delta(`j${index}`, delta.partial_json, true);
     }
@@ -240,7 +261,7 @@ function rewriteEvent(ev: Event, un: Unmasker): Event[] {
   if (type === 'content_block_stop') {
     const index = data.index as number;
     const extra: Event[] = [];
-    const text = un.flush(`a${index}`);
+    const text = un.flush(`a${index}`, un.jsonText);
     if (text) extra.push(out({ type: 'content_block_delta', index, delta: { type: 'text_delta', text } }, 'content_block_delta'));
     const json = un.flush(`j${index}`, true);
     if (json) {
@@ -254,13 +275,13 @@ function rewriteEvent(ev: Event, un: Unmasker): Event[] {
   if (type === 'response.output_text.delta' || type === 'response.function_call_arguments.delta') {
     const args = type === 'response.function_call_arguments.delta';
     const key = `r${data.item_id}:${data.output_index}:${data.content_index ?? ''}:${args ? 'f' : 't'}`;
-    data.delta = un.delta(key, String(data.delta ?? ''), args);
+    data.delta = un.delta(key, String(data.delta ?? ''), args || un.jsonText);
     return [out(data)];
   }
   if (type === 'response.output_text.done' || type === 'response.function_call_arguments.done') {
     const args = type === 'response.function_call_arguments.done';
     const key = `r${data.item_id}:${data.output_index}:${data.content_index ?? ''}:${args ? 'f' : 't'}`;
-    const rest = un.flush(key, args);
+    const rest = un.flush(key, args || un.jsonText);
     const extra = rest
       ? [out({ ...data, type: args ? 'response.function_call_arguments.delta' : 'response.output_text.delta', delta: rest }, ev.event?.replace(/\.done$/, '.delta'))]
       : [];
@@ -274,7 +295,7 @@ function rewriteEvent(ev: Event, un: Unmasker): Event[] {
       const i = c.index ?? 0;
       const delta = c.delta;
       if (delta) {
-        if (typeof delta.content === 'string') delta.content = un.delta(`c${i}`, delta.content);
+        if (typeof delta.content === 'string') delta.content = un.delta(`c${i}`, delta.content, un.jsonText);
         if (Array.isArray(delta.tool_calls)) {
           for (const call of delta.tool_calls as Array<{ index?: number; function?: { arguments?: string } }>) {
             if (typeof call.function?.arguments === 'string') {
@@ -284,7 +305,7 @@ function rewriteEvent(ev: Event, un: Unmasker): Event[] {
         }
       }
       if (c.finish_reason) {
-        const rest = un.flush(`c${i}`);
+        const rest = un.flush(`c${i}`, un.jsonText);
         if (rest) {
           c.delta ??= {};
           c.delta.content = rest + (typeof c.delta.content === 'string' ? c.delta.content : '');
@@ -414,6 +435,7 @@ export function startProxy(options: ProxyOptions = {}): Promise<Server> {
     const samaran = new Samaran({ exclude, custom: options.custom, allow: options.allow });
     const counts = new Map<PiiType, number>();
     const unchecked: Unchecked = { parts: 0, found: [] };
+    let jsonAnswers = false;
     try {
       const raw = await readBody(req);
       const contentType = String(req.headers['content-type'] ?? '');
@@ -422,6 +444,7 @@ export function startProxy(options: ProxyOptions = {}): Promise<Server> {
         if (req.headers['content-encoding']) return fail(res, 415, 'Samaran Proxy cannot mask a compressed request body; send it uncompressed.');
         if (contentType.includes('json')) {
           const parsed = JSON.parse(raw.toString('utf8')) as Json;
+          jsonAnswers = asksForJson(parsed);
           // Placeholder-like text anywhere in the request (an e-mail template in the system prompt) keeps its number.
           samaran.reserve(JSON.stringify(parsed));
           let names: Map<string, readonly PiiMatch[]> | undefined;
@@ -481,7 +504,7 @@ export function startProxy(options: ProxyOptions = {}): Promise<Server> {
         if (!HOP_BY_HOP.has(k) && typeof v === 'string') headers[k] = v;
       }
       const response = await fetch(target, { method: req.method, headers, body });
-      const un = new Unmasker(samaran);
+      const un = new Unmasker(samaran, jsonAnswers);
       const out: Record<string, string> = {};
       response.headers.forEach((v, k) => {
         if (!HOP_BY_HOP.has(k) && k !== 'content-encoding') out[k] = v;

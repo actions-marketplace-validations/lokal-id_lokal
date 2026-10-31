@@ -6,7 +6,7 @@ import type { PiiType } from './types.ts';
 const FIELDS: Array<[PiiType, string]> = [
   // A column called "pasien" or "pelanggan" holds that person's name.
   ['NAME', 'nama|name|full_?name|kepada|kpd|yth|attn|attention|pelapor|terlapor|korban|saksi|tersangka|terdakwa|pelaku|kepala_?keluarga|penanggung_?jawab|ahli_?waris|pemberi_?kuasa|penerima_?kuasa|requester|username|nama_?lengkap|first_?name|last_?name|middle_?name|given_?name|family_?name|surname|nama_?depan|nama_?tengah|nama_?belakang|nama_?panggilan|nickname|nama_?ibu_?kandung|mother_?s?_?maiden_?name|penerima|pengirim|recipient|pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner|pemesan|pembeli|buyer|konsumen|atas_?nama|a_n'],
-  ['ADDRESS', 'alamat|address|full_?address|street|street_?address|domisili|alamat_?domisili|alamat_?ktp|alamat_?rumah|alamat_?pengiriman|shipping_?address|home_?address|billing_?address'],
+  ['ADDRESS', 'alamat|address|full_?address|street|street_?address|domisili|alamat_?domisili|alamat_?ktp|alamat_?rumah|alamat_?pengiriman|shipping_?address|home_?address|billing_?address|alamat_?kirim|alamat_?tujuan|alamat_?penerima|alamat_?pengirim|alamat_?lengkap|alamat_?tinggal|tempat_?tinggal|kirim_?ke|dikirim_?ke|tujuan_?kirim|tujuan_?pengiriman|ship_?to|shipping_?to|deliver_?to|delivery_?address|delivery_?to|mailing_?address|residential_?address|residence|address_?line_?[12]'],
   ['NIK', 'nik|no_?ktp|nomor_?ktp|ktp|nomor_?induk_?kependudukan|national_?id'],
   ['KK', 'kk|no_?kk|nomor_?kk|kartu_?keluarga|no_?kartu_?keluarga|nomor_?kartu_?keluarga|family_?card(_?number)?'],
   ['NPWP', 'npwp|no_?npwp|nomor_?npwp|tax_?id|tin'],
@@ -101,7 +101,7 @@ const DIGIT_TYPES: ReadonlySet<PiiType> = new Set([
 
 // `user=dimas.anggara` in a log is a person; `user=root` or `user: postgres` is an account.
 const USER_KEY = /^(?:user|username|login)$/;
-const isKnownNamePart = (word: string) => {
+export const isKnownNamePart = (word: string) => {
   const bare = word.toLowerCase().replace(/\d+$/, '');
   return GIVEN_NAMES.has(bare) || AMBIGUOUS_GIVEN_NAMES.has(bare) || FAMILY_NAMES.has(bare) || SECOND_NAMES.has(bare);
 };
@@ -144,6 +144,9 @@ export function isPlausibleValue(type: PiiType, value: string, key: string): boo
     if (!DATE_LIKE.test(v) && !serialOk) return false;
   }
   if (type === 'NAME') {
+    // "Budi_Santoso": OpenAI's `name` field allows no spaces, so a person is written with underscores. A name the lists
+    // know in it makes it a person; `build_and_test` is not one.
+    if (/^[A-Za-z]+(?:_[A-Za-z]+){1,3}$/.test(v)) return v.split('_').some(isKnownNamePart);
     if (!/[A-Za-z]/.test(v) || /[\d_(){}[\]<>=]/.test(v)) return false;
     // `fullName = new codegen.Name(…)`: an expression, not a name.
     if (/^(?:new|this|await|null|undefined|true|false|typeof|function|return|self|None)\b/.test(v)) return false;

@@ -61,7 +61,8 @@ On held-out test data, rules and model together: 98.9% of names in chat (19.4% r
 benchmark (93.6% rules alone), 93.4% of people in news, with no false positives in the test corpora. See
 [MODEL.md](MODEL.md) for the data, the results, and the limits.
 
-In Python, `lokal.samaran.ner.NerNames` offers two larger models from their authors.
+In Python, the same model is `lokal.samaran.ner.NerNames()` (`pip install "lokal-id[ner-lokal]"`), sharing this cache
+folder; it also offers two larger models from their authors.
 
 ## License
 

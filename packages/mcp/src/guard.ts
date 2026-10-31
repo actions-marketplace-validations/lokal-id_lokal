@@ -22,13 +22,14 @@
 // more files than a search checks, and a check that runs too long.
 import { existsSync, statSync } from 'node:fs';
 import path from 'node:path';
-import { partialMask, PII_TYPES, type PiiMatch, type PiiType } from '@lokal-id/core';
+import { PII_TYPES, type PiiMatch, type PiiType } from '@lokal-id/core';
 import {
-  detectConfigured, GUARD_MAX_ZIP_BYTES, GUARD_SAMPLE_BYTES, globToRegExp, loadConfig, loadDocument, loadIgnore, policyFor,
+  detectConfigured, GUARD_MAX_ZIP_BYTES, GUARD_SAMPLE_BYTES, globToRegExp, loadConfig, loadDocument, loadIgnore, loadUnmasked,
+  policyFor, previewForModel,
   walkFiles, type Document, type SamaranConfig,
 } from './files.ts';
 import { countMatches, writeAudit } from './audit.ts';
-import { dataReadsInCommand, inlineCodeReads, SHELL_DATA_FILE } from './shell-reads.ts';
+import { dataReadsInCommand, inlineCodeReads, isShellDataFile, markDataFiles } from './shell-reads.ts';
 
 // One of these is enough to hold a prompt or a file back: identity numbers, and labeled sensitive data.
 const STRICT: PiiType[] = [
@@ -39,6 +40,8 @@ const STRICT: PiiType[] = [
 ];
 // Common on their own (a support email, a sample phone number); a file with several is a data export.
 const BULK_THRESHOLD = 3;
+// In a prompt, the values that make a pasted list of people: not names alone, which a prompt mentions all the time.
+const BULK_PROMPT_TYPES: PiiType[] = ['PHONE', 'EMAIL', 'ADDRESS', 'BIRTH_DATE'];
 const BYPASS = /#izinkan-pii\b/i;
 // Claude Code's Read sends a PDF to the model as is, pages and all.
 const DATA_FILE = /\.(csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out|xlsx|xlsm|docx|pdf)(\.\d+)?$/i;
@@ -93,7 +96,7 @@ function summarize(matches: PiiMatch[], examples = true): string {
   return [...counts.entries()]
     .map(([label, n]) => {
       const first = matches.find((m) => name(m) === label)!;
-      const sample = examples ? ` (${partialMask(first.type, first.value)})` : '';
+      const sample = examples ? ` (${previewForModel(first.type, first.value)})` : '';
       return `${label}×${n}${sample}`;
     })
     .join(', ');
@@ -231,7 +234,7 @@ function readTool(
       ? uncheckedRead(shownAs, 'mungkin foto KTP atau dokumen pribadi', 'it is an image that may be a photo of an ID card or document')
       : undefined;
   }
-  if (!DATA_FILE.test(file)) return undefined;
+  if (!DATA_FILE.test(file) && !isShellDataFile(file)) return undefined;
   let doc: Document;
   try {
     // A big export is checked from its first rows instead of being skipped: skipping once let a 6 MB CSV through.
@@ -318,7 +321,7 @@ function grepTool(input: NonNullable<HookInput['tool_input']>, cwd: string, igno
   const typeFilter = input.type ? GREP_TYPES[input.type.toLowerCase()] : undefined;
   if (input.type && !typeFilter) return undefined; // `type: "ts"` searches code
   candidates = candidates
-    .filter((f) => SHELL_DATA_FILE.test(f) && !ignored(f))
+    .filter((f) => isShellDataFile(f) && !ignored(f))
     .filter((f) => !glob || glob.test(path.relative(target, f).split(path.sep).join('/')) || glob.test(path.basename(f)))
     .filter((f) => !typeFilter || typeFilter.test(f));
   const unchecked: string[] = [];
@@ -380,6 +383,8 @@ export function evaluate(input: HookInput, projectRoot?: string): Verdict | unde
   deadline = Date.now() + budget;
   // One hook call is one process: the project's rules apply to every check below.
   config = loadConfig(root);
+  // Files write_file_unmasked wrote hold real values whatever their extension: checked like data files.
+  markDataFiles(loadUnmasked(root));
 
   if (input.hook_event_name === 'UserPromptSubmit' && input.prompt) {
     if (BYPASS.test(input.prompt)) return undefined;
@@ -387,7 +392,12 @@ export function evaluate(input: HookInput, projectRoot?: string): Verdict | unde
     const held = Object.entries(config.policy ?? {})
       .filter(([type, action]) => (action === 'block' || action === 'route') && PII_TYPES.includes(type as PiiType))
       .map(([type]) => type as PiiType);
-    const found = detectConfigured(input.prompt, { types: [...new Set([...STRICT, ...held])], minConfidence: 'high' }, config);
+    let found = detectConfigured(input.prompt, { types: [...new Set([...STRICT, ...held])], minConfidence: 'high' }, config);
+    if (!found.length) {
+      // Rows of contacts pasted in (names with phone numbers and e-mail addresses): one is a question, three are data.
+      const contacts = detectConfigured(input.prompt, { types: BULK_PROMPT_TYPES, minConfidence: 'high' }, config);
+      if (new Set(contacts.map((m) => `${m.type}:${m.value}`)).size >= BULK_THRESHOLD) found = contacts;
+    }
     if (!found.length) return undefined;
     return block([
       `🛡️  Samaran menahan prompt ini: ada data pribadi ${summarize(found)}.`,
