@@ -444,7 +444,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: lokal-id/lokal@v0.15.0
+      - uses: lokal-id/lokal@v0.16.0
         # with:
         #   scope: all              # every tracked file, not only the changes
         #   min-confidence: medium  # also values without a label or column name
@@ -463,7 +463,7 @@ repos:
         name: Indonesian personal data
         entry: lokal-mcp scan --staged
         language: node
-        additional_dependencies: ['@lokal-id/mcp@0.15.0']
+        additional_dependencies: ['@lokal-id/mcp@0.16.0']
         pass_filenames: false
 ```
 
@@ -674,16 +674,16 @@ The guard lets one ordinary value through on purpose, such as a single phone num
 |---|---|---|---|---|
 | 0.8.3: all 6,160 values | 96.7% | 91.3% | 94.0% | 93.4–94.6% |
 | 0.9.0: all 6,160 values | 99.8% | 95.8% | 96.6% | 96.1–97.0% |
-| **0.15.0: all 6,160 values** | **99.8%** | **97.1%** | **97.3%** | 96.9–97.7% |
-| 0.15.0, NIK (0.9.0: 88.1%) | | | 100% | 98.8–100% |
-| 0.15.0, weakest: religion | | | 85.7% | 81.1–89.3% |
-| 0.15.0, weakest: names | | | 93.6% | 92.4–94.6% |
+| **0.16.0: all 6,160 values** | **99.8%** | **97.1%** | **97.3%** | 96.9–97.7% |
+| 0.16.0, NIK (0.9.0: 88.1%) | | | 100% | 98.8–100% |
+| 0.16.0, weakest: religion | | | 85.7% | 81.1–89.3% |
+| 0.16.0, weakest: names | | | 93.6% | 92.4–94.6% |
 | 0.13.0 with the optional NER model (Python): all values | 99.8% | 97.9% | 98.7% | 98.4–98.9% |
 | 0.13.0 with the optional NER model (Python): names | | | 98.1% | 97.4–98.6% |
 | 0.14.0 with the optional NER model (Python, `gold`): all values | 99.6% | 98.4% | 99.2% | 98.9–99.4% |
 | 0.14.0 with the optional NER model (Python, `gold`): names | | | 99.6% | 99.3–99.8% |
-| 0.15.0 with Lokal's NER model (`@lokal-id/ner`): all values | 99.1% | 98.8% | 99.0% | 98.7–99.2% |
-| 0.15.0 with Lokal's NER model (`@lokal-id/ner`): names | | | 98.8% | 98.2–99.2% |
+| 0.16.0 with Lokal's NER model (`@lokal-id/ner`): all values | 99.5% | 98.9% | 99.0% | 98.7–99.2% |
+| 0.16.0 with Lokal's NER model (`@lokal-id/ner`): names | | | 98.9% | 98.4–99.3% |
 
 *Protected* means every letter and digit of the value was masked, by a detection of any type. The NER rows add [an optional model](python/README.md#names-the-rules-do-not-know-an-optional-ner-model) for names to the rules, with settings chosen on the development split; it found no false positive either, at a hundred to five hundred times the time. On real news, where public figures are named with no cue the rules know, the rules alone find about a fifth of the people (21.6% in the [idner-news-2k](https://github.com/khairunnisaor/idner-news-2k) test set); the `gold` model finds 96.1%, at 99.0% precision. In 2,277 articles crawled from 14 news sites in October 2026, the `fast` model found 90.6% of 2,250 quoted speakers (rules alone: 18.5%), and 95% of its detections in a sample of 300 were people. In chat, names rarely have a cue: on the held-out [chat corpus](evals/chat/README.md) the rules protect 19.4% of them, the `gold` model 89.3%, and Lokal's own model 98.9%, with no false positive ([model card](packages/ner/MODEL.md)). [The stress test](evals/stress) measures speed and bounds on large and hostile input. 0.12.0 reads a NIK that OCR misread ("3674O2 53097l0l22") from its label. The gaps left are names with no label or known name part around them, ways of stating a religion the rules do not know, and other OCR misreads ("AGAMA. ISLAM" without a colon). None of the 400 trap documents has a false positive. CI fails when a release scores lower than the last baseline.
 

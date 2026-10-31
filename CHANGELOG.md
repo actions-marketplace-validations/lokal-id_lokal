@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.16.0] - 2026-10-31
+
 ### Added
 
 - Lokal's own NER model in Python: `NerNames(model='lokal')`, the same `lokal-ner-base-v1` as `@lokal-id/ner`, run with onnxruntime and a WordPiece tokenizer of Lokal's own (checked against Hugging Face's on 5,689 texts and against the Node one by parity vectors). `pip install "lokal-id[ner-lokal]"` installs only onnxruntime, without transformers or PyTorch; the model (125 MB) is downloaded once from the GitHub release, checked against its SHA-256, and cached in the folder the Node package uses. About 5 ms per short document on a laptop CPU. `download_model()` fetches it ahead of time.
@@ -378,7 +380,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.15.0...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.16.0...HEAD
+[0.16.0]: https://github.com/lokal-id/lokal/compare/v0.15.0...v0.16.0
 [0.15.0]: https://github.com/lokal-id/lokal/compare/v0.14.0...v0.15.0
 [0.14.0]: https://github.com/lokal-id/lokal/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/lokal-id/lokal/compare/v0.12.0...v0.13.0

@@ -3,7 +3,7 @@
   "name": "io.github.lokal-id/lokal",
   "title": "Lokal",
   "description": "Indonesia-ready agents: NIK, phone, Rupiah, regions, postal codes, holidays, and PII masking.",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "websiteUrl": "https://github.com/lokal-id/lokal",
   "repository": {
     "url": "https://github.com/lokal-id/lokal",
@@ -14,7 +14,7 @@
     {
       "registryType": "npm",
       "identifier": "@lokal-id/mcp",
-      "version": "0.15.0",
+      "version": "0.16.0",
       "transport": {
         "type": "stdio"
       },
