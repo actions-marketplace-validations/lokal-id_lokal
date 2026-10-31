@@ -1,7 +1,7 @@
 import { randomBytes } from 'node:crypto';
 import {
-  closeSync, existsSync, fstatSync, mkdirSync, openSync, readdirSync, readFileSync, readSync, realpathSync, renameSync, rmSync,
-  statSync, writeSync, type BigIntStats,
+  closeSync, existsSync, fstatSync, lstatSync, mkdirSync, openSync, readdirSync, readFileSync, readlinkSync, readSync, realpathSync,
+  renameSync, rmSync, statSync, writeSync, type BigIntStats,
 } from 'node:fs';
 import path from 'node:path';
 import {
@@ -74,6 +74,26 @@ export function resolveInRoot(root: string, p: string): string {
 
 const sameFile = (a: BigIntStats, b: BigIntStats): boolean => a.dev === b.dev && a.ino === b.ino;
 
+/** Where the open file `fd` is, from the kernel (Linux), without following any path again; undefined elsewhere. */
+function openedPath(fd: number): string | undefined {
+  if (process.platform !== 'linux') return undefined;
+  try {
+    return readlinkSync(`/proc/self/fd/${fd}`);
+  } catch {
+    return undefined;
+  }
+}
+
+/** No part of `real` below `rootReal` is a link right now (a junction counts as one). */
+function linkFree(rootReal: string, real: string): boolean {
+  let at = rootReal;
+  for (const part of path.relative(rootReal, real).split(path.sep).filter(Boolean)) {
+    at = path.join(at, part);
+    if (lstatSync(at).isSymbolicLink()) return false;
+  }
+  return true;
+}
+
 /** Removes the file with the identity `created` at the first of `paths` that still leads to it. */
 function removeCreated(created: BigIntStats, paths: string[]): void {
   for (const candidate of paths) {
@@ -94,8 +114,20 @@ function openChecked(root: string, p: string, abs: string, flags: string): numbe
   const fd = openSync(abs, flags);
   const opened = fstatSync(fd, { bigint: true });
   try {
-    const real = realpathSync.native(abs);
-    if (outside(realRoot(root), real) || !sameFile(opened, statSync(real, { bigint: true }))) {
+    const rootReal = realRoot(root);
+    // Linux tells where the open file is. Elsewhere its path is resolved again, and stat follows that path once more:
+    // a second swap in between could lead it back to the outside file, so the path must also hold no link afterwards.
+    const viaFd = openedPath(fd);
+    let real: string;
+    let inside: boolean;
+    if (viaFd !== undefined) {
+      real = viaFd;
+      inside = !outside(rootReal, real);
+    } else {
+      real = realpathSync.native(abs);
+      inside = !outside(rootReal, real) && sameFile(opened, statSync(real, { bigint: true })) && linkFree(rootReal, real);
+    }
+    if (!inside) {
       // A file this call created (flag x) where a swap led it: remove it again, found by its identity, so not even an
       // empty file is left outside the root. Never a file this call did not create.
       if (flags.includes('x')) removeCreated(opened, [real, abs]);
