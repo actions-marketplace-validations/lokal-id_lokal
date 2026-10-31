@@ -2396,7 +2396,21 @@ function partialMask(type, value) {
 }
 
 // packages/mcp/src/files.ts
-import { closeSync, existsSync, openSync, readdirSync, readFileSync, readSync, realpathSync, statSync } from "node:fs";
+import {
+  closeSync,
+  existsSync,
+  fstatSync,
+  mkdirSync,
+  openSync,
+  readdirSync,
+  readFileSync,
+  readSync,
+  realpathSync,
+  renameSync,
+  rmSync,
+  statSync,
+  writeSync
+} from "node:fs";
 import path from "node:path";
 
 // packages/mcp/src/xlsx.ts
@@ -3777,14 +3791,14 @@ function loadDocument(file, options = {}) {
 }
 
 // packages/mcp/src/audit.ts
-import { appendFileSync, existsSync as existsSync2, mkdirSync, readFileSync as readFileSync2, writeFileSync } from "node:fs";
+import { appendFileSync, existsSync as existsSync2, mkdirSync as mkdirSync2, readFileSync as readFileSync2, writeFileSync } from "node:fs";
 import path2 from "node:path";
 function writeAudit(file, event) {
   if (!file) return;
   try {
     const dir = path2.dirname(file);
     if (!existsSync2(dir)) {
-      mkdirSync(dir, { recursive: true });
+      mkdirSync2(dir, { recursive: true });
       if (path2.basename(dir) === ".lokal") writeFileSync(path2.join(dir, ".gitignore"), "*\n");
     }
     appendFileSync(file, `${JSON.stringify({ ts: (/* @__PURE__ */ new Date()).toISOString(), ...event })}

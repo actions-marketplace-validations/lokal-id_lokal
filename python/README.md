@@ -97,38 +97,43 @@ To cover every LLM call of an app without calling `mask()` and `unmask()` at eac
 Samaran finds a name from its label, its column, a cue ("Pelanggan …", "a.n. …", "pak …"), or a known Indonesian given or family name. A name with none of these slips through, and in chat that is most names: "saya di chat sama rianto surya tadi pagi", "ada yang ngeliat minan minanto ga ya". For batch jobs where that matters, add a local NER model:
 
 ```sh
-pip install "lokal-id[ner]"     # transformers and PyTorch: large
+pip install "lokal-id[ner-lokal]"   # Lokal's own model: onnxruntime only
+pip install "lokal-id[ner]"         # all three models, with transformers and PyTorch: large
 ```
+
+Both need Python 3.11 or later, as onnxruntime and PyTorch do; the rest of the library runs on 3.10.
 
 ```python
 from lokal.samaran import Samaran
 from lokal.samaran.ner import NerNames
 
-ner = NerNames()                  # downloads the model once; NerNames(model_path=...) loads an approved copy
+ner = NerNames()                  # Lokal's model: downloaded once (125 MB) and checked against its SHA-256
 samaran = Samaran(ner=ner)
 samaran.mask('td pagi rianto surya nelpon, katanya mau resign').text
 # 'td pagi [NAME_1] nelpon, katanya mau resign'
 ```
 
-There are two models. Both are IndoBERT fine-tuned for Indonesian NER, MIT-licensed, and read from safetensors at a pinned revision, never from a pickle file:
+There are three models, all IndoBERT fine-tuned for Indonesian NER and MIT-licensed. `'lokal'` is Lokal's own (see its [model card](../packages/ner/MODEL.md)), downloaded from the GitHub release `ner-base-v1` and checked against its SHA-256, into the folder `@lokal-id/ner` uses too. The other two are their authors' models, read from safetensors at a pinned revision, never from a pickle file:
 
-| | `NerNames()`, `model='gold'` | `NerNames(model='fast')` | Rules alone |
-|---|---|---|---|
-| Model | [treamyracle/indobert-ner-gold](https://huggingface.co/treamyracle/indobert-ner-gold) (IndoBERT-large) | [cahya/bert-base-indonesian-NER](https://huggingface.co/cahya/bert-base-indonesian-NER) (IndoBERT-base) | |
-| Names in chat (held-out [chat corpus](../evals/chat/README.md)) | **89.3%** | 62.2% | 19.5% |
-| Names in lower-case chat | **89.4%** | 59.5% | 11.1% |
-| People in news ([idner-news-2k](https://github.com/khairunnisaor/idner-news-2k) test set) | **96.1%**, 99.0% precision | 91.5%, 97.7% precision | 21.6% |
-| Names in Samaran's held-out benchmark | **99.6%** | 98.1% | 93.6% |
-| False positives in the benchmarks' trap documents | 0 | 0 | 0 |
-| Size, time per short document on a laptop CPU | 1.3 GB, about 100 ms | 440 MB, about 30 ms | 0.2 ms |
+| | `NerNames()`, `model='lokal'` | `NerNames(model='gold')` | `NerNames(model='fast')` | Rules alone |
+|---|---|---|---|---|
+| Model | [lokal-ner-base-v1](../packages/ner/MODEL.md) (IndoBERT-base) | [treamyracle/indobert-ner-gold](https://huggingface.co/treamyracle/indobert-ner-gold) (IndoBERT-large) | [cahya/bert-base-indonesian-NER](https://huggingface.co/cahya/bert-base-indonesian-NER) (IndoBERT-base) | |
+| Names in chat (held-out [chat corpus](../evals/chat/README.md)) | **98.9%** | 89.3% | 62.2% | 19.4% |
+| People in news ([idner-news-2k](https://github.com/khairunnisaor/idner-news-2k) test set) | 93.4%, 98.6% precision | **96.1%**, 99.0% precision | 91.5%, 97.7% precision | 21.6% |
+| Names in Samaran's held-out benchmark | 98.8% | **99.6%** | 98.1% | 93.6% |
+| False positives in the benchmarks' trap documents | 0 | 0 | 0 | 0 |
+| Size, time per short document on a laptop CPU | 125 MB, about 5 ms | 1.3 GB, about 100 ms | 440 MB, about 30 ms | 0.2 ms |
+| Needs | `lokal-id[ner-lokal]` | `lokal-id[ner]` | `lokal-id[ner]` | |
+
+Use `'lokal'` for chat, tickets, and records; `'gold'` when the text is mostly news. `NerNames(model_path=...)` loads an approved copy from a folder: one with `model.onnx` is read as Lokal's model. `download_model()` fetches Lokal's model ahead of time, for a container image or a machine that will be offline.
 
 - **Settings.** Thresholds and filters were chosen on development data only. Every number above is on data that played no part in choosing them.
 - **Filters.** Only the model's person names are used, and only those that pass filters for chat words and slang, informal verbs ("nungguin", "dibeliin"), field names, abbreviations, and place names. The model reads lower case, so a name in lower-case chat counts, but only in a sentence: not in a CSV header, a `key=value`, or an e-mail address.
-- **Real news.** In 2,277 articles from 14 Indonesian news sites, published in October 2026, the 2,250 speakers named after "kata", "ujar", or "sebut" were found 18.5% of the time by the rules and 90.6% with the fast model. That ranges from 83.7% (technology) to 97.2% (entertainment). The speakers were labelled automatically, and in a sample of the ones missed, more than half were job titles or organizations rather than people, so 90.6% is a lower bound. In a random sample of 300 of the fast model's detections there, 285 (95%) were people. The news texts were processed on one machine for the test, and only these numbers were kept.
+- **Real news.** In 2,277 articles from 14 Indonesian news sites, published in October 2026, the 2,250 speakers named after "kata", "ujar", or "sebut" were found 18.5% of the time by the rules and 90.6% with the `fast` model. That ranges from 83.7% (technology) to 97.2% (entertainment). The speakers were labelled automatically, and in a sample of the ones missed, more than half were job titles or organizations rather than people, so 90.6% is a lower bound. In a random sample of 300 of the fast model's detections there, 285 (95%) were people. The news texts were processed on one machine for the test, and only these numbers were kept.
 - **Privacy.** The model runs on your machine, and the text never leaves it. The only network access is downloading the model, once.
 - **Merging.** The model's matches merge with the rules' matches, and the rules win where they overlap. A name the model cut inside a word is masked whole, and a rank or form of address in front of it ("Kombes Pol.", "mama") is left out.
 - **Long text.** The model reads each line, and a long line in passages of about 600 characters cut at sentence ends. In one long passage it starts to miss names it finds when they stand alone.
-- **Where to use it.** Exports, batch masking, and data for vendors, not per keystroke. The TypeScript package, the guard, and the proxy do not use it.
+- **Where to use it.** Exports, batch masking, and data for vendors, not per keystroke. In Node, the same `'lokal'` model is [`@lokal-id/ner`](../packages/ner), which the MCP server and the proxy use with `"ner": true` in `.samaran.json`. The guard does not use a model.
 
 ### Logging
 

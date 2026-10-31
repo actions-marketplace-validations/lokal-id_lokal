@@ -1,4 +1,8 @@
-import { closeSync, existsSync, openSync, readdirSync, readFileSync, readSync, realpathSync, statSync } from 'node:fs';
+import { randomBytes } from 'node:crypto';
+import {
+  closeSync, existsSync, fstatSync, mkdirSync, openSync, readdirSync, readFileSync, readSync, realpathSync, renameSync, rmSync,
+  statSync, writeSync, type BigIntStats,
+} from 'node:fs';
 import path from 'node:path';
 import {
   checkCustomRules, detectPii, PII_TYPES, type CustomRule, type DetectOptions, type PiiMatch, type PiiType, type ScanStatus,
@@ -37,14 +41,109 @@ function realTarget(abs: string): string {
   return path.join(realpathSync.native(existing), ...rest);
 }
 
+// The root's real path, taken once per root (the server takes it when it starts): a root swapped for a link later
+// does not move the boundary with it.
+const realRoots = new Map<string, string>();
+
+/** The real path of `root`, as it was the first time it was asked for. */
+export function realRoot(root: string): string {
+  let real = realRoots.get(root);
+  if (real === undefined) {
+    real = realTarget(root);
+    realRoots.set(root, real);
+  }
+  return real;
+}
+
 /**
  * Resolves `p` against `root` and refuses paths that escape it: by `..`, by an absolute path, or through a symbolic
  * link or junction inside the root that points outside it.
  */
 export function resolveInRoot(root: string, p: string): string {
   const abs = path.resolve(root, p);
-  if (outside(root, abs) || outside(realTarget(root), realTarget(abs))) {
+  if (outside(root, abs) || outside(realRoot(root), realTarget(abs))) {
     throw new Error(`Path is outside the allowed root (${root}): ${p}`);
+  }
+  return abs;
+}
+
+// The path checked above can change before it is used: a folder in it swapped for a junction or a symbolic link that
+// leads out of the root (by another process, or by an agent running commands while it calls a tool). So a file is
+// opened first, and then the file that was opened is checked: it must be the very file (same device and file ID) that
+// the path leads to now, inside the root. A swap before the open, after it, or in between fails that check.
+
+const sameFile = (a: BigIntStats, b: BigIntStats): boolean => a.dev === b.dev && a.ino === b.ino;
+
+/** Removes the file with the identity `created` at the first of `paths` that still leads to it. */
+function removeCreated(created: BigIntStats, paths: string[]): void {
+  for (const candidate of paths) {
+    try {
+      const real = realpathSync.native(candidate);
+      if (sameFile(created, statSync(real, { bigint: true }))) {
+        rmSync(real);
+        return;
+      }
+    } catch {
+      // gone or swapped again: try the next path
+    }
+  }
+}
+
+/** Opens `p` inside `root` and returns its descriptor, after checking that the open file is the one inside the root. */
+function openChecked(root: string, p: string, abs: string, flags: string): number {
+  const fd = openSync(abs, flags);
+  const opened = fstatSync(fd, { bigint: true });
+  try {
+    const real = realpathSync.native(abs);
+    if (outside(realRoot(root), real) || !sameFile(opened, statSync(real, { bigint: true }))) {
+      // A file this call created (flag x) where a swap led it: remove it again, found by its identity, so not even an
+      // empty file is left outside the root. Never a file this call did not create.
+      if (flags.includes('x')) removeCreated(opened, [real, abs]);
+      throw new Error(`Path is outside the allowed root (${root}): ${p}`);
+    }
+    // A hard link is the same file under a second name, and nothing in its path shows where the other name is.
+    if (opened.isFile() && opened.nlink > 1n) {
+      throw new Error(`${p} has more than one hard link, so it may be a file outside the root under a second name; it is not read or written.`);
+    }
+    return fd;
+  } catch (e) {
+    closeSync(fd);
+    throw e;
+  }
+}
+
+/** Reads a whole file inside `root`, as a Document, from the descriptor that was checked (never by its path again). */
+export function loadInRoot(root: string, p: string): { abs: string; doc: Document } {
+  const abs = resolveInRoot(root, p);
+  const fd = openChecked(root, p, abs, 'r');
+  try {
+    const size = Number(fstatSync(fd, { bigint: true }).size);
+    if (size > MAX_FILE_BYTES) return { abs, doc: unsupported(`larger than ${mb(MAX_FILE_BYTES)}`) };
+    return { abs, doc: loadBuffer(abs, readFileSync(fd)) };
+  } finally {
+    closeSync(fd);
+  }
+}
+
+/**
+ * Writes `data` to `p` inside `root`: into a new file with a random name next to it, checked like a read, then renamed
+ * into place. A swap after the check can only move the new file, whose name nobody knows, and the rename then fails.
+ */
+export function writeInRoot(root: string, p: string, data: string): string {
+  const abs = resolveInRoot(root, p);
+  mkdirSync(path.dirname(abs), { recursive: true });
+  const tmp = path.join(path.dirname(abs), `.${path.basename(abs)}.${randomBytes(8).toString('hex')}.tmp`);
+  const fd = openChecked(root, p, tmp, 'wx');
+  let written = false;
+  try {
+    writeSync(fd, data, 0, 'utf8');
+    closeSync(fd);
+    written = true;
+    renameSync(tmp, abs);
+  } catch (e) {
+    if (!written) closeSync(fd);
+    rmSync(tmp, { force: true });
+    throw e;
   }
   return abs;
 }

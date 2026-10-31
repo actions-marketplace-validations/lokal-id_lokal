@@ -4,6 +4,28 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+### Added
+
+- Lokal's own NER model in Python: `NerNames(model='lokal')`, the same `lokal-ner-base-v1` as `@lokal-id/ner`, run with onnxruntime and a WordPiece tokenizer of Lokal's own (checked against Hugging Face's on 5,689 texts and against the Node one by parity vectors). `pip install "lokal-id[ner-lokal]"` installs only onnxruntime, without transformers or PyTorch; the model (125 MB) is downloaded once from the GitHub release, checked against its SHA-256, and cached in the folder the Node package uses. About 5 ms per short document on a laptop CPU. `download_model()` fetches it ahead of time.
+
+### Changed
+
+- `NerNames()` loads `'lokal'` by default (it was `'gold'`). On the held-out chat corpus it protects 98.9% of the names (`gold`: 89.3%), at a tenth of the size; `gold` stays the better choice for news (96.1% of the people in idner-news-2k, against 93.4%). Pass `model='gold'` for the earlier default.
+- The NER extras need Python 3.11 or later, as onnxruntime and PyTorch do. The rest of `lokal-id` still runs on 3.10.
+- Python dependencies are locked only once they are two weeks old (`exclude-newer = "2 weeks"` in `pyproject.toml`). The lock had picked up newer releases of PyTorch, transformers, and huggingface-hub; they are back to the last ones that are two weeks old.
+
+### Fixed
+
+- Lokal's NER model could leave part of a name unmasked: "[NAME_2] kirapuspa". The model labels word pieces, and when one piece of a word leaned the other way ("kira" of "kirapuspa", next to "##pus" and "##pa" that lean to a person), the word was split and dropped. Names are now grouped by word, each word taking the highest person probability of its pieces, in Node (`aggregateWords`) and Python (`aggregate_words`), checked against each other by parity vectors. On the development sets, recall in idner-news-2k went from 95.5% to 96.8% and name precision in Samaran's benchmark from 98.9% to 99.4%, with no false positive added. Found by the independent evaluation of 0.15.0; a name the model does not take for a person at all ("ada yang ngeliat zelvanya kirapuspa ga ya", 0.06) is still missed.
+
+### Security
+
+- The MCP server's file tools no longer check a path and then open it again (TOCTOU). `read_file_masked`, `scan_pii`, `write_file_unmasked`, and `anonymize_file` open a file first and then check the file that was opened: the same file (device and file ID) as the one its path leads to inside the root, read and written through that descriptor. A write goes to a new file with a random name, checked, then renamed into place. While another process swapped a folder in the root for a junction to an outside folder and back, 0.15.0 read the outside file 23 to 36 times in about 1,400 reads and wrote real data outside the root; now 0. A rare double swap can still leave an empty file with a random name outside the root: Node cannot create a file relative to a folder handle.
+- The MCP server takes the root's real path once, when it starts: a root swapped for a link later no longer moves the boundary. Files with more than one hard link are refused, since the other name may be outside the root.
+- The NER cache of the MCP server and Samaran Proxy (0.15.0) held the texts it had read, personal data included, and `clear_vault` and the vault's expiry did not empty it. It now holds a keyed hash of each text (HMAC-SHA256 with a random key) and where the names are, never the text or a name, and is emptied, with a new key, when the vault is cleared or expires.
+- `@lokal-id/ner` and Python's `'lokal'` model load the model from the bytes they checked against the SHA-256, not from the file again; `@lokal-id/ner` downloads into a temporary file with a random name, created only if it is not there.
+- The NER extras lock `filelock` 4.2.1, which fixes 17 advisories about other local users' lock files (GHSA-v4x8-3wr5-3wq8 and others). The lock held 4.1.0 for Python 3.10, which the fixed release no longer supports.
+
 ## [0.15.0] - 2026-10-31
 
 ### Added

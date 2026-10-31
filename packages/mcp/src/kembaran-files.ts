@@ -5,7 +5,7 @@ import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'no
 import path from 'node:path';
 import { PII_TYPES, type CustomRule, type PiiType } from '@lokal-id/core';
 import { KEEP_BY_DEFAULT, Kembaran } from '@lokal-id/core/kembaran';
-import { isTextFile, loadConfig, MAX_FILE_BYTES } from './files.ts';
+import { isTextFile, loadConfig, loadInRoot, MAX_FILE_BYTES, writeInRoot } from './files.ts';
 
 export interface AnonymizeOptions {
   secret?: string;
@@ -17,6 +17,11 @@ export interface AnonymizeOptions {
   dryRun?: boolean;
   /** The project's own rules from .samaran.json. */
   custom?: CustomRule[];
+  /**
+   * The MCP server's root: inputs are read and outputs written only as files checked inside it when opened, so a path
+   * swapped for a link after the check cannot lead out of it. The command line has no root.
+   */
+  root?: string;
 }
 
 export interface AnonymizedFile {
@@ -59,11 +64,21 @@ export function anonymizeFiles(inputs: string[], output: string, options: Anonym
     custom: options.custom,
   });
   // All files at once: a value found in one is replaced in the others too, where it has no label or column name.
-  const result = kembaran.texts(inputs.map((file) => readFileSync(file, 'utf8')));
+  const read = (file: string): string => {
+    if (options.root === undefined) return readFileSync(file, 'utf8');
+    const { doc } = loadInRoot(options.root, file);
+    if (doc.kind !== 'text') throw new Error(`${file} is not a text file. Kembaran reads SQL dumps, CSV, JSON, and logs.`);
+    return doc.text;
+  };
+  const result = kembaran.texts(inputs.map(read));
   const files = result.files.map(({ text, replaced, crossed }, i) => {
     if (!options.dryRun) {
-      mkdirSync(path.dirname(targets[i]!), { recursive: true });
-      writeFileSync(targets[i]!, text, 'utf8');
+      if (options.root !== undefined) {
+        writeInRoot(options.root, targets[i]!, text);
+      } else {
+        mkdirSync(path.dirname(targets[i]!), { recursive: true });
+        writeFileSync(targets[i]!, text, 'utf8');
+      }
     }
     return { from: inputs[i]!, to: targets[i]!, replaced, crossed };
   });

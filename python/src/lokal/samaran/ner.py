@@ -1,41 +1,50 @@
-"""Optional NER for names that Samaran's rules do not know: ``pip install "lokal-id[ner]"``.
+"""Optional NER for names that Samaran's rules do not know: ``pip install "lokal-id[ner-lokal]"``.
 
 Samaran finds a name from its label ("Nama:"), its place in a CSV or a form, a cue ("Pelanggan …", "a.n. …"), or a
 known given or family name. A name with none of these, in a sentence, is missed: in news, and most of all in chat
 ("saya di chat sama rianto surya tadi pagi"). ``NerNames`` adds a model that reads the sentence, of which only the
-person spans are kept, and only those that pass the filters below. Two models, both MIT, both IndoBERT fine-tuned for
+person spans are kept, and only those that pass the filters below. Three models, all MIT, all IndoBERT fine-tuned for
 Indonesian NER:
 
-- ``'gold'`` (the default): ``treamyracle/indobert-ner-gold``, IndoBERT-large. 1.3 GB, about 100 ms per short document
-  on a laptop CPU. On the held-out chat corpus it protects 89.3% of the names; on Samaran's held-out benchmark, 99.6%.
-- ``'fast'``: ``cahya/bert-base-indonesian-NER``, IndoBERT-base. 440 MB, about 30 ms per short document. On the same
-  data, 62.2% and 98.1%.
+- ``'lokal'`` (the default): Lokal's own model, ``lokal-ner-base-v1``, IndoBERT-base fine-tuned for person names (see
+  packages/ner/MODEL.md). 125 MB in ONNX, about 20 ms per short document on a laptop CPU, and only onnxruntime to
+  install (``lokal-id[ner-lokal]``). On the held-out chat corpus it protects 98.9% of the names; on Samaran's held-out
+  benchmark, 98.8%; in the idner-news-2k test set it finds 93.4% of the people at 98.6% precision.
+- ``'gold'``: ``treamyracle/indobert-ner-gold``, IndoBERT-large. 1.3 GB, about 100 ms per short document. On the same
+  data, 89.3% and 99.6%, and 96.1% of the people in news: the best on news, the weakest in chat.
+- ``'fast'``: ``cahya/bert-base-indonesian-NER``, IndoBERT-base. 440 MB, about 30 ms per short document. 62.2% and
+  98.1%, and 91.5% in news.
 
-Settings were chosen on development data only, and neither added a false positive in the benchmarks' trap documents.
-On real news (the idner-news-2k test set) they found 96.1% and 91.5% of the people, against 21.6% for the rules alone.
-The rules take 0.2 ms per document. NER is off unless you pass it:
+``'gold'`` and ``'fast'`` need transformers and PyTorch (``lokal-id[ner]``). Settings were chosen on development data
+only, and none of the three added a false positive in the benchmarks' trap documents. On real news the rules alone find
+21.6% of the people, and 19.4% of the names in chat. The rules take 0.2 ms per document. NER is off unless you pass it:
 
     >>> from lokal.samaran import Samaran                                   # doctest: +SKIP
     >>> from lokal.samaran.ner import NerNames                              # doctest: +SKIP
     >>> samaran = Samaran(ner=NerNames())                                   # doctest: +SKIP
 
-The weights are read from the model's safetensors file at a pinned revision, never from a pickle file, and the text
-never leaves the machine: the model runs locally.
+``'lokal'`` is downloaded from the GitHub release ``ner-base-v1`` and checked against its SHA-256; the other two are
+read from their safetensors file at a pinned revision, never from a pickle file. The text never leaves the machine: the
+models run locally. All three need Python 3.11 or later, as onnxruntime and PyTorch do.
 """
 
 from __future__ import annotations
 
 import re
 from collections.abc import Callable, Iterable
+from pathlib import Path
 from typing import Any, Optional
 
 from ..wilayah import _base
+from . import _onnx_ner
 from .detectors import _NOT_NAME, _TITLE_WORDS
 from .fields import field_type
 from .types import PiiMatch
 
-#: The models ``NerNames(model=…)`` can load: Hugging Face id, pinned revision, and the files read from it.
+#: The models ``NerNames(model=…)`` can load: where from (a Hugging Face id, or this repository's releases), the pinned
+#: revision (a commit, or the release tag), and the files read from it.
 MODELS: dict[str, tuple[str, str, tuple[str, ...]]] = {
+    'lokal': ('lokal-id/lokal', 'ner-base-v1', tuple(_onnx_ner.FILES)),
     'gold': (
         'treamyracle/indobert-ner-gold',
         '014ef5da775cdc6ffea1bdcce8f5db2557791d99',
@@ -49,7 +58,7 @@ MODELS: dict[str, tuple[str, str, tuple[str, ...]]] = {
         ('config.json', 'special_tokens_map.json', 'tokenizer_config.json', 'vocab.txt', 'model.safetensors'),
     ),
 }
-DEFAULT_MODEL = 'gold'
+DEFAULT_MODEL = 'lokal'
 MODEL, REVISION, _ = MODELS[DEFAULT_MODEL]
 
 # Chat words, slang, and forms of address the model takes for names, most of all in lower-case chat.
@@ -211,10 +220,12 @@ def ner_chunks(text: str) -> list[tuple[int, int]]:
 class NerNames:
     """Finds people's names with a local NER model, for ``Samaran(ner=…)`` and ``detect_pii(…, ner=…)``.
 
-    ``model`` is ``'gold'`` (the default, most accurate) or ``'fast'`` (three times faster, a third of the size); see
-    ``MODELS``. ``model_path`` loads the model from a folder instead (offline, or an approved copy); otherwise it is
-    downloaded once from Hugging Face at its pinned revision, without pickle files. ``min_score`` is the model's
-    confidence below which a name is dropped. Needs ``pip install "lokal-id[ner]"`` (transformers and PyTorch).
+    ``model`` is ``'lokal'`` (the default: Lokal's own model, best in chat), ``'gold'`` (best in news), or ``'fast'``;
+    see ``MODELS``. ``model_path`` loads the model from a folder instead (offline, or an approved copy): one with
+    ``model.onnx`` is read as Lokal's model. Otherwise the model is downloaded once and checked: ``'lokal'`` from the
+    GitHub release (cached where ``@lokal-id/ner`` caches it), the others from Hugging Face at their pinned revision,
+    without pickle files. ``min_score`` is the model's confidence below which a name is dropped. ``'lokal'`` needs
+    ``pip install "lokal-id[ner-lokal]"`` (onnxruntime); the others ``pip install "lokal-id[ner]"`` (also PyTorch).
     """
 
     __slots__ = ('_pipeline', 'min_score')
@@ -222,6 +233,12 @@ class NerNames:
     def __init__(self, *, model: str = DEFAULT_MODEL, model_path: Optional[str] = None, min_score: float = 0.7) -> None:
         if model not in MODELS:
             raise ValueError(f'model must be one of {", ".join(map(repr, MODELS))}, not {model!r}')
+        self.min_score = min_score
+        if (model == 'lokal' and model_path is None) or (model_path is not None and _is_onnx(model_path)):
+            folder = Path(model_path) if model_path is not None else _onnx_ner.model_dir()
+            files = _onnx_ner.load_files(folder, check=model_path is None)
+            self._pipeline: Callable[..., Any] = _onnx_ner.OnnxPipeline(files)
+            return
         try:
             from huggingface_hub import snapshot_download  # type: ignore[import-not-found,unused-ignore]
             from transformers import (  # type: ignore[import-not-found,unused-ignore]
@@ -230,9 +247,9 @@ class NerNames:
                 pipeline,
             )
         except ImportError as e:  # pragma: no cover - depends on the extra
-            raise ImportError('NerNames needs the NER extra: pip install "lokal-id[ner]"') from e
-        repo, revision, files = MODELS[model]
-        path = model_path or snapshot_download(repo, revision=revision, allow_patterns=list(files))
+            raise ImportError('NerNames needs the NER extra: pip install "lokal-id[ner]" (Python 3.11 or later)') from e
+        repo, revision, wanted = MODELS[model]
+        path = model_path or snapshot_download(repo, revision=revision, allow_patterns=list(wanted))
         tokenizer = AutoTokenizer.from_pretrained(path)
         weights = AutoModelForTokenClassification.from_pretrained(path, use_safetensors=True)
         # These tokenizers' configs leave the maximum length unset, so long text would reach the model in one piece and
@@ -240,11 +257,10 @@ class NerNames:
         limit = int(getattr(weights.config, 'max_position_embeddings', 512))
         if not tokenizer.model_max_length or tokenizer.model_max_length > limit:
             tokenizer.model_max_length = limit
-        self._pipeline: Callable[..., Any] = pipeline(
+        self._pipeline = pipeline(
             'token-classification', model=weights, tokenizer=tokenizer, aggregation_strategy='simple', stride=64,
             device=-1,
         )
-        self.min_score = min_score
 
     @classmethod
     def _with_pipeline(cls, fn: Callable[..., Any], min_score: float = 0.7) -> NerNames:
@@ -263,6 +279,17 @@ class NerNames:
                 if r.get('entity_group') in ('PER', 'PERSON'):
                     spans.append((offset + int(r['start']), offset + int(r['end']), float(r['score'])))
         return names_from_spans(text, spans, self.min_score)
+
+
+def _is_onnx(model_path: str) -> bool:
+    """Whether a model folder holds Lokal's ONNX model rather than a transformers one."""
+    return (Path(model_path) / 'model.onnx').is_file()
+
+
+def download_model(folder: Optional[str] = None) -> str:
+    """Downloads Lokal's model (``'lokal'``, 125 MB) ahead of time, for a container image or a machine that will be
+    offline later, and checks it. Returns the folder; ``NerNames()`` reads it from there."""
+    return str(_onnx_ner.download_model(Path(folder) if folder else None))
 
 
 def names_from_spans(text: str, spans: Iterable[tuple[int, int, float]], min_score: float = 0.7) -> list[PiiMatch]:
@@ -296,4 +323,7 @@ def names_from_spans(text: str, spans: Iterable[tuple[int, int, float]], min_sco
     return out
 
 
-__all__ = ['DEFAULT_MODEL', 'MODEL', 'MODELS', 'REVISION', 'NerNames', 'keep_name', 'names_from_spans', 'ner_chunks']
+__all__ = [
+    'DEFAULT_MODEL', 'MODEL', 'MODELS', 'REVISION', 'NerNames', 'download_model', 'keep_name', 'names_from_spans',
+    'ner_chunks',
+]

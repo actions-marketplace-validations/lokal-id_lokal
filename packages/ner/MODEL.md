@@ -54,8 +54,10 @@ An earlier candidate took words for names in the test splits: "semalem" opening 
 sentences for the first two, a filter for log levels); the test splits were then measured again. The numbers above are
 from that second measurement.
 
-The int8 model gives the same results as the full-precision one on the chat development set, and the Node package
-(`@lokal-id/ner`) gives the same results as the Python reference on every development set.
+The int8 model gives the same results as the full-precision one on the chat development set. The Node package
+(`@lokal-id/ner`, WebAssembly) and Python (`NerNames()`, onnxruntime) score the same on every development set; their
+arithmetic differs in the last digits, which changes the outcome for 8 of 5,677 documents where a score sits at the
+threshold.
 
 ## Limitations
 
@@ -68,9 +70,10 @@ The int8 model gives the same results as the full-precision one on the chat deve
 
 ## Use
 
-Node: [`@lokal-id/ner`](README.md). The files are on the GitHub release
-[`ner-base-v1`](https://github.com/lokal-id/lokal/releases/tag/ner-base-v1), and the package checks each against its
-SHA-256:
+Node: [`@lokal-id/ner`](README.md). Python: `NerNames()` in `lokal-id` (`pip install "lokal-id[ner-lokal]"`). Both
+read the files from the GitHub release
+[`ner-base-v1`](https://github.com/lokal-id/lokal/releases/tag/ner-base-v1) into the same cache folder, and check each against
+its SHA-256:
 
 ```
 88eda9302acae1ca4bf3f0261673713af467179fe0de730a8c25dcb2444cd254  model.onnx

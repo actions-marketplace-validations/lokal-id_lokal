@@ -236,3 +236,28 @@ def test_ner_filters() -> None:
         assert [list(c) for c in ner_chunks(text)] == case['chunks'], text[:200]
         got = [[m.start, m.end, m.value] for m in names_from_spans(text, [tuple(s) for s in case['spans']])]
         assert got == case['names'], text[:200]
+
+
+WORDPIECE = load('ner_wordpiece.json')
+
+
+def test_ner_wordpiece() -> None:
+    from lokal.samaran._wordpiece import WordPiece
+
+    wp = WordPiece(WORDPIECE['vocab'], WORDPIECE['maxCharsPerWord'])
+    for case in WORDPIECE['cases']:
+        assert [list(t) for t in wp.encode(case['text'])] == case['tokens'], case['text'][:200]
+
+
+AGGREGATE = load('ner_aggregate.json')
+
+
+def test_ner_word_grouping() -> None:
+    from lokal.samaran._onnx_ner import aggregate_words
+    from lokal.samaran._wordpiece import Token
+
+    for case in AGGREGATE:
+        tokens = [Token(0, start, end, sub) for start, end, sub in case['tokens']]
+        got = aggregate_words(tokens, case['probs'], ['O', 'B-PER', 'I-PER'])
+        assert [[s, e] for s, e, _ in got] == [[s, e] for s, e, _ in case['spans']], case
+        assert all(abs(a[2] - b[2]) < 1e-9 for a, b in zip(got, case['spans'], strict=True)), case
