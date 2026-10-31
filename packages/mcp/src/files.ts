@@ -1,12 +1,24 @@
 import { randomBytes } from 'node:crypto';
+import { gunzipSync } from 'node:zlib';
 import {
   closeSync, existsSync, fstatSync, lstatSync, mkdirSync, openSync, readdirSync, readFileSync, readlinkSync, readSync, realpathSync,
-  renameSync, rmSync, statSync, writeSync, type BigIntStats,
+  renameSync, rmSync, statSync, writeFileSync, writeSync, type BigIntStats,
 } from 'node:fs';
 import path from 'node:path';
 import {
-  checkCustomRules, detectPii, PII_TYPES, type CustomRule, type DetectOptions, type PiiMatch, type PiiType, type ScanStatus,
+  checkCustomRules, detectPii, partialMask, PII_TYPES, type CustomRule, type DetectOptions, type PiiMatch, type PiiType,
+  type ScanStatus,
 } from '@lokal-id/core';
+
+/**
+ * A value as the model may see it in a finding or a guard message. A NIK or KK shows only its last four digits
+ * (************0001): partialMask's first four are the region, and with them eight of sixteen digits would reach the
+ * model. Logs and admin screens keep partialMask, for people.
+ */
+export function previewForModel(type: PiiType, value: string): string {
+  if (type === 'NIK' || type === 'KK') return `${'*'.repeat(12)}${value.replace(/\D/g, '').slice(-4)}`;
+  return partialMask(type, value);
+}
 import { readDocx } from './docx.ts';
 import { readPdf } from './pdf.ts';
 import { readXlsx, type Sheet } from './xlsx.ts';
@@ -396,6 +408,38 @@ export function detectConfigured(text: string, options: DetectOptions, config: S
   return config.allow.length ? found.filter((m) => !config.allow.includes(m.value)) : found;
 }
 
+// The files write_file_unmasked wrote with real values, relative to the root: the guard checks them like data files
+// whatever their extension, so real data written to docs/notes.md or src/fixtures.ts cannot be read back by `Read`.
+// Only paths, never contents; in .lokal/, which is kept out of git.
+const UNMASKED_LIST = path.join('.lokal', 'unmasked.json');
+
+/** The files write_file_unmasked wrote in this project, as absolute paths. */
+export function loadUnmasked(root: string): string[] {
+  try {
+    const list = JSON.parse(readFileSync(path.join(root, UNMASKED_LIST), 'utf8')) as { files?: unknown };
+    return Array.isArray(list.files) ? list.files.filter((f): f is string => typeof f === 'string').map((f) => path.resolve(root, f)) : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Adds a file write_file_unmasked wrote to the list. Never throws: the write itself already happened. */
+export function recordUnmasked(root: string, file: string): void {
+  try {
+    const rel = toPosix(path.relative(root, file));
+    const known = loadUnmasked(root).map((f) => toPosix(path.relative(root, f)));
+    if (known.includes(rel)) return;
+    const dir = path.join(root, '.lokal');
+    if (!existsSync(dir)) {
+      mkdirSync(dir, { recursive: true });
+      writeFileSync(path.join(dir, '.gitignore'), '*\n');
+    }
+    writeInRoot(root, UNMASKED_LIST, `${JSON.stringify({ files: [...known, rel] }, null, 2)}\n`);
+  } catch (e) {
+    process.stderr.write(`lokal: could not record ${file} as holding real data: ${(e as Error).message}\n`);
+  }
+}
+
 /**
  * `.samaranignore` at the project root: gitignore-like patterns for files known to hold
  * only fake data (test fixtures, seeders). Patterns without "/" match the file name anywhere.
@@ -546,10 +590,31 @@ function parseWhole(ext: string, buf: Buffer): Document {
 }
 
 /** Loads a file for scanning: as text, as spreadsheet sheets, or as an explicit skip with a reason. */
+/**
+ * A gzipped text file ("export.csv.gz", what `zcat` prints): its text, unpacked up to MAX_FILE_BYTES so a small file
+ * that unpacks to gigabytes stops there. Archives of several files (.tar.gz) stay unsupported.
+ */
+function gunzipText(buf: Buffer, sampleBytes?: number): Document {
+  let text: Buffer;
+  try {
+    text = gunzipSync(buf, { maxOutputLength: MAX_FILE_BYTES });
+  } catch (e) {
+    return unsupported(/maxOutputLength|buffer length/i.test((e as Error).message) ? `unpacks to more than ${mb(MAX_FILE_BYTES)}` : 'damaged gzip file');
+  }
+  if (text.subarray(0, 8000).includes(0)) return unsupported('archive');
+  if (sampleBytes !== undefined && text.length > sampleBytes) {
+    return { kind: 'text', text: text.subarray(0, sampleBytes).toString('utf8').replace(/\n[^\n]*$/, '\n'), sampled: true };
+  }
+  return { kind: 'text', text: text.toString('utf8') };
+}
+const GZIPPED_TEXT = /\.gz$/i;
+const isGzippedText = (file: string) => GZIPPED_TEXT.test(file) && !/\.tar\.gz$/i.test(file);
+
 export function loadDocument(file: string, options: LoadOptions = {}): Document {
   const ext = path.extname(file).toLowerCase();
   const st = statSync(file);
   if (st.size > MAX_FILE_BYTES) return unsupported(`larger than ${mb(MAX_FILE_BYTES)}`);
+  if (isGzippedText(file)) return gunzipText(readFileSync(file), options.sampleBytes);
   if (PARSED_WHOLE.has(ext)) {
     if (options.maxZipBytes !== undefined && st.size > options.maxZipBytes) {
       return unsupported(`larger than ${mb(options.maxZipBytes)}`);
@@ -569,6 +634,7 @@ export function loadDocument(file: string, options: LoadOptions = {}): Document 
 export function loadBuffer(name: string, buf: Buffer): Document {
   const ext = path.extname(name).toLowerCase();
   if (buf.length > MAX_FILE_BYTES) return unsupported(`larger than ${mb(MAX_FILE_BYTES)}`);
+  if (isGzippedText(name)) return gunzipText(buf);
   if (PARSED_WHOLE.has(ext)) return parseWhole(ext, buf);
   const why = UNSUPPORTED_DATA[ext];
   if (why) return unsupported(why);

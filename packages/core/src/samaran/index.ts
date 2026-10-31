@@ -115,6 +115,12 @@ export function partialMask(type: PiiType, value: string): string {
 
 const PLACEHOLDER = /\[([A-Z_]+_\d+)\]/g;
 
+/** No capital letter in the words around a placeholder (other placeholders aside): chat written in lower case. */
+function lowerCaseAround(text: string, start: number, end: number): boolean {
+  const around = `${text.slice(Math.max(0, start - 40), start)} ${text.slice(end, end + 40)}`.replace(/\[[A-Z_]+_\d+\]/g, ' ');
+  return /[a-z]/.test(around) && !/[A-Z]/.test(around);
+}
+
 /**
  * Masks Indonesian personal data before text leaves your server, and restores it afterwards.
  *
@@ -130,6 +136,8 @@ export class Samaran {
   readonly options: SamaranOptions;
   private byCanonical = new Map<string, string>();
   private byPlaceholder = new Map<string, string>();
+  /** A value also written in lower case ("Paijo", later "paijo"): one placeholder, restored in the case around it. */
+  private lowerForm = new Map<string, string>();
   /** Last number used per placeholder name: a type, or a custom rule's label. */
   private counters = new Map<string, number>();
 
@@ -181,7 +189,12 @@ export class Samaran {
 
   /** Puts the original values back. Unknown placeholders are left as they are. */
   unmask(text: string): string {
-    return text.replace(PLACEHOLDER, (whole, key: string) => this.byPlaceholder.get(`[${key}]`) ?? whole);
+    return text.replace(PLACEHOLDER, (whole: string, key: string, at: number) => {
+      const value = this.byPlaceholder.get(`[${key}]`);
+      if (value === undefined) return whole;
+      const lower = this.lowerForm.get(whole);
+      return lower !== undefined && lowerCaseAround(text, at, at + whole.length) ? lower : value;
+    });
   }
 
   /** Number of distinct values in the vault. */
@@ -219,7 +232,12 @@ export class Samaran {
     const name = type === 'CUSTOM' ? label! : type;
     const key = `${name}:${canonical(type, value)}`;
     const existing = this.byCanonical.get(key);
-    if (existing) return existing;
+    if (existing) {
+      if (value !== this.byPlaceholder.get(existing) && value === value.toLowerCase() && /[a-z]/.test(value)) {
+        this.lowerForm.set(existing, value);
+      }
+      return existing;
+    }
     const n = (this.counters.get(name) ?? 0) + 1;
     this.counters.set(name, n);
     const placeholder = `[${name}_${n}]`;

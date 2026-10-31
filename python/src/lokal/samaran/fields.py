@@ -15,7 +15,7 @@ from .types import PiiType
 _FIELDS: list[tuple[PiiType, str]] = [
     # A column called "pasien" or "pelanggan" holds that person's name.
     ('NAME', 'nama|name|full_?name|kepada|kpd|yth|attn|attention|pelapor|terlapor|korban|saksi|tersangka|terdakwa|pelaku|kepala_?keluarga|penanggung_?jawab|ahli_?waris|pemberi_?kuasa|penerima_?kuasa|requester|username|nama_?lengkap|first_?name|last_?name|middle_?name|given_?name|family_?name|surname|nama_?depan|nama_?tengah|nama_?belakang|nama_?panggilan|nickname|nama_?ibu_?kandung|mother_?s?_?maiden_?name|penerima|pengirim|recipient|pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner|pemesan|pembeli|buyer|konsumen|atas_?nama|a_n'),  # noqa: E501
-    ('ADDRESS', 'alamat|address|full_?address|street|street_?address|domisili|alamat_?domisili|alamat_?ktp|alamat_?rumah|alamat_?pengiriman|shipping_?address|home_?address|billing_?address'),  # noqa: E501
+    ('ADDRESS', 'alamat|address|full_?address|street|street_?address|domisili|alamat_?domisili|alamat_?ktp|alamat_?rumah|alamat_?pengiriman|shipping_?address|home_?address|billing_?address|alamat_?kirim|alamat_?tujuan|alamat_?penerima|alamat_?pengirim|alamat_?lengkap|alamat_?tinggal|tempat_?tinggal|kirim_?ke|dikirim_?ke|tujuan_?kirim|tujuan_?pengiriman|ship_?to|shipping_?to|deliver_?to|delivery_?address|delivery_?to|mailing_?address|residential_?address|residence|address_?line_?[12]'),  # noqa: E501
     ('NIK', 'nik|no_?ktp|nomor_?ktp|ktp|nomor_?induk_?kependudukan|national_?id'),
     ('KK', 'kk|no_?kk|nomor_?kk|kartu_?keluarga|no_?kartu_?keluarga|nomor_?kartu_?keluarga|family_?card(_?number)?'),
     ('NPWP', 'npwp|no_?npwp|nomor_?npwp|tax_?id|tin'),
@@ -133,7 +133,7 @@ _USER_PARTS = _js.rx(r'[._ -]+')
 _TRAILING_DIGITS = _js.rx(r'\d+$')
 
 
-def _is_known_name_part(word: str) -> bool:
+def is_known_name_part(word: str) -> bool:
     bare = _TRAILING_DIGITS.sub('', word.lower())
     return bare in GIVEN_NAMES or bare in AMBIGUOUS_GIVEN_NAMES or bare in FAMILY_NAMES or bare in SECOND_NAMES
 
@@ -148,6 +148,7 @@ _URL_SPACE = re.compile(r'%20|\+')
 _ACCOUNT_LIKE = _js.rx(r'[-_.\d]|^(?:admin|root|system|bot|team|tim|null|user)$')
 _HAS_LETTER = re.compile(r'[A-Za-z]')
 _NAME_BAD_CHARS = re.compile(r'[0-9_(){}\[\]<>=]')
+_UNDERSCORED_NAME = re.compile(r'[A-Za-z]+(?:_[A-Za-z]+){1,3}')
 _CODE_KEYWORD = _js.compile(r'^(?:new|this|await|null|undefined|true|false|typeof|function|return|self|None)\b')
 _PASCAL = re.compile(r'^[A-Z][a-z]+[A-Z]')
 _STARTS_UPPER = re.compile(r'^[A-Z]')
@@ -169,7 +170,7 @@ def is_plausible_value(pii_type: PiiType, value: str, key: str) -> bool:
     if _PLACEHOLDER.fullmatch(v):
         return False  # already masked
     if pii_type == 'NAME' and _USER_KEY.search(normalize_key(key)):
-        return bool(_USER_VALUE.search(v)) and any(_is_known_name_part(w) for w in _USER_PARTS.split(v))
+        return bool(_USER_VALUE.search(v)) and any(is_known_name_part(w) for w in _USER_PARTS.split(v))
     # Code, not data: `req.body.nama`, `z.string()`, `${user.phone}`, `=> …`.
     if _CODE_LIKE.search(v):
         return False
@@ -209,6 +210,10 @@ def is_plausible_value(pii_type: PiiType, value: str, key: str) -> bool:
         if not _DATE_LIKE.search(v) and not serial_ok:
             return False
     if pii_type == 'NAME':
+        # "Budi_Santoso": OpenAI's `name` field allows no spaces, so a person is written with underscores. A name the
+        # lists know in it makes it a person; `build_and_test` is not one.
+        if _UNDERSCORED_NAME.fullmatch(v):
+            return any(is_known_name_part(w) for w in v.split('_'))
         if not _HAS_LETTER.search(v) or _NAME_BAD_CHARS.search(v):
             return False
         # `fullName = new codegen.Name(…)`: an expression, not a name.

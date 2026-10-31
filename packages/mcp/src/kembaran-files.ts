@@ -39,7 +39,11 @@ export interface Anonymized {
 }
 
 export const KEMBARAN_NOTE =
-  'The output holds made-up people that look real, so Samaran and the guard will flag it; list it in .samaranignore if agents should read it. A made-up phone number can still belong to someone: keep staging from sending SMS, WhatsApp, or e-mail to real addresses.';
+  'Kembaran replaces the personal data it recognizes, and a 16-digit run that is a valid NIK however it is written; anything else it does not recognize is copied as it is. Look through the output before sharing it, and only then, if agents should read it, list it in .samaranignore (the made-up people in it look real, so Samaran and the guard flag them). A made-up phone number can still belong to someone: keep staging from sending SMS, WhatsApp, or e-mail to real addresses.';
+
+/** Said of a file in which Kembaran replaced nothing: never "clean", since it only knows what it recognizes. */
+export const NOTHING_REPLACED =
+  'nothing replaced: Kembaran recognized no personal data, which does not mean there is none; the output is a copy of the input';
 
 /** Where each input goes: `output` itself for one file, `output/<name>` for several or when it is a folder. */
 export function planOutputs(inputs: string[], output: string): string[] {
@@ -131,13 +135,21 @@ export function runKembaran(args: string[]): void {
       dryRun,
       custom: loadConfig(process.cwd()).custom,
     });
+    let empty = 0;
     for (const f of files) {
       const crossed = Object.values(f.crossed).reduce((a, b) => a + b, 0);
-      const counts = (Object.entries(f.replaced).map(([t, n]) => `${t}=${n}`).join(', ') || 'nothing found') +
-        (crossed ? `, and ${crossed} more found through the other values` : '');
+      const replaced = Object.entries(f.replaced).map(([t, n]) => `${t}=${n}`).join(', ');
+      if (!replaced && !crossed) empty++;
+      const counts = !replaced && !crossed
+        ? NOTHING_REPLACED
+        : (replaced || 'nothing directly') + (crossed ? `, and ${crossed} more found through the other values or as valid NIKs` : '');
       process.stderr.write(dryRun ? `${f.from}: would replace ${counts}\n` : `${f.from} -> ${f.to}: ${counts}\n`);
     }
-    if (leaked) process.stderr.write(`Warning: ${leaked} real value(s) are still in the output, glued to other text. Check it before sharing.\n`);
+    if (leaked) {
+      process.stderr.write(`Warning: ${leaked} real value(s) are still in the output, glued to other text. Do not share it as it is.\n`);
+      process.exitCode = 1;
+    }
+    if (empty) process.stderr.write(`Warning: ${empty} file(s) had nothing replaced. Do not treat them as anonymized without looking.\n`);
     process.stderr.write(dryRun ? 'Dry run: nothing was written.\n' : `${KEMBARAN_NOTE}\n`);
   } catch (e) {
     process.stderr.write(`${(e as Error).message}\n`);

@@ -22,7 +22,6 @@ import {
   parsePhone,
   parseQris,
   parseRupiah,
-  partialMask,
   setQrisAmount,
   terbilang,
   type PiiMatch,
@@ -40,11 +39,12 @@ import {
 } from '@lokal-id/core/wilayah';
 import { countMatches, writeAudit } from './audit.ts';
 import {
-  allowedTypes, detectConfigured, loadConfig, loadIgnore, loadInRoot, realRoot, resolveInRoot, toPosix, underPolicy,
+  allowedTypes, detectConfigured, loadConfig, loadIgnore, loadInRoot, previewForModel, realRoot, recordUnmasked, resolveInRoot,
+  toPosix, underPolicy,
   walkFiles, writeInRoot,
   type Document, type SamaranConfig,
 } from './files.ts';
-import { anonymizeFiles, KEMBARAN_NOTE } from './kembaran-files.ts';
+import { anonymizeFiles, KEMBARAN_NOTE, NOTHING_REPLACED } from './kembaran-files.ts';
 import { NerNames } from './ner.ts';
 import { VERSION } from './version.ts';
 
@@ -494,7 +494,7 @@ export function createServer(
                 label: m.label,
                 uuPdp: UU_PDP_CATEGORY[m.type],
                 confidence: m.confidence,
-                preview: partialMask(m.type, m.value),
+                preview: previewForModel(m.type, m.value),
               });
             }
           }
@@ -616,7 +616,7 @@ export function createServer(
       const header = [
         `File: ${rel} (${what})`,
         ...(doc.kind === 'sheets' && doc.unscanned ? [`Not read: ${doc.unscanned}. They may hold personal data, such as an ID card photo.`] : []),
-        `Masked: ${all.length ? JSON.stringify(countByType(all.map((m) => m.label ?? m.type))) : 'nothing found'}`,
+        `Masked: ${all.length ? JSON.stringify(countByType(all.map((m) => m.label ?? m.type))) : 'nothing recognized'}`,
         ...(clashes.size
           ? [`Note: the file itself contains ${[...clashes].slice(0, 5).join(', ')}, which this session also uses as placeholders. write_file_unmasked would restore them; do not copy that text into output.`]
           : []),
@@ -659,6 +659,8 @@ export function createServer(
         return fail((e as Error).message);
       }
       const restored = placeholders.filter((p) => !unknown.includes(p));
+      // Real values are in it now: the guard checks it from here on like a data file, whatever its extension.
+      if (restored.length) recordUnmasked(root, abs);
       audit('restored', 'write_file_unmasked', {
         file: toPosix(path.relative(root, abs)),
         counts: countMatches(restored.map((p) => ({ type: p.slice(1, p.lastIndexOf('_')) }))),
@@ -712,11 +714,23 @@ export function createServer(
           for (const [t, n] of Object.entries(f.crossed)) counts[t] = (counts[t] ?? 0) + n;
           audit('anonymized', 'anonymize_file', { file: toPosix(path.relative(root, f.from)), counts });
         }
+        const empty = files.filter((f) => !Object.keys(f.replaced).length && !Object.keys(f.crossed).length);
+        const warnings = [
+          ...(leaked ? [`${leaked} real value(s) are still in the output, glued to other text: tell the user not to share it as it is.`] : []),
+          ...(empty.length ? [`In ${empty.map((f) => toPosix(path.relative(root, f.from))).join(', ')}: ${NOTHING_REPLACED}. Tell the user; do not call it anonymized.`] : []),
+        ];
         return json({
-          files: files.map((f) => ({ from: toPosix(path.relative(root, f.from)), to: toPosix(path.relative(root, f.to)), replaced: f.replaced, also_found: f.crossed })),
-          // Real values of the input still in the output: 0 unless one is glued to other text.
+          files: files.map((f) => ({
+            from: toPosix(path.relative(root, f.from)),
+            to: toPosix(path.relative(root, f.to)),
+            replaced: f.replaced,
+            also_found: f.crossed,
+            ...(empty.includes(f) ? { nothing_replaced: true } : {}),
+          })),
+          // Real values Kembaran recognized in the input and still finds in the output: 0 unless one is glued to other
+          // text. It cannot count what it never recognized.
           real_values_left: leaked,
-          note: leaked ? `${leaked} real value(s) are still in the output, glued to other text: tell the user to check it before sharing. ${KEMBARAN_NOTE}` : KEMBARAN_NOTE,
+          note: [...warnings, KEMBARAN_NOTE].join(' '),
         });
       } catch (e) {
         return fail((e as Error).message);

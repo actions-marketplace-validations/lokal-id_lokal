@@ -95,6 +95,14 @@ def partial_mask(pii_type: PiiType, value: str) -> str:
 
 
 _PLACEHOLDER = re.compile(r'\[([A-Z_]+_[0-9]+)\]')
+_HAS_LOWER = re.compile(r'[a-z]')
+_HAS_UPPER = re.compile(r'[A-Z]')
+
+
+def _lower_case_around(text: str, start: int, end: int) -> bool:
+    """No capital letter in the words around a placeholder (other placeholders aside): chat written in lower case."""
+    around = _PLACEHOLDER.sub(' ', f'{text[max(0, start - 40) : start]} {text[end : end + 40]}')
+    return bool(_HAS_LOWER.search(around)) and not _HAS_UPPER.search(around)
 _VAULT_KEY = re.compile(r'\[([A-Z_]+)_([0-9]+)\]')
 
 
@@ -121,7 +129,7 @@ class Samaran:
 
     __slots__ = (
         'mode', 'allow', 'types', 'exclude', 'min_confidence', 'custom', 'ner',
-        '_by_canonical', '_by_placeholder', '_counters',
+        '_by_canonical', '_by_placeholder', '_lower_form', '_counters',
     )
 
     def __init__(
@@ -146,6 +154,8 @@ class Samaran:
         self.ner = ner
         self._by_canonical: dict[str, str] = {}
         self._by_placeholder: dict[str, str] = {}
+        # A value also written in lower case ("Paijo", later "paijo"): one placeholder, restored in the case around it.
+        self._lower_form: dict[str, str] = {}
         self._counters: dict[str, int] = {}
 
     def _allowed(self, value: str) -> bool:
@@ -196,7 +206,15 @@ class Samaran:
 
     def unmask(self, text: str) -> str:
         """Puts the original values back. Unknown placeholders are left as they are."""
-        return _PLACEHOLDER.sub(lambda m: self._by_placeholder.get(f'[{m.group(1)}]', m.group(0)), text)
+
+        def restore(m: re.Match[str]) -> str:
+            value = self._by_placeholder.get(m.group(0))
+            if value is None:
+                return m.group(0)
+            lower = self._lower_form.get(m.group(0))
+            return lower if lower is not None and _lower_case_around(text, m.start(), m.end()) else value
+
+        return _PLACEHOLDER.sub(restore, text)
 
     @property
     def size(self) -> int:
@@ -236,6 +254,8 @@ class Samaran:
         key = f'{name}:{_canonical(pii_type, value)}'
         existing = self._by_canonical.get(key)
         if existing:
+            if value != self._by_placeholder.get(existing) and value == value.lower() and _HAS_LOWER.search(value):
+                self._lower_form[existing] = value
             return existing
         n = self._counters.get(name, 0) + 1
         self._counters[name] = n

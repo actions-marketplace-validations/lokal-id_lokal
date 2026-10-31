@@ -4,12 +4,31 @@
 // `Get-Content x -Tail 20`, `Import-Csv x | Select-Object -First 3`. Anything it does not recognize
 // (`node dedupe.js data.csv`, `python clean.py`) is allowed: running a script on the real data is the
 // private way to process it, and what the script prints is the script author's choice.
-import { existsSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { globToRegExp } from './files.ts';
 
 /** Text data formats, and PDF for `pdftotext x.pdf -`; spreadsheets are binary and print nothing readable through `cat`. */
-export const SHELL_DATA_FILE = /\.(csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out|pdf)(\.\d+)?$/i;
+export const SHELL_DATA_FILE = /\.(csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out|pdf)(\.\d+)?(\.gz)?$/i;
+// A dotenv file (.env, .env.local, .env.production): configuration that may hold anything.
+const ENV_FILE = /^\.env(?:\.[\w.-]+)?$/i;
+
+// Files write_file_unmasked wrote with real values, whatever their extension (docs/notes.md, src/fixtures.ts).
+let marked: ReadonlySet<string> = new Set();
+
+/** Files to treat as data from now on in this process, as absolute paths: the guard passes what write_file_unmasked wrote. */
+export function markDataFiles(files: Iterable<string>): void {
+  marked = new Set([...files].map((f) => path.resolve(f)));
+}
+
+/**
+ * Whether a file's contents count as data when a command prints it: a data format (gzipped too), a dotenv file, a file
+ * with no extension (an export called `customers`), or a file write_file_unmasked wrote. Source code is not.
+ */
+export function isShellDataFile(file: string): boolean {
+  const name = path.basename(file);
+  return SHELL_DATA_FILE.test(name) || ENV_FILE.test(name) || (!name.includes('.') && name.length > 0) || marked.has(path.resolve(file));
+}
 
 export interface ShellRead {
   file: string;
@@ -25,15 +44,44 @@ const READERS = new Set([
   'cat', 'type', 'gc', 'get-content', 'more', 'less', 'bat', 'batcat', 'head', 'tail', 'nl', 'tac', 'sed', 'awk',
   'gawk', 'cut', 'sort', 'uniq', 'column', 'jq', 'yq', 'grep', 'egrep', 'fgrep', 'rg', 'ag', 'select-string', 'sls',
   'import-csv', 'ipcsv', 'xxd', 'od', 'strings', 'csvlook', 'csvcut', 'mlr', 'paste', 'findstr', 'pdftotext',
+  'diff', 'comm', 'join', 'base64', 'base32', 'hexdump', 'iconv', 'rev', 'shuf', 'fold', 'fmt', 'expand', 'pr', 'curl',
+  'zcat', 'gzcat', 'zless', 'zmore', 'zgrep', 'zegrep',
+  // `done < data.csv` feeds the file to a `while read` loop, whose body prints what it reads.
+  'done',
 ]);
-// Programs that pass their stdin through to the screen, reshaped.
+// Programs that pass their stdin through to the screen, reshaped. `read` is the stdin of `… | while read l; do …`.
 const FILTERS = new Set([
-  ...READERS, 'tr', 'fold', 'fmt', 'tee', 'select-object', 'select', 'format-table', 'ft', 'format-list', 'fl',
-  'out-string', 'out-host', 'convertto-json', 'convertto-csv', 'where-object', 'where', '?', 'sort-object',
-  'group-object', 'write-output', 'echo',
+  ...READERS, 'tr', 'tee', 'select-object', 'select', 'format-table', 'ft', 'format-list', 'fl', 'out-string', 'out-host',
+  'convertto-json', 'convertto-csv', 'where-object', 'where', '?', 'sort-object', 'group-object', 'write-output', 'echo',
+  'read',
 ]);
 const WRITE_SINKS = new Set(['out-file', 'set-content', 'add-content', 'export-csv', 'out-null']);
-const PREFIXES = new Set(['sudo', 'command', 'env', 'time', 'nice', 'nohup', 'exec', '&', '.']);
+const PREFIXES = new Set(['sudo', 'command', 'env', 'time', 'nice', 'nohup', 'exec', '&']);
+// Shell words that come before a command: `if grep …; then cat …; else …`, `while read l; do echo "$l"; done`.
+const KEYWORDS = new Set(['if', 'then', 'else', 'elif', 'do', 'while', 'until', '!', '{', '(']);
+// Folder changes: `cd data && cat x.csv` reads data/x.csv.
+const CD = new Set(['cd', 'chdir', 'pushd', 'set-location', 'sl', 'push-location']);
+// Copies whose destination a later command can print: `cp x.csv /tmp/y && cat /tmp/y`.
+const COPIES = new Set(['cp', 'copy', 'copy-item', 'cpi', 'mv', 'move', 'move-item', 'mi', 'ln', 'install', 'rsync']);
+// Query tools that load a data file named anywhere in their arguments and print the results.
+const QUERY_TOOLS = new Set(['sqlite3', 'duckdb', 'csvsql', 'csvq', 'q', 'textql', 'trdsql']);
+// Commands whose output can be a list of file names for `xargs cat`.
+const LISTERS = new Set(['ls', 'dir', 'find', 'fd', 'gci', 'get-childitem', 'echo', 'printf']);
+// Shells that run the code after these options: `bash -c "cat x.csv"`, `cmd /c type x.csv`. cmd is read like
+// PowerShell, where a backslash separates folders instead of escaping.
+const SHELLS: Record<string, { flags: string[]; powershell: boolean }> = {
+  bash: { flags: ['-c'], powershell: false }, sh: { flags: ['-c'], powershell: false }, zsh: { flags: ['-c'], powershell: false },
+  dash: { flags: ['-c'], powershell: false }, ksh: { flags: ['-c'], powershell: false }, cmd: { flags: ['/c', '/k'], powershell: true },
+  pwsh: { flags: ['-c', '-command'], powershell: true }, powershell: { flags: ['-c', '-command'], powershell: true },
+};
+// Searches. rg and ag go into folders by default; grep with -r. zgrep searches gzipped files.
+const GREPS = new Set(['grep', 'egrep', 'fgrep', 'rg', 'ag', 'zgrep', 'zegrep']);
+const RECURSIVE_GREPS = new Set(['rg', 'ag']);
+/** A search into folders is checked in this many data files, as the Grep tool is. */
+const MAX_SEARCHED_FILES = 300;
+/** Shell scripts are followed into, up to this depth; bigger scripts are not read. */
+const MAX_DEPTH = 3;
+const MAX_SCRIPT_BYTES = 256 * 1024;
 
 interface Word {
   text: string;
@@ -209,22 +257,49 @@ interface Segment {
   positional: string[];
   inputFile?: string;
   writesToFile: boolean;
+  /** Where stdout goes, for `>` and `>>`. */
+  writesTo?: string;
+}
+
+/** Drops subshell and group brackets around words: `(cd data && cat x.csv)`, `{ cat x.csv; }`. */
+function unbracket(words: Word[]): Word[] {
+  const out: Word[] = [];
+  for (const w of words) {
+    let text = w.text;
+    if (!w.quoted) {
+      if (!out.length) text = text.replace(/^[({]+/, '');
+      if (!text.includes('(')) text = text.replace(/[)}]+$/, '');
+    }
+    if (text || w.quoted) out.push({ text, quoted: w.quoted });
+  }
+  return out;
 }
 
 function toSegment(words: Word[]): Segment | undefined {
-  const list = [...words];
-  // Skip VAR=value assignments and wrappers like sudo.
-  while (list.length && (/^[A-Za-z_]\w*=/.test(list[0]!.text) && !list[0]!.quoted)) list.shift();
-  while (list.length && PREFIXES.has(list[0]!.text.toLowerCase())) list.shift();
+  const list = unbracket(words);
+  // Skip shell keywords, VAR=value assignments, and wrappers like sudo.
+  for (;;) {
+    const first = list[0];
+    if (!first || first.quoted) break;
+    if (KEYWORDS.has(first.text.toLowerCase()) || PREFIXES.has(first.text.toLowerCase()) || /^[A-Za-z_]\w*=/.test(first.text)) {
+      list.shift();
+    } else {
+      break;
+    }
+  }
   if (!list.length) return undefined;
   const program = programName(list[0]!.text);
   const args: string[] = [];
   let inputFile: string | undefined;
   let writesToFile = false;
+  let writesTo: string | undefined;
   for (let i = 1; i < list.length; i++) {
     const w = list[i]!;
     if (!w.quoted && /^(\d|&)?>>?$/.test(w.text)) {
-      if (!w.text.startsWith('2')) writesToFile = true; // `2>` only redirects errors
+      if (!w.text.startsWith('2')) {
+        writesToFile = true; // `2>` only redirects errors
+        writesTo = list[i + 1]?.text;
+      }
       i++;
     } else if (!w.quoted && /^\d?>&\d$/.test(w.text)) {
       // 2>&1 and friends: nothing to do
@@ -235,7 +310,7 @@ function toSegment(words: Word[]): Segment | undefined {
     }
   }
   const positional = args.filter((a) => !/^--?[A-Za-z]/.test(a) && !/^-\d+$/.test(a));
-  return { program, args, positional, inputFile, writesToFile };
+  return { program, args, positional, inputFile, writesToFile, writesTo };
 }
 
 /** How a segment narrows what flows through it, or `undefined` when it prints a summary instead (wc -l, grep -c). */
@@ -252,8 +327,8 @@ function selection(seg: Segment): Select | undefined {
       if (raw?.startsWith('+')) return lastLines(0, Number(raw.slice(1)));
       return lastLines(Math.abs(num(raw) ?? 10));
     }
-    case 'grep': case 'egrep': case 'fgrep': case 'rg': case 'ag': case 'findstr': {
-      if (has(args, '-c', '-l', '-L', '-q', '--count', '--files-with-matches', '--files-without-match', '--quiet')) {
+    case 'grep': case 'egrep': case 'fgrep': case 'rg': case 'ag': case 'findstr': case 'zgrep': case 'zegrep': {
+      if (has(args, '-c', '-l', '-L', '-q', '--count', '--files-with-matches', '--files-without-match', '--quiet', '--files', '--count-matches')) {
         return undefined;
       }
       const pattern = option(args, ['-e', '--regexp']) ?? seg.positional[0];
@@ -314,21 +389,26 @@ function selection(seg: Segment): Select | undefined {
   }
 }
 
-function expand(raw: string, cwd: string, powershell: boolean): string[] {
-  let word = raw;
-  // Git Bash on Windows writes Z:\Project as /z/Project.
+/** A word as a path: Git Bash on Windows writes Z:\Project as /z/Project, PowerShell takes "\" as a separator. */
+function asPath(raw: string, powershell: boolean): string {
+  let word = raw.replace(/^file:\/\//i, '');
+  if (/^\/[A-Za-z]:[\\/]/.test(word)) word = word.slice(1); // file:///Z:/data.csv
   if (process.platform === 'win32') word = word.replace(/^\/([a-zA-Z])(?=\/|$)/, '$1:');
-  // PowerShell takes "\" as a path separator on every OS: .\data.csv
   else if (powershell) word = word.replace(/\\/g, '/');
+  return word;
+}
+
+function expand(raw: string, cwd: string, powershell: boolean): string[] {
+  const word = asPath(raw, powershell);
   if (!/[*?]/.test(word)) {
     const file = path.resolve(cwd, word);
-    return SHELL_DATA_FILE.test(file) && existsSync(file) && statSync(file).isFile() ? [file] : [];
+    return isShellDataFile(file) && existsSync(file) && statSync(file).isFile() ? [file] : [];
   }
   const dir = path.resolve(cwd, path.dirname(word));
   const re = globToRegExp(path.basename(word));
   try {
     return readdirSync(dir)
-      .filter((name) => re.test(name) && SHELL_DATA_FILE.test(name))
+      .filter((name) => re.test(name) && isShellDataFile(path.join(dir, name)))
       .map((name) => path.join(dir, name))
       .filter((f) => statSync(f).isFile());
   } catch {
@@ -336,21 +416,296 @@ function expand(raw: string, cwd: string, powershell: boolean): string[] {
   }
 }
 
-/** Data files whose contents the command prints to the conversation. */
-export function dataReadsInCommand(command: string, cwd: string, powershell = false): ShellRead[] {
+const isDir = (p: string) => {
+  try {
+    return statSync(p).isDirectory();
+  } catch {
+    return false;
+  }
+};
+
+/** Data files in a folder, for `ls data | xargs cat` and `find data -name "*.csv" | xargs cat`; at most 2,000 entries. */
+function dataFilesIn(dir: string, recursive: boolean): string[] {
+  const out: string[] = [];
+  const queue = [dir];
+  let seen = 0;
+  while (queue.length && seen < 2000) {
+    const at = queue.shift()!;
+    let entries;
+    try {
+      entries = readdirSync(at, { withFileTypes: true });
+    } catch {
+      continue;
+    }
+    for (const e of entries) {
+      if (++seen > 2000) break;
+      const full = path.join(at, e.name);
+      if (e.isDirectory()) {
+        if (recursive && !/^(node_modules|\.git|\.venv|venv|dist|build|target)$/.test(e.name)) queue.push(full);
+      } else if (e.isFile() && isShellDataFile(full)) {
+        out.push(full);
+      }
+    }
+  }
+  return out;
+}
+
+// What one command line has done so far, as the walk goes from segment to segment.
+interface Walk {
+  /** Folders a relative path may be in: the start folder and every folder `cd` went to (a subshell may have gone back). */
+  dirs: string[];
+  /** Shell and PowerShell variables: `F=x.csv`, `$f = "x.csv"`, `for f in *.csv`. */
+  vars: Map<string, string[]>;
+  /** Files this command writes from data files (cp, mv, `>`, tee), and what of the data they hold. */
+  copies: Map<string, ShellRead[]>;
+  /** Scripts this command writes (a heredoc into a file), for strict mode. */
+  scripts: Map<string, string>;
+  /** `$(…)` and backtick commands, taken out before parsing: their output is part of the command's. */
+  subs: string[];
+  powershell: boolean;
+  strict: boolean;
+  depth: number;
+  reads: ShellRead[];
+  inline: ShellRead[];
+}
+
+/** Takes `$(…)` and backtick commands out of a command, leaving a marker for each. */
+function takeSubstitutions(command: string, powershell: boolean, subs: string[]): string {
+  let out = '';
+  for (let i = 0; i < command.length; i++) {
+    if (command[i] === '$' && command[i + 1] === '(') {
+      let depth = 0;
+      let j = i + 1;
+      for (; j < command.length; j++) {
+        if (command[j] === '(') depth++;
+        else if (command[j] === ')' && --depth === 0) break;
+      }
+      subs.push(command.slice(i + 2, j));
+      out += `\u0000${subs.length - 1}\u0000`;
+      i = j;
+    } else if (!powershell && command[i] === '`') {
+      const close = command.indexOf('`', i + 1);
+      if (close === -1) {
+        out += command.slice(i);
+        break;
+      }
+      subs.push(command.slice(i + 1, close));
+      out += `\u0000${subs.length - 1}\u0000`;
+      i = close;
+    } else {
+      out += command[i];
+    }
+  }
+  return out;
+}
+
+const varKey = (name: string, w: Walk) => (w.powershell ? name.toLowerCase() : name);
+
+/** Replaces known variables in the words; a variable that stands alone with several values becomes several words. */
+function substitute(words: Word[], w: Walk): Word[] {
+  return words.flatMap((word) => {
+    const whole = /^\$(?:\{(\w+)\}|env:(\w+)|(\w+))$/i.exec(word.text);
+    const values = whole ? w.vars.get(varKey((whole[1] ?? whole[2] ?? whole[3])!, w)) : undefined;
+    if (values) return values.map((text) => ({ text, quoted: word.quoted }));
+    const text = word.text.replace(/\$\{(\w+)\}|\$(\w+)/g, (m, a?: string, b?: string) => w.vars.get(varKey((a ?? b)!, w))?.[0] ?? m);
+    return [{ text, quoted: word.quoted }];
+  });
+}
+
+/** Records `F=x`, `export F=x`, `$f = "x"`, and `for f in a b`; true when the words did nothing else. */
+function assign(words: Word[], w: Walk): boolean {
+  const texts = words.map((x) => x.text);
+  if (/^for$/i.test(texts[0] ?? '') && texts[2]?.toLowerCase() === 'in') {
+    w.vars.set(varKey(texts[1]!, w), texts.slice(3));
+    return true;
+  }
+  if (w.powershell) {
+    const one = /^\$(\w+)=(.+)$/.exec(texts[0] ?? '');
+    if (one && texts.length === 1) {
+      w.vars.set(varKey(one[1]!, w), [one[2]!]);
+      return true;
+    }
+    const m = /^\$(\w+)$/.exec(texts[0] ?? '');
+    if (m && texts[1] === '=' && texts.length === 3) w.vars.set(varKey(m[1]!, w), [texts[2]!]);
+    return false; // `$rows = Get-Content x.csv` is still a command, whose output is kept to be shown later
+  }
+  const rest = ['export', 'declare', 'local', 'readonly', 'typeset', 'set'].includes(texts[0] ?? '') ? texts.slice(1) : texts;
+  if (!rest.length || !rest.every((t) => /^[A-Za-z_]\w*=/.test(t))) return false;
+  for (const t of rest) w.vars.set(t.slice(0, t.indexOf('=')), [t.slice(t.indexOf('=') + 1)]);
+  return true;
+}
+
+/** Every file a word may name, in every folder the command may be in, including files the command wrote from data. */
+function resolveWord(raw: string, w: Walk): ShellRead[] {
   const out: ShellRead[] = [];
-  for (const pipeline of parse(stripHeredocs(command), powershell)) {
+  for (const dir of w.dirs) {
+    const copied = w.copies.get(path.resolve(dir, asPath(raw, w.powershell)));
+    if (copied) out.push(...copied);
+    for (const file of expand(raw, dir, w.powershell)) out.push({ file, select: all });
+  }
+  return out;
+}
+
+/** The data files a search or `find` reaches through each of `places`: the files themselves, or every data file under a folder. */
+function inFolders(places: string[], w: Walk): ShellRead[] {
+  const out: ShellRead[] = [];
+  for (const place of places) {
+    out.push(...resolveWord(place, w));
+    for (const dir of w.dirs) {
+      const at = path.resolve(dir, asPath(place, w.powershell));
+      if (isDir(at)) for (const file of dataFilesIn(at, true)) out.push({ file, select: all });
+    }
+  }
+  return out.slice(0, MAX_SEARCHED_FILES);
+}
+
+/** A script's text: one this command writes, or a file of up to MAX_SCRIPT_BYTES. */
+function readScript(raw: string, w: Walk): string | undefined {
+  for (const dir of w.dirs) {
+    const file = path.resolve(dir, asPath(raw, w.powershell));
+    const written = w.scripts.get(file);
+    if (written !== undefined) return written;
+    try {
+      const stat = statSync(file);
+      if (stat.isFile() && stat.size <= MAX_SCRIPT_BYTES) return readFileSync(file, 'utf8');
+    } catch {
+      // not there
+    }
+  }
+  return undefined;
+}
+
+/** Walks a command (or a script's text) inside `w`, adding what it prints to `w.reads` (and, strict, to `w.inline`). */
+function walk(command: string, w: Walk): void {
+  for (const m of command.matchAll(HEREDOC)) {
+    const target = /(?:>\s*|\btee\s+)([^\s<>|;&]+)/.exec(m[0].trimStart().split('\n')[0]!)?.[1];
+    if (target) for (const dir of w.dirs) w.scripts.set(path.resolve(dir, asPath(target, w.powershell)), m[4]!);
+  }
+  const text = takeSubstitutions(stripHeredocs(command), w.powershell, w.subs);
+  for (const pipeline of parse(text, w.powershell)) {
     let flow: ShellRead[] = [];
-    for (const words of pipeline) {
-      const seg = toSegment(words);
+    // File names earlier in the pipeline, for `… | xargs cat`; listed only when an xargs needs them.
+    const listed: Array<() => ShellRead[]> = [];
+    for (const raw of pipeline) {
+      // A `$(…)` in the words runs first, and what it prints is part of this command.
+      for (const word of raw) {
+        for (const m of word.text.matchAll(/\u0000(\d+)\u0000/g)) walk(w.subs[Number(m[1])]!, w);
+      }
+      const words = substitute(raw, w);
+      if (assign(words, w)) continue;
+      const kept = w.powershell && /^\$\w+$/.test(words[0]?.text ?? '') && words[1]?.text === '=';
+      const seg = toSegment(kept ? words.slice(2) : words);
       if (!seg) continue;
-      const narrow = selection(seg);
-      // `pdftotext in.pdf out.txt` writes a file; only `pdftotext in.pdf -` prints the text.
-      if (seg.program === 'pdftotext' && !seg.args.includes('-')) {
+      const reads = (word: string) => resolveWord(word, w);
+
+      if (CD.has(seg.program)) {
+        const to = seg.positional.find((a) => a.toLowerCase() !== '/d');
+        if (to && to !== '-' && to !== '~') {
+          for (const dir of [...w.dirs]) {
+            const next = path.resolve(dir, asPath(to, w.powershell));
+            if (!w.dirs.includes(next) && isDir(next)) w.dirs.push(next);
+          }
+        }
+        continue;
+      }
+
+      if (COPIES.has(seg.program)) {
+        const destination = w.powershell ? option(seg.args, ['-destination']) : undefined;
+        const named = destination !== undefined
+          ? [option(seg.args, ['-path', '-literalpath']) ?? seg.positional[0] ?? '', destination]
+          : seg.positional;
+        const dest = named[named.length - 1];
+        const sources = named.slice(0, -1).flatMap((s) => reads(s));
+        if (dest && sources.length) {
+          for (const dir of w.dirs) {
+            const target = path.resolve(dir, asPath(dest, w.powershell));
+            const intoDir = isDir(target) || /[\\/]$/.test(dest) || sources.length > 1;
+            for (const r of sources) {
+              const at = intoDir ? path.join(target, path.basename(r.file)) : target;
+              w.copies.set(at, [...(w.copies.get(at) ?? []), r]);
+            }
+          }
+        }
         flow = [];
         continue;
       }
-      if (WRITE_SINKS.has(seg.program) || (!READERS.has(seg.program) && !FILTERS.has(seg.program))) {
+
+      // Shells and shell scripts: `bash -c "…"`, `cmd /c …`, `pwsh -c …`, `bash x.sh`, `source x.sh`, `./x.sh`.
+      const shell = SHELLS[seg.program];
+      const sourced = ['source', '.'].includes(seg.program);
+      if (shell || sourced || /\.(sh|bash|ps1)$/i.test(seg.program)) {
+        const at = shell ? seg.args.findIndex((a) => shell.flags.includes(a.toLowerCase())) : -1;
+        const powershell = shell ? shell.powershell : /\.ps1$/i.test(seg.program) || (sourced && w.powershell);
+        const script = shell || sourced ? (option(seg.args, ['-file']) ?? seg.positional[0]) : raw[0]!.text;
+        const inner = at >= 0 ? seg.args.slice(at + 1).join(' ') : script !== undefined ? readScript(script, w) : undefined;
+        if (inner !== undefined && w.depth < MAX_DEPTH && !seg.writesToFile) walk(inner, { ...w, powershell, depth: w.depth + 1 });
+        flow = [];
+        continue;
+      }
+
+      if (w.strict && !seg.writesToFile) strictCode(seg, words, w);
+
+      let isReader = READERS.has(seg.program);
+      let narrow = selection(seg);
+      let files: ShellRead[] | undefined;
+      if (seg.program === 'xargs') {
+        // `ls data/*.csv | xargs cat`: the files are the names earlier in the pipeline.
+        let i = 0;
+        while (i < seg.args.length && seg.args[i]!.startsWith('-')) i += /^-[InLPdaEs]$/.test(seg.args[i]!) ? 2 : 1;
+        const inner = toSegment(seg.args.slice(i).map((text) => ({ text, quoted: false })));
+        isReader = !!inner && READERS.has(inner.program);
+        narrow = inner ? selection(inner) : undefined;
+        files = isReader ? listed.flatMap((list) => list()) : [];
+      } else if (['perl', 'ruby'].includes(seg.program) && seg.args.some((a) => /^-[a-zA-Z]*[pn]/.test(a))) {
+        isReader = true; // perl -pe / -ne goes through the lines of the files it is given
+        narrow = all;
+      } else if (/^python[\d.]*$|^py$/.test(seg.program) && option(seg.args, ['-m']) === 'json.tool') {
+        isReader = true;
+        narrow = all;
+      } else if (QUERY_TOOLS.has(seg.program)) {
+        // sqlite3 :memory: ".import data.csv t" "select * from t": the files are named inside its arguments.
+        isReader = true;
+        narrow = all;
+        files = seg.args.flatMap((a) => [...a.matchAll(NAMED_FILE)].flatMap((m) => reads(m[0])));
+      } else if (['gzip', 'gunzip'].includes(seg.program) && seg.args.some((a) => /^-[a-zA-Z]*c[a-zA-Z]*$|^--(?:to-)?stdout$/.test(a))) {
+        isReader = true; // gzip -dc / gunzip -c export.csv.gz prints the text, as zcat does
+        narrow = all;
+      } else if (seg.program === 'find' && seg.args.some((a) => /^-exec(?:dir)?$/.test(a))) {
+        // `find data -name "*.csv" -exec head {} \;`: the files find lists, through the command it runs on each.
+        const at = seg.args.findIndex((a) => /^-exec(?:dir)?$/.test(a));
+        const end = seg.args.findIndex((a, i) => i > at && (a === ';' || a === '+'));
+        const inner = toSegment(seg.args.slice(at + 1, end < 0 ? undefined : end).filter((a) => a !== '{}').map((text) => ({ text, quoted: false })));
+        isReader = !!inner && READERS.has(inner.program);
+        narrow = inner ? selection(inner) : undefined;
+        const firstOption = seg.args.findIndex((a) => a.startsWith('-'));
+        const places = seg.args.slice(0, firstOption < 0 ? seg.args.length : firstOption);
+        files = isReader ? inFolders(places.length ? places : ['.'], w) : [];
+      } else if (GREPS.has(seg.program) && (RECURSIVE_GREPS.has(seg.program) || has(seg.args, '-r', '-R', '--recursive', '--dereference-recursive'))) {
+        // `grep -rn 0812 .`, `rg Budi data/`: every data file under the folders, through the search.
+        const patternGiven = option(seg.args, ['-e', '--regexp']) !== undefined;
+        const places = seg.positional.slice(patternGiven ? 0 : 1);
+        files = inFolders(places.length ? places : ['.'], w);
+      }
+      if (LISTERS.has(seg.program)) {
+        const recursive = seg.program === 'find' || seg.program === 'fd';
+        const places = seg.positional.length || !recursive ? seg.positional : ['.'];
+        const dirs = [...w.dirs];
+        listed.push(() =>
+          places.flatMap((a) => [
+            ...reads(a),
+            ...dirs.flatMap((dir) => {
+              const at = path.resolve(dir, asPath(a, w.powershell));
+              return isDir(at) ? dataFilesIn(at, recursive).map((file) => ({ file, select: all })) : [];
+            }),
+          ]),
+        );
+      }
+
+      if (seg.program === 'pdftotext' && !seg.args.includes('-')) {
+        flow = []; // `pdftotext in.pdf out.txt` writes a file; only `pdftotext in.pdf -` prints the text
+        continue;
+      }
+      if (WRITE_SINKS.has(seg.program) || (!isReader && !FILTERS.has(seg.program))) {
         flow = []; // written to a file, or consumed by a program whose output we cannot predict
         continue;
       }
@@ -358,24 +713,37 @@ export function dataReadsInCommand(command: string, cwd: string, powershell = fa
         flow = []; // a count or a yes/no, not the data
         continue;
       }
-      const files = READERS.has(seg.program)
-        ? [...seg.args, ...(seg.inputFile ? [seg.inputFile] : [])].flatMap((a) => expand(a, cwd, powershell))
-        : [];
-      flow = files.length
-        ? files.map((file) => ({ file, select: narrow }))
-        : flow.map((r) => ({ file: r.file, select: (t: string) => narrow(r.select(t)) }));
+      if (isReader && files === undefined) files = [...seg.args, ...(seg.inputFile ? [seg.inputFile] : [])].flatMap(reads);
+      const select = narrow;
+      flow = (files?.length ? files : seg.program === 'xargs' ? [] : flow).map((r) => ({ file: r.file, select: (t: string) => select(r.select(t)) }));
+      // What goes into a file can be printed by a later command: `head x.csv > /tmp/y; cat /tmp/y`.
+      const targets = [...(seg.writesTo ? [seg.writesTo] : []), ...(seg.program === 'tee' ? seg.positional : [])];
+      if (flow.length) for (const t of targets) for (const dir of w.dirs) w.copies.set(path.resolve(dir, asPath(t, w.powershell)), flow);
       if (seg.writesToFile && seg.program !== 'tee') flow = [];
     }
-    for (const r of flow) out.push(r);
+    for (const r of flow) w.reads.push(r);
   }
-  return out;
+}
+
+function newWalk(cwd: string, powershell: boolean, strict: boolean): Walk {
+  return { dirs: [cwd], vars: new Map(), copies: new Map(), scripts: new Map(), subs: [], powershell, strict, depth: 0, reads: [], inline: [] };
+}
+
+/** Data files whose contents the command prints to the conversation. */
+export function dataReadsInCommand(command: string, cwd: string, powershell = false): ShellRead[] {
+  const w = newWalk(cwd, powershell, false);
+  walk(command, w);
+  return w.reads;
 }
 
 // ------------------------------------------------------------------------------------------------ strict mode
 //
 // Code passed on the command line can print a file as easily as `cat`: `python -c "print(open('x.csv').read())"`. The
 // default guard allows it, because one-liners that count or check data are common. In strict mode a data file named in
-// such code is treated as printed. Scripts saved in files are still not read: what they do is the author's choice.
+// such code is treated as printed, and so is one named in a script that an interpreter runs with its output on the
+// screen (`python report.py`, or a script a heredoc wrote a moment before): what it prints reaches the conversation
+// too. Output redirected to a file (`python clean.py > bersih.csv`), or a data file passed as an argument
+// (`python clean.py data.csv`), still runs.
 
 /** Interpreters, and the options after which their code follows on the command line. */
 const INLINE_CODE: Record<string, string[]> = {
@@ -383,6 +751,7 @@ const INLINE_CODE: Record<string, string[]> = {
   deno: ['eval'], ruby: ['-e'], perl: ['-e', '-E'], php: ['-r'], rscript: ['-e'], pwsh: ['-c', '-command'],
   powershell: ['-c', '-command'],
 };
+const SCRIPT_FILE = /\.(py|js|mjs|cjs|ts|mts|rb|pl|php|r)$/i;
 const NAMED_FILE = /[\w.~:\\/-]+\.(?:csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out)(?:\.\d+)?(?![\w.])/gi;
 // .NET file reads in PowerShell: [IO.File]::ReadAllText('x.csv'), [System.IO.File]::ReadAllLines(...)
 const DOTNET_READ = /\[(?:system\.)?io\.file\]::\s*read/i;
@@ -391,29 +760,32 @@ const HEREDOC = /(?:^|\n)[ \t]*(\S+)[^\n]*?<<-?[ \t]*(['"]?)(\w+)\2[^\n]*\n([\s\
 // A PowerShell here-string piped to a program: @' … '@ | python -
 const HERE_STRING = /@(['"])\r?\n([\s\S]*?)\r?\n\1@[ \t]*\|[ \t]*(\S+)/g;
 
-function namedFiles(code: string, cwd: string, powershell: boolean): string[] {
-  return [...code.matchAll(NAMED_FILE)].flatMap((m) => expand(m[0].replace(/^[(]+/, ''), cwd, powershell));
+function namedFiles(code: string, w: Walk): string[] {
+  return [...code.matchAll(NAMED_FILE)].flatMap((m) => w.dirs.flatMap((dir) => expand(m[0].replace(/^[(]+/, ''), dir, w.powershell)));
+}
+
+/** Strict mode: the data files named in code an interpreter runs from this segment. */
+function strictCode(seg: Segment, words: Word[], w: Walk): void {
+  const flags = INLINE_CODE[seg.program];
+  const at = flags ? seg.args.findIndex((a) => flags.includes(a.toLowerCase())) : -1;
+  const joined = words.map((x) => x.text).join(' ');
+  let code: string | undefined;
+  if (at >= 0) code = seg.args.slice(at + 1).join(' ');
+  else if (w.powershell && DOTNET_READ.test(joined)) code = joined;
+  else if (flags && seg.positional[0] && SCRIPT_FILE.test(seg.positional[0])) code = readScript(seg.positional[0], w);
+  if (code !== undefined) for (const file of namedFiles(code, w)) w.inline.push({ file, select: all });
 }
 
 /** Strict mode: data files named in code that runs from the command line, which may print them whole. */
 export function inlineCodeReads(command: string, cwd: string, powershell = false): ShellRead[] {
-  const files = new Set<string>();
+  const w = newWalk(cwd, powershell, true);
   for (const m of command.matchAll(HEREDOC)) {
-    if (programName(m[1]!) in INLINE_CODE) for (const f of namedFiles(m[4]!, cwd, powershell)) files.add(f);
+    if (programName(m[1]!) in INLINE_CODE) for (const f of namedFiles(m[4]!, w)) w.inline.push({ file: f, select: all });
   }
   for (const m of command.matchAll(HERE_STRING)) {
-    if (programName(m[3]!) in INLINE_CODE) for (const f of namedFiles(m[2]!, cwd, powershell)) files.add(f);
+    if (programName(m[3]!) in INLINE_CODE) for (const f of namedFiles(m[2]!, w)) w.inline.push({ file: f, select: all });
   }
-  for (const pipeline of parse(stripHeredocs(command), powershell)) {
-    for (const words of pipeline) {
-      const seg = toSegment(words);
-      if (!seg || seg.writesToFile) continue;
-      const flags = INLINE_CODE[seg.program];
-      const at = flags ? seg.args.findIndex((a) => flags.includes(a.toLowerCase())) : -1;
-      const joined = words.map((w) => w.text).join(' ');
-      const code = at >= 0 ? seg.args.slice(at + 1).join(' ') : powershell && DOTNET_READ.test(joined) ? joined : undefined;
-      if (code !== undefined) for (const f of namedFiles(code, cwd, powershell)) files.add(f);
-    }
-  }
-  return [...files].map((file) => ({ file, select: all }));
+  walk(command, w);
+  const seen = new Set<string>();
+  return w.inline.filter((r) => !seen.has(r.file) && seen.add(r.file));
 }

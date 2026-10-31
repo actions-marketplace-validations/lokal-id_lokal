@@ -1153,6 +1153,13 @@
     [
      "NAME",
      null,
+     506,
+     512,
+     "budi_s"
+    ],
+    [
+     "NAME",
+     null,
      513,
      525,
      "Budi Santoso"
@@ -1265,6 +1272,13 @@
     [
      "NAME",
      null,
+     1326,
+     1338,
+     "rina_kartika"
+    ],
+    [
+     "NAME",
+     null,
      1339,
      1356,
      "Rina Kartika Sari"
@@ -1331,6 +1345,13 @@
      1843,
      1854,
      "12345678901"
+    ],
+    [
+     "NAME",
+     null,
+     1916,
+     1923,
+     "fitri_h"
     ],
     [
      "NAME",
@@ -1412,6 +1433,13 @@
     [
      "NAME",
      null,
+     2485,
+     2491,
+     "agus_p"
+    ],
+    [
+     "NAME",
+     null,
      2492,
      2505,
      "Agus Prasetyo"
@@ -1431,7 +1459,7 @@
      "Jl. Kaliurang Km 5, Sleman"
     ]
    ],
-   "placeholder": "No. Pesanan,Status Pesanan,No. Resi,Opsi Pengiriman,Waktu Pesanan Dibuat,Username (Pembeli),Nama Penerima,No. Telepon,Alamat Pengiriman,Kota/Kabupaten,Provinsi,Total Pembayaran,Catatan dari Pembeli\n2610014KQ7ZB2M,Perlu Dikirim,,SPX Standard,2026-10-01 08:12,sitirahayu88,[NAME_1],[PHONE_1],\"[ADDRESS_1]\",KOTA DEPOK,JAWA BARAT,Rp185.000,tolong a.n. Ibu [NAME_1] ya kak\n2610015AB3XY9P,Dikirim,SPXID045123456789,SPX Standard,2026-10-01 09:40,budi_s,[NAME_2],[PHONE_2],\"[ADDRESS_2]\",KAB. BOGOR,JAWA BARAT,Rp92.500,\n2610016CD4ZT1Q,Perlu Dikirim,,J&T Express,2026-10-02 10:05,mamah.yosef,[NAME_3],[PHONE_3],\"[ADDRESS_3]\",KAB. MERAUKE,PAPUA SELATAN,Rp310.000,kalau kurir nyasar hub suami saya Pak [NAME_4] [PHONE_4]\n2610017EF5UV2R,Perlu Dikirim,,JNE REG,2026-10-02 13:22,[NAME_5],[NAME_6],[PHONE_5],\"[ADDRESS_4]\",KOTA SORONG,PAPUA BARAT DAYA,Rp1.250.000,NIK saya [NIK_1] untuk klaim garansi\n2610018GH6WX3S,Selesai,JX4417730215,J&T Express,2026-10-03 07:55,dewi.lestari,[NAME_7],[PHONE_6],\"[ADDRESS_5]\",KOTA DENPASAR,BALI,Rp75.000,\n2610019IJ7YZ4T,Perlu Dikirim,,SiCepat REG,2026-10-03 16:30,rina_kartika,[NAME_8],[PHONE_7],\"[ADDRESS_6]\",KAB. PENAJAM PASER UTARA,KALIMANTAN TIMUR,Rp640.000,\"rumah cat hijau sebelah masjid, titip ke satpam\"\n2610020KL8AB5U,Perlu Dikirim,,SPX Hemat,2026-10-04 11:11,yuliana.n,[NAME_9],[PHONE_8],\"[ADDRESS_7]\",KAB. NABIRE,PAPUA TENGAH,Rp230.000,\n2610021MN9CD6V,Perlu Dikirim,,JNE YES,2026-10-04 19:45,hendra88,[NAME_10],[PHONE_9],\"[ADDRESS_8]\",KOTA PADANG,SUMATERA BARAT,Rp415.000,bayar pake VA BCA [BANK_ACCOUNT_1] sudah ya\n2610022OP1EF7W,Batal,,SPX Standard,2026-10-05 08:00,fitri_h,[NAME_11],[PHONE_10],\"[ADDRESS_9]\",KOTA SURABAYA,JAWA TIMUR,Rp99.000,\n2610023QR2GH8X,Perlu Dikirim,,SiCepat BEST,2026-10-05 14:20,lukman.h,[NAME_12],[PHONE_11],\"[ADDRESS_10]\",KOTA DEPOK,JAWA BARAT,Rp150.000,\n2610024ST3IJ9Y,Perlu Dikirim,,J&T Express,2026-10-06 09:09,siti.aminah,[NAME_13],[PHONE_12],\"[ADDRESS_11]\",KOTA DEPOK,JAWA BARAT,Rp88.000,\"tolong jgn dibanting, isi obat [HEALTH_1] buat ibu saya ([HEALTH_2])\"\n2610025UV4KL1Z,Dikirim,CGK7700123456789,JNE REG,2026-10-06 10:10,agus_p,[NAME_14],[PHONE_13],\"[ADDRESS_12]\",KAB. SLEMAN,DI YOGYAKARTA,Rp56.000,\n",
+   "placeholder": "No. Pesanan,Status Pesanan,No. Resi,Opsi Pengiriman,Waktu Pesanan Dibuat,Username (Pembeli),Nama Penerima,No. Telepon,Alamat Pengiriman,Kota/Kabupaten,Provinsi,Total Pembayaran,Catatan dari Pembeli\n2610014KQ7ZB2M,Perlu Dikirim,,SPX Standard,2026-10-01 08:12,sitirahayu88,[NAME_1],[PHONE_1],\"[ADDRESS_1]\",KOTA DEPOK,JAWA BARAT,Rp185.000,tolong a.n. Ibu [NAME_1] ya kak\n2610015AB3XY9P,Dikirim,SPXID045123456789,SPX Standard,2026-10-01 09:40,[NAME_2],[NAME_3],[PHONE_2],\"[ADDRESS_2]\",KAB. BOGOR,JAWA BARAT,Rp92.500,\n2610016CD4ZT1Q,Perlu Dikirim,,J&T Express,2026-10-02 10:05,mamah.yosef,[NAME_4],[PHONE_3],\"[ADDRESS_3]\",KAB. MERAUKE,PAPUA SELATAN,Rp310.000,kalau kurir nyasar hub suami saya Pak [NAME_5] [PHONE_4]\n2610017EF5UV2R,Perlu Dikirim,,JNE REG,2026-10-02 13:22,[NAME_6],[NAME_7],[PHONE_5],\"[ADDRESS_4]\",KOTA SORONG,PAPUA BARAT DAYA,Rp1.250.000,NIK saya [NIK_1] untuk klaim garansi\n2610018GH6WX3S,Selesai,JX4417730215,J&T Express,2026-10-03 07:55,dewi.lestari,[NAME_8],[PHONE_6],\"[ADDRESS_5]\",KOTA DENPASAR,BALI,Rp75.000,\n2610019IJ7YZ4T,Perlu Dikirim,,SiCepat REG,2026-10-03 16:30,[NAME_9],[NAME_10],[PHONE_7],\"[ADDRESS_6]\",KAB. PENAJAM PASER UTARA,KALIMANTAN TIMUR,Rp640.000,\"rumah cat hijau sebelah masjid, titip ke satpam\"\n2610020KL8AB5U,Perlu Dikirim,,SPX Hemat,2026-10-04 11:11,yuliana.n,[NAME_11],[PHONE_8],\"[ADDRESS_7]\",KAB. NABIRE,PAPUA TENGAH,Rp230.000,\n2610021MN9CD6V,Perlu Dikirim,,JNE YES,2026-10-04 19:45,hendra88,[NAME_12],[PHONE_9],\"[ADDRESS_8]\",KOTA PADANG,SUMATERA BARAT,Rp415.000,bayar pake VA BCA [BANK_ACCOUNT_1] sudah ya\n2610022OP1EF7W,Batal,,SPX Standard,2026-10-05 08:00,[NAME_13],[NAME_14],[PHONE_10],\"[ADDRESS_9]\",KOTA SURABAYA,JAWA TIMUR,Rp99.000,\n2610023QR2GH8X,Perlu Dikirim,,SiCepat BEST,2026-10-05 14:20,lukman.h,[NAME_15],[PHONE_11],\"[ADDRESS_10]\",KOTA DEPOK,JAWA BARAT,Rp150.000,\n2610024ST3IJ9Y,Perlu Dikirim,,J&T Express,2026-10-06 09:09,siti.aminah,[NAME_16],[PHONE_12],\"[ADDRESS_11]\",KOTA DEPOK,JAWA BARAT,Rp88.000,\"tolong jgn dibanting, isi obat [HEALTH_1] buat ibu saya ([HEALTH_2])\"\n2610025UV4KL1Z,Dikirim,CGK7700123456789,JNE REG,2026-10-06 10:10,[NAME_17],[NAME_18],[PHONE_13],\"[ADDRESS_12]\",KAB. SLEMAN,DI YOGYAKARTA,Rp56.000,\n",
    "vault": [
     [
      "[NAME_1]",
@@ -1447,6 +1475,10 @@
     ],
     [
      "[NAME_2]",
+     "budi_s"
+    ],
+    [
+     "[NAME_3]",
      "Budi Santoso"
     ],
     [
@@ -1458,7 +1490,7 @@
      "Perum Griya Asri Blok C2 No. 7, Cibinong"
     ],
     [
-     "[NAME_3]",
+     "[NAME_4]",
      "Maria Yosefina Gebze"
     ],
     [
@@ -1470,7 +1502,7 @@
      "Jl. Raya Mandala No. 12, Kel. Mandala, Distrik Merauke"
     ],
     [
-     "[NAME_4]",
+     "[NAME_5]",
      "Yohanes"
     ],
     [
@@ -1478,11 +1510,11 @@
      "0813-1111-2233"
     ],
     [
-     "[NAME_5]",
+     "[NAME_6]",
      "andiwj"
     ],
     [
-     "[NAME_6]",
+     "[NAME_7]",
      "Andi Wijaya"
     ],
     [
@@ -1498,7 +1530,7 @@
      "9671 0125 1187 0004"
     ],
     [
-     "[NAME_7]",
+     "[NAME_8]",
      "Dewi Lestari"
     ],
     [
@@ -1510,7 +1542,11 @@
      "Jl. Gajah Mada No. 101, Denpasar"
     ],
     [
-     "[NAME_8]",
+     "[NAME_9]",
+     "rina_kartika"
+    ],
+    [
+     "[NAME_10]",
      "Rina Kartika Sari"
     ],
     [
@@ -1522,7 +1558,7 @@
      "Jl. Provinsi No. 3, Penajam"
     ],
     [
-     "[NAME_9]",
+     "[NAME_11]",
      "Yuliana Nawipa"
     ],
     [
@@ -1534,7 +1570,7 @@
      "Jl. Merdeka No. 5, Nabire"
     ],
     [
-     "[NAME_10]",
+     "[NAME_12]",
      "Hendra Gunawan"
     ],
     [
@@ -1550,7 +1586,11 @@
      "12345678901"
     ],
     [
-     "[NAME_11]",
+     "[NAME_13]",
+     "fitri_h"
+    ],
+    [
+     "[NAME_14]",
      "Fitri Handayani"
     ],
     [
@@ -1562,7 +1602,7 @@
      "Jl. Ahmad Yani No. 8, Surabaya"
     ],
     [
-     "[NAME_12]",
+     "[NAME_15]",
      "Lukman Hakim"
     ],
     [
@@ -1574,7 +1614,7 @@
      "Jl. Raya Tapos No. 1, Kel. Tapos"
     ],
     [
-     "[NAME_13]",
+     "[NAME_16]",
      "Siti Aminah"
     ],
     [
@@ -1594,7 +1634,11 @@
      "diabetes"
     ],
     [
-     "[NAME_14]",
+     "[NAME_17]",
+     "agus_p"
+    ],
+    [
+     "[NAME_18]",
      "Agus Prasetyo"
     ],
     [
@@ -1606,7 +1650,7 @@
      "Jl. Kaliurang Km 5, Sleman"
     ]
    ],
-   "partial": "No. Pesanan,Status Pesanan,No. Resi,Opsi Pengiriman,Waktu Pesanan Dibuat,Username (Pembeli),Nama Penerima,No. Telepon,Alamat Pengiriman,Kota/Kabupaten,Provinsi,Total Pembayaran,Catatan dari Pembeli\n2610014KQ7ZB2M,Perlu Dikirim,,SPX Standard,2026-10-01 08:12,sitirahayu88,S*** R***,0812****5432,\"Jl. ***\",KOTA DEPOK,JAWA BARAT,Rp185.000,tolong a.n. Ibu S*** R*** ya kak\n2610015AB3XY9P,Dikirim,SPXID045123456789,SPX Standard,2026-10-01 09:40,budi_s,B*** S***,0857****2222,\"Perum ***\",KAB. BOGOR,JAWA BARAT,Rp92.500,\n2610016CD4ZT1Q,Perlu Dikirim,,J&T Express,2026-10-02 10:05,mamah.yosef,M*** Y*** G***,0878****5678,\"Jl. ***\",KAB. MERAUKE,PAPUA SELATAN,Rp310.000,kalau kurir nyasar hub suami saya Pak Y*** 0813****2233\n2610017EF5UV2R,Perlu Dikirim,,JNE REG,2026-10-02 13:22,a***,A*** W***,0812****0001,\"Jl. ***\",KOTA SORONG,PAPUA BARAT DAYA,Rp1.250.000,NIK saya 9671********0004 untuk klaim garansi\n2610018GH6WX3S,Selesai,JX4417730215,J&T Express,2026-10-03 07:55,dewi.lestari,D*** L***,0896****8888,\"Jl. ***\",KOTA DENPASAR,BALI,Rp75.000,\n2610019IJ7YZ4T,Perlu Dikirim,,SiCepat REG,2026-10-03 16:30,rina_kartika,R*** K*** S***,0881****6789,\"Jl. ***\",KAB. PENAJAM PASER UTARA,KALIMANTAN TIMUR,Rp640.000,\"rumah cat hijau sebelah masjid, titip ke satpam\"\n2610020KL8AB5U,Perlu Dikirim,,SPX Hemat,2026-10-04 11:11,yuliana.n,Y*** N***,0821****5432,\"Jl. ***\",KAB. NABIRE,PAPUA TENGAH,Rp230.000,\n2610021MN9CD6V,Perlu Dikirim,,JNE YES,2026-10-04 19:45,hendra88,H*** G***,0751***2345,\"Jl. ***\",KOTA PADANG,SUMATERA BARAT,Rp415.000,bayar pake VA BCA *******8901 sudah ya\n2610022OP1EF7W,Batal,,SPX Standard,2026-10-05 08:00,fitri_h,F*** H***,0852****7891,\"Jl. ***\",KOTA SURABAYA,JAWA TIMUR,Rp99.000,\n2610023QR2GH8X,Perlu Dikirim,,SiCepat BEST,2026-10-05 14:20,lukman.h,L*** H***,0813****8888,\"Jl. ***\",KOTA DEPOK,JAWA BARAT,Rp150.000,\n2610024ST3IJ9Y,Perlu Dikirim,,J&T Express,2026-10-06 09:09,siti.aminah,S*** A***,0838****5679,\"Jl. ***\",KOTA DEPOK,JAWA BARAT,Rp88.000,\"tolong jgn dibanting, isi obat *** buat ibu saya (***)\"\n2610025UV4KL1Z,Dikirim,CGK7700123456789,JNE REG,2026-10-06 10:10,agus_p,A*** P***,0819****5678,\"Jl. ***\",KAB. SLEMAN,DI YOGYAKARTA,Rp56.000,\n"
+   "partial": "No. Pesanan,Status Pesanan,No. Resi,Opsi Pengiriman,Waktu Pesanan Dibuat,Username (Pembeli),Nama Penerima,No. Telepon,Alamat Pengiriman,Kota/Kabupaten,Provinsi,Total Pembayaran,Catatan dari Pembeli\n2610014KQ7ZB2M,Perlu Dikirim,,SPX Standard,2026-10-01 08:12,sitirahayu88,S*** R***,0812****5432,\"Jl. ***\",KOTA DEPOK,JAWA BARAT,Rp185.000,tolong a.n. Ibu S*** R*** ya kak\n2610015AB3XY9P,Dikirim,SPXID045123456789,SPX Standard,2026-10-01 09:40,b***,B*** S***,0857****2222,\"Perum ***\",KAB. BOGOR,JAWA BARAT,Rp92.500,\n2610016CD4ZT1Q,Perlu Dikirim,,J&T Express,2026-10-02 10:05,mamah.yosef,M*** Y*** G***,0878****5678,\"Jl. ***\",KAB. MERAUKE,PAPUA SELATAN,Rp310.000,kalau kurir nyasar hub suami saya Pak Y*** 0813****2233\n2610017EF5UV2R,Perlu Dikirim,,JNE REG,2026-10-02 13:22,a***,A*** W***,0812****0001,\"Jl. ***\",KOTA SORONG,PAPUA BARAT DAYA,Rp1.250.000,NIK saya 9671********0004 untuk klaim garansi\n2610018GH6WX3S,Selesai,JX4417730215,J&T Express,2026-10-03 07:55,dewi.lestari,D*** L***,0896****8888,\"Jl. ***\",KOTA DENPASAR,BALI,Rp75.000,\n2610019IJ7YZ4T,Perlu Dikirim,,SiCepat REG,2026-10-03 16:30,r***,R*** K*** S***,0881****6789,\"Jl. ***\",KAB. PENAJAM PASER UTARA,KALIMANTAN TIMUR,Rp640.000,\"rumah cat hijau sebelah masjid, titip ke satpam\"\n2610020KL8AB5U,Perlu Dikirim,,SPX Hemat,2026-10-04 11:11,yuliana.n,Y*** N***,0821****5432,\"Jl. ***\",KAB. NABIRE,PAPUA TENGAH,Rp230.000,\n2610021MN9CD6V,Perlu Dikirim,,JNE YES,2026-10-04 19:45,hendra88,H*** G***,0751***2345,\"Jl. ***\",KOTA PADANG,SUMATERA BARAT,Rp415.000,bayar pake VA BCA *******8901 sudah ya\n2610022OP1EF7W,Batal,,SPX Standard,2026-10-05 08:00,f***,F*** H***,0852****7891,\"Jl. ***\",KOTA SURABAYA,JAWA TIMUR,Rp99.000,\n2610023QR2GH8X,Perlu Dikirim,,SiCepat BEST,2026-10-05 14:20,lukman.h,L*** H***,0813****8888,\"Jl. ***\",KOTA DEPOK,JAWA BARAT,Rp150.000,\n2610024ST3IJ9Y,Perlu Dikirim,,J&T Express,2026-10-06 09:09,siti.aminah,S*** A***,0838****5679,\"Jl. ***\",KOTA DEPOK,JAWA BARAT,Rp88.000,\"tolong jgn dibanting, isi obat *** buat ibu saya (***)\"\n2610025UV4KL1Z,Dikirim,CGK7700123456789,JNE REG,2026-10-06 10:10,a***,A*** P***,0819****5678,\"Jl. ***\",KAB. SLEMAN,DI YOGYAKARTA,Rp56.000,\n"
   },
   {
    "text": "[2026-10-01 08:12:40] production.INFO: midtrans.charge {\"order_id\":\"2610014KQ7ZB2M\",\"gross_amount\":185000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"Siti\",\"last_name\":\"Rahayu\",\"email\":\"siti.rahayu88@example.com\",\"phone\":\"+6281298765432\"}}\n[2026-10-01 08:14:02] production.INFO: midtrans.notification {\"order_id\":\"2610014KQ7ZB2M\",\"transaction_status\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"185000.00\",\"transaction_time\":\"2026-10-01 08:13:55\"}\n[2026-10-01 09:40:31] production.INFO: midtrans.charge {\"order_id\":\"2610015AB3XY9P\",\"gross_amount\":92500,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"Budi\",\"last_name\":\"Santoso\",\"email\":\"budi.santoso@example.com\",\"phone\":\"+6285711112222\"}}\n[2026-10-01 09:41:10] production.INFO: midtrans.notification {\"order_id\":\"2610015AB3XY9P\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"92500.00\",\"transaction_time\":\"2026-10-01 09:41:02\"}\n[2026-10-02 10:05:12] production.INFO: midtrans.charge {\"order_id\":\"2610016CD4ZT1Q\",\"gross_amount\":310000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Maria Yosefina\",\"last_name\":\"Gebze\",\"email\":\"maria.gebze@example.com\",\"phone\":\"+6287812345678\"}}\n[2026-10-02 10:05:13] production.INFO: midtrans.va_created {\"order_id\":\"2610016CD4ZT1Q\",\"va_numbers\":[{\"bank\":\"bca\",\"va_number\":\"70012000123456\"}]}\n[2026-10-02 11:47:20] production.INFO: midtrans.notification {\"order_id\":\"2610016CD4ZT1Q\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"310000.00\",\"transaction_time\":\"2026-10-02 11:47:11\"}\n[2026-10-02 13:22:05] production.INFO: midtrans.charge {\"order_id\":\"2610017EF5UV2R\",\"gross_amount\":1250000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Andi\",\"last_name\":\"Wijaya\",\"email\":\"andi.wijaya@example.com\",\"phone\":\"+6281234560001\"}}\n[2026-10-02 13:22:06] production.INFO: midtrans.notification {\"order_id\":\"2610017EF5UV2R\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"1250000.00\",\"transaction_time\":\"2026-10-02 13:22:06\"}\n[2026-10-02 13:25:41] production.ERROR: Gagal verifikasi KTP untuk klaim garansi {\"order_id\":\"2610017EF5UV2R\",\"nik\":\"9671012511870004\",\"nama\":\"Andi Wijaya\",\"alasan\":\"foto KTP buram\"}\n[2026-10-03 07:55:18] production.INFO: midtrans.charge {\"order_id\":\"2610018GH6WX3S\",\"gross_amount\":75000,\"payment_type\":\"shopeepay\",\"customer_details\":{\"first_name\":\"Dewi\",\"last_name\":\"Lestari\",\"email\":\"dewi.lestari@example.com\",\"phone\":\"+6289677778888\"}}\n[2026-10-03 07:56:02] production.INFO: midtrans.notification {\"order_id\":\"2610018GH6WX3S\",\"transaction_status\":\"settlement\",\"payment_type\":\"shopeepay\",\"gross_amount\":\"75000.00\",\"transaction_time\":\"2026-10-03 07:55:58\"}\n[2026-10-03 09:30:00] production.INFO: midtrans.notification {\"order_id\":\"2610017EF5UV2R\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"1250000.00\",\"transaction_time\":\"2026-10-03 09:29:47\"}\n[2026-10-03 16:30:44] production.INFO: midtrans.charge {\"order_id\":\"2610019IJ7YZ4T\",\"gross_amount\":640000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Rina Kartika\",\"last_name\":\"Sari\",\"email\":\"rina.kartika@example.com\",\"phone\":\"+6288123456789\"}}\n[2026-10-03 16:30:45] production.INFO: midtrans.notification {\"order_id\":\"2610019IJ7YZ4T\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"640000.00\",\"transaction_time\":\"2026-10-03 16:30:45\"}\n[2026-10-04 11:11:09] production.INFO: midtrans.charge {\"order_id\":\"2610020KL8AB5U\",\"gross_amount\":230000,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"Yuliana\",\"last_name\":\"Nawipa\",\"email\":\"yuliana.nawipa@example.com\",\"phone\":\"+6282198765432\"}}\n[2026-10-04 11:12:30] production.INFO: midtrans.notification {\"order_id\":\"2610020KL8AB5U\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"230000.00\",\"transaction_time\":\"2026-10-04 11:12:21\"}\n[2026-10-04 16:30:46] production.INFO: midtrans.notification {\"order_id\":\"2610019IJ7YZ4T\",\"transaction_status\":\"expire\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"640000.00\",\"transaction_time\":\"2026-10-04 16:30:46\"}\n[2026-10-04 19:45:51] production.INFO: midtrans.charge {\"order_id\":\"2610021MN9CD6V\",\"gross_amount\":415000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Hendra\",\"last_name\":\"Gunawan\",\"email\":\"hendra.gunawan@example.com\",\"phone\":\"+62751812345\"}}\n[2026-10-04 20:02:13] production.INFO: midtrans.notification {\"order_id\":\"2610021MN9CD6V\",\"transaction_status\":\"settlement\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"415000.00\",\"transaction_time\":\"2026-10-04 20:02:04\"}\n[2026-10-05 08:00:22] production.INFO: midtrans.charge {\"order_id\":\"2610022OP1EF7W\",\"gross_amount\":99000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"Fitri\",\"last_name\":\"Handayani\",\"email\":\"fitri.h@example.com\",\"phone\":\"+6285234567891\"}}\n[2026-10-05 08:20:00] production.INFO: midtrans.notification {\"order_id\":\"2610022OP1EF7W\",\"transaction_status\":\"cancel\",\"payment_type\":\"qris\",\"gross_amount\":\"99000.00\",\"transaction_time\":\"2026-10-05 08:19:58\"}\n[2026-10-05 14:20:37] production.INFO: midtrans.charge {\"order_id\":\"2610023QR2GH8X\",\"gross_amount\":150000,\"payment_type\":\"bank_transfer\",\"customer_details\":{\"first_name\":\"Lukman\",\"last_name\":\"Hakim\",\"email\":\"lukman.hakim@example.com\",\"phone\":\"+6281377778888\"}}\n[2026-10-05 14:20:38] production.INFO: midtrans.notification {\"order_id\":\"2610023QR2GH8X\",\"transaction_status\":\"pending\",\"payment_type\":\"bank_transfer\",\"gross_amount\":\"150000.00\",\"transaction_time\":\"2026-10-05 14:20:38\"}\n[2026-10-06 09:09:15] production.INFO: midtrans.charge {\"order_id\":\"2610024ST3IJ9Y\",\"gross_amount\":88000,\"payment_type\":\"qris\",\"customer_details\":{\"first_name\":\"Siti\",\"last_name\":\"Aminah\",\"email\":\"siti.aminah@example.com\",\"phone\":\"+6283812345679\"}}\n[2026-10-06 09:10:01] production.INFO: midtrans.notification {\"order_id\":\"2610024ST3IJ9Y\",\"transaction_status\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"88000.00\",\"transaction_time\":\"2026-10-06 09:09:52\"}\n[2026-10-06 10:10:28] production.INFO: midtrans.charge {\"order_id\":\"2610025UV4KL1Z\",\"gross_amount\":56000,\"payment_type\":\"gopay\",\"customer_details\":{\"first_name\":\"Agus\",\"last_name\":\"Prasetyo\",\"email\":\"agus.prasetyo@example.com\",\"phone\":\"+6281912345678\"}}\n[2026-10-06 10:11:44] production.INFO: midtrans.notification {\"order_id\":\"2610025UV4KL1Z\",\"transaction_status\":\"settlement\",\"payment_type\":\"gopay\",\"gross_amount\":\"56000.00\",\"transaction_time\":\"2026-10-06 10:11:35\"}\n[2026-10-06 12:00:03] production.WARNING: midtrans.notification order tidak dikenal {\"order_id\":\"TEST-0001\",\"transaction_status\":\"settlement\",\"payment_type\":\"qris\",\"gross_amount\":\"1.00\"}\n",
@@ -3574,16 +3618,27 @@
      0,
      23,
      "jl margonda raya no 100"
+    ],
+    [
+     "ADDRESS",
+     null,
+     24,
+     30,
+     "rt 3/5"
     ]
    ],
-   "placeholder": "[ADDRESS_1] rt 3/5 kemiri muka beji depok 16423",
+   "placeholder": "[ADDRESS_1] [ADDRESS_2] kemiri muka beji depok 16423",
    "vault": [
     [
      "[ADDRESS_1]",
      "jl margonda raya no 100"
+    ],
+    [
+     "[ADDRESS_2]",
+     "rt 3/5"
     ]
    ],
-   "partial": "jl *** rt 3/5 kemiri muka beji depok 16423"
+   "partial": "jl *** rt *** kemiri muka beji depok 16423"
   },
   {
    "text": "32.76.06.1004",

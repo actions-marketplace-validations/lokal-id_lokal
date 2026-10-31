@@ -1,6 +1,6 @@
 import { parseNik } from '../nik.ts';
 import { parsePhone } from '../phone.ts';
-import { fieldType, isGenericNameKey, isPlausibleValue } from './fields.ts';
+import { fieldType, isGenericNameKey, isKnownNamePart, isPlausibleValue } from './fields.ts';
 import {
   AMBIGUOUS_GIVEN_NAMES,
   BALINESE_NAMES,
@@ -104,18 +104,27 @@ const NIK_KEYWORD = /\b(nik|ktp|nomor induk kependudukan)\b/;
 const NPWP_KEYWORD = /\bnpwp\b/;
 const NISN_KEYWORD = /\b(nisn|nomor induk siswa nasional)\b[^\d]*$/;
 const BPJS_KEYWORD =/\b(bpjs|jkn|kis|kartu indonesia sehat|kpj|jamsostek)\b/;
+// A technical or order ID right before the number: "trace_id=7340…", "request 7340…", "id transaksi 7340…". In a
+// payment service's log the words around it ("transfer", "va", "bca") would otherwise make every ID an account.
+const TECH_ID_LABEL =
+  /(?:\b|_)(?:trace|span|request|req|correlation|corr|session|sess|message|msg|event|job|task|order|pesanan|invoice|inv|txn|trx|transaction|transaksi|ref|reference|referensi|idempotency|booking|resi|tracking|uuid|nonce|seq|sequence)(?:[_ -]?(?:id|no|number|nomor|key))?\s*[:=#]?\s*["']?$/;
 const BANK_KEYWORD =
   /\b(no\.?\s*rek(ening)?|norek|rekening|rek|account|acc|a\/c|virtual account|va|transfer|tf|bca|bri|bni|mandiri|bsi|cimb|niaga|permata|danamon|btn|jago|seabank|blu|ocbc|panin|maybank|mega|muamalat)\b/;
 
+// A NIK or KK written with dots, the way a form or a letter groups it: "3175.0912.0390.0002", "32.01.01.150895.0001",
+// "320101.150895.0001". Other dotted numbers are amounts ("12.500.000.000") and versions, never read as an ID.
+const DOTTED_ID = /^(?:\d{4}\.\d{4}\.\d{4}\.\d{4}|\d{2}\.\d{2}\.\d{2}\.\d{6}\.\d{4}|\d{6}\.\d{6}\.\d{4})$/;
+
 /**
- * Runs of 8–19 digits, optionally separated by single spaces or dashes ("1234 5678 9012").
- * Classified by length, structure, checksum, and nearby keywords.
+ * Runs of 8–19 digits, optionally separated by single spaces or dashes ("1234 5678 9012"), or by dots in the groups of
+ * a NIK or KK. Classified by length, structure, checksum, and nearby keywords.
  */
 function detectDigitRuns(text: string): PiiMatch[] {
   const out: PiiMatch[] = [];
-  const run = /(?<![\d\w.])\d(?:[ -]?\d){7,18}(?![\d\w])/g;
+  const run = /(?<![\d\w.])\d(?:[ .-]?\d){7,18}(?![\d\w]|\.\d)/g;
   for (const m of text.matchAll(run)) {
     const value = m[0];
+    if (value.includes('.') && !DOTTED_ID.test(value)) continue;
     const digits = value.replace(/\D/g, '');
     const ctx = before(text, m.index);
     const label = ctx.slice(-25); // the words right before the number
@@ -131,13 +140,18 @@ function detectDigitRuns(text: string): PiiMatch[] {
     else if (digits.length >= 12 && digits.length <= 16 && SIM_KEYWORD.test(label)) push('SIM', 'high');
     else if (digits.length === 16 && parseNik(digits).valid) push('NIK', 'high');
     else if (isNip(digits)) push('NIP', 'high');
-    else if (digits.length >= 13 && digits.length <= 19 && /^[3-6]/.test(digits) && luhn(digits)) {
+    else if (
+      digits.length >= 13 && digits.length <= 19 && /^[3-6]/.test(digits) && luhn(digits) &&
+      // An IMEI has 15 digits and a Luhn check too; the only cards with 15 digits are Amex, 34… and 37….
+      !(digits.length === 15 && !/^3[47]/.test(digits)) && !/\bimei\b/.test(label)
+    ) {
       if (!TEST_CARDS.has(digits)) push('CARD', 'high');
     }
     else if ((digits.length === 15 || digits.length === 16) && NPWP_KEYWORD.test(ctx)) push('NPWP', 'high');
     else if (digits.length === 16 && NIK_KEYWORD.test(ctx)) push('NIK', 'medium');
     else if (digits.length === 10 && NISN_KEYWORD.test(label)) push('NISN', 'high');
     else if ((digits.length === 13 || digits.length === 11) && (BPJS_KEYWORD.test(ctx) || BPJS_KEYWORD.test(title))) push('BPJS', 'high');
+    else if (TECH_ID_LABEL.test(label)) continue;
     else if (digits.length >= 8 && digits.length <= 18 && BANK_KEYWORD.test(ctx)) push('BANK_ACCOUNT', 'high');
     else if (digits.length >= 8 && digits.length <= 18 && BANK_KEYWORD.test(lineAbove(text, m.index, m[0].length))) {
       // A transfer receipt stacks the bank and the account: "Bank BNI\n0123456789".
@@ -194,6 +208,19 @@ function gluedToCode(text: string, index: number): boolean {
 
 const PHONE_WORD = /\b(?:telp|telepon|telpon|tlp|tel|phone|fax|faks|hub|hubungi|call|kontak|contact|cp|rumah|kantor|no)\b[^\d]*$/;
 
+// A measurement in a log, not a phone: "duration=0856123456", "waktu proses 0812345678 ms", "ts=0812…".
+const METRIC_LABEL =
+  /(?:\b|_)(?:duration|durasi|elapsed|latency|took|waktu(?:\s+proses)?|time|dur|ttl|timeout|uptime|bytes|size|count|offset|epoch|timestamp|ts|nanos?|millis?)(?:[_ -]?(?:ms|ns|us|s|sec|secs))?\s*[:=]?\s*["']?$/;
+const METRIC_UNIT = /^\s*(?:ms|ns|us|µs|s|sec|secs|seconds|detik|milidetik|mikrodetik|bytes?|kb|mb|b)\b/i;
+
+const PHONE_LABEL_BEFORE = /\b(?:hp|nohp|wa|whatsapp|sms|telp|telepon|telpon|tlp|tel|phone|mobile|kontak|contact|hubungi|call|cp)\b[^\d]*$/;
+
+function isMeasurement(text: string, index: number, end: number): boolean {
+  const label = before(text, index, 30);
+  if (PHONE_LABEL_BEFORE.test(label)) return false;
+  return METRIC_UNIT.test(text.slice(end, end + 12)) || METRIC_LABEL.test(label);
+}
+
 function detectPhones(text: string): PiiMatch[] {
   const out: PiiMatch[] = [];
   // Separators never include a line break, and every group after the operator prefix has at least three digits.
@@ -202,6 +229,7 @@ function detectPhones(text: string): PiiMatch[] {
   // "0062 812 …" dials out of another country the way "+62" does.
   const mobile = /(?<![\d+\w])(?:\+62|0062|62|0)[ \t-]?8\d{1,2}(?:[ \t.-]?\d{3,4}){2,3}(?![\d\w])/g;
   for (const m of text.matchAll(mobile)) {
+    if (isMeasurement(text, m.index, m.index + m[0].length)) continue;
     if (parsePhone(m[0].replace(/^00/, '+')).valid && !gluedToCode(text, m.index)) out.push(match('PHONE', m.index, m[0], 'high'));
   }
   const landline = /\((?:\+62[ \t]?|0)\d{2,3}\)[ \t]?\d{3,4}[ \t-]?\d{3,4}(?!\d)|(?<![\d\w])\+62[ \t]?[2-79]\d{1,2}[ \t-]?\d{3,4}[ \t-]?\d{3,4}(?!\d)/g;
@@ -220,6 +248,7 @@ function detectPhones(text: string): PiiMatch[] {
     if (!named && (groups.length < 4 || groups.slice(1).some((g) => g.length > 2))) continue;
     // "0 8 1 2 3 …", one digit at a time, only next to a phone word: otherwise it is any list of digits.
     if (/^0[ \t.-]/.test(m[0]) && !named) continue;
+    if (!named && isMeasurement(text, m.index, m.index + m[0].length)) continue;
     if (parsePhone(m[0]).valid && !gluedToCode(text, m.index)) out.push(match('PHONE', m.index, m[0], 'high'));
   }
   // "rumah 0251 8321234", "telp 021-7654321": an area code without brackets, only next to a phone word.
@@ -1186,6 +1215,34 @@ function detectSentenceSubjects(text: string): PiiMatch[] {
   return out;
 }
 
+// "Fatimah binti Abdullah", "AHMAD BIN HASAN": a name, then bin or binti and the father's name. Nothing else is written
+// that way, so no cue is needed.
+const PATRONYMIC =
+  /\b[A-Z][A-Za-z'-]+(?:\s+[A-Z][A-Za-z'-]+){0,2}\s+(?:bin|binti|bt|bte|BIN|BINTI|Bin|Binti)\s+[A-Z][A-Za-z'-]+(?:\s+[A-Z][A-Za-z'-]+){0,2}/g;
+// "R. Ayu Kusumawardhani", "R.A. Siti Rahma": a Javanese title or initials before a name the lists know.
+const INITIALED = /(?<![\w.])(?:[A-Z]\.\s?){1,3}[A-Z][a-z'-]+(?:\s+[A-Z][a-z'-]+){0,3}/g;
+
+function detectPatronymicsAndInitials(text: string): PiiMatch[] {
+  const out: PiiMatch[] = [];
+  for (const m of text.matchAll(PATRONYMIC)) {
+    // A sentence may start with a word that is not part of the name: "Kemudian Fatimah binti Abdullah".
+    let offset = 0;
+    for (;;) {
+      const lead = /^(\S+)\s+(?=\S+\s+\S+\s+\S)/.exec(m[0].slice(offset));
+      if (!lead || !NOT_NAME.has(lead[1]!.toLowerCase())) break;
+      offset += lead[0].length;
+    }
+    out.push(match('NAME', m.index + offset, m[0].slice(offset), 'high'));
+  }
+  for (const m of text.matchAll(INITIALED)) {
+    const words = m[0].replace(/^(?:[A-Z]\.\s?)+/, '').split(/\s+/);
+    if (words.some((w) => isKnownNamePart(w)) && !words.every((w) => NOT_NAME.has(w.toLowerCase()))) {
+      out.push(match('NAME', m.index, m[0], 'medium'));
+    }
+  }
+  return out;
+}
+
 /**
  * Two names joined by "&" or "dan" where one is a known given name: "Dimas & Anggun", "Rina dan Kelvin". The other
  * is a name too, even if the list does not know it.
@@ -1365,7 +1422,8 @@ const STREET =
   'JL|JLN|JALAN|GG|GANG|KOMP|KOMPLEK|KOMPLEKS|PERUM|PERUMAHAN|DUSUN|DSN|KAMPUNG|KP';
 // What pins a street to one house: No., Blok, Kav., or an apartment's floor and unit. Chat writes "blok b no 9".
 const PIN = '[Nn][Oo]|[Nn]omor|[Bb]lok|[Kk]av|[Uu]nit|[Ll]t|[Ll]antai|[Kk]amar|[Kk]mr|NO|BLOK';
-const RT_RW = 'RT\\.?\\s*0*\\d{1,3}\\s*[/,]?\\s*RW\\.?\\s*0*\\d{1,3}';
+// "RT 04 RW 09", "RT.04/RW.09", and the short "RT 04/09".
+const RT_RW = 'RT\\.?\\s*0*\\d{1,3}\\s*(?:[/,]?\\s*RW\\.?\\s*|/\\s*)0*\\d{1,3}';
 
 function detectStreetAddresses(text: string): PiiMatch[] {
   const out: PiiMatch[] = [];
@@ -1384,6 +1442,14 @@ function detectStreetAddresses(text: string): PiiMatch[] {
   const bare =
     /\b(?:[Jj]ln?|[Gg]g)\.?\s+[A-Za-z][A-Za-z'-]*(?:\s+[A-Za-z][A-Za-z'-]*){0,3}?\s+\d{1,4}[A-Za-z]?\b(?!\s*(?:jam|menit|detik|km|meter|m\b|kali|hari|minggu|bulan|tahun|orang|lantai|lajur|jalur|%|x\b))/g;
   for (const m of text.matchAll(bare)) out.push(match('ADDRESS', m.index, m[0], 'medium'));
+  // "Komp. Griya Kenanga 6", "Perumahan Taman Sari 12": an estate and a house number, no "No.". Not "Perum", which is
+  // also a state company ("Perum Bulog 2").
+  const estate =
+    /\b(?:Komp|Kompl|Komplek|Kompleks|Perumahan|Cluster|Klaster|komp|komplek|kompleks|perumahan|cluster)\.?\s+[A-Za-z][A-Za-z'-]*(?:\s+[A-Za-z][A-Za-z'-]*){0,3}?\s+\d{1,4}[A-Za-z]?\b(?!\s*(?:jam|menit|detik|km|meter|m\b|kali|hari|minggu|bulan|tahun|orang|unit|rumah|kk|%|x\b))/g;
+  for (const m of text.matchAll(estate)) out.push(match('ADDRESS', m.index, m[0], 'medium'));
+  // "Blok C2 No. 5" pins a house without a street before it: "Kenanga Residence Blok C2 No. 5".
+  const pinned = /\b[Bb]lok\.?\s*[A-Za-z]{0,2}-?\d{0,3}[A-Za-z]?\s*[,/]?\s*(?:[Nn]o|[Nn]omor|NO)\.?\s*\d{1,4}[A-Za-z]?\b/g;
+  for (const m of text.matchAll(pinned)) out.push(match('ADDRESS', m.index, m[0], 'medium'));
   return out;
 }
 
@@ -1658,7 +1724,42 @@ function detectCsvColumns(text: string): PiiMatch[] {
     const later = csvTableAt(text, lineStart, false);
     if (later) return later;
   }
-  return [];
+  return nameColumns(text);
+}
+
+// A cell that could be a person's name: one to five words of letters, as "Budi Santoso" or "ni luh putu ayu".
+const NAME_CELL = /^[A-Za-z][A-Za-z'.-]*(?:\s+[A-Za-z][A-Za-z'.-]*){0,4}$/;
+
+/**
+ * A CSV whose header says nothing ("c1,c2,c3", or no header at all): a column is a column of names when at least half
+ * of its cells, and at least three, hold a given or family name Samaran knows, and nearly all of them look like names.
+ * Then every name-like cell in it is a name, including the ones no list knows ("Kaleandra Wirasena").
+ */
+function nameColumns(text: string): PiiMatch[] {
+  const raws = text.split('\n');
+  const lines = raws.map((l) => l.replace(/\r$/, ''));
+  while (lines.length && !lines[lines.length - 1]!.trim()) lines.pop();
+  const delimiter = [',', ';', '\t', '|'].find((d) => lines[0]?.includes(d));
+  if (!delimiter || lines.length < 4) return [];
+  const rows = lines.map((l) => csvFields(l, delimiter));
+  const width = rows[0]!.length;
+  if (width < 2 || rows.some((r) => r.length !== width)) return [];
+  const out: PiiMatch[] = [];
+  for (let col = 0; col < width; col++) {
+    const cells: Array<{ at: number; value: string }> = [];
+    let offset = 0;
+    rows.forEach((r, i) => {
+      const raw = lines[i]!.slice(r[col]!.start, r[col]!.end);
+      const value = raw.trim().replace(/^"(.*)"$/, '$1');
+      if (value) cells.push({ at: offset + r[col]!.start + raw.indexOf(value), value });
+      offset += raws[i]!.length + 1;
+    });
+    const nameLike = cells.filter((c) => NAME_CELL.test(c.value) && c.value.length <= 60);
+    const known = nameLike.filter((c) => c.value.split(/[\s.'-]+/).some((w) => w && isKnownNamePart(w)));
+    if (known.length < 3 || known.length < cells.length / 2 || nameLike.length < cells.length * 0.8) continue;
+    for (const c of nameLike) out.push(match('NAME', c.at, c.value, 'medium'));
+  }
+  return out;
 }
 
 /**
@@ -1814,6 +1915,7 @@ const DETECTORS: Array<(text: string) => PiiMatch[]> = [
   detectLoneGivenNames,
   detectNamesWithAge,
   detectNamePairs,
+  detectPatronymicsAndInitials,
   detectAttendance,
   detectSentenceSubjects,
   detectBracketHandles,
@@ -1939,6 +2041,9 @@ function escapesAsBreaks(text: string): string {
 }
 
 /** All personal data in the text, non-overlapping, in reading order. */
+const NAME_TAIL =
+  /\s+(?:telah|sudah|akan|sedang|pernah|masih|tidak|tak|belum|lalu|kemudian|segera|sempat|(?:meng|meny|memb|memp)[a-z]{3,})\b/i;
+
 export function detectPii(text: string, options: DetectOptions = {}): PiiMatch[] {
   for (const t of [...(options.types ?? []), ...(options.exclude ?? [])]) {
     if (!PII_TYPES.includes(t)) throw new RangeError(`Unknown PII type "${t}". Valid types: ${PII_TYPES.join(', ')}`);
@@ -1970,6 +2075,13 @@ export function detectPii(text: string, options: DetectOptions = {}): PiiMatch[]
     accepted.push(c);
   }
   accepted.sort((a, b) => a.start - b.start);
+  for (const [i, m] of accepted.entries()) {
+    if (m.type !== 'NAME') continue;
+    // "SUPRIYADI ALIAS UDIN TELAH MENGAMBIL": in capitals nothing marks where a name ends, so it ends at a word that
+    // says when, or an active verb (meng-, meny-, memb-, memp-; not men-, as "Mentari" is a name).
+    const tail = NAME_TAIL.exec(m.value);
+    if (tail && tail.index > 0) accepted[i] = { ...m, end: m.start + tail.index, value: m.value.slice(0, tail.index) };
+  }
   // A match stops before an escape it ran into: a line break read from "\n", or a quote written "\"" in JSON that
   // went through twice. Its value is the text as it is.
   return accepted.flatMap((m) => {

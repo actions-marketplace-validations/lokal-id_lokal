@@ -151,6 +151,9 @@ test('scan_pii melapor tanpa membocorkan nilai, menghormati .samaranignore', asy
   assert.ok(!text.includes('3201011508950001'));
   assert.ok(!text.includes('3456-7890'));
   assert.ok(!text.includes('Asma'));
+  // The model sees four of a NIK's sixteen digits, not eight.
+  const niks = data.findings.filter((f: any) => f.type === 'NIK');
+  assert.ok(niks.length && niks.every((f: any) => /^\*{12}\d{4}$/.test(f.preview)), JSON.stringify(niks.map((f: any) => f.preview)));
 });
 
 test('scan_pii tidak pernah diam soal file yang tidak bisa dipindai', async () => {
@@ -283,7 +286,7 @@ function guard(event: object, env: Record<string, string> = {}) {
 test('guard: prompt berisi NIK ditahan, #izinkan-pii meloloskan', () => {
   const blocked = guard({ hook_event_name: 'UserPromptSubmit', prompt: 'cek NIK 3201011508950001 dong' });
   assert.equal(blocked.status, 2);
-  assert.match(blocked.stderr, /NIK×1 \(3201\*{8}0001\)/);
+  assert.match(blocked.stderr, /NIK×1 \(\*{12}0001\)/, 'only the last four digits of a NIK');
   assert.ok(!blocked.stderr.includes('3201011508950001'));
 
   const kk = guard({ hook_event_name: 'UserPromptSubmit', prompt: 'ini KK 3201010101200001 sama paspor A1234567' });
@@ -675,4 +678,39 @@ test('anonymize_file: dump produksi jadi data staging, konsisten antarfile, agen
   assert.equal(cli.status, 0, cli.stderr);
   assert.match(cli.stderr, /NIK=1/);
   assert.equal(readFileSync(path.join(dir, 'cli.csv'), 'utf8'), csv);
+});
+
+test('guard: file yang ditulis write_file_unmasked diperiksa seperti file data, apa pun ekstensinya', async () => {
+  const masked = await call('read_file_masked', { path: 'pelanggan.csv' });
+  const nik = /\[NIK_\d+\]/.exec(masked.text)![0];
+  const name = /\[NAME_\d+\]/.exec(masked.text)![0];
+  const note = path.join(dir, 'docs', 'catatan.md');
+  try {
+    const wrote = await call('write_file_unmasked', { path: 'docs/catatan.md', content: `# Catatan\n\n${name}, NIK ${nik}\n` });
+    assert.equal(wrote.isError, undefined, wrote.text);
+    assert.match(readFileSync(path.join(dir, '.lokal', 'unmasked.json'), 'utf8'), /docs\/catatan\.md/);
+    assert.ok(!readFileSync(path.join(dir, '.lokal', 'unmasked.json'), 'utf8').includes('3201011508950001'), 'only paths');
+    const read = guard({ hook_event_name: 'PreToolUse', tool_name: 'Read', tool_input: { file_path: note }, cwd: dir });
+    assert.equal(read.status, 2, read.stderr);
+    const cat = guard({ hook_event_name: 'PreToolUse', tool_name: 'Bash', tool_input: { command: 'cat docs/catatan.md' }, cwd: dir });
+    assert.equal(cat.status, 2, cat.stderr);
+    // Other Markdown is still source, not data.
+    assert.equal(guard({ hook_event_name: 'PreToolUse', tool_name: 'Read', tool_input: { file_path: path.join(dir, 'README.md') }, cwd: dir }).status, 0);
+  } finally {
+    rmSync(note, { force: true });
+    rmSync(path.join(dir, '.lokal'), { recursive: true, force: true });
+  }
+});
+
+test('guard: prompt berisi daftar kontak ditahan, satu nomor tidak', () => {
+  const rows = [
+    'Rina Kartika, 0812-3456-7801, rina.k@contoh.co.id',
+    'Doni Prasetyo, 0813-2222-1902, doni.p@contoh.co.id',
+    'Wulan Sari, 0857-1111-2203, wulan.s@contoh.co.id',
+  ].join('\n');
+  const list = guard({ hook_event_name: 'UserPromptSubmit', prompt: `tolong rapikan kontak ini:\n${rows}` });
+  assert.equal(list.status, 2, list.stderr);
+  assert.ok(!list.stderr.includes('3456-7801'), 'the message carries no value');
+  assert.equal(guard({ hook_event_name: 'UserPromptSubmit', prompt: 'nomor CS kami 0812-3456-7801, tolong buat template balasan' }).status, 0);
+  assert.equal(guard({ hook_event_name: 'UserPromptSubmit', prompt: `${rows} #izinkan-pii` }).status, 0);
 });

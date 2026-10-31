@@ -458,7 +458,7 @@ var BALINESE_NAMES = new Set("made wayan nyoman ketut gede putu kadek komang nen
 var FIELDS = [
   // A column called "pasien" or "pelanggan" holds that person's name.
   ["NAME", "nama|name|full_?name|kepada|kpd|yth|attn|attention|pelapor|terlapor|korban|saksi|tersangka|terdakwa|pelaku|kepala_?keluarga|penanggung_?jawab|ahli_?waris|pemberi_?kuasa|penerima_?kuasa|requester|username|nama_?lengkap|first_?name|last_?name|middle_?name|given_?name|family_?name|surname|nama_?depan|nama_?tengah|nama_?belakang|nama_?panggilan|nickname|nama_?ibu_?kandung|mother_?s?_?maiden_?name|penerima|pengirim|recipient|pasien|patient|pelanggan|customer|nasabah|karyawan|employee|pegawai|siswa|mahasiswa|student|peserta|pemohon|debitur|pemilik|owner|pemesan|pembeli|buyer|konsumen|atas_?nama|a_n"],
-  ["ADDRESS", "alamat|address|full_?address|street|street_?address|domisili|alamat_?domisili|alamat_?ktp|alamat_?rumah|alamat_?pengiriman|shipping_?address|home_?address|billing_?address"],
+  ["ADDRESS", "alamat|address|full_?address|street|street_?address|domisili|alamat_?domisili|alamat_?ktp|alamat_?rumah|alamat_?pengiriman|shipping_?address|home_?address|billing_?address|alamat_?kirim|alamat_?tujuan|alamat_?penerima|alamat_?pengirim|alamat_?lengkap|alamat_?tinggal|tempat_?tinggal|kirim_?ke|dikirim_?ke|tujuan_?kirim|tujuan_?pengiriman|ship_?to|shipping_?to|deliver_?to|delivery_?address|delivery_?to|mailing_?address|residential_?address|residence|address_?line_?[12]"],
   ["NIK", "nik|no_?ktp|nomor_?ktp|ktp|nomor_?induk_?kependudukan|national_?id"],
   ["KK", "kk|no_?kk|nomor_?kk|kartu_?keluarga|no_?kartu_?keluarga|nomor_?kartu_?keluarga|family_?card(_?number)?"],
   ["NPWP", "npwp|no_?npwp|nomor_?npwp|tax_?id|tin"],
@@ -616,6 +616,8 @@ function isPlausibleValue(type, value, key) {
       return false;
   }
   if (type === "NAME") {
+    if (/^[A-Za-z]+(?:_[A-Za-z]+){1,3}$/.test(v))
+      return v.split("_").some(isKnownNamePart);
     if (!/[A-Za-z]/.test(v) || /[\d_(){}[\]<>=]/.test(v))
       return false;
     if (/^(?:new|this|await|null|undefined|true|false|typeof|function|return|self|None)\b/.test(v))
@@ -725,12 +727,16 @@ var NIK_KEYWORD = /\b(nik|ktp|nomor induk kependudukan)\b/;
 var NPWP_KEYWORD = /\bnpwp\b/;
 var NISN_KEYWORD = /\b(nisn|nomor induk siswa nasional)\b[^\d]*$/;
 var BPJS_KEYWORD = /\b(bpjs|jkn|kis|kartu indonesia sehat|kpj|jamsostek)\b/;
+var TECH_ID_LABEL = /(?:\b|_)(?:trace|span|request|req|correlation|corr|session|sess|message|msg|event|job|task|order|pesanan|invoice|inv|txn|trx|transaction|transaksi|ref|reference|referensi|idempotency|booking|resi|tracking|uuid|nonce|seq|sequence)(?:[_ -]?(?:id|no|number|nomor|key))?\s*[:=#]?\s*["']?$/;
 var BANK_KEYWORD = /\b(no\.?\s*rek(ening)?|norek|rekening|rek|account|acc|a\/c|virtual account|va|transfer|tf|bca|bri|bni|mandiri|bsi|cimb|niaga|permata|danamon|btn|jago|seabank|blu|ocbc|panin|maybank|mega|muamalat)\b/;
+var DOTTED_ID = /^(?:\d{4}\.\d{4}\.\d{4}\.\d{4}|\d{2}\.\d{2}\.\d{2}\.\d{6}\.\d{4}|\d{6}\.\d{6}\.\d{4})$/;
 function detectDigitRuns(text) {
   const out = [];
-  const run = /(?<![\d\w.])\d(?:[ -]?\d){7,18}(?![\d\w])/g;
+  const run = /(?<![\d\w.])\d(?:[ .-]?\d){7,18}(?![\d\w]|\.\d)/g;
   for (const m of text.matchAll(run)) {
     const value = m[0];
+    if (value.includes(".") && !DOTTED_ID.test(value))
+      continue;
     const digits = value.replace(/\D/g, "");
     const ctx = before(text, m.index);
     const label = ctx.slice(-25);
@@ -748,7 +754,8 @@ function detectDigitRuns(text) {
       push("NIK", "high");
     else if (isNip(digits))
       push("NIP", "high");
-    else if (digits.length >= 13 && digits.length <= 19 && /^[3-6]/.test(digits) && luhn(digits)) {
+    else if (digits.length >= 13 && digits.length <= 19 && /^[3-6]/.test(digits) && luhn(digits) && // An IMEI has 15 digits and a Luhn check too; the only cards with 15 digits are Amex, 34… and 37….
+    !(digits.length === 15 && !/^3[47]/.test(digits)) && !/\bimei\b/.test(label)) {
       if (!TEST_CARDS.has(digits))
         push("CARD", "high");
     } else if ((digits.length === 15 || digits.length === 16) && NPWP_KEYWORD.test(ctx))
@@ -759,6 +766,8 @@ function detectDigitRuns(text) {
       push("NISN", "high");
     else if ((digits.length === 13 || digits.length === 11) && (BPJS_KEYWORD.test(ctx) || BPJS_KEYWORD.test(title)))
       push("BPJS", "high");
+    else if (TECH_ID_LABEL.test(label))
+      continue;
     else if (digits.length >= 8 && digits.length <= 18 && BANK_KEYWORD.test(ctx))
       push("BANK_ACCOUNT", "high");
     else if (digits.length >= 8 && digits.length <= 18 && BANK_KEYWORD.test(lineAbove(text, m.index, m[0].length))) {
@@ -824,10 +833,21 @@ function gluedToCode(text, index) {
   return /[a-z]/.test(token) && !PHONE_LABELS.has(token) && !token.endsWith("wa.me");
 }
 var PHONE_WORD = /\b(?:telp|telepon|telpon|tlp|tel|phone|fax|faks|hub|hubungi|call|kontak|contact|cp|rumah|kantor|no)\b[^\d]*$/;
+var METRIC_LABEL = /(?:\b|_)(?:duration|durasi|elapsed|latency|took|waktu(?:\s+proses)?|time|dur|ttl|timeout|uptime|bytes|size|count|offset|epoch|timestamp|ts|nanos?|millis?)(?:[_ -]?(?:ms|ns|us|s|sec|secs))?\s*[:=]?\s*["']?$/;
+var METRIC_UNIT = /^\s*(?:ms|ns|us|µs|s|sec|secs|seconds|detik|milidetik|mikrodetik|bytes?|kb|mb|b)\b/i;
+var PHONE_LABEL_BEFORE = /\b(?:hp|nohp|wa|whatsapp|sms|telp|telepon|telpon|tlp|tel|phone|mobile|kontak|contact|hubungi|call|cp)\b[^\d]*$/;
+function isMeasurement(text, index, end) {
+  const label = before(text, index, 30);
+  if (PHONE_LABEL_BEFORE.test(label))
+    return false;
+  return METRIC_UNIT.test(text.slice(end, end + 12)) || METRIC_LABEL.test(label);
+}
 function detectPhones(text) {
   const out = [];
   const mobile = /(?<![\d+\w])(?:\+62|0062|62|0)[ \t-]?8\d{1,2}(?:[ \t.-]?\d{3,4}){2,3}(?![\d\w])/g;
   for (const m of text.matchAll(mobile)) {
+    if (isMeasurement(text, m.index, m.index + m[0].length))
+      continue;
     if (parsePhone(m[0].replace(/^00/, "+")).valid && !gluedToCode(text, m.index))
       out.push(match("PHONE", m.index, m[0], "high"));
   }
@@ -846,6 +866,8 @@ function detectPhones(text) {
     if (!named && (groups.length < 4 || groups.slice(1).some((g) => g.length > 2)))
       continue;
     if (/^0[ \t.-]/.test(m[0]) && !named)
+      continue;
+    if (!named && isMeasurement(text, m.index, m.index + m[0].length))
       continue;
     if (parsePhone(m[0]).valid && !gluedToCode(text, m.index))
       out.push(match("PHONE", m.index, m[0], "high"));
@@ -1646,6 +1668,28 @@ function detectSentenceSubjects(text) {
   }
   return out;
 }
+var PATRONYMIC = /\b[A-Z][A-Za-z'-]+(?:\s+[A-Z][A-Za-z'-]+){0,2}\s+(?:bin|binti|bt|bte|BIN|BINTI|Bin|Binti)\s+[A-Z][A-Za-z'-]+(?:\s+[A-Z][A-Za-z'-]+){0,2}/g;
+var INITIALED = /(?<![\w.])(?:[A-Z]\.\s?){1,3}[A-Z][a-z'-]+(?:\s+[A-Z][a-z'-]+){0,3}/g;
+function detectPatronymicsAndInitials(text) {
+  const out = [];
+  for (const m of text.matchAll(PATRONYMIC)) {
+    let offset = 0;
+    for (; ; ) {
+      const lead = /^(\S+)\s+(?=\S+\s+\S+\s+\S)/.exec(m[0].slice(offset));
+      if (!lead || !NOT_NAME.has(lead[1].toLowerCase()))
+        break;
+      offset += lead[0].length;
+    }
+    out.push(match("NAME", m.index + offset, m[0].slice(offset), "high"));
+  }
+  for (const m of text.matchAll(INITIALED)) {
+    const words = m[0].replace(/^(?:[A-Z]\.\s?)+/, "").split(/\s+/);
+    if (words.some((w) => isKnownNamePart(w)) && !words.every((w) => NOT_NAME.has(w.toLowerCase()))) {
+      out.push(match("NAME", m.index, m[0], "medium"));
+    }
+  }
+  return out;
+}
 function detectNamePairs(text) {
   const out = [];
   for (const m of text.matchAll(/(?<![\w@.'’-])([A-Z][a-z]{2,14})[ \t]*(?:&|dan)[ \t]*([A-Z][a-z]{2,14})(?![\w'’-]|[ \t]+[A-Z])/g)) {
@@ -1811,7 +1855,7 @@ function detectSqlInserts(text) {
 }
 var STREET = "Jl|Jln|Jalan|Gg|Gang|Komp|Kompl|Komplek|Kompleks|Perum|Perumahan|Cluster|Klaster|Apartemen|Apartment|Apt|Rusun|Rusunawa|Tower|Ruko|Wisma|Asrama|Dusun|Dsn|Dukuh|Kampung|Kp|Lingkungan|Ling|JL|JLN|JALAN|GG|GANG|KOMP|KOMPLEK|KOMPLEKS|PERUM|PERUMAHAN|DUSUN|DSN|KAMPUNG|KP";
 var PIN = "[Nn][Oo]|[Nn]omor|[Bb]lok|[Kk]av|[Uu]nit|[Ll]t|[Ll]antai|[Kk]amar|[Kk]mr|NO|BLOK";
-var RT_RW = "RT\\.?\\s*0*\\d{1,3}\\s*[/,]?\\s*RW\\.?\\s*0*\\d{1,3}";
+var RT_RW = "RT\\.?\\s*0*\\d{1,3}\\s*(?:[/,]?\\s*RW\\.?\\s*|/\\s*)0*\\d{1,3}";
 function detectStreetAddresses(text) {
   const out = [];
   const street = new RegExp(`\\b(?:${STREET})\\.?\\s+[A-Za-z0-9][^\\n;]{1,80}?(?:\\b(?:${PIN})\\.?\\s*[A-Za-z]?\\d+[A-Za-z]?(?:\\/\\d+)?(?:,?\\s*(?:${PIN})\\.?\\s*[A-Za-z]?\\d+[A-Za-z]?(?:\\/\\d+)?)*(?:,?\\s*${RT_RW})?|\\b${RT_RW})`, "g");
@@ -1824,6 +1868,12 @@ function detectStreetAddresses(text) {
     out.push(match("ADDRESS", m.index, m[0], "medium"));
   const bare = /\b(?:[Jj]ln?|[Gg]g)\.?\s+[A-Za-z][A-Za-z'-]*(?:\s+[A-Za-z][A-Za-z'-]*){0,3}?\s+\d{1,4}[A-Za-z]?\b(?!\s*(?:jam|menit|detik|km|meter|m\b|kali|hari|minggu|bulan|tahun|orang|lantai|lajur|jalur|%|x\b))/g;
   for (const m of text.matchAll(bare))
+    out.push(match("ADDRESS", m.index, m[0], "medium"));
+  const estate = /\b(?:Komp|Kompl|Komplek|Kompleks|Perumahan|Cluster|Klaster|komp|komplek|kompleks|perumahan|cluster)\.?\s+[A-Za-z][A-Za-z'-]*(?:\s+[A-Za-z][A-Za-z'-]*){0,3}?\s+\d{1,4}[A-Za-z]?\b(?!\s*(?:jam|menit|detik|km|meter|m\b|kali|hari|minggu|bulan|tahun|orang|unit|rumah|kk|%|x\b))/g;
+  for (const m of text.matchAll(estate))
+    out.push(match("ADDRESS", m.index, m[0], "medium"));
+  const pinned = /\b[Bb]lok\.?\s*[A-Za-z]{0,2}-?\d{0,3}[A-Za-z]?\s*[,/]?\s*(?:[Nn]o|[Nn]omor|NO)\.?\s*\d{1,4}[A-Za-z]?\b/g;
+  for (const m of text.matchAll(pinned))
     out.push(match("ADDRESS", m.index, m[0], "medium"));
   return out;
 }
@@ -2067,7 +2117,40 @@ function detectCsvColumns(text) {
     if (later)
       return later;
   }
-  return [];
+  return nameColumns(text);
+}
+var NAME_CELL = /^[A-Za-z][A-Za-z'.-]*(?:\s+[A-Za-z][A-Za-z'.-]*){0,4}$/;
+function nameColumns(text) {
+  const raws = text.split("\n");
+  const lines = raws.map((l) => l.replace(/\r$/, ""));
+  while (lines.length && !lines[lines.length - 1].trim())
+    lines.pop();
+  const delimiter = [",", ";", "	", "|"].find((d) => lines[0]?.includes(d));
+  if (!delimiter || lines.length < 4)
+    return [];
+  const rows = lines.map((l) => csvFields(l, delimiter));
+  const width = rows[0].length;
+  if (width < 2 || rows.some((r) => r.length !== width))
+    return [];
+  const out = [];
+  for (let col = 0; col < width; col++) {
+    const cells2 = [];
+    let offset = 0;
+    rows.forEach((r, i) => {
+      const raw = lines[i].slice(r[col].start, r[col].end);
+      const value = raw.trim().replace(/^"(.*)"$/, "$1");
+      if (value)
+        cells2.push({ at: offset + r[col].start + raw.indexOf(value), value });
+      offset += raws[i].length + 1;
+    });
+    const nameLike = cells2.filter((c) => NAME_CELL.test(c.value) && c.value.length <= 60);
+    const known = nameLike.filter((c) => c.value.split(/[\s.'-]+/).some((w) => w && isKnownNamePart(w)));
+    if (known.length < 3 || known.length < cells2.length / 2 || nameLike.length < cells2.length * 0.8)
+      continue;
+    for (const c of nameLike)
+      out.push(match("NAME", c.at, c.value, "medium"));
+  }
+  return out;
 }
 var CSV_HEADER_PREFIX = /^[^,;|\t:]{1,60}:[ \t]+/;
 function csvTableAt(text, at, toEnd, header) {
@@ -2202,6 +2285,7 @@ var DETECTORS = [
   detectLoneGivenNames,
   detectNamesWithAge,
   detectNamePairs,
+  detectPatronymicsAndInitials,
   detectAttendance,
   detectSentenceSubjects,
   detectBracketHandles,
@@ -2287,6 +2371,7 @@ function escapesAsBreaks(text) {
     return text;
   return text.replace(ESCAPED_BREAK, (e) => " ".repeat(e.length - 1) + BREAK_FOR[e[e.length - 1]]);
 }
+var NAME_TAIL = /\s+(?:telah|sudah|akan|sedang|pernah|masih|tidak|tak|belum|lalu|kemudian|segera|sempat|(?:meng|meny|memb|memp)[a-z]{3,})\b/i;
 function detectPii(text, options = {}) {
   for (const t of [...options.types ?? [], ...options.exclude ?? []]) {
     if (!PII_TYPES.includes(t))
@@ -2320,6 +2405,13 @@ function detectPii(text, options = {}) {
     accepted.push(c);
   }
   accepted.sort((a, b) => a.start - b.start);
+  for (const [i, m] of accepted.entries()) {
+    if (m.type !== "NAME")
+      continue;
+    const tail = NAME_TAIL.exec(m.value);
+    if (tail && tail.index > 0)
+      accepted[i] = { ...m, end: m.start + tail.index, value: m.value.slice(0, tail.index) };
+  }
   return accepted.flatMap((m) => {
     let end = m.end;
     for (; ; ) {
@@ -2396,6 +2488,7 @@ function partialMask(type, value) {
 }
 
 // packages/mcp/src/files.ts
+import { gunzipSync } from "node:zlib";
 import {
   closeSync,
   existsSync,
@@ -2411,6 +2504,7 @@ import {
   renameSync,
   rmSync,
   statSync,
+  writeFileSync,
   writeSync
 } from "node:fs";
 import path from "node:path";
@@ -2916,18 +3010,18 @@ var Pdf = class {
   pages() {
     const out = [];
     const seen = /* @__PURE__ */ new Set();
-    const walk = (node, inherited, depth) => {
+    const walk2 = (node, inherited, depth) => {
       if (!node || seen.has(node) || depth > 64 || out.length >= 1e4) return;
       seen.add(node);
       const resources = this.dict(node.get("Resources")) ?? inherited;
       const kids = this.resolve(node.get("Kids"));
-      if (Array.isArray(kids)) for (const k of kids) walk(this.dict(k), resources, depth + 1);
+      if (Array.isArray(kids)) for (const k of kids) walk2(this.dict(k), resources, depth + 1);
       else out.push({ page: node, resources });
     };
     for (const t of [...this.trailers].reverse()) {
       const catalog = this.dict(t.get("Root"));
       if (catalog) {
-        walk(this.dict(catalog.get("Pages")), void 0, 0);
+        walk2(this.dict(catalog.get("Pages")), void 0, 0);
         if (out.length) return out;
       }
     }
@@ -3498,6 +3592,10 @@ function readPdf(buf) {
 }
 
 // packages/mcp/src/files.ts
+function previewForModel(type, value) {
+  if (type === "NIK" || type === "KK") return `${"*".repeat(12)}${value.replace(/\D/g, "").slice(-4)}`;
+  return partialMask(type, value);
+}
 var MAX_FILE_BYTES = 100 * 1024 * 1024;
 var GUARD_SAMPLE_BYTES = 5 * 1024 * 1024;
 var GUARD_MAX_ZIP_BYTES = 20 * 1024 * 1024;
@@ -3670,6 +3768,15 @@ function detectConfigured(text, options, config2) {
   const found = detectPii(text, { ...options, custom: config2.custom, ...exclude ? { exclude } : {} });
   return config2.allow.length ? found.filter((m) => !config2.allow.includes(m.value)) : found;
 }
+var UNMASKED_LIST = path.join(".lokal", "unmasked.json");
+function loadUnmasked(root) {
+  try {
+    const list = JSON.parse(readFileSync(path.join(root, UNMASKED_LIST), "utf8"));
+    return Array.isArray(list.files) ? list.files.filter((f) => typeof f === "string").map((f) => path.resolve(root, f)) : [];
+  } catch {
+    return [];
+  }
+}
 function loadIgnore(root) {
   const file = path.join(root, ".samaranignore");
   if (!existsSync(file)) return () => false;
@@ -3773,10 +3880,26 @@ function parseWhole(ext, buf) {
     return failed(/encrypted/.test(message) ? "encrypted PDF (password-protected)" : `unreadable PDF: ${message.replace(/\.$/, "")}`);
   }
 }
+function gunzipText(buf, sampleBytes) {
+  let text;
+  try {
+    text = gunzipSync(buf, { maxOutputLength: MAX_FILE_BYTES });
+  } catch (e) {
+    return unsupported(/maxOutputLength|buffer length/i.test(e.message) ? `unpacks to more than ${mb(MAX_FILE_BYTES)}` : "damaged gzip file");
+  }
+  if (text.subarray(0, 8e3).includes(0)) return unsupported("archive");
+  if (sampleBytes !== void 0 && text.length > sampleBytes) {
+    return { kind: "text", text: text.subarray(0, sampleBytes).toString("utf8").replace(/\n[^\n]*$/, "\n"), sampled: true };
+  }
+  return { kind: "text", text: text.toString("utf8") };
+}
+var GZIPPED_TEXT = /\.gz$/i;
+var isGzippedText = (file) => GZIPPED_TEXT.test(file) && !/\.tar\.gz$/i.test(file);
 function loadDocument(file, options = {}) {
   const ext = path.extname(file).toLowerCase();
   const st = statSync(file);
   if (st.size > MAX_FILE_BYTES) return unsupported(`larger than ${mb(MAX_FILE_BYTES)}`);
+  if (isGzippedText(file)) return gunzipText(readFileSync(file), options.sampleBytes);
   if (PARSED_WHOLE.has(ext)) {
     if (options.maxZipBytes !== void 0 && st.size > options.maxZipBytes) {
       return unsupported(`larger than ${mb(options.maxZipBytes)}`);
@@ -3793,7 +3916,7 @@ function loadDocument(file, options = {}) {
 }
 
 // packages/mcp/src/audit.ts
-import { appendFileSync, existsSync as existsSync2, mkdirSync as mkdirSync2, readFileSync as readFileSync2, writeFileSync } from "node:fs";
+import { appendFileSync, existsSync as existsSync2, mkdirSync as mkdirSync2, readFileSync as readFileSync2, writeFileSync as writeFileSync2 } from "node:fs";
 import path2 from "node:path";
 function writeAudit(file, event) {
   if (!file) return;
@@ -3801,7 +3924,7 @@ function writeAudit(file, event) {
     const dir = path2.dirname(file);
     if (!existsSync2(dir)) {
       mkdirSync2(dir, { recursive: true });
-      if (path2.basename(dir) === ".lokal") writeFileSync(path2.join(dir, ".gitignore"), "*\n");
+      if (path2.basename(dir) === ".lokal") writeFileSync2(path2.join(dir, ".gitignore"), "*\n");
     }
     appendFileSync(file, `${JSON.stringify({ ts: (/* @__PURE__ */ new Date()).toISOString(), ...event })}
 `);
@@ -3817,9 +3940,18 @@ function countMatches(matches) {
 }
 
 // packages/mcp/src/shell-reads.ts
-import { existsSync as existsSync3, readdirSync as readdirSync2, statSync as statSync2 } from "node:fs";
+import { existsSync as existsSync3, readdirSync as readdirSync2, readFileSync as readFileSync3, statSync as statSync2 } from "node:fs";
 import path3 from "node:path";
-var SHELL_DATA_FILE = /\.(csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out|pdf)(\.\d+)?$/i;
+var SHELL_DATA_FILE = /\.(csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out|pdf)(\.\d+)?(\.gz)?$/i;
+var ENV_FILE = /^\.env(?:\.[\w.-]+)?$/i;
+var marked = /* @__PURE__ */ new Set();
+function markDataFiles(files) {
+  marked = new Set([...files].map((f) => path3.resolve(f)));
+}
+function isShellDataFile(file) {
+  const name = path3.basename(file);
+  return SHELL_DATA_FILE.test(name) || ENV_FILE.test(name) || !name.includes(".") && name.length > 0 || marked.has(path3.resolve(file));
+}
 var all = (t) => t;
 var READERS = /* @__PURE__ */ new Set([
   "cat",
@@ -3860,13 +3992,33 @@ var READERS = /* @__PURE__ */ new Set([
   "mlr",
   "paste",
   "findstr",
-  "pdftotext"
+  "pdftotext",
+  "diff",
+  "comm",
+  "join",
+  "base64",
+  "base32",
+  "hexdump",
+  "iconv",
+  "rev",
+  "shuf",
+  "fold",
+  "fmt",
+  "expand",
+  "pr",
+  "curl",
+  "zcat",
+  "gzcat",
+  "zless",
+  "zmore",
+  "zgrep",
+  "zegrep",
+  // `done < data.csv` feeds the file to a `while read` loop, whose body prints what it reads.
+  "done"
 ]);
 var FILTERS = /* @__PURE__ */ new Set([
   ...READERS,
   "tr",
-  "fold",
-  "fmt",
   "tee",
   "select-object",
   "select",
@@ -3884,10 +4036,31 @@ var FILTERS = /* @__PURE__ */ new Set([
   "sort-object",
   "group-object",
   "write-output",
-  "echo"
+  "echo",
+  "read"
 ]);
 var WRITE_SINKS = /* @__PURE__ */ new Set(["out-file", "set-content", "add-content", "export-csv", "out-null"]);
-var PREFIXES = /* @__PURE__ */ new Set(["sudo", "command", "env", "time", "nice", "nohup", "exec", "&", "."]);
+var PREFIXES = /* @__PURE__ */ new Set(["sudo", "command", "env", "time", "nice", "nohup", "exec", "&"]);
+var KEYWORDS = /* @__PURE__ */ new Set(["if", "then", "else", "elif", "do", "while", "until", "!", "{", "("]);
+var CD = /* @__PURE__ */ new Set(["cd", "chdir", "pushd", "set-location", "sl", "push-location"]);
+var COPIES = /* @__PURE__ */ new Set(["cp", "copy", "copy-item", "cpi", "mv", "move", "move-item", "mi", "ln", "install", "rsync"]);
+var QUERY_TOOLS = /* @__PURE__ */ new Set(["sqlite3", "duckdb", "csvsql", "csvq", "q", "textql", "trdsql"]);
+var LISTERS = /* @__PURE__ */ new Set(["ls", "dir", "find", "fd", "gci", "get-childitem", "echo", "printf"]);
+var SHELLS = {
+  bash: { flags: ["-c"], powershell: false },
+  sh: { flags: ["-c"], powershell: false },
+  zsh: { flags: ["-c"], powershell: false },
+  dash: { flags: ["-c"], powershell: false },
+  ksh: { flags: ["-c"], powershell: false },
+  cmd: { flags: ["/c", "/k"], powershell: true },
+  pwsh: { flags: ["-c", "-command"], powershell: true },
+  powershell: { flags: ["-c", "-command"], powershell: true }
+};
+var GREPS = /* @__PURE__ */ new Set(["grep", "egrep", "fgrep", "rg", "ag", "zgrep", "zegrep"]);
+var RECURSIVE_GREPS = /* @__PURE__ */ new Set(["rg", "ag"]);
+var MAX_SEARCHED_FILES = 300;
+var MAX_DEPTH2 = 3;
+var MAX_SCRIPT_BYTES = 256 * 1024;
 function stripHeredocs(command) {
   return command.replace(/(<<-?[ \t]*(['"]?)(\w+)\2)[^\n]*\n[\s\S]*?\n[ \t]*\3[ \t]*(?=\r?\n|$)/g, "$1").replace(/@(['"])\r?\n[\s\S]*?\r?\n\1@/g, "''");
 }
@@ -4015,19 +4188,42 @@ function option(args, names) {
   return void 0;
 }
 var has = (args, ...flags) => args.some((a) => flags.includes(a) || /^-[a-zA-Z]+$/.test(a) && flags.some((f) => /^-[a-zA-Z]$/.test(f) && a.includes(f[1])));
+function unbracket(words) {
+  const out = [];
+  for (const w of words) {
+    let text = w.text;
+    if (!w.quoted) {
+      if (!out.length) text = text.replace(/^[({]+/, "");
+      if (!text.includes("(")) text = text.replace(/[)}]+$/, "");
+    }
+    if (text || w.quoted) out.push({ text, quoted: w.quoted });
+  }
+  return out;
+}
 function toSegment(words) {
-  const list = [...words];
-  while (list.length && (/^[A-Za-z_]\w*=/.test(list[0].text) && !list[0].quoted)) list.shift();
-  while (list.length && PREFIXES.has(list[0].text.toLowerCase())) list.shift();
+  const list = unbracket(words);
+  for (; ; ) {
+    const first = list[0];
+    if (!first || first.quoted) break;
+    if (KEYWORDS.has(first.text.toLowerCase()) || PREFIXES.has(first.text.toLowerCase()) || /^[A-Za-z_]\w*=/.test(first.text)) {
+      list.shift();
+    } else {
+      break;
+    }
+  }
   if (!list.length) return void 0;
   const program = programName(list[0].text);
   const args = [];
   let inputFile;
   let writesToFile = false;
+  let writesTo;
   for (let i = 1; i < list.length; i++) {
     const w = list[i];
     if (!w.quoted && /^(\d|&)?>>?$/.test(w.text)) {
-      if (!w.text.startsWith("2")) writesToFile = true;
+      if (!w.text.startsWith("2")) {
+        writesToFile = true;
+        writesTo = list[i + 1]?.text;
+      }
       i++;
     } else if (!w.quoted && /^\d?>&\d$/.test(w.text)) {
     } else if (!w.quoted && w.text === "<") {
@@ -4037,7 +4233,7 @@ function toSegment(words) {
     }
   }
   const positional = args.filter((a) => !/^--?[A-Za-z]/.test(a) && !/^-\d+$/.test(a));
-  return { program, args, positional, inputFile, writesToFile };
+  return { program, args, positional, inputFile, writesToFile, writesTo };
 }
 function selection(seg) {
   const { program, args } = seg;
@@ -4057,8 +4253,10 @@ function selection(seg) {
     case "fgrep":
     case "rg":
     case "ag":
-    case "findstr": {
-      if (has(args, "-c", "-l", "-L", "-q", "--count", "--files-with-matches", "--files-without-match", "--quiet")) {
+    case "findstr":
+    case "zgrep":
+    case "zegrep": {
+      if (has(args, "-c", "-l", "-L", "-q", "--count", "--files-with-matches", "--files-without-match", "--quiet", "--files", "--count-matches")) {
         return void 0;
       }
       const pattern = option(args, ["-e", "--regexp"]) ?? seg.positional[0];
@@ -4124,35 +4322,265 @@ function selection(seg) {
       return all;
   }
 }
-function expand(raw, cwd, powershell) {
-  let word = raw;
+function asPath(raw, powershell) {
+  let word = raw.replace(/^file:\/\//i, "");
+  if (/^\/[A-Za-z]:[\\/]/.test(word)) word = word.slice(1);
   if (process.platform === "win32") word = word.replace(/^\/([a-zA-Z])(?=\/|$)/, "$1:");
   else if (powershell) word = word.replace(/\\/g, "/");
+  return word;
+}
+function expand(raw, cwd, powershell) {
+  const word = asPath(raw, powershell);
   if (!/[*?]/.test(word)) {
     const file = path3.resolve(cwd, word);
-    return SHELL_DATA_FILE.test(file) && existsSync3(file) && statSync2(file).isFile() ? [file] : [];
+    return isShellDataFile(file) && existsSync3(file) && statSync2(file).isFile() ? [file] : [];
   }
   const dir = path3.resolve(cwd, path3.dirname(word));
   const re = globToRegExp(path3.basename(word));
   try {
-    return readdirSync2(dir).filter((name) => re.test(name) && SHELL_DATA_FILE.test(name)).map((name) => path3.join(dir, name)).filter((f) => statSync2(f).isFile());
+    return readdirSync2(dir).filter((name) => re.test(name) && isShellDataFile(path3.join(dir, name))).map((name) => path3.join(dir, name)).filter((f) => statSync2(f).isFile());
   } catch {
     return [];
   }
 }
-function dataReadsInCommand(command, cwd, powershell = false) {
+var isDir = (p) => {
+  try {
+    return statSync2(p).isDirectory();
+  } catch {
+    return false;
+  }
+};
+function dataFilesIn(dir, recursive) {
   const out = [];
-  for (const pipeline of parse(stripHeredocs(command), powershell)) {
+  const queue = [dir];
+  let seen = 0;
+  while (queue.length && seen < 2e3) {
+    const at = queue.shift();
+    let entries;
+    try {
+      entries = readdirSync2(at, { withFileTypes: true });
+    } catch {
+      continue;
+    }
+    for (const e of entries) {
+      if (++seen > 2e3) break;
+      const full = path3.join(at, e.name);
+      if (e.isDirectory()) {
+        if (recursive && !/^(node_modules|\.git|\.venv|venv|dist|build|target)$/.test(e.name)) queue.push(full);
+      } else if (e.isFile() && isShellDataFile(full)) {
+        out.push(full);
+      }
+    }
+  }
+  return out;
+}
+function takeSubstitutions(command, powershell, subs) {
+  let out = "";
+  for (let i = 0; i < command.length; i++) {
+    if (command[i] === "$" && command[i + 1] === "(") {
+      let depth = 0;
+      let j = i + 1;
+      for (; j < command.length; j++) {
+        if (command[j] === "(") depth++;
+        else if (command[j] === ")" && --depth === 0) break;
+      }
+      subs.push(command.slice(i + 2, j));
+      out += `\0${subs.length - 1}\0`;
+      i = j;
+    } else if (!powershell && command[i] === "`") {
+      const close = command.indexOf("`", i + 1);
+      if (close === -1) {
+        out += command.slice(i);
+        break;
+      }
+      subs.push(command.slice(i + 1, close));
+      out += `\0${subs.length - 1}\0`;
+      i = close;
+    } else {
+      out += command[i];
+    }
+  }
+  return out;
+}
+var varKey = (name, w) => w.powershell ? name.toLowerCase() : name;
+function substitute(words, w) {
+  return words.flatMap((word) => {
+    const whole = /^\$(?:\{(\w+)\}|env:(\w+)|(\w+))$/i.exec(word.text);
+    const values = whole ? w.vars.get(varKey(whole[1] ?? whole[2] ?? whole[3], w)) : void 0;
+    if (values) return values.map((text2) => ({ text: text2, quoted: word.quoted }));
+    const text = word.text.replace(/\$\{(\w+)\}|\$(\w+)/g, (m, a, b) => w.vars.get(varKey(a ?? b, w))?.[0] ?? m);
+    return [{ text, quoted: word.quoted }];
+  });
+}
+function assign(words, w) {
+  const texts = words.map((x) => x.text);
+  if (/^for$/i.test(texts[0] ?? "") && texts[2]?.toLowerCase() === "in") {
+    w.vars.set(varKey(texts[1], w), texts.slice(3));
+    return true;
+  }
+  if (w.powershell) {
+    const one = /^\$(\w+)=(.+)$/.exec(texts[0] ?? "");
+    if (one && texts.length === 1) {
+      w.vars.set(varKey(one[1], w), [one[2]]);
+      return true;
+    }
+    const m = /^\$(\w+)$/.exec(texts[0] ?? "");
+    if (m && texts[1] === "=" && texts.length === 3) w.vars.set(varKey(m[1], w), [texts[2]]);
+    return false;
+  }
+  const rest = ["export", "declare", "local", "readonly", "typeset", "set"].includes(texts[0] ?? "") ? texts.slice(1) : texts;
+  if (!rest.length || !rest.every((t) => /^[A-Za-z_]\w*=/.test(t))) return false;
+  for (const t of rest) w.vars.set(t.slice(0, t.indexOf("=")), [t.slice(t.indexOf("=") + 1)]);
+  return true;
+}
+function resolveWord(raw, w) {
+  const out = [];
+  for (const dir of w.dirs) {
+    const copied = w.copies.get(path3.resolve(dir, asPath(raw, w.powershell)));
+    if (copied) out.push(...copied);
+    for (const file of expand(raw, dir, w.powershell)) out.push({ file, select: all });
+  }
+  return out;
+}
+function inFolders(places, w) {
+  const out = [];
+  for (const place of places) {
+    out.push(...resolveWord(place, w));
+    for (const dir of w.dirs) {
+      const at = path3.resolve(dir, asPath(place, w.powershell));
+      if (isDir(at)) for (const file of dataFilesIn(at, true)) out.push({ file, select: all });
+    }
+  }
+  return out.slice(0, MAX_SEARCHED_FILES);
+}
+function readScript(raw, w) {
+  for (const dir of w.dirs) {
+    const file = path3.resolve(dir, asPath(raw, w.powershell));
+    const written = w.scripts.get(file);
+    if (written !== void 0) return written;
+    try {
+      const stat = statSync2(file);
+      if (stat.isFile() && stat.size <= MAX_SCRIPT_BYTES) return readFileSync3(file, "utf8");
+    } catch {
+    }
+  }
+  return void 0;
+}
+function walk(command, w) {
+  for (const m of command.matchAll(HEREDOC)) {
+    const target = /(?:>\s*|\btee\s+)([^\s<>|;&]+)/.exec(m[0].trimStart().split("\n")[0])?.[1];
+    if (target) for (const dir of w.dirs) w.scripts.set(path3.resolve(dir, asPath(target, w.powershell)), m[4]);
+  }
+  const text = takeSubstitutions(stripHeredocs(command), w.powershell, w.subs);
+  for (const pipeline of parse(text, w.powershell)) {
     let flow = [];
-    for (const words of pipeline) {
-      const seg = toSegment(words);
+    const listed = [];
+    for (const raw of pipeline) {
+      for (const word of raw) {
+        for (const m of word.text.matchAll(/\u0000(\d+)\u0000/g)) walk(w.subs[Number(m[1])], w);
+      }
+      const words = substitute(raw, w);
+      if (assign(words, w)) continue;
+      const kept = w.powershell && /^\$\w+$/.test(words[0]?.text ?? "") && words[1]?.text === "=";
+      const seg = toSegment(kept ? words.slice(2) : words);
       if (!seg) continue;
-      const narrow = selection(seg);
+      const reads = (word) => resolveWord(word, w);
+      if (CD.has(seg.program)) {
+        const to = seg.positional.find((a) => a.toLowerCase() !== "/d");
+        if (to && to !== "-" && to !== "~") {
+          for (const dir of [...w.dirs]) {
+            const next = path3.resolve(dir, asPath(to, w.powershell));
+            if (!w.dirs.includes(next) && isDir(next)) w.dirs.push(next);
+          }
+        }
+        continue;
+      }
+      if (COPIES.has(seg.program)) {
+        const destination = w.powershell ? option(seg.args, ["-destination"]) : void 0;
+        const named = destination !== void 0 ? [option(seg.args, ["-path", "-literalpath"]) ?? seg.positional[0] ?? "", destination] : seg.positional;
+        const dest = named[named.length - 1];
+        const sources = named.slice(0, -1).flatMap((s) => reads(s));
+        if (dest && sources.length) {
+          for (const dir of w.dirs) {
+            const target = path3.resolve(dir, asPath(dest, w.powershell));
+            const intoDir = isDir(target) || /[\\/]$/.test(dest) || sources.length > 1;
+            for (const r of sources) {
+              const at = intoDir ? path3.join(target, path3.basename(r.file)) : target;
+              w.copies.set(at, [...w.copies.get(at) ?? [], r]);
+            }
+          }
+        }
+        flow = [];
+        continue;
+      }
+      const shell = SHELLS[seg.program];
+      const sourced = ["source", "."].includes(seg.program);
+      if (shell || sourced || /\.(sh|bash|ps1)$/i.test(seg.program)) {
+        const at = shell ? seg.args.findIndex((a) => shell.flags.includes(a.toLowerCase())) : -1;
+        const powershell = shell ? shell.powershell : /\.ps1$/i.test(seg.program) || sourced && w.powershell;
+        const script = shell || sourced ? option(seg.args, ["-file"]) ?? seg.positional[0] : raw[0].text;
+        const inner = at >= 0 ? seg.args.slice(at + 1).join(" ") : script !== void 0 ? readScript(script, w) : void 0;
+        if (inner !== void 0 && w.depth < MAX_DEPTH2 && !seg.writesToFile) walk(inner, { ...w, powershell, depth: w.depth + 1 });
+        flow = [];
+        continue;
+      }
+      if (w.strict && !seg.writesToFile) strictCode(seg, words, w);
+      let isReader = READERS.has(seg.program);
+      let narrow = selection(seg);
+      let files;
+      if (seg.program === "xargs") {
+        let i = 0;
+        while (i < seg.args.length && seg.args[i].startsWith("-")) i += /^-[InLPdaEs]$/.test(seg.args[i]) ? 2 : 1;
+        const inner = toSegment(seg.args.slice(i).map((text2) => ({ text: text2, quoted: false })));
+        isReader = !!inner && READERS.has(inner.program);
+        narrow = inner ? selection(inner) : void 0;
+        files = isReader ? listed.flatMap((list) => list()) : [];
+      } else if (["perl", "ruby"].includes(seg.program) && seg.args.some((a) => /^-[a-zA-Z]*[pn]/.test(a))) {
+        isReader = true;
+        narrow = all;
+      } else if (/^python[\d.]*$|^py$/.test(seg.program) && option(seg.args, ["-m"]) === "json.tool") {
+        isReader = true;
+        narrow = all;
+      } else if (QUERY_TOOLS.has(seg.program)) {
+        isReader = true;
+        narrow = all;
+        files = seg.args.flatMap((a) => [...a.matchAll(NAMED_FILE)].flatMap((m) => reads(m[0])));
+      } else if (["gzip", "gunzip"].includes(seg.program) && seg.args.some((a) => /^-[a-zA-Z]*c[a-zA-Z]*$|^--(?:to-)?stdout$/.test(a))) {
+        isReader = true;
+        narrow = all;
+      } else if (seg.program === "find" && seg.args.some((a) => /^-exec(?:dir)?$/.test(a))) {
+        const at = seg.args.findIndex((a) => /^-exec(?:dir)?$/.test(a));
+        const end = seg.args.findIndex((a, i) => i > at && (a === ";" || a === "+"));
+        const inner = toSegment(seg.args.slice(at + 1, end < 0 ? void 0 : end).filter((a) => a !== "{}").map((text2) => ({ text: text2, quoted: false })));
+        isReader = !!inner && READERS.has(inner.program);
+        narrow = inner ? selection(inner) : void 0;
+        const firstOption = seg.args.findIndex((a) => a.startsWith("-"));
+        const places = seg.args.slice(0, firstOption < 0 ? seg.args.length : firstOption);
+        files = isReader ? inFolders(places.length ? places : ["."], w) : [];
+      } else if (GREPS.has(seg.program) && (RECURSIVE_GREPS.has(seg.program) || has(seg.args, "-r", "-R", "--recursive", "--dereference-recursive"))) {
+        const patternGiven = option(seg.args, ["-e", "--regexp"]) !== void 0;
+        const places = seg.positional.slice(patternGiven ? 0 : 1);
+        files = inFolders(places.length ? places : ["."], w);
+      }
+      if (LISTERS.has(seg.program)) {
+        const recursive = seg.program === "find" || seg.program === "fd";
+        const places = seg.positional.length || !recursive ? seg.positional : ["."];
+        const dirs = [...w.dirs];
+        listed.push(
+          () => places.flatMap((a) => [
+            ...reads(a),
+            ...dirs.flatMap((dir) => {
+              const at = path3.resolve(dir, asPath(a, w.powershell));
+              return isDir(at) ? dataFilesIn(at, recursive).map((file) => ({ file, select: all })) : [];
+            })
+          ])
+        );
+      }
       if (seg.program === "pdftotext" && !seg.args.includes("-")) {
         flow = [];
         continue;
       }
-      if (WRITE_SINKS.has(seg.program) || !READERS.has(seg.program) && !FILTERS.has(seg.program)) {
+      if (WRITE_SINKS.has(seg.program) || !isReader && !FILTERS.has(seg.program)) {
         flow = [];
         continue;
       }
@@ -4160,13 +4588,23 @@ function dataReadsInCommand(command, cwd, powershell = false) {
         flow = [];
         continue;
       }
-      const files = READERS.has(seg.program) ? [...seg.args, ...seg.inputFile ? [seg.inputFile] : []].flatMap((a) => expand(a, cwd, powershell)) : [];
-      flow = files.length ? files.map((file) => ({ file, select: narrow })) : flow.map((r) => ({ file: r.file, select: (t) => narrow(r.select(t)) }));
+      if (isReader && files === void 0) files = [...seg.args, ...seg.inputFile ? [seg.inputFile] : []].flatMap(reads);
+      const select = narrow;
+      flow = (files?.length ? files : seg.program === "xargs" ? [] : flow).map((r) => ({ file: r.file, select: (t) => select(r.select(t)) }));
+      const targets = [...seg.writesTo ? [seg.writesTo] : [], ...seg.program === "tee" ? seg.positional : []];
+      if (flow.length) for (const t of targets) for (const dir of w.dirs) w.copies.set(path3.resolve(dir, asPath(t, w.powershell)), flow);
       if (seg.writesToFile && seg.program !== "tee") flow = [];
     }
-    for (const r of flow) out.push(r);
+    for (const r of flow) w.reads.push(r);
   }
-  return out;
+}
+function newWalk(cwd, powershell, strict) {
+  return { dirs: [cwd], vars: /* @__PURE__ */ new Map(), copies: /* @__PURE__ */ new Map(), scripts: /* @__PURE__ */ new Map(), subs: [], powershell, strict, depth: 0, reads: [], inline: [] };
+}
+function dataReadsInCommand(command, cwd, powershell = false) {
+  const w = newWalk(cwd, powershell, false);
+  walk(command, w);
+  return w.reads;
 }
 var INLINE_CODE = {
   python: ["-c"],
@@ -4182,33 +4620,35 @@ var INLINE_CODE = {
   pwsh: ["-c", "-command"],
   powershell: ["-c", "-command"]
 };
+var SCRIPT_FILE = /\.(py|js|mjs|cjs|ts|mts|rb|pl|php|r)$/i;
 var NAMED_FILE = /[\w.~:\\/-]+\.(?:csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out)(?:\.\d+)?(?![\w.])/gi;
 var DOTNET_READ = /\[(?:system\.)?io\.file\]::\s*read/i;
 var HEREDOC = /(?:^|\n)[ \t]*(\S+)[^\n]*?<<-?[ \t]*(['"]?)(\w+)\2[^\n]*\n([\s\S]*?)\n[ \t]*\3[ \t]*(?=\r?\n|$)/g;
 var HERE_STRING = /@(['"])\r?\n([\s\S]*?)\r?\n\1@[ \t]*\|[ \t]*(\S+)/g;
-function namedFiles(code, cwd, powershell) {
-  return [...code.matchAll(NAMED_FILE)].flatMap((m) => expand(m[0].replace(/^[(]+/, ""), cwd, powershell));
+function namedFiles(code, w) {
+  return [...code.matchAll(NAMED_FILE)].flatMap((m) => w.dirs.flatMap((dir) => expand(m[0].replace(/^[(]+/, ""), dir, w.powershell)));
+}
+function strictCode(seg, words, w) {
+  const flags = INLINE_CODE[seg.program];
+  const at = flags ? seg.args.findIndex((a) => flags.includes(a.toLowerCase())) : -1;
+  const joined = words.map((x) => x.text).join(" ");
+  let code;
+  if (at >= 0) code = seg.args.slice(at + 1).join(" ");
+  else if (w.powershell && DOTNET_READ.test(joined)) code = joined;
+  else if (flags && seg.positional[0] && SCRIPT_FILE.test(seg.positional[0])) code = readScript(seg.positional[0], w);
+  if (code !== void 0) for (const file of namedFiles(code, w)) w.inline.push({ file, select: all });
 }
 function inlineCodeReads(command, cwd, powershell = false) {
-  const files = /* @__PURE__ */ new Set();
+  const w = newWalk(cwd, powershell, true);
   for (const m of command.matchAll(HEREDOC)) {
-    if (programName(m[1]) in INLINE_CODE) for (const f of namedFiles(m[4], cwd, powershell)) files.add(f);
+    if (programName(m[1]) in INLINE_CODE) for (const f of namedFiles(m[4], w)) w.inline.push({ file: f, select: all });
   }
   for (const m of command.matchAll(HERE_STRING)) {
-    if (programName(m[3]) in INLINE_CODE) for (const f of namedFiles(m[2], cwd, powershell)) files.add(f);
+    if (programName(m[3]) in INLINE_CODE) for (const f of namedFiles(m[2], w)) w.inline.push({ file: f, select: all });
   }
-  for (const pipeline of parse(stripHeredocs(command), powershell)) {
-    for (const words of pipeline) {
-      const seg = toSegment(words);
-      if (!seg || seg.writesToFile) continue;
-      const flags = INLINE_CODE[seg.program];
-      const at = flags ? seg.args.findIndex((a) => flags.includes(a.toLowerCase())) : -1;
-      const joined = words.map((w) => w.text).join(" ");
-      const code = at >= 0 ? seg.args.slice(at + 1).join(" ") : powershell && DOTNET_READ.test(joined) ? joined : void 0;
-      if (code !== void 0) for (const f of namedFiles(code, cwd, powershell)) files.add(f);
-    }
-  }
-  return [...files].map((file) => ({ file, select: all }));
+  walk(command, w);
+  const seen = /* @__PURE__ */ new Set();
+  return w.inline.filter((r) => !seen.has(r.file) && seen.add(r.file));
 }
 
 // packages/mcp/src/guard.ts
@@ -4231,6 +4671,7 @@ var STRICT = [
   "CUSTOM"
 ];
 var BULK_THRESHOLD = 3;
+var BULK_PROMPT_TYPES = ["PHONE", "EMAIL", "ADDRESS", "BIRTH_DATE"];
 var BYPASS = /#izinkan-pii\b/i;
 var DATA_FILE = /\.(csv|tsv|json|jsonl|ndjson|log|txt|sql|xml|ya?ml|dump|bak|out|xlsx|xlsm|docx|pdf)(\.\d+)?$/i;
 var GREP_MAX_FILES = 300;
@@ -4257,7 +4698,7 @@ function summarize(matches, examples = true) {
   for (const m of matches) counts.set(name(m), (counts.get(name(m)) ?? 0) + 1);
   return [...counts.entries()].map(([label, n]) => {
     const first = matches.find((m) => name(m) === label);
-    const sample = examples ? ` (${partialMask(first.type, first.value)})` : "";
+    const sample = examples ? ` (${previewForModel(first.type, first.value)})` : "";
     return `${label}\xD7${n}${sample}`;
   }).join(", ");
 }
@@ -4343,7 +4784,7 @@ function readTool(file, shownAs, root, ignored, lines) {
   if (IMAGE_FILE.test(file)) {
     return personalImage(file, root) && existsSync4(file) ? uncheckedRead(shownAs, "mungkin foto KTP atau dokumen pribadi", "it is an image that may be a photo of an ID card or document") : void 0;
   }
-  if (!DATA_FILE.test(file)) return void 0;
+  if (!DATA_FILE.test(file) && !isShellDataFile(file)) return void 0;
   let doc;
   try {
     doc = loadDocument(file, { sampleBytes: GUARD_SAMPLE_BYTES, maxZipBytes: GUARD_MAX_ZIP_BYTES });
@@ -4422,7 +4863,7 @@ function grepTool(input, cwd, ignored) {
   const glob = input.glob ? globToRegExp(input.glob.includes("/") ? input.glob : `**/${input.glob}`) : void 0;
   const typeFilter = input.type ? GREP_TYPES[input.type.toLowerCase()] : void 0;
   if (input.type && !typeFilter) return void 0;
-  candidates = candidates.filter((f) => SHELL_DATA_FILE.test(f) && !ignored(f)).filter((f) => !glob || glob.test(path4.relative(target, f).split(path4.sep).join("/")) || glob.test(path4.basename(f))).filter((f) => !typeFilter || typeFilter.test(f));
+  candidates = candidates.filter((f) => isShellDataFile(f) && !ignored(f)).filter((f) => !glob || glob.test(path4.relative(target, f).split(path4.sep).join("/")) || glob.test(path4.basename(f))).filter((f) => !typeFilter || typeFilter.test(f));
   const unchecked = [];
   if (candidates.length > GREP_MAX_FILES) {
     unchecked.push(`only ${GREP_MAX_FILES} of the ${candidates.length} data files it searches were checked`);
@@ -4476,10 +4917,15 @@ function evaluate(input, projectRoot) {
   const budget = Math.min(Number(process.env.SAMARAN_GUARD_BUDGET_MS) || STRICT_BUDGET_MS, STRICT_BUDGET_MS);
   deadline = Date.now() + budget;
   config = loadConfig(root);
+  markDataFiles(loadUnmasked(root));
   if (input.hook_event_name === "UserPromptSubmit" && input.prompt) {
     if (BYPASS.test(input.prompt)) return void 0;
     const held = Object.entries(config.policy ?? {}).filter(([type, action]) => (action === "block" || action === "route") && PII_TYPES.includes(type)).map(([type]) => type);
-    const found = detectConfigured(input.prompt, { types: [.../* @__PURE__ */ new Set([...STRICT, ...held])], minConfidence: "high" }, config);
+    let found = detectConfigured(input.prompt, { types: [.../* @__PURE__ */ new Set([...STRICT, ...held])], minConfidence: "high" }, config);
+    if (!found.length) {
+      const contacts = detectConfigured(input.prompt, { types: BULK_PROMPT_TYPES, minConfidence: "high" }, config);
+      if (new Set(contacts.map((m) => `${m.type}:${m.value}`)).size >= BULK_THRESHOLD) found = contacts;
+    }
     if (!found.length) return void 0;
     return block([
       `\u{1F6E1}\uFE0F  Samaran menahan prompt ini: ada data pribadi ${summarize(found)}.`,

@@ -18,6 +18,7 @@ import { createHash, randomBytes, type Hash } from 'node:crypto';
 import {
   FEMALE_FIRST, FEMALE_LAST, HEALTH, MALE_FIRST, MALE_LAST, MARITAL, NAME_KEEP, RELIGIONS, STREETS,
 } from './kembaran-data.ts';
+import { parseNik } from './nik.ts';
 import { parsePhone } from './phone.ts';
 import { canonical, checkCustomRules, detectPii, PII_TYPES, type Confidence, type CustomRule, type PiiType } from './samaran/index.ts';
 
@@ -260,6 +261,21 @@ export class Kembaran {
         }
       }
     }
+    // A backstop that does not depend on the detector: any run of 16 digits, however it is separated, that is a valid
+    // NIK by its structure is taken for one, replaced, and counted if it is left. A NIK the detector misses ("3276.0101.
+    // 0180.0001" before 0.17.0) must never pass through an "anonymized" file unseen.
+    if (!this.keep.has('NIK')) {
+      for (const input of inputs) {
+        for (const m of input.matchAll(DIGIT_RUN)) {
+          const d = onlyDigits(m[0]);
+          if (d.length !== 16 || digits.has(d) || !parseNik(d).valid) continue;
+          digits.set(d, 'NIK');
+          const set = this.originals.get('NIK') ?? new Set<string>();
+          this.originals.set('NIK', set);
+          set.add(this.canon('NIK', d));
+        }
+      }
+    }
     // Longest first, so "Budi Santoso Wijaya" is replaced whole before "Budi Santoso".
     const nameRe = names.size
       ? new RegExp(
@@ -349,6 +365,17 @@ export class Kembaran {
     const cacheKey = `${type}|${canon}`;
     const cached = this.fakes.get(cacheKey);
     if (cached !== undefined) return this.render(type, original, cached);
+    // "Bu Siti" in a note, where the data has one full name that starts with "Siti": the same person, so the first word
+    // of that name's stand-in. With two people called Siti it could be either, and gets a stand-in of its own.
+    if (type === 'NAME' && !canon.includes(' ') && canon) {
+      const full = [...(this.originals.get('NAME') ?? [])].filter((n) => n.startsWith(`${canon} `));
+      if (full.length === 1) {
+        const first = this.value('NAME', full[0]!);
+        const standIn = this.fakes.get(`NAME|${full[0]}`)?.split(' ')[0] ?? first.split(/\s+/)[0]!;
+        this.fakes.set(cacheKey, standIn);
+        return this.render(type, original, standIn);
+      }
+    }
     let fake = '';
     for (let attempt = 0; attempt < 100; attempt++) {
       fake = this.make(type, original, canon, new Stream(this.key, `${type}|${canon}|${attempt}`));

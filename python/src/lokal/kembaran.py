@@ -48,6 +48,7 @@ from ._kembaran_data import (
     STREETS,
 )
 from ._result import Result
+from .nik import parse_nik
 from .samaran.core import _canonical
 from .samaran.custom import CustomRule, RuleLike, to_rules
 from .samaran.detectors import check_types, detect_pii
@@ -324,6 +325,17 @@ class Kembaran:
                     core = self._name_core(m.value)
                     if len(core) >= 2 and all(_NAME_WORD.fullmatch(w) for w in core):
                         names.add(' '.join(w.lower() for w in core))
+        # A backstop that does not depend on the detector: any run of 16 digits, however it is separated, that is a
+        # valid NIK by its structure is taken for one, replaced, and counted if it is left. A NIK the detector misses
+        # ("3276.0101.0180.0001" before 0.17.0) must never pass through an "anonymized" file unseen.
+        if 'NIK' not in self._keep:
+            for text in inputs:
+                for run in _CROSS_DIGIT_RUN.finditer(text):
+                    d = _only_digits(run.group(0))
+                    if len(d) != 16 or d in digits or not parse_nik(d).valid:
+                        continue
+                    digits[d] = 'NIK'
+                    self._originals.setdefault('NIK', set()).add(self._canon('NIK', d))
         # Longest first, so "Budi Santoso Wijaya" is replaced whole before "Budi Santoso".
         name_re = (
             re.compile(
@@ -430,6 +442,15 @@ class Kembaran:
         cached = self._fakes.get(cache_key)
         if cached is not None:
             return self._render(pii_type, original, cached)
+        # "Bu Siti" in a note, where the data has one full name that starts with "Siti": the same person, so the first
+        # word of that name's stand-in. With two people called Siti it could be either, and gets a stand-in of its own.
+        if pii_type == 'NAME' and canon and ' ' not in canon:
+            full = [n for n in self._originals.get('NAME', set()) if n.startswith(f'{canon} ')]
+            if len(full) == 1:
+                first = self._value('NAME', full[0], None)
+                stand_in = (self._fakes.get(f'NAME|{full[0]}') or first).split()[0]
+                self._fakes[cache_key] = stand_in
+                return self._render(pii_type, original, stand_in)
         fake = ''
         for attempt in range(100):
             fake = self._make(pii_type, original, canon, _Stream(self._key, f'{pii_type}|{canon}|{attempt}'))
@@ -673,21 +694,46 @@ def main(argv: Optional[list[str]] = None) -> int:
             return 1
     # All files at once: a value found in one is replaced in the others too, where it has no label or column name.
     result = k.texts(src.read_bytes().decode('utf-8', 'replace') for src in args.inputs)
+    empty = 0
     for src, dest, out in zip(args.inputs, targets, result.files, strict=True):
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_bytes(out.text.encode('utf-8'))
-        counts = ', '.join(f'{t}={n}' for t, n in out.replaced.items()) or 'nothing found'
+        replaced = ', '.join(f'{t}={n}' for t, n in out.replaced.items())
         crossed = sum(out.crossed.values())
-        if crossed:
-            counts += f', and {crossed} more found through the other values'
+        if not replaced and not crossed:
+            empty += 1
+            counts = _NOTHING_REPLACED
+        else:
+            counts = (replaced or 'nothing directly') + (
+                f', and {crossed} more found through the other values or as valid NIKs' if crossed else ''
+            )
         print(f'{src} -> {dest}: {counts}', file=sys.stderr)
+    status = 0
     if result.leaked:
         print(
             f'Warning: {result.leaked} real value(s) are still in the output, glued to other text. '
-            'Check it before sharing.',
+            'Do not share it as it is.',
             file=sys.stderr,
         )
-    return 0
+        status = 1
+    if empty:
+        print(
+            f'Warning: {empty} file(s) had nothing replaced. Do not treat them as anonymized without looking.',
+            file=sys.stderr,
+        )
+    print(_NOTE, file=sys.stderr)
+    return status
+
+
+# Said of a file in which Kembaran replaced nothing: never "clean", since it only knows what it recognizes.
+_NOTHING_REPLACED = (
+    'nothing replaced: Kembaran recognized no personal data, which does not mean there is none; '
+    'the output is a copy of the input'
+)
+_NOTE = (
+    'Kembaran replaces the personal data it recognizes, and a 16-digit run that is a valid NIK however it is '
+    'written; anything else it does not recognize is copied as it is. Look through the output before sharing it.'
+)
 
 
 __all__ = ['KEEP_BY_DEFAULT', 'Kembaran', 'KembaranFile', 'KembaranResult', 'KembaranTextsResult', 'kembaran', 'main']
