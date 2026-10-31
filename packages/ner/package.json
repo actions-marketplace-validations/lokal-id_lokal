@@ -1,6 +1,6 @@
 {
   "name": "@lokal-id/ner",
-  "version": "0.16.0",
+  "version": "0.16.1",
   "description": "Lokal's local NER model for Indonesian person names in chat, tickets, and documents: adds names Samaran's rules do not know. Runs on the CPU in WebAssembly; the text never leaves the machine.",
   "type": "module",
   "exports": {
@@ -17,7 +17,7 @@
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@lokal-id/core": "0.16.0",
+    "@lokal-id/core": "0.16.1",
     "onnxruntime-web": "1.30.0"
   },
   "keywords": [

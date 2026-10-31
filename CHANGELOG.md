@@ -4,6 +4,14 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.16.1] - 2026-10-31
+
+0.16.0 was published to PyPI only: its npm release stopped when CI on Linux found the gap below. The Python package of 0.16.1 is the same as 0.16.0's.
+
+### Security
+
+- The MCP server's file tools in 0.16.0 checked the file they had opened by resolving its path again and taking the identity of the file there. A second swap between those two steps could lead that check itself to the outside file: in 30-second races on Linux, while another process swapped a folder in the root for a link to an outside folder and back, `read_file_masked` read the outside file 56 times in 938,000 reads. On Linux the check now asks the kernel where the open file is (`/proc/self/fd`), without following a path; elsewhere the path must also hold no link after the check. Now 0 in 1.74 million reads on Linux, and 0 on Windows, where the swaps are slower and neither version read the outside file.
+
 ## [0.16.0] - 2026-10-31
 
 ### Added
@@ -22,7 +30,7 @@ All notable changes to this project are documented here. The format is based on 
 
 ### Security
 
-- The MCP server's file tools no longer check a path and then open it again (TOCTOU). `read_file_masked`, `scan_pii`, `write_file_unmasked`, and `anonymize_file` open a file first and then check the file that was opened: the same file (device and file ID) as the one its path leads to inside the root, read and written through that descriptor. A write goes to a new file with a random name, checked, then renamed into place. While another process swapped a folder in the root for a junction to an outside folder and back, 0.15.0 read the outside file 23 to 36 times in about 1,400 reads and wrote real data outside the root; now 0. On Linux the check asks the kernel where the open file is (`/proc/self/fd`); elsewhere it resolves the path again, and the path must still hold no link after that, since a second swap could lead the check itself to the outside file. In 30-second races on Linux that second swap made a check without those two steps read the outside file 56 times in 938,000 reads; now 0 in 1.74 million. A rare double swap can still leave an empty file with a random name outside the root: Node cannot create a file relative to a folder handle.
+- The MCP server's file tools no longer check a path and then open it again (TOCTOU). `read_file_masked`, `scan_pii`, `write_file_unmasked`, and `anonymize_file` open a file first and then check the file that was opened: the same file (device and file ID) as the one its path leads to inside the root, read and written through that descriptor. A write goes to a new file with a random name, checked, then renamed into place. While another process swapped a folder in the root for a junction to an outside folder and back, 0.15.0 read the outside file 23 to 36 times in about 1,400 reads and wrote real data outside the root; now 0. A rare double swap can still leave an empty file with a random name outside the root: Node cannot create a file relative to a folder handle.
 - The MCP server takes the root's real path once, when it starts: a root swapped for a link later no longer moves the boundary. Files with more than one hard link are refused, since the other name may be outside the root.
 - The NER cache of the MCP server and Samaran Proxy (0.15.0) held the texts it had read, personal data included, and `clear_vault` and the vault's expiry did not empty it. It now holds a keyed hash of each text (HMAC-SHA256 with a random key) and where the names are, never the text or a name, and is emptied, with a new key, when the vault is cleared or expires.
 - `@lokal-id/ner` and Python's `'lokal'` model load the model from the bytes they checked against the SHA-256, not from the file again; `@lokal-id/ner` downloads into a temporary file with a random name, created only if it is not there.
@@ -380,7 +388,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.16.0...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.16.1...HEAD
+[0.16.1]: https://github.com/lokal-id/lokal/compare/v0.16.0...v0.16.1
 [0.16.0]: https://github.com/lokal-id/lokal/compare/v0.15.0...v0.16.0
 [0.15.0]: https://github.com/lokal-id/lokal/compare/v0.14.0...v0.15.0
 [0.14.0]: https://github.com/lokal-id/lokal/compare/v0.13.0...v0.14.0
