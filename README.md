@@ -444,7 +444,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: lokal-id/lokal@v0.14.0
+      - uses: lokal-id/lokal@v0.15.0
         # with:
         #   scope: all              # every tracked file, not only the changes
         #   min-confidence: medium  # also values without a label or column name
@@ -463,7 +463,7 @@ repos:
         name: Indonesian personal data
         entry: lokal-mcp scan --staged
         language: node
-        additional_dependencies: ['@lokal-id/mcp@0.14.0']
+        additional_dependencies: ['@lokal-id/mcp@0.15.0']
         pass_filenames: false
 ```
 
@@ -674,10 +674,10 @@ The guard lets one ordinary value through on purpose, such as a single phone num
 |---|---|---|---|---|
 | 0.8.3: all 6,160 values | 96.7% | 91.3% | 94.0% | 93.4–94.6% |
 | 0.9.0: all 6,160 values | 99.8% | 95.8% | 96.6% | 96.1–97.0% |
-| **0.14.0: all 6,160 values** | **99.8%** | **96.5%** | **97.2%** | 96.8–97.6% |
-| 0.14.0, NIK (0.9.0: 88.1%) | | | 100% | 98.8–100% |
-| 0.14.0, weakest: religion | | | 85.7% | 81.1–89.3% |
-| 0.14.0, weakest: names | | | 93.6% | 92.4–94.6% |
+| **0.15.0: all 6,160 values** | **99.8%** | **97.1%** | **97.3%** | 96.9–97.7% |
+| 0.15.0, NIK (0.9.0: 88.1%) | | | 100% | 98.8–100% |
+| 0.15.0, weakest: religion | | | 85.7% | 81.1–89.3% |
+| 0.15.0, weakest: names | | | 93.6% | 92.4–94.6% |
 | 0.13.0 with the optional NER model (Python): all values | 99.8% | 97.9% | 98.7% | 98.4–98.9% |
 | 0.13.0 with the optional NER model (Python): names | | | 98.1% | 97.4–98.6% |
 | 0.14.0 with the optional NER model (Python, `gold`): all values | 99.6% | 98.4% | 99.2% | 98.9–99.4% |

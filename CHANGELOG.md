@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.15.0] - 2026-10-31
+
 ### Added
 
 - `@lokal-id/ner`: Lokal's own NER model for people's names that nothing announces ("saya di chat sama rianto surya"), for Node. IndoBERT-base fine-tuned by Lokal on public Indonesian NER corpora (MIT), synthetic chat, and news sentences with every name replaced; 125 MB in int8, about 20 ms per chat message on a CPU, in WebAssembly (onnxruntime-web: no native binaries, no install scripts). The model is downloaded once from the GitHub release and checked against its SHA-256. On the held-out chat corpus, rules and model protect 98.9% of the names (rules alone: 19.4%), and 98.8% in Samaran's held-out benchmark, with no false positive in either. See [MODEL.md](packages/ner/MODEL.md).
@@ -354,7 +356,8 @@ First public release.
 - Claude Code plugin and marketplace manifests.
 - End-to-end evaluation against real Claude Code sessions (`npm run eval`).
 
-[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.14.0...HEAD
+[Unreleased]: https://github.com/lokal-id/lokal/compare/v0.15.0...HEAD
+[0.15.0]: https://github.com/lokal-id/lokal/compare/v0.14.0...v0.15.0
 [0.14.0]: https://github.com/lokal-id/lokal/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/lokal-id/lokal/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/lokal-id/lokal/compare/v0.11.0...v0.12.0
