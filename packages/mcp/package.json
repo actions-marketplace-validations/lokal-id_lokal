@@ -1,6 +1,6 @@
 {
   "name": "@lokal-id/mcp",
-  "version": "0.16.1",
+  "version": "0.17.0",
   "mcpName": "io.github.lokal-id/lokal",
   "description": "MCP server that makes AI agents Indonesia-ready: NIK/NPWP/phone validation, Rupiah, wilayah Kemendagri, and Samaran — read production data with Indonesian PII masked.",
   "type": "module",
@@ -14,10 +14,10 @@
     "build": "node ../../scripts/bundle-mcp.mjs"
   },
   "dependencies": {
-    "@lokal-id/core": "0.16.1"
+    "@lokal-id/core": "0.17.0"
   },
   "peerDependencies": {
-    "@lokal-id/ner": "0.16.1"
+    "@lokal-id/ner": "0.17.0"
   },
   "peerDependenciesMeta": {
     "@lokal-id/ner": {

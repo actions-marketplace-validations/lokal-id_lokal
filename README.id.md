@@ -446,7 +446,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: lokal-id/lokal@v0.16.1
+      - uses: lokal-id/lokal@v0.17.0
         # with:
         #   scope: all              # semua file yang dilacak git, bukan hanya perubahan
         #   min-confidence: medium  # termasuk nilai tanpa label atau nama kolom
@@ -465,7 +465,7 @@ repos:
         name: Data pribadi Indonesia
         entry: lokal-mcp scan --staged
         language: node
-        additional_dependencies: ['@lokal-id/mcp@0.16.1']
+        additional_dependencies: ['@lokal-id/mcp@0.17.0']
         pass_filenames: false
 ```
 
@@ -680,16 +680,16 @@ Guard sengaja meloloskan satu nilai biasa, misalnya satu nomor HP di hasil `grep
 |---|---|---|---|---|
 | 0.8.3: semua 6.160 nilai | 96,7% | 91,3% | 94,0% | 93,4–94,6% |
 | 0.9.0: semua 6.160 nilai | 99,8% | 95,8% | 96,6% | 96,1–97,0% |
-| **0.16.0: semua 6.160 nilai** | **99,8%** | **97,1%** | **97,3%** | 96,9–97,7% |
-| 0.16.0, NIK (0.9.0: 88,1%) | | | 100% | 98,8–100% |
-| 0.16.0, terlemah: agama | | | 85,7% | 81,1–89,3% |
-| 0.16.0, terlemah: nama | | | 93,6% | 92,4–94,6% |
+| **0.17.0: semua 6.160 nilai** | **99,8%** | **97,2%** | **97,3%** | 96,9–97,7% |
+| 0.17.0, NIK (0.9.0: 88,1%) | | | 100% | 98,8–100% |
+| 0.17.0, terlemah: agama | | | 85,7% | 81,1–89,3% |
+| 0.17.0, terlemah: nama | | | 93,6% | 92,4–94,6% |
 | 0.13.0 dengan model NER opsional (Python): semua nilai | 99,8% | 97,9% | 98,7% | 98,4–98,9% |
 | 0.13.0 dengan model NER opsional (Python): nama | | | 98,1% | 97,4–98,6% |
 | 0.14.0 dengan model NER opsional (Python, `gold`): semua nilai | 99,6% | 98,4% | 99,2% | 98,9–99,4% |
 | 0.14.0 dengan model NER opsional (Python, `gold`): nama | | | 99,6% | 99,3–99,8% |
-| 0.16.0 dengan model NER Lokal (`@lokal-id/ner`): semua nilai | 99,5% | 98,9% | 99,0% | 98,7–99,2% |
-| 0.16.0 dengan model NER Lokal (`@lokal-id/ner`): nama | | | 98,9% | 98,4–99,3% |
+| 0.17.0 dengan model NER Lokal (`@lokal-id/ner`): semua nilai | 99,5% | 98,9% | 99,0% | 98,7–99,2% |
+| 0.17.0 dengan model NER Lokal (`@lokal-id/ner`): nama | | | 98,9% | 98,4–99,3% |
 
 *Terlindungi* artinya setiap huruf dan angka dari nilai itu tersamar, oleh deteksi jenis apa pun. Baris NER menambahkan [model opsional](python/README.md#names-the-rules-do-not-know-an-optional-ner-model) untuk nama ke aturan, dengan setelan yang dipilih di set pengembangan; tidak ada false positive juga, dengan waktu seratus sampai lima ratus kali lipat. Di berita asli, yang menyebut tokoh publik tanpa petunjuk yang dikenal aturan, aturan saja hanya menemukan sekitar seperlima nama orang (21,6% di set test [idner-news-2k](https://github.com/khairunnisaor/idner-news-2k)); model `gold` menemukan 96,1%, dengan presisi 99,0%. Di 2.277 artikel yang di-crawl dari 14 portal berita pada Oktober 2026, model `fast` menemukan 90,6% dari 2.250 narasumber yang dikutip (aturan saja: 18,5%), dan 95% deteksinya dalam sampel 300 memang nama orang. Di chat, nama jarang punya petunjuk: di [korpus chat](evals/chat/README.md) held-out, aturan melindungi 19,4% nama, model `gold` 89,3%, dan model milik Lokal 98,9%, tanpa false positive ([model card](packages/ner/MODEL.md)). [Stress test](evals/stress) mengukur kecepatan dan batasnya pada input besar dan bermusuhan. Sejak 0.12.0, NIK yang salah baca oleh OCR ("3674O2 53097l0l22") dikenali dari labelnya. Celah yang tersisa: nama tanpa label atau bagian nama yang dikenal di sekitarnya, cara menyebut agama yang belum dikenal aturannya, dan salah baca OCR lainnya ("AGAMA. ISLAM" tanpa titik dua). Tidak ada false positive di 400 dokumen jebakan. CI gagal kalau sebuah rilis mendapat skor di bawah baseline terakhir.
 
