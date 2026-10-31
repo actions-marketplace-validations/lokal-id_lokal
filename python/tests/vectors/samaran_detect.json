@@ -7670,6 +7670,70 @@
   ]
  },
  {
+  "text": "Pasien a.n. Rudi Hartono kontrol rutin tiap bulan",
+  "matches": [
+   [
+    "NAME",
+    12,
+    24,
+    "Rudi Hartono",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Rudi Hartono",
+  "matches": [
+   [
+    "NAME",
+    0,
+    12,
+    "Rudi Hartono",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "SAYA RINA WULANDARI DARI BEKASI",
+  "matches": [
+   [
+    "NAME",
+    5,
+    19,
+    "RINA WULANDARI",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "RINA WULANDARI",
+  "matches": [
+   [
+    "NAME",
+    0,
+    14,
+    "RINA WULANDARI",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "a.n. Dewi lestari ya",
+  "matches": [
+   [
+    "NAME",
+    5,
+    17,
+    "Dewi lestari",
+    "high"
+   ]
+  ]
+ },
+ {
+  "text": "Dewi lestari",
+  "matches": []
+ },
+ {
   "text": "kalimat chat biasa tidak dianggap nama",
   "matches": []
  },
@@ -7735,6 +7799,14 @@
  },
  {
   "text": "const fullName = new codegen_1.Name(\"x\")",
+  "matches": []
+ },
+ {
+  "text": "AKU TITIP BARANG KE TETANGGA SOALNYA LAGI PERGI",
+  "matches": []
+ },
+ {
+  "text": "SEMALEM AKU PAPASAN SAMA TEMEN LAMA",
   "matches": []
  },
  {
@@ -8060,6 +8132,37 @@
  },
  {
   "text": "HEALTH",
+  "matches": []
+ },
+ {
+  "text": "kontrol rutin hipertensi, lalu terapi asma",
+  "matches": [
+   [
+    "HEALTH",
+    14,
+    24,
+    "hipertensi",
+    "medium"
+   ],
+   [
+    "HEALTH",
+    38,
+    42,
+    "asma",
+    "medium"
+   ]
+  ]
+ },
+ {
+  "text": "HEALTH",
+  "matches": []
+ },
+ {
+  "text": "HEALTH:hipertensi",
+  "matches": []
+ },
+ {
+  "text": "HEALTH:asma",
   "matches": []
  },
  {
@@ -23328,8 +23431,8 @@
    [
     "NAME",
     32,
-    53,
-    "DEWI KARTIKA berhasil",
+    44,
+    "DEWI KARTIKA",
     "high"
    ]
   ]
@@ -25692,8 +25795,8 @@
    [
     "NAME",
     32,
-    51,
-    "Suharti jatuh tempo",
+    39,
+    "Suharti",
     "high"
    ]
   ]
@@ -26349,9 +26452,16 @@
    [
     "NAME",
     16,
-    50,
-    "Tiara mengalami gangguan kecemasan",
+    21,
+    "Tiara",
     "high"
+   ],
+   [
+    "HEALTH",
+    32,
+    69,
+    "gangguan kecemasan dan serangan panik",
+    "medium"
    ]
   ]
  },
@@ -26443,8 +26553,8 @@
    [
     "NAME",
     24,
-    37,
-    "Endah dititip",
+    29,
+    "Endah",
     "high"
    ]
   ]
@@ -30163,8 +30273,8 @@
    [
     "NAME",
     18,
-    54,
-    "Joko Prihatin menggunakan kursi roda",
+    31,
+    "Joko Prihatin",
     "high"
    ],
    [
@@ -51685,8 +51795,8 @@
    [
     "NAME",
     127,
-    144,
-    "Dewi Lestari gaji",
+    139,
+    "Dewi Lestari",
     "high"
    ],
    [

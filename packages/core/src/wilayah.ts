@@ -141,6 +141,11 @@ export function villagesWithPostalCode(postalCode: string): string[] {
   return [...(byPostalCode.get(String(postalCode).trim()) ?? [])];
 }
 
+/** Names of provinces, regencies, cities, and districts, without villages. For NER's place filter. */
+export function districtNames(): string[] {
+  return Object.values(getBase());
+}
+
 /** Every region as [code, name], provinces to villages. For parseAlamat. */
 export function* regionNames(): Generator<[string, string]> {
   yield* Object.entries(getBase());

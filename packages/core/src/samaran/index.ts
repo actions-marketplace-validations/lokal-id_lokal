@@ -17,7 +17,7 @@ export interface MaskResult {
   matches: MaskedMatch[];
 }
 
-export interface SamaranOptions extends DetectOptions {
+export interface SamaranOptions extends Omit<DetectOptions, 'extra'> {
   /**
    * - `placeholder` (default): reversible tokens like [NIK_1], for text sent to an LLM.
    * - `partial`: human-readable masks like 0812****7890, for logs and admin screens. Not reversible.
@@ -138,9 +138,10 @@ export class Samaran {
     this.options = options;
   }
 
-  scan(text: string): PiiMatch[] {
+  /** `extra` adds another detector's matches for this text, such as `await ner.find(text)` from `@lokal-id/ner`. */
+  scan(text: string, extra?: readonly PiiMatch[]): PiiMatch[] {
     const allow = this.options.allow ?? [];
-    return detectPii(text, this.options).filter(
+    return detectPii(text, { ...this.options, extra }).filter(
       // search(), not test(): a RegExp with the g or y flag keeps its lastIndex between calls, and would skip a value.
       (m) => !allow.some((a) => (typeof a === 'string' ? a === m.value : m.value.search(a) !== -1)),
     );
@@ -162,9 +163,9 @@ export class Samaran {
     }
   }
 
-  mask(text: string): MaskResult {
+  mask(text: string, extra?: readonly PiiMatch[]): MaskResult {
     if (this.options.mode !== 'partial') this.reserve(text);
-    const matches = this.scan(text);
+    const matches = this.scan(text, extra);
     const masked: MaskedMatch[] = [];
     let out = '';
     let cursor = 0;

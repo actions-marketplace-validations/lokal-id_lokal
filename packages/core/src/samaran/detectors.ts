@@ -328,8 +328,8 @@ function detectHealth(text: string): PiiMatch[] {
   // Everyday words ("positif", "karena", "saya") only count before a known condition: "saya diabetes",
   // "riwayat hipertensi dan diabetes melitus".
   const gated = new RegExp(
-    `\\b(?:(?:dokter|dok|dr)\\.?\\s+(?:bilang|bilangnya|menyatakan|mendiagnosis)(?:\\s+(?:ada|kena|positif))?|perawatan|pengobatan|dirawat\\s+karena|kontrol|has|have|had|with|suffers\\s+from|suffering\\s+from|diagnosed\\s+with|history\\s+of|positif|menderita|terkena|kena|sakit|pasien|komplikasi|kambuh|kumat|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|riwayat|diagnosa|diagnosis|didiagnosa|pembawa\\s+sifat|carrier|saya|aku|gue|gw|gua|dia|beliau|ayah|bapak|ibu|mama|mamah|papa|papah|suami|istri|anak|anaknya|adik|adek|kakak|nenek|kakek|mertua|pacar|teman|temen)` +
-      `\\s+(?:(?:saya|aku|gue|dia|lagi|sedang|sdg|sudah|udah|sdh|sempat|pernah|baru|kena|terkena)\\s+){0,2}` +
+    `\\b(?:(?:dokter|dok|dr)\\.?\\s+(?:bilang|bilangnya|menyatakan|mendiagnosis)(?:\\s+(?:ada|kena|positif))?|perawatan|pengobatan|terapi|dirawat\\s+karena|kontrol|has|have|had|with|suffers\\s+from|suffering\\s+from|diagnosed\\s+with|history\\s+of|positif|menderita|terkena|kena|sakit|pasien|komplikasi|kambuh|kumat|penderita|pengidap|penyintas|mengalami|karena|krn|akibat|gara-gara|punya|riwayat|diagnosa|diagnosis|didiagnosa|pembawa\\s+sifat|carrier|saya|aku|gue|gw|gua|dia|beliau|ayah|bapak|ibu|mama|mamah|papa|papah|suami|istri|anak|anaknya|adik|adek|kakak|nenek|kakek|mertua|pacar|teman|temen)` +
+      `\\s+(?:(?:saya|aku|gue|dia|lagi|sedang|sdg|sudah|udah|sdh|sempat|pernah|baru|rutin|kena|terkena)\\s+){0,2}` +
       `((?:penyakit\\s+)?(?:${CONDITIONS})(?:\\s*(?:,|dan|serta)\\s+(?:${CONDITIONS}))*)\\b`,
     'gi',
   );
@@ -487,7 +487,7 @@ function detectPlates(text: string): PiiMatch[] {
 }
 
 // Titles between the honorific and the name are skipped: "Bapak Presiden Joko Widodo" \u2192 "Joko Widodo".
-const TITLE_WORDS = new Set([
+export const TITLE_WORDS = new Set([
   'bapak', 'ibu', 'pak', 'bu', 'mas', 'mbak', 'kak', 'bang', 'presiden', 'wakil', 'menteri', 'direktur',
   'dokter', 'dr', 'drs', 'dra', 'prof', 'ir', 'h', 'hj', 'guru', 'lurah', 'camat', 'bupati', 'walikota', 'wali',
   'gubernur', 'kepala', 'dosen', 'ketua', 'manajer', 'admin', 'kurir', 'driver', 'ustadz', 'ustadzah', 'sdr',
@@ -496,7 +496,7 @@ const TITLE_WORDS = new Set([
   'almarhum', 'almarhumah', 'kh', 'dear',
 ]);
 // Words that end (or rule out) a name in chat: "nama saya budi mau refund", "Ibu Kota", "atas nama perusahaan".
-const NOT_NAME = new Set(
+export const NOT_NAME = new Set(
   (
     'yang dan atau dengan dgn di ke dari dr untuk utk pada dalam ini itu tsb tersebut saya sy aku aq kamu km anda dia ' +
     'beliau kami kita mereka gue gw gua lu nya ya iya yaa ok oke kak sih dong deh nih tuh kok lah kah pun juga aja saja ' +
@@ -560,6 +560,9 @@ function nameAt(text: string, start: number, confidence: Confidence, capitalized
       // A cue plus a common name is enough without capitals: "aku andi yg td chat", "saya siti rahayu".
       if (words.length ? !isKnownName(bare) : !GIVEN_NAMES.has(bare) && !AMBIGUOUS_GIVEN_NAMES.has(bare)) break;
       if (!words.length && AMBIGUOUS_GIVEN_NAMES.has(bare)) lowercaseAmbiguous = true;
+    } else if (words.length && /^[A-Z]/.test(text[words[0]!.start]!) && !/^[A-Z]/.test(word)) {
+      // "a.n. Ilham Simatupang kontrol rutin …": a capitalized name ends at a lowercase word that is no name.
+      if (!NAME_PARTICLES.has(bare) && !isKnownName(bare)) break;
     }
     words.push({ start: wordStart, end: wordStart + word.length, bare });
     if (word.endsWith('.') && bare.length > 1) break; // "… Budi." ends the sentence; "M. Rizky" goes on
@@ -603,7 +606,12 @@ function detectNames(text: string): PiiMatch[] {
   const out: PiiMatch[] = [];
   const add = (found: PiiMatch | undefined) => found && out.push(found);
   for (const m of text.matchAll(NAME_INTRO)) add(nameAt(text, m.index + m[0].length, 'high'));
-  for (const m of text.matchAll(NAME_CUE)) add(nameAt(text, m.index + m[0].length, 'medium', true));
+  for (const m of text.matchAll(NAME_CUE)) {
+    const found = nameAt(text, m.index + m[0].length, 'medium', true);
+    // In capitals a capital is no sign of a name: "AKU TITIP BARANG" is a verb, "SAYA RINA" a name the lists know.
+    if (found && !/[a-z]/.test(found.value) && !isKnownName(found.value.split(/\s+/)[0]!.toLowerCase())) continue;
+    add(found);
+  }
   for (const m of text.matchAll(HONORIFIC)) {
     // "Ibu Sari Dewi di Depok" stops at "di". After "bapak/ibu/mbak" a lowercase name is common in chat
     // ("bapak ahmad"); the short ones ("kak", "pak", "bu") too often just address the reader.
@@ -1908,6 +1916,12 @@ export interface DetectOptions {
   minConfidence?: Confidence;
   /** A team's own rules: ID formats and field names Samaran does not know. Matches are CUSTOM, with the rule's label. */
   custom?: readonly CustomRule[];
+  /**
+   * Another detector's matches, with offsets into `text`: names from `@lokal-id/ner`, which runs a model and so is
+   * asynchronous (`detectPii(text, { extra: await ner.find(text) })`). Samaran's own matches win where they overlap
+   * and are as long.
+   */
+  extra?: readonly PiiMatch[];
 }
 
 /**
@@ -1938,6 +1952,7 @@ export function detectPii(text: string, options: DetectOptions = {}): PiiMatch[]
   const view = escapesAsBreaks(text);
   const found = [...DETECTORS.flatMap((d) => d(view)), ...detectEscapedStrings(text)];
   if (options.custom?.length) found.push(...detectCustom(view, options.custom));
+  if (options.extra) found.push(...options.extra.filter((m) => m.start >= 0 && m.end <= text.length));
   const candidates = found.filter((m) => m.end > m.start && types.has(m.type) && rank(m) >= minRank);
   // Prefer confident, then longer matches, then a team's own rule; drop anything overlapping an accepted match.
   const own = (m: PiiMatch) => (m.type === 'CUSTOM' ? 1 : 0);

@@ -26,7 +26,7 @@ never leaves the machine: the model runs locally.
 from __future__ import annotations
 
 import re
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from typing import Any, Optional
 
 from ..wilayah import _base
@@ -82,6 +82,24 @@ _INFORMAL = frozenset((
     'ketemu', 'ketemuan', 'chat', 'chatting', 'japri', 'dm', 'wa', 'transfer', 'tf', 'bayar', 'kirim', 'kasih',
     'tanya', 'hubungi', 'telat', 'izin', 'cuti', 'sakit', 'resign', 'lembur', 'piket', 'rapat', 'meeting',
 ))
+# Common English words, which mixed Indonesian and English text puts next to names ("Rina Pratama, born 9 Agustus").
+# A name written in lower case must not be one; a capitalized one ("Grace", "Joy") may.
+_ENGLISH = frozenset('''
+a about above after again against age all also am an and any are as at be because been before being below between
+both but by can could did do does doing down during each few for from further had has have having he her here hers
+herself him himself his how i if in into is it its itself just me more most my myself no nor not now of off on once
+only or other our ours out over own same she should so some such than that the their theirs them then there these
+they this those through to too under until up very was we were what when where which while who whom why will with
+would you your yours yourself born died dead age aged birth birthday married single divorced widow widowed male female
+gender sex religion occupation job status account user customer client patient guest member employee staff manager
+admin owner holder name names full first last middle nickname address phone email mobile number id card passport
+date day today tomorrow yesterday later soon now morning night please thanks thank sorry hello hi hey dear regards
+sir madam mr mrs ms miss check call send sent reply replied ask asked told tell said say says meeting report invoice
+order payment refund ticket issue problem help support team project task update done pending approved rejected
+new old good great nice okay fine yes yeah nope maybe sure ready free busy online offline home office work
+suffer suffers suffering suffered diagnosed treated admitted discharged visited lives lived living works worked
+working stays stayed moved arrived left needs needed wants wanted
+'''.split())
 # Informal verbs by their form: "nge-" ("ngeliat", "ngerjain") and the passive "di-…-in" ("dibeliin"). Not "ng-" or
 # "ny-" alone, nor "-in" alone: Ngurah, Nyoman, Ngadiman, Arifin, and Syamsudin are names.
 _INFORMAL_VERB = re.compile(r'^nge[a-z]{3,}$|^di[a-z]{3,}in$')
@@ -96,6 +114,8 @@ _RANKS = frozenset((
     'brigjen', 'irjen', 'komjen', 'jenderal', 'mayjen', 'letjen', 'marsekal', 'laksamana', 'kolonel', 'letkol', 'mayor',
     'kapten', 'lettu', 'letda', 'serma', 'serka', 'kopda', 'prada', 'tni', 'polri',
 ))
+# Log levels: "[10:02] WARN login check …" opens a log line, not a name.
+_LOG_LEVELS = frozenset(('warn', 'warning', 'error', 'err', 'info', 'debug', 'trace', 'fatal', 'notice', 'critical'))
 # Words in front of a name that are left out of it: ranks, titles, and forms of address ("mama rina", "ci lina").
 _LEADING = _RANKS | _TITLE_WORDS | _CHAT
 _REGION_PREFIX = re.compile(r'^(?:kabupaten|kota|kab\.?|provinsi)\s+')
@@ -134,9 +154,9 @@ def keep_name(value: str, score: float, min_score: float = 0.7, min_lower_score:
     if any(w in _INFORMAL for w in low + plain):
         return False
     # By form only in lower case: "Ngesti" is a name.
-    if not _cased(value) and any(_INFORMAL_VERB.match(w) for w in low):
+    if not _cased(value) and any(_INFORMAL_VERB.match(w) or w in _ENGLISH for w in low):
         return False
-    if any(w in _NOT_NAME or w in _TITLE_WORDS or w in _CHAT or w in _RANKS for w in low + plain):
+    if any(w in _NOT_NAME or w in _TITLE_WORDS or w in _CHAT or w in _RANKS or w in _LOG_LEVELS for w in low + plain):
         return False
     if field_type('_'.join(low)) is not None:
         return False  # a column name
@@ -165,7 +185,7 @@ def _in_prose(text: str, start: int, end: int) -> bool:
     return len(re.findall(r'[^\W\d_]{2,}', line)) >= 3 and ' ' in line.strip()
 
 
-def _chunks(text: str) -> list[tuple[int, int]]:
+def ner_chunks(text: str) -> list[tuple[int, int]]:
     """Where the model reads: each line, and a long line in pieces of about ``_CHUNK`` characters cut at sentence ends.
 
     The model finds names best in a short passage: in a long one it starts to miss names it finds when they stand alone.
@@ -237,36 +257,43 @@ class NerNames:
     def __call__(self, text: str) -> list[PiiMatch]:
         if not text.strip():
             return []
-        out: list[PiiMatch] = []
-        spans = [(r, offset) for offset, end in _chunks(text) for r in self._pipeline(text[offset:end])]
-        for r, offset in spans:
-            if r.get('entity_group') not in ('PER', 'PERSON'):
-                continue
-            start, end = offset + int(r['start']), offset + int(r['end'])
-            # The model's span can carry spaces or punctuation at its edges.
-            while start < end and not text[start].isalnum():
-                start += 1
-            while end > start and not text[end - 1].isalnum() and text[end - 1] != '.':
-                end -= 1
-            # It works on word pieces and can stop inside a word ("Gib" of a name): the whole word is the name.
-            while start > 0 and text[start - 1].isalpha():
-                start -= 1
-            while end < len(text) and (
-                text[end].isalpha() or (text[end] in "'’" and end + 1 < len(text) and text[end + 1].isalpha())
-            ):
-                end += 1
-            # A rank, title, or form of address in front stays: "Kombes Pol. Ronni" masks the name, not the rank.
-            while True:
-                head = re.match(r"[A-Za-z]+\.?\s+", text[start:end])
-                if not head or head.group(0).strip().rstrip('.').lower() not in _LEADING:
-                    break
-                start += head.end()
-            value = text[start:end]
-            # A lower-case name counts in a sentence only: in a CSV header or a key=value it is a field name.
-            in_place = _cased(value) or _in_prose(text, start, end)
-            if in_place and keep_name(value, float(r['score']), self.min_score):
-                out.append(PiiMatch('NAME', start, end, value, 'medium'))
-        return out
+        spans = []
+        for offset, end in ner_chunks(text):
+            for r in self._pipeline(text[offset:end]):
+                if r.get('entity_group') in ('PER', 'PERSON'):
+                    spans.append((offset + int(r['start']), offset + int(r['end']), float(r['score'])))
+        return names_from_spans(text, spans, self.min_score)
 
 
-__all__ = ['DEFAULT_MODEL', 'MODEL', 'MODELS', 'REVISION', 'NerNames', 'keep_name']
+def names_from_spans(text: str, spans: Iterable[tuple[int, int, float]], min_score: float = 0.7) -> list[PiiMatch]:
+    """The model's person spans (start, end, score; offsets into ``text``) as NAME matches: widened to whole words,
+    without a leading title, and filtered. ``@lokal-id/ner`` in Node does the same, with the same test vectors."""
+    out: list[PiiMatch] = []
+    for start, end, score in spans:
+        # The model's span can carry spaces or punctuation at its edges.
+        while start < end and not text[start].isalnum():
+            start += 1
+        while end > start and not text[end - 1].isalnum() and text[end - 1] != '.':
+            end -= 1
+        # It works on word pieces and can stop inside a word ("Gib" of a name): the whole word is the name.
+        while start > 0 and text[start - 1].isalpha():
+            start -= 1
+        while end < len(text) and (
+            text[end].isalpha() or (text[end] in "'’" and end + 1 < len(text) and text[end + 1].isalpha())
+        ):
+            end += 1
+        # A rank, title, or form of address in front stays: "Kombes Pol. Ronni" masks the name, not the rank.
+        while True:
+            head = re.match(r"[A-Za-z]+\.?\s+", text[start:end])
+            if not head or head.group(0).strip().rstrip('.').lower() not in _LEADING:
+                break
+            start += head.end()
+        value = text[start:end]
+        # A lower-case name counts in a sentence only: in a CSV header or a key=value it is a field name.
+        in_place = _cased(value) or _in_prose(text, start, end)
+        if in_place and keep_name(value, score, min_score):
+            out.append(PiiMatch('NAME', start, end, value, 'medium'))
+    return out
+
+
+__all__ = ['DEFAULT_MODEL', 'MODEL', 'MODELS', 'REVISION', 'NerNames', 'keep_name', 'names_from_spans', 'ner_chunks']

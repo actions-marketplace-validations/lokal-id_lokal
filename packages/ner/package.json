@@ -1,0 +1,47 @@
+{
+  "name": "@lokal-id/ner",
+  "version": "0.15.0",
+  "description": "Lokal's local NER model for Indonesian person names in chat, tickets, and documents: adds names Samaran's rules do not know. Runs on the CPU in WebAssembly; the text never leaves the machine.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "MODEL.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@lokal-id/core": "0.15.0",
+    "onnxruntime-web": "1.30.0"
+  },
+  "keywords": [
+    "indonesia",
+    "ner",
+    "pii",
+    "uu-pdp",
+    "indobert",
+    "onnx"
+  ],
+  "homepage": "https://github.com/lokal-id/lokal/tree/main/packages/ner#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lokal-id/lokal.git",
+    "directory": "packages/ner"
+  },
+  "bugs": {
+    "url": "https://github.com/lokal-id/lokal/issues"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

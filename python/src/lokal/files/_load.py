@@ -270,12 +270,12 @@ def load_config(root: StrPath) -> tuple[list[CustomRule], list[str]]:
 
     if not isinstance(raw, dict):
         fail('expected an object with "custom" and "allow"')
-    known = ('custom', 'allow', 'policy', 'route', 'audit', 'vaultTtlMinutes', 'guard')
+    known = ('custom', 'allow', 'policy', 'route', 'audit', 'vaultTtlMinutes', 'guard', 'ner')
     unknown = [k for k in raw if k not in known and not k.startswith('$')]
     if unknown:
         fail(
             f'unknown key {", ".join(chr(34) + k + chr(34) for k in unknown)} '
-            '(expected "custom", "allow", "policy", "route", "audit", "vaultTtlMinutes", or "guard")'
+            '(expected "custom", "allow", "policy", "route", "audit", "vaultTtlMinutes", "guard", or "ner")'
         )
     custom = raw.get('custom', [])
     allow = raw.get('allow', [])
@@ -348,6 +348,8 @@ def _check_policy(raw: dict[str, object], labels: set[str], fail: Callable[[str]
         fail('"vaultTtlMinutes" must be a positive number')
     if raw.get('guard', 'strict') != 'strict':
         fail('"guard" can only be "strict" (SAMARAN_GUARD=off on your own machine turns the guard off)')
+    if not isinstance(raw.get('ner', False), bool):
+        fail('"ner" must be true or false')
 
 
 def load_ignore(root: StrPath) -> IgnoreRule:

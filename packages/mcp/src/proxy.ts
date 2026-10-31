@@ -11,9 +11,10 @@
 // including tool call arguments, so the app works with real values. Thinking and reasoning blocks are left alone:
 // they are signed, and the model only ever saw placeholders in them anyway.
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
-import { PII_TYPES, Samaran, type CustomRule, type PiiType, type ScanStatus } from '@lokal-id/core';
+import { PII_TYPES, Samaran, type CustomRule, type PiiMatch, type PiiType, type ScanStatus } from '@lokal-id/core';
 import { countMatches, writeAudit } from './audit.ts';
 import { allowedTypes, loadConfig, underPolicy, type PolicyAction, type SamaranConfig } from './files.ts';
+import { NerNames } from './ner.ts';
 
 export interface ProxyOptions {
   /** Default 127.0.0.1: the proxy sees real personal data, so it is not exposed to the network unless asked. */
@@ -42,6 +43,8 @@ export interface ProxyOptions {
   route?: SamaranConfig['route'];
   /** The audit log to append one line per request to. */
   audit?: string;
+  /** Names without a label or cue, from the NER model ("ner": true in .samaran.json). */
+  ner?: Pick<NerNames, 'find'>;
   /** One line per request, without content. Default: stderr. */
   log?: (line: string) => void;
 }
@@ -77,19 +80,39 @@ function parseJsonText(s: string): Json | undefined {
   }
 }
 
+/** The NER model's names in each text of the request, by text. */
+type Names = ReadonlyMap<string, readonly PiiMatch[]>;
+
+/** The texts `maskJson` masks: every string outside binary data, opaque blocks, and skipped keys. */
+function textsToMask(value: Json, out: Set<string>, nested = false): Set<string> {
+  if (typeof value === 'string') {
+    if (isBinaryText(value)) return out;
+    const inner = parseJsonText(value);
+    if (inner !== undefined) return textsToMask(inner, out, true);
+    out.add(value);
+  } else if (Array.isArray(value)) {
+    for (const v of value) textsToMask(v, out, nested);
+  } else if (value && typeof value === 'object') {
+    if (typeof value.type === 'string' && OPAQUE_TYPES.has(value.type)) return out;
+    for (const [k, v] of Object.entries(value)) if (nested || !SKIP_KEYS.has(k)) textsToMask(v, out, nested);
+  }
+  return out;
+}
+
 /**
  * A value of JSON that was inside a string, masked with its field name as a label: "Kenanga Purbasari" alone is just
  * two words, "nama: Kenanga Purbasari" is a name.
  */
-function maskField(samaran: Samaran, key: string, value: string) {
-  if (!key) return samaran.mask(value);
+function maskField(samaran: Samaran, key: string, value: string, names: readonly PiiMatch[] | undefined) {
+  if (!key) return samaran.mask(value, names);
   // A document in a field (a CSV, a form) keeps its own first line: the label goes on a line before it.
   const label = value.includes('\n') ? `${key}:\n` : `${key}: `;
-  const labelled = samaran.mask(label + value);
+  const shifted = names?.map((m) => ({ ...m, start: m.start + label.length, end: m.end + label.length }));
+  const labelled = samaran.mask(label + value, shifted);
   if (labelled.text.startsWith(label) && labelled.matches.every((m) => m.start >= label.length)) {
     return { text: labelled.text.slice(label.length), matches: labelled.matches };
   }
-  return samaran.mask(value);
+  return samaran.mask(value, names);
 }
 
 /** What masking a request saw besides its counts: parts it could not check, and every match, for the policy. */
@@ -103,7 +126,9 @@ interface Unchecked {
  * `key` is set inside JSON that was in a string (tool call arguments, tool results): there every field is someone's
  * data, so none is skipped, and each is masked with its field name.
  */
-function maskJson(value: Json, samaran: Samaran, counts: Map<PiiType, number>, unchecked: Unchecked, key?: string): Json {
+function maskJson(
+  value: Json, samaran: Samaran, counts: Map<PiiType, number>, unchecked: Unchecked, names: Names | undefined, key?: string,
+): Json {
   if (typeof value === 'string') {
     if (isBinaryText(value)) {
       unchecked.parts++;
@@ -111,20 +136,21 @@ function maskJson(value: Json, samaran: Samaran, counts: Map<PiiType, number>, u
     }
     // Tool call arguments and many tool results are JSON in a string: mask them field by field, as JSON.
     const nested = parseJsonText(value);
-    if (nested !== undefined) return JSON.stringify(maskJson(nested, samaran, counts, unchecked, key ?? ''));
-    const { text, matches } = key === undefined ? samaran.mask(value) : maskField(samaran, key, value);
+    if (nested !== undefined) return JSON.stringify(maskJson(nested, samaran, counts, unchecked, names, key ?? ''));
+    const found = names?.get(value);
+    const { text, matches } = key === undefined ? samaran.mask(value, found) : maskField(samaran, key, value, found);
     for (const m of matches) {
       counts.set(m.type, (counts.get(m.type) ?? 0) + 1);
       unchecked.found.push({ type: m.type, label: m.label });
     }
     return text;
   }
-  if (Array.isArray(value)) return value.map((v) => maskJson(v, samaran, counts, unchecked, key));
+  if (Array.isArray(value)) return value.map((v) => maskJson(v, samaran, counts, unchecked, names, key));
   if (value && typeof value === 'object') {
     if (typeof value.type === 'string' && OPAQUE_TYPES.has(value.type)) return value;
     const out: { [key: string]: Json } = {};
     for (const [k, v] of Object.entries(value)) {
-      out[k] = key === undefined && SKIP_KEYS.has(k) ? v : maskJson(v, samaran, counts, unchecked, key === undefined ? undefined : k);
+      out[k] = key === undefined && SKIP_KEYS.has(k) ? v : maskJson(v, samaran, counts, unchecked, names, key === undefined ? undefined : k);
     }
     return out;
   }
@@ -398,7 +424,15 @@ export function startProxy(options: ProxyOptions = {}): Promise<Server> {
           const parsed = JSON.parse(raw.toString('utf8')) as Json;
           // Placeholder-like text anywhere in the request (an e-mail template in the system prompt) keeps its number.
           samaran.reserve(JSON.stringify(parsed));
-          body = JSON.stringify(maskJson(parsed, samaran, counts, unchecked));
+          let names: Map<string, readonly PiiMatch[]> | undefined;
+          if (options.ner) {
+            names = new Map();
+            for (const text of textsToMask(parsed, new Set())) {
+              const found = await options.ner.find(text);
+              if (found?.length) names.set(text, found);
+            }
+          }
+          body = JSON.stringify(maskJson(parsed, samaran, counts, unchecked, names));
           const found = countMatches(unchecked.found);
           const blocked = underPolicy(policyConfig, unchecked.found, ['block']);
           if (blocked.size) {
@@ -559,6 +593,7 @@ export async function runProxy(args: string[]): Promise<void> {
     policy: config.policy,
     route: config.route,
     audit: config.audit,
+    ...(config.ner ? { ner: new NerNames() } : {}),
   });
   process.stderr.write(`Samaran Proxy listening on http://${host}:${port}\n`);
   if (host !== '127.0.0.1' && host !== 'localhost') {

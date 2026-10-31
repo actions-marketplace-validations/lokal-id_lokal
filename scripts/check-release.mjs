@@ -10,6 +10,7 @@ const json = (path) => JSON.parse(read(path));
 
 const core = json('packages/core/package.json');
 const mcp = json('packages/mcp/package.json');
+const ner = json('packages/ner/package.json');
 const server = json('server.json');
 const npmEntry = server.packages.find((p) => p.registryType === 'npm' && p.identifier === mcp.name);
 const serverTs = read('packages/mcp/src/version.ts').match(/const VERSION = '([^']+)'/)?.[1];
@@ -20,6 +21,9 @@ const found = {
   // Pinned exactly, so each @lokal-id/mcp release runs on the core it was built and tested with.
   'packages/mcp/package.json dependencies["@lokal-id/core"]': mcp.dependencies[core.name],
   'packages/mcp/src/version.ts VERSION': serverTs,
+  'packages/ner/package.json': ner.version,
+  'packages/ner/package.json dependencies["@lokal-id/core"]': ner.dependencies[core.name],
+  'packages/mcp/package.json peerDependencies["@lokal-id/ner"]': mcp.peerDependencies?.[ner.name],
   '.claude-plugin/plugin.json': json('.claude-plugin/plugin.json').version,
   // The plugin starts the MCP server with npx; a pinned version keeps the two in step and gets past npx's cache.
   '.mcp.json npx @lokal-id/mcp@<version>': json('.mcp.json').lokal.args.find((a) => a.startsWith(`${mcp.name}@`))?.slice(mcp.name.length + 1),
